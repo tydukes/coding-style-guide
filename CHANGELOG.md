@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2025-10-27
+
 ### Added
 
 - MIT License
@@ -70,5 +72,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 For detailed changes, see the [commit history](https://github.com/tydukes/coding-style-guide/commits/main).
 
-[Unreleased]: https://github.com/tydukes/coding-style-guide/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/tydukes/coding-style-guide/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/tydukes/coding-style-guide/compare/v1.1.0...v1.2.0
 [0.1.0]: https://github.com/tydukes/coding-style-guide/releases/tag/v0.1.0
