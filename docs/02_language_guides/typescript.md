@@ -4,6 +4,7 @@
 - Use `tsconfig.json` with `strict: true`.
 
 ## Canonical example
+
 ```ts
 // @module: util
 export function sum(a: number, b: number): number { return a + b }

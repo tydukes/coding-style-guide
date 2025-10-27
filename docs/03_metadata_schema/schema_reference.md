@@ -4,6 +4,7 @@
 Metadata is embedded inline as comment-based tags. Use language-appropriate comment syntax.
 
 Common tags:
+
 - `@module: <name>`
 - `@vars: name,type,required; name2,type,optional,default=...`
 - `@outputs: name,description`
@@ -11,6 +12,7 @@ Common tags:
 - `@env: prod|staging|dev`
 
 Example (Terraform file header):
+
 ```hcl
 # @module: vpc
 # @vars: name,string,required; cidr,string,optional,default="10.0.0.0/16"

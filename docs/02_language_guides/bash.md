@@ -4,6 +4,7 @@
 - Provide metadata header and `--help`.
 
 ## Template
+
 ```bash
 #!/usr/bin/env bash
 # @script: deploy-helper

@@ -4,6 +4,7 @@
 - Use `ansible-lint` and `molecule` for testing.
 
 ## Example task header
+
 ```yaml
 # @module: create_user
 - name: Ensure user exists

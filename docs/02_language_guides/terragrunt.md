@@ -4,6 +4,7 @@
 - Centralize remote state in top-level `terragrunt.hcl`.
 
 ## Example
+
 ```hcl
 # @module: vpc-live
 include { path = find_in_parent_folders() }

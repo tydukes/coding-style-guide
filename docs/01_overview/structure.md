@@ -1,9 +1,10 @@
 
 # Structure
 
-Repository layout is split per guide (multi-repo). Each guide follows the structure:
+Repository layout is split per guide (multi-repo). Each guide follows the
+structure:
 
-```
+```text
 /README.md
 /docs/
 /templates/
