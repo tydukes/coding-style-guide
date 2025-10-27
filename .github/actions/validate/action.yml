@@ -1,0 +1,87 @@
+name: 'Validate Coding Standards'
+description: 'Run coding style guide validation using containerized tools'
+author: 'Tyler Dukes'
+
+branding:
+  icon: 'check-circle'
+  color: 'green'
+
+inputs:
+  mode:
+    description: 'Validation mode: validate, lint, format, docs, or metadata'
+    required: false
+    default: 'validate'
+
+  path:
+    description: 'Path to the repository to validate'
+    required: false
+    default: '.'
+
+  image:
+    description: 'Container image to use'
+    required: false
+    default: 'ghcr.io/tydukes/coding-style-guide:latest'
+
+  strict:
+    description: 'Enable strict mode (fail on warnings)'
+    required: false
+    default: 'false'
+
+  continue-on-error:
+    description: 'Continue workflow even if validation fails'
+    required: false
+    default: 'false'
+
+outputs:
+  result:
+    description: 'Validation result: success or failure'
+    value: ${{ steps.validate.outputs.result }}
+
+  exit-code:
+    description: 'Exit code from validation'
+    value: ${{ steps.validate.outputs.exit-code }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Validate with container
+      id: validate
+      shell: bash
+      run: |
+        set +e
+
+        echo "::group::Running validation"
+        echo "Mode: ${{ inputs.mode }}"
+        echo "Path: ${{ inputs.path }}"
+        echo "Image: ${{ inputs.image }}"
+        echo "Strict: ${{ inputs.strict }}"
+        echo "::endgroup::"
+
+        # Run container
+        docker run --rm \
+          -v "${{ github.workspace }}/${{ inputs.path }}:/workspace" \
+          -e STRICT="${{ inputs.strict }}" \
+          -e DEBUG="false" \
+          "${{ inputs.image }}" \
+          "${{ inputs.mode }}"
+
+        exit_code=$?
+
+        # Set outputs
+        echo "exit-code=${exit_code}" >> $GITHUB_OUTPUT
+
+        if [[ $exit_code -eq 0 ]]; then
+          echo "result=success" >> $GITHUB_OUTPUT
+          echo "::notice::Validation completed successfully"
+        else
+          echo "result=failure" >> $GITHUB_OUTPUT
+          echo "::error::Validation failed with exit code ${exit_code}"
+        fi
+
+        # Handle continue-on-error
+        if [[ "${{ inputs.continue-on-error }}" == "true" ]]; then
+          echo "::warning::Validation failed but continue-on-error is enabled"
+          exit 0
+        else
+          exit $exit_code
+        fi
