@@ -1,0 +1,80 @@
+# Example GitHub Actions workflow for using the coding style guide validator
+# Place this file in .github/workflows/ci.yml in your repository
+
+name: CI
+
+"on":
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # Option 1: Using the reusable action (recommended)
+  validate-with-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate coding standards
+        uses: tydukes/coding-style-guide/.github/actions/validate@main
+        with:
+          mode: validate
+          path: .
+          strict: false
+
+  # Option 2: Using the container directly
+  validate-with-container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run validation
+        run: |
+          docker run --rm -v $PWD:/workspace \
+            ghcr.io/tydukes/coding-style-guide:latest validate
+
+  # Option 3: Multiple validation stages
+  validate-staged:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run linters
+        uses: tydukes/coding-style-guide/.github/actions/validate@main
+        with:
+          mode: lint
+
+      - name: Validate documentation
+        uses: tydukes/coding-style-guide/.github/actions/validate@main
+        with:
+          mode: docs
+        continue-on-error: true
+
+      - name: Check metadata
+        uses: tydukes/coding-style-guide/.github/actions/validate@main
+        with:
+          mode: metadata
+        continue-on-error: true
+
+  # Option 4: Format and commit (for automated formatting)
+  auto-format:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Format code
+        run: |
+          docker run --rm -v $PWD:/workspace \
+            ghcr.io/tydukes/coding-style-guide:latest format
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "style: auto-format code"
+          git push

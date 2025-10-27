@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  validator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: coding-style-guide:local
+    container_name: coding-style-validator
+    volumes:
+      # Mount current directory as workspace
+      - .:/workspace
+      # Optional: Mount custom config
+      # - ./custom-config:/config:ro
+    environment:
+      - STRICT=false
+      - DEBUG=false
+    command: validate
+
+  # Service for running linters only
+  lint:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: coding-style-guide:local
+    volumes:
+      - .:/workspace
+    command: lint
+
+  # Service for formatting code
+  format:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: coding-style-guide:local
+    volumes:
+      - .:/workspace
+    command: format
+
+  # Service for building docs
+  docs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: coding-style-guide:local
+    volumes:
+      - .:/workspace
+    command: docs
+
+  # Service for metadata validation
+  metadata:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: coding-style-guide:local
+    volumes:
+      - .:/workspace
+    command: metadata

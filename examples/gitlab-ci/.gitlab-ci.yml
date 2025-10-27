@@ -1,0 +1,87 @@
+# Example GitLab CI configuration for using the coding style guide validator
+# Place this file in .gitlab-ci.yml in your repository
+
+stages:
+  - validate
+  - format
+
+# Option 1: Basic validation
+validate-coding-standards:
+  stage: validate
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker run --rm -v $CI_PROJECT_DIR:/workspace
+        ghcr.io/tydukes/coding-style-guide:latest validate
+  only:
+    - merge_requests
+    - main
+    - develop
+
+# Option 2: Separate linting and docs
+lint-code:
+  stage: validate
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker run --rm -v $CI_PROJECT_DIR:/workspace
+        ghcr.io/tydukes/coding-style-guide:latest lint
+  only:
+    - merge_requests
+    - main
+
+validate-docs:
+  stage: validate
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker run --rm -v $CI_PROJECT_DIR:/workspace
+        ghcr.io/tydukes/coding-style-guide:latest docs
+  allow_failure: true
+  only:
+    - merge_requests
+    - main
+
+# Option 3: Auto-format on main branch
+auto-format:
+  stage: format
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker run --rm -v $CI_PROJECT_DIR:/workspace
+        ghcr.io/tydukes/coding-style-guide:latest format
+    - |
+      if git diff --quiet; then
+        echo "No changes to commit"
+      else
+        git config user.name "GitLab CI"
+        git config user.email "ci@gitlab.com"
+        git add -A
+        git commit -m "style: auto-format code [skip ci]"
+        git push https://oauth2:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git HEAD:${CI_COMMIT_REF_NAME}
+      fi
+  only:
+    - main
+  when: manual
+
+# Option 4: Validation with caching
+validate-with-cache:
+  stage: validate
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker pull ghcr.io/tydukes/coding-style-guide:latest || true
+  script:
+    - docker run --rm -v $CI_PROJECT_DIR:/workspace
+        ghcr.io/tydukes/coding-style-guide:latest validate
+  cache:
+    paths:
+      - .cache/
+  only:
+    - merge_requests
+    - main
