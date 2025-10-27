@@ -53,18 +53,20 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
+          load: ${{ github.event_name == 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ github.event_name == 'pull_request' && 'linux/amd64' || 'linux/amd64,linux/arm64' }}
 
       - name: Test container
         if: github.event_name == 'pull_request'
         run: |
-          docker run --rm -v $PWD:/workspace \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }} \
-            help
+          # Use the first tag from the metadata output (PR tag)
+          IMAGE_TAG=$(echo "${{ steps.meta.outputs.tags }}" | head -n1)
+          echo "Testing image: $IMAGE_TAG"
+          docker run --rm -v $PWD:/workspace "$IMAGE_TAG" help
 
       - name: Generate SBOM
         if: github.event_name != 'pull_request'
