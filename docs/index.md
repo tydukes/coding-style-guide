@@ -3,7 +3,7 @@
 **Version:** 1.0.0
 **Maintainer:** Tyler Dukes
 **License:** MIT
-**Last Updated:** {{ date }}
+**Last Updated:** 2024-06-10
 
 ---
 
