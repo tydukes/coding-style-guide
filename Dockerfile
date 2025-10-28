@@ -1,16 +1,14 @@
 # Multi-stage build for coding style guide validator
 FROM python:3.10-slim AS base
 
-# Install system dependencies
+# Install system dependencies and UV
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    bash \
     curl \
     git \
-    bash \
     shellcheck \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install UV
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:${PATH}"
 
 # Set working directory
@@ -28,13 +26,10 @@ COPY scripts/ ./scripts/
 COPY mkdocs.yml ./
 COPY .markdownlint.json ./
 
-# Create workspace directory for mounting external repos
+# Copy entrypoint script with execute permissions and create workspace directory
+COPY --chmod=755 docker-entrypoint.sh /usr/local/bin/
 RUN mkdir -p /workspace
 WORKDIR /workspace
-
-# Copy entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Set entrypoint
 ENTRYPOINT ["docker-entrypoint.sh"]
