@@ -1,4 +1,14 @@
-# The Dukes Engineering Style Guide
+---
+title: "The Dukes Engineering Style Guide"
+description: "Unified, opinionated standards for infrastructure and application code that is both human-readable and AI-optimized"
+author: "Tyler Dukes"
+date: "2025-10-27"
+tags: [style-guide, devops, infrastructure-as-code, best-practices, ai-optimized]
+category: "Home"
+status: "active"
+version: "1.0.0"
+---
+
 
 **Version:** 1.0.0
 **Maintainer:** Tyler Dukes
