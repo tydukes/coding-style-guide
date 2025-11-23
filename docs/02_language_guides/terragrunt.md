@@ -1,4 +1,14 @@
-# Terragrunt Style Guide
+---
+title: "Terragrunt Style Guide"
+description: "Terragrunt wrapper standards for DRY Terraform configurations"
+author: "Tyler Dukes"
+date: "2025-10-28"
+tags: [terragrunt, terraform, iac, dry, devops]
+category: "Language Guides"
+status: "needs-expansion"
+version: "0.1.0"
+---
+
 
 - Use `live/<env>/<region>/<stack>/terragrunt.hcl` pattern.
 - Centralize remote state in top-level `terragrunt.hcl`.

@@ -1,5 +1,15 @@
+---
+title: "AI Validation Pipeline"
+description: "AI-powered validation pipeline for automated code review and style checking"
+author: "Tyler Dukes"
+date: "2025-10-28"
+tags: [cicd, ai, validation, automation, pipeline]
+category: "CI/CD"
+status: "needs-expansion"
+version: "0.1.0"
+---
 
-# CI / AI Validation Pipeline
+
 
 - Steps:
   1. Checkout

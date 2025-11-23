@@ -1,4 +1,14 @@
-# Integration Prompt for Other Repositories
+---
+title: "Integration Guide"
+description: "Guide for integrating style standards with AI assistants and development workflows"
+author: "Tyler Dukes"
+date: "2025-10-28"
+tags: [integration, ai, claude, workflow, automation]
+category: "Integration"
+status: "active"
+version: "0.1.0"
+---
+
 
 Use this prompt to quickly integrate the coding style guide validator into any codebase.
 
