@@ -1,0 +1,631 @@
+---
+title: "Makefile Style Guide"
+description: "Makefile standards for consistent, maintainable build automation and task execution"
+author: "Tyler Dukes"
+date: "2025-10-28"
+tags: [makefile, make, build, automation, devops]
+category: "Language Guides"
+status: "active"
+version: "1.0.0"
+---
+
+## Language Overview
+
+**Makefiles** are used with the `make` utility to automate build processes, run tests, and execute common tasks. This
+guide covers Makefile best practices for creating maintainable, portable, and efficient build automation.
+
+### Key Characteristics
+
+- **File Name**: `Makefile` or `makefile` (prefer `Makefile`)
+- **Syntax**: Tab-indented commands, target-based execution
+- **Primary Use**: Build automation, task execution, dependency management
+- **Key Concepts**: Targets, prerequisites, recipes, variables
+
+---
+
+## Basic Structure
+
+### Simple Makefile
+
+```makefile
+.PHONY: help clean build test
+
+help:
+	@echo "Available targets:"
+	@echo "  build  - Build the application"
+	@echo "  test   - Run tests"
+	@echo "  clean  - Clean build artifacts"
+
+build:
+	go build -o bin/app main.go
+
+test:
+	go test ./...
+
+clean:
+	rm -rf bin/
+```
+
+---
+
+## Targets and Prerequisites
+
+### Basic Target
+
+```makefile
+# Target: what to build
+# Prerequisites: dependencies
+# Recipe: commands to execute (MUST be indented with TAB)
+
+target: prerequisite1 prerequisite2
+	command1
+	command2
+```
+
+### Target with Prerequisites
+
+```makefile
+.PHONY: all build test
+
+all: build test
+
+build: compile
+	@echo "Build complete"
+
+compile:
+	gcc -o myapp main.c
+
+test: build
+	./myapp --test
+```
+
+---
+
+## .PHONY Targets
+
+Always declare targets that don't create files as `.PHONY`:
+
+```makefile
+.PHONY: clean test run install help
+
+clean:
+	rm -rf build/ dist/
+
+test:
+	pytest tests/
+
+run:
+	python main.py
+
+install:
+	pip install -r requirements.txt
+
+help:
+	@echo "Available targets: clean, test, run, install, help"
+```
+
+---
+
+## Variables
+
+### Define Variables
+
+```makefile
+# Simple variable
+CC = gcc
+CFLAGS = -Wall -Wextra -O2
+
+# Recursive variable (evaluated when used)
+SRC_DIR = src
+OBJ_DIR = $(SRC_DIR)/obj
+
+# Simply expanded variable (evaluated immediately)
+BUILD_TIME := $(shell date +%Y%m%d-%H%M%S)
+
+# Conditional variable
+DEBUG ?= 0
+
+ifeq ($(DEBUG),1)
+    CFLAGS += -g
+endif
+```
+
+### Use Variables
+
+```makefile
+CC = gcc
+CFLAGS = -Wall -Wextra
+SOURCES = main.c utils.c
+
+build:
+	$(CC) $(CFLAGS) $(SOURCES) -o app
+```
+
+### Common Variables
+
+```makefile
+# Compiler and tools
+CC = gcc
+CXX = g++
+LD = ld
+AR = ar
+
+# Directories
+SRC_DIR = src
+BUILD_DIR = build
+BIN_DIR = bin
+
+# Flags
+CFLAGS = -Wall -Wextra -O2
+LDFLAGS = -L/usr/local/lib
+INCLUDES = -I/usr/local/include
+
+# Files
+SOURCES = $(wildcard $(SRC_DIR)/*.c)
+OBJECTS = $(SOURCES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
+TARGET = $(BIN_DIR)/app
+```
+
+---
+
+## Pattern Rules
+
+### Basic Pattern Rule
+
+```makefile
+# Compile .c files to .o files
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Automatic variables:
+# $@ - target name
+# $< - first prerequisite
+# $^ - all prerequisites
+# $* - stem (matched by %)
+```
+
+### Advanced Pattern Rules
+
+```makefile
+SRC_DIR = src
+BUILD_DIR = build
+
+# Pattern rule with directory paths
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Multiple targets
+%.o %.d: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) -MM $(CFLAGS) $< > $*.d
+```
+
+---
+
+## Common Patterns
+
+### Node.js / TypeScript Project
+
+```makefile
+.PHONY: help install build test lint clean dev
+
+help:
+	@echo "Available targets:"
+	@echo "  install  - Install dependencies"
+	@echo "  build    - Build the application"
+	@echo "  test     - Run tests"
+	@echo "  lint     - Run linter"
+	@echo "  clean    - Clean build artifacts"
+	@echo "  dev      - Start development server"
+
+install:
+	npm ci
+
+build: install
+	npm run build
+
+test: install
+	npm test
+
+lint:
+	npm run lint
+
+clean:
+	rm -rf node_modules dist build
+
+dev: install
+	npm run dev
+```
+
+### Python Project
+
+```makefile
+.PHONY: help install test lint format clean venv
+
+PYTHON = python3
+VENV = venv
+VENV_BIN = $(VENV)/bin
+
+help:
+	@echo "Available targets:"
+	@echo "  venv     - Create virtual environment"
+	@echo "  install  - Install dependencies"
+	@echo "  test     - Run tests"
+	@echo "  lint     - Run linter"
+	@echo "  format   - Format code"
+	@echo "  clean    - Clean artifacts"
+
+venv:
+	$(PYTHON) -m venv $(VENV)
+
+install: venv
+	$(VENV_BIN)/pip install -r requirements.txt
+	$(VENV_BIN)/pip install -r requirements-dev.txt
+
+test: install
+	$(VENV_BIN)/pytest tests/
+
+lint: install
+	$(VENV_BIN)/flake8 src/ tests/
+	$(VENV_BIN)/mypy src/
+
+format: install
+	$(VENV_BIN)/black src/ tests/
+
+clean:
+	rm -rf $(VENV) .pytest_cache __pycache__
+	find . -type f -name '*.pyc' -delete
+	find . -type d -name '__pycache__' -delete
+```
+
+### Go Project
+
+```makefile
+.PHONY: help build test lint clean run
+
+BINARY_NAME = myapp
+GO = go
+GOFLAGS = -v
+LDFLAGS = -ldflags="-s -w"
+
+help:
+	@echo "Available targets:"
+	@echo "  build    - Build the application"
+	@echo "  test     - Run tests"
+	@echo "  lint     - Run linter"
+	@echo "  clean    - Clean build artifacts"
+	@echo "  run      - Run the application"
+
+build:
+	$(GO) build $(GOFLAGS) $(LDFLAGS) -o $(BINARY_NAME) .
+
+test:
+	$(GO) test $(GOFLAGS) ./...
+
+lint:
+	golangci-lint run
+
+clean:
+	rm -f $(BINARY_NAME)
+	$(GO) clean
+
+run: build
+	./$(BINARY_NAME)
+```
+
+### Docker Project
+
+```makefile
+.PHONY: help build push run stop clean
+
+IMAGE_NAME = myapp
+IMAGE_TAG = latest
+REGISTRY = docker.io
+FULL_IMAGE = $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG)
+
+help:
+	@echo "Available targets:"
+	@echo "  build    - Build Docker image"
+	@echo "  push     - Push image to registry"
+	@echo "  run      - Run container"
+	@echo "  stop     - Stop container"
+	@echo "  clean    - Remove image"
+
+build:
+	docker build -t $(FULL_IMAGE) .
+
+push: build
+	docker push $(FULL_IMAGE)
+
+run:
+	docker run -d -p 8080:8080 --name $(IMAGE_NAME) $(FULL_IMAGE)
+
+stop:
+	docker stop $(IMAGE_NAME)
+	docker rm $(IMAGE_NAME)
+
+clean:
+	docker rmi $(FULL_IMAGE)
+```
+
+---
+
+## Conditional Logic
+
+### If Statements
+
+```makefile
+DEBUG ?= 0
+
+ifeq ($(DEBUG),1)
+    CFLAGS += -g -DDEBUG
+else
+    CFLAGS += -O2
+endif
+
+# Check if variable is defined
+ifdef VERBOSE
+    Q =
+else
+    Q = @
+endif
+
+build:
+	$(Q)echo "Building..."
+	$(Q)$(CC) $(CFLAGS) -o app main.c
+```
+
+### OS Detection
+
+```makefile
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S),Linux)
+    PLATFORM = linux
+    LDFLAGS += -lpthread
+endif
+ifeq ($(UNAME_S),Darwin)
+    PLATFORM = macos
+    LDFLAGS += -framework CoreFoundation
+endif
+ifeq ($(UNAME_S),MINGW64_NT)
+    PLATFORM = windows
+    EXE_EXT = .exe
+endif
+
+build:
+	@echo "Building for $(PLATFORM)"
+	$(CC) -o app$(EXE_EXT) main.c $(LDFLAGS)
+```
+
+---
+
+## Functions
+
+### Built-in Functions
+
+```makefile
+# wildcard - Match files
+SOURCES = $(wildcard src/*.c)
+
+# patsubst - Pattern substitution
+OBJECTS = $(patsubst src/%.c,build/%.o,$(SOURCES))
+
+# shell - Execute shell command
+BUILD_DATE = $(shell date +%Y%m%d)
+
+# foreach - Iterate over list
+DIRS = src include lib
+CREATE_DIRS = $(foreach dir,$(DIRS),$(shell mkdir -p $(dir)))
+
+# filter - Filter list
+CFILES = $(filter %.c,$(SOURCES))
+
+# filter-out - Exclude from list
+NON_TEST = $(filter-out %_test.c,$(SOURCES))
+```
+
+---
+
+## Multi-Line Commands
+
+### Backslash Continuation
+
+```makefile
+build:
+	$(CC) \
+		$(CFLAGS) \
+		-I$(INCLUDE_DIR) \
+		-L$(LIB_DIR) \
+		$(SOURCES) \
+		-o $(TARGET)
+```
+
+### Multi-Line Recipe
+
+```makefile
+deploy:
+	@echo "Starting deployment..."
+	@docker build -t myapp:latest .
+	@docker tag myapp:latest registry.example.com/myapp:latest
+	@docker push registry.example.com/myapp:latest
+	@echo "Deployment complete!"
+```
+
+---
+
+## Error Handling
+
+### Exit on Error
+
+```makefile
+# Default: exit on error
+test:
+	pytest tests/
+
+# Continue on error
+.IGNORE: test
+test:
+	pytest tests/
+
+# Ignore errors for specific command
+test:
+	-pytest tests/
+```
+
+### Check Command Success
+
+```makefile
+test:
+	@pytest tests/ || (echo "Tests failed!"; exit 1)
+```
+
+---
+
+## Silent Commands
+
+```makefile
+# Prefix with @ to suppress output
+build:
+	@echo "Building..."
+	@$(CC) -o app main.c
+
+# Make all commands silent
+.SILENT:
+build:
+	echo "Building..."
+	$(CC) -o app main.c
+```
+
+---
+
+## Dependencies
+
+### Automatic Dependency Generation
+
+```makefile
+SRC_DIR = src
+BUILD_DIR = build
+
+SOURCES = $(wildcard $(SRC_DIR)/*.c)
+OBJECTS = $(SOURCES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
+DEPS = $(OBJECTS:.o=.d)
+
+# Include dependency files
+-include $(DEPS)
+
+# Compile with dependency generation
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+
+build: $(OBJECTS)
+	$(CC) $(LDFLAGS) $^ -o $(TARGET)
+
+clean:
+	rm -rf $(BUILD_DIR) $(TARGET)
+```
+
+---
+
+## Anti-Patterns
+
+### ❌ Avoid: Spaces Instead of Tabs
+
+```makefile
+# Bad - Using spaces for indentation
+build:
+    echo "Building..."  # This will fail!
+
+# Good - Using tabs
+build:
+	echo "Building..."
+```
+
+### ❌ Avoid: Not Using .PHONY
+
+```makefile
+# Bad - Without .PHONY, make won't run if 'clean' file exists
+clean:
+	rm -rf build/
+
+# Good - Using .PHONY
+.PHONY: clean
+clean:
+	rm -rf build/
+```
+
+### ❌ Avoid: Hardcoded Paths
+
+```makefile
+# Bad - Hardcoded paths
+build:
+	gcc -o /home/user/myapp main.c
+
+# Good - Use variables
+BIN_DIR = bin
+build:
+	gcc -o $(BIN_DIR)/myapp main.c
+```
+
+---
+
+## Best Practices
+
+### Default Target
+
+```makefile
+.DEFAULT_GOAL := help
+
+help:
+	@echo "Available targets: build, test, clean"
+
+build:
+	go build -o app main.go
+
+test:
+	go test ./...
+
+clean:
+	rm -f app
+```
+
+### Self-Documenting Makefile
+
+```makefile
+.PHONY: help
+
+help: ## Show this help message
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
+		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+build: ## Build the application
+	go build -o app main.go
+
+test: ## Run tests
+	go test ./...
+
+clean: ## Clean build artifacts
+	rm -f app
+```
+
+---
+
+## References
+
+### Official Documentation
+
+- [GNU Make Manual](https://www.gnu.org/software/make/manual/)
+- [Make Reference Card](https://www.gnu.org/software/make/manual/make.html#Quick-Reference)
+
+### Tutorials
+
+- [Makefile Tutorial](https://makefiletutorial.com/)
+- [Learning Make](https://learning.oreilly.com/library/view/managing-projects-with/0596006101/)
+
+---
+
+**Version**: 1.0.0
+**Last Updated**: 2025-10-28
+**Status**: Active
