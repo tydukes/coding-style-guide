@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Terragrunt wrapper standards for DRY Terraform configurations">
+        <meta name="description" content="Terragrunt wrapper standards for DRY Terraform configurations and multi-environment management">
       
       
         <meta name="author" content="Tyler Dukes">
@@ -90,7 +90,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#example" class="md-skip">
+        <a href="#language-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -811,7 +811,7 @@
     
   
   
-    <span class="md-status md-status--needs-expansion"></span>
+    <span class="md-status md-status--active"></span>
   
 
   
@@ -836,7 +836,7 @@
     
   
   
-    <span class="md-status md-status--needs-expansion"></span>
+    <span class="md-status md-status--active"></span>
   
 
   
@@ -857,13 +857,448 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
+  <a href="#language-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example
+        Language Overview
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Language Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Characteristics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Directory Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-terragrunthcl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root terragrunt.hcl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Root terragrunt.hcl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#centralized-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralized Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#child-terragrunthcl-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Child terragrunt.hcl Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Child terragrunt.hcl Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-child-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Child Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-with-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration with Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-with-multiple-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration with Multiple Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generate Blocks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generate Blocks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generating-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before-and-after-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before and After Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-terragrunt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Terragrunt
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running Terragrunt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dependency Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explicit-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explicit Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skip-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skip Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-mock-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Mock Outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-get_repo_root" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use get_repo_root()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keep-inputs-dry-with-locals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keep Inputs DRY with Locals
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anti-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Anti-Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#avoid-hardcoded-values-everywhere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Hardcoded Values Everywhere
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-inconsistent-directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Inconsistent Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tool-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Configurations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tool Configurations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#terragrunt-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .terragrunt-cache
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vscode-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VSCode Extensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#official-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Official Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gruntwork-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gruntwork Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practice-guides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practice Guides
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1461,13 +1896,448 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
+  <a href="#language-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example
+        Language Overview
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Language Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Characteristics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Directory Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-terragrunthcl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root terragrunt.hcl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Root terragrunt.hcl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#centralized-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralized Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#child-terragrunthcl-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Child terragrunt.hcl Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Child terragrunt.hcl Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-child-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Child Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-with-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration with Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-with-multiple-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration with Multiple Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generate Blocks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generate Blocks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generating-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before-and-after-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before and After Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-terragrunt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Terragrunt
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running Terragrunt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dependency Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explicit-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explicit Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skip-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skip Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-mock-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Mock Outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-get_repo_root" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use get_repo_root()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keep-inputs-dry-with-locals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keep Inputs DRY with Locals
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anti-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Anti-Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#avoid-hardcoded-values-everywhere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Hardcoded Values Everywhere
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-inconsistent-directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Inconsistent Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tool-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Configurations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tool Configurations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#terragrunt-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .terragrunt-cache
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vscode-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VSCode Extensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#official-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Official Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gruntwork-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gruntwork Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practice-guides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practice Guides
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1493,16 +2363,547 @@
 
   <h1>Terragrunt (live)</h1>
 
+<h2 id="language-overview">Language Overview<a class="headerlink" href="#language-overview" title="Permanent link">&para;</a></h2>
+<p><strong>Terragrunt</strong> is a thin wrapper for Terraform that provides extra tools for keeping your Terraform configurations DRY
+(Don't Repeat Yourself), working with multiple Terraform modules, and managing remote state. This guide covers
+Terragrunt best practices for multi-environment infrastructure.</p>
+<h3 id="key-characteristics">Key Characteristics<a class="headerlink" href="#key-characteristics" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Use <code>live/&lt;env&gt;/&lt;region&gt;/&lt;stack&gt;/terragrunt.hcl</code> pattern.</li>
-<li>Centralize remote state in top-level <code>terragrunt.hcl</code>.</li>
+<li><strong>Purpose</strong>: DRY Terraform configurations, remote state management, multi-environment orchestration</li>
+<li><strong>File Extension</strong>: <code>.hcl</code> (HCL syntax)</li>
+<li><strong>Primary Use</strong>: Managing Terraform across multiple environments, regions, and accounts</li>
+<li><strong>Version</strong>: Terragrunt 0.45.x+ (compatible with Terraform 1.5.x+)</li>
 </ul>
-<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># @module: vpc-live</span>
-<span class="nb">include</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span><span class="w"> </span><span class="p">}</span>
-<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;git::ssh://...//modules//vpc?ref=v1.2.0&quot;</span><span class="w"> </span><span class="p">}</span>
-<span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-vpc&quot;</span><span class="w"> </span><span class="p">}</span>
+<hr />
+<h2 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h2>
+<h3 id="standard-layout">Standard Layout<a class="headerlink" href="#standard-layout" title="Permanent link">&para;</a></h3>
+<p>Use the <code>live/&lt;account&gt;/&lt;region&gt;/&lt;environment&gt;/&lt;stack&gt;</code> pattern:</p>
+<div class="codehilite"><pre><span></span><code>infrastructure/
+├── modules/                           # Reusable Terraform modules
+│   ├── vpc/
+│   ├── eks/
+│   └── rds/
+├── live/                              # Live infrastructure
+│   ├── terragrunt.hcl                # Root configuration
+│   ├── prod/
+│   │   ├── us-east-1/
+│   │   │   ├── vpc/
+│   │   │   │   └── terragrunt.hcl
+│   │   │   ├── eks/
+│   │   │   │   └── terragrunt.hcl
+│   │   │   └── rds/
+│   │   │       └── terragrunt.hcl
+│   │   └── us-west-2/
+│   │       └── vpc/
+│   │           └── terragrunt.hcl
+│   ├── staging/
+│   │   └── us-east-1/
+│   │       ├── vpc/
+│   │       │   └── terragrunt.hcl
+│   │       └── eks/
+│   │           └── terragrunt.hcl
+│   └── dev/
+│       └── us-east-1/
+│           └── vpc/
+│               └── terragrunt.hcl
+└── README.md
 </code></pre></div>
+
+<hr />
+<h2 id="root-terragrunthcl">Root terragrunt.hcl<a class="headerlink" href="#root-terragrunthcl" title="Permanent link">&para;</a></h2>
+<h3 id="centralized-configuration">Centralized Configuration<a class="headerlink" href="#centralized-configuration" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># @module root_terragrunt</span>
+<span class="c1"># @description Root Terragrunt configuration for remote state and provider settings</span>
+<span class="c1"># @version 1.0.0</span>
+<span class="c1"># @author Tyler Dukes</span>
+<span class="c1"># @last_updated 2025-10-28</span>
+
+<span class="c1"># Generate backend configuration for all child modules</span>
+<span class="nb">remote_state</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span>
+
+<span class="w">  </span><span class="nb">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-terraform-state-${local.account_id}&quot;</span>
+<span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${path_relative_to_include()}/terraform.tfstate&quot;</span>
+<span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">local.aws_region</span>
+<span class="w">    </span><span class="na">encrypt</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-locks&quot;</span>
+
+<span class="w">    </span><span class="nb">s3_bucket_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform State&quot;</span>
+<span class="w">      </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.environment</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nb">dynamodb_table_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform Locks&quot;</span>
+<span class="w">      </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.environment</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;backend.tf&quot;</span>
+<span class="w">    </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite_terragrunt&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Generate provider configuration</span>
+<span class="err">generate</span><span class="w"> </span><span class="s2">&quot;provider&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;provider.tf&quot;</span>
+<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite_terragrunt&quot;</span>
+
+<span class="w">  </span><span class="na">contents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;-</span><span class="dl">EOF</span>
+<span class="sh">    provider &quot;aws&quot; {</span>
+<span class="sh">      region = &quot;${local.aws_region}&quot;</span>
+
+<span class="sh">      default_tags {</span>
+<span class="sh">        tags = {</span>
+<span class="sh">          Environment = &quot;${local.environment}&quot;</span>
+<span class="sh">          ManagedBy   = &quot;Terragrunt&quot;</span>
+<span class="sh">          Region      = &quot;${local.aws_region}&quot;</span>
+<span class="sh">        }</span>
+<span class="sh">      }</span>
+<span class="sh">    }</span>
+<span class="dl">  EOF</span>
+<span class="p">}</span>
+
+<span class="c1"># Local variables available to all child configurations</span>
+<span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">  # Parse environment and region from path</span>
+<span class="c1">  # Expected path: live/&lt;environment&gt;/&lt;region&gt;/&lt;stack&gt;/terragrunt.hcl</span>
+<span class="w">  </span><span class="na">path_parts</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="err">path_relative_to_include</span><span class="p">())</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.path_parts</span><span class="p">)</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">local.path_parts[0</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
+<span class="w">  </span><span class="na">aws_region</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.path_parts</span><span class="p">)</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">local.path_parts[1</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+
+<span class="c1">  # Account ID mapping</span>
+<span class="w">  </span><span class="nb">account_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">prod</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;111111111111&quot;</span>
+<span class="w">    </span><span class="na">staging</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;222222222222&quot;</span>
+<span class="w">    </span><span class="na">dev</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;333333333333&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lookup</span><span class="p">(</span><span class="nv">local.account_ids</span><span class="p">,</span><span class="w"> </span><span class="nv">local.environment</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;333333333333&quot;</span><span class="p">)</span>
+
+<span class="c1">  # Common tags</span>
+<span class="w">  </span><span class="nb">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.environment</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terragrunt&quot;</span>
+<span class="w">    </span><span class="na">Region</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">local.aws_region</span>
+<span class="w">    </span><span class="na">AccountId</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">local.account_id</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Terraform version constraints</span>
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="err">extra_arguments</span><span class="w"> </span><span class="s2">&quot;common_vars&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_terraform_commands_that_need_vars</span><span class="p">()</span>
+
+<span class="w">    </span><span class="nb">env_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">TF_INPUT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;false&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2 id="child-terragrunthcl-files">Child terragrunt.hcl Files<a class="headerlink" href="#child-terragrunthcl-files" title="Permanent link">&para;</a></h2>
+<h3 id="basic-child-configuration">Basic Child Configuration<a class="headerlink" href="#basic-child-configuration" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># @module vpc_live</span>
+<span class="c1"># @description VPC configuration for production us-east-1</span>
+<span class="c1"># @version 1.0.0</span>
+<span class="c1"># @author Tyler Dukes</span>
+<span class="c1"># @last_updated 2025-10-28</span>
+
+<span class="c1"># Include root configuration</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c1"># Reference Terraform module</span>
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_repo_root()}/modules//vpc&quot;</span>
+
+<span class="c1">  # Or use Git repository</span>
+<span class="c1">  # source = &quot;git::ssh://git@github.com/myorg/terraform-modules.git//vpc?ref=v1.2.0&quot;</span>
+<span class="p">}</span>
+
+<span class="c1"># Module inputs</span>
+<span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-vpc-us-east-1&quot;</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<span class="w">  </span><span class="na">availability_zones</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;, &quot;us-east-1c&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">public_subnets</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.1.0/24&quot;, &quot;10.0.2.0/24&quot;, &quot;10.0.3.0/24&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">private_subnets</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.11.0/24&quot;, &quot;10.0.12.0/24&quot;, &quot;10.0.13.0/24&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">enable_nat_gateway</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">enable_vpn_gateway</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
+
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MyApp&quot;</span>
+<span class="w">    </span><span class="na">Owner</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Platform Team&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="configuration-with-dependencies">Configuration with Dependencies<a class="headerlink" href="#configuration-with-dependencies" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># @module eks_live</span>
+<span class="c1"># @description EKS cluster depending on VPC</span>
+<span class="c1"># @version 1.0.0</span>
+<span class="c1"># @author Tyler Dukes</span>
+<span class="c1"># @last_updated 2025-10-28</span>
+
+<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_repo_root()}/modules//eks&quot;</span>
+<span class="p">}</span>
+
+<span class="c1"># Dependency on VPC module</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+
+<span class="c1">  # Mock outputs for faster plan/validate without applying VPC first</span>
+<span class="w">  </span><span class="nb">mock_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">vpc_id</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-mock-id&quot;</span>
+<span class="w">    </span><span class="na">private_subnet_ids</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;subnet-mock-1&quot;, &quot;subnet-mock-2&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;validate&quot;, &quot;plan&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cluster_name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-eks-us-east-1&quot;</span>
+<span class="w">  </span><span class="na">cluster_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.28&quot;</span>
+
+<span class="c1">  # Use VPC outputs as inputs</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nv">dependency.vpc.outputs.vpc_id</span>
+<span class="w">  </span><span class="na">subnet_ids</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">dependency.vpc.outputs.private_subnet_ids</span>
+
+<span class="w">  </span><span class="nb">node_groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">general</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">desired_capacity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+<span class="w">      </span><span class="na">max_capacity</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">10</span>
+<span class="w">      </span><span class="na">min_capacity</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
+<span class="w">      </span><span class="na">instance_types</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;t3.large&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="configuration-with-multiple-dependencies">Configuration with Multiple Dependencies<a class="headerlink" href="#configuration-with-multiple-dependencies" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># @module rds_live</span>
+<span class="c1"># @description RDS database depending on VPC and security groups</span>
+<span class="c1"># @version 1.0.0</span>
+<span class="c1"># @author Tyler Dukes</span>
+<span class="c1"># @last_updated 2025-10-28</span>
+
+<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_repo_root()}/modules//rds&quot;</span>
+<span class="p">}</span>
+
+<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+
+<span class="w">  </span><span class="nb">mock_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">vpc_id</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-mock-id&quot;</span>
+<span class="w">    </span><span class="na">private_subnet_ids</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;subnet-mock-1&quot;, &quot;subnet-mock-2&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;validate&quot;, &quot;plan&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;security_groups&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../security-groups&quot;</span>
+
+<span class="w">  </span><span class="nb">mock_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">database_security_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sg-mock-id&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;validate&quot;, &quot;plan&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">identifier</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-postgres&quot;</span>
+<span class="w">  </span><span class="na">engine</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
+<span class="w">  </span><span class="na">engine_version</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;15.3&quot;</span>
+<span class="w">  </span><span class="na">instance_class</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;db.t3.large&quot;</span>
+<span class="w">  </span><span class="na">allocated_storage</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
+
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nv">dependency.vpc.outputs.vpc_id</span>
+<span class="w">  </span><span class="na">subnet_ids</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">dependency.vpc.outputs.private_subnet_ids</span>
+<span class="w">  </span><span class="na">security_group_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">dependency.security_groups.outputs.database_security_group_id</span><span class="p">]</span>
+
+<span class="w">  </span><span class="na">backup_retention_period</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span>
+<span class="w">  </span><span class="na">multi_az</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2 id="generate-blocks">Generate Blocks<a class="headerlink" href="#generate-blocks" title="Permanent link">&para;</a></h2>
+<h3 id="generating-files">Generating Files<a class="headerlink" href="#generating-files" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Generate versions.tf</span>
+<span class="err">generate</span><span class="w"> </span><span class="s2">&quot;versions&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;versions.tf&quot;</span>
+<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite&quot;</span>
+
+<span class="w">  </span><span class="na">contents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;-</span><span class="dl">EOF</span>
+<span class="sh">    terraform {</span>
+<span class="sh">      required_version = &quot;&gt;= 1.5.0&quot;</span>
+
+<span class="sh">      required_providers {</span>
+<span class="sh">        aws = {</span>
+<span class="sh">          source  = &quot;hashicorp/aws&quot;</span>
+<span class="sh">          version = &quot;~&gt; 5.0&quot;</span>
+<span class="sh">        }</span>
+<span class="sh">      }</span>
+<span class="sh">    }</span>
+<span class="dl">  EOF</span>
+<span class="p">}</span>
+
+<span class="c1"># Generate data sources</span>
+<span class="err">generate</span><span class="w"> </span><span class="s2">&quot;common_data&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;data.tf&quot;</span>
+<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite&quot;</span>
+
+<span class="w">  </span><span class="na">contents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;-</span><span class="dl">EOF</span>
+<span class="sh">    data &quot;aws_caller_identity&quot; &quot;current&quot; {}</span>
+<span class="sh">    data &quot;aws_region&quot; &quot;current&quot; {}</span>
+<span class="dl">  EOF</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2 id="hooks">Hooks<a class="headerlink" href="#hooks" title="Permanent link">&para;</a></h2>
+<h3 id="before-and-after-hooks">Before and After Hooks<a class="headerlink" href="#before-and-after-hooks" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_repo_root()}/modules//vpc&quot;</span>
+
+<span class="c1">  # Format code before plan/apply</span>
+<span class="w">  </span><span class="err">before_hook</span><span class="w"> </span><span class="s2">&quot;terraform_fmt&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;plan&quot;, &quot;apply&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">execute</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;terraform&quot;, &quot;fmt&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="c1">  # Validate before plan</span>
+<span class="w">  </span><span class="err">before_hook</span><span class="w"> </span><span class="s2">&quot;terraform_validate&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;plan&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">execute</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;terraform&quot;, &quot;validate&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="c1">  # Run custom script after apply</span>
+<span class="w">  </span><span class="err">after_hook</span><span class="w"> </span><span class="s2">&quot;notify_deployment&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">commands</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;apply&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">execute</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;bash&quot;, &quot;${get_repo_root()}/scripts/notify-deployment.sh&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">run_on_error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2 id="running-terragrunt">Running Terragrunt<a class="headerlink" href="#running-terragrunt" title="Permanent link">&para;</a></h2>
+<h3 id="common-commands">Common Commands<a class="headerlink" href="#common-commands" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Initialize and apply single module</span>
+<span class="nb">cd</span><span class="w"> </span>live/prod/us-east-1/vpc
+terragrunt<span class="w"> </span>init
+terragrunt<span class="w"> </span>plan
+terragrunt<span class="w"> </span>apply
+
+<span class="c1"># Run plan for all modules in current directory and subdirectories</span>
+terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan
+
+<span class="c1"># Apply all modules in dependency order</span>
+terragrunt<span class="w"> </span>run-all<span class="w"> </span>apply
+
+<span class="c1"># Destroy specific module</span>
+terragrunt<span class="w"> </span>destroy
+
+<span class="c1"># Destroy all modules in reverse dependency order</span>
+terragrunt<span class="w"> </span>run-all<span class="w"> </span>destroy
+
+<span class="c1"># Validate all configurations</span>
+terragrunt<span class="w"> </span>run-all<span class="w"> </span>validate
+
+<span class="c1"># Format all HCL files</span>
+terragrunt<span class="w"> </span>hclfmt
+
+<span class="c1"># Show outputs</span>
+terragrunt<span class="w"> </span>output
+
+<span class="c1"># Show dependency graph</span>
+terragrunt<span class="w"> </span>graph-dependencies
+</code></pre></div>
+
+<hr />
+<h2 id="dependency-management">Dependency Management<a class="headerlink" href="#dependency-management" title="Permanent link">&para;</a></h2>
+<h3 id="explicit-dependencies">Explicit Dependencies<a class="headerlink" href="#explicit-dependencies" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Define dependencies to ensure correct apply order</span>
+<span class="nb">dependencies</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;../vpc&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;../security-groups&quot;</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="skip-dependencies">Skip Dependencies<a class="headerlink" href="#skip-dependencies" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Skip dependency for faster iteration during development</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+
+<span class="w">  </span><span class="na">skip_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+
+<span class="w">  </span><span class="nb">mock_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-mock-id&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="use-mock-outputs">Use Mock Outputs<a class="headerlink" href="#use-mock-outputs" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Always provide mock outputs for faster plan/validate</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+
+<span class="w">  </span><span class="nb">mock_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">vpc_id</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-00000000&quot;</span>
+<span class="w">    </span><span class="na">public_subnet_ids</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;subnet-00000001&quot;, &quot;subnet-00000002&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">private_subnet_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;subnet-00000003&quot;, &quot;subnet-00000004&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;validate&quot;, &quot;plan&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">mock_outputs_merge_strategy_with_state</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;shallow&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="use-get_repo_root">Use get_repo_root()<a class="headerlink" href="#use-get_repo_root" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Good - Portable across different directory depths</span>
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_repo_root()}/modules//vpc&quot;</span>
+<span class="p">}</span>
+
+<span class="c1"># Avoid - Brittle with multiple ../</span>
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../../../modules//vpc&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="keep-inputs-dry-with-locals">Keep Inputs DRY with Locals<a class="headerlink" href="#keep-inputs-dry-with-locals" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">  # Define common inputs in locals</span>
+<span class="w">  </span><span class="nb">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terragrunt&quot;</span>
+<span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MyApp&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">vpc_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<span class="w">    </span><span class="na">azs</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;, &quot;us-east-1c&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="na">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
+<span class="w">  </span><span class="nv">local.vpc_config</span><span class="p">,</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="na">vpc_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-vpc&quot;</span>
+<span class="w">    </span><span class="na">tags</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="avoid-hardcoded-values-everywhere">❌ Avoid: Hardcoded Values Everywhere<a class="headerlink" href="#avoid-hardcoded-values-everywhere" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Hardcoded values in each child</span>
+<span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span>
+<span class="w">  </span><span class="na">region</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="p">}</span>
+
+<span class="c1"># Good - Parse from path in root terragrunt.hcl</span>
+<span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path_parts</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="err">path_relative_to_include</span><span class="p">())</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.path_parts[0</span><span class="p">]</span>
+<span class="w">  </span><span class="na">region</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">local.path_parts[1</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="avoid-not-using-dependencies">❌ Avoid: Not Using Dependencies<a class="headerlink" href="#avoid-not-using-dependencies" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Manually passing outputs</span>
+<span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-1234567890abcdef&quot;</span><span class="c1">  # Hardcoded!</span>
+<span class="p">}</span>
+
+<span class="c1"># Good - Use dependency block</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+<span class="p">}</span>
+
+<span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">dependency.vpc.outputs.vpc_id</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="avoid-inconsistent-directory-structure">❌ Avoid: Inconsistent Directory Structure<a class="headerlink" href="#avoid-inconsistent-directory-structure" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Inconsistent paths</span>
+<span class="err">live/</span>
+<span class="err">├──</span><span class="w"> </span><span class="err">prod-vpc/</span>
+<span class="err">├──</span><span class="w"> </span><span class="err">staging/vpc/</span>
+<span class="err">└──</span><span class="w"> </span><span class="err">dev_us_east_</span><span class="m">1</span><span class="err">/vpc/</span>
+
+<span class="c1"># Good - Consistent structure</span>
+<span class="err">live/</span>
+<span class="err">├──</span><span class="w"> </span><span class="err">prod/us-east-</span><span class="m">1</span><span class="err">/vpc/</span>
+<span class="err">├──</span><span class="w"> </span><span class="err">staging/us-east-</span><span class="m">1</span><span class="err">/vpc/</span>
+<span class="err">└──</span><span class="w"> </span><span class="err">dev/us-east-</span><span class="m">1</span><span class="err">/vpc/</span>
+</code></pre></div>
+
+<hr />
+<h2 id="tool-configurations">Tool Configurations<a class="headerlink" href="#tool-configurations" title="Permanent link">&para;</a></h2>
+<h3 id="terragrunt-cache">.terragrunt-cache<a class="headerlink" href="#terragrunt-cache" title="Permanent link">&para;</a></h3>
+<p>Add to <code>.gitignore</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Terragrunt cache</span>
+<span class="na">.terragrunt-cache</span><span class="err">/</span>
+<span class="err">**/</span><span class="na">.terragrunt-cache</span><span class="err">/</span>
+
+<span class="c1"># Terraform files</span>
+<span class="err">*</span><span class="na">.tfstate</span>
+<span class="err">*</span><span class="na">.tfstate.backup</span>
+<span class="na">.terraform</span><span class="err">/</span>
+</code></pre></div>
+
+<h3 id="vscode-extensions">VSCode Extensions<a class="headerlink" href="#vscode-extensions" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Terraform</strong>: Syntax highlighting for HCL</li>
+<li><strong>HashiCorp Terraform</strong>: Official HashiCorp extension</li>
+</ul>
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<h3 id="official-documentation">Official Documentation<a class="headerlink" href="#official-documentation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://terragrunt.gruntwork.io/">Terragrunt Documentation</a></li>
+<li><a href="https://terragrunt.gruntwork.io/docs/getting-started/quick-start/">Terragrunt Quick Start</a></li>
+<li><a href="https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/">Terragrunt Configuration Reference</a></li>
+</ul>
+<h3 id="gruntwork-resources">Gruntwork Resources<a class="headerlink" href="#gruntwork-resources" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://gruntwork.io/infrastructure-as-code-library/">Gruntwork Infrastructure as Code Library</a></li>
+<li><a href="https://blog.gruntwork.io/terragrunt-how-to-keep-your-terraform-code-dry-and-maintainable-f61ae06959d8">How to Use Terragrunt</a></li>
+</ul>
+<h3 id="best-practice-guides">Best Practice Guides<a class="headerlink" href="#best-practice-guides" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://terragrunt.gruntwork.io/docs/getting-started/recommended-best-practices/">Terragrunt Best Practices</a></li>
+<li><a href="https://blog.gruntwork.io/terragrunt-how-to-keep-your-terraform-code-dry-and-maintainable-f61ae06959d8">Keep Your Terraform Code DRY</a></li>
+</ul>
+<hr />
+<p><strong>Version</strong>: 1.0.0
+<strong>Last Updated</strong>: 2025-10-28
+<strong>Status</strong>: Active</p>
 
 
 
