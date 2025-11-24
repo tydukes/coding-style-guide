@@ -1,14 +1,717 @@
 ---
 title: "PowerShell Style Guide"
-description: "Cross-platform PowerShell 7+ scripting standards for automation"
+description: "Cross-platform PowerShell 7+ scripting standards for automation and infrastructure management"
 author: "Tyler Dukes"
 date: "2025-10-28"
-tags: [powershell, scripting, cross-platform, automation, windows]
+tags: [powershell, scripting, cross-platform, automation, windows, infrastructure]
 category: "Language Guides"
-status: "needs-creation"
-version: "0.1.0"
+status: "active"
+version: "1.0.0"
 ---
 
+## Language Overview
 
-- Follow Microsoft-approved verbs and parameter conventions.
-- Enforce PSScriptAnalyzer in CI.
+**PowerShell** is a cross-platform task automation solution consisting of a command-line shell, scripting
+language, and configuration management framework. This guide focuses on PowerShell 7+ (PowerShell Core) for
+cross-platform compatibility.
+
+### Key Characteristics
+
+- **Paradigm**: Object-oriented, pipeline-based scripting
+- **Case Sensitivity**: Case-insensitive by default
+- **File Extensions**: `.ps1` (scripts), `.psm1` (modules), `.psd1` (manifests)
+- **Primary Use**: System administration, automation, CI/CD, infrastructure management
+- **Platforms**: Windows, Linux, macOS
+
+### Supported Versions
+
+- **PowerShell 7.2+**: Long-term support (LTS) versions
+- **PowerShell 7.4+**: Current stable version
+
+---
+
+## Naming Conventions
+
+### Functions and Cmdlets
+
+Use **PascalCase** with **Verb-Noun** pattern using approved verbs:
+
+```powershell
+# Good - Approved verb + PascalCase noun
+function Get-UserProfile { }
+function Set-ServiceConfiguration { }
+function New-DeploymentPackage { }
+function Remove-TemporaryFiles { }
+
+# Bad - Unapproved verb or incorrect casing
+function Fetch-UserProfile { }      # Use Get, not Fetch
+function get-userProfile { }        # Incorrect casing
+function Delete-TempFiles { }       # Use Remove, not Delete
+```
+
+### Approved Verbs
+
+Use `Get-Verb` to see all approved verbs. Common categories:
+
+```powershell
+# Data Operations
+Get, Set, New, Remove, Clear, Add, Copy, Move
+
+# Lifecycle
+Start, Stop, Restart, Enable, Disable, Initialize, Complete
+
+# Diagnostics
+Debug, Trace, Measure, Test, Watch, Confirm
+
+# Communication
+Send, Receive, Read, Write, Invoke, Connect, Disconnect
+```
+
+### Variables
+
+Use **PascalCase** for variables:
+
+```powershell
+# Good
+$UserName = "john.doe"
+$ServiceEndpoint = "https://api.example.com"
+$MaxRetryCount = 3
+
+# Bad - Incorrect casing
+$username = "john.doe"
+$service_endpoint = "https://api.example.com"
+```
+
+### Constants and Configuration
+
+Use **UPPER_SNAKE_CASE** for constants:
+
+```powershell
+# Good
+$MAX_TIMEOUT_SECONDS = 300
+$DEFAULT_API_VERSION = "v1"
+$LOG_FILE_PATH = "/var/log/app.log"
+```
+
+---
+
+## Function Structure
+
+### Basic Function
+
+```powershell
+function Get-UserProfile {
+    <#
+    .SYNOPSIS
+    Retrieves user profile information from Active Directory.
+
+    .DESCRIPTION
+    Queries Active Directory for detailed user profile information including
+    display name, email, department, and manager.
+
+    .PARAMETER UserName
+    The SAM account name of the user to query.
+
+    .PARAMETER IncludeManager
+    Include manager information in the output.
+
+    .EXAMPLE
+    Get-UserProfile -UserName "jdoe"
+
+    .EXAMPLE
+    Get-UserProfile -UserName "jdoe" -IncludeManager
+
+    .OUTPUTS
+    PSCustomObject with user profile properties.
+
+    .NOTES
+    Requires Active Directory PowerShell module.
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [ValidateNotNullOrEmpty()]
+        [string]$UserName,
+
+        [Parameter(Mandatory = $false)]
+        [switch]$IncludeManager
+    )
+
+    begin {
+        Write-Verbose "Starting user profile retrieval for: $UserName"
+    }
+
+    process {
+        try {
+            $User = Get-ADUser -Identity $UserName -Properties DisplayName, EmailAddress, Department, Manager
+
+            $Profile = [PSCustomObject]@{
+                UserName    = $User.SamAccountName
+                DisplayName = $User.DisplayName
+                Email       = $User.EmailAddress
+                Department  = $User.Department
+            }
+
+            if ($IncludeManager -and $User.Manager) {
+                $Manager = Get-ADUser -Identity $User.Manager -Properties DisplayName
+                $Profile | Add-Member -MemberType NoteProperty -Name Manager -Value $Manager.DisplayName
+            }
+
+            return $Profile
+        }
+        catch {
+            Write-Error "Failed to retrieve user profile for '$UserName': $_"
+            throw
+        }
+    }
+
+    end {
+        Write-Verbose "User profile retrieval completed"
+    }
+}
+```
+
+### Advanced Function with Pipeline Support
+
+```powershell
+function Set-ServiceConfiguration {
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
+    param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [string[]]$ServiceName,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Running', 'Stopped', 'Paused')]
+        [string]$DesiredState,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Automatic', 'Manual', 'Disabled')]
+        [string]$StartupType
+    )
+
+    begin {
+        Write-Verbose "Configuring services with desired state: $DesiredState"
+        $Results = @()
+    }
+
+    process {
+        foreach ($Service in $ServiceName) {
+            if ($PSCmdlet.ShouldProcess($Service, "Set configuration")) {
+                try {
+                    $ServiceObj = Get-Service -Name $Service -ErrorAction Stop
+
+                    # Set startup type if specified
+                    if ($PSBoundParameters.ContainsKey('StartupType')) {
+                        Set-Service -Name $Service -StartupType $StartupType
+                        Write-Verbose "Set startup type to '$StartupType' for service: $Service"
+                    }
+
+                    # Set desired state
+                    switch ($DesiredState) {
+                        'Running' { Start-Service -Name $Service }
+                        'Stopped' { Stop-Service -Name $Service }
+                        'Paused'  { Suspend-Service -Name $Service }
+                    }
+
+                    $Results += [PSCustomObject]@{
+                        ServiceName = $Service
+                        Status      = (Get-Service -Name $Service).Status
+                        StartupType = (Get-Service -Name $Service).StartType
+                        Success     = $true
+                    }
+                }
+                catch {
+                    Write-Error "Failed to configure service '$Service': $_"
+                    $Results += [PSCustomObject]@{
+                        ServiceName = $Service
+                        Status      = $null
+                        StartupType = $null
+                        Success     = $false
+                    }
+                }
+            }
+        }
+    }
+
+    end {
+        return $Results
+    }
+}
+```
+
+---
+
+## Parameters and Validation
+
+### Parameter Attributes
+
+```powershell
+function New-UserAccount {
+    [CmdletBinding()]
+    param(
+        # Mandatory parameter with validation
+        [Parameter(Mandatory = $true, Position = 0)]
+        [ValidateNotNullOrEmpty()]
+        [ValidateLength(3, 20)]
+        [string]$UserName,
+
+        # Email validation
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')]
+        [string]$Email,
+
+        # Range validation
+        [Parameter(Mandatory = $false)]
+        [ValidateRange(1, 120)]
+        [int]$Age = 18,
+
+        # Set validation
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Admin', 'User', 'Guest')]
+        [string]$Role = 'User',
+
+        # Script validation
+        [Parameter(Mandatory = $false)]
+        [ValidateScript({ Test-Path $_ -PathType Container })]
+        [string]$HomeDirectory,
+
+        # Count validation
+        [Parameter(Mandatory = $false)]
+        [ValidateCount(1, 5)]
+        [string[]]$Groups
+    )
+
+    # Function implementation
+}
+```
+
+### Parameter Sets
+
+```powershell
+function Get-LogData {
+    [CmdletBinding(DefaultParameterSetName = 'ByDate')]
+    param(
+        # ByDate parameter set
+        [Parameter(Mandatory = $true, ParameterSetName = 'ByDate')]
+        [datetime]$StartDate,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'ByDate')]
+        [datetime]$EndDate,
+
+        # ByCount parameter set
+        [Parameter(Mandatory = $true, ParameterSetName = 'ByCount')]
+        [ValidateRange(1, 1000)]
+        [int]$Count,
+
+        # Common parameter across all sets
+        [Parameter(Mandatory = $false)]
+        [string]$LogLevel = 'Info'
+    )
+
+    switch ($PSCmdlet.ParameterSetName) {
+        'ByDate' {
+            Get-WinEvent -FilterHashtable @{
+                LogName   = 'Application'
+                StartTime = $StartDate
+                EndTime   = $EndDate
+            } | Where-Object { $_.LevelDisplayName -eq $LogLevel }
+        }
+        'ByCount' {
+            Get-WinEvent -LogName 'Application' -MaxEvents $Count |
+                Where-Object { $_.LevelDisplayName -eq $LogLevel }
+        }
+    }
+}
+```
+
+---
+
+## Error Handling
+
+### Try-Catch-Finally
+
+```powershell
+function Invoke-ApiRequest {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Endpoint,
+
+        [Parameter(Mandatory = $false)]
+        [int]$MaxRetries = 3
+    )
+
+    $AttemptCount = 0
+    $Success = $false
+
+    while (-not $Success -and $AttemptCount -lt $MaxRetries) {
+        $AttemptCount++
+        Write-Verbose "API request attempt $AttemptCount of $MaxRetries"
+
+        try {
+            $Response = Invoke-RestMethod -Uri $Endpoint -Method Get -ErrorAction Stop
+            $Success = $true
+            return $Response
+        }
+        catch [System.Net.WebException] {
+            Write-Warning "Network error on attempt $AttemptCount: $($_.Exception.Message)"
+            if ($AttemptCount -eq $MaxRetries) {
+                Write-Error "Max retries reached. Request failed."
+                throw
+            }
+            Start-Sleep -Seconds (2 * $AttemptCount)
+        }
+        catch {
+            Write-Error "Unexpected error: $($_.Exception.Message)"
+            throw
+        }
+        finally {
+            Write-Verbose "Completed attempt $AttemptCount"
+        }
+    }
+}
+```
+
+### ErrorAction and ErrorVariable
+
+```powershell
+# Suppress errors for specific commands
+$Service = Get-Service -Name 'NonExistentService' -ErrorAction SilentlyContinue
+
+if ($null -eq $Service) {
+    Write-Warning "Service not found, creating..."
+}
+
+# Capture errors for analysis
+Get-Process -Name 'chrome' -ErrorAction SilentlyContinue -ErrorVariable ProcessErrors
+if ($ProcessErrors) {
+    Write-Error "Failed to get process: $($ProcessErrors[0].Exception.Message)"
+}
+```
+
+---
+
+## Pipeline Usage
+
+### Pipeline-Aware Functions
+
+```powershell
+function Export-UserData {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [PSCustomObject[]]$User,
+
+        [Parameter(Mandatory = $true)]
+        [string]$OutputPath
+    )
+
+    begin {
+        Write-Verbose "Starting user data export to: $OutputPath"
+        $AllUsers = @()
+    }
+
+    process {
+        $AllUsers += $User
+    }
+
+    end {
+        $AllUsers | Export-Csv -Path $OutputPath -NoTypeInformation
+        Write-Verbose "Exported $($AllUsers.Count) users to $OutputPath"
+    }
+}
+
+# Usage
+Get-ADUser -Filter * | Export-UserData -OutputPath 'users.csv'
+```
+
+### Pipeline Best Practices
+
+```powershell
+# Good - Efficient pipeline usage
+Get-Process | Where-Object { $_.WorkingSet -gt 100MB } | Sort-Object WorkingSet -Descending | Select-Object -First 10
+
+# Good - Named parameters for clarity
+Get-ChildItem -Path C:\Logs -Filter *.log |
+    Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-30) } |
+    Remove-Item -Force
+
+# Avoid - Unnecessary loops when pipeline works
+# Bad
+$Files = Get-ChildItem -Path C:\Logs
+foreach ($File in $Files) {
+    Remove-Item -Path $File.FullName
+}
+
+# Good
+Get-ChildItem -Path C:\Logs | Remove-Item
+```
+
+---
+
+## Module Structure
+
+### Module Layout
+
+```text
+MyModule/
+├── MyModule.psd1          # Module manifest
+├── MyModule.psm1          # Root module script
+├── Public/                # Exported functions
+│   ├── Get-MyData.ps1
+│   └── Set-MyData.ps1
+├── Private/               # Internal functions
+│   └── ConvertTo-MyFormat.ps1
+├── Classes/               # PowerShell classes
+│   └── MyClass.ps1
+├── Tests/                 # Pester tests
+│   ├── MyModule.Tests.ps1
+│   └── Integration.Tests.ps1
+└── en-US/                 # Help files
+    └── MyModule-help.xml
+```
+
+### Module Manifest (.psd1)
+
+```powershell
+@{
+    RootModule        = 'MyModule.psm1'
+    ModuleVersion     = '1.0.0'
+    GUID              = '12345678-1234-1234-1234-123456789012'
+    Author            = 'Tyler Dukes'
+    CompanyName       = 'Dukes Engineering'
+    Copyright         = '(c) 2025 Tyler Dukes. All rights reserved.'
+    Description       = 'Module for managing application deployments'
+    PowerShellVersion = '7.2'
+
+    FunctionsToExport = @('Get-MyData', 'Set-MyData')
+    CmdletsToExport   = @()
+    VariablesToExport = @()
+    AliasesToExport   = @()
+
+    RequiredModules   = @('Microsoft.PowerShell.Management')
+
+    PrivateData = @{
+        PSData = @{
+            Tags       = @('Automation', 'Deployment')
+            LicenseUri = 'https://github.com/myorg/MyModule/blob/main/LICENSE'
+            ProjectUri = 'https://github.com/myorg/MyModule'
+        }
+    }
+}
+```
+
+### Root Module (.psm1)
+
+```powershell
+# MyModule.psm1
+
+# Import all public functions
+$PublicFunctions = @(Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue)
+foreach ($Function in $PublicFunctions) {
+    try {
+        . $Function.FullName
+    }
+    catch {
+        Write-Error "Failed to import function $($Function.FullName): $_"
+    }
+}
+
+# Import all private functions
+$PrivateFunctions = @(Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue)
+foreach ($Function in $PrivateFunctions) {
+    try {
+        . $Function.FullName
+    }
+    catch {
+        Write-Error "Failed to import private function $($Function.FullName): $_"
+    }
+}
+
+# Export only public functions
+Export-ModuleMember -Function $PublicFunctions.BaseName
+```
+
+---
+
+## Testing with Pester
+
+### Basic Pester Test
+
+```powershell
+# Get-UserProfile.Tests.ps1
+BeforeAll {
+    . $PSScriptRoot/../Public/Get-UserProfile.ps1
+}
+
+Describe 'Get-UserProfile' {
+    Context 'Parameter validation' {
+        It 'Should require UserName parameter' {
+            { Get-UserProfile } | Should -Throw
+        }
+
+        It 'Should accept valid UserName' {
+            { Get-UserProfile -UserName 'jdoe' } | Should -Not -Throw
+        }
+    }
+
+    Context 'User retrieval' {
+        BeforeEach {
+            Mock Get-ADUser {
+                return [PSCustomObject]@{
+                    SamAccountName = 'jdoe'
+                    DisplayName    = 'John Doe'
+                    EmailAddress   = 'jdoe@example.com'
+                    Department     = 'IT'
+                }
+            }
+        }
+
+        It 'Should return user profile object' {
+            $Result = Get-UserProfile -UserName 'jdoe'
+            $Result | Should -Not -BeNullOrEmpty
+            $Result.UserName | Should -Be 'jdoe'
+        }
+
+        It 'Should include email address' {
+            $Result = Get-UserProfile -UserName 'jdoe'
+            $Result.Email | Should -Match '^\w+@\w+\.\w+$'
+        }
+    }
+}
+```
+
+---
+
+## PSScriptAnalyzer Configuration
+
+### .pslintrc.psd1
+
+```powershell
+@{
+    Rules = @{
+        PSAvoidUsingCmdletAliases = @{
+            Enable = $true
+        }
+        PSAvoidUsingWriteHost = @{
+            Enable = $true
+        }
+        PSUseApprovedVerbs = @{
+            Enable = $true
+        }
+        PSUseDeclaredVarsMoreThanAssignments = @{
+            Enable = $true
+        }
+        PSProvideCommentHelp = @{
+            Enable = $true
+        }
+    }
+    ExcludeRules = @(
+        'PSAvoidUsingInvokeExpression'
+    )
+    Severity = @('Error', 'Warning')
+}
+```
+
+### Running PSScriptAnalyzer
+
+```powershell
+# Analyze single file
+Invoke-ScriptAnalyzer -Path .\MyScript.ps1
+
+# Analyze entire directory
+Invoke-ScriptAnalyzer -Path .\MyModule -Recurse
+
+# With custom settings
+Invoke-ScriptAnalyzer -Path .\MyModule -Settings .\.pslintrc.psd1
+```
+
+---
+
+## Anti-Patterns
+
+### ❌ Avoid: Using Aliases in Scripts
+
+```powershell
+# Bad - Aliases reduce readability
+gci | ? { $_.Length -gt 1MB } | % { ri $_ }
+
+# Good - Full cmdlet names
+Get-ChildItem | Where-Object { $_.Length -gt 1MB } | ForEach-Object { Remove-Item $_ }
+```
+
+### ❌ Avoid: Write-Host for Output
+
+```powershell
+# Bad - Write-Host cannot be captured
+function Get-ComputerStatus {
+    Write-Host "Computer is online"
+}
+
+# Good - Use Write-Output or return
+function Get-ComputerStatus {
+    return [PSCustomObject]@{
+        Status = 'Online'
+    }
+}
+```
+
+### ❌ Avoid: Unapproved Verbs
+
+```powershell
+# Bad - Unapproved verbs
+function Fetch-UserData { }
+function Delete-OldFiles { }
+
+# Good - Approved verbs
+function Get-UserData { }
+function Remove-OldFiles { }
+```
+
+---
+
+## Tool Configurations
+
+### VSCode settings.json
+
+```json
+{
+    "powershell.scriptAnalysis.enable": true,
+    "powershell.scriptAnalysis.settingsPath": ".pslintrc.psd1",
+    "powershell.codeFormatting.preset": "OTBS",
+    "powershell.codeFormatting.useCorrectCasing": true,
+    "files.associations": {
+        "*.ps1": "powershell",
+        "*.psm1": "powershell",
+        "*.psd1": "powershell"
+    }
+}
+```
+
+---
+
+## References
+
+### Official Documentation
+
+- [PowerShell Documentation](https://docs.microsoft.com/en-us/powershell/)
+- [Approved Verbs](https://docs.microsoft.com/en-us/powershell/scripting/developer/cmdlet/approved-verbs-for-windows-powershell-commands)
+- [PowerShell Best Practices](https://docs.microsoft.com/en-us/powershell/scripting/developer/cmdlet/cmdlet-development-guidelines)
+
+### Tools
+
+- [PSScriptAnalyzer](https://github.com/PowerShell/PSScriptAnalyzer) - Static code analyzer
+- [Pester](https://pester.dev/) - Testing framework
+- [Plaster](https://github.com/PowerShell/Plaster) - Template-based scaffolding
+- [PSReadLine](https://github.com/PowerShell/PSReadLine) - Command-line editing
+
+### Style Guides
+
+- [PowerShell Practice and Style Guide](https://poshcode.gitbook.io/powershell-practice-and-style/)
+- [The PowerShell Best Practices and Style Guide](https://github.com/PoshCode/PowerShellPracticeAndStyle)
+
+---
+
+**Version**: 1.0.0
+**Last Updated**: 2025-10-28
+**Status**: Active
