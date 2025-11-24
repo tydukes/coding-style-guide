@@ -1,0 +1,3422 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Complete template structure for creating modern Python packages with pyproject.toml">
+      
+      
+        <meta name="author" content="Tyler Dukes">
+      
+      
+        <link rel="canonical" href="https://tydukes.github.io/coding-style-guide/04_templates/python_package_template/">
+      
+      
+        <link rel="prev" href="../terraform_module_template/">
+      
+      
+        <link rel="next" href="../../05_ci_cd/ai_validation_pipeline/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Python Package Template - The Dukes Engineering Style Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#overview" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="The Dukes Engineering Style Guide" class="md-header__button md-logo" aria-label="The Dukes Engineering Style Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            The Dukes Engineering Style Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Python Package Template
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/tydukes/coding-style-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    coding-style-guide
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01_overview/getting_started/" class="md-tabs__link">
+          
+  
+  
+  Overview
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02_language_guides/terraform/" class="md-tabs__link">
+          
+  
+  
+  Language Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../03_metadata_schema/schema_reference/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Metadata Schema
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../README_template/" class="md-tabs__link">
+          
+  
+  
+  Templates
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../05_ci_cd/ai_validation_pipeline/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  CI / CD
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../06_container/usage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Container Usage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../07_integration/integration_prompt/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Integration Guide
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../glossary/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="The Dukes Engineering Style Guide" class="md-nav__button md-logo" aria-label="The Dukes Engineering Style Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    The Dukes Engineering Style Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/tydukes/coding-style-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    coding-style-guide
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Overview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_overview/getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_overview/principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_overview/governance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_overview/structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structure
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/terraform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform & Terragrunt
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/terragrunt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terragrunt (live)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/hcl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HCL
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/ansible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/typescript/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TypeScript
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/bash/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bash
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/powershell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PowerShell
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/jenkins_groovy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins / Groovy
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQL
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/yaml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JSON
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/dockerfile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dockerfile
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/github_actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Actions
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/makefile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Makefile
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/docker_compose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Compose
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/gitlab_ci/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitLab CI/CD
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/cdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS CDK
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes & Helm
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_metadata_schema/schema_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata Schema
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Templates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../README_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    README Template
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../terraform_module_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform Module
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Package
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Package
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#package-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyprojecttoml-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pyproject.toml Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#readmemd-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        README.md Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srcmy_packageinitpy-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/my_package/init.py Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srcmy_packagemainpy-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/my_package/main.py Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srcmy_packagecorepy-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/my_package/core.py Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srcmy_packageutilspy-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/my_package/utils.py Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testsconftestpy-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tests/conftest.py Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#teststest_corepy-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tests/test_core.py Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gitignore-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .gitignore Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-commit-configyaml-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .pre-commit-config.yaml Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#makefile-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Makefile Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#package-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Naming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-hints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Hints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#official-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Official Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_ci_cd/ai_validation_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI / CD
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--needs-expansion"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_container/usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Usage
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_integration/integration_prompt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#package-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pyprojecttoml-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pyproject.toml Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#readmemd-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        README.md Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srcmy_packageinitpy-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/my_package/init.py Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srcmy_packagemainpy-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/my_package/main.py Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srcmy_packagecorepy-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/my_package/core.py Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srcmy_packageutilspy-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/my_package/utils.py Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testsconftestpy-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tests/conftest.py Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#teststest_corepy-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tests/test_core.py Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gitignore-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .gitignore Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-commit-configyaml-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .pre-commit-config.yaml Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#makefile-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Makefile Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#package-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Naming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-hints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Hints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#official-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Official Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+  <h1>Python Package</h1>
+
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This template provides a complete structure for creating modern Python packages using <code>pyproject.toml</code> and the
+src layout. Follows PEP 517, PEP 518, and modern Python packaging best practices.</p>
+<hr />
+<h2 id="package-structure">Package Structure<a class="headerlink" href="#package-structure" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>my-package/
+├── src/
+│   └── my_package/
+│       ├── __init__.py
+│       ├── __main__.py
+│       ├── core.py
+│       ├── utils.py
+│       └── py.typed
+├── tests/
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── test_core.py
+│   └── test_utils.py
+├── docs/
+│   ├── conf.py
+│   ├── index.md
+│   └── api.md
+├── examples/
+│   └── basic_usage.py
+├── .github/
+│   └── workflows/
+│       ├── ci.yml
+│       └── release.yml
+├── pyproject.toml
+├── README.md
+├── LICENSE
+├── CHANGELOG.md
+├── .gitignore
+├── .pre-commit-config.yaml
+└── Makefile
+</code></pre></div>
+
+<hr />
+<h2 id="pyprojecttoml-template">pyproject.toml Template<a class="headerlink" href="#pyprojecttoml-template" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="k">[build-system]</span>
+<span class="n">requires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;setuptools&gt;=68.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;wheel&quot;</span><span class="p">]</span>
+<span class="n">build-backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;setuptools.build_meta&quot;</span>
+
+<span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-package&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;A short description of the package&quot;</span>
+<span class="n">readme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;README.md&quot;</span>
+<span class="n">authors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="n">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;Your Name&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;your.email@example.com&quot;</span><span class="p">}</span>
+<span class="p">]</span>
+<span class="n">license</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">text</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;MIT&quot;</span><span class="p">}</span>
+<span class="n">classifiers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;Development Status :: 3 - Alpha&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;Intended Audience :: Developers&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;License :: OSI Approved :: MIT License&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;Programming Language :: Python :: 3&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;Programming Language :: Python :: 3.10&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;Programming Language :: Python :: 3.11&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;Programming Language :: Python :: 3.12&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">keywords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;example&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;package&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;template&quot;</span><span class="p">]</span>
+<span class="n">requires-python</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;=3.10&quot;</span>
+<span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;requests&gt;=2.31.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;pydantic&gt;=2.0.0&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="k">[project.optional-dependencies]</span>
+<span class="n">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;pytest&gt;=7.4.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;pytest-cov&gt;=4.1.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;pytest-asyncio&gt;=0.21.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;black&gt;=23.7.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ruff&gt;=0.0.280&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;mypy&gt;=1.4.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;pre-commit&gt;=3.3.0&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">docs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;mkdocs&gt;=1.5.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;mkdocs-material&gt;=9.1.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;mkdocstrings[python]&gt;=0.22.0&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="k">[project.urls]</span>
+<span class="n">Homepage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://github.com/yourusername/my-package&quot;</span>
+<span class="n">Documentation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://my-package.readthedocs.io&quot;</span>
+<span class="n">Repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://github.com/yourusername/my-package&quot;</span>
+<span class="n">Issues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://github.com/yourusername/my-package/issues&quot;</span>
+
+<span class="k">[project.scripts]</span>
+<span class="n">my-package</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my_package.__main__:main&quot;</span>
+
+<span class="k">[tool.setuptools]</span>
+<span class="n">package-dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;src&quot;</span><span class="p">}</span>
+
+<span class="k">[tool.setuptools.packages.find]</span>
+<span class="n">where</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
+<span class="n">include</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;my_package*&quot;</span><span class="p">]</span>
+
+<span class="k">[tool.setuptools.package-data]</span>
+<span class="n">my_package</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;py.typed&quot;</span><span class="p">]</span>
+
+<span class="c1"># Black configuration</span>
+<span class="k">[tool.black]</span>
+<span class="n">line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+<span class="n">target-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;py310&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;py311&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;py312&quot;</span><span class="p">]</span>
+<span class="n">include</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;\.pyi?$&#39;</span>
+
+<span class="c1"># Ruff configuration</span>
+<span class="k">[tool.ruff]</span>
+<span class="n">line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+<span class="n">target-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;py310&quot;</span>
+<span class="n">select</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;E&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1"># pycodestyle errors</span>
+<span class="w">    </span><span class="s2">&quot;W&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1"># pycodestyle warnings</span>
+<span class="w">    </span><span class="s2">&quot;F&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1"># pyflakes</span>
+<span class="w">    </span><span class="s2">&quot;I&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1"># isort</span>
+<span class="w">    </span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1"># flake8-bugbear</span>
+<span class="w">    </span><span class="s2">&quot;C4&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># flake8-comprehensions</span>
+<span class="w">    </span><span class="s2">&quot;UP&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># pyupgrade</span>
+<span class="p">]</span>
+<span class="n">ignore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+
+<span class="k">[tool.ruff.isort]</span>
+<span class="n">known-first-party</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;my_package&quot;</span><span class="p">]</span>
+
+<span class="c1"># MyPy configuration</span>
+<span class="k">[tool.mypy]</span>
+<span class="n">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3.10&quot;</span>
+<span class="n">warn_return_any</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">warn_unused_configs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">disallow_untyped_defs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">disallow_incomplete_defs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">check_untyped_defs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">no_implicit_optional</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">warn_redundant_casts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">warn_unused_ignores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">warn_no_return</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+
+<span class="k">[[tool.mypy.overrides]]</span>
+<span class="n">module</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tests.*&quot;</span>
+<span class="n">disallow_untyped_defs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+
+<span class="c1"># Pytest configuration</span>
+<span class="k">[tool.pytest.ini_options]</span>
+<span class="n">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tests&quot;</span><span class="p">]</span>
+<span class="n">python_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;test_*.py&quot;</span>
+<span class="n">python_classes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Test*&quot;</span>
+<span class="n">python_functions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;test_*&quot;</span>
+<span class="n">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;--verbose&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--cov=my_package&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--cov-report=term-missing&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--cov-report=html&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--cov-report=xml&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Coverage configuration</span>
+<span class="k">[tool.coverage.run]</span>
+<span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
+<span class="n">omit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tests/*&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;**/__main__.py&quot;</span><span class="p">]</span>
+
+<span class="k">[tool.coverage.report]</span>
+<span class="n">exclude_lines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;pragma: no cover&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;def __repr__&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;raise AssertionError&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;raise NotImplementedError&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;if __name__ == .__main__.:&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;if TYPE_CHECKING:&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
+
+<hr />
+<h2 id="readmemd-template">README.md Template<a class="headerlink" href="#readmemd-template" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="gh"># My Package</span>
+
+[<span class="nt">![PyPI version</span>](<span class="na">https://badge.fury.io/py/my-package.svg</span>)](https://badge.fury.io/py/my-package)
+[<span class="nt">![Python versions</span>](<span class="na">https://img.shields.io/pypi/pyversions/my-package.svg</span>)](https://pypi.org/project/my-package/)
+[<span class="nt">![CI</span>](<span class="na">https://github.com/yourusername/my-package/workflows/CI/badge.svg</span>)](https://github.com/yourusername/my-package/actions)
+[<span class="nt">![codecov</span>](<span class="na">https://codecov.io/gh/yourusername/my-package/branch/main/graph/badge.svg</span>)](https://codecov.io/gh/yourusername/my-package)
+[<span class="nt">![License: MIT</span>](<span class="na">https://img.shields.io/badge/License-MIT-yellow.svg</span>)](https://opensource.org/licenses/MIT)
+
+A short, compelling description of your package.
+
+<span class="gu">## Features</span>
+
+<span class="k">-</span><span class="w"> </span>✨ Feature 1: Brief description
+<span class="k">-</span><span class="w"> </span>🚀 Feature 2: Brief description
+<span class="k">-</span><span class="w"> </span>🛡️ Feature 3: Brief description
+<span class="k">-</span><span class="w"> </span>📦 Feature 4: Brief description
+
+<span class="gu">## Installation</span>
+
+\```bash
+pip install my-package
+\```
+
+For development:
+
+\```bash
+pip install my-package[dev]
+\```
+
+<span class="gu">## Quick Start</span>
+
+\```python
+from my_package import MyClass
+
+<span class="gh"># Basic usage</span>
+obj = MyClass()
+result = obj.do_something()
+print(result)
+\```
+
+<span class="gu">## Usage Examples</span>
+
+<span class="gu">### Example 1: Basic Usage</span>
+
+\```python
+from my_package import core
+
+<span class="gh"># Use the main functionality</span>
+result = core.process_data(input_data)
+\```
+
+<span class="gu">### Example 2: Advanced Usage</span>
+
+\```python
+from my_package import core, utils
+
+<span class="gh"># Advanced configuration</span>
+config = utils.load_config(&quot;config.yaml&quot;)
+processor = core.DataProcessor(config)
+result = processor.run()
+\```
+
+<span class="gu">## CLI Usage</span>
+
+\```bash
+<span class="gh"># Run the CLI</span>
+my-package --help
+
+<span class="gh"># Basic command</span>
+my-package process input.txt
+
+<span class="gh"># With options</span>
+my-package process input.txt --output output.txt --verbose
+\```
+
+<span class="gu">## Documentation</span>
+
+Full documentation is available at [<span class="nt">https://my-package.readthedocs.io</span>](<span class="na">https://my-package.readthedocs.io</span>)
+
+<span class="gu">## Development</span>
+
+<span class="gu">### Setup</span>
+
+\```bash
+<span class="gh"># Clone the repository</span>
+git clone https://github.com/yourusername/my-package.git
+cd my-package
+
+<span class="gh"># Create virtual environment</span>
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+<span class="gh"># Install dependencies</span>
+pip install -e &quot;.[dev]&quot;
+
+<span class="gh"># Install pre-commit hooks</span>
+pre-commit install
+\```
+
+<span class="gu">### Running Tests</span>
+
+\```bash
+<span class="gh"># Run tests</span>
+pytest
+
+<span class="gh"># With coverage</span>
+pytest --cov
+
+<span class="gh"># Run specific test</span>
+pytest tests/test_core.py::test_specific_function
+\```
+
+<span class="gu">### Code Quality</span>
+
+\```bash
+<span class="gh"># Format code</span>
+black src tests
+
+<span class="gh"># Lint code</span>
+ruff check src tests
+
+<span class="gh"># Type checking</span>
+mypy src
+\```
+
+<span class="gu">### Documentation</span>
+
+\```bash
+<span class="gh"># Build documentation</span>
+cd docs
+mkdocs build
+
+<span class="gh"># Serve documentation locally</span>
+mkdocs serve
+\```
+
+<span class="gu">## Contributing</span>
+
+Contributions are welcome! Please see [<span class="nt">CONTRIBUTING.md</span>](<span class="na">CONTRIBUTING.md</span>) for guidelines.
+
+<span class="k">1.</span> Fork the repository
+<span class="k">2.</span> Create a feature branch (<span class="sb">`git checkout -b feature/amazing-feature`</span>)
+<span class="k">3.</span> Commit your changes (<span class="sb">`git commit -m &#39;Add amazing feature&#39;`</span>)
+<span class="k">4.</span> Push to the branch (<span class="sb">`git push origin feature/amazing-feature`</span>)
+<span class="k">5.</span> Open a Pull Request
+
+<span class="gu">## License</span>
+
+This project is licensed under the MIT License - see the [<span class="nt">LICENSE</span>](<span class="na">LICENSE</span>) file for details.
+
+<span class="gu">## Changelog</span>
+
+See [<span class="nt">CHANGELOG.md</span>](<span class="na">CHANGELOG.md</span>) for a list of changes.
+
+<span class="gu">## Authors</span>
+
+<span class="k">-</span><span class="w"> </span>Your Name - [<span class="nt">@yourhandle</span>](<span class="na">https://github.com/yourusername</span>)
+
+<span class="gu">## Acknowledgments</span>
+
+<span class="k">-</span><span class="w"> </span>Inspiration or libraries used
+<span class="k">-</span><span class="w"> </span>Contributors
+</code></pre></div>
+
+<hr />
+<h2 id="srcmy_packageinitpy-template">src/my_package/<strong>init</strong>.py Template<a class="headerlink" href="#srcmy_packageinitpy-template" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="sd">&quot;&quot;&quot;My Package - A description of the package.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_package.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">MyClass</span><span class="p">,</span> <span class="n">process_data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_package.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">setup_logging</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.1.0&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;MyClass&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;process_data&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;load_config&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;setup_logging&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
+
+<hr />
+<h2 id="srcmy_packagemainpy-template">src/my_package/<strong>main</strong>.py Template<a class="headerlink" href="#srcmy_packagemainpy-template" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="sd">&quot;&quot;&quot;CLI entry point for my-package.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_package</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_package.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_package.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup_logging</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse command line arguments.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        args: Command line arguments (defaults to sys.argv[1:])</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Parsed arguments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">prog</span><span class="o">=</span><span class="s2">&quot;my-package&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A description of the CLI tool&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--version&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span>
+        <span class="n">version</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;%(prog)s </span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Input file to process&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output file (default: stdout)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-v&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Enable verbose output&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main CLI entry point.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        args: Command line arguments</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Exit code (0 for success, non-zero for failure)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parsed_args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="c1"># Setup logging</span>
+    <span class="n">log_level</span> <span class="o">=</span> <span class="s2">&quot;DEBUG&quot;</span> <span class="k">if</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">verbose</span> <span class="k">else</span> <span class="s2">&quot;INFO&quot;</span>
+    <span class="n">setup_logging</span><span class="p">(</span><span class="n">log_level</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Process input</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">process_data</span><span class="p">(</span><span class="n">parsed_args</span><span class="o">.</span><span class="n">input_file</span><span class="p">)</span>
+
+        <span class="c1"># Write output</span>
+        <span class="k">if</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+            <span class="n">parsed_args</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+
+<hr />
+<h2 id="srcmy_packagecorepy-template">src/my_package/core.py Template<a class="headerlink" href="#srcmy_packagecorepy-template" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="sd">&quot;&quot;&quot;Core functionality for my-package.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main class for the package.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: Configuration dictionary</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        config: Configuration dictionary</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize MyClass.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">do_something</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform the main action.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Result string</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If configuration is invalid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Configuration is required&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot;Result of doing something&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">input_file</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process input data from a file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_file: Path to input file</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Processed data as string</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: If input file doesn&#39;t exist</span>
+<span class="sd">        ValueError: If input file is invalid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">input_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input file not found: </span><span class="si">{</span><span class="n">input_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">content</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">content</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input file is empty&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Process the content</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+
+<hr />
+<h2 id="srcmy_packageutilspy-template">src/my_package/utils.py Template<a class="headerlink" href="#srcmy_packageutilspy-template" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="sd">&quot;&quot;&quot;Utility functions for my-package.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup logging configuration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+        <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span>
+        <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(name)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">datefmt</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load configuration from YAML file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config_file: Path to YAML configuration file</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Configuration dictionary</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: If config file doesn&#39;t exist</span>
+<span class="sd">        ValueError: If config file is invalid YAML</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">config_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Config file not found: </span><span class="si">{</span><span class="n">config_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">config_file</span><span class="o">.</span><span class="n">open</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid YAML in config file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">config</span> <span class="ow">or</span> <span class="p">{}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_input</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate input data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: Data to validate</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if valid, False otherwise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">data</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="kc">True</span>
+</code></pre></div>
+
+<hr />
+<h2 id="testsconftestpy-template">tests/conftest.py Template<a class="headerlink" href="#testsconftestpy-template" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="sd">&quot;&quot;&quot;Pytest configuration and fixtures.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generator</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_data</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide sample data for tests.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Sample data dictionary</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;key1&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;key2&quot;</span><span class="p">:</span> <span class="s2">&quot;value2&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">temp_file</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a temporary file for testing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tmp_path: Pytest temporary directory fixture</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        Path to temporary file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;test_file.txt&quot;</span>
+    <span class="n">file_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;test content&quot;</span><span class="p">)</span>
+
+    <span class="k">yield</span> <span class="n">file_path</span>
+
+    <span class="c1"># Cleanup handled by tmp_path</span>
+</code></pre></div>
+
+<hr />
+<h2 id="teststest_corepy-template">tests/test_core.py Template<a class="headerlink" href="#teststest_corepy-template" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="sd">&quot;&quot;&quot;Tests for core functionality.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_package.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">MyClass</span><span class="p">,</span> <span class="n">process_data</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestMyClass</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests for MyClass.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_init_with_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test initialization with configuration.&quot;&quot;&quot;</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">sample_data</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">obj</span><span class="o">.</span><span class="n">config</span> <span class="o">==</span> <span class="n">sample_data</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_init_without_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test initialization without configuration.&quot;&quot;&quot;</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">obj</span><span class="o">.</span><span class="n">config</span> <span class="o">==</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_do_something_with_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test do_something with valid configuration.&quot;&quot;&quot;</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">sample_data</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">do_something</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_do_something_without_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test do_something raises ValueError without config.&quot;&quot;&quot;</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">&quot;Configuration is required&quot;</span><span class="p">):</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">do_something</span><span class="p">()</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestProcessData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests for process_data function.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_process_data_valid_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp_file</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test processing a valid file.&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">process_data</span><span class="p">(</span><span class="n">temp_file</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="s2">&quot;TEST CONTENT&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_process_data_missing_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test processing raises FileNotFoundError for missing file.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">):</span>
+            <span class="n">process_data</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;nonexistent.txt&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_process_data_empty_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test processing raises ValueError for empty file.&quot;&quot;&quot;</span>
+        <span class="n">empty_file</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;empty.txt&quot;</span>
+        <span class="n">empty_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">&quot;Input file is empty&quot;</span><span class="p">):</span>
+            <span class="n">process_data</span><span class="p">(</span><span class="n">empty_file</span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<h2 id="gitignore-template">.gitignore Template<a class="headerlink" href="#gitignore-template" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Byte-compiled / optimized / DLL files</span>
+<span class="n">__pycache__</span><span class="o">/</span>
+<span class="o">*.</span><span class="n">py</span><span class="p">[</span><span class="n">cod</span><span class="p">]</span>
+<span class="o">*$</span><span class="n">py</span><span class="o">.</span><span class="k">class</span>
+
+<span class="c1"># C extensions</span>
+<span class="o">*.</span><span class="n">so</span>
+
+<span class="c1"># Distribution / packaging</span>
+<span class="o">.</span><span class="n">Python</span>
+<span class="n">build</span><span class="o">/</span>
+<span class="n">develop</span><span class="o">-</span><span class="n">eggs</span><span class="o">/</span>
+<span class="n">dist</span><span class="o">/</span>
+<span class="n">downloads</span><span class="o">/</span>
+<span class="n">eggs</span><span class="o">/</span>
+<span class="o">.</span><span class="n">eggs</span><span class="o">/</span>
+<span class="n">lib</span><span class="o">/</span>
+<span class="n">lib64</span><span class="o">/</span>
+<span class="n">parts</span><span class="o">/</span>
+<span class="n">sdist</span><span class="o">/</span>
+<span class="k">var</span><span class="o">/</span>
+<span class="n">wheels</span><span class="o">/</span>
+<span class="n">pip</span><span class="o">-</span><span class="n">wheel</span><span class="o">-</span><span class="n">metadata</span><span class="o">/</span>
+<span class="n">share</span><span class="o">/</span><span class="n">python</span><span class="o">-</span><span class="n">wheels</span><span class="o">/</span>
+<span class="o">*.</span><span class="n">egg</span><span class="o">-</span><span class="n">info</span><span class="o">/</span>
+<span class="o">.</span><span class="n">installed</span><span class="o">.</span><span class="n">cfg</span>
+<span class="o">*.</span><span class="n">egg</span>
+<span class="n">MANIFEST</span>
+
+<span class="c1"># PyInstaller</span>
+<span class="o">*.</span><span class="n">manifest</span>
+<span class="o">*.</span><span class="n">spec</span>
+
+<span class="c1"># Unit test / coverage reports</span>
+<span class="n">htmlcov</span><span class="o">/</span>
+<span class="o">.</span><span class="n">tox</span><span class="o">/</span>
+<span class="o">.</span><span class="n">nox</span><span class="o">/</span>
+<span class="o">.</span><span class="n">coverage</span>
+<span class="o">.</span><span class="n">coverage</span><span class="o">.*</span>
+<span class="o">.</span><span class="n">cache</span>
+<span class="n">nosetests</span><span class="o">.</span><span class="n">xml</span>
+<span class="n">coverage</span><span class="o">.</span><span class="n">xml</span>
+<span class="o">*.</span><span class="n">cover</span>
+<span class="o">*.</span><span class="n">py</span><span class="p">,</span><span class="n">cover</span>
+<span class="o">.</span><span class="n">hypothesis</span><span class="o">/</span>
+<span class="o">.</span><span class="n">pytest_cache</span><span class="o">/</span>
+
+<span class="c1"># Translations</span>
+<span class="o">*.</span><span class="n">mo</span>
+<span class="o">*.</span><span class="n">pot</span>
+
+<span class="c1"># Django</span>
+<span class="o">*.</span><span class="n">log</span>
+<span class="n">local_settings</span><span class="o">.</span><span class="n">py</span>
+<span class="n">db</span><span class="o">.</span><span class="n">sqlite3</span>
+<span class="n">db</span><span class="o">.</span><span class="n">sqlite3</span><span class="o">-</span><span class="n">journal</span>
+
+<span class="c1"># Flask</span>
+<span class="n">instance</span><span class="o">/</span>
+<span class="o">.</span><span class="n">webassets</span><span class="o">-</span><span class="n">cache</span>
+
+<span class="c1"># Scrapy</span>
+<span class="o">.</span><span class="n">scrapy</span>
+
+<span class="c1"># Sphinx documentation</span>
+<span class="n">docs</span><span class="o">/</span><span class="n">_build</span><span class="o">/</span>
+
+<span class="c1"># PyBuilder</span>
+<span class="n">target</span><span class="o">/</span>
+
+<span class="c1"># Jupyter Notebook</span>
+<span class="o">.</span><span class="n">ipynb_checkpoints</span>
+
+<span class="c1"># IPython</span>
+<span class="n">profile_default</span><span class="o">/</span>
+<span class="n">ipython_config</span><span class="o">.</span><span class="n">py</span>
+
+<span class="c1"># pyenv</span>
+<span class="o">.</span><span class="n">python</span><span class="o">-</span><span class="n">version</span>
+
+<span class="c1"># pipenv</span>
+<span class="n">Pipfile</span><span class="o">.</span><span class="n">lock</span>
+
+<span class="c1"># PEP 582</span>
+<span class="n">__pypackages__</span><span class="o">/</span>
+
+<span class="c1"># Celery</span>
+<span class="n">celerybeat</span><span class="o">-</span><span class="n">schedule</span>
+<span class="n">celerybeat</span><span class="o">.</span><span class="n">pid</span>
+
+<span class="c1"># SageMath</span>
+<span class="o">*.</span><span class="n">sage</span><span class="o">.</span><span class="n">py</span>
+
+<span class="c1"># Environments</span>
+<span class="o">.</span><span class="n">env</span>
+<span class="o">.</span><span class="n">venv</span>
+<span class="n">env</span><span class="o">/</span>
+<span class="n">venv</span><span class="o">/</span>
+<span class="n">ENV</span><span class="o">/</span>
+<span class="n">env</span><span class="o">.</span><span class="n">bak</span><span class="o">/</span>
+<span class="n">venv</span><span class="o">.</span><span class="n">bak</span><span class="o">/</span>
+
+<span class="c1"># Spyder</span>
+<span class="o">.</span><span class="n">spyderproject</span>
+<span class="o">.</span><span class="n">spyproject</span>
+
+<span class="c1"># Rope</span>
+<span class="o">.</span><span class="n">ropeproject</span>
+
+<span class="c1"># mkdocs</span>
+<span class="o">/</span><span class="n">site</span>
+
+<span class="c1"># mypy</span>
+<span class="o">.</span><span class="n">mypy_cache</span><span class="o">/</span>
+<span class="o">.</span><span class="n">dmypy</span><span class="o">.</span><span class="n">json</span>
+<span class="n">dmypy</span><span class="o">.</span><span class="n">json</span>
+
+<span class="c1"># Pyre</span>
+<span class="o">.</span><span class="n">pyre</span><span class="o">/</span>
+
+<span class="c1"># IDEs</span>
+<span class="o">.</span><span class="n">vscode</span><span class="o">/</span>
+<span class="o">.</span><span class="n">idea</span><span class="o">/</span>
+<span class="o">*.</span><span class="n">swp</span>
+<span class="o">*.</span><span class="n">swo</span>
+<span class="o">*~</span>
+
+<span class="c1"># OS</span>
+<span class="o">.</span><span class="n">DS_Store</span>
+<span class="n">Thumbs</span><span class="o">.</span><span class="n">db</span>
+</code></pre></div>
+
+<hr />
+<h2 id="pre-commit-configyaml-template">.pre-commit-config.yaml Template<a class="headerlink" href="#pre-commit-configyaml-template" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="nt">repos</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/pre-commit-hooks</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v4.4.0</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trailing-whitespace</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">end-of-file-fixer</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-yaml</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-added-large-files</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-toml</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-merge-conflict</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">debug-statements</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/psf/black</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">23.7.0</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">black</span>
+<span class="w">        </span><span class="nt">language_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python3.10</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/astral-sh/ruff-pre-commit</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.0.280</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ruff</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">--fix</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">--exit-non-zero-on-fix</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/mirrors-mypy</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.4.1</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mypy</span>
+<span class="w">        </span><span class="nt">additional_dependencies</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">types-all</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">--strict</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+
+<hr />
+<h2 id="makefile-template">Makefile Template<a class="headerlink" href="#makefile-template" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span> <span class="n">install</span> <span class="n">dev</span> <span class="n">test</span> <span class="n">lint</span> <span class="n">format</span> <span class="n">clean</span> <span class="n">build</span> <span class="n">publish</span>
+
+<span class="nf">help</span><span class="o">:</span><span class="w"> </span><span class="c">## Show this help message</span>
+<span class="w">    </span>@grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;^[a-zA-Z_-]+:.*?## .*$$&#39;</span><span class="w"> </span><span class="k">$(</span>MAKEFILE_LIST<span class="k">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>awk<span class="w"> </span><span class="s1">&#39;BEGIN {FS = &quot;:.*?## &quot;}; {printf &quot;\033[36m%-20s\033[0m %s\n&quot;, $$1, $$2}&#39;</span>
+
+<span class="nf">install</span><span class="o">:</span><span class="w"> </span><span class="c">## Install package</span>
+<span class="w">    </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+
+<span class="nf">dev</span><span class="o">:</span><span class="w"> </span><span class="c">## Install package with development dependencies</span>
+<span class="w">    </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev,docs]&quot;</span>
+
+<span class="nf">test</span><span class="o">:</span><span class="w"> </span><span class="c">## Run tests</span>
+<span class="w">    </span>pytest
+
+<span class="nf">test-cov</span><span class="o">:</span><span class="w"> </span><span class="c">## Run tests with coverage report</span>
+<span class="w">    </span>pytest<span class="w"> </span>--cov<span class="w"> </span>--cov-report<span class="o">=</span>html<span class="w"> </span>--cov-report<span class="o">=</span>term
+
+<span class="nf">lint</span><span class="o">:</span><span class="w"> </span><span class="c">## Run linters</span>
+<span class="w">    </span>ruff<span class="w"> </span>check<span class="w"> </span>src<span class="w"> </span>tests
+<span class="w">    </span>mypy<span class="w"> </span>src
+
+<span class="nf">format</span><span class="o">:</span><span class="w"> </span><span class="c">## Format code</span>
+<span class="w">    </span>black<span class="w"> </span>src<span class="w"> </span>tests
+<span class="w">    </span>ruff<span class="w"> </span>check<span class="w"> </span>--fix<span class="w"> </span>src<span class="w"> </span>tests
+
+<span class="nf">clean</span><span class="o">:</span><span class="w"> </span><span class="c">## Clean build artifacts</span>
+<span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>build<span class="w"> </span>dist<span class="w"> </span>*.egg-info
+<span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>.pytest_cache<span class="w"> </span>.coverage<span class="w"> </span>htmlcov
+<span class="w">    </span>find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-name<span class="w"> </span>__pycache__<span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="o">{}</span><span class="w"> </span>+
+<span class="w">    </span>find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.pyc&quot;</span><span class="w"> </span>-delete
+
+<span class="nf">build</span><span class="o">:</span><span class="w"> </span><span class="n">clean</span> <span class="c">## Build distribution</span>
+<span class="w">    </span>python<span class="w"> </span>-m<span class="w"> </span>build
+
+<span class="nf">publish</span><span class="o">:</span><span class="w"> </span><span class="n">build</span> <span class="c">## Publish to PyPI</span>
+<span class="w">    </span>python<span class="w"> </span>-m<span class="w"> </span>twine<span class="w"> </span>upload<span class="w"> </span>dist/*
+
+<span class="nf">docs-serve</span><span class="o">:</span><span class="w"> </span><span class="c">## Serve documentation locally</span>
+<span class="w">    </span>mkdocs<span class="w"> </span>serve
+
+<span class="nf">docs-build</span><span class="o">:</span><span class="w"> </span><span class="c">## Build documentation</span>
+<span class="w">    </span>mkdocs<span class="w"> </span>build
+</code></pre></div>
+
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="package-naming">Package Naming<a class="headerlink" href="#package-naming" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Use lowercase with hyphens for PyPI: <code>my-package</code></li>
+<li>Use underscores for Python imports: <code>my_package</code></li>
+<li>Choose descriptive, unique names</li>
+</ul>
+<h3 id="version-management">Version Management<a class="headerlink" href="#version-management" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Follow <a href="https://semver.org/">Semantic Versioning</a></li>
+<li>Use <code>__version__</code> in <code>__init__.py</code></li>
+<li>Keep version in sync with git tags</li>
+</ul>
+<h3 id="type-hints">Type Hints<a class="headerlink" href="#type-hints" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Use type hints for all public APIs</li>
+<li>Include <code>py.typed</code> marker for type checking</li>
+<li>Configure mypy in <code>pyproject.toml</code></li>
+</ul>
+<h3 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Aim for &gt;90% code coverage</li>
+<li>Use fixtures for common test data</li>
+<li>Test edge cases and error conditions</li>
+</ul>
+<h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Write clear docstrings (Google style)</li>
+<li>Include usage examples in README</li>
+<li>Use mkdocs for comprehensive docs</li>
+</ul>
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<h3 id="official-documentation">Official Documentation<a class="headerlink" href="#official-documentation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://packaging.python.org/">Python Packaging Guide</a></li>
+<li><a href="https://peps.python.org/pep-0517/">PEP 517 - Build System</a></li>
+<li><a href="https://peps.python.org/pep-0518/">PEP 518 - pyproject.toml</a></li>
+<li><a href="https://setuptools.pypa.io/">setuptools Documentation</a></li>
+</ul>
+<h3 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://pytest.org/">pytest</a> - Testing framework</li>
+<li><a href="https://black.readthedocs.io/">black</a> - Code formatter</li>
+<li><a href="https://docs.astral.sh/ruff/">ruff</a> - Fast Python linter</li>
+<li><a href="https://mypy.readthedocs.io/">mypy</a> - Static type checker</li>
+<li><a href="https://pre-commit.com/">pre-commit</a> - Git hooks</li>
+</ul>
+<hr />
+<p><strong>Version</strong>: 1.0.0
+<strong>Last Updated</strong>: 2025-10-28
+<strong>Status</strong>: Active</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/tydukes" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://linkedin.com/in/tydukes" target="_blank" rel="noopener" title="linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "content.code.annotate", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
