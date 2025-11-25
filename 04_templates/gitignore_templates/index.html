@@ -1,0 +1,3670 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Comprehensive .gitignore templates for all languages and frameworks">
+      
+      
+        <meta name="author" content="Tyler Dukes">
+      
+      
+        <link rel="canonical" href="https://tydukes.github.io/coding-style-guide/04_templates/gitignore_templates/">
+      
+      
+        <link rel="prev" href="../python_package_template/">
+      
+      
+        <link rel="next" href="../../05_ci_cd/ai_validation_pipeline/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>.gitignore Templates - The Dukes Engineering Style Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#overview" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="The Dukes Engineering Style Guide" class="md-header__button md-logo" aria-label="The Dukes Engineering Style Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            The Dukes Engineering Style Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              .gitignore Templates
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/tydukes/coding-style-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    coding-style-guide
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01_overview/getting_started/" class="md-tabs__link">
+          
+  
+  
+  Overview
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02_language_guides/terraform/" class="md-tabs__link">
+          
+  
+  
+  Language Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../03_metadata_schema/schema_reference/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Metadata Schema
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../README_template/" class="md-tabs__link">
+          
+  
+  
+  Templates
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../05_ci_cd/ai_validation_pipeline/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  CI / CD
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../06_container/usage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Container Usage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../07_integration/integration_prompt/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Integration Guide
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../glossary/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="The Dukes Engineering Style Guide" class="md-nav__button md-logo" aria-label="The Dukes Engineering Style Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    The Dukes Engineering Style Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/tydukes/coding-style-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    coding-style-guide
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Overview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_overview/getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_overview/principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_overview/governance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_overview/structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structure
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/terraform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform & Terragrunt
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/terragrunt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terragrunt (live)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/hcl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HCL
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/ansible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/typescript/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TypeScript
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/bash/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bash
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/powershell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PowerShell
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/jenkins_groovy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins / Groovy
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQL
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/yaml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JSON
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/dockerfile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dockerfile
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/github_actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Actions
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/makefile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Makefile
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/docker_compose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Compose
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/gitlab_ci/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitLab CI/CD
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/cdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS CDK
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes & Helm
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_metadata_schema/schema_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata Schema
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Templates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../README_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    README Template
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../terraform_module_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform Module
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python_package_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Package
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .gitignore Templates
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .gitignore Templates
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typescript-javascript-nodejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypeScript / JavaScript / Node.js
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ansible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ansible
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bash
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#go" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Go
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jenkins-groovy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jenkins / Groovy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-helm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes / Helm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-ide-editor-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General IDE / Editor Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-os-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General OS Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combined-devops-gitignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combined DevOps .gitignore
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-language-project-gitignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Language Project .gitignore
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#language-specific-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Language-Specific Additions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Language-Specific Additions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#go-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Go Projects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ruby-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ruby Projects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Java Projects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rust-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rust Projects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cc-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C/C++ Projects
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-gitignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using .gitignore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#global-gitignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global .gitignore
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#official-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Official Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_ci_cd/ai_validation_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI / CD
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--needs-expansion"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_container/usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Usage
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_integration/integration_prompt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typescript-javascript-nodejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypeScript / JavaScript / Node.js
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ansible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ansible
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bash
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#go" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Go
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jenkins-groovy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jenkins / Groovy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-helm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes / Helm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-ide-editor-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General IDE / Editor Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-os-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General OS Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combined-devops-gitignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combined DevOps .gitignore
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-language-project-gitignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Language Project .gitignore
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#language-specific-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Language-Specific Additions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Language-Specific Additions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#go-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Go Projects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ruby-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ruby Projects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Java Projects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rust-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rust Projects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cc-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C/C++ Projects
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-gitignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using .gitignore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#global-gitignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global .gitignore
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#official-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Official Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+  <h1>.gitignore Templates</h1>
+
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This document provides comprehensive <code>.gitignore</code> templates for all languages and frameworks covered in this style guide.
+Use these templates to exclude build artifacts, dependencies, IDE files, and sensitive data from version control.</p>
+<hr />
+<h2 id="python">Python<a class="headerlink" href="#python" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Byte-compiled / optimized / DLL files</span>
+<span class="n">__pycache__</span><span class="o">/</span>
+<span class="o">*.</span><span class="n">py</span><span class="p">[</span><span class="n">cod</span><span class="p">]</span>
+<span class="o">*$</span><span class="n">py</span><span class="o">.</span><span class="k">class</span>
+
+<span class="c1"># C extensions</span>
+<span class="o">*.</span><span class="n">so</span>
+
+<span class="c1"># Distribution / packaging</span>
+<span class="o">.</span><span class="n">Python</span>
+<span class="n">build</span><span class="o">/</span>
+<span class="n">develop</span><span class="o">-</span><span class="n">eggs</span><span class="o">/</span>
+<span class="n">dist</span><span class="o">/</span>
+<span class="n">downloads</span><span class="o">/</span>
+<span class="n">eggs</span><span class="o">/</span>
+<span class="o">.</span><span class="n">eggs</span><span class="o">/</span>
+<span class="n">lib</span><span class="o">/</span>
+<span class="n">lib64</span><span class="o">/</span>
+<span class="n">parts</span><span class="o">/</span>
+<span class="n">sdist</span><span class="o">/</span>
+<span class="k">var</span><span class="o">/</span>
+<span class="n">wheels</span><span class="o">/</span>
+<span class="n">pip</span><span class="o">-</span><span class="n">wheel</span><span class="o">-</span><span class="n">metadata</span><span class="o">/</span>
+<span class="n">share</span><span class="o">/</span><span class="n">python</span><span class="o">-</span><span class="n">wheels</span><span class="o">/</span>
+<span class="o">*.</span><span class="n">egg</span><span class="o">-</span><span class="n">info</span><span class="o">/</span>
+<span class="o">.</span><span class="n">installed</span><span class="o">.</span><span class="n">cfg</span>
+<span class="o">*.</span><span class="n">egg</span>
+<span class="n">MANIFEST</span>
+
+<span class="c1"># PyInstaller</span>
+<span class="o">*.</span><span class="n">manifest</span>
+<span class="o">*.</span><span class="n">spec</span>
+
+<span class="c1"># Installer logs</span>
+<span class="n">pip</span><span class="o">-</span><span class="nb">log</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">pip</span><span class="o">-</span><span class="n">delete</span><span class="o">-</span><span class="n">this</span><span class="o">-</span><span class="n">directory</span><span class="o">.</span><span class="n">txt</span>
+
+<span class="c1"># Unit test / coverage reports</span>
+<span class="n">htmlcov</span><span class="o">/</span>
+<span class="o">.</span><span class="n">tox</span><span class="o">/</span>
+<span class="o">.</span><span class="n">nox</span><span class="o">/</span>
+<span class="o">.</span><span class="n">coverage</span>
+<span class="o">.</span><span class="n">coverage</span><span class="o">.*</span>
+<span class="o">.</span><span class="n">cache</span>
+<span class="n">nosetests</span><span class="o">.</span><span class="n">xml</span>
+<span class="n">coverage</span><span class="o">.</span><span class="n">xml</span>
+<span class="o">*.</span><span class="n">cover</span>
+<span class="o">*.</span><span class="n">py</span><span class="p">,</span><span class="n">cover</span>
+<span class="o">.</span><span class="n">hypothesis</span><span class="o">/</span>
+<span class="o">.</span><span class="n">pytest_cache</span><span class="o">/</span>
+<span class="o">.</span><span class="n">ruff_cache</span><span class="o">/</span>
+
+<span class="c1"># Translations</span>
+<span class="o">*.</span><span class="n">mo</span>
+<span class="o">*.</span><span class="n">pot</span>
+
+<span class="c1"># Django</span>
+<span class="o">*.</span><span class="n">log</span>
+<span class="n">local_settings</span><span class="o">.</span><span class="n">py</span>
+<span class="n">db</span><span class="o">.</span><span class="n">sqlite3</span>
+<span class="n">db</span><span class="o">.</span><span class="n">sqlite3</span><span class="o">-</span><span class="n">journal</span>
+
+<span class="c1"># Flask</span>
+<span class="n">instance</span><span class="o">/</span>
+<span class="o">.</span><span class="n">webassets</span><span class="o">-</span><span class="n">cache</span>
+
+<span class="c1"># Scrapy</span>
+<span class="o">.</span><span class="n">scrapy</span>
+
+<span class="c1"># Sphinx documentation</span>
+<span class="n">docs</span><span class="o">/</span><span class="n">_build</span><span class="o">/</span>
+
+<span class="c1"># PyBuilder</span>
+<span class="n">target</span><span class="o">/</span>
+
+<span class="c1"># Jupyter Notebook</span>
+<span class="o">.</span><span class="n">ipynb_checkpoints</span>
+
+<span class="c1"># IPython</span>
+<span class="n">profile_default</span><span class="o">/</span>
+<span class="n">ipython_config</span><span class="o">.</span><span class="n">py</span>
+
+<span class="c1"># pyenv</span>
+<span class="o">.</span><span class="n">python</span><span class="o">-</span><span class="n">version</span>
+
+<span class="c1"># pipenv</span>
+<span class="n">Pipfile</span><span class="o">.</span><span class="n">lock</span>
+
+<span class="c1"># poetry</span>
+<span class="n">poetry</span><span class="o">.</span><span class="n">lock</span>
+
+<span class="c1"># PEP 582</span>
+<span class="n">__pypackages__</span><span class="o">/</span>
+
+<span class="c1"># Celery</span>
+<span class="n">celerybeat</span><span class="o">-</span><span class="n">schedule</span>
+<span class="n">celerybeat</span><span class="o">.</span><span class="n">pid</span>
+
+<span class="c1"># SageMath</span>
+<span class="o">*.</span><span class="n">sage</span><span class="o">.</span><span class="n">py</span>
+
+<span class="c1"># Environments</span>
+<span class="o">.</span><span class="n">env</span>
+<span class="o">.</span><span class="n">venv</span>
+<span class="n">env</span><span class="o">/</span>
+<span class="n">venv</span><span class="o">/</span>
+<span class="n">ENV</span><span class="o">/</span>
+<span class="n">env</span><span class="o">.</span><span class="n">bak</span><span class="o">/</span>
+<span class="n">venv</span><span class="o">.</span><span class="n">bak</span><span class="o">/</span>
+
+<span class="c1"># Spyder</span>
+<span class="o">.</span><span class="n">spyderproject</span>
+<span class="o">.</span><span class="n">spyproject</span>
+
+<span class="c1"># Rope</span>
+<span class="o">.</span><span class="n">ropeproject</span>
+
+<span class="c1"># mkdocs</span>
+<span class="o">/</span><span class="n">site</span>
+
+<span class="c1"># mypy</span>
+<span class="o">.</span><span class="n">mypy_cache</span><span class="o">/</span>
+<span class="o">.</span><span class="n">dmypy</span><span class="o">.</span><span class="n">json</span>
+<span class="n">dmypy</span><span class="o">.</span><span class="n">json</span>
+
+<span class="c1"># Pyre</span>
+<span class="o">.</span><span class="n">pyre</span><span class="o">/</span>
+
+<span class="c1"># pytype</span>
+<span class="o">.</span><span class="n">pytype</span><span class="o">/</span>
+
+<span class="c1"># Cython</span>
+<span class="n">cython_debug</span><span class="o">/</span>
+</code></pre></div>
+
+<hr />
+<h2 id="typescript-javascript-nodejs">TypeScript / JavaScript / Node.js<a class="headerlink" href="#typescript-javascript-nodejs" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Logs</span>
+<span class="n">logs</span>
+<span class="o">*.</span><span class="n">log</span>
+<span class="n">npm</span><span class="o">-</span><span class="n">debug</span><span class="o">.</span><span class="n">log</span><span class="o">*</span>
+<span class="n">yarn</span><span class="o">-</span><span class="n">debug</span><span class="o">.</span><span class="n">log</span><span class="o">*</span>
+<span class="n">yarn</span><span class="o">-</span><span class="n">error</span><span class="o">.</span><span class="n">log</span><span class="o">*</span>
+<span class="n">lerna</span><span class="o">-</span><span class="n">debug</span><span class="o">.</span><span class="n">log</span><span class="o">*</span>
+<span class="n">pnpm</span><span class="o">-</span><span class="n">debug</span><span class="o">.</span><span class="n">log</span><span class="o">*</span>
+
+<span class="c1"># Diagnostic reports</span>
+<span class="n">report</span><span class="o">.</span><span class="p">[</span><span class="mi">0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="o">*.</span><span class="p">[</span><span class="mi">0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="o">*.</span><span class="p">[</span><span class="mi">0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="o">*.</span><span class="p">[</span><span class="mi">0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="o">*.</span><span class="n">json</span>
+
+<span class="c1"># Runtime data</span>
+<span class="n">pids</span>
+<span class="o">*.</span><span class="n">pid</span>
+<span class="o">*.</span><span class="n">seed</span>
+<span class="o">*.</span><span class="n">pid</span><span class="o">.</span><span class="n">lock</span>
+
+<span class="c1"># Directory for instrumented libs</span>
+<span class="n">lib</span><span class="o">-</span><span class="n">cov</span>
+
+<span class="c1"># Coverage directory</span>
+<span class="n">coverage</span>
+<span class="o">*.</span><span class="n">lcov</span>
+<span class="o">.</span><span class="n">nyc_output</span>
+
+<span class="c1"># Grunt intermediate storage</span>
+<span class="o">.</span><span class="n">grunt</span>
+
+<span class="c1"># Bower dependency directory</span>
+<span class="n">bower_components</span>
+
+<span class="c1"># node-waf configuration</span>
+<span class="o">.</span><span class="n">lock</span><span class="o">-</span><span class="n">wscript</span>
+
+<span class="c1"># Compiled binary addons</span>
+<span class="n">build</span><span class="o">/</span><span class="n">Release</span>
+
+<span class="c1"># Dependency directories</span>
+<span class="n">node_modules</span><span class="o">/</span>
+<span class="n">jspm_packages</span><span class="o">/</span>
+
+<span class="c1"># Snowpack dependency directory</span>
+<span class="n">web_modules</span><span class="o">/</span>
+
+<span class="c1"># TypeScript cache</span>
+<span class="o">*.</span><span class="n">tsbuildinfo</span>
+
+<span class="c1"># Optional npm cache directory</span>
+<span class="o">.</span><span class="n">npm</span>
+
+<span class="c1"># Optional eslint cache</span>
+<span class="o">.</span><span class="n">eslintcache</span>
+
+<span class="c1"># Optional stylelint cache</span>
+<span class="o">.</span><span class="n">stylelintcache</span>
+
+<span class="c1"># Microbundle cache</span>
+<span class="o">.</span><span class="n">rpt2_cache</span><span class="o">/</span>
+<span class="o">.</span><span class="n">rts2_cache_cjs</span><span class="o">/</span>
+<span class="o">.</span><span class="n">rts2_cache_es</span><span class="o">/</span>
+<span class="o">.</span><span class="n">rts2_cache_umd</span><span class="o">/</span>
+
+<span class="c1"># Optional REPL history</span>
+<span class="o">.</span><span class="n">node_repl_history</span>
+
+<span class="c1"># Output of &#39;npm pack&#39;</span>
+<span class="o">*.</span><span class="n">tgz</span>
+
+<span class="c1"># Yarn</span>
+<span class="o">.</span><span class="n">yarn</span><span class="o">-</span><span class="n">integrity</span>
+<span class="o">.</span><span class="n">yarn</span><span class="o">/</span><span class="n">cache</span>
+<span class="o">.</span><span class="n">yarn</span><span class="o">/</span><span class="n">unplugged</span>
+<span class="o">.</span><span class="n">yarn</span><span class="o">/</span><span class="n">build</span><span class="o">-</span><span class="n">state</span><span class="o">.</span><span class="n">yml</span>
+<span class="o">.</span><span class="n">yarn</span><span class="o">/</span><span class="n">install</span><span class="o">-</span><span class="n">state</span><span class="o">.</span><span class="n">gz</span>
+<span class="o">.</span><span class="n">pnp</span><span class="o">.*</span>
+
+<span class="c1"># parcel-bundler cache</span>
+<span class="o">.</span><span class="n">cache</span>
+<span class="o">.</span><span class="n">parcel</span><span class="o">-</span><span class="n">cache</span>
+
+<span class="c1"># Next.js</span>
+<span class="o">.</span><span class="n">next</span><span class="o">/</span>
+<span class="n">out</span><span class="o">/</span>
+
+<span class="c1"># Nuxt.js</span>
+<span class="o">.</span><span class="n">nuxt</span>
+<span class="n">dist</span>
+
+<span class="c1"># Gatsby</span>
+<span class="o">.</span><span class="n">cache</span><span class="o">/</span>
+<span class="n">public</span>
+
+<span class="c1"># vuepress</span>
+<span class="o">.</span><span class="n">vuepress</span><span class="o">/</span><span class="n">dist</span>
+
+<span class="c1"># Serverless</span>
+<span class="o">.</span><span class="n">serverless</span><span class="o">/</span>
+
+<span class="c1"># FuseBox</span>
+<span class="o">.</span><span class="n">fusebox</span><span class="o">/</span>
+
+<span class="c1"># DynamoDB Local</span>
+<span class="o">.</span><span class="n">dynamodb</span><span class="o">/</span>
+
+<span class="c1"># TernJS</span>
+<span class="o">.</span><span class="n">tern</span><span class="o">-</span><span class="n">port</span>
+
+<span class="c1"># Stores VSCode versions</span>
+<span class="o">.</span><span class="n">vscode</span><span class="o">-</span><span class="n">test</span>
+
+<span class="c1"># yarn v2</span>
+<span class="o">.</span><span class="n">yarn</span><span class="o">/</span><span class="n">cache</span>
+<span class="o">.</span><span class="n">yarn</span><span class="o">/</span><span class="n">unplugged</span>
+<span class="o">.</span><span class="n">yarn</span><span class="o">/</span><span class="n">build</span><span class="o">-</span><span class="n">state</span><span class="o">.</span><span class="n">yml</span>
+<span class="o">.</span><span class="n">yarn</span><span class="o">/</span><span class="n">install</span><span class="o">-</span><span class="n">state</span><span class="o">.</span><span class="n">gz</span>
+<span class="o">.</span><span class="n">pnp</span><span class="o">.*</span>
+
+<span class="c1"># Turborepo</span>
+<span class="o">.</span><span class="n">turbo</span>
+
+<span class="c1"># Vercel</span>
+<span class="o">.</span><span class="n">vercel</span>
+
+<span class="c1"># Environment variables</span>
+<span class="o">.</span><span class="n">env</span>
+<span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">local</span>
+<span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">development</span><span class="o">.</span><span class="n">local</span>
+<span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">local</span>
+<span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">production</span><span class="o">.</span><span class="n">local</span>
+</code></pre></div>
+
+<hr />
+<h2 id="terraform">Terraform<a class="headerlink" href="#terraform" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Local .terraform directories</span>
+<span class="o">**/.</span><span class="n">terraform</span><span class="o">/*</span>
+
+<span class="c1"># .tfstate files</span>
+<span class="o">*.</span><span class="n">tfstate</span>
+<span class="o">*.</span><span class="n">tfstate</span><span class="o">.*</span>
+
+<span class="c1"># Crash log files</span>
+<span class="n">crash</span><span class="o">.</span><span class="n">log</span>
+<span class="n">crash</span><span class="o">.*.</span><span class="n">log</span>
+
+<span class="c1"># Exclude all .tfvars files (may contain sensitive data)</span>
+<span class="o">*.</span><span class="n">tfvars</span>
+<span class="o">*.</span><span class="n">tfvars</span><span class="o">.</span><span class="n">json</span>
+
+<span class="c1"># Ignore override files</span>
+<span class="n">override</span><span class="o">.</span><span class="n">tf</span>
+<span class="n">override</span><span class="o">.</span><span class="n">tf</span><span class="o">.</span><span class="n">json</span>
+<span class="o">*</span><span class="n">_override</span><span class="o">.</span><span class="n">tf</span>
+<span class="o">*</span><span class="n">_override</span><span class="o">.</span><span class="n">tf</span><span class="o">.</span><span class="n">json</span>
+
+<span class="c1"># Include override files you do wish to add to version control</span>
+<span class="c1"># !example_override.tf</span>
+
+<span class="c1"># Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan</span>
+<span class="c1"># *tfplan*</span>
+
+<span class="c1"># Ignore CLI configuration files</span>
+<span class="o">.</span><span class="n">terraformrc</span>
+<span class="n">terraform</span><span class="o">.</span><span class="n">rc</span>
+
+<span class="c1"># Terraform lock file (uncomment to ignore)</span>
+<span class="c1"># .terraform.lock.hcl</span>
+
+<span class="c1"># Terragrunt cache</span>
+<span class="o">.</span><span class="n">terragrunt</span><span class="o">-</span><span class="n">cache</span><span class="o">/</span>
+
+<span class="c1"># Terraform provider cache</span>
+<span class="o">.</span><span class="n">terraform</span><span class="o">.</span><span class="n">d</span><span class="o">/</span>
+
+<span class="c1"># Sentinel runtime directory</span>
+<span class="o">.</span><span class="n">sentinel</span>
+</code></pre></div>
+
+<hr />
+<h2 id="ansible">Ansible<a class="headerlink" href="#ansible" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Ansible retry files</span>
+<span class="o">*.</span><span class="n">retry</span>
+
+<span class="c1"># Ansible vault password files</span>
+<span class="o">.</span><span class="n">vault_pass</span>
+<span class="n">vault_pass</span><span class="o">.</span><span class="n">txt</span>
+<span class="o">.</span><span class="n">vault</span><span class="o">-</span><span class="n">password</span>
+
+<span class="c1"># Ansible temporary files</span>
+<span class="o">.</span><span class="n">ansible</span><span class="o">/</span>
+
+<span class="c1"># Inventory files with sensitive data</span>
+<span class="n">inventory</span><span class="o">/</span><span class="n">production</span><span class="o">/</span><span class="n">hosts</span>
+<span class="n">inventory</span><span class="o">/</span><span class="n">production</span><span class="o">/*.</span><span class="n">yml</span>
+
+<span class="c1"># Ansible roles downloaded by ansible-galaxy</span>
+<span class="n">roles</span><span class="o">/*/</span>
+<span class="o">!</span><span class="n">roles</span><span class="o">/.</span><span class="n">gitkeep</span>
+
+<span class="c1"># Molecule</span>
+<span class="o">.</span><span class="n">molecule</span><span class="o">/</span>
+<span class="n">molecule</span><span class="o">/.</span><span class="n">cache</span><span class="o">/</span>
+
+<span class="c1"># Python virtualenv</span>
+<span class="n">venv</span><span class="o">/</span>
+<span class="o">.</span><span class="n">venv</span><span class="o">/</span>
+
+<span class="c1"># Logs</span>
+<span class="o">*.</span><span class="n">log</span>
+
+<span class="c1"># Test results</span>
+<span class="n">test</span><span class="o">-</span><span class="n">results</span><span class="o">/</span>
+
+<span class="c1"># Collections</span>
+<span class="n">collections</span><span class="o">/</span>
+
+<span class="c1"># Variables with secrets</span>
+<span class="n">group_vars</span><span class="o">/*/</span><span class="n">vault</span><span class="o">.</span><span class="n">yml</span>
+<span class="n">host_vars</span><span class="o">/*/</span><span class="n">vault</span><span class="o">.</span><span class="n">yml</span>
+</code></pre></div>
+
+<hr />
+<h2 id="bash">Bash<a class="headerlink" href="#bash" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Logs</span>
+<span class="err">*</span><span class="na">.log</span>
+
+<span class="c1"># Backup files</span>
+<span class="err">*~</span>
+<span class="err">*</span><span class="na">.bak</span>
+<span class="err">*</span><span class="na">.swp</span>
+<span class="err">*</span><span class="na">.swo</span>
+<span class="err">*</span><span class="na">.tmp</span>
+
+<span class="c1"># Shell history</span>
+<span class="na">.bash_history</span>
+<span class="na">.zsh_history</span>
+
+<span class="c1"># Environment files</span>
+<span class="na">.env</span>
+<span class="na">.env.local</span>
+
+<span class="c1"># Scripts output</span>
+<span class="nf">output</span><span class="err">/</span>
+<span class="nf">logs</span><span class="err">/</span>
+
+<span class="c1"># Lock files</span>
+<span class="err">*</span><span class="na">.lock</span>
+</code></pre></div>
+
+<hr />
+<h2 id="powershell">PowerShell<a class="headerlink" href="#powershell" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Logs</span>
+<span class="err">*</span><span class="na">.log</span>
+<span class="err">*</span><span class="na">.txt</span>
+
+<span class="c1"># Module directories</span>
+<span class="nf">PSScriptAnalyzerSettings</span><span class="err">/</span>
+
+<span class="c1"># Test results</span>
+<span class="nf">TestResults</span><span class="err">/</span>
+<span class="err">*</span><span class="na">.trx</span>
+
+<span class="c1"># Package files</span>
+<span class="err">*</span><span class="na">.nupkg</span>
+<span class="err">*</span><span class="na">.zip</span>
+
+<span class="c1"># Environment files</span>
+<span class="na">.env</span>
+<span class="na">.env.local</span>
+
+<span class="c1"># PowerShell profile backups</span>
+<span class="nf">profile.ps1.bak</span>
+</code></pre></div>
+
+<hr />
+<h2 id="go">Go<a class="headerlink" href="#go" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Binaries for programs and plugins</span>
+<span class="o">*.</span><span class="n">exe</span>
+<span class="o">*.</span><span class="n">exe</span><span class="o">~</span>
+<span class="o">*.</span><span class="n">dll</span>
+<span class="o">*.</span><span class="n">so</span>
+<span class="o">*.</span><span class="n">dylib</span>
+
+<span class="c1"># Test binary, built with `go test -c`</span>
+<span class="o">*.</span><span class="n">test</span>
+
+<span class="c1"># Output of the go coverage tool</span>
+<span class="o">*.</span><span class="n">out</span>
+
+<span class="c1"># Dependency directories</span>
+<span class="n">vendor</span><span class="o">/</span>
+
+<span class="c1"># Go workspace file</span>
+<span class="n">go</span><span class="o">.</span><span class="n">work</span>
+
+<span class="c1"># Build output</span>
+<span class="n">bin</span><span class="o">/</span>
+<span class="n">dist</span><span class="o">/</span>
+<span class="n">build</span><span class="o">/</span>
+
+<span class="c1"># IDEs</span>
+<span class="o">.</span><span class="n">idea</span><span class="o">/</span>
+<span class="o">*.</span><span class="n">swp</span>
+<span class="o">*.</span><span class="n">swo</span>
+<span class="o">*~</span>
+
+<span class="c1"># Air (live reload for Go)</span>
+<span class="n">tmp</span><span class="o">/</span>
+</code></pre></div>
+
+<hr />
+<h2 id="sql">SQL<a class="headerlink" href="#sql" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="gh">#</span> Database files
+*.db
+<span class="gs">*.sqlite</span>
+<span class="gs">*</span>.sqlite3
+<span class="gs">*.db-shm</span>
+<span class="gs">*</span>.db-wal
+
+<span class="gh">#</span> Backup files
+*.bak
+<span class="gs">*.backup</span>
+<span class="gs">*</span>.sql.bak
+
+<span class="gh">#</span> Query logs
+*.log
+
+<span class="gh">#</span> Migration generated files
+migrations/tmp/
+</code></pre></div>
+
+<hr />
+<h2 id="docker">Docker<a class="headerlink" href="#docker" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Docker build context</span>
+<span class="na">.dockerignore</span>
+
+<span class="c1"># Docker volumes</span>
+<span class="nf">volumes</span><span class="err">/</span>
+
+<span class="c1"># Docker secrets</span>
+<span class="nf">secrets</span><span class="err">/</span>
+<span class="err">*</span><span class="na">.secret</span>
+
+<span class="c1"># Build artifacts</span>
+<span class="na">.docker</span><span class="err">/</span>
+
+<span class="c1"># Environment files</span>
+<span class="na">.env</span>
+<span class="na">.env.local</span>
+<span class="nf">docker-compose.override.yml</span>
+</code></pre></div>
+
+<hr />
+<h2 id="jenkins-groovy">Jenkins / Groovy<a class="headerlink" href="#jenkins-groovy" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Jenkins</span>
+<span class="na">.jenkins</span>
+<span class="nf">jobs</span><span class="err">/</span>
+<span class="nf">workspace</span><span class="err">/</span>
+<span class="nf">builds</span><span class="err">/</span>
+<span class="nf">logs</span><span class="err">/</span>
+
+<span class="c1"># Groovy compiled classes</span>
+<span class="err">*</span><span class="na">.class</span>
+
+<span class="c1"># Logs</span>
+<span class="err">*</span><span class="na">.log</span>
+
+<span class="c1"># Temporary files</span>
+<span class="err">*</span><span class="na">.tmp</span>
+</code></pre></div>
+
+<hr />
+<h2 id="kubernetes-helm">Kubernetes / Helm<a class="headerlink" href="#kubernetes-helm" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="gh">#</span> Helm
+charts/*/charts/
+<span class="gs">*.tgz</span>
+
+<span class="gs"># Kubernetes secrets</span>
+<span class="gs">secrets.yml</span>
+<span class="gs">secrets.yaml</span>
+<span class="gs">*</span>-secrets.yml
+*-secrets.yaml
+
+<span class="gh">#</span> Kustomize
+kustomization.yaml.bak
+
+<span class="gh">#</span> Temporary manifests
+tmp/
+temp/
+
+<span class="gh">#</span> Rendered templates
+rendered/
+</code></pre></div>
+
+<hr />
+<h2 id="general-ide-editor-files">General IDE / Editor Files<a class="headerlink" href="#general-ide-editor-files" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># VSCode</span>
+<span class="na">.vscode</span><span class="err">/</span>
+<span class="err">*</span><span class="na">.code-workspace</span>
+
+<span class="c1"># IntelliJ IDEA</span>
+<span class="na">.idea</span><span class="err">/</span>
+<span class="err">*</span><span class="na">.iml</span>
+<span class="err">*</span><span class="na">.ipr</span>
+<span class="err">*</span><span class="na">.iws</span>
+<span class="nf">out</span><span class="err">/</span>
+
+<span class="c1"># Eclipse</span>
+<span class="na">.project</span>
+<span class="na">.classpath</span>
+<span class="na">.settings</span><span class="err">/</span>
+<span class="nf">bin</span><span class="err">/</span>
+
+<span class="c1"># Sublime Text</span>
+<span class="err">*</span><span class="na">.sublime-project</span>
+<span class="err">*</span><span class="na">.sublime-workspace</span>
+
+<span class="c1"># Vim</span>
+<span class="err">*</span><span class="na">.swp</span>
+<span class="err">*</span><span class="na">.swo</span>
+<span class="err">*~</span>
+<span class="na">.netrwhist</span>
+
+<span class="c1"># Emacs</span>
+<span class="err">*~</span>
+<span class="err">\</span><span class="c1">#*\#</span>
+<span class="err">/</span><span class="na">.emacs.desktop</span>
+<span class="err">/</span><span class="na">.emacs.desktop.lock</span>
+<span class="err">*</span><span class="na">.elc</span>
+<span class="nf">auto-save-list</span>
+<span class="nf">tramp</span>
+<span class="err">.\</span><span class="c1">#*</span>
+
+<span class="c1"># JetBrains</span>
+<span class="na">.idea</span><span class="err">/</span>
+<span class="err">*</span><span class="na">.iml</span>
+<span class="err">*</span><span class="na">.ipr</span>
+<span class="err">*</span><span class="na">.iws</span>
+<span class="na">.idea_modules</span><span class="err">/</span>
+
+<span class="c1"># Atom</span>
+<span class="na">.atom</span><span class="err">/</span>
+</code></pre></div>
+
+<hr />
+<h2 id="general-os-files">General OS Files<a class="headerlink" href="#general-os-files" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">macOS</span>
+<span class="p">.</span><span class="n">DS_Store</span>
+<span class="p">.</span><span class="n">AppleDouble</span>
+<span class="p">.</span><span class="n">LSOverride</span>
+<span class="n">Icon</span>
+<span class="p">.</span><span class="n">_</span><span class="o">*</span>
+<span class="p">.</span><span class="n">DocumentRevisions</span><span class="o">-</span><span class="n">V100</span>
+<span class="p">.</span><span class="n">fseventsd</span>
+<span class="p">.</span><span class="n">Spotlight</span><span class="o">-</span><span class="n">V100</span>
+<span class="p">.</span><span class="n">TemporaryItems</span>
+<span class="p">.</span><span class="n">Trashes</span>
+<span class="p">.</span><span class="n">VolumeIcon</span><span class="p">.</span><span class="n">icns</span>
+<span class="p">.</span><span class="n">com</span><span class="p">.</span><span class="n">apple</span><span class="p">.</span><span class="n">timemachine</span><span class="p">.</span><span class="n">donotpresent</span>
+<span class="p">.</span><span class="n">AppleDB</span>
+<span class="p">.</span><span class="n">AppleDesktop</span>
+<span class="n">Network</span><span class="w"> </span><span class="n">Trash</span><span class="w"> </span><span class="n">Folder</span>
+<span class="k">Temporary</span><span class="w"> </span><span class="n">Items</span>
+<span class="p">.</span><span class="n">apdisk</span>
+
+<span class="err">#</span><span class="w"> </span><span class="n">Windows</span>
+<span class="n">Thumbs</span><span class="p">.</span><span class="n">db</span>
+<span class="n">Thumbs</span><span class="p">.</span><span class="nl">db</span><span class="p">:</span><span class="n">encryptable</span>
+<span class="n">ehthumbs</span><span class="p">.</span><span class="n">db</span>
+<span class="n">ehthumbs_vista</span><span class="p">.</span><span class="n">db</span>
+<span class="o">*</span><span class="p">.</span><span class="n">stackdump</span>
+<span class="o">[</span><span class="n">Dd</span><span class="o">]</span><span class="n">esktop</span><span class="p">.</span><span class="n">ini</span>
+<span class="err">$</span><span class="n">RECYCLE</span><span class="p">.</span><span class="n">BIN</span><span class="o">/</span>
+<span class="o">*</span><span class="p">.</span><span class="n">cab</span>
+<span class="o">*</span><span class="p">.</span><span class="n">msi</span>
+<span class="o">*</span><span class="p">.</span><span class="n">msix</span>
+<span class="o">*</span><span class="p">.</span><span class="n">msm</span>
+<span class="o">*</span><span class="p">.</span><span class="n">msp</span>
+<span class="o">*</span><span class="p">.</span><span class="n">lnk</span>
+
+<span class="err">#</span><span class="w"> </span><span class="n">Linux</span>
+<span class="o">*~</span>
+<span class="p">.</span><span class="n">fuse_hidden</span><span class="o">*</span>
+<span class="p">.</span><span class="n">directory</span>
+<span class="p">.</span><span class="n">Trash</span><span class="o">-*</span>
+<span class="p">.</span><span class="n">nfs</span><span class="o">*</span>
+</code></pre></div>
+
+<hr />
+<h2 id="combined-devops-gitignore">Combined DevOps .gitignore<a class="headerlink" href="#combined-devops-gitignore" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c"># ============================================</span>
+<span class="c"># Combined DevOps </span><span class="nt">.</span><span class="c">gitignore Template</span>
+<span class="c"># ============================================</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Python</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c">__pycache__/</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">py</span><span class="k">[</span><span class="c">cod</span><span class="k">]</span>
+<span class="c">*$py</span><span class="nt">.</span><span class="c">class</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">so</span>
+<span class="nt">.</span><span class="c">Python</span>
+<span class="c">build/</span>
+<span class="c">dist/</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">egg</span><span class="nb">-</span><span class="c">info/</span>
+<span class="nt">.</span><span class="c">pytest_cache/</span>
+<span class="nt">.</span><span class="c">coverage</span>
+<span class="c">htmlcov/</span>
+<span class="c">venv/</span>
+<span class="nt">.</span><span class="c">venv/</span>
+<span class="nt">.</span><span class="c">env</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Node</span><span class="nt">.</span><span class="c">js / TypeScript</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c">node_modules/</span>
+<span class="c">npm</span><span class="nb">-</span><span class="c">debug</span><span class="nt">.</span><span class="c">log*</span>
+<span class="c">yarn</span><span class="nb">-</span><span class="c">error</span><span class="nt">.</span><span class="c">log*</span>
+<span class="nt">.</span><span class="c">next/</span>
+<span class="nt">.</span><span class="c">nuxt/</span>
+<span class="c">dist/</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">tsbuildinfo</span>
+<span class="nt">.</span><span class="c">eslintcache</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Terraform</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="nt">.</span><span class="c">terraform/</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">tfstate</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">tfstate</span><span class="nt">.</span><span class="c">*</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">tfvars</span>
+<span class="nt">.</span><span class="c">terraform</span><span class="nt">.</span><span class="c">lock</span><span class="nt">.</span><span class="c">hcl</span>
+<span class="nt">.</span><span class="c">terragrunt</span><span class="nb">-</span><span class="c">cache/</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Ansible</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">retry</span>
+<span class="nt">.</span><span class="c">ansible/</span>
+<span class="c">roles/*/</span>
+<span class="nt">.</span><span class="c">molecule/</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Docker</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="nt">.</span><span class="c">dockerignore</span>
+<span class="c">docker</span><span class="nb">-</span><span class="c">compose</span><span class="nt">.</span><span class="c">override</span><span class="nt">.</span><span class="c">yml</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Kubernetes / Helm</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c">charts/*/charts/</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">tgz</span>
+<span class="c">secrets</span><span class="nt">.</span><span class="c">yml</span>
+<span class="c">secrets</span><span class="nt">.</span><span class="c">yaml</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># CI/CD</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="nt">.</span><span class="c">jenkins/</span>
+<span class="nt">.</span><span class="c">github/workflows/*</span><span class="nt">.</span><span class="c">log</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># IDE / Editors</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="nt">.</span><span class="c">vscode/</span>
+<span class="nt">.</span><span class="c">idea/</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">swp</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">swo</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">iml</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># OS</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="nt">.</span><span class="c">DS_Store</span>
+<span class="c">Thumbs</span><span class="nt">.</span><span class="c">db</span>
+<span class="c">*~</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Logs &amp; Temporary Files</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">log</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">tmp</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">bak</span>
+<span class="c">logs/</span>
+<span class="c">tmp/</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Secrets &amp; Credentials</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">pem</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">key</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">crt</span>
+<span class="c">*credentials*</span>
+<span class="c">*secret*</span>
+<span class="nt">.</span><span class="c">env</span>
+<span class="nt">.</span><span class="c">env</span><span class="nt">.</span><span class="c">*</span>
+</code></pre></div>
+
+<hr />
+<h2 id="multi-language-project-gitignore">Multi-Language Project .gitignore<a class="headerlink" href="#multi-language-project-gitignore" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c"># ============================================</span>
+<span class="c"># Multi</span><span class="nb">-</span><span class="c">Language Project </span><span class="nt">.</span><span class="c">gitignore</span>
+<span class="c"># ============================================</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Dependencies</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c">node_modules/</span>
+<span class="c">vendor/</span>
+<span class="c">venv/</span>
+<span class="nt">.</span><span class="c">venv/</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Build Artifacts</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c">build/</span>
+<span class="c">dist/</span>
+<span class="c">out/</span>
+<span class="c">target/</span>
+<span class="c">bin/</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">exe</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">dll</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">so</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">dylib</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Test &amp; Coverage</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c">coverage/</span>
+<span class="nt">.</span><span class="c">coverage</span>
+<span class="c">htmlcov/</span>
+<span class="nt">.</span><span class="c">pytest_cache/</span>
+<span class="nt">.</span><span class="c">nyc_output/</span>
+<span class="c">test</span><span class="nb">-</span><span class="c">results/</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">test</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Package Files</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">egg</span><span class="nb">-</span><span class="c">info/</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">nupkg</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">tgz</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">tar</span><span class="nt">.</span><span class="c">gz</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">zip</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Infrastructure</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="nt">.</span><span class="c">terraform/</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">tfstate</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">tfstate</span><span class="nt">.</span><span class="c">*</span>
+<span class="nt">.</span><span class="c">terragrunt</span><span class="nb">-</span><span class="c">cache/</span>
+<span class="nt">.</span><span class="c">ansible/</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Environment &amp; Config</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="nt">.</span><span class="c">env</span>
+<span class="nt">.</span><span class="c">env</span><span class="nt">.</span><span class="c">local</span>
+<span class="nt">.</span><span class="c">env</span><span class="nt">.</span><span class="c">*</span><span class="nt">.</span><span class="c">local</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">tfvars</span>
+<span class="c">secrets/</span>
+<span class="c">credentials/</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># IDE &amp; Editors</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="nt">.</span><span class="c">vscode/</span>
+<span class="nt">.</span><span class="c">idea/</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">swp</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">swo</span>
+<span class="c">*~</span>
+<span class="nt">.</span><span class="c">project</span>
+<span class="nt">.</span><span class="c">classpath</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># OS Files</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="nt">.</span><span class="c">DS_Store</span>
+<span class="c">Thumbs</span><span class="nt">.</span><span class="c">db</span>
+<span class="c">Desktop</span><span class="nt">.</span><span class="c">ini</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Logs</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">log</span>
+<span class="c">logs/</span>
+<span class="c">npm</span><span class="nb">-</span><span class="c">debug</span><span class="nt">.</span><span class="c">log*</span>
+<span class="c">yarn</span><span class="nb">-</span><span class="c">debug</span><span class="nt">.</span><span class="c">log*</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># Cache</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="nt">.</span><span class="c">cache/</span>
+<span class="nt">.</span><span class="c">eslintcache</span>
+<span class="nt">.</span><span class="c">ruff_cache/</span>
+<span class="nt">.</span><span class="c">mypy_cache/</span>
+<span class="c">*</span><span class="nt">.</span><span class="c">tsbuildinfo</span>
+
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="c"># CI/CD</span>
+<span class="c"># </span><span class="nb">----------------</span>
+<span class="nt">.</span><span class="c">github/workflows/*</span><span class="nt">.</span><span class="c">log</span>
+<span class="nt">.</span><span class="c">jenkins/</span>
+</code></pre></div>
+
+<hr />
+<h2 id="language-specific-additions">Language-Specific Additions<a class="headerlink" href="#language-specific-additions" title="Permanent link">&para;</a></h2>
+<h3 id="go-projects">Go Projects<a class="headerlink" href="#go-projects" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="k">Go</span>
+<span class="n">vendor</span><span class="o">/</span>
+<span class="o">*</span><span class="p">.</span><span class="n">test</span>
+<span class="o">*</span><span class="p">.</span><span class="k">out</span>
+<span class="k">go</span><span class="p">.</span><span class="k">work</span>
+<span class="n">bin</span><span class="o">/</span>
+</code></pre></div>
+
+<h3 id="ruby-projects">Ruby Projects<a class="headerlink" href="#ruby-projects" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Ruby</span>
+<span class="err">*</span><span class="na">.gem</span>
+<span class="err">*</span><span class="na">.rbc</span>
+<span class="err">/</span><span class="na">.config</span>
+<span class="err">/</span><span class="nf">coverage</span><span class="err">/</span>
+<span class="err">/</span><span class="nf">InstalledFiles</span>
+<span class="err">/</span><span class="nf">pkg</span><span class="err">/</span>
+<span class="err">/</span><span class="nf">spec</span><span class="err">/</span><span class="no">reports</span><span class="err">/</span>
+<span class="err">/</span><span class="nf">spec</span><span class="err">/</span><span class="no">examples.txt</span>
+<span class="err">/</span><span class="nf">test</span><span class="err">/</span><span class="no">tmp</span><span class="err">/</span>
+<span class="err">/</span><span class="nf">test</span><span class="err">/</span><span class="no">version_tmp</span><span class="err">/</span>
+<span class="err">/</span><span class="nf">tmp</span><span class="err">/</span>
+<span class="na">.bundle</span>
+<span class="na">.byebug_history</span>
+<span class="na">.rspec_status</span>
+</code></pre></div>
+
+<h3 id="java-projects">Java Projects<a class="headerlink" href="#java-projects" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Java</span>
+<span class="err">*</span><span class="na">.class</span>
+<span class="err">*</span><span class="na">.jar</span>
+<span class="err">*</span><span class="na">.war</span>
+<span class="err">*</span><span class="na">.ear</span>
+<span class="err">*</span><span class="na">.nar</span>
+<span class="nf">target</span><span class="err">/</span>
+<span class="nf">pom.xml.tag</span>
+<span class="nf">pom.xml.releaseBackup</span>
+<span class="nf">pom.xml.versionsBackup</span>
+<span class="nf">dependency-reduced-pom.xml</span>
+<span class="na">.classpath</span>
+<span class="na">.project</span>
+<span class="na">.settings</span><span class="err">/</span>
+</code></pre></div>
+
+<h3 id="rust-projects">Rust Projects<a class="headerlink" href="#rust-projects" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="gh">#</span> Rust
+target/
+Cargo.lock
+**/*.rs.bk
+*.pdb
+</code></pre></div>
+
+<h3 id="cc-projects">C/C++ Projects<a class="headerlink" href="#cc-projects" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="gh">#</span> C/C++
+*.o
+<span class="gs">*.obj</span>
+<span class="gs">*</span>.exe
+<span class="gs">*.out</span>
+<span class="gs">*</span>.app
+*.i*86
+<span class="gs">*.x86_64</span>
+<span class="gs">*</span>.hex
+<span class="gs">*.dSYM/</span>
+<span class="gs">*</span>.su
+<span class="gs">*.idb</span>
+<span class="gs">*</span>.pdb
+<span class="gs">*.ilk</span>
+<span class="gs">*</span>.map
+</code></pre></div>
+
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="general-rules">General Rules<a class="headerlink" href="#general-rules" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Version Control Sensitive Data</strong>: Never commit:</li>
+<li>API keys, passwords, tokens</li>
+<li>Private keys, certificates</li>
+<li>Database credentials</li>
+<li>
+<p>Environment variables with secrets</p>
+</li>
+<li>
+<p><strong>Exclude Build Artifacts</strong>:</p>
+</li>
+<li>Compiled code</li>
+<li>Distribution packages</li>
+<li>
+<p>Dependency directories</p>
+</li>
+<li>
+<p><strong>Ignore IDE Files</strong>:</p>
+</li>
+<li>Personal workspace settings</li>
+<li>
+<p>Project-specific IDE configurations</p>
+</li>
+<li>
+<p><strong>Keep It Updated</strong>:</p>
+</li>
+<li>Review and update <code>.gitignore</code> regularly</li>
+<li>Add new patterns as project evolves</li>
+</ol>
+<h3 id="using-gitignore">Using .gitignore<a class="headerlink" href="#using-gitignore" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Check if a file would be ignored</span>
+git<span class="w"> </span>check-ignore<span class="w"> </span>-v<span class="w"> </span>path/to/file
+
+<span class="c1"># Remove already tracked files from git</span>
+git<span class="w"> </span>rm<span class="w"> </span>--cached<span class="w"> </span>&lt;file&gt;
+git<span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span>--cached<span class="w"> </span>&lt;directory&gt;
+
+<span class="c1"># Force add an ignored file (use carefully)</span>
+git<span class="w"> </span>add<span class="w"> </span>-f<span class="w"> </span>&lt;file&gt;
+</code></pre></div>
+
+<h3 id="global-gitignore">Global .gitignore<a class="headerlink" href="#global-gitignore" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Set global .gitignore for all repositories</span>
+git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>core.excludesfile<span class="w"> </span>~/.gitignore_global
+
+<span class="c1"># Create global .gitignore</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>~/.gitignore_global<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">.DS_Store</span>
+<span class="s">.vscode/</span>
+<span class="s">.idea/</span>
+<span class="s">*.swp</span>
+<span class="s">EOF</span>
+</code></pre></div>
+
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<h3 id="official-documentation">Official Documentation<a class="headerlink" href="#official-documentation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://git-scm.com/docs/gitignore">Git Documentation - gitignore</a></li>
+<li><a href="https://github.com/github/gitignore">GitHub .gitignore Templates</a></li>
+<li><a href="https://www.toptal.com/developers/gitignore">Gitignore.io</a></li>
+</ul>
+<h3 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://www.toptal.com/developers/gitignore">gitignore.io</a> - Generate .gitignore files</li>
+<li><a href="https://git-scm.com/docs/git-check-ignore">git check-ignore</a> - Debug .gitignore rules</li>
+</ul>
+<hr />
+<p><strong>Version</strong>: 1.0.0
+<strong>Last Updated</strong>: 2025-10-28
+<strong>Status</strong>: Active</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/tydukes" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://linkedin.com/in/tydukes" target="_blank" rel="noopener" title="linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "content.code.annotate", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
