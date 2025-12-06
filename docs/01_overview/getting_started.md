@@ -650,6 +650,46 @@ Found something missing or incorrect?
 2. Submit a pull request: [Contributing Guide](https://github.com/tydukes/coding-style-guide/blob/main/CONTRIBUTING.md)
 3. Join discussions: [GitHub Discussions](https://github.com/tydukes/coding-style-guide/discussions)
 
+## See Also
+
+### Core Documentation
+
+- [Principles](principles.md) - Style guide philosophy and core values
+- [Governance](governance.md) - Decision-making and contribution process
+- [Structure](structure.md) - Repository organization patterns
+- [Metadata Schema](../03_metadata_schema/schema_reference.md) - Frontmatter requirements
+
+### Popular Language Guides
+
+- [Python Style Guide](../02_language_guides/python.md) - Python development standards
+- [TypeScript Style Guide](../02_language_guides/typescript.md) - TypeScript development standards
+- [Terraform Style Guide](../02_language_guides/terraform.md) - Infrastructure as Code standards
+- [Bash Style Guide](../02_language_guides/bash.md) - Shell scripting standards
+
+### Development Setup
+
+- [IDE Integration Guide](../05_ci_cd/ide_integration_guide.md) - Editor setup for validation
+- [Pre-commit Hooks Guide](../05_ci_cd/precommit_hooks_guide.md) - Local validation hooks
+- [Local Validation Setup](../05_ci_cd/local_validation_setup.md) - Development environment
+
+### CI/CD Integration
+
+- [GitHub Actions Guide](../05_ci_cd/github_actions_guide.md) - GitHub workflow examples
+- [GitLab CI Guide](../05_ci_cd/gitlab_ci_guide.md) - GitLab pipeline examples
+- [Jenkins Pipeline Guide](../05_ci_cd/jenkins_pipeline_guide.md) - Jenkins configuration
+- [AI Validation Pipeline](../05_ci_cd/ai_validation_pipeline.md) - Automated code review
+
+### Templates & Examples
+
+- [README Template](../04_templates/README_template.md) - Project documentation
+- [Python Package Template](../04_templates/python_package_template.md) - Python project structure
+- [Terraform Module Template](../04_templates/terraform_module_template.md) - Terraform module structure
+
+### Container Usage
+
+- [Container Usage Guide](../06_container/usage.md) - Docker-based validation
+- [Integration Guide](../07_integration/integration_prompt.md) - Integrate into your projects
+
 ## Resources
 
 ### Documentation

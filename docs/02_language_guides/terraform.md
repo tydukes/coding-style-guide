@@ -1218,6 +1218,50 @@ output "internet_gateway_id" {
 
 ---
 
+## See Also
+
+### Related Infrastructure Guides
+
+- [HCL Style Guide](hcl.md) - HashiCorp Configuration Language fundamentals
+- [Terragrunt Guide](terragrunt.md) - DRY Terraform configurations
+- [AWS CDK Guide](cdk.md) - Alternative IaC with TypeScript/Python
+- [Kubernetes & Helm Guide](kubernetes.md) - Container orchestration IaC
+
+### Configuration Management
+
+- [Ansible Guide](ansible.md) - Configuration management and provisioning
+
+### Development Tools & Practices
+
+- [IDE Integration Guide](../05_ci_cd/ide_integration_guide.md) - VS Code, IntelliJ Terraform plugins
+- [Pre-commit Hooks Guide](../05_ci_cd/precommit_hooks_guide.md) - terraform fmt, validate, tflint
+- [Local Validation Setup](../05_ci_cd/local_validation_setup.md) - Terraform, tflint, checkov setup
+
+### Testing & Quality
+
+- [Testing Strategies](../05_ci_cd/testing_strategies.md) - Terratest, kitchen-terraform patterns
+- [Security Scanning Guide](../05_ci_cd/security_scanning_guide.md) - checkov, tfsec, terrascan
+
+### CI/CD Integration
+
+- [GitHub Actions Guide](../05_ci_cd/github_actions_guide.md) - Terraform workflow examples
+- [GitLab CI Guide](../05_ci_cd/gitlab_ci_guide.md) - Terraform pipeline configuration
+- [AI Validation Pipeline](../05_ci_cd/ai_validation_pipeline.md) - Automated IaC review
+
+### Templates & Examples
+
+- [Terraform Module Template](../04_templates/terraform_module_template.md) - Module structure
+- [Terraform Module Example](../05_examples/terraform_module_example.md) - Complete module
+
+### Core Documentation
+
+- [Getting Started Guide](../01_overview/getting_started.md) - Repository setup
+- [Metadata Schema Reference](../03_metadata_schema/schema_reference.md) - Frontmatter requirements
+- [Structure Guide](../01_overview/structure.md) - Terraform project organization
+- [Principles](../01_overview/principles.md) - Style guide philosophy
+
+---
+
 ## References
 
 ### Official Documentation
