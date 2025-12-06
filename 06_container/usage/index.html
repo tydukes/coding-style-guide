@@ -4033,7 +4033,7 @@
 integrate validation into any repository without installing dependencies locally.</p>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <h3 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Run full validation on current directory</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run full validation on current directory</span>
 docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>validate
 
@@ -4045,7 +4045,6 @@ docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </
 docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>format
 </code></pre></div>
-
 <h2 id="available-commands">Available Commands<a class="headerlink" href="#available-commands" title="Permanent link">&para;</a></h2>
 <h3 id="validate-default"><code>validate</code> (default)<a class="headerlink" href="#validate-default" title="Permanent link">&para;</a></h3>
 <p>Runs all validation checks:</p>
@@ -4054,37 +4053,32 @@ docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </
 <li>Linters (Python, YAML, Shell, etc.)</li>
 <li>Documentation build (if <code>mkdocs.yml</code> present)</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>validate
 </code></pre></div>
-
 <h3 id="lint"><code>lint</code><a class="headerlink" href="#lint" title="Permanent link">&para;</a></h3>
 <p>Runs linters only without building documentation:</p>
-<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>lint
 </code></pre></div>
-
 <h3 id="format"><code>format</code><a class="headerlink" href="#format" title="Permanent link">&para;</a></h3>
 <p>Auto-formats code (Python with Black, Terraform):</p>
-<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>format
 </code></pre></div>
-
 <h3 id="docs"><code>docs</code><a class="headerlink" href="#docs" title="Permanent link">&para;</a></h3>
 <p>Builds and validates MkDocs documentation:</p>
-<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>docs
 </code></pre></div>
-
 <h3 id="metadata"><code>metadata</code><a class="headerlink" href="#metadata" title="Permanent link">&para;</a></h3>
 <p>Validates <code>@module</code> metadata tags:</p>
-<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>metadata
 </code></pre></div>
-
 <h2 id="using-with-docker-compose">Using with Docker Compose<a class="headerlink" href="#using-with-docker-compose" title="Permanent link">&para;</a></h2>
 <p>Create a <code>docker-compose.yml</code> in your repository:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
 
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">validate</span><span class="p">:</span>
@@ -4093,19 +4087,17 @@ docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.:/workspace</span>
 <span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate</span>
 </code></pre></div>
-
 <p>Then run:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Full validation</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Full validation</span>
 docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>validate
 
 <span class="c1"># Or specify command</span>
 docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>validate<span class="w"> </span>lint
 </code></pre></div>
-
 <h2 id="github-actions-integration">GitHub Actions Integration<a class="headerlink" href="#github-actions-integration" title="Permanent link">&para;</a></h2>
 <h3 id="using-the-reusable-action">Using the Reusable Action<a class="headerlink" href="#using-the-reusable-action" title="Permanent link">&para;</a></h3>
 <p>Add to your <code>.github/workflows/ci.yml</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI</span>
 
 <span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pull_request</span><span class="p p-Indicator">]</span>
 
@@ -4121,7 +4113,6 @@ docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class
 <span class="w">          </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate</span>
 <span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
 </code></pre></div>
-
 <h3 id="action-inputs">Action Inputs<a class="headerlink" href="#action-inputs" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -4166,7 +4157,7 @@ docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class
 </tbody>
 </table>
 <h3 id="using-container-directly">Using Container Directly<a class="headerlink" href="#using-container-directly" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI</span>
 
 <span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pull_request</span><span class="p p-Indicator">]</span>
 
@@ -4181,10 +4172,9 @@ docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class
 <span class="w">          </span><span class="no">docker run --rm -v $PWD:/workspace \</span>
 <span class="w">            </span><span class="no">ghcr.io/tydukes/coding-style-guide:latest validate</span>
 </code></pre></div>
-
 <h2 id="cli-wrapper-script">CLI Wrapper Script<a class="headerlink" href="#cli-wrapper-script" title="Permanent link">&para;</a></h2>
 <p>For easier local usage, use the wrapper script:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Download wrapper script</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Download wrapper script</span>
 curl<span class="w"> </span>-sSL<span class="w"> </span>https://raw.githubusercontent.com/tydukes/coding-style-guide/main/scripts/validate-container.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-o<span class="w"> </span>validate-style.sh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>validate-style.sh
 
@@ -4197,9 +4187,8 @@ curl<span class="w"> </span>-sSL<span class="w"> </span>https://raw.githubuserco
 <span class="c1"># Use local image</span>
 ./validate-style.sh<span class="w"> </span>validate<span class="w"> </span>--image<span class="w"> </span>coding-style-guide:local
 </code></pre></div>
-
 <h3 id="wrapper-options">Wrapper Options<a class="headerlink" href="#wrapper-options" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>./validate-style.sh<span class="w"> </span><span class="o">[</span>COMMAND<span class="o">]</span><span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code>./validate-style.sh<span class="w"> </span><span class="o">[</span>COMMAND<span class="o">]</span><span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 
 Commands:
 <span class="w">  </span>validate<span class="w">    </span>Run<span class="w"> </span>all<span class="w"> </span>validation<span class="w"> </span>checks<span class="w"> </span><span class="o">(</span>default<span class="o">)</span>
@@ -4214,7 +4203,6 @@ Options:
 <span class="w">  </span>--strict<span class="w">            </span>Fail<span class="w"> </span>on<span class="w"> </span>warnings
 <span class="w">  </span>--debug<span class="w">             </span>Enable<span class="w"> </span>debug<span class="w"> </span>output
 </code></pre></div>
-
 <h2 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -4249,7 +4237,7 @@ Options:
 </table>
 <h2 id="pre-commit-hook-integration">Pre-commit Hook Integration<a class="headerlink" href="#pre-commit-hook-integration" title="Permanent link">&para;</a></h2>
 <p>Add to <code>.pre-commit-config.yaml</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">repos</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">repos</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coding-style-validator</span>
@@ -4260,10 +4248,9 @@ Options:
 <span class="w">        </span><span class="nt">pass_filenames</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">        </span><span class="nt">always_run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
-
 <h2 id="gitlab-ci-integration">GitLab CI Integration<a class="headerlink" href="#gitlab-ci-integration" title="Permanent link">&para;</a></h2>
 <p>Add to <code>.gitlab-ci.yml</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">validate-coding-standards</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">validate-coding-standards</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:latest</span>
 <span class="w">  </span><span class="nt">services</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:dind</span>
@@ -4274,10 +4261,9 @@ Options:
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge_requests</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 </code></pre></div>
-
 <h2 id="jenkins-integration">Jenkins Integration<a class="headerlink" href="#jenkins-integration" title="Permanent link">&para;</a></h2>
 <p>Add to <code>Jenkinsfile</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
 
 <span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
@@ -4293,10 +4279,9 @@ Options:
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-
 <h2 id="building-locally">Building Locally<a class="headerlink" href="#building-locally" title="Permanent link">&para;</a></h2>
 <p>To build and test locally:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Build image</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Build image</span>
 docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>coding-style-guide:local<span class="w"> </span>.
 
 <span class="c1"># Test with docker-compose</span>
@@ -4305,30 +4290,26 @@ docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class
 <span class="c1"># Or run directly</span>
 docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span>coding-style-guide:local<span class="w"> </span>validate
 </code></pre></div>
-
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="permission-issues">Permission Issues<a class="headerlink" href="#permission-issues" title="Permanent link">&para;</a></h3>
 <p>If you encounter permission issues with mounted volumes:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Run as current user</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run as current user</span>
 docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--user<span class="w"> </span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span>:<span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>validate
 </code></pre></div>
-
 <h3 id="missing-files">Missing Files<a class="headerlink" href="#missing-files" title="Permanent link">&para;</a></h3>
 <p>Ensure your repository is properly mounted:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Verify mount</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify mount</span>
 docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>/workspace
 </code></pre></div>
-
 <h3 id="debug-mode">Debug Mode<a class="headerlink" href="#debug-mode" title="Permanent link">&para;</a></h3>
 <p>Enable debug output:</p>
-<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-e<span class="w"> </span><span class="nv">DEBUG</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>validate
 </code></pre></div>
-
 <h2 id="image-tags">Image Tags<a class="headerlink" href="#image-tags" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>latest</code> - Latest stable release from main branch</li>

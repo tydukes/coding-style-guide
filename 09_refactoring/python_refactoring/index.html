@@ -3764,7 +3764,7 @@
 <h2 id="extract-function">Extract Function<a class="headerlink" href="#extract-function" title="Permanent link">&para;</a></h2>
 <h3 id="problem-long-complex-function-doing-multiple-things">Problem: Long, complex function doing multiple things<a class="headerlink" href="#problem-long-complex-function-doing-multiple-things" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong> (150 lines, cyclomatic complexity: 18):</p>
-<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_user_data</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_user_data</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
     <span class="c1"># Fetch user from database</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">DATABASE_URL</span><span class="p">)</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
@@ -3811,9 +3811,8 @@
 
     <span class="k">return</span> <span class="n">response</span>
 </code></pre></div>
-
 <p><strong>After</strong> (well-structured, cyclomatic complexity: 3):</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
@@ -3887,7 +3886,6 @@
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="n">subscription_end</span> <span class="o">&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Single Responsibility Principle: Each function does one thing</li>
@@ -3902,7 +3900,7 @@
 <h2 id="replace-magic-numbers">Replace Magic Numbers<a class="headerlink" href="#replace-magic-numbers" title="Permanent link">&para;</a></h2>
 <h3 id="problem-hard-coded-values-throughout-code">Problem: Hard-coded values throughout code<a class="headerlink" href="#problem-hard-coded-values-throughout-code" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calculate_shipping</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">distance</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calculate_shipping</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">distance</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">weight</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
         <span class="n">base_cost</span> <span class="o">=</span> <span class="mf">10.0</span>
     <span class="k">elif</span> <span class="n">weight</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">:</span>
@@ -3924,9 +3922,8 @@
 
     <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span>
 
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -3999,7 +3996,6 @@
 
     <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Named constants instead of magic numbers</li>
@@ -4012,7 +4008,7 @@
 <h2 id="simplify-complex-conditionals">Simplify Complex Conditionals<a class="headerlink" href="#simplify-complex-conditionals" title="Permanent link">&para;</a></h2>
 <h3 id="problem-nested-ifelse-statements">Problem: Nested if/else statements<a class="headerlink" href="#problem-nested-ifelse-statements" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_user_discount</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_user_discount</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_premium</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">years_member</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">total_purchases</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">:</span>
@@ -4035,9 +4031,8 @@
 
     <span class="k">return</span> <span class="n">discount</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">UserProtocol</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
@@ -4089,7 +4084,6 @@
 
     <span class="k">return</span> <span class="mf">0.0</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Eliminated nested conditionals</li>
@@ -4102,7 +4096,7 @@
 <h2 id="use-list-comprehensions-effectively">Use List Comprehensions Effectively<a class="headerlink" href="#use-list-comprehensions-effectively" title="Permanent link">&para;</a></h2>
 <h3 id="problem-verbose-loop-based-transformations">Problem: Verbose loop-based transformations<a class="headerlink" href="#problem-verbose-loop-based-transformations" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_orders</span><span class="p">(</span><span class="n">orders</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_orders</span><span class="p">(</span><span class="n">orders</span><span class="p">):</span>
     <span class="c1"># Filter active orders</span>
     <span class="n">active_orders</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="n">orders</span><span class="p">:</span>
@@ -4130,9 +4124,8 @@
 
     <span class="k">return</span> <span class="n">high_value_orders</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Protocol</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Protocol</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">OrderItem</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
@@ -4181,7 +4174,6 @@
         <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="n">HIGH_VALUE_THRESHOLD</span>
     <span class="p">]</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Single comprehension instead of multiple loops</li>
@@ -4194,7 +4186,7 @@
 <h2 id="apply-type-hints">Apply Type Hints<a class="headerlink" href="#apply-type-hints" title="Permanent link">&para;</a></h2>
 <h3 id="problem-unclear-function-signatures-and-return-types">Problem: Unclear function signatures and return types<a class="headerlink" href="#problem-unclear-function-signatures-and-return-types" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fetch_user_data</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">include_orders</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fetch_user_data</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">include_orders</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -4218,9 +4210,8 @@
         <span class="k">return</span> <span class="n">product</span><span class="o">.</span><span class="n">price</span> <span class="o">*</span> <span class="mf">0.15</span>
     <span class="k">return</span> <span class="n">product</span><span class="o">.</span><span class="n">price</span> <span class="o">*</span> <span class="mf">0.05</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">OrderDict</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
@@ -4302,7 +4293,6 @@
     <span class="n">discount_rate</span> <span class="o">=</span> <span class="n">PREMIUM_DISCOUNT_RATE</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">premium</span> <span class="k">else</span> <span class="n">STANDARD_DISCOUNT_RATE</span>
     <span class="k">return</span> <span class="n">product</span><span class="o">.</span><span class="n">price</span> <span class="o">*</span> <span class="n">discount_rate</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Complete type hints for all parameters and returns</li>

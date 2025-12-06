@@ -5132,7 +5132,7 @@ for creating maintainable, efficient pipelines.</p>
 <hr />
 <h2 id="basic-pipeline-structure">Basic Pipeline Structure<a class="headerlink" href="#basic-pipeline-structure" title="Permanent link">&para;</a></h2>
 <h3 id="simple-pipeline">Simple Pipeline<a class="headerlink" href="#simple-pipeline" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">stages</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">stages</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
@@ -5168,11 +5168,10 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">  </span><span class="nt">only</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 </code></pre></div>
-
 <hr />
 <h2 id="stages">Stages<a class="headerlink" href="#stages" title="Permanent link">&para;</a></h2>
 <h3 id="define-stages">Define Stages<a class="headerlink" href="#define-stages" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Stages execute in order</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Stages execute in order</span>
 <span class="nt">stages</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
@@ -5183,11 +5182,10 @@ for creating maintainable, efficient pipelines.</p>
 <span class="c1"># Jobs in same stage run in parallel</span>
 <span class="c1"># Jobs in next stage wait for previous stage to complete</span>
 </code></pre></div>
-
 <hr />
 <h2 id="jobs">Jobs<a class="headerlink" href="#jobs" title="Permanent link">&para;</a></h2>
 <h3 id="job-configuration">Job Configuration<a class="headerlink" href="#job-configuration" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">job_name</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">job_name</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:18-alpine</span>
 <span class="w">  </span><span class="nt">tags</span><span class="p">:</span>
@@ -5213,11 +5211,10 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">runner_system_failure</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stuck_or_timeout_failure</span>
 </code></pre></div>
-
 <hr />
 <h2 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">&para;</a></h2>
 <h3 id="global-variables">Global Variables<a class="headerlink" href="#global-variables" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">variables</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">variables</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;testdb&quot;</span>
 <span class="w">  </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;testuser&quot;</span>
 <span class="w">  </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;testpass&quot;</span>
@@ -5226,9 +5223,8 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">  </span><span class="nt">GIT_STRATEGY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clone</span>
 <span class="w">  </span><span class="nt">GIT_DEPTH</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;50&quot;</span>
 </code></pre></div>
-
 <h3 id="job-variables">Job Variables<a class="headerlink" href="#job-variables" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">deploy_staging</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">deploy_staging</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
 <span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">DEPLOY_ENV</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;staging&quot;</span>
@@ -5237,10 +5233,9 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;Deploying to $DEPLOY_ENV&quot;</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./deploy.sh</span>
 </code></pre></div>
-
 <h3 id="protected-variables">Protected Variables<a class="headerlink" href="#protected-variables" title="Permanent link">&para;</a></h3>
 <p>Set in GitLab UI under Settings &gt; CI/CD &gt; Variables:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">deploy_production</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">deploy_production</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;API Key</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$API_KEY&quot;</span><span class="w">  </span><span class="c1"># From protected variable</span>
@@ -5248,11 +5243,10 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">  </span><span class="nt">only</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 </code></pre></div>
-
 <hr />
 <h2 id="artifacts">Artifacts<a class="headerlink" href="#artifacts" title="Permanent link">&para;</a></h2>
 <h3 id="basic-artifacts">Basic Artifacts<a class="headerlink" href="#basic-artifacts" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">build</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">build</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run build</span>
@@ -5262,9 +5256,8 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build/</span>
 <span class="w">    </span><span class="nt">expire_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 week</span>
 </code></pre></div>
-
 <h3 id="artifact-with-reports">Artifact with Reports<a class="headerlink" href="#artifact-with-reports" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">test</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">test</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
@@ -5279,9 +5272,8 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coverage/</span>
 <span class="w">    </span><span class="nt">expire_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30 days</span>
 </code></pre></div>
-
 <h3 id="download-artifacts-from-another-job">Download Artifacts from Another Job<a class="headerlink" href="#download-artifacts-from-another-job" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">deploy</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">deploy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
 <span class="w">  </span><span class="nt">dependencies</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
@@ -5289,11 +5281,10 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ls dist/</span><span class="w">  </span><span class="c1"># Artifacts from build job</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./deploy.sh</span>
 </code></pre></div>
-
 <hr />
 <h2 id="cache">Cache<a class="headerlink" href="#cache" title="Permanent link">&para;</a></h2>
 <h3 id="npm-cache">NPM Cache<a class="headerlink" href="#npm-cache" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">.node_cache</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;node_cache</span>
+<div class="highlight"><pre><span></span><code><span class="nt">.node_cache</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;node_cache</span>
 <span class="w">  </span><span class="nt">cache</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CI_COMMIT_REF_SLUG}</span>
 <span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
@@ -5307,9 +5298,8 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci --cache .npm</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
 </code></pre></div>
-
 <h3 id="global-cache">Global Cache<a class="headerlink" href="#global-cache" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">cache</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">cache</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CI_COMMIT_REF_SLUG}</span>
 <span class="w">  </span><span class="nt">paths</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node_modules/</span>
@@ -5327,11 +5317,10 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run build</span>
 </code></pre></div>
-
 <hr />
 <h2 id="docker-in-docker-dind">Docker-in-Docker (DinD)<a class="headerlink" href="#docker-in-docker-dind" title="Permanent link">&para;</a></h2>
 <h3 id="building-docker-images">Building Docker Images<a class="headerlink" href="#building-docker-images" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">build_image</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">build_image</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:latest</span>
 <span class="w">  </span><span class="nt">services</span><span class="p">:</span>
@@ -5348,11 +5337,10 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">  </span><span class="nt">only</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 </code></pre></div>
-
 <hr />
 <h2 id="conditional-execution">Conditional Execution<a class="headerlink" href="#conditional-execution" title="Permanent link">&para;</a></h2>
 <h3 id="onlyexcept">Only/Except<a class="headerlink" href="#onlyexcept" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Run only on specific branches</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run only on specific branches</span>
 <span class="nt">deploy_production</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
@@ -5376,9 +5364,8 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">  </span><span class="nt">only</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge_requests</span>
 </code></pre></div>
-
 <h3 id="rules-preferred">Rules (Preferred)<a class="headerlink" href="#rules-preferred" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">deploy</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">deploy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./deploy.sh</span>
@@ -5398,20 +5385,18 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == &quot;main&quot;</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == &quot;develop&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="templates-and-includes">Templates and Includes<a class="headerlink" href="#templates-and-includes" title="Permanent link">&para;</a></h2>
 <h3 id="include-external-files">Include External Files<a class="headerlink" href="#include-external-files" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">include</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">include</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">local</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;.gitlab/ci/build.yml&#39;</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">local</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;.gitlab/ci/test.yml&#39;</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">local</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;.gitlab/ci/deploy.yml&#39;</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security/SAST.gitlab-ci.yml</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">remote</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;https://example.com/ci-templates/docker.yml&#39;</span>
 </code></pre></div>
-
 <h3 id="anchor-and-aliases-yaml">Anchor and Aliases (YAML)<a class="headerlink" href="#anchor-and-aliases-yaml" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">.job_template</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;job_definition</span>
+<div class="highlight"><pre><span></span><code><span class="nt">.job_template</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;job_definition</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:18-alpine</span>
 <span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
@@ -5430,9 +5415,8 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run build</span>
 </code></pre></div>
-
 <h3 id="extends">Extends<a class="headerlink" href="#extends" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">.base_job</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">.base_job</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:18-alpine</span>
 <span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
@@ -5451,11 +5435,10 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run build</span>
 </code></pre></div>
-
 <hr />
 <h2 id="parallel-jobs">Parallel Jobs<a class="headerlink" href="#parallel-jobs" title="Permanent link">&para;</a></h2>
 <h3 id="matrix-jobs">Matrix Jobs<a class="headerlink" href="#matrix-jobs" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">test</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">test</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="nt">parallel</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">matrix</span><span class="p">:</span>
@@ -5466,19 +5449,17 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
 </code></pre></div>
-
 <h3 id="simple-parallel">Simple Parallel<a class="headerlink" href="#simple-parallel" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">test</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">test</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="nt">parallel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test -- --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL</span>
 </code></pre></div>
-
 <hr />
 <h2 id="services">Services<a class="headerlink" href="#services" title="Permanent link">&para;</a></h2>
 <h3 id="postgresql-service">PostgreSQL Service<a class="headerlink" href="#postgresql-service" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">test</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">test</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:18-alpine</span>
 <span class="w">  </span><span class="nt">services</span><span class="p">:</span>
@@ -5492,9 +5473,8 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run test:db</span>
 </code></pre></div>
-
 <h3 id="multiple-services">Multiple Services<a class="headerlink" href="#multiple-services" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">integration_test</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">integration_test</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="nt">services</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15-alpine</span>
@@ -5506,11 +5486,10 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run test:integration</span>
 </code></pre></div>
-
 <hr />
 <h2 id="multi-project-pipelines">Multi-Project Pipelines<a class="headerlink" href="#multi-project-pipelines" title="Permanent link">&para;</a></h2>
 <h3 id="trigger-downstream-pipeline">Trigger Downstream Pipeline<a class="headerlink" href="#trigger-downstream-pipeline" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">trigger_deploy</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">trigger_deploy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
 <span class="w">  </span><span class="nt">trigger</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mygroup/deployment-project</span>
@@ -5519,9 +5498,8 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">  </span><span class="nt">only</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 </code></pre></div>
-
 <h3 id="parent-child-pipelines">Parent-Child Pipelines<a class="headerlink" href="#parent-child-pipelines" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">generate_child</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">generate_child</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;Generating child pipeline config&quot;</span>
@@ -5537,11 +5515,10 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">artifact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">child-pipeline.yml</span>
 <span class="w">        </span><span class="nt">job</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">generate_child</span>
 </code></pre></div>
-
 <hr />
 <h2 id="complete-pipeline-example">Complete Pipeline Example<a class="headerlink" href="#complete-pipeline-example" title="Permanent link">&para;</a></h2>
 <h3 id="full-stack-application-pipeline">Full-Stack Application Pipeline<a class="headerlink" href="#full-stack-application-pipeline" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">workflow</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">workflow</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == &quot;main&quot;</span>
@@ -5696,11 +5673,10 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security/SAST.gitlab-ci.yml</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security/Dependency-Scanning.gitlab-ci.yml</span>
 </code></pre></div>
-
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-no-cache">❌ Avoid: No Cache<a class="headerlink" href="#avoid-no-cache" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Reinstalling dependencies every time</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Reinstalling dependencies every time</span>
 <span class="nt">test</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm install</span>
@@ -5716,9 +5692,8 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
 </code></pre></div>
-
 <h3 id="avoid-hardcoded-secrets">❌ Avoid: Hardcoded Secrets<a class="headerlink" href="#avoid-hardcoded-secrets" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Hardcoded credentials</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Hardcoded credentials</span>
 <span class="nt">deploy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh user@server &quot;password123&quot;</span>
@@ -5728,9 +5703,8 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh $DEPLOY_USER@$DEPLOY_SERVER</span>
 </code></pre></div>
-
 <h3 id="avoid-no-artifact-expiration">❌ Avoid: No Artifact Expiration<a class="headerlink" href="#avoid-no-artifact-expiration" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Artifacts kept forever</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Artifacts kept forever</span>
 <span class="nt">build</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
@@ -5743,12 +5717,11 @@ for creating maintainable, efficient pipelines.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/</span>
 <span class="w">    </span><span class="nt">expire_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 week</span>
 </code></pre></div>
-
 <hr />
 <h2 id="tool-configuration">Tool Configuration<a class="headerlink" href="#tool-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="gitlab-ci-local-local-pipeline-testing">gitlab-ci-local - Local Pipeline Testing<a class="headerlink" href="#gitlab-ci-local-local-pipeline-testing" title="Permanent link">&para;</a></h3>
 <p>Install and configure gitlab-ci-local for testing pipelines locally:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Install gitlab-ci-local (npm)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install gitlab-ci-local (npm)</span>
 npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>gitlab-ci-local
 
 <span class="c1"># Install gitlab-ci-local (brew)</span>
@@ -5772,9 +5745,8 @@ gitlab-ci-local<span class="w"> </span>--preview
 <span class="c1"># Use specific variables</span>
 gitlab-ci-local<span class="w"> </span>--variable<span class="w"> </span><span class="nv">CI_COMMIT_REF_NAME</span><span class="o">=</span>main
 </code></pre></div>
-
 <h3 id="gitlab-ci-local-variablesyml">.gitlab-ci-local-variables.yml<a class="headerlink" href="#gitlab-ci-local-variablesyml" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .gitlab-ci-local-variables.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .gitlab-ci-local-variables.yml</span>
 <span class="c1"># Local development variables</span>
 <span class="nt">CI_PROJECT_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-project</span>
 <span class="nt">CI_COMMIT_BRANCH</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
@@ -5782,9 +5754,8 @@ gitlab-ci-local<span class="w"> </span>--variable<span class="w"> </span><span c
 <span class="nt">DOCKER_REGISTRY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost:5000</span>
 <span class="nt">DEPLOY_ENV</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">development</span>
 </code></pre></div>
-
 <h3 id="gitlab-ci-lint-pipeline-validation">gitlab-ci-lint - Pipeline Validation<a class="headerlink" href="#gitlab-ci-lint-pipeline-validation" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Validate .gitlab-ci.yml syntax (requires GitLab instance)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Validate .gitlab-ci.yml syntax (requires GitLab instance)</span>
 gitlab-ci-lint<span class="w"> </span>.gitlab-ci.yml
 
 <span class="c1"># Using GitLab API</span>
@@ -5795,9 +5766,8 @@ curl<span class="w"> </span>--header<span class="w"> </span><span class="s2">&qu
 <span class="c1"># Using glab CLI</span>
 glab<span class="w"> </span>ci<span class="w"> </span>lint
 </code></pre></div>
-
 <h3 id="vs-code-settings">VS Code Settings<a class="headerlink" href="#vs-code-settings" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;files.associations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;.gitlab-ci*.yml&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yaml&quot;</span>
 <span class="w">  </span><span class="p">},</span>
@@ -5816,9 +5786,8 @@ glab<span class="w"> </span>ci<span class="w"> </span>lint
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="pre-commit-hooks">Pre-commit Hooks<a class="headerlink" href="#pre-commit-hooks" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
 <span class="nt">repos</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/pre-commit-hooks</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v4.5.0</span>
@@ -5846,9 +5815,8 @@ glab<span class="w"> </span>ci<span class="w"> </span>lint
 <span class="w">        </span><span class="nt">files</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\.gitlab-ci\.yml$</span>
 <span class="w">        </span><span class="nt">pass_filenames</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </code></pre></div>
-
 <h3 id="yamllint-configuration">yamllint Configuration<a class="headerlink" href="#yamllint-configuration" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .yamllint</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .yamllint</span>
 <span class="nt">extends</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 
 <span class="nt">rules</span><span class="p">:</span>
@@ -5865,9 +5833,8 @@ glab<span class="w"> </span>ci<span class="w"> </span>lint
 <span class="w">    </span><span class="nt">allowed-values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;true&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;false&#39;</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">key-duplicates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enable</span>
 </code></pre></div>
-
 <h3 id="editorconfig">EditorConfig<a class="headerlink" href="#editorconfig" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .editorconfig</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .editorconfig</span>
 <span class="k">[.gitlab-ci*.{yml,yaml}]</span>
 <span class="na">indent_style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">space</span>
 <span class="na">indent_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
@@ -5876,9 +5843,8 @@ glab<span class="w"> </span>ci<span class="w"> </span>lint
 <span class="na">trim_trailing_whitespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
 <span class="na">insert_final_newline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
 </code></pre></div>
-
 <h3 id="makefile">Makefile<a class="headerlink" href="#makefile" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Makefile</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Makefile</span>
 <span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">ci</span>-<span class="n">local</span> <span class="n">ci</span>-<span class="n">list</span> <span class="n">ci</span>-<span class="n">validate</span>
 
 <span class="nf">ci-local</span><span class="o">:</span>
@@ -5900,10 +5866,9 @@ glab<span class="w"> </span>ci<span class="w"> </span>lint
 <span class="nf">ci-debug</span><span class="o">:</span>
 <span class="w"> </span>gitlab-ci-local<span class="w"> </span>--shell-isolation<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="k">$(</span>JOB<span class="k">)</span>
 </code></pre></div>
-
 <h3 id="gitlab-ci-include-localyml">.gitlab-ci-include-local.yml<a class="headerlink" href="#gitlab-ci-include-localyml" title="Permanent link">&para;</a></h3>
 <p>Template for reusable CI configurations:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .gitlab-ci/templates/docker.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .gitlab-ci/templates/docker.yml</span>
 <span class="nt">.docker_build</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:24</span>
 <span class="w">  </span><span class="nt">services</span><span class="p">:</span>
@@ -5920,10 +5885,9 @@ glab<span class="w"> </span>ci<span class="w"> </span>lint
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA</span>
 </code></pre></div>
-
 <h3 id="gitlab-ci-workflow-validation-job">GitLab CI Workflow Validation Job<a class="headerlink" href="#gitlab-ci-workflow-validation-job" title="Permanent link">&para;</a></h3>
 <p>Add to your <code>.gitlab-ci.yml</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">validate:ci</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">validate:ci</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.pre</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python:3.11-slim</span>
 <span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
@@ -5936,9 +5900,8 @@ glab<span class="w"> </span>ci<span class="w"> </span>lint
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.gitlab-ci.yml</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.gitlab-ci/**/*</span>
 </code></pre></div>
-
 <h3 id="glab-cli-configuration">glab CLI Configuration<a class="headerlink" href="#glab-cli-configuration" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># ~/.config/glab-cli/config.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># ~/.config/glab-cli/config.yml</span>
 <span class="nt">hosts</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">gitlab.com</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-username</span>
@@ -5954,9 +5917,8 @@ glab<span class="w"> </span>ci<span class="w"> </span>lint
 
 <span class="nt">browser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">firefox</span>
 </code></pre></div>
-
 <h3 id="docker-compose-for-local-gitlab-runner">Docker Compose for Local GitLab Runner<a class="headerlink" href="#docker-compose-for-local-gitlab-runner" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># docker-compose.gitlab-runner.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># docker-compose.gitlab-runner.yml</span>
 <span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
 
 <span class="nt">services</span><span class="p">:</span>
@@ -5968,7 +5930,6 @@ glab<span class="w"> </span>ci<span class="w"> </span>lint
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./gitlab-runner-config:/etc/gitlab-runner</span>
 <span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
 </code></pre></div>
-
 <hr />
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <h3 id="official-documentation">Official Documentation<a class="headerlink" href="#official-documentation" title="Permanent link">&para;</a></h3>

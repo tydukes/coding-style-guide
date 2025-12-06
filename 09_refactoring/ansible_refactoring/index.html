@@ -3765,7 +3765,7 @@ to best practices.</p>
 <h2 id="extract-roles-from-playbooks">Extract Roles from Playbooks<a class="headerlink" href="#extract-roles-from-playbooks" title="Permanent link">&para;</a></h2>
 <h3 id="problem-monolithic-playbook-doing-everything">Problem: Monolithic playbook doing everything<a class="headerlink" href="#problem-monolithic-playbook-doing-everything" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong> (280-line playbook with everything inline):</p>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure web servers</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webservers</span>
 <span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -3878,9 +3878,8 @@ to best practices.</p>
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">app_name</span><span class="nv"> </span><span class="s">}}&quot;</span>
 <span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restarted</span>
 </code></pre></div>
-
 <p><strong>After</strong> (modular role-based structure):</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># playbooks/configure_webservers.yml (now 20 lines)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># playbooks/configure_webservers.yml (now 20 lines)</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure web servers</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webservers</span>
@@ -4078,7 +4077,6 @@ to best practices.</p>
 <span class="w">  </span><span class="nt">ufw</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enabled</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Modular structure with reusable roles</li>
@@ -4092,7 +4090,7 @@ to best practices.</p>
 <h2 id="use-blocks-for-error-handling">Use Blocks for Error Handling<a class="headerlink" href="#use-blocks-for-error-handling" title="Permanent link">&para;</a></h2>
 <h3 id="problem-no-error-handling-tasks-fail-and-leave-system-in-inconsistent-state">Problem: No error handling, tasks fail and leave system in inconsistent state<a class="headerlink" href="#problem-no-error-handling-tasks-fail-and-leave-system-in-inconsistent-state" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy application</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webservers</span>
 <span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -4129,9 +4127,8 @@ to best practices.</p>
 <span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">started</span>
 <span class="w">      </span><span class="c1"># This never runs if migration fails</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy application</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webservers</span>
 <span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -4271,7 +4268,6 @@ to best practices.</p>
 <span class="w">          </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slack_webhook_url is defined</span>
 <span class="w">          </span><span class="nt">delegate_to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Automatic rollback on failure</li>
@@ -4285,7 +4281,7 @@ to best practices.</p>
 <h2 id="apply-handlers-effectively">Apply Handlers Effectively<a class="headerlink" href="#apply-handlers-effectively" title="Permanent link">&para;</a></h2>
 <h3 id="problem-tasks-restart-services-multiple-times-unnecessarily">Problem: Tasks restart services multiple times unnecessarily<a class="headerlink" href="#problem-tasks-restart-services-multiple-times-unnecessarily" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure web server</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webservers</span>
 <span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -4328,9 +4324,8 @@ to best practices.</p>
 <span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restarted</span>
 <span class="w">    </span><span class="c1"># Nginx restarted 3 times when once at the end would suffice!</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure web server</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webservers</span>
 <span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -4392,9 +4387,8 @@ to best practices.</p>
 <span class="w">      </span><span class="nt">changed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">      </span><span class="c1"># Validation handler for manual triggering</span>
 </code></pre></div>
-
 <p><strong>Even Better</strong> (with handler dependencies):</p>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure web server with handler dependencies</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webservers</span>
 <span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -4447,7 +4441,6 @@ to best practices.</p>
 <span class="w">          </span><span class="nt">fail</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Nginx</span><span class="nv"> </span><span class="s">configuration</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">invalid.</span><span class="nv"> </span><span class="s">Check</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">templates.&quot;</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Service reloaded once instead of multiple times</li>
@@ -4461,7 +4454,7 @@ to best practices.</p>
 <h2 id="simplify-conditionals">Simplify Conditionals<a class="headerlink" href="#simplify-conditionals" title="Permanent link">&para;</a></h2>
 <h3 id="problem-complex-when-conditions-repeated-across-tasks">Problem: Complex when conditions repeated across tasks<a class="headerlink" href="#problem-complex-when-conditions-repeated-across-tasks" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure application</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all</span>
 <span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -4505,9 +4498,8 @@ to best practices.</p>
 
 <span class="w">    </span><span class="c1"># Repeated conditionals throughout...</span>
 </code></pre></div>
-
 <p><strong>After</strong> (using includes and group_vars):</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># group_vars/production.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># group_vars/production.yml</span>
 <span class="nn">---</span>
 <span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
 <span class="nt">app_package</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp-pro</span>
@@ -4569,9 +4561,8 @@ to best practices.</p>
 <span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/myapp/database.yml</span>
 <span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0640&#39;</span>
 </code></pre></div>
-
 <p><strong>Alternative</strong> (using set_fact for complex conditions):</p>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure application</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all</span>
 <span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -4608,7 +4599,6 @@ to best practices.</p>
 <span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/myapp/database.yml</span>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">is_production_ubuntu | bool or is_production_centos | bool</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ No repeated complex conditionals</li>
@@ -4621,7 +4611,7 @@ to best practices.</p>
 <h2 id="use-collections">Use Collections<a class="headerlink" href="#use-collections" title="Permanent link">&para;</a></h2>
 <h3 id="problem-using-deprecated-or-built-in-modules-with-limited-functionality">Problem: Using deprecated or built-in modules with limited functionality<a class="headerlink" href="#problem-using-deprecated-or-built-in-modules-with-limited-functionality" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong> (using built-in modules):</p>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Manage AWS resources</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
 <span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no</span>
@@ -4653,9 +4643,8 @@ to best practices.</p>
 <span class="w">        </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
 <span class="w">        </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">db_password</span><span class="nv"> </span><span class="s">}}&quot;</span>
 </code></pre></div>
-
 <p><strong>After</strong> (using amazon.aws collection):</p>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Manage AWS resources</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
 <span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no</span>
@@ -4731,9 +4720,8 @@ to best practices.</p>
 <span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Instance</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">item.tags.Name</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">IP</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">item.public_ip_address</span><span class="nv"> </span><span class="s">}}&quot;</span>
 <span class="w">      </span><span class="nt">loop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">ec2_info.instances</span><span class="nv"> </span><span class="s">}}&quot;</span>
 </code></pre></div>
-
 <p><strong>Using Multiple Collections</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Complete infrastructure setup</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
 <span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no</span>
@@ -4767,7 +4755,6 @@ to best practices.</p>
 <span class="w">        </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#ops&quot;</span>
 <span class="w">      </span><span class="nt">delegate_to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Modern, maintained modules with full features</li>

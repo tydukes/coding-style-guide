@@ -3937,7 +3937,7 @@
 Helm charts enable version control, templating, and dependency management for Kubernetes deployments.</p>
 <hr />
 <h2 id="chart-structure">Chart Structure<a class="headerlink" href="#chart-structure" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>my-app/
+<div class="highlight"><pre><span></span><code>my-app/
 ├── Chart.yaml
 ├── values.yaml
 ├── values-dev.yaml
@@ -3958,10 +3958,9 @@ Helm charts enable version control, templating, and dependency management for Ku
 ├── charts/
 └── .helmignore
 </code></pre></div>
-
 <hr />
 <h2 id="chartyaml">Chart.yaml<a class="headerlink" href="#chartyaml" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2</span>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
 <span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A Helm chart for deploying my-app on Kubernetes</span>
 <span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application</span>
@@ -3997,10 +3996,9 @@ Helm charts enable version control, templating, and dependency management for Ku
 <span class="w">  </span><span class="nt">category</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Application</span>
 <span class="w">  </span><span class="nt">licenses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Apache-2.0</span>
 </code></pre></div>
-
 <hr />
 <h2 id="valuesyaml">values.yaml<a class="headerlink" href="#valuesyaml" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Default values for my-app</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Default values for my-app</span>
 <span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 
 <span class="nt">image</span><span class="p">:</span>
@@ -4165,10 +4163,9 @@ Helm charts enable version control, templating, and dependency management for Ku
 <span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8Gi</span>
 </code></pre></div>
-
 <hr />
 <h2 id="templates_helperstpl">templates/_helpers.tpl<a class="headerlink" href="#templates_helperstpl" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">/*</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">/*</span>
 <span class="nv">Expand the name of the chart.</span>
 <span class="nv">*/</span><span class="p p-Indicator">}}</span>
 <span class="p p-Indicator">{{</span><span class="nv">- define &quot;my-app.name&quot; -</span><span class="p p-Indicator">}}</span>
@@ -4229,10 +4226,9 @@ Helm charts enable version control, templating, and dependency management for Ku
 <span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="templatesdeploymentyaml">templates/deployment.yaml<a class="headerlink" href="#templatesdeploymentyaml" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;my-app.fullname&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span>
@@ -4310,10 +4306,9 @@ Helm charts enable version control, templating, and dependency management for Ku
 <span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml . | nindent 8</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="templatesserviceyaml">templates/service.yaml<a class="headerlink" href="#templatesserviceyaml" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;my-app.fullname&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span>
@@ -4333,10 +4328,9 @@ Helm charts enable version control, templating, and dependency management for Ku
 <span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;my-app.selectorLabels&quot; . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="templatesingressyaml">templates/ingress.yaml<a class="headerlink" href="#templatesingressyaml" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">- if .Values.ingress.enabled -</span><span class="p p-Indicator">}}</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">- if .Values.ingress.enabled -</span><span class="p p-Indicator">}}</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -4378,10 +4372,9 @@ Helm charts enable version control, templating, and dependency management for Ku
 <span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="templatesconfigmapyaml">templates/configmap.yaml<a class="headerlink" href="#templatesconfigmapyaml" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;my-app.fullname&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span><span class="l l-Scalar l-Scalar-Plain">-config</span>
@@ -4392,10 +4385,9 @@ Helm charts enable version control, templating, and dependency management for Ku
 <span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.config.port | quote</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="w">  </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.config.environment | quote</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="templatessecretyaml">templates/secret.yaml<a class="headerlink" href="#templatessecretyaml" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">- if .Values.secrets.enabled</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">- if .Values.secrets.enabled</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -4409,10 +4401,9 @@ Helm charts enable version control, templating, and dependency management for Ku
 <span class="w">  </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="templatesserviceaccountyaml">templates/serviceaccount.yaml<a class="headerlink" href="#templatesserviceaccountyaml" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">- if .Values.serviceAccount.create -</span><span class="p p-Indicator">}}</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">- if .Values.serviceAccount.create -</span><span class="p p-Indicator">}}</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -4425,10 +4416,9 @@ Helm charts enable version control, templating, and dependency management for Ku
 <span class="w">  </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="templateshpayaml">templates/hpa.yaml<a class="headerlink" href="#templateshpayaml" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">- if .Values.autoscaling.enabled</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">- if .Values.autoscaling.enabled</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">autoscaling/v2</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HorizontalPodAutoscaler</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -4461,10 +4451,9 @@ Helm charts enable version control, templating, and dependency management for Ku
 <span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="templatespdbyaml">templates/pdb.yaml<a class="headerlink" href="#templatespdbyaml" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">- if .Values.podDisruptionBudget.enabled</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">- if .Values.podDisruptionBudget.enabled</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">policy/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PodDisruptionBudget</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -4478,10 +4467,9 @@ Helm charts enable version control, templating, and dependency management for Ku
 <span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;my-app.selectorLabels&quot; . | nindent 6</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="templatesnotestxt">templates/NOTES.txt<a class="headerlink" href="#templatesnotestxt" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>1. Get the application URL by running these commands:
+<div class="highlight"><pre><span></span><code>1. Get the application URL by running these commands:
 {{- if .Values.ingress.enabled }}
 {{- range $host := .Values.ingress.hosts }}
   {{- range .paths }}
@@ -4510,36 +4498,34 @@ Helm charts enable version control, templating, and dependency management for Ku
 3. View application logs:
   kubectl logs --namespace {{ .Release.Namespace }} -l app.kubernetes.io/name={{ include &quot;my-app.name&quot; . }} -f
 </code></pre></div>
-
 <hr />
 <h2 id="helmignore">.helmignore<a class="headerlink" href="#helmignore" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="nx">Patterns</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">ignore</span><span class="w"> </span><span class="nx">when</span><span class="w"> </span><span class="nx">building</span><span class="w"> </span><span class="nx">packages</span>
-<span class="p">.</span><span class="nx">git</span><span class="o">/</span>
-<span class="p">.</span><span class="nx">gitignore</span>
-<span class="p">.</span><span class="nx">DS_Store</span>
-<span class="p">.</span><span class="nx">idea</span><span class="o">/</span>
-<span class="o">*</span><span class="p">.</span><span class="nx">swp</span>
-<span class="o">*</span><span class="p">.</span><span class="nx">bak</span>
-<span class="o">*</span><span class="p">.</span><span class="nx">tmp</span>
-<span class="o">*</span><span class="p">.</span><span class="nx">orig</span>
-<span class="o">*~</span>
-<span class="p">.</span><span class="nx">vscode</span><span class="o">/</span>
-<span class="p">.</span><span class="nx">project</span>
-<span class="p">.</span><span class="nx">settings</span><span class="o">/</span>
+<div class="highlight"><pre><span></span><code># Patterns to ignore when building packages
+.git/
+.gitignore
+.DS_Store
+.idea/
+*.swp
+*.bak
+*.tmp
+*.orig
+*~
+.vscode/
+.project
+.settings/
 
-<span class="err">#</span><span class="w"> </span><span class="nx">CI</span><span class="o">/</span><span class="nx">CD</span>
-<span class="p">.</span><span class="nx">github</span><span class="o">/</span>
-<span class="p">.</span><span class="nx">gitlab</span><span class="o">-</span><span class="nx">ci</span><span class="p">.</span><span class="nx">yml</span>
+# CI/CD
+.github/
+.gitlab-ci.yml
 
-<span class="err">#</span><span class="w"> </span><span class="nx">Documentation</span>
-<span class="nx">README</span><span class="p">.</span><span class="nx">md</span>
-<span class="nx">CONTRIBUTING</span><span class="p">.</span><span class="nx">md</span>
+# Documentation
+README.md
+CONTRIBUTING.md
 </code></pre></div>
-
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="using-helper-templates">Using Helper Templates<a class="headerlink" href="#using-helper-templates" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># In _helpers.tpl</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># In _helpers.tpl</span>
 <span class="p p-Indicator">{{</span><span class="nv">- define &quot;my-app.database.url&quot; -</span><span class="p p-Indicator">}}</span>
 <span class="p p-Indicator">{{</span><span class="nv">- if .Values.postgresql.enabled</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="p p-Indicator">{{</span><span class="nv">- printf &quot;postgresql</span><span class="p p-Indicator">:</span><span class="nv">//%s</span><span class="p p-Indicator">:</span><span class="err">%</span><span class="nv">s@%s</span><span class="p p-Indicator">:</span><span class="nv">5432/%s&quot; .Values.postgresql.auth.username .Values.postgresql.auth.password (include &quot;my-app.fullname&quot; .) .Values.postgresql.auth.database</span><span class="w"> </span><span class="p p-Indicator">}}</span>
@@ -4553,26 +4539,23 @@ Helm charts enable version control, templating, and dependency management for Ku
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DATABASE_URL</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;my-app.database.url&quot; . | quote</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
 <h3 id="checksum-annotations">Checksum Annotations<a class="headerlink" href="#checksum-annotations" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Force pod restart when ConfigMap or Secret changes</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Force pod restart when ConfigMap or Secret changes</span>
 <span class="nt">annotations</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">checksum/config</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include (print $.Template.BasePath &quot;/configmap.yaml&quot;) . | sha256sum</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="w">  </span><span class="nt">checksum/secret</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include (print $.Template.BasePath &quot;/secret.yaml&quot;) . | sha256sum</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
 <h3 id="conditional-resources">Conditional Resources<a class="headerlink" href="#conditional-resources" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Only create resource if enabled</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Only create resource if enabled</span>
 <span class="p p-Indicator">{{</span><span class="nv">- if .Values.ingress.enabled</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
 <span class="c1"># ...</span>
 <span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="useful-commands">Useful Commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Create new chart</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create new chart</span>
 helm<span class="w"> </span>create<span class="w"> </span>my-app
 
 <span class="c1"># Lint chart</span>
@@ -4617,7 +4600,6 @@ helm<span class="w"> </span>package<span class="w"> </span>my-app
 <span class="c1"># Test chart</span>
 helm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>my-app
 </code></pre></div>
-
 <hr />
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <h3 id="official-documentation">Official Documentation<a class="headerlink" href="#official-documentation" title="Permanent link">&para;</a></h3>

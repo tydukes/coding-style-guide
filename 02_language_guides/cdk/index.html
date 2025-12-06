@@ -4674,7 +4674,7 @@ maintainable, reusable infrastructure code.</p>
 <hr />
 <h2 id="project-structure">Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h2>
 <h3 id="basic-cdk-project">Basic CDK Project<a class="headerlink" href="#basic-cdk-project" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>my-cdk-app/
+<div class="highlight"><pre><span></span><code>my-cdk-app/
 ├── bin/
 │   └── my-cdk-app.ts          # App entry point
 ├── lib/
@@ -4691,11 +4691,10 @@ maintainable, reusable infrastructure code.</p>
 ├── package.json
 └── tsconfig.json
 </code></pre></div>
-
 <hr />
 <h2 id="basic-stack">Basic Stack<a class="headerlink" href="#basic-stack" title="Permanent link">&para;</a></h2>
 <h3 id="simple-stack-definition">Simple Stack Definition<a class="headerlink" href="#simple-stack-definition" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">cdk</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">cdk</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Construct</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;constructs&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">s3</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-s3&#39;</span><span class="p">;</span>
 
@@ -4714,9 +4713,8 @@ maintainable, reusable infrastructure code.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="app-entry-point">App Entry Point<a class="headerlink" href="#app-entry-point" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env node</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env node</span>
 <span class="k">import</span><span class="w"> </span><span class="s1">&#39;source-map-support/register&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">cdk</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">MyStack</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../lib/my-cdk-app-stack&#39;</span><span class="p">;</span>
@@ -4736,11 +4734,10 @@ maintainable, reusable infrastructure code.</p>
 
 <span class="nx">app</span><span class="p">.</span><span class="nx">synth</span><span class="p">();</span>
 </code></pre></div>
-
 <hr />
 <h2 id="constructs">Constructs<a class="headerlink" href="#constructs" title="Permanent link">&para;</a></h2>
 <h3 id="l1-constructs-cloudformation-resources">L1 Constructs (CloudFormation Resources)<a class="headerlink" href="#l1-constructs-cloudformation-resources" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">cdk</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">cdk</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib&#39;</span><span class="p">;</span>
 
 <span class="c1">// Raw CloudFormation resource</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">cfnBucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">aws_s3</span><span class="p">.</span><span class="nx">CfnBucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;MyCfnBucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
@@ -4750,9 +4747,8 @@ maintainable, reusable infrastructure code.</p>
 <span class="w">  </span><span class="p">},</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <h3 id="l2-constructs-aws-constructs-preferred">L2 Constructs (AWS Constructs - Preferred)<a class="headerlink" href="#l2-constructs-aws-constructs-preferred" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">s3</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-s3&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">s3</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-s3&#39;</span><span class="p">;</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;MyBucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">bucketName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;my-app-bucket&#39;</span><span class="p">,</span>
@@ -4762,9 +4758,8 @@ maintainable, reusable infrastructure code.</p>
 <span class="w">  </span><span class="nx">removalPolicy</span><span class="o">:</span><span class="w"> </span><span class="kt">cdk.RemovalPolicy.DESTROY</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <h3 id="l3-constructs-custom-patterns">L3 Constructs (Custom Patterns)<a class="headerlink" href="#l3-constructs-custom-patterns" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Construct</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;constructs&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Construct</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;constructs&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">s3</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-s3&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">cloudfront</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-cloudfront&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">origins</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-cloudfront-origins&#39;</span><span class="p">;</span>
@@ -4807,11 +4802,10 @@ maintainable, reusable infrastructure code.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="vpc-stack">VPC Stack<a class="headerlink" href="#vpc-stack" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">ec2</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-ec2&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">ec2</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-ec2&#39;</span><span class="p">;</span>
 
 <span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">NetworkStack</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">Stack</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">public</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">vpc</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.Vpc</span><span class="p">;</span>
@@ -4848,9 +4842,8 @@ maintainable, reusable infrastructure code.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="rds-database-stack">RDS Database Stack<a class="headerlink" href="#rds-database-stack" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">rds</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-rds&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">rds</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-rds&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">ec2</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-ec2&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">secretsmanager</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-secretsmanager&#39;</span><span class="p">;</span>
 
@@ -4901,9 +4894,8 @@ maintainable, reusable infrastructure code.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="lambda-api-gateway-stack">Lambda + API Gateway Stack<a class="headerlink" href="#lambda-api-gateway-stack" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">lambda</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-lambda&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">lambda</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-lambda&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">apigateway</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-apigateway&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">logs</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/aws-logs&#39;</span><span class="p">;</span>
 
@@ -4955,11 +4947,10 @@ maintainable, reusable infrastructure code.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="environment-configuration">Environment Configuration<a class="headerlink" href="#environment-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="environment-specific-configuration">Environment-Specific Configuration<a class="headerlink" href="#environment-specific-configuration" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1">// lib/config/dev.ts</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// lib/config/dev.ts</span>
 <span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">devConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">env</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">account</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;111111111111&#39;</span><span class="p">,</span>
@@ -5012,11 +5003,10 @@ maintainable, reusable infrastructure code.</p>
 <span class="w">  </span><span class="nx">config</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <hr />
 <h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
 <h3 id="unit-tests-with-jest">Unit Tests with Jest<a class="headerlink" href="#unit-tests-with-jest" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">cdk</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">cdk</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Template</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib/assertions&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">MyStack</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../lib/my-cdk-app-stack&#39;</span><span class="p">;</span>
 
@@ -5054,11 +5044,10 @@ maintainable, reusable infrastructure code.</p>
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <hr />
 <h2 id="cdk-commands">CDK Commands<a class="headerlink" href="#cdk-commands" title="Permanent link">&para;</a></h2>
 <h3 id="common-commands">Common Commands<a class="headerlink" href="#common-commands" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Initialize new CDK project</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Initialize new CDK project</span>
 cdk<span class="w"> </span>init<span class="w"> </span>app<span class="w"> </span>--language<span class="w"> </span>typescript
 
 <span class="c1"># Install dependencies</span>
@@ -5091,25 +5080,22 @@ cdk<span class="w"> </span>doctor
 <span class="c1"># Bootstrap environment (first time only)</span>
 cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER/REGION
 </code></pre></div>
-
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="use-stack-outputs">Use Stack Outputs<a class="headerlink" href="#use-stack-outputs" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">CfnOutput</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;BucketName&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">CfnOutput</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;BucketName&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">bucket.bucketName</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;The name of the S3 bucket&#39;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">exportName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;MyBucketName&#39;</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <h3 id="tagging">Tagging<a class="headerlink" href="#tagging" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nx">cdk</span><span class="p">.</span><span class="nx">Tags</span><span class="p">.</span><span class="k">of</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;Project&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;MyProject&#39;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="nx">cdk</span><span class="p">.</span><span class="nx">Tags</span><span class="p">.</span><span class="k">of</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;Project&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;MyProject&#39;</span><span class="p">);</span>
 <span class="nx">cdk</span><span class="p">.</span><span class="nx">Tags</span><span class="p">.</span><span class="k">of</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;Owner&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Platform Team&#39;</span><span class="p">);</span>
 <span class="nx">cdk</span><span class="p">.</span><span class="nx">Tags</span><span class="p">.</span><span class="k">of</span><span class="p">(</span><span class="nx">myResource</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;Critical&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">);</span>
 </code></pre></div>
-
 <h3 id="removal-policies">Removal Policies<a class="headerlink" href="#removal-policies" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1">// Development - destroy resources</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Development - destroy resources</span>
 <span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DevBucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">removalPolicy</span><span class="o">:</span><span class="w"> </span><span class="kt">cdk.RemovalPolicy.DESTROY</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">autoDeleteObjects</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
@@ -5125,11 +5111,10 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="w">  </span><span class="nx">removalPolicy</span><span class="o">:</span><span class="w"> </span><span class="kt">cdk.RemovalPolicy.SNAPSHOT</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-hardcoded-values">❌ Avoid: Hardcoded Values<a class="headerlink" href="#avoid-hardcoded-values" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1">// Bad</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad</span>
 <span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Bucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">bucketName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;my-hardcoded-bucket-name&#39;</span><span class="p">,</span>
 <span class="p">});</span>
@@ -5142,9 +5127,8 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="w">  </span><span class="nx">bucketName</span><span class="o">:</span><span class="w"> </span><span class="kt">props.bucketName</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <h3 id="avoid-not-using-typescript-strict-mode">❌ Avoid: Not Using TypeScript Strict Mode<a class="headerlink" href="#avoid-not-using-typescript-strict-mode" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1">// tsconfig.json - Enable strict mode</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// tsconfig.json - Enable strict mode</span>
 <span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;compilerOptions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;strict&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
@@ -5152,9 +5136,8 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="avoid-no-tests">❌ Avoid: No Tests<a class="headerlink" href="#avoid-no-tests" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1">// Always write tests for your stacks</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Always write tests for your stacks</span>
 <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;MyStack&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">test</span><span class="p">(</span><span class="s1">&#39;Stack creates resources&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">App</span><span class="p">();</span>
@@ -5164,11 +5147,10 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <hr />
 <h2 id="tool-configuration">Tool Configuration<a class="headerlink" href="#tool-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="cdkjson">cdk.json<a class="headerlink" href="#cdkjson" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;app&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;npx ts-node --prefer-ts-exts bin/app.ts&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;watch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;include&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;**&quot;</span><span class="p">],</span>
@@ -5208,9 +5190,8 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="tsconfigjson">tsconfig.json<a class="headerlink" href="#tsconfigjson" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;compilerOptions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ES2020&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;module&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;commonjs&quot;</span><span class="p">,</span>
@@ -5236,9 +5217,8 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="w">  </span><span class="nt">&quot;exclude&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node_modules&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;cdk.out&quot;</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="packagejson-scripts">package.json Scripts<a class="headerlink" href="#packagejson-scripts" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;build&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tsc&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;watch&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tsc -w&quot;</span><span class="p">,</span>
@@ -5278,9 +5258,8 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="eslint-configuration">ESLint Configuration<a class="headerlink" href="#eslint-configuration" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1">// .eslintrc.js</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// .eslintrc.js</span>
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">root</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">parser</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;@typescript-eslint/parser&#39;</span><span class="p">,</span>
@@ -5308,9 +5287,8 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="w">  </span><span class="nx">ignorePatterns</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;*.js&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;*.d.ts&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;node_modules/&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;cdk.out/&#39;</span><span class="p">],</span>
 <span class="p">};</span>
 </code></pre></div>
-
 <h3 id="jest-configuration">Jest Configuration<a class="headerlink" href="#jest-configuration" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1">// jest.config.js</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// jest.config.js</span>
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">testEnvironment</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;node&#39;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">roots</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;&lt;rootDir&gt;/test&#39;</span><span class="p">],</span>
@@ -5334,9 +5312,8 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="w">  </span><span class="nx">moduleFileExtensions</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;ts&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;tsx&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;js&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;jsx&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;json&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;node&#39;</span><span class="p">],</span>
 <span class="p">};</span>
 </code></pre></div>
-
 <h3 id="prettier-configuration">Prettier Configuration<a class="headerlink" href="#prettier-configuration" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;printWidth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;tabWidth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;useTabs&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
@@ -5347,9 +5324,8 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="w">  </span><span class="nt">&quot;arrowParens&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;always&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="pre-commit-hooks">Pre-commit Hooks<a class="headerlink" href="#pre-commit-hooks" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
 <span class="nt">repos</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/pre-commit-hooks</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v4.5.0</span>
@@ -5376,9 +5352,8 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;@typescript-eslint/eslint-plugin@6.21.0&#39;</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;@typescript-eslint/parser@6.21.0&#39;</span>
 </code></pre></div>
-
 <h3 id="vs-code-settings">VS Code Settings<a class="headerlink" href="#vs-code-settings" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;[typescript]&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;editor.defaultFormatter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;esbenp.prettier-vscode&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;editor.formatOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
@@ -5392,9 +5367,8 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="w">  </span><span class="nt">&quot;cdk.path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node_modules/.bin/cdk&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="makefile">Makefile<a class="headerlink" href="#makefile" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Makefile</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Makefile</span>
 <span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">install</span> <span class="n">build</span> <span class="n">test</span> <span class="n">deploy</span> <span class="n">clean</span>
 
 <span class="nf">install</span><span class="o">:</span>
@@ -5446,7 +5420,6 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="nf">bootstrap</span><span class="o">:</span>
 <span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>bootstrap
 </code></pre></div>
-
 <hr />
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <h3 id="official-documentation">Official Documentation<a class="headerlink" href="#official-documentation" title="Permanent link">&para;</a></h3>

@@ -2993,6 +2993,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cicd-pipeline-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD Pipeline Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4014,6 +4025,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cicd-pipeline-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD Pipeline Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4621,10 +4643,67 @@ and performance optimization.</p>
   for YAML syntax and basic concepts</li>
 <li><strong>Validation Pipeline</strong>: See <a href="../ai_validation_pipeline/">AI Validation Pipeline</a> for quality checks</li>
 </ul>
+<h3 id="cicd-pipeline-workflow">CI/CD Pipeline Workflow<a class="headerlink" href="#cicd-pipeline-workflow" title="Permanent link">&para;</a></h3>
+<p>This diagram illustrates a complete CI/CD pipeline flow from code commit to production deployment:</p>
+<pre class="mermaid"><code>flowchart TD
+    Start([Code Push/PR]) --&gt; Validate[Validation Stage]
+
+    Validate --&gt; Lint[Lint Code]
+    Validate --&gt; Format[Check Formatting]
+    Validate --&gt; Types[Type Checking]
+    Validate --&gt; Security[Security Scan]
+
+    Lint --&gt; TestStage{All Checks Pass?}
+    Format --&gt; TestStage
+    Types --&gt; TestStage
+    Security --&gt; TestStage
+
+    TestStage --&gt;|No| FailFast[❌ Fail Fast&lt;br/&gt;Notify Team]
+    TestStage --&gt;|Yes| UnitTests[Unit Tests]
+
+    UnitTests --&gt; IntTests[Integration Tests]
+    IntTests --&gt; E2E[E2E Tests]
+
+    E2E --&gt; AllTests{All Tests Pass?}
+
+    AllTests --&gt;|No| FailTests[❌ Test Failure&lt;br/&gt;Generate Report]
+    AllTests --&gt;|Yes| Build[Build Stage]
+
+    Build --&gt; BuildApp[Build Application]
+    BuildApp --&gt; BuildImage[Build Container Image]
+    BuildImage --&gt; ScanImage[Scan Image]
+
+    ScanImage --&gt; BuildSuccess{Build OK?}
+
+    BuildSuccess --&gt;|No| FailBuild[❌ Build Failed]
+    BuildSuccess --&gt;|Yes| DeployStaging[Deploy to Staging]
+
+    DeployStaging --&gt; SmokeTests[Smoke Tests]
+    SmokeTests --&gt; StagingOK{Staging OK?}
+
+    StagingOK --&gt;|No| Rollback[🔄 Rollback Staging]
+    StagingOK --&gt;|Yes| Approval{Manual Approval?}
+
+    Approval --&gt;|Rejected| Stop[⏸️ Deployment Stopped]
+    Approval --&gt;|Approved| DeployProd[Deploy to Production]
+
+    DeployProd --&gt; BlueGreen[Blue-Green Switch]
+    BlueGreen --&gt; HealthCheck[Health Checks]
+
+    HealthCheck --&gt; ProdOK{Production OK?}
+
+    ProdOK --&gt;|No| RollbackProd[🔄 Rollback Production]
+    ProdOK --&gt;|Yes| Success[✅ Deployment Complete&lt;br/&gt;Notify Team]
+
+    RollbackProd --&gt; Notify[📢 Alert On-Call]
+    Rollback --&gt; Notify
+    FailBuild --&gt; Notify
+    FailTests --&gt; Notify
+    FailFast --&gt; Notify</code></pre>
 <hr />
 <h2 id="complete-cicd-pipeline-example">Complete CI/CD Pipeline Example<a class="headerlink" href="#complete-cicd-pipeline-example" title="Permanent link">&para;</a></h2>
 <h3 id="full-stack-application-pipeline">Full-Stack Application Pipeline<a class="headerlink" href="#full-stack-application-pipeline" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Full-Stack CI/CD</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Full-Stack CI/CD</span>
 
 <span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">push</span><span class="p">:</span>
@@ -5164,11 +5243,10 @@ and performance optimization.</p>
 <span class="w">            </span><span class="no">Author: ${{ github.actor }}</span>
 <span class="w">            </span><span class="no">Ref: ${{ github.ref }}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="deployment-strategies">Deployment Strategies<a class="headerlink" href="#deployment-strategies" title="Permanent link">&para;</a></h2>
 <h3 id="blue-green-deployment">Blue-Green Deployment<a class="headerlink" href="#blue-green-deployment" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Blue-Green Deployment</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Blue-Green Deployment</span>
 
 <span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
@@ -5209,9 +5287,8 @@ and performance optimization.</p>
 <span class="w">          </span><span class="no">kubectl patch service myapp-service \</span>
 <span class="w">            </span><span class="no">-p &#39;{&quot;spec&quot;:{&quot;selector&quot;:{&quot;slot&quot;:&quot;blue&quot;}}}&#39;</span>
 </code></pre></div>
-
 <h3 id="canary-deployment">Canary Deployment<a class="headerlink" href="#canary-deployment" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Canary Deployment</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Canary Deployment</span>
 
 <span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">deploy-canary</span><span class="p">:</span>
@@ -5259,9 +5336,8 @@ and performance optimization.</p>
 <span class="w">          </span><span class="no">kubectl apply -f k8s/stable/</span>
 <span class="w">          </span><span class="no">kubectl delete -f k8s/canary/</span>
 </code></pre></div>
-
 <h3 id="rolling-deployment">Rolling Deployment<a class="headerlink" href="#rolling-deployment" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rolling Deployment</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rolling Deployment</span>
 
 <span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
@@ -5289,11 +5365,10 @@ and performance optimization.</p>
 <span class="w">          </span><span class="no">kubectl rollout undo deployment/myapp</span>
 <span class="w">          </span><span class="no">kubectl rollout status deployment/myapp --timeout=10m</span>
 </code></pre></div>
-
 <hr />
 <h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="openid-connect-oidc-for-aws">OpenID Connect (OIDC) for AWS<a class="headerlink" href="#openid-connect-oidc-for-aws" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OIDC AWS Deployment</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OIDC AWS Deployment</span>
 
 <span class="nt">permissions</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">id-token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
@@ -5316,9 +5391,8 @@ and performance optimization.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to S3</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws s3 sync ./dist s3://my-bucket</span>
 </code></pre></div>
-
 <h3 id="oidc-aws-iam-role-trust-policy">OIDC AWS IAM Role Trust Policy<a class="headerlink" href="#oidc-aws-iam-role-trust-policy" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
@@ -5339,9 +5413,8 @@ and performance optimization.</p>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="secrets-management">Secrets Management<a class="headerlink" href="#secrets-management" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 
@@ -5373,9 +5446,8 @@ and performance optimization.</p>
 <span class="w">            </span><span class="no">myapp/database-url</span>
 <span class="w">          </span><span class="nt">parse-json-secrets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
-
 <h3 id="container-signing-and-verification">Container Signing and Verification<a class="headerlink" href="#container-signing-and-verification" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">build-and-sign</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">permissions</span><span class="p">:</span>
@@ -5412,11 +5484,10 @@ and performance optimization.</p>
 <span class="w">          </span><span class="no">cosign attach sbom --sbom sbom.spdx.json \</span>
 <span class="w">            </span><span class="no">${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="performance-optimization">Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permanent link">&para;</a></h2>
 <h3 id="matrix-builds">Matrix Builds<a class="headerlink" href="#matrix-builds" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">test</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ matrix.os }}</span>
 <span class="w">    </span><span class="nt">timeout-minutes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
@@ -5450,9 +5521,8 @@ and performance optimization.</p>
 <span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">matrix.coverage</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">codecov/codecov-action@v4</span>
 </code></pre></div>
-
 <h3 id="advanced-caching">Advanced Caching<a class="headerlink" href="#advanced-caching" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">build</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 
@@ -5500,9 +5570,8 @@ and performance optimization.</p>
 <span class="w">          </span><span class="no">rm -rf /tmp/.buildx-cache</span>
 <span class="w">          </span><span class="no">mv /tmp/.buildx-cache-new /tmp/.buildx-cache</span>
 </code></pre></div>
-
 <h3 id="conditional-job-execution">Conditional Job Execution<a class="headerlink" href="#conditional-job-execution" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">changes</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">outputs</span><span class="p">:</span>
@@ -5545,11 +5614,10 @@ and performance optimization.</p>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;Deploying infrastructure&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="reusable-workflows">Reusable Workflows<a class="headerlink" href="#reusable-workflows" title="Permanent link">&para;</a></h2>
 <h3 id="caller-workflow">Caller Workflow<a class="headerlink" href="#caller-workflow" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .github/workflows/deploy.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/deploy.yml</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy Application</span>
 
 <span class="nt">on</span><span class="p">:</span>
@@ -5575,9 +5643,8 @@ and performance optimization.</p>
 <span class="w">    </span><span class="nt">secrets</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">aws-role-arn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AWS_ROLE_ARN_PRODUCTION }}</span>
 </code></pre></div>
-
 <h3 id="reusable-workflow">Reusable Workflow<a class="headerlink" href="#reusable-workflow" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .github/workflows/reusable-deploy.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/reusable-deploy.yml</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reusable Deploy</span>
 
 <span class="nt">on</span><span class="p">:</span>
@@ -5618,11 +5685,10 @@ and performance optimization.</p>
 <span class="w">          </span><span class="no">echo &quot;Deploying to ${{ inputs.environment }}&quot;</span>
 <span class="w">          </span><span class="no">./deploy.sh</span>
 </code></pre></div>
-
 <hr />
 <h2 id="monorepo-patterns">Monorepo Patterns<a class="headerlink" href="#monorepo-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="turborepo-with-selective-builds">Turborepo with Selective Builds<a class="headerlink" href="#turborepo-with-selective-builds" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Monorepo CI</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Monorepo CI</span>
 
 <span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
@@ -5675,9 +5741,8 @@ and performance optimization.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test package</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">turbo run test --filter=@myorg/${{ matrix.package }}</span>
 </code></pre></div>
-
 <h3 id="nx-monorepo">Nx Monorepo<a class="headerlink" href="#nx-monorepo" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Nx Monorepo</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Nx Monorepo</span>
 
 <span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
@@ -5713,11 +5778,10 @@ and performance optimization.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build affected projects</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npx nx affected --target=build --parallel=3</span>
 </code></pre></div>
-
 <hr />
 <h2 id="advanced-patterns">Advanced Patterns<a class="headerlink" href="#advanced-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="dynamic-matrix-from-api">Dynamic Matrix from API<a class="headerlink" href="#dynamic-matrix-from-api" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">get-environments</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">outputs</span><span class="p">:</span>
@@ -5741,9 +5805,8 @@ and performance optimization.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to ${{ matrix.environment }}</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./deploy.sh ${{ matrix.environment }} ${{ matrix.region }}</span>
 </code></pre></div>
-
 <h3 id="composite-actions">Composite Actions<a class="headerlink" href="#composite-actions" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .github/actions/setup-app/action.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/actions/setup-app/action.yml</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Setup</span><span class="nv"> </span><span class="s">Application&#39;</span>
 <span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Setup</span><span class="nv"> </span><span class="s">Node.js</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">dependencies&#39;</span>
 
@@ -5789,9 +5852,8 @@ and performance optimization.</p>
 <span class="w">          </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;20&#39;</span>
 <span class="w">          </span><span class="nt">cache-key</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;build&#39;</span>
 </code></pre></div>
-
 <h3 id="self-hosted-runners-with-labels">Self-Hosted Runners with Labels<a class="headerlink" href="#self-hosted-runners-with-labels" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">build-on-custom-hardware</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">self-hosted</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">linux</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">x64</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">gpu</span><span class="p p-Indicator">]</span>
 <span class="w">    </span><span class="nt">timeout-minutes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
@@ -5812,11 +5874,10 @@ and performance optimization.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Standard build</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./build.sh</span>
 </code></pre></div>
-
 <hr />
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="debug-logging">Debug Logging<a class="headerlink" href="#debug-logging" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">debug</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 
@@ -5837,9 +5898,8 @@ and performance optimization.</p>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mxschmitt/action-tmate@v3</span>
 <span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">failure()</span>
 </code></pre></div>
-
 <h3 id="retry-failed-jobs">Retry Failed Jobs<a class="headerlink" href="#retry-failed-jobs" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">flaky-test</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 
@@ -5862,9 +5922,8 @@ and performance optimization.</p>
 <span class="w">          </span><span class="nt">retry_on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error</span>
 <span class="w">          </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./flaky-script.sh</span>
 </code></pre></div>
-
 <h3 id="handle-rate-limits">Handle Rate Limits<a class="headerlink" href="#handle-rate-limits" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">api-call</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 
@@ -5878,7 +5937,6 @@ and performance optimization.</p>
 <span class="w">          </span><span class="nt">exponential_backoff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">          </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curl -f https://api.example.com/data</span>
 </code></pre></div>
-
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="workflow-organization">Workflow Organization<a class="headerlink" href="#workflow-organization" title="Permanent link">&para;</a></h3>

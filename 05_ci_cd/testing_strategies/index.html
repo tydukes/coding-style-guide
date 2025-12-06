@@ -4300,7 +4300,7 @@ CI/CD pipelines.</p>
 <hr />
 <h2 id="testing-pyramid">Testing Pyramid<a class="headerlink" href="#testing-pyramid" title="Permanent link">&para;</a></h2>
 <h3 id="concept">Concept<a class="headerlink" href="#concept" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>        /\
+<div class="highlight"><pre><span></span><code>        /\
        /  \
       / E2E \
      /________\
@@ -4311,7 +4311,6 @@ CI/CD pipelines.</p>
 /   Unit Tests     \
 /____________________\
 </code></pre></div>
-
 <p><strong>Distribution</strong>:</p>
 <ul>
 <li><strong>Unit Tests</strong>: 70% - Fast, isolated, test individual components</li>
@@ -4329,11 +4328,10 @@ CI/CD pipelines.</p>
 <h2 id="unit-testing">Unit Testing<a class="headerlink" href="#unit-testing" title="Permanent link">&para;</a></h2>
 <h3 id="python-pytest">Python (pytest)<a class="headerlink" href="#python-pytest" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pytest<span class="w"> </span>pytest-cov<span class="w"> </span>pytest-mock<span class="w"> </span>pytest-asyncio
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pytest<span class="w"> </span>pytest-cov<span class="w"> </span>pytest-mock<span class="w"> </span>pytest-asyncio
 </code></pre></div>
-
 <p><strong>Example test</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># tests/test_calculator.py</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/test_calculator.py</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">src.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Calculator</span>
 
@@ -4371,9 +4369,8 @@ CI/CD pipelines.</p>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Test addition with multiple inputs.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="n">calculator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected</span>
 </code></pre></div>
-
 <p><strong>pytest.ini</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[pytest]</span>
+<div class="highlight"><pre><span></span><code><span class="k">[pytest]</span>
 <span class="na">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tests</span>
 <span class="na">python_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">test_*.py</span>
 <span class="na">python_classes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Test*</span>
@@ -4390,9 +4387,8 @@ CI/CD pipelines.</p>
 <span class="w">    </span><span class="na">integration</span><span class="o">:</span><span class="w"> </span><span class="s">marks tests as integration tests</span>
 <span class="w">    </span><span class="na">unit</span><span class="o">:</span><span class="w"> </span><span class="s">marks tests as unit tests</span>
 </code></pre></div>
-
 <p><strong>Run tests</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Run all tests</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run all tests</span>
 pytest
 
 <span class="c1"># Run with coverage</span>
@@ -4408,14 +4404,12 @@ pytest<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;n
 <span class="c1"># Run in parallel</span>
 pytest<span class="w"> </span>-n<span class="w"> </span>auto
 </code></pre></div>
-
 <h3 id="javascripttypescript-jest">JavaScript/TypeScript (Jest)<a class="headerlink" href="#javascripttypescript-jest" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="codehilite"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class="w"> </span>jest<span class="w"> </span>@types/jest<span class="w"> </span>ts-jest<span class="w"> </span>@testing-library/jest-dom
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class="w"> </span>jest<span class="w"> </span>@types/jest<span class="w"> </span>ts-jest<span class="w"> </span>@testing-library/jest-dom
 </code></pre></div>
-
 <p><strong>jest.config.js</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">preset</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ts-jest&#39;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">testEnvironment</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;node&#39;</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">roots</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;&lt;rootDir&gt;/src&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&lt;rootDir&gt;/tests&#39;</span><span class="p">],</span>
@@ -4439,9 +4433,8 @@ pytest<span class="w"> </span>-n<span class="w"> </span>auto
 <span class="w">  </span><span class="nx">setupFilesAfterEnv</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;&lt;rootDir&gt;/tests/setup.ts&#39;</span><span class="p">],</span>
 <span class="p">};</span>
 </code></pre></div>
-
 <p><strong>Example test</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// tests/calculator.test.ts</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// tests/calculator.test.ts</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Calculator</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../src/calculator&#39;</span><span class="p">;</span>
 
 <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Calculator&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -4483,9 +4476,8 @@ pytest<span class="w"> </span>-n<span class="w"> </span>auto
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <p><strong>Mocking example</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// tests/user-service.test.ts</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// tests/user-service.test.ts</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UserService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../src/user-service&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UserRepository</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../src/user-repository&#39;</span><span class="p">;</span>
 
@@ -4511,9 +4503,8 @@ pytest<span class="w"> </span>-n<span class="w"> </span>auto
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <p><strong>Run tests</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Run all tests</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run all tests</span>
 npm<span class="w"> </span><span class="nb">test</span>
 
 <span class="c1"># Run with coverage</span>
@@ -4528,10 +4519,9 @@ npm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-
 <span class="c1"># Update snapshots</span>
 npm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--<span class="w"> </span>-u
 </code></pre></div>
-
 <h3 id="go-testing-package">Go (testing package)<a class="headerlink" href="#go-testing-package" title="Permanent link">&para;</a></h3>
 <p><strong>Example test</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// calculator_test.go</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// calculator_test.go</span>
 <span class="kn">package</span><span class="w"> </span><span class="nx">calculator</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="p">(</span>
@@ -4566,9 +4556,8 @@ npm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Run tests</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Run all tests</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run all tests</span>
 go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>./...
 
 <span class="c1"># Run with coverage</span>
@@ -4582,12 +4571,11 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-b
 <span class="c1"># Run with race detector</span>
 go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-race<span class="w"> </span>./...
 </code></pre></div>
-
 <hr />
 <h2 id="integration-testing">Integration Testing<a class="headerlink" href="#integration-testing" title="Permanent link">&para;</a></h2>
 <h3 id="database-integration-python">Database Integration (Python)<a class="headerlink" href="#database-integration-python" title="Permanent link">&para;</a></h3>
 <p><strong>Using testcontainers</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># tests/integration/test_user_repository.py</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/integration/test_user_repository.py</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">testcontainers.postgres</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostgresContainer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span>
@@ -4645,10 +4633,9 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-r
         <span class="k">assert</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Jane Doe&quot;</span>
 </code></pre></div>
-
 <h3 id="api-integration-typescript">API Integration (TypeScript)<a class="headerlink" href="#api-integration-typescript" title="Permanent link">&para;</a></h3>
 <p><strong>Using supertest</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// tests/integration/user-api.test.ts</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// tests/integration/user-api.test.ts</span>
 <span class="k">import</span><span class="w"> </span><span class="nx">request</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;supertest&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">App</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../../src/app&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Database</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../../src/database&#39;</span><span class="p">;</span>
@@ -4719,10 +4706,9 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-r
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <h3 id="docker-compose-integration">Docker Compose Integration<a class="headerlink" href="#docker-compose-integration" title="Permanent link">&para;</a></h3>
 <p><strong>docker-compose.test.yml</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
 
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">postgres</span><span class="p">:</span>
@@ -4761,25 +4747,22 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-r
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api</span>
 <span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run test:integration</span>
 </code></pre></div>
-
 <p><strong>Run integration tests</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Start services and run tests</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Start services and run tests</span>
 docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.test.yml<span class="w"> </span>up<span class="w"> </span>--abort-on-container-exit
 
 <span class="c1"># Cleanup</span>
 docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.test.yml<span class="w"> </span>down<span class="w"> </span>-v
 </code></pre></div>
-
 <hr />
 <h2 id="end-to-end-testing">End-to-End Testing<a class="headerlink" href="#end-to-end-testing" title="Permanent link">&para;</a></h2>
 <h3 id="playwright-web">Playwright (Web)<a class="headerlink" href="#playwright-web" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="codehilite"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class="w"> </span>@playwright/test
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class="w"> </span>@playwright/test
 npx<span class="w"> </span>playwright<span class="w"> </span>install
 </code></pre></div>
-
 <p><strong>playwright.config.ts</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">defineConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">devices</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@playwright/test&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">defineConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">devices</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@playwright/test&#39;</span><span class="p">;</span>
 
 <span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">defineConfig</span><span class="p">({</span>
 <span class="w">  </span><span class="nx">testDir</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;./tests/e2e&#39;</span><span class="p">,</span>
@@ -4821,9 +4804,8 @@ npx<span class="w"> </span>playwright<span class="w"> </span>install
 <span class="w">  </span><span class="p">},</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <p><strong>Example E2E test</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// tests/e2e/login.spec.ts</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// tests/e2e/login.spec.ts</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">test</span><span class="p">,</span><span class="w"> </span><span class="nx">expect</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@playwright/test&#39;</span><span class="p">;</span>
 
 <span class="nx">test</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Login Flow&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -4856,9 +4838,8 @@ npx<span class="w"> </span>playwright<span class="w"> </span>install
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <p><strong>Page Object Model</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// tests/e2e/pages/login.page.ts</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// tests/e2e/pages/login.page.ts</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Page</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@playwright/test&#39;</span><span class="p">;</span>
 
 <span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">LoginPage</span><span class="w"> </span><span class="p">{</span>
@@ -4889,9 +4870,8 @@ npx<span class="w"> </span>playwright<span class="w"> </span>install
 <span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">expect</span><span class="p">(</span><span class="nx">page</span><span class="p">).</span><span class="nx">toHaveURL</span><span class="p">(</span><span class="s1">&#39;/dashboard&#39;</span><span class="p">);</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <p><strong>Run tests</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Run all E2E tests</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run all E2E tests</span>
 npx<span class="w"> </span>playwright<span class="w"> </span><span class="nb">test</span>
 
 <span class="c1"># Run in headed mode</span>
@@ -4906,15 +4886,13 @@ npx<span class="w"> </span>playwright<span class="w"> </span><span class="nb">te
 <span class="c1"># Show report</span>
 npx<span class="w"> </span>playwright<span class="w"> </span>show-report
 </code></pre></div>
-
 <h3 id="cypress-alternative">Cypress (Alternative)<a class="headerlink" href="#cypress-alternative" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="codehilite"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class="w"> </span>cypress
+<div class="highlight"><pre><span></span><code>npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class="w"> </span>cypress
 npx<span class="w"> </span>cypress<span class="w"> </span>open
 </code></pre></div>
-
 <p><strong>cypress.config.ts</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">defineConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;cypress&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">defineConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;cypress&#39;</span><span class="p">;</span>
 
 <span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">defineConfig</span><span class="p">({</span>
 <span class="w">  </span><span class="nx">e2e</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
@@ -4927,9 +4905,8 @@ npx<span class="w"> </span>cypress<span class="w"> </span>open
 <span class="w">  </span><span class="p">},</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <p><strong>Example test</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// cypress/e2e/login.cy.ts</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// cypress/e2e/login.cy.ts</span>
 <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Login Flow&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">beforeEach</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">);</span>
@@ -4953,12 +4930,11 @@ npx<span class="w"> </span>cypress<span class="w"> </span>open
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <hr />
 <h2 id="performance-testing">Performance Testing<a class="headerlink" href="#performance-testing" title="Permanent link">&para;</a></h2>
 <h3 id="k6-load-testing">k6 (Load Testing)<a class="headerlink" href="#k6-load-testing" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>k6
 
 <span class="c1"># Linux</span>
@@ -4966,9 +4942,8 @@ wget<span class="w"> </span>https://github.com/grafana/k6/releases/download/v0.4
 tar<span class="w"> </span>-xzf<span class="w"> </span>k6-v0.48.0-linux-amd64.tar.gz
 sudo<span class="w"> </span>mv<span class="w"> </span>k6-v0.48.0-linux-amd64/k6<span class="w"> </span>/usr/local/bin/
 </code></pre></div>
-
 <p><strong>Example load test</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// tests/load/api-load-test.js</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// tests/load/api-load-test.js</span>
 <span class="k">import</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;k6/http&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">check</span><span class="p">,</span><span class="w"> </span><span class="nx">sleep</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;k6&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Rate</span><span class="p">,</span><span class="w"> </span><span class="nx">Trend</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;k6/metrics&#39;</span><span class="p">;</span>
@@ -5015,9 +4990,8 @@ sudo<span class="w"> </span>mv<span class="w"> </span>k6-v0.48.0-linux-amd64/k6<
 <span class="w">  </span><span class="nx">sleep</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Run load test</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Run test</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run test</span>
 k6<span class="w"> </span>run<span class="w"> </span>tests/load/api-load-test.js
 
 <span class="c1"># Run with specific VUs and duration</span>
@@ -5026,19 +5000,17 @@ k6<span class="w"> </span>run<span class="w"> </span>--vus<span class="w"> </spa
 <span class="c1"># Output to InfluxDB</span>
 k6<span class="w"> </span>run<span class="w"> </span>--out<span class="w"> </span><span class="nv">influxdb</span><span class="o">=</span>http://localhost:8086/mydb<span class="w"> </span>tests/load/api-load-test.js
 </code></pre></div>
-
 <h3 id="apache-jmeter">Apache JMeter<a class="headerlink" href="#apache-jmeter" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>jmeter
 
 <span class="c1"># Manual download</span>
 wget<span class="w"> </span>https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.2.tgz
 tar<span class="w"> </span>-xzf<span class="w"> </span>apache-jmeter-5.6.2.tgz
 </code></pre></div>
-
 <p><strong>Run JMeter</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># GUI mode</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># GUI mode</span>
 jmeter
 
 <span class="c1"># CLI mode</span>
@@ -5047,14 +5019,12 @@ jmeter<span class="w"> </span>-n<span class="w"> </span>-t<span class="w"> </spa
 <span class="c1"># With variables</span>
 jmeter<span class="w"> </span>-n<span class="w"> </span>-t<span class="w"> </span>test-plan.jmx<span class="w"> </span>-Jusers<span class="o">=</span><span class="m">100</span><span class="w"> </span>-Jduration<span class="o">=</span><span class="m">300</span>
 </code></pre></div>
-
 <h3 id="locust-python">Locust (Python)<a class="headerlink" href="#locust-python" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>locust
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>locust
 </code></pre></div>
-
 <p><strong>locustfile.py</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">locust</span><span class="w"> </span><span class="kn">import</span> <span class="n">HttpUser</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">between</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">locust</span><span class="w"> </span><span class="kn">import</span> <span class="n">HttpUser</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">between</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">WebsiteUser</span><span class="p">(</span><span class="n">HttpUser</span><span class="p">):</span>
     <span class="n">wait_time</span> <span class="o">=</span> <span class="n">between</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
@@ -5085,9 +5055,8 @@ jmeter<span class="w"> </span>-n<span class="w"> </span>-t<span class="w"> </spa
             <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;password123&quot;</span>
         <span class="p">})</span>
 </code></pre></div>
-
 <p><strong>Run Locust</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Web UI</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Web UI</span>
 locust<span class="w"> </span>-f<span class="w"> </span>locustfile.py<span class="w"> </span>--host<span class="o">=</span>https://api.example.com
 
 <span class="c1"># Headless</span>
@@ -5098,12 +5067,11 @@ locust<span class="w"> </span>-f<span class="w"> </span>locustfile.py<span class
 <span class="w">  </span>--run-time<span class="w"> </span>5m<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--headless
 </code></pre></div>
-
 <hr />
 <h2 id="security-testing">Security Testing<a class="headerlink" href="#security-testing" title="Permanent link">&para;</a></h2>
 <h3 id="owasp-zap-api-testing">OWASP ZAP (API Testing)<a class="headerlink" href="#owasp-zap-api-testing" title="Permanent link">&para;</a></h3>
 <p><strong>zap-api-scan.yaml</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># ZAP API scan configuration</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># ZAP API scan configuration</span>
 <span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">contexts</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-context</span>
@@ -5133,9 +5101,8 @@ locust<span class="w"> </span>-f<span class="w"> </span>locustfile.py<span class
 <span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api-context</span>
 <span class="w">      </span><span class="nt">policy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">API-Scan</span>
 </code></pre></div>
-
 <p><strong>Run scan</strong>:</p>
-<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/zap/wrk/:rw<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/zap/wrk/:rw<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>zaproxy/zap-stable<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>zap-api-scan.py<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-t<span class="w"> </span>https://api.example.com/openapi.json<span class="w"> </span><span class="se">\</span>
@@ -5143,12 +5110,11 @@ locust<span class="w"> </span>-f<span class="w"> </span>locustfile.py<span class
 <span class="w">  </span>-c<span class="w"> </span>zap-api-scan.yaml<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-r<span class="w"> </span>zap-api-report.html
 </code></pre></div>
-
 <hr />
 <h2 id="test-automation">Test Automation<a class="headerlink" href="#test-automation" title="Permanent link">&para;</a></h2>
 <h3 id="contract-testing-pact">Contract Testing (Pact)<a class="headerlink" href="#contract-testing-pact" title="Permanent link">&para;</a></h3>
 <p><strong>Consumer test (TypeScript)</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// tests/contract/user-service.pact.ts</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// tests/contract/user-service.pact.ts</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PactV3</span><span class="p">,</span><span class="w"> </span><span class="nx">MatchersV3</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@pact-foundation/pact&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">UserService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../../src/user-service&#39;</span><span class="p">;</span>
 
@@ -5193,21 +5159,18 @@ locust<span class="w"> </span>-f<span class="w"> </span>locustfile.py<span class
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <h3 id="mutation-testing-python-mutmut">Mutation Testing (Python - mutmut)<a class="headerlink" href="#mutation-testing-python-mutmut" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>mutmut
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>mutmut
 </code></pre></div>
-
 <p><strong>Configuration (.mutmut.toml)</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[mutmut]</span>
+<div class="highlight"><pre><span></span><code><span class="k">[mutmut]</span>
 <span class="n">paths_to_mutate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">src/</span>
 <span class="n">tests_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">tests/</span>
 <span class="n">runner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">pytest</span>
 </code></pre></div>
-
 <p><strong>Run mutation testing</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Run mutation tests</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run mutation tests</span>
 mutmut<span class="w"> </span>run
 
 <span class="c1"># Show results</span>
@@ -5216,11 +5179,10 @@ mutmut<span class="w"> </span>results
 <span class="c1"># Show surviving mutants</span>
 mutmut<span class="w"> </span>show
 </code></pre></div>
-
 <hr />
 <h2 id="cicd-integration">CI/CD Integration<a class="headerlink" href="#cicd-integration" title="Permanent link">&para;</a></h2>
 <h3 id="github-actions-complete-test-suite">GitHub Actions - Complete Test Suite<a class="headerlink" href="#github-actions-complete-test-suite" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test Suite</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test Suite</span>
 
 <span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">push</span><span class="p">:</span>
@@ -5329,12 +5291,11 @@ mutmut<span class="w"> </span>show
 <span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k6-results</span>
 <span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">summary.json</span>
 </code></pre></div>
-
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="test-organization">Test Organization<a class="headerlink" href="#test-organization" title="Permanent link">&para;</a></h3>
 <p><strong>Directory structure</strong>:</p>
-<div class="codehilite"><pre><span></span><code>tests/
+<div class="highlight"><pre><span></span><code>tests/
 ├── unit/                    # Unit tests
 │   ├── test_calculator.py
 │   └── test_validator.py
@@ -5352,9 +5313,8 @@ mutmut<span class="w"> </span>show
 │   └── test-helpers.ts
 └── conftest.py             # Pytest configuration
 </code></pre></div>
-
 <h3 id="test-naming-conventions">Test Naming Conventions<a class="headerlink" href="#test-naming-conventions" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Good naming</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good naming</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_user_creation_with_valid_email_succeeds</span><span class="p">():</span>
     <span class="k">pass</span>
 
@@ -5368,9 +5328,8 @@ mutmut<span class="w"> </span>show
 <span class="k">def</span><span class="w"> </span><span class="nf">test_1</span><span class="p">():</span>
     <span class="k">pass</span>
 </code></pre></div>
-
 <h3 id="aaa-pattern-arrange-act-assert">AAA Pattern (Arrange-Act-Assert)<a class="headerlink" href="#aaa-pattern-arrange-act-assert" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_user_login</span><span class="p">():</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_user_login</span><span class="p">():</span>
     <span class="c1"># Arrange</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s2">&quot;test@example.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span><span class="p">)</span>
     <span class="n">auth_service</span> <span class="o">=</span> <span class="n">AuthService</span><span class="p">()</span>
@@ -5382,9 +5341,8 @@ mutmut<span class="w"> </span>show
     <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span> <span class="ow">is</span> <span class="kc">True</span>
     <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">token</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 </code></pre></div>
-
 <h3 id="test-independence">Test Independence<a class="headerlink" href="#test-independence" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Good - Each test is independent</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good - Each test is independent</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_create_user</span><span class="p">():</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="s2">&quot;test@example.com&quot;</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s2">&quot;test@example.com&quot;</span>
@@ -5403,7 +5361,6 @@ mutmut<span class="w"> </span>show
 <span class="k">def</span><span class="w"> </span><span class="nf">test_delete_user</span><span class="p">():</span>
     <span class="n">delete_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>  <span class="c1"># Depends on previous test</span>
 </code></pre></div>
-
 <h3 id="coverage-goals">Coverage Goals<a class="headerlink" href="#coverage-goals" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Statements</strong>: 80% minimum</li>

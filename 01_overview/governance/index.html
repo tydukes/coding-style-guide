@@ -4173,6 +4173,45 @@ requirements, release processes, and change management procedures. These governa
 maintainability, and collaborative development.</p>
 <h2 id="gitflow-branching-model">GitFlow Branching Model<a class="headerlink" href="#gitflow-branching-model" title="Permanent link">&para;</a></h2>
 <p>This repository follows <strong>GitFlow</strong>, a strict branching model that separates development work from stable releases.</p>
+<pre class="mermaid"><code>gitGraph
+    commit id: "Initial commit"
+    branch develop
+    checkout develop
+    commit id: "Setup project"
+
+    branch feature/new-guide
+    checkout feature/new-guide
+    commit id: "Add Python guide"
+    commit id: "Add examples"
+    checkout develop
+    merge feature/new-guide tag: "Feature complete"
+
+    branch feature/add-diagrams
+    checkout feature/add-diagrams
+    commit id: "Add Mermaid diagrams"
+    checkout develop
+    merge feature/add-diagrams
+
+    branch release/v1.1.0
+    checkout release/v1.1.0
+    commit id: "Bump version to 1.1.0"
+    commit id: "Update changelog"
+    checkout main
+    merge release/v1.1.0 tag: "v1.1.0"
+    checkout develop
+    merge release/v1.1.0
+
+    checkout main
+    branch hotfix/v1.1.1
+    checkout hotfix/v1.1.1
+    commit id: "Fix critical bug"
+    checkout main
+    merge hotfix/v1.1.1 tag: "v1.1.1"
+    checkout develop
+    merge hotfix/v1.1.1
+
+    checkout develop
+    commit id: "Continue development"</code></pre>
 <h3 id="branch-types">Branch Types<a class="headerlink" href="#branch-types" title="Permanent link">&para;</a></h3>
 <h4 id="main-branch-main">Main Branch (<code>main</code>)<a class="headerlink" href="#main-branch-main" title="Permanent link">&para;</a></h4>
 <ul>
@@ -4213,13 +4252,12 @@ maintainability, and collaborative development.</p>
 <li><strong>Lifetime</strong>: Deleted after merge</li>
 </ul>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>feature/13-expand-principles-doc
+<div class="highlight"><pre><span></span><code>feature/13-expand-principles-doc
 feature/add-powershell-guide
 feature/improve-metadata-schema
 </code></pre></div>
-
 <p><strong>Workflow</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Create feature branch</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create feature branch</span>
 git<span class="w"> </span>checkout<span class="w"> </span>develop
 git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>develop
 git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/13-expand-principles-doc
@@ -4232,7 +4270,6 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>feature/13-expand-principles-doc
 gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </span>--base<span class="w"> </span>develop
 </code></pre></div>
-
 <h4 id="fix-branches-fix">Fix Branches (<code>fix/*</code>)<a class="headerlink" href="#fix-branches-fix" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>Purpose</strong>: Bug fixes for non-critical issues</li>
@@ -4241,10 +4278,9 @@ gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </spa
 <li><strong>Naming</strong>: <code>fix/&lt;issue-number&gt;-&lt;short-description&gt;</code></li>
 </ul>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>fix/42-correct-typo-in-terraform-guide
+<div class="highlight"><pre><span></span><code>fix/42-correct-typo-in-terraform-guide
 fix/broken-mkdocs-link
 </code></pre></div>
-
 <h4 id="hotfix-branches-hotfix">Hotfix Branches (<code>hotfix/*</code>)<a class="headerlink" href="#hotfix-branches-hotfix" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>Purpose</strong>: Critical bug fixes for production</li>
@@ -4254,12 +4290,11 @@ fix/broken-mkdocs-link
 <li><strong>Urgency</strong>: Bypass normal development cycle</li>
 </ul>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>hotfix/v1.2.2-critical-security-fix
+<div class="highlight"><pre><span></span><code>hotfix/v1.2.2-critical-security-fix
 hotfix/v1.0.1-container-build-failure
 </code></pre></div>
-
 <p><strong>Workflow</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Create hotfix from main</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create hotfix from main</span>
 git<span class="w"> </span>checkout<span class="w"> </span>main
 git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
 git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>hotfix/v1.2.2-security-fix
@@ -4282,7 +4317,6 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <span class="c1"># Delete hotfix branch</span>
 git<span class="w"> </span>branch<span class="w"> </span>-d<span class="w"> </span>hotfix/v1.2.2-security-fix
 </code></pre></div>
-
 <h4 id="release-branches-release">Release Branches (<code>release/*</code>)<a class="headerlink" href="#release-branches-release" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>Purpose</strong>: Prepare new production release</li>
@@ -4292,7 +4326,7 @@ git<span class="w"> </span>branch<span class="w"> </span>-d<span class="w"> </sp
 <li><strong>Activities</strong>: Version bumps, changelog updates, final testing</li>
 </ul>
 <p><strong>Workflow</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Create release branch</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create release branch</span>
 git<span class="w"> </span>checkout<span class="w"> </span>develop
 git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>develop
 git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>release/v1.3.0
@@ -4315,7 +4349,6 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <span class="c1"># Delete release branch</span>
 git<span class="w"> </span>branch<span class="w"> </span>-d<span class="w"> </span>release/v1.3.0
 </code></pre></div>
-
 <h3 id="branch-naming-conventions">Branch Naming Conventions<a class="headerlink" href="#branch-naming-conventions" title="Permanent link">&para;</a></h3>
 <p><strong>Format</strong>: <code>&lt;type&gt;/&lt;scope&gt;</code></p>
 <p><strong>Type Prefixes</strong>:</p>
@@ -4381,7 +4414,7 @@ git<span class="w"> </span>branch<span class="w"> </span>-d<span class="w"> </sp
 <li>Examples are correct and tested</li>
 </ul>
 <h4 id="pr-description-template">PR Description Template<a class="headerlink" href="#pr-description-template" title="Permanent link">&para;</a></h4>
-<div class="codehilite"><pre><span></span><code><span class="gu">## Summary</span>
+<div class="highlight"><pre><span></span><code><span class="gu">## Summary</span>
 Brief description of changes
 
 <span class="gu">## Changes</span>
@@ -4396,34 +4429,28 @@ Brief description of changes
 <span class="gu">## Related Issues</span>
 Closes #&lt;issue-number&gt;
 </code></pre></div>
-
 <h3 id="pr-workflow">PR Workflow<a class="headerlink" href="#pr-workflow" title="Permanent link">&para;</a></h3>
 <p><strong>1. Create Branch</strong>:</p>
-<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/add-kubernetes-guide
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/add-kubernetes-guide
 </code></pre></div>
-
 <p><strong>2. Make Changes &amp; Commit</strong>:</p>
-<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add Kubernetes and Helm style guide&quot;</span>
 </code></pre></div>
-
 <p><strong>3. Push &amp; Create PR</strong>:</p>
-<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>feature/add-kubernetes-guide
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>feature/add-kubernetes-guide
 gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </span>--base<span class="w"> </span>main<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;feat: add Kubernetes guide&quot;</span><span class="w"> </span>--body<span class="w"> </span><span class="s2">&quot;...&quot;</span>
 </code></pre></div>
-
 <p><strong>4. Address Review Feedback</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Make requested changes</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Make requested changes</span>
 git<span class="w"> </span>add<span class="w"> </span>.
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix: address review feedback on Kubernetes guide&quot;</span>
 git<span class="w"> </span>push
 </code></pre></div>
-
 <p><strong>5. Merge (after approval)</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Squash and merge via GitHub UI or CLI</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Squash and merge via GitHub UI or CLI</span>
 gh<span class="w"> </span>pr<span class="w"> </span>merge<span class="w"> </span><span class="m">123</span><span class="w"> </span>--squash<span class="w"> </span>--delete-branch
 </code></pre></div>
-
 <h3 id="merge-strategies">Merge Strategies<a class="headerlink" href="#merge-strategies" title="Permanent link">&para;</a></h3>
 <p><strong>Squash Merge (Default)</strong>:</p>
 <ul>
@@ -4459,11 +4486,10 @@ gh<span class="w"> </span>pr<span class="w"> </span>merge<span class="w"> </span
 </ul>
 <h3 id="release-process">Release Process<a class="headerlink" href="#release-process" title="Permanent link">&para;</a></h3>
 <p><strong>1. Prepare Release Branch</strong>:</p>
-<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>develop
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>develop
 git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>develop
 git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>release/v1.3.0
 </code></pre></div>
-
 <p><strong>2. Update Version and Changelog</strong>:</p>
 <ul>
 <li>Update version in <code>mkdocs.yml</code>, <code>pyproject.toml</code></li>
@@ -4471,7 +4497,7 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
 <li>Update any version references in documentation</li>
 </ul>
 <p><strong>3. Final Testing</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Build and test documentation</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Build and test documentation</span>
 uv<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> </span>build<span class="w"> </span>--strict
 
 <span class="c1"># Run all pre-commit hooks</span>
@@ -4480,14 +4506,12 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 <span class="c1"># Test container build</span>
 docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>coding-style-guide:v1.3.0<span class="w"> </span>.
 </code></pre></div>
-
 <p><strong>4. Create PR to Main</strong>:</p>
-<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>release/v1.3.0
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>release/v1.3.0
 gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </span>--base<span class="w"> </span>main<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Release v1.3.0&quot;</span>
 </code></pre></div>
-
 <p><strong>5. Merge and Tag</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Merge PR (via GitHub UI or CLI)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Merge PR (via GitHub UI or CLI)</span>
 gh<span class="w"> </span>pr<span class="w"> </span>merge<span class="w"> </span>&lt;pr-number&gt;<span class="w"> </span>--merge<span class="w"> </span>--delete-branch
 
 <span class="c1"># Tag the release</span>
@@ -4496,18 +4520,15 @@ git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </
 git<span class="w"> </span>tag<span class="w"> </span>v1.3.0
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v1.3.0
 </code></pre></div>
-
 <p><strong>6. Merge Back to Develop</strong>:</p>
-<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>develop
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>develop
 git<span class="w"> </span>merge<span class="w"> </span>main
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>develop
 </code></pre></div>
-
 <p><strong>7. Publish Release Notes</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Create GitHub Release</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create GitHub Release</span>
 gh<span class="w"> </span>release<span class="w"> </span>create<span class="w"> </span>v1.3.0<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Release v1.3.0&quot;</span><span class="w"> </span>--notes-file<span class="w"> </span>CHANGELOG.md
 </code></pre></div>
-
 <h3 id="pre-release-versions">Pre-release Versions<a class="headerlink" href="#pre-release-versions" title="Permanent link">&para;</a></h3>
 <p>For testing before official release:</p>
 <ul>

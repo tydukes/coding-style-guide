@@ -3786,7 +3786,7 @@
 <h2 id="extract-functions-from-scripts">Extract Functions from Scripts<a class="headerlink" href="#extract-functions-from-scripts" title="Permanent link">&para;</a></h2>
 <h3 id="problem-long-monolithic-script-with-duplicated-code">Problem: Long monolithic script with duplicated code<a class="headerlink" href="#problem-long-monolithic-script-with-duplicated-code" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong> (300+ line script):</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 
 <span class="c1"># Deploy application script</span>
 <span class="nv">APP_NAME</span><span class="o">=</span><span class="s2">&quot;myapp&quot;</span>
@@ -3871,9 +3871,8 @@ curl<span class="w"> </span>-f<span class="w"> </span>http://localhost:8080/heal
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Deployment completed successfully&quot;</span>
 <span class="c1"># ... 200+ more lines with similar patterns</span>
 </code></pre></div>
-
 <p><strong>After</strong> (modular with functions):</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 <span class="c1">#</span>
 <span class="c1"># Deploy application script</span>
 <span class="c1">#</span>
@@ -4168,7 +4167,6 @@ main<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span>main<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
 <span class="k">fi</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Functions with single responsibilities</li>
@@ -4184,7 +4182,7 @@ main<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <h2 id="add-error-handling">Add Error Handling<a class="headerlink" href="#add-error-handling" title="Permanent link">&para;</a></h2>
 <h3 id="problem-no-error-handling-script-continues-after-failures">Problem: No error handling, script continues after failures<a class="headerlink" href="#problem-no-error-handling-script-continues-after-failures" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 
 <span class="c1"># Process log files</span>
 <span class="nv">LOG_DIR</span><span class="o">=</span><span class="s2">&quot;/var/log/myapp&quot;</span>
@@ -4211,9 +4209,8 @@ aws<span class="w"> </span>s3<span class="w"> </span>sync<span class="w"> </span
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Log processing complete&quot;</span>
 <span class="c1"># If any command fails, we might delete logs before uploading!</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 <span class="c1">#</span>
 <span class="c1"># Process and archive application logs</span>
 <span class="c1">#</span>
@@ -4450,7 +4447,6 @@ main<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span>main<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
 <span class="k">fi</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ <code>set -euo pipefail</code> for strict error handling</li>
@@ -4466,7 +4462,7 @@ main<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <h2 id="use-arrays-instead-of-strings">Use Arrays Instead of Strings<a class="headerlink" href="#use-arrays-instead-of-strings" title="Permanent link">&para;</a></h2>
 <h3 id="problem-string-manipulation-for-lists-causing-word-splitting-issues">Problem: String manipulation for lists causing word splitting issues<a class="headerlink" href="#problem-string-manipulation-for-lists-causing-word-splitting-issues" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 
 <span class="c1"># Install packages</span>
 <span class="nv">PACKAGES</span><span class="o">=</span><span class="s2">&quot;nginx mysql-server redis-server git curl wget&quot;</span>
@@ -4492,9 +4488,8 @@ main<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span>ssh<span class="w"> </span><span class="nv">$server</span><span class="w"> </span><span class="s2">&quot;systemctl status myapp&quot;</span>
 <span class="k">done</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
@@ -4603,9 +4598,8 @@ main<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span>main<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
 <span class="k">fi</span>
 </code></pre></div>
-
 <p><strong>Even Better</strong> (using associative arrays for configuration):</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
@@ -4675,7 +4669,6 @@ main<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span>main<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
 <span class="k">fi</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ No word splitting issues</li>
@@ -4689,7 +4682,7 @@ main<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <h2 id="apply-posix-compliance">Apply POSIX Compliance<a class="headerlink" href="#apply-posix-compliance" title="Permanent link">&para;</a></h2>
 <h3 id="problem-bash-specific-features-prevent-portability">Problem: Bash-specific features prevent portability<a class="headerlink" href="#problem-bash-specific-features-prevent-portability" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong> (Bash-specific):</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 
 <span class="c1"># Bash-specific features</span>
 <span class="k">function</span><span class="w"> </span>deploy_app<span class="o">()</span><span class="w"> </span><span class="o">{</span>
@@ -4718,9 +4711,8 @@ main<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 
 deploy_app<span class="w"> </span><span class="s2">&quot;myapp&quot;</span><span class="w"> </span><span class="s2">&quot;v1.2.3&quot;</span>
 </code></pre></div>
-
 <p><strong>After</strong> (POSIX-compliant):</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/sh</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/sh</span>
 <span class="c1">#</span>
 <span class="c1"># POSIX-compliant deployment script</span>
 <span class="c1"># Compatible with sh, dash, bash, and other POSIX shells</span>
@@ -4790,9 +4782,8 @@ main<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span>main<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
 <span class="k">fi</span>
 </code></pre></div>
-
 <p><strong>Comparison of Features</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bash vs POSIX</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bash vs POSIX</span>
 
 <span class="c1"># Function declaration</span>
 <span class="k">function</span><span class="w"> </span>bash_func<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span>...<span class="w"> </span><span class="o">}</span><span class="w">     </span><span class="c1"># Bash</span>
@@ -4826,7 +4817,6 @@ cmd<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="w"> <
 <span class="nv">output</span><span class="o">=</span><span class="k">$(</span><span class="nb">command</span><span class="k">)</span><span class="w">                 </span><span class="c1"># Bash/POSIX (preferred)</span>
 <span class="nv">output</span><span class="o">=</span><span class="sb">`</span><span class="nb">command</span><span class="sb">`</span><span class="w">                  </span><span class="c1"># POSIX (old style)</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Compatible with any POSIX shell</li>
@@ -4839,7 +4829,7 @@ cmd<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="w"> <
 <h2 id="improve-variable-quoting">Improve Variable Quoting<a class="headerlink" href="#improve-variable-quoting" title="Permanent link">&para;</a></h2>
 <h3 id="problem-unquoted-variables-cause-word-splitting-and-glob-expansion">Problem: Unquoted variables cause word splitting and glob expansion<a class="headerlink" href="#problem-unquoted-variables-cause-word-splitting-and-glob-expansion" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong> (unsafe quoting):</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 
 <span class="nv">FILE_NAME</span><span class="o">=</span><span class="s2">&quot;my document.txt&quot;</span>
 <span class="nv">DIR_PATH</span><span class="o">=</span><span class="s2">&quot;/tmp/my files&quot;</span>
@@ -4865,9 +4855,8 @@ rm<span class="w"> </span><span class="nv">$USER_INPUT</span>
 <span class="nv">SERVERS</span><span class="o">=(</span>web-01<span class="w"> </span>web-02<span class="o">)</span>
 ssh<span class="w"> </span><span class="si">${</span><span class="nv">SERVERS</span><span class="p">[0]</span><span class="si">}</span><span class="w"> </span><span class="s2">&quot;echo </span><span class="nv">$HOME</span><span class="s2">&quot;</span>
 </code></pre></div>
-
 <p><strong>After</strong> (proper quoting):</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
@@ -4915,9 +4904,8 @@ ssh<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</sp
 <span class="w">    </span><span class="k">fi</span>
 <span class="k">done</span>
 </code></pre></div>
-
 <p><strong>Quoting Rules Summary</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Always quote:</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Always quote:</span>
 <span class="s2">&quot;</span><span class="si">${</span><span class="nv">variable</span><span class="si">}</span><span class="s2">&quot;</span><span class="w">                 </span><span class="c1"># Variables</span>
 <span class="s2">&quot;</span><span class="si">${</span><span class="nv">array</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w">                 </span><span class="c1"># Array expansion (all elements)</span>
 <span class="s2">&quot;</span><span class="k">$(</span><span class="nb">command</span><span class="k">)</span><span class="s2">&quot;</span><span class="w">                  </span><span class="c1"># Command substitution</span>
@@ -4942,7 +4930,6 @@ ssh<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</sp
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">var</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">      </span><span class="c1"># Correct</span>
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="nv">$var</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">          </span><span class="c1"># Fails if var is unset</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ No word splitting on spaces</li>
@@ -4962,7 +4949,7 @@ ssh<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</sp
 <li><strong>checkbashisms</strong>: Check for bash-specific features</li>
 </ul>
 <h3 id="running-shellcheck">Running ShellCheck<a class="headerlink" href="#running-shellcheck" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Check a script</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check a script</span>
 shellcheck<span class="w"> </span>script.sh
 
 <span class="c1"># Check with specific shell</span>
@@ -4975,7 +4962,6 @@ shellcheck<span class="w"> </span>--exclude<span class="o">=</span>SC2086<span c
 <span class="c1"># Format as JSON</span>
 shellcheck<span class="w"> </span>--format<span class="o">=</span>json<span class="w"> </span>script.sh
 </code></pre></div>
-
 <h3 id="related-documentation">Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="../../02_language_guides/bash/">Bash Style Guide</a></li>

@@ -4626,7 +4626,7 @@ best practices for creating secure, efficient, and maintainable container images
 <hr />
 <h2 id="basic-structure">Basic Structure<a class="headerlink" href="#basic-structure" title="Permanent link">&para;</a></h2>
 <h3 id="simple-dockerfile">Simple Dockerfile<a class="headerlink" href="#simple-dockerfile" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Syntax version (optional but recommended)</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Syntax version (optional but recommended)</span>
 <span class="c"># syntax=docker/dockerfile:1</span>
 
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
@@ -4643,20 +4643,18 @@ best practices for creating secure, efficient, and maintainable container images
 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;index.js&quot;</span><span class="p">]</span>
 </code></pre></div>
-
 <hr />
 <h2 id="from-instruction">FROM Instruction<a class="headerlink" href="#from-instruction" title="Permanent link">&para;</a></h2>
 <h3 id="always-pin-base-image-versions">Always Pin Base Image Versions<a class="headerlink" href="#always-pin-base-image-versions" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Good - Pinned to specific version</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Good - Pinned to specific version</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18.19-alpine3.19</span>
 
 <span class="c"># Avoid - Using latest or unpinned versions</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:latest</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18</span>
 </code></pre></div>
-
 <h3 id="multi-stage-builds">Multi-Stage Builds<a class="headerlink" href="#multi-stage-builds" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Build stage</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Build stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
@@ -4673,11 +4671,10 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
 </code></pre></div>
-
 <hr />
 <h2 id="workdir-instruction">WORKDIR Instruction<a class="headerlink" href="#workdir-instruction" title="Permanent link">&para;</a></h2>
 <p>Always use <code>WORKDIR</code> instead of <code>RUN cd</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c"># Good - Using WORKDIR</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Good - Using WORKDIR</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 
@@ -4685,30 +4682,27 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="k">RUN</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/app
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 </code></pre></div>
-
 <hr />
 <h2 id="copy-vs-add">COPY vs ADD<a class="headerlink" href="#copy-vs-add" title="Permanent link">&para;</a></h2>
 <h3 id="use-copy-for-local-files">Use COPY for Local Files<a class="headerlink" href="#use-copy-for-local-files" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Good - COPY for local files</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Good - COPY for local files</span>
 <span class="k">COPY</span><span class="w"> </span>package.json<span class="w"> </span>./
 <span class="k">COPY</span><span class="w"> </span>src/<span class="w"> </span>./src/
 
 <span class="c"># Avoid - ADD has implicit extraction behavior</span>
 <span class="k">ADD</span><span class="w"> </span>package.json<span class="w"> </span>./
 </code></pre></div>
-
 <h3 id="use-add-only-for-urls-or-tar-extraction">Use ADD Only for URLs or Tar Extraction<a class="headerlink" href="#use-add-only-for-urls-or-tar-extraction" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># ADD for remote URLs (but prefer RUN wget/curl for better control)</span>
+<div class="highlight"><pre><span></span><code><span class="c"># ADD for remote URLs (but prefer RUN wget/curl for better control)</span>
 <span class="k">ADD</span><span class="w"> </span>https://example.com/file.tar.gz<span class="w"> </span>/tmp/
 
 <span class="c"># ADD for automatic tar extraction</span>
 <span class="k">ADD</span><span class="w"> </span>archive.tar.gz<span class="w"> </span>/opt/
 </code></pre></div>
-
 <hr />
 <h2 id="run-instruction">RUN Instruction<a class="headerlink" href="#run-instruction" title="Permanent link">&para;</a></h2>
 <h3 id="combine-commands-to-reduce-layers">Combine Commands to Reduce Layers<a class="headerlink" href="#combine-commands-to-reduce-layers" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Good - Single layer</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Good - Single layer</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="se">\</span>
 <span class="w">      </span>curl<span class="w"> </span><span class="se">\</span>
@@ -4723,9 +4717,8 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>git
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>vim
 </code></pre></div>
-
 <h3 id="clean-up-in-same-layer">Clean Up in Same Layer<a class="headerlink" href="#clean-up-in-same-layer" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Good - Clean up in same RUN instruction</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Good - Clean up in same RUN instruction</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>build-essential<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>make<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
@@ -4739,10 +4732,9 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="k">RUN</span><span class="w"> </span>make
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>remove<span class="w"> </span>-y<span class="w"> </span>build-essential
 </code></pre></div>
-
 <hr />
 <h2 id="env-instruction">ENV Instruction<a class="headerlink" href="#env-instruction" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c"># Environment variables</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Environment variables</span>
 <span class="k">ENV</span><span class="w"> </span><span class="nv">NODE_ENV</span><span class="o">=</span>production<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">PORT</span><span class="o">=</span><span class="m">3000</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">LOG_LEVEL</span><span class="o">=</span>info
@@ -4750,19 +4742,17 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="c"># Path variables</span>
 <span class="k">ENV</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/app/node_modules/.bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="expose-instruction">EXPOSE Instruction<a class="headerlink" href="#expose-instruction" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c"># Document exposed ports</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Document exposed ports</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080/tcp</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8081/udp</span>
 </code></pre></div>
-
 <hr />
 <h2 id="user-instruction">USER Instruction<a class="headerlink" href="#user-instruction" title="Permanent link">&para;</a></h2>
 <h3 id="always-run-as-non-root-user">Always Run as Non-Root User<a class="headerlink" href="#always-run-as-non-root-user" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Good - Create and use non-root user</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Good - Create and use non-root user</span>
 <span class="k">RUN</span><span class="w"> </span>addgroup<span class="w"> </span>-g<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-S<span class="w"> </span>nodejs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>adduser<span class="w"> </span>-S<span class="w"> </span>nodejs<span class="w"> </span>-u<span class="w"> </span><span class="m">1001</span>
 
@@ -4771,11 +4761,10 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="c"># Bad - Running as root (default)</span>
 <span class="c"># (no USER instruction)</span>
 </code></pre></div>
-
 <hr />
 <h2 id="multi-stage-build-examples">Multi-Stage Build Examples<a class="headerlink" href="#multi-stage-build-examples" title="Permanent link">&para;</a></h2>
 <h3 id="nodejs-application">Node.js Application<a class="headerlink" href="#nodejs-application" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># syntax=docker/dockerfile:1</span>
+<div class="highlight"><pre><span></span><code><span class="c"># syntax=docker/dockerfile:1</span>
 
 <span class="c"># Build stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
@@ -4808,9 +4797,8 @@ best practices for creating secure, efficient, and maintainable container images
 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
 </code></pre></div>
-
 <h3 id="python-application">Python Application<a class="headerlink" href="#python-application" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># syntax=docker/dockerfile:1</span>
+<div class="highlight"><pre><span></span><code><span class="c"># syntax=docker/dockerfile:1</span>
 
 <span class="c"># Build stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
@@ -4858,9 +4846,8 @@ best practices for creating secure, efficient, and maintainable container images
 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;uvicorn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;main:app&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--port&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;8000&quot;</span><span class="p">]</span>
 </code></pre></div>
-
 <h3 id="go-application">Go Application<a class="headerlink" href="#go-application" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># syntax=docker/dockerfile:1</span>
+<div class="highlight"><pre><span></span><code><span class="c"># syntax=docker/dockerfile:1</span>
 
 <span class="c"># Build stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.21-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
@@ -4902,60 +4889,58 @@ best practices for creating secure, efficient, and maintainable container images
 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;./main&quot;</span><span class="p">]</span>
 </code></pre></div>
-
 <hr />
 <h2 id="dockerignore">.dockerignore<a class="headerlink" href="#dockerignore" title="Permanent link">&para;</a></h2>
 <p>Always create a <code>.dockerignore</code> file:</p>
-<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">Git</span>
-<span class="p">.</span><span class="n">git</span>
-<span class="p">.</span><span class="n">gitignore</span>
+<div class="highlight"><pre><span></span><code># Git
+.git
+.gitignore
 
-<span class="err">#</span><span class="w"> </span><span class="n">Node</span><span class="p">.</span><span class="n">js</span>
-<span class="n">node_modules</span>
-<span class="n">npm</span><span class="o">-</span><span class="n">debug</span><span class="p">.</span><span class="nf">log</span>
+# Node.js
+node_modules
+npm-debug.log
 
-<span class="err">#</span><span class="w"> </span><span class="n">Python</span>
-<span class="n">__pycache__</span>
-<span class="o">*</span><span class="p">.</span><span class="n">py</span><span class="o">[</span><span class="n">cod</span><span class="o">]</span>
-<span class="o">*</span><span class="err">$</span><span class="n">py</span><span class="p">.</span><span class="k">class</span>
-<span class="p">.</span><span class="n">Python</span>
-<span class="n">venv</span><span class="o">/</span>
-<span class="p">.</span><span class="n">env</span>
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+.Python
+venv/
+.env
 
-<span class="err">#</span><span class="w"> </span><span class="n">Build</span><span class="w"> </span><span class="n">artifacts</span>
-<span class="n">dist</span>
-<span class="n">build</span>
-<span class="o">*</span><span class="p">.</span><span class="n">o</span>
-<span class="o">*</span><span class="p">.</span><span class="n">so</span>
+# Build artifacts
+dist
+build
+*.o
+*.so
 
-<span class="err">#</span><span class="w"> </span><span class="n">IDE</span>
-<span class="p">.</span><span class="n">vscode</span>
-<span class="p">.</span><span class="n">idea</span>
-<span class="o">*</span><span class="p">.</span><span class="n">swp</span>
-<span class="o">*</span><span class="p">.</span><span class="n">swo</span>
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
 
-<span class="err">#</span><span class="w"> </span><span class="n">Documentation</span>
-<span class="o">*</span><span class="p">.</span><span class="n">md</span>
-<span class="n">docs</span><span class="o">/</span>
+# Documentation
+*.md
+docs/
 
-<span class="err">#</span><span class="w"> </span><span class="n">Tests</span>
-<span class="n">tests</span><span class="o">/</span>
-<span class="o">*</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">js</span>
+# Tests
+tests/
+*.test.js
 
-<span class="err">#</span><span class="w"> </span><span class="n">CI</span><span class="o">/</span><span class="n">CD</span>
-<span class="p">.</span><span class="n">github</span>
-<span class="p">.</span><span class="n">gitlab</span><span class="o">-</span><span class="n">ci</span><span class="p">.</span><span class="n">yml</span>
-<span class="n">Jenkinsfile</span>
+# CI/CD
+.github
+.gitlab-ci.yml
+Jenkinsfile
 
-<span class="err">#</span><span class="w"> </span><span class="n">Docker</span>
-<span class="n">Dockerfile</span><span class="o">*</span>
-<span class="n">docker</span><span class="o">-</span><span class="n">compose</span><span class="o">*</span><span class="p">.</span><span class="n">yml</span>
+# Docker
+Dockerfile*
+docker-compose*.yml
 </code></pre></div>
-
 <hr />
 <h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="scan-for-vulnerabilities">Scan for Vulnerabilities<a class="headerlink" href="#scan-for-vulnerabilities" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Scan image with Trivy</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Scan image with Trivy</span>
 trivy<span class="w"> </span>image<span class="w"> </span>myapp:latest
 
 <span class="c1"># Scan image with Grype</span>
@@ -4964,9 +4949,8 @@ grype<span class="w"> </span>myapp:latest
 <span class="c1"># Scan with Docker Scout</span>
 docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> </span>myapp:latest
 </code></pre></div>
-
 <h3 id="use-minimal-base-images">Use Minimal Base Images<a class="headerlink" href="#use-minimal-base-images" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Good - Minimal alpine image</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Good - Minimal alpine image</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
 
 <span class="c"># Good - Distroless image (even smaller, no shell)</span>
@@ -4976,9 +4960,8 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:22.04</span>
 </code></pre></div>
-
 <h3 id="dont-store-secrets-in-images">Don't Store Secrets in Images<a class="headerlink" href="#dont-store-secrets-in-images" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Bad - Secret in ENV</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Secret in ENV</span>
 <span class="k">ENV</span><span class="w"> </span><span class="nv">DB_PASSWORD</span><span class="o">=</span>supersecret
 
 <span class="c"># Bad - Secret in file</span>
@@ -4988,10 +4971,9 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="c"># Pass via environment variables at runtime</span>
 <span class="c"># docker run -e DB_PASSWORD=$DB_PASSWORD myapp</span>
 </code></pre></div>
-
 <hr />
 <h2 id="healthcheck">HEALTHCHECK<a class="headerlink" href="#healthcheck" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c"># HTTP health check</span>
+<div class="highlight"><pre><span></span><code><span class="c"># HTTP health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>CMD<span class="w"> </span>curl<span class="w"> </span>-f<span class="w"> </span>http://localhost:3000/health<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 
@@ -5003,10 +4985,9 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="k">CMD</span><span class="w"> </span>node<span class="w"> </span>healthcheck.js
 </code></pre></div>
-
 <hr />
 <h2 id="labels">Labels<a class="headerlink" href="#labels" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="k">LABEL</span><span class="w"> </span>org.opencontainers.image.title<span class="o">=</span><span class="s2">&quot;My Application&quot;</span><span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><span class="k">LABEL</span><span class="w"> </span>org.opencontainers.image.title<span class="o">=</span><span class="s2">&quot;My Application&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">      </span>org.opencontainers.image.description<span class="o">=</span><span class="s2">&quot;A sample application&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">      </span>org.opencontainers.image.version<span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">      </span>org.opencontainers.image.authors<span class="o">=</span><span class="s2">&quot;Tyler Dukes &lt;tyler@example.com&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -5014,11 +4995,10 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="w">      </span>org.opencontainers.image.source<span class="o">=</span><span class="s2">&quot;https://github.com/myorg/myapp&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">      </span>org.opencontainers.image.licenses<span class="o">=</span><span class="s2">&quot;MIT&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-running-as-root">❌ Avoid: Running as Root<a class="headerlink" href="#avoid-running-as-root" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Bad - Running as root</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Running as root</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;index.js&quot;</span><span class="p">]</span>
@@ -5030,17 +5010,15 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;index.js&quot;</span><span class="p">]</span>
 </code></pre></div>
-
 <h3 id="avoid-using-latest-tag">❌ Avoid: Using latest Tag<a class="headerlink" href="#avoid-using-latest-tag" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Bad - Unpredictable builds</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Unpredictable builds</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:latest</span>
 
 <span class="c"># Good - Pinned version</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18.19-alpine3.19</span>
 </code></pre></div>
-
 <h3 id="avoid-installing-unnecessary-packages">❌ Avoid: Installing Unnecessary Packages<a class="headerlink" href="#avoid-installing-unnecessary-packages" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Bad - Installing unnecessary packages</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Installing unnecessary packages</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>build-essential<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>python3<span class="w"> </span><span class="se">\</span>
@@ -5053,10 +5031,9 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="w">    </span>build-essential<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
 </code></pre></div>
-
 <hr />
 <h2 id="building-and-tagging">Building and Tagging<a class="headerlink" href="#building-and-tagging" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Build with tag</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Build with tag</span>
 docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>myapp:1.0.0<span class="w"> </span>.
 
 <span class="c1"># Build with multiple tags</span>
@@ -5071,12 +5048,11 @@ docker<span class="w"> </span>build<span class="w"> </span>--target<span class="
 <span class="c1"># Build with platform</span>
 docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64,linux/arm64<span class="w"> </span>-t<span class="w"> </span>myapp:1.0.0<span class="w"> </span>.
 </code></pre></div>
-
 <hr />
 <h2 id="tool-configurations">Tool Configurations<a class="headerlink" href="#tool-configurations" title="Permanent link">&para;</a></h2>
 <h3 id="hadolint-configuration">hadolint Configuration<a class="headerlink" href="#hadolint-configuration" title="Permanent link">&para;</a></h3>
 <p><code>.hadolint.yaml</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">ignored</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">ignored</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DL3008</span><span class="w">  </span><span class="c1"># Pin versions in apt-get install</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DL3013</span><span class="w">  </span><span class="c1"># Pin versions in pip</span>
 
@@ -5084,9 +5060,8 @@ docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker.io</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcr.io</span>
 </code></pre></div>
-
 <h3 id="running-hadolint">Running hadolint<a class="headerlink" href="#running-hadolint" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Lint Dockerfile</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Lint Dockerfile</span>
 hadolint<span class="w"> </span>Dockerfile
 
 <span class="c1"># Lint with custom config</span>
@@ -5095,7 +5070,6 @@ hadolint<span class="w"> </span>--config<span class="w"> </span>.hadolint.yaml<s
 <span class="c1"># Output as JSON</span>
 hadolint<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>Dockerfile
 </code></pre></div>
-
 <hr />
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <h3 id="official-documentation">Official Documentation<a class="headerlink" href="#official-documentation" title="Permanent link">&para;</a></h3>

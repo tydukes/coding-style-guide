@@ -4679,17 +4679,15 @@ limitations that make higher-level languages preferable for complex logic.</p>
 <hr />
 <h2 id="posix-compliance">POSIX Compliance<a class="headerlink" href="#posix-compliance" title="Permanent link">&para;</a></h2>
 <p>Write POSIX-compliant scripts for maximum portability across systems.</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/sh</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/sh</span>
 <span class="c1"># Good - POSIX compliant shebang</span>
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
 <span class="c1"># Acceptable - When bash-specific features are needed</span>
 <span class="c1"># Document bash requirement in README</span>
 </code></pre></div>
-
 <h3 id="bash-only-features-to-avoid">Bash-only Features to Avoid<a class="headerlink" href="#bash-only-features-to-avoid" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Bash-specific array syntax</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Bash-specific array syntax</span>
 <span class="nb">declare</span><span class="w"> </span>-a<span class="w"> </span><span class="nv">my_array</span><span class="o">=(</span><span class="s2">&quot;item1&quot;</span><span class="w"> </span><span class="s2">&quot;item2&quot;</span><span class="o">)</span>
 
 <span class="c1"># Bad - Bash-specific [[ ]] test</span>
@@ -4710,11 +4708,10 @@ command1<span class="w"> </span>&gt;<span class="w"> </span>/tmp/file1
 command2<span class="w"> </span>&gt;<span class="w"> </span>/tmp/file2
 diff<span class="w"> </span>/tmp/file1<span class="w"> </span>/tmp/file2
 </code></pre></div>
-
 <hr />
 <h2 id="script-header-and-metadata">Script Header and Metadata<a class="headerlink" href="#script-header-and-metadata" title="Permanent link">&para;</a></h2>
 <p>Every script must start with a header including metadata and error handling:</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/sh</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/sh</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">@module deploy_application</span>
 <span class="s2">@description Deploys application to production environment</span>
@@ -4740,20 +4737,18 @@ diff<span class="w"> </span>/tmp/file1<span class="w"> </span>/tmp/file2
 <span class="nb">readonly</span><span class="w"> </span><span class="nv">YELLOW</span><span class="o">=</span><span class="s1">&#39;\033[1;33m&#39;</span>
 <span class="nb">readonly</span><span class="w"> </span><span class="nv">NC</span><span class="o">=</span><span class="s1">&#39;\033[0m&#39;</span><span class="w"> </span><span class="c1"># No Color</span>
 </code></pre></div>
-
 <h3 id="set-options-explained">Set Options Explained<a class="headerlink" href="#set-options-explained" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>errexit<span class="w">    </span><span class="c1"># Exit immediately if a command exits with non-zero status</span>
+<div class="highlight"><pre><span></span><code><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>errexit<span class="w">    </span><span class="c1"># Exit immediately if a command exits with non-zero status</span>
 <span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>nounset<span class="w">    </span><span class="c1"># Treat unset variables as errors</span>
 <span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>pipefail<span class="w">   </span><span class="c1"># Return exit status of last failed command in pipeline</span>
 
 <span class="c1"># Alternative short form</span>
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 </code></pre></div>
-
 <hr />
 <h2 id="function-definitions">Function Definitions<a class="headerlink" href="#function-definitions" title="Permanent link">&para;</a></h2>
 <p>Use functions for reusable code blocks:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Function definition - no &#39;function&#39; keyword for POSIX compliance</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Function definition - no &#39;function&#39; keyword for POSIX compliance</span>
 log_info<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">message</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
 <span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">GREEN</span><span class="si">}</span><span class="s2">[INFO]</span><span class="si">${</span><span class="nv">NC</span><span class="si">}</span><span class="s2"> </span><span class="k">$(</span>date<span class="w"> </span><span class="s1">&#39;+%Y-%m-%d %H:%M:%S&#39;</span><span class="k">)</span><span class="s2"> - </span><span class="nv">$message</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span>
@@ -4797,11 +4792,10 @@ deploy_service<span class="o">()</span><span class="w"> </span><span class="o">{
 <span class="w">  </span><span class="k">fi</span>
 <span class="o">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="argument-parsing">Argument Parsing<a class="headerlink" href="#argument-parsing" title="Permanent link">&para;</a></h2>
 <h3 id="simple-argument-parsing">Simple Argument Parsing<a class="headerlink" href="#simple-argument-parsing" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>show_help<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<div class="highlight"><pre><span></span><code>show_help<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span>cat<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
 <span class="s">Usage: $SCRIPT_NAME [OPTIONS] &lt;environment&gt;</span>
 
@@ -4878,11 +4872,10 @@ parse_arguments<span class="o">()</span><span class="w"> </span><span class="o">
 <span class="w">  </span><span class="k">esac</span>
 <span class="o">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <h3 id="trap-signals-for-cleanup">Trap Signals for Cleanup<a class="headerlink" href="#trap-signals-for-cleanup" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Cleanup function</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Cleanup function</span>
 cleanup<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">exit_code</span><span class="o">=</span><span class="nv">$?</span>
 
@@ -4906,9 +4899,8 @@ cleanup<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="nv">TEMP_FILE</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="k">)</span>
 <span class="nv">TEMP_DIR</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="w"> </span>-d<span class="k">)</span>
 </code></pre></div>
-
 <h3 id="error-handling-patterns">Error Handling Patterns<a class="headerlink" href="#error-handling-patterns" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Check command success</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check command success</span>
 <span class="k">if</span><span class="w"> </span>!<span class="w"> </span>check_command_exists<span class="w"> </span><span class="s2">&quot;docker&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span>log_error<span class="w"> </span><span class="s2">&quot;docker is not installed&quot;</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
@@ -4935,11 +4927,10 @@ docker<span class="w"> </span>pull<span class="w"> </span><span class="s2">&quot
 <span class="w">  </span>log_error<span class="w"> </span><span class="s2">&quot;One or more commands failed&quot;</span>
 <span class="k">fi</span>
 </code></pre></div>
-
 <hr />
 <h2 id="temporary-file-handling">Temporary File Handling<a class="headerlink" href="#temporary-file-handling" title="Permanent link">&para;</a></h2>
 <p>Always use <code>mktemp</code> for temporary files and ensure cleanup:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Create temporary file</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create temporary file</span>
 <span class="nv">TEMP_FILE</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="k">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span>log_error<span class="w"> </span><span class="s2">&quot;Failed to create temporary file&quot;</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
@@ -4958,10 +4949,9 @@ docker<span class="w"> </span>pull<span class="w"> </span><span class="s2">&quot
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;data&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TEMP_FILE</span><span class="s2">&quot;</span>
 process_file<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TEMP_FILE</span><span class="s2">&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="string-manipulation">String Manipulation<a class="headerlink" href="#string-manipulation" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Variable assignment</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Variable assignment</span>
 <span class="nv">name</span><span class="o">=</span><span class="s2">&quot;John Doe&quot;</span>
 
 <span class="c1"># String length</span>
@@ -4990,10 +4980,9 @@ process_file<span class="w"> </span><span class="s2">&quot;</span><span class="n
 <span class="nv">database_host</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DB_HOST</span><span class="k">:-</span><span class="nv">localhost</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="nv">database_port</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DB_PORT</span><span class="k">:-</span><span class="nv">5432</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="conditional-statements">Conditional Statements<a class="headerlink" href="#conditional-statements" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Basic if statement</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Basic if statement</span>
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ENVIRONMENT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span>log_warning<span class="w"> </span><span class="s2">&quot;Deploying to production&quot;</span>
 <span class="k">fi</span>
@@ -5036,10 +5025,9 @@ process_file<span class="w"> </span><span class="s2">&quot;</span><span class="n
 <span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w">    </span><span class="c1"># OR</span>
 <span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w">                    </span><span class="c1"># NOT</span>
 </code></pre></div>
-
 <hr />
 <h2 id="loops">Loops<a class="headerlink" href="#loops" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># For loop with list</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># For loop with list</span>
 <span class="k">for</span><span class="w"> </span>env<span class="w"> </span><span class="k">in</span><span class="w"> </span>dev<span class="w"> </span>staging<span class="w"> </span>prod<span class="p">;</span><span class="w"> </span><span class="k">do</span>
 <span class="w">  </span>log_info<span class="w"> </span><span class="s2">&quot;Deploying to </span><span class="nv">$env</span><span class="s2">&quot;</span>
 <span class="w">  </span>deploy_to_environment<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$env</span><span class="s2">&quot;</span>
@@ -5075,10 +5063,9 @@ process_file<span class="w"> </span><span class="s2">&quot;</span><span class="n
 <span class="w">  </span>sleep<span class="w"> </span><span class="m">5</span>
 <span class="k">done</span>
 </code></pre></div>
-
 <hr />
 <h2 id="here-documents">HERE Documents<a class="headerlink" href="#here-documents" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Basic HERE document</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Basic HERE document</span>
 cat<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
 <span class="s">This is a multi-line</span>
 <span class="s">text block that will</span>
@@ -5114,10 +5101,9 @@ docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </sp
 <span class="s">command3</span>
 <span class="s">EOF</span>
 </code></pre></div>
-
 <hr />
 <h2 id="command-substitution">Command Substitution<a class="headerlink" href="#command-substitution" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Modern command substitution (POSIX)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Modern command substitution (POSIX)</span>
 <span class="nv">current_date</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span><span class="s1">&#39;+%Y-%m-%d&#39;</span><span class="k">)</span>
 <span class="nv">file_count</span><span class="o">=</span><span class="k">$(</span>ls<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span>
 <span class="nv">git_branch</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>rev-parse<span class="w"> </span>--abbrev-ref<span class="w"> </span>HEAD<span class="k">)</span>
@@ -5130,11 +5116,10 @@ docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </sp
 <span class="w">  </span>log_info<span class="w"> </span><span class="s2">&quot;Docker running with </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span><span class="s2"> containers&quot;</span>
 <span class="k">fi</span>
 </code></pre></div>
-
 <hr />
 <h2 id="arrays-use-carefully-bash-specific">Arrays (Use Carefully - Bash-specific)<a class="headerlink" href="#arrays-use-carefully-bash-specific" title="Permanent link">&para;</a></h2>
 <p>For POSIX compliance, use whitespace-separated strings or multiple variables:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># POSIX-compliant approach - avoid arrays</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># POSIX-compliant approach - avoid arrays</span>
 <span class="nv">environments</span><span class="o">=</span><span class="s2">&quot;dev staging prod&quot;</span>
 <span class="k">for</span><span class="w"> </span>env<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$environments</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
 <span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$env</span><span class="s2">&quot;</span>
@@ -5154,11 +5139,10 @@ docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </sp
 <span class="c1"># Array length</span>
 <span class="nv">count</span><span class="o">=</span><span class="si">${#</span><span class="nv">servers</span><span class="p">[@]</span><span class="si">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-unquoted-variables">❌ Avoid: Unquoted Variables<a class="headerlink" href="#avoid-unquoted-variables" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Word splitting and globbing issues</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Word splitting and globbing issues</span>
 <span class="nv">file</span><span class="o">=</span><span class="nv">$1</span>
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="nv">$file</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># Breaks with spaces in filename</span>
 <span class="w">  </span>cat<span class="w"> </span><span class="nv">$file</span>
@@ -5170,9 +5154,8 @@ docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </sp
 <span class="w">  </span>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
 <span class="k">fi</span>
 </code></pre></div>
-
 <h3 id="avoid-using-eval">❌ Avoid: Using <code>eval</code><a class="headerlink" href="#avoid-using-eval" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Security risk, arbitrary code execution</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Security risk, arbitrary code execution</span>
 <span class="nv">user_input</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
 <span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$user_input</span><span class="s2">&quot;</span>
 
@@ -5183,9 +5166,8 @@ docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </sp
 <span class="w">  </span>*<span class="o">)</span><span class="w">     </span>log_error<span class="w"> </span><span class="s2">&quot;Unknown command&quot;</span><span class="w"> </span><span class="p">;;</span>
 <span class="k">esac</span>
 </code></pre></div>
-
 <h3 id="avoid-parsing-ls-output">❌ Avoid: Parsing ls Output<a class="headerlink" href="#avoid-parsing-ls-output" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Breaks with spaces, special characters</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Breaks with spaces, special characters</span>
 <span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>ls<span class="w"> </span>*.txt<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
 <span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
 <span class="k">done</span>
@@ -5197,17 +5179,15 @@ docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </sp
 <span class="w">  </span><span class="k">fi</span>
 <span class="k">done</span>
 </code></pre></div>
-
 <h3 id="avoid-useless-cat">❌ Avoid: Useless cat<a class="headerlink" href="#avoid-useless-cat" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Unnecessary use of cat</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Unnecessary use of cat</span>
 cat<span class="w"> </span>file.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span>
 
 <span class="c1"># Good - Direct input redirection</span>
 grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span>file.txt
 </code></pre></div>
-
 <h3 id="avoid-test-with">❌ Avoid: Test with ==<a class="headerlink" href="#avoid-test-with" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Not POSIX compliant</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Not POSIX compliant</span>
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$var</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;match&quot;</span>
 <span class="k">fi</span>
@@ -5217,9 +5197,8 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;match&quot;</span>
 <span class="k">fi</span>
 </code></pre></div>
-
 <h3 id="avoid-ignoring-exit-codes">❌ Avoid: Ignoring Exit Codes<a class="headerlink" href="#avoid-ignoring-exit-codes" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - No error checking</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - No error checking</span>
 curl<span class="w"> </span>-o<span class="w"> </span>file.txt<span class="w"> </span>https://example.com/file.txt
 process_file<span class="w"> </span>file.txt
 
@@ -5231,9 +5210,8 @@ process_file<span class="w"> </span>file.txt
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
 </code></pre></div>
-
 <h3 id="avoid-using-cd-without-checks">❌ Avoid: Using cd Without Checks<a class="headerlink" href="#avoid-using-cd-without-checks" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - cd might fail</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - cd might fail</span>
 <span class="nb">cd</span><span class="w"> </span>/some/directory
 rm<span class="w"> </span>-rf<span class="w"> </span>*
 
@@ -5250,12 +5228,11 @@ rm<span class="w"> </span>-rf<span class="w"> </span>*
 <span class="w">  </span>rm<span class="w"> </span>-rf<span class="w"> </span>*
 <span class="o">)</span>
 </code></pre></div>
-
 <hr />
 <h2 id="tool-configuration">Tool Configuration<a class="headerlink" href="#tool-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="shellcheck">shellcheck<a class="headerlink" href="#shellcheck" title="Permanent link">&para;</a></h3>
 <p><code>.shellcheckrc</code>:</p>
-<div class="codehilite"><pre><span></span><code># Disable specific warnings
+<div class="highlight"><pre><span></span><code># Disable specific warnings
 disable=SC2034  # Unused variable
 disable=SC2086  # Unquoted variable (if intentional)
 
@@ -5265,28 +5242,24 @@ enable=all
 # Specify shell dialect
 shell=sh
 </code></pre></div>
-
 <p>Run shellcheck:</p>
-<div class="codehilite"><pre><span></span><code>shellcheck<span class="w"> </span>script.sh
+<div class="highlight"><pre><span></span><code>shellcheck<span class="w"> </span>script.sh
 shellcheck<span class="w"> </span>-x<span class="w"> </span>script.sh<span class="w">  </span><span class="c1"># Follow source files</span>
 </code></pre></div>
-
 <h3 id="shfmt">shfmt<a class="headerlink" href="#shfmt" title="Permanent link">&para;</a></h3>
 <p><code>.editorconfig</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[*.sh]</span>
+<div class="highlight"><pre><span></span><code><span class="k">[*.sh]</span>
 <span class="na">indent_style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">space</span>
 <span class="na">indent_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
 <span class="na">shell_variant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">posix</span>
 </code></pre></div>
-
 <p>Format scripts:</p>
-<div class="codehilite"><pre><span></span><code>shfmt<span class="w"> </span>-w<span class="w"> </span>script.sh<span class="w">         </span><span class="c1"># Format in place</span>
+<div class="highlight"><pre><span></span><code>shfmt<span class="w"> </span>-w<span class="w"> </span>script.sh<span class="w">         </span><span class="c1"># Format in place</span>
 shfmt<span class="w"> </span>-i<span class="w"> </span><span class="m">2</span><span class="w"> </span>-s<span class="w"> </span>script.sh<span class="w">    </span><span class="c1"># 2-space indent, simplify</span>
 </code></pre></div>
-
 <h3 id="pre-commit-hook">Pre-commit Hook<a class="headerlink" href="#pre-commit-hook" title="Permanent link">&para;</a></h3>
 <p><code>.pre-commit-config.yaml</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">repos</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">repos</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/shellcheck-py/shellcheck-py</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.9.0.5</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
@@ -5298,10 +5271,9 @@ shfmt<span class="w"> </span>-i<span class="w"> </span><span class="m">2</span><
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shfmt</span>
 <span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">-w</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">-i</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;2&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">-s</span><span class="p p-Indicator">]</span>
 </code></pre></div>
-
 <hr />
 <h2 id="complete-script-example">Complete Script Example<a class="headerlink" href="#complete-script-example" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/sh</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/sh</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">@module database_backup</span>
 <span class="s2">@description Automated PostgreSQL database backup with rotation</span>
@@ -5462,7 +5434,6 @@ main<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="c1"># Run main function with arguments</span>
 main<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="when-to-use-higher-level-languages">When to Use Higher-Level Languages<a class="headerlink" href="#when-to-use-higher-level-languages" title="Permanent link">&para;</a></h2>
 <p>Replace Bash with Python, Go, or TypeScript when you need:</p>
@@ -5491,21 +5462,19 @@ main<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</s
 <li>Async I/O operations</li>
 </ul>
 <h3 id="example-when-not-to-use-bash">Example: When NOT to Use Bash<a class="headerlink" href="#example-when-not-to-use-bash" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Complex JSON parsing in Bash</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Complex JSON parsing in Bash</span>
 <span class="c1"># This should be Python/Go/TypeScript</span>
 <span class="nv">response</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>https://api.example.com/users<span class="k">)</span>
 <span class="c1"># Trying to parse JSON with grep/sed is fragile and error-prone</span>
 <span class="nv">user_id</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$response</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;&quot;id&quot;:[0-9]*&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d:<span class="w"> </span>-f2<span class="k">)</span>
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="c1"># Good - Use Python for JSON APIs</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good - Use Python for JSON APIs</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 
 <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://api.example.com/users&#39;</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 <span class="n">user_id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
 </code></pre></div>
-
 <hr />
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <h3 id="official-documentation">Official Documentation<a class="headerlink" href="#official-documentation" title="Permanent link">&para;</a></h3>

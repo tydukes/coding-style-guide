@@ -4190,7 +4190,7 @@ in a single repository. This approach enables:</p>
 <li><strong>Single source of truth</strong>: Documentation portal builds from one repository</li>
 </ul>
 <h3 id="directory-layout">Directory Layout<a class="headerlink" href="#directory-layout" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>coding-style-guide/
+<div class="highlight"><pre><span></span><code>coding-style-guide/
 ├── docs/                           # MkDocs documentation source
 │   ├── 01_overview/               # General principles and governance
 │   │   ├── principles.md          # Core principles
@@ -4225,7 +4225,6 @@ in a single repository. This approach enables:</p>
 ├── pyproject.toml                 # Python project config
 └── README.md                      # Repository overview
 </code></pre></div>
-
 <h3 id="why-monorepo-for-this-project">Why Monorepo for This Project?<a class="headerlink" href="#why-monorepo-for-this-project" title="Permanent link">&para;</a></h3>
 <p>The monorepo structure is ideal for this style guide because:</p>
 <ol>
@@ -4246,7 +4245,7 @@ in a single repository. This approach enables:</p>
 <li>Unified deployment pipelines are valuable</li>
 </ul>
 <p><strong>Structure:</strong></p>
-<div class="codehilite"><pre><span></span><code>project-name/
+<div class="highlight"><pre><span></span><code>project-name/
 ├── services/
 │   ├── api/
 │   │   ├── src/
@@ -4280,7 +4279,6 @@ in a single repository. This approach enables:</p>
 ├── Makefile
 └── README.md
 </code></pre></div>
-
 <p><strong>Benefits:</strong></p>
 <ul>
 <li>Atomic commits across services</li>
@@ -4303,7 +4301,7 @@ in a single repository. This approach enables:</p>
 <li>Services have different release cadences</li>
 </ul>
 <p><strong>Structure (per repository):</strong></p>
-<div class="codehilite"><pre><span></span><code>service-name/
+<div class="highlight"><pre><span></span><code>service-name/
 ├── src/
 │   ├── main/
 │   └── test/
@@ -4320,7 +4318,6 @@ in a single repository. This approach enables:</p>
 ├── Makefile
 └── README.md
 </code></pre></div>
-
 <p><strong>Benefits:</strong></p>
 <ul>
 <li>Clear ownership boundaries</li>
@@ -4342,7 +4339,7 @@ in a single repository. This approach enables:</p>
 <li>Centralized infrastructure governance needed</li>
 </ul>
 <p><strong>Infrastructure Repository:</strong></p>
-<div class="codehilite"><pre><span></span><code>infrastructure/
+<div class="highlight"><pre><span></span><code>infrastructure/
 ├── terraform/
 │   ├── modules/
 │   │   ├── networking/
@@ -4360,7 +4357,6 @@ in a single repository. This approach enables:</p>
 ├── docs/
 └── README.md
 </code></pre></div>
-
 <p><strong>Service Repositories:</strong></p>
 <ul>
 <li>Each service in its own repository</li>
@@ -4381,22 +4377,20 @@ in a single repository. This approach enables:</p>
 <h2 id="directory-standards">Directory Standards<a class="headerlink" href="#directory-standards" title="Permanent link">&para;</a></h2>
 <p>Regardless of organizational pattern, follow these directory conventions:</p>
 <h3 id="required-top-level-directories">Required Top-Level Directories<a class="headerlink" href="#required-top-level-directories" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>project/
+<div class="highlight"><pre><span></span><code>project/
 ├── src/           # Source code (or services/ for monorepo)
 ├── tests/         # Tests (mirror src/ structure)
 ├── docs/          # Documentation (MkDocs recommended)
 ├── scripts/       # Automation scripts
 └── infrastructure/ # IaC code (Terraform, K8s manifests)
 </code></pre></div>
-
 <h3 id="optional-directories">Optional Directories<a class="headerlink" href="#optional-directories" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>├── .github/       # GitHub-specific (workflows, CODEOWNERS)
+<div class="highlight"><pre><span></span><code>├── .github/       # GitHub-specific (workflows, CODEOWNERS)
 ├── templates/     # Project templates
 ├── examples/      # Usage examples
 ├── tools/         # Development tools
 └── config/        # Configuration files
 </code></pre></div>
-
 <h3 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Lowercase with hyphens</strong>: <code>my-service/</code>, <code>api-gateway/</code></li>
@@ -4406,16 +4400,15 @@ in a single repository. This approach enables:</p>
 <h2 id="file-organization-best-practices">File Organization Best Practices<a class="headerlink" href="#file-organization-best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="1-colocate-related-files">1. Colocate Related Files<a class="headerlink" href="#1-colocate-related-files" title="Permanent link">&para;</a></h3>
 <p>Keep related files together:</p>
-<div class="codehilite"><pre><span></span><code>src/
+<div class="highlight"><pre><span></span><code>src/
 └── user-authentication/
     ├── service.py          # Core implementation
     ├── service_test.py     # Tests
     ├── README.md           # Module documentation
     └── schema.json         # Data schema
 </code></pre></div>
-
 <h3 id="2-separate-source-from-configuration">2. Separate Source from Configuration<a class="headerlink" href="#2-separate-source-from-configuration" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>project/
+<div class="highlight"><pre><span></span><code>project/
 ├── src/                    # Application code
 ├── config/                 # Configuration files
 │   ├── development.yaml
@@ -4423,10 +4416,9 @@ in a single repository. This approach enables:</p>
 │   └── production.yaml
 └── infrastructure/         # Infrastructure as Code
 </code></pre></div>
-
 <h3 id="3-use-clear-test-directories">3. Use Clear Test Directories<a class="headerlink" href="#3-use-clear-test-directories" title="Permanent link">&para;</a></h3>
 <p><strong>Option A: Mirrored Structure</strong> (Recommended for Python, TypeScript)</p>
-<div class="codehilite"><pre><span></span><code>src/
+<div class="highlight"><pre><span></span><code>src/
 ├── api/
 │   ├── users.py
 │   └── posts.py
@@ -4435,19 +4427,17 @@ tests/
 │   ├── test_users.py
 │   └── test_posts.py
 </code></pre></div>
-
 <p><strong>Option B: Colocated Tests</strong> (Recommended for Go, Rust)</p>
-<div class="codehilite"><pre><span></span><code>src/
+<div class="highlight"><pre><span></span><code>src/
 ├── api/
 │   ├── users.go
 │   ├── users_test.go
 │   ├── posts.go
 │   └── posts_test.go
 </code></pre></div>
-
 <h3 id="4-documentation-structure">4. Documentation Structure<a class="headerlink" href="#4-documentation-structure" title="Permanent link">&para;</a></h3>
 <p>Use MkDocs-compatible structure:</p>
-<div class="codehilite"><pre><span></span><code>docs/
+<div class="highlight"><pre><span></span><code>docs/
 ├── index.md               # Home page
 ├── getting-started/
 │   ├── installation.md
@@ -4461,10 +4451,9 @@ tests/
     ├── overview.md
     └── decisions/         # ADRs (Architecture Decision Records)
 </code></pre></div>
-
 <h2 id="infrastructure-as-code-organization">Infrastructure as Code Organization<a class="headerlink" href="#infrastructure-as-code-organization" title="Permanent link">&para;</a></h2>
 <h3 id="terraformterragrunt">Terraform/Terragrunt<a class="headerlink" href="#terraformterragrunt" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>infrastructure/
+<div class="highlight"><pre><span></span><code>infrastructure/
 ├── terraform/
 │   ├── modules/           # Reusable modules
 │   │   ├── vpc/
@@ -4479,9 +4468,8 @@ tests/
 └── docs/
     └── infrastructure.md
 </code></pre></div>
-
 <h3 id="kubernetes">Kubernetes<a class="headerlink" href="#kubernetes" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>infrastructure/
+<div class="highlight"><pre><span></span><code>infrastructure/
 ├── kubernetes/
 │   ├── base/              # Kustomize base
 │   │   ├── deployment.yaml
@@ -4493,10 +4481,9 @@ tests/
 └── helm/                  # Helm charts
     └── app-chart/
 </code></pre></div>
-
 <h2 id="cicd-organization">CI/CD Organization<a class="headerlink" href="#cicd-organization" title="Permanent link">&para;</a></h2>
 <h3 id="github-actions">GitHub Actions<a class="headerlink" href="#github-actions" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>.github/
+<div class="highlight"><pre><span></span><code>.github/
 ├── workflows/
 │   ├── ci.yml             # Continuous integration
 │   ├── cd-dev.yml         # Deploy to dev
@@ -4506,19 +4493,17 @@ tests/
 │   └── validate-style/
 └── CODEOWNERS            # Code ownership
 </code></pre></div>
-
 <h3 id="gitlab-ci">GitLab CI<a class="headerlink" href="#gitlab-ci" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>.gitlab/
+<div class="highlight"><pre><span></span><code>.gitlab/
 ├── ci/
 │   ├── lint.yml
 │   ├── test.yml
 │   └── deploy.yml
 └── .gitlab-ci.yml         # Main pipeline config
 </code></pre></div>
-
 <h2 id="version-control-patterns">Version Control Patterns<a class="headerlink" href="#version-control-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="branch-structure-gitflow">Branch Structure (GitFlow)<a class="headerlink" href="#branch-structure-gitflow" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>main                       # Production-ready code
+<div class="highlight"><pre><span></span><code>main                       # Production-ready code
 ├── develop                # Integration branch
 ├── feature/               # Feature branches
 │   ├── add-user-auth
@@ -4528,7 +4513,6 @@ tests/
 └── release/               # Release preparation
     └── v1.2.0
 </code></pre></div>
-
 <h3 id="tagging-convention">Tagging Convention<a class="headerlink" href="#tagging-convention" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Releases</strong>: <code>v1.0.0</code>, <code>v1.1.0</code>, <code>v2.0.0</code> (semantic versioning)</li>
@@ -4537,7 +4521,7 @@ tests/
 </ul>
 <h2 id="makefile-organization">Makefile Organization<a class="headerlink" href="#makefile-organization" title="Permanent link">&para;</a></h2>
 <p>Centralize common tasks in a <code>Makefile</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span> <span class="n">lint</span> <span class="n">test</span> <span class="n">build</span> <span class="n">deploy</span> <span class="n">clean</span>
+<div class="highlight"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span> <span class="n">lint</span> <span class="n">test</span> <span class="n">build</span> <span class="n">deploy</span> <span class="n">clean</span>
 
 <span class="nf">help</span><span class="o">:</span>
 <span class="w"> </span>@echo<span class="w"> </span><span class="s2">&quot;Available targets:&quot;</span>
@@ -4558,15 +4542,14 @@ tests/
 <span class="nf">deploy</span><span class="o">:</span>
 <span class="w"> </span>@./scripts/deploy.sh<span class="w"> </span><span class="k">$(</span>ENV<span class="k">)</span>
 </code></pre></div>
-
 <h2 id="migration-strategies">Migration Strategies<a class="headerlink" href="#migration-strategies" title="Permanent link">&para;</a></h2>
 <h3 id="from-multi-repo-to-monorepo">From Multi-Repo to Monorepo<a class="headerlink" href="#from-multi-repo-to-monorepo" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Create new monorepo structure</li>
 <li>Import each repository as subdirectory preserving history:</li>
 </ol>
-<p><code>bash
-   git subtree add --prefix services/api api-repo main</code></p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>subtree<span class="w"> </span>add<span class="w"> </span>--prefix<span class="w"> </span>services/api<span class="w"> </span>api-repo<span class="w"> </span>main
+</code></pre></div>
 <ol>
 <li>Update CI/CD for monorepo patterns (selective builds)</li>
 <li>Migrate documentation to unified MkDocs</li>
@@ -4575,8 +4558,8 @@ tests/
 <ol>
 <li>Extract each service with history:</li>
 </ol>
-<p><code>bash
-   git subtree split --prefix services/api -b api-split</code></p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>subtree<span class="w"> </span>split<span class="w"> </span>--prefix<span class="w"> </span>services/api<span class="w"> </span>-b<span class="w"> </span>api-split
+</code></pre></div>
 <ol>
 <li>Create new repository from split branch</li>
 <li>Update cross-repo references to use Git tags</li>

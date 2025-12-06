@@ -1988,6 +1988,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#metadata-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4002,6 +4013,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#metadata-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4621,6 +4643,39 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <li><strong>Extensible</strong>: New tags can be added as needed</li>
 <li><strong>Human-Readable</strong>: Clear and understandable without tooling</li>
 </ul>
+<h3 id="metadata-flow">Metadata Flow<a class="headerlink" href="#metadata-flow" title="Permanent link">&para;</a></h3>
+<p>This diagram shows how metadata flows from source code through validation, documentation, and AI integration:</p>
+<pre class="mermaid"><code>flowchart LR
+    Source[Source Code&lt;br/&gt;with Metadata] --&gt; Parser[Metadata Parser]
+
+    Parser --&gt; Validate{Validation}
+
+    Validate --&gt;|Invalid| Error[❌ Validation Error&lt;br/&gt;Missing/Invalid Tags]
+    Validate --&gt;|Valid| Extract[Extract Metadata]
+
+    Extract --&gt; Storage[(Metadata Store&lt;br/&gt;JSON/Database)]
+
+    Storage --&gt; DocGen[Documentation&lt;br/&gt;Generator]
+    Storage --&gt; AI[AI Assistant&lt;br/&gt;Context]
+    Storage --&gt; Tools[Dev Tools&lt;br/&gt;IDEs, Linters]
+
+    DocGen --&gt; APIDocs[API Docs]
+    DocGen --&gt; ArchDocs[Architecture Docs]
+    DocGen --&gt; DepGraph[Dependency Graph]
+
+    AI --&gt; CodeReview[AI Code Review]
+    AI --&gt; Autocomplete[Smart Autocomplete]
+    AI --&gt; Search[Semantic Search]
+
+    Tools --&gt; VSCode[VS Code Extension]
+    Tools --&gt; PreCommit[Pre-commit Hooks]
+    Tools --&gt; CI[CI/CD Pipeline]
+
+    style Source fill:#e1f5ff
+    style Storage fill:#fff4e6
+    style DocGen fill:#e8f5e9
+    style AI fill:#f3e5f5
+    style Tools fill:#fce4ec</code></pre>
 <h2 id="core-metadata-tags">Core Metadata Tags<a class="headerlink" href="#core-metadata-tags" title="Permanent link">&para;</a></h2>
 <p>All code modules should include a metadata block at the file header with these core tags:</p>
 <h3 id="required-tags">Required Tags<a class="headerlink" href="#required-tags" title="Permanent link">&para;</a></h3>
@@ -4750,7 +4805,7 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <p>The metadata block must use the appropriate comment syntax for each language.</p>
 <h3 id="python">Python<a class="headerlink" href="#python" title="Permanent link">&para;</a></h3>
 <p><strong>Docstring Format</strong> (Recommended):</p>
-<div class="codehilite"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@module user_authentication</span>
 <span class="sd">@description Handles user authentication, session management, and JWT token generation</span>
 <span class="sd">@dependencies fastapi, pyjwt, passlib, python-dotenv</span>
@@ -4766,18 +4821,16 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <span class="kn">import</span><span class="w"> </span><span class="nn">jwt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIRouter</span><span class="p">,</span> <span class="n">HTTPException</span>
 </code></pre></div>
-
 <p><strong>Comment Format</strong> (Alternative):</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># @module user_authentication</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># @module user_authentication</span>
 <span class="c1"># @description Handles user authentication and session management</span>
 <span class="c1"># @version 1.2.0</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">jwt</span>
 </code></pre></div>
-
 <h3 id="terraformterragrunt">Terraform/Terragrunt<a class="headerlink" href="#terraformterragrunt" title="Permanent link">&para;</a></h3>
 <p><strong>Block Comment Format</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="cm">/**</span>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
 <span class="cm"> * @module vpc</span>
 <span class="cm"> * @description Creates VPC with public/private subnets, NAT gateways, and route tables</span>
 <span class="cm"> * @dependencies aws_vpc, aws_subnet, aws_nat_gateway</span>
@@ -4796,9 +4849,8 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Inline Comment Format</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># @module vpc</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># @module vpc</span>
 <span class="c1"># @description Creates VPC infrastructure</span>
 <span class="c1"># @version 2.1.0</span>
 
@@ -4806,10 +4858,9 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vpc_cidr</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="typescriptjavascript">TypeScript/JavaScript<a class="headerlink" href="#typescriptjavascript" title="Permanent link">&para;</a></h3>
 <p><strong>JSDoc Format</strong> (Recommended):</p>
-<div class="codehilite"><pre><span></span><code><span class="cm">/**</span>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
 <span class="cm"> * @module payment-processor</span>
 <span class="cm"> * @description Processes credit card payments via Stripe API</span>
 <span class="cm"> * @dependencies stripe, express, redis</span>
@@ -4823,10 +4874,9 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <span class="k">import</span><span class="w"> </span><span class="nx">Stripe</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;stripe&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Router</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
 </code></pre></div>
-
 <h3 id="bash">Bash<a class="headerlink" href="#bash" title="Permanent link">&para;</a></h3>
 <p><strong>Comment Block</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
 <span class="c1">#</span>
 <span class="c1"># @module deploy_script</span>
 <span class="c1"># @description Automated deployment script for staging environment</span>
@@ -4840,9 +4890,8 @@ code modules, functions, and infrastructure components. This metadata serves thr
 
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 </code></pre></div>
-
 <h3 id="yaml-ansible-github-actions">YAML (Ansible, GitHub Actions)<a class="headerlink" href="#yaml-ansible-github-actions" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="c1"># @module user_provisioning</span>
 <span class="c1"># @description Ansible playbook for user account creation and permissions</span>
 <span class="c1"># @dependencies ansible &gt;= 2.9</span>
@@ -4859,9 +4908,8 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}&quot;</span>
 <span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 </code></pre></div>
-
 <h3 id="sql">SQL<a class="headerlink" href="#sql" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="cm">/*</span>
+<div class="highlight"><pre><span></span><code><span class="cm">/*</span>
 <span class="cm"> * @module user_schema</span>
 <span class="cm"> * @description Database schema for user accounts and authentication</span>
 <span class="cm"> * @dependencies postgresql &gt;= 13</span>
@@ -4878,7 +4926,6 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span>
 <span class="p">);</span>
 </code></pre></div>
-
 <h2 id="field-definitions">Field Definitions<a class="headerlink" href="#field-definitions" title="Permanent link">&para;</a></h2>
 <h3 id="module">@module<a class="headerlink" href="#module" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: Unique identifier for the module or file.</p>
@@ -4890,12 +4937,11 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <li>Avoid generic names like <code>utils</code> or <code>helpers</code></li>
 </ul>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>@module user_authentication
+<div class="highlight"><pre><span></span><code>@module user_authentication
 @module vpc_networking
 @module payment-processor
 @module database-migrations
 </code></pre></div>
-
 <h3 id="description">@description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: Clear, concise explanation of what the module does.</p>
 <p><strong>Format</strong>: Single sentence or short paragraph.</p>
@@ -4907,11 +4953,10 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <li>Maximum 200 characters recommended</li>
 </ul>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>@description Handles user authentication, session management, and JWT token generation
+<div class="highlight"><pre><span></span><code>@description Handles user authentication, session management, and JWT token generation
 @description Creates AWS VPC with public/private subnets and NAT gateways
 @description Processes credit card payments and manages refund workflows
 </code></pre></div>
-
 <h3 id="version">@version<a class="headerlink" href="#version" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: Semantic version of the module.</p>
 <p><strong>Format</strong>: <code>MAJOR.MINOR.PATCH</code> or <code>MAJOR.MINOR.PATCH-prerelease</code></p>
@@ -4923,21 +4968,19 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <li>Increment PATCH for bug fixes</li>
 </ul>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>@version 1.0.0
+<div class="highlight"><pre><span></span><code>@version 1.0.0
 @version 2.3.1
 @version 1.0.0-beta.1
 @version 0.1.0-alpha
 </code></pre></div>
-
 <h3 id="author">@author<a class="headerlink" href="#author" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: Original creator or primary maintainer.</p>
 <p><strong>Format</strong>: Full name or username.</p>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>@author Tyler Dukes
+<div class="highlight"><pre><span></span><code>@author Tyler Dukes
 @author Jane Smith
 @author DevOps Team
 </code></pre></div>
-
 <h3 id="last_updated">@last_updated<a class="headerlink" href="#last_updated" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: Date of last significant update.</p>
 <p><strong>Format</strong>: <code>YYYY-MM-DD</code> (ISO 8601)</p>
@@ -4948,19 +4991,17 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <li>Can be automated in CI/CD</li>
 </ul>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>@last_updated 2025-10-27
+<div class="highlight"><pre><span></span><code>@last_updated 2025-10-27
 @last_updated 2024-12-15
 </code></pre></div>
-
 <h3 id="dependencies">@dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: External libraries, packages, or modules required.</p>
 <p><strong>Format</strong>: Comma-separated list, optionally with version constraints.</p>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>@dependencies fastapi, pyjwt, redis
+<div class="highlight"><pre><span></span><code>@dependencies fastapi, pyjwt, redis
 @dependencies stripe &gt;= 8.0.0, express ^4.17.1
 @dependencies aws_vpc, aws_subnet, aws_nat_gateway
 </code></pre></div>
-
 <h3 id="status">@status<a class="headerlink" href="#status" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: Current development or deployment status.</p>
 <p><strong>Format</strong>: Single keyword from predefined set.</p>
@@ -4974,11 +5015,10 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <li><code>archived</code> - No longer maintained</li>
 </ul>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>@status stable
+<div class="highlight"><pre><span></span><code>@status stable
 @status deprecated
 @status in-progress
 </code></pre></div>
-
 <h3 id="security_classification">@security_classification<a class="headerlink" href="#security_classification" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: Data sensitivity and access control level.</p>
 <p><strong>Format</strong>: Single keyword from organizational security levels.</p>
@@ -4990,39 +5030,35 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <li><code>restricted</code> - Highly sensitive, limited access</li>
 </ul>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>@security_classification internal
+<div class="highlight"><pre><span></span><code>@security_classification internal
 @security_classification confidential
 @security_classification public
 </code></pre></div>
-
 <h3 id="api_endpoints">@api_endpoints<a class="headerlink" href="#api_endpoints" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: HTTP API routes or endpoints exposed by this module.</p>
 <p><strong>Format</strong>: Comma-separated list of <code>METHOD /path</code> pairs.</p>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>@api_endpoints POST /auth/login, GET /auth/status
+<div class="highlight"><pre><span></span><code>@api_endpoints POST /auth/login, GET /auth/status
 @api_endpoints GET /users/{id}, PUT /users/{id}, DELETE /users/{id}
 @api_endpoints POST /payments/charge, POST /payments/refund, GET /payments/{id}
 </code></pre></div>
-
 <h3 id="env">@env<a class="headerlink" href="#env" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: Target deployment environments.</p>
 <p><strong>Format</strong>: Comma-separated list of environment names.</p>
 <p><strong>Common Values</strong>: <code>prod</code>, <code>production</code>, <code>staging</code>, <code>dev</code>, <code>development</code>, <code>test</code>, <code>qa</code></p>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>@env prod, staging
+<div class="highlight"><pre><span></span><code>@env prod, staging
 @env development, test
 @env all
 </code></pre></div>
-
 <h3 id="depends_on">@depends_on<a class="headerlink" href="#depends_on" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: Internal module or file dependencies (relative paths).</p>
 <p><strong>Format</strong>: Comma-separated relative paths.</p>
 <p><strong>Examples</strong>:</p>
-<div class="codehilite"><pre><span></span><code>@depends_on ../database/connection, ../cache/redis_client
+<div class="highlight"><pre><span></span><code>@depends_on ../database/connection, ../cache/redis_client
 @depends_on ./utils/validators, ./models/user
 @depends_on ../../shared/logging
 </code></pre></div>
-
 <h2 id="validation-rules">Validation Rules<a class="headerlink" href="#validation-rules" title="Permanent link">&para;</a></h2>
 <h3 id="schema-validation">Schema Validation<a class="headerlink" href="#schema-validation" title="Permanent link">&para;</a></h3>
 <p>Modules are validated for:</p>
@@ -5035,7 +5071,7 @@ code modules, functions, and infrastructure components. This metadata serves thr
 </ol>
 <h3 id="automated-validation">Automated Validation<a class="headerlink" href="#automated-validation" title="Permanent link">&para;</a></h3>
 <p>Use the validation script to check metadata:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Validate all Python files</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Validate all Python files</span>
 python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </span>--language<span class="w"> </span>python<span class="w"> </span>src/
 
 <span class="c1"># Validate specific file</span>
@@ -5044,10 +5080,9 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 <span class="c1"># Validate all Terraform modules</span>
 python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </span>--language<span class="w"> </span>terraform<span class="w"> </span>infrastructure/
 </code></pre></div>
-
 <h3 id="pre-commit-hook">Pre-commit Hook<a class="headerlink" href="#pre-commit-hook" title="Permanent link">&para;</a></h3>
 <p>Add to <code>.pre-commit-config.yaml</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">repos</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">repos</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate-metadata</span>
@@ -5056,81 +5091,71 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 <span class="w">        </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python</span>
 <span class="w">        </span><span class="nt">files</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\.(py|tf|hcl|js|ts|sh|sql)$</span>
 </code></pre></div>
-
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="do-keep-metadata-up-to-date">DO: Keep Metadata Up-to-Date<a class="headerlink" href="#do-keep-metadata-up-to-date" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Good - version and date updated together</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good - version and date updated together</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@module user_service</span>
 <span class="sd">@version 2.1.0</span>
 <span class="sd">@last_updated 2025-10-27</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </code></pre></div>
-
 <h3 id="dont-leave-stale-metadata">DON'T: Leave Stale Metadata<a class="headerlink" href="#dont-leave-stale-metadata" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - version updated but date is old</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - version updated but date is old</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@module user_service</span>
 <span class="sd">@version 2.1.0</span>
 <span class="sd">@last_updated 2023-01-15  # Stale date!</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </code></pre></div>
-
 <h3 id="do-be-specific-in-descriptions">DO: Be Specific in Descriptions<a class="headerlink" href="#do-be-specific-in-descriptions" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Good - specific about what it does</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good - specific about what it does</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@description Validates user input for email format, length constraints, and prohibited characters</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </code></pre></div>
-
 <h3 id="dont-use-vague-descriptions">DON'T: Use Vague Descriptions<a class="headerlink" href="#dont-use-vague-descriptions" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - too generic</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - too generic</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@description Handles validation</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </code></pre></div>
-
 <h3 id="do-list-all-dependencies">DO: List All Dependencies<a class="headerlink" href="#do-list-all-dependencies" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Good - comprehensive dependency list</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good - comprehensive dependency list</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@dependencies fastapi, pyjwt, passlib[bcrypt], python-dotenv, redis</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </code></pre></div>
-
 <h3 id="dont-omit-dependencies">DON'T: Omit Dependencies<a class="headerlink" href="#dont-omit-dependencies" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - missing implicit dependencies</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - missing implicit dependencies</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@dependencies fastapi</span>
 <span class="sd"># Missing: pyjwt (used in code)</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </code></pre></div>
-
 <h3 id="do-use-semantic-versioning-correctly">DO: Use Semantic Versioning Correctly<a class="headerlink" href="#do-use-semantic-versioning-correctly" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Good - breaking change bumps major version</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good - breaking change bumps major version</span>
 <span class="cm">/**</span>
 <span class="cm"> * @version 2.0.0</span>
 <span class="cm"> * Breaking: Changed input variable names</span>
 <span class="cm"> */</span>
 </code></pre></div>
-
 <h3 id="dont-misuse-version-numbers">DON'T: Misuse Version Numbers<a class="headerlink" href="#dont-misuse-version-numbers" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - breaking change but only bumped patch</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - breaking change but only bumped patch</span>
 <span class="cm">/**</span>
 <span class="cm"> * @version 1.0.1</span>
 <span class="cm"> * Changed input variable names (this is breaking!)</span>
 <span class="cm"> */</span>
 </code></pre></div>
-
 <h2 id="integration-with-ai-assistants">Integration with AI Assistants<a class="headerlink" href="#integration-with-ai-assistants" title="Permanent link">&para;</a></h2>
 <p>Metadata tags help AI assistants:</p>
 <h3 id="understand-context">Understand Context<a class="headerlink" href="#understand-context" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@module payment_processor</span>
 <span class="sd">@description Processes credit card payments via Stripe API</span>
 <span class="sd">@security_classification confidential</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </code></pre></div>
-
 <p>AI knows:</p>
 <ul>
 <li>This handles payments (sensitive operation)</li>
@@ -5138,12 +5163,11 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 <li>Contains confidential data (requires extra care)</li>
 </ul>
 <h3 id="suggest-compatible-dependencies">Suggest Compatible Dependencies<a class="headerlink" href="#suggest-compatible-dependencies" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@dependencies fastapi &gt;= 0.100.0, pydantic &gt;= 2.0</span>
 <span class="sd">@python_version &gt;= 3.9</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </code></pre></div>
-
 <p>AI knows:</p>
 <ul>
 <li>Must use FastAPI 0.100.0 or higher</li>
@@ -5151,12 +5175,11 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 <li>Can suggest compatible libraries</li>
 </ul>
 <h3 id="detect-version-conflicts">Detect Version Conflicts<a class="headerlink" href="#detect-version-conflicts" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="cm">/**</span>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
 <span class="cm"> * @terraform_version &gt;= 1.5</span>
 <span class="cm"> * @dependencies aws &gt;= 5.0</span>
 <span class="cm"> */</span>
 </code></pre></div>
-
 <p>AI can warn:</p>
 <ul>
 <li>If you use Terraform &lt; 1.5</li>
@@ -5173,7 +5196,7 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 </ul>
 <h2 id="complete-examples">Complete Examples<a class="headerlink" href="#complete-examples" title="Permanent link">&para;</a></h2>
 <h3 id="python-fastapi-module">Python FastAPI Module<a class="headerlink" href="#python-fastapi-module" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@module user_authentication_api</span>
 <span class="sd">@description RESTful API for user authentication with JWT tokens and refresh token support</span>
 <span class="sd">@dependencies fastapi, pyjwt, passlib[bcrypt], python-dotenv, redis, sqlalchemy</span>
@@ -5196,9 +5219,8 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 <span class="n">router</span> <span class="o">=</span> <span class="n">APIRouter</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;/auth&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;authentication&quot;</span><span class="p">])</span>
 <span class="n">pwd_context</span> <span class="o">=</span> <span class="n">CryptContext</span><span class="p">(</span><span class="n">schemes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bcrypt&quot;</span><span class="p">],</span> <span class="n">deprecated</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
 </code></pre></div>
-
 <h3 id="terraform-vpc-module">Terraform VPC Module<a class="headerlink" href="#terraform-vpc-module" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="cm">/**</span>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
 <span class="cm"> * @module aws_vpc_networking</span>
 <span class="cm"> * @description Creates AWS VPC with public/private subnets across 3 AZs, NAT gateways, and route tables</span>
 <span class="cm"> * @dependencies aws_vpc, aws_subnet, aws_internet_gateway, aws_nat_gateway, aws_route_table</span>
@@ -5234,9 +5256,8 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="bash-deployment-script">Bash Deployment Script<a class="headerlink" href="#bash-deployment-script" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
 <span class="c1">#</span>
 <span class="c1"># @module deploy_to_staging</span>
 <span class="c1"># @description Deploys application to staging environment with health checks and rollback capability</span>
@@ -5256,22 +5277,19 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 <span class="nb">readonly</span><span class="w"> </span><span class="nv">APP_NAME</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">APP_NAME</span><span class="k">:-</span><span class="nv">myapp</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="nb">readonly</span><span class="w"> </span><span class="nv">ENVIRONMENT</span><span class="o">=</span><span class="s2">&quot;staging&quot;</span>
 </code></pre></div>
-
 <h2 id="migration-guide">Migration Guide<a class="headerlink" href="#migration-guide" title="Permanent link">&para;</a></h2>
 <h3 id="adding-metadata-to-existing-code">Adding Metadata to Existing Code<a class="headerlink" href="#adding-metadata-to-existing-code" title="Permanent link">&para;</a></h3>
 <p><strong>Step 1</strong>: Identify all modules without metadata</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Find Python files without @module tag</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Find Python files without @module tag</span>
 find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-exec<span class="w"> </span>grep<span class="w"> </span>-L<span class="w"> </span><span class="s2">&quot;@module&quot;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
 </code></pre></div>
-
 <p><strong>Step 2</strong>: Add minimal metadata block</p>
-<div class="codehilite"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@module [infer_from_filename]</span>
 <span class="sd">@description [TODO: Add description]</span>
 <span class="sd">@version 0.1.0</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </code></pre></div>
-
 <p><strong>Step 3</strong>: Progressively enhance</p>
 <ul>
 <li>Add <code>@author</code> and <code>@last_updated</code></li>
@@ -5280,9 +5298,8 @@ find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </spa
 <li>Specify <code>@env</code> and <code>@status</code></li>
 </ul>
 <p><strong>Step 4</strong>: Validate</p>
-<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </span>--fix<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </span>--fix<span class="w"> </span>.
 </code></pre></div>
-
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://semver.org/">Semantic Versioning 2.0.0</a></li>

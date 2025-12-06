@@ -3764,7 +3764,7 @@
 <h2 id="extract-reusable-module">Extract Reusable Module<a class="headerlink" href="#extract-reusable-module" title="Permanent link">&para;</a></h2>
 <h3 id="problem-repeated-resource-definitions-across-environments">Problem: Repeated resource definitions across environments<a class="headerlink" href="#problem-repeated-resource-definitions-across-environments" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong> (separate files for each environment, lots of duplication):</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># environments/dev/main.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># environments/dev/main.tf</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
 <span class="w">  </span><span class="na">enable_dns_hostnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
@@ -3816,9 +3816,8 @@
 <span class="c1"># ... 100+ more lines of route tables, NAT gateways, etc.</span>
 <span class="c1"># Same code repeated in staging/main.tf and production/main.tf</span>
 </code></pre></div>
-
 <p><strong>After</strong> (reusable module):</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># modules/vpc/main.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># modules/vpc/main.tf</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
 <span class="w">    </span><span class="nv">var.tags</span><span class="p">,</span>
@@ -3950,7 +3949,6 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ DRY: VPC code defined once, reused across environments</li>
@@ -3963,7 +3961,7 @@
 <h2 id="use-for_each-instead-of-count">Use for_each Instead of count<a class="headerlink" href="#use-for_each-instead-of-count" title="Permanent link">&para;</a></h2>
 <h3 id="problem-using-count-for-dynamic-resources-causes-recreation-on-reordering">Problem: Using count for dynamic resources causes recreation on reordering<a class="headerlink" href="#problem-using-count-for-dynamic-resources-causes-recreation-on-reordering" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong> (using count):</p>
-<div class="codehilite"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;List of IAM users to create&quot;</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;alice&quot;, &quot;bob&quot;, &quot;charlie&quot;</span><span class="p">]</span>
@@ -3993,9 +3991,8 @@
 <span class="c1"># 3. Recreate users[1] (charlie) - BAD!</span>
 <span class="c1"># Charlie&#39;s access keys get destroyed and recreated!</span>
 </code></pre></div>
-
 <p><strong>After</strong> (using for_each):</p>
-<div class="codehilite"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Set of IAM users to create&quot;</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">set</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;alice&quot;, &quot;bob&quot;, &quot;charlie&quot;</span><span class="p">]</span>
@@ -4025,9 +4022,8 @@
 <span class="c1"># 1. Destroy users[&quot;bob&quot;] - GOOD</span>
 <span class="c1"># Charlie is untouched because he&#39;s keyed by name, not index!</span>
 </code></pre></div>
-
 <p><strong>Even Better</strong> (using map for additional attributes):</p>
-<div class="codehilite"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Map of IAM users with their attributes&quot;</span>
 <span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">map</span><span class="p">(</span><span class="kt">object</span><span class="p">({</span>
 <span class="w">    </span><span class="na">path</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
@@ -4068,7 +4064,6 @@
 <span class="w">  </span><span class="na">groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">each.value.groups</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Stable resource addresses (keyed by name, not index)</li>
@@ -4081,7 +4076,7 @@
 <h2 id="apply-locals-for-dry">Apply Locals for DRY<a class="headerlink" href="#apply-locals-for-dry" title="Permanent link">&para;</a></h2>
 <h3 id="problem-repeated-expressions-and-hard-coded-values">Problem: Repeated expressions and hard-coded values<a class="headerlink" href="#problem-repeated-expressions-and-hard-coded-values" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-0c55b159cbfafe1f0&quot;</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.medium&quot;</span>
@@ -4127,9 +4122,8 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="c1">  # Environment configuration</span>
 <span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
 <span class="w">  </span><span class="na">project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span>
@@ -4217,7 +4211,6 @@
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Single source of truth for repeated values</li>
@@ -4230,7 +4223,7 @@
 <h2 id="simplify-variable-structures">Simplify Variable Structures<a class="headerlink" href="#simplify-variable-structures" title="Permanent link">&para;</a></h2>
 <h3 id="problem-complex-nested-variable-structures-that-are-hard-to-use">Problem: Complex, nested variable structures that are hard to use<a class="headerlink" href="#problem-complex-nested-variable-structures-that-are-hard-to-use" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;config&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;config&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Application configuration&quot;</span>
 <span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">object</span><span class="p">({</span>
 <span class="w">    </span><span class="na">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">object</span><span class="p">({</span>
@@ -4276,9 +4269,8 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Flatten and simplify variable structure</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Flatten and simplify variable structure</span>
 <span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;app_name&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Application name&quot;</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
@@ -4354,7 +4346,6 @@
 <span class="na">instance_type</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.large&quot;</span>
 <span class="na">instance_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Flattened structure is easier to understand</li>
@@ -4368,7 +4359,7 @@
 <h2 id="improve-resource-naming">Improve Resource Naming<a class="headerlink" href="#improve-resource-naming" title="Permanent link">&para;</a></h2>
 <h3 id="problem-inconsistent-and-unclear-resource-naming">Problem: Inconsistent and unclear resource naming<a class="headerlink" href="#problem-inconsistent-and-unclear-resource-naming" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
 <span class="p">}</span>
 
@@ -4407,9 +4398,8 @@
 <span class="c1"># - What&#39;s the difference between &quot;subnet1&quot; and &quot;pub_sub&quot;?</span>
 <span class="c1"># - What does &quot;server&quot; do vs &quot;web_server&quot;?</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Use descriptive, consistent naming patterns</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Use descriptive, consistent naming patterns</span>
 
 <span class="c1"># VPCs: describe purpose</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;application&quot;</span><span class="w"> </span><span class="p">{</span>
@@ -4528,7 +4518,6 @@
 <span class="c1"># - aws_instance.api_backend vs web_frontend (role-based)</span>
 <span class="c1"># - aws_security_group.api_backend (matches protected resource)</span>
 </code></pre></div>
-
 <p><strong>Naming Conventions Applied</strong>:</p>
 <ol>
 <li><strong>VPCs</strong>: Use purpose (application, management, data)</li>

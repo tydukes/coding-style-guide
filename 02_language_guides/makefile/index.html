@@ -5023,7 +5023,7 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <hr />
 <h2 id="basic-structure">Basic Structure<a class="headerlink" href="#basic-structure" title="Permanent link">&para;</a></h2>
 <h3 id="simple-makefile">Simple Makefile<a class="headerlink" href="#simple-makefile" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span> <span class="n">clean</span> <span class="n">build</span> <span class="n">test</span>
+<div class="highlight"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span> <span class="n">clean</span> <span class="n">build</span> <span class="n">test</span>
 
 <span class="nf">help</span><span class="o">:</span>
 <span class="w"> </span>@echo<span class="w"> </span><span class="s2">&quot;Available targets:&quot;</span>
@@ -5040,11 +5040,10 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nf">clean</span><span class="o">:</span>
 <span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>bin/
 </code></pre></div>
-
 <hr />
 <h2 id="targets-and-prerequisites">Targets and Prerequisites<a class="headerlink" href="#targets-and-prerequisites" title="Permanent link">&para;</a></h2>
 <h3 id="basic-target">Basic Target<a class="headerlink" href="#basic-target" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Target: what to build</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Target: what to build</span>
 <span class="c"># Prerequisites: dependencies</span>
 <span class="c"># Recipe: commands to execute (MUST be indented with TAB)</span>
 
@@ -5052,9 +5051,8 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="w"> </span>command1
 <span class="w"> </span>command2
 </code></pre></div>
-
 <h3 id="target-with-prerequisites">Target with Prerequisites<a class="headerlink" href="#target-with-prerequisites" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">all</span> <span class="n">build</span> <span class="n">test</span>
+<div class="highlight"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">all</span> <span class="n">build</span> <span class="n">test</span>
 
 <span class="nf">all</span><span class="o">:</span><span class="w"> </span><span class="n">build</span> <span class="n">test</span>
 
@@ -5067,11 +5065,10 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nf">test</span><span class="o">:</span><span class="w"> </span><span class="n">build</span>
 <span class="w"> </span>./myapp<span class="w"> </span>--test
 </code></pre></div>
-
 <hr />
 <h2 id="phony-targets">.PHONY Targets<a class="headerlink" href="#phony-targets" title="Permanent link">&para;</a></h2>
 <p>Always declare targets that don't create files as <code>.PHONY</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">clean</span> <span class="n">test</span> <span class="n">run</span> <span class="n">install</span> <span class="n">help</span>
+<div class="highlight"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">clean</span> <span class="n">test</span> <span class="n">run</span> <span class="n">install</span> <span class="n">help</span>
 
 <span class="nf">clean</span><span class="o">:</span>
 <span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>build/<span class="w"> </span>dist/
@@ -5088,11 +5085,10 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nf">help</span><span class="o">:</span>
 <span class="w"> </span>@echo<span class="w"> </span><span class="s2">&quot;Available targets: clean, test, run, install, help&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">&para;</a></h2>
 <h3 id="define-variables">Define Variables<a class="headerlink" href="#define-variables" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Simple variable</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Simple variable</span>
 <span class="nv">CC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>gcc
 <span class="nv">CFLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-Wall<span class="w"> </span>-Wextra<span class="w"> </span>-O2
 
@@ -5110,18 +5106,16 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="w">    </span><span class="nv">CFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>-g
 <span class="cp">endif</span>
 </code></pre></div>
-
 <h3 id="use-variables">Use Variables<a class="headerlink" href="#use-variables" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nv">CC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>gcc
+<div class="highlight"><pre><span></span><code><span class="nv">CC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>gcc
 <span class="nv">CFLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-Wall<span class="w"> </span>-Wextra
 <span class="nv">SOURCES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>main.c<span class="w"> </span>utils.c
 
 <span class="nf">build</span><span class="o">:</span>
 <span class="w"> </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>SOURCES<span class="k">)</span><span class="w"> </span>-o<span class="w"> </span>app
 </code></pre></div>
-
 <h3 id="common-variables">Common Variables<a class="headerlink" href="#common-variables" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Compiler and tools</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Compiler and tools</span>
 <span class="nv">CC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>gcc
 <span class="nv">CXX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>g++
 <span class="nv">LD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ld
@@ -5142,11 +5136,10 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nv">OBJECTS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">$(</span>SOURCES:<span class="k">$(</span>SRC_DIR<span class="k">)</span>/%.c<span class="o">=</span><span class="k">$(</span>BUILD_DIR<span class="k">)</span>/%.o<span class="k">)</span>
 <span class="nv">TARGET</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">$(</span>BIN_DIR<span class="k">)</span>/app
 </code></pre></div>
-
 <hr />
 <h2 id="pattern-rules">Pattern Rules<a class="headerlink" href="#pattern-rules" title="Permanent link">&para;</a></h2>
 <h3 id="basic-pattern-rule">Basic Pattern Rule<a class="headerlink" href="#basic-pattern-rule" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Compile .c files to .o files</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Compile .c files to .o files</span>
 <span class="nf">%.o</span><span class="o">:</span><span class="w"> </span>%.<span class="n">c</span>
 <span class="w"> </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span>-c<span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
 
@@ -5156,9 +5149,8 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="c"># $^ - all prerequisites</span>
 <span class="c"># $* - stem (matched by %)</span>
 </code></pre></div>
-
 <h3 id="advanced-pattern-rules">Advanced Pattern Rules<a class="headerlink" href="#advanced-pattern-rules" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nv">SRC_DIR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>src
+<div class="highlight"><pre><span></span><code><span class="nv">SRC_DIR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>src
 <span class="nv">BUILD_DIR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>build
 
 <span class="c"># Pattern rule with directory paths</span>
@@ -5171,11 +5163,10 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="w"> </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span>-c<span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
 <span class="w"> </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span>-MM<span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>&gt;<span class="w"> </span><span class="nv">$*</span>.d
 </code></pre></div>
-
 <hr />
 <h2 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="nodejs-typescript-project">Node.js / TypeScript Project<a class="headerlink" href="#nodejs-typescript-project" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span> <span class="n">install</span> <span class="n">build</span> <span class="n">test</span> <span class="n">lint</span> <span class="n">clean</span> <span class="n">dev</span>
+<div class="highlight"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span> <span class="n">install</span> <span class="n">build</span> <span class="n">test</span> <span class="n">lint</span> <span class="n">clean</span> <span class="n">dev</span>
 
 <span class="nf">help</span><span class="o">:</span>
 <span class="w"> </span>@echo<span class="w"> </span><span class="s2">&quot;Available targets:&quot;</span>
@@ -5204,9 +5195,8 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nf">dev</span><span class="o">:</span><span class="w"> </span><span class="n">install</span>
 <span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>dev
 </code></pre></div>
-
 <h3 id="python-project">Python Project<a class="headerlink" href="#python-project" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span> <span class="n">install</span> <span class="n">test</span> <span class="n">lint</span> <span class="n">format</span> <span class="n">clean</span> <span class="n">venv</span>
+<div class="highlight"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span> <span class="n">install</span> <span class="n">test</span> <span class="n">lint</span> <span class="n">format</span> <span class="n">clean</span> <span class="n">venv</span>
 
 <span class="nv">PYTHON</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>python3
 <span class="nv">VENV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>venv
@@ -5243,9 +5233,8 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;*.pyc&#39;</span><span class="w"> </span>-delete
 <span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;__pycache__&#39;</span><span class="w"> </span>-delete
 </code></pre></div>
-
 <h3 id="go-project">Go Project<a class="headerlink" href="#go-project" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span> <span class="n">build</span> <span class="n">test</span> <span class="n">lint</span> <span class="n">clean</span> <span class="n">run</span>
+<div class="highlight"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span> <span class="n">build</span> <span class="n">test</span> <span class="n">lint</span> <span class="n">clean</span> <span class="n">run</span>
 
 <span class="nv">BINARY_NAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>myapp
 <span class="nv">GO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>go
@@ -5276,9 +5265,8 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nf">run</span><span class="o">:</span><span class="w"> </span><span class="n">build</span>
 <span class="w"> </span>./<span class="k">$(</span>BINARY_NAME<span class="k">)</span>
 </code></pre></div>
-
 <h3 id="docker-project">Docker Project<a class="headerlink" href="#docker-project" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span> <span class="n">build</span> <span class="n">push</span> <span class="n">run</span> <span class="n">stop</span> <span class="n">clean</span>
+<div class="highlight"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span> <span class="n">build</span> <span class="n">push</span> <span class="n">run</span> <span class="n">stop</span> <span class="n">clean</span>
 
 <span class="nv">IMAGE_NAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>myapp
 <span class="nv">IMAGE_TAG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>latest
@@ -5309,11 +5297,10 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nf">clean</span><span class="o">:</span>
 <span class="w"> </span>docker<span class="w"> </span>rmi<span class="w"> </span><span class="k">$(</span>FULL_IMAGE<span class="k">)</span>
 </code></pre></div>
-
 <hr />
 <h2 id="conditional-logic">Conditional Logic<a class="headerlink" href="#conditional-logic" title="Permanent link">&para;</a></h2>
 <h3 id="if-statements">If Statements<a class="headerlink" href="#if-statements" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nv">DEBUG</span><span class="w"> </span><span class="o">?=</span><span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><span class="nv">DEBUG</span><span class="w"> </span><span class="o">?=</span><span class="w"> </span><span class="m">0</span>
 
 <span class="cp">ifeq ($(DEBUG),1)</span>
 <span class="w">    </span><span class="nv">CFLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>-g<span class="w"> </span>-DDEBUG
@@ -5332,9 +5319,8 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="w"> </span><span class="k">$(</span>Q<span class="k">)</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Building...&quot;</span>
 <span class="w"> </span><span class="k">$(</span>Q<span class="k">)$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span>-o<span class="w"> </span>app<span class="w"> </span>main.c
 </code></pre></div>
-
 <h3 id="os-detection">OS Detection<a class="headerlink" href="#os-detection" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nv">UNAME_S</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>uname<span class="w"> </span>-s<span class="k">)</span>
+<div class="highlight"><pre><span></span><code><span class="nv">UNAME_S</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>uname<span class="w"> </span>-s<span class="k">)</span>
 
 <span class="cp">ifeq ($(UNAME_S),Linux)</span>
 <span class="w">    </span><span class="nv">PLATFORM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>linux
@@ -5353,11 +5339,10 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="w"> </span>@echo<span class="w"> </span><span class="s2">&quot;Building for </span><span class="k">$(</span>PLATFORM<span class="k">)</span><span class="s2">&quot;</span>
 <span class="w"> </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span>-o<span class="w"> </span>app<span class="k">$(</span>EXE_EXT<span class="k">)</span><span class="w"> </span>main.c<span class="w"> </span><span class="k">$(</span>LDFLAGS<span class="k">)</span>
 </code></pre></div>
-
 <hr />
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
 <h3 id="built-in-functions">Built-in Functions<a class="headerlink" href="#built-in-functions" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># wildcard - Match files</span>
+<div class="highlight"><pre><span></span><code><span class="c"># wildcard - Match files</span>
 <span class="nv">SOURCES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">$(</span>wildcard<span class="w"> </span>src/*.c<span class="k">)</span>
 
 <span class="c"># patsubst - Pattern substitution</span>
@@ -5376,11 +5361,10 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="c"># filter-out - Exclude from list</span>
 <span class="nv">NON_TEST</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">$(</span>filter-out<span class="w"> </span>%_test.c,<span class="k">$(</span>SOURCES<span class="k">))</span>
 </code></pre></div>
-
 <hr />
 <h2 id="multi-line-commands">Multi-Line Commands<a class="headerlink" href="#multi-line-commands" title="Permanent link">&para;</a></h2>
 <h3 id="backslash-continuation">Backslash Continuation<a class="headerlink" href="#backslash-continuation" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nf">build</span><span class="o">:</span>
+<div class="highlight"><pre><span></span><code><span class="nf">build</span><span class="o">:</span>
 <span class="w"> </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-I<span class="k">$(</span>INCLUDE_DIR<span class="k">)</span><span class="w"> </span><span class="se">\</span>
@@ -5388,20 +5372,18 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="w">  </span><span class="k">$(</span>SOURCES<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-o<span class="w"> </span><span class="k">$(</span>TARGET<span class="k">)</span>
 </code></pre></div>
-
 <h3 id="multi-line-recipe">Multi-Line Recipe<a class="headerlink" href="#multi-line-recipe" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nf">deploy</span><span class="o">:</span>
+<div class="highlight"><pre><span></span><code><span class="nf">deploy</span><span class="o">:</span>
 <span class="w"> </span>@echo<span class="w"> </span><span class="s2">&quot;Starting deployment...&quot;</span>
 <span class="w"> </span>@docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>myapp:latest<span class="w"> </span>.
 <span class="w"> </span>@docker<span class="w"> </span>tag<span class="w"> </span>myapp:latest<span class="w"> </span>registry.example.com/myapp:latest
 <span class="w"> </span>@docker<span class="w"> </span>push<span class="w"> </span>registry.example.com/myapp:latest
 <span class="w"> </span>@echo<span class="w"> </span><span class="s2">&quot;Deployment complete!&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <h3 id="exit-on-error">Exit on Error<a class="headerlink" href="#exit-on-error" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Default: exit on error</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Default: exit on error</span>
 <span class="nf">test</span><span class="o">:</span>
 <span class="w"> </span>pytest<span class="w"> </span>tests/
 
@@ -5414,15 +5396,13 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nf">test</span><span class="o">:</span>
 <span class="w"> </span>-pytest<span class="w"> </span>tests/
 </code></pre></div>
-
 <h3 id="check-command-success">Check Command Success<a class="headerlink" href="#check-command-success" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nf">test</span><span class="o">:</span>
+<div class="highlight"><pre><span></span><code><span class="nf">test</span><span class="o">:</span>
 <span class="w"> </span>@pytest<span class="w"> </span>tests/<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Tests failed!&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="o">)</span>
 </code></pre></div>
-
 <hr />
 <h2 id="silent-commands">Silent Commands<a class="headerlink" href="#silent-commands" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c"># Prefix with @ to suppress output</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Prefix with @ to suppress output</span>
 <span class="nf">build</span><span class="o">:</span>
 <span class="w"> </span>@echo<span class="w"> </span><span class="s2">&quot;Building...&quot;</span>
 <span class="w"> </span>@<span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span>-o<span class="w"> </span>app<span class="w"> </span>main.c
@@ -5433,11 +5413,10 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Building...&quot;</span>
 <span class="w"> </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span>-o<span class="w"> </span>app<span class="w"> </span>main.c
 </code></pre></div>
-
 <hr />
 <h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
 <h3 id="automatic-dependency-generation">Automatic Dependency Generation<a class="headerlink" href="#automatic-dependency-generation" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nv">SRC_DIR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>src
+<div class="highlight"><pre><span></span><code><span class="nv">SRC_DIR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>src
 <span class="nv">BUILD_DIR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>build
 
 <span class="nv">SOURCES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">$(</span>wildcard<span class="w"> </span><span class="k">$(</span>SRC_DIR<span class="k">)</span>/*.c<span class="k">)</span>
@@ -5458,11 +5437,10 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nf">clean</span><span class="o">:</span>
 <span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="k">$(</span>BUILD_DIR<span class="k">)</span><span class="w"> </span><span class="k">$(</span>TARGET<span class="k">)</span>
 </code></pre></div>
-
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-spaces-instead-of-tabs">❌ Avoid: Spaces Instead of Tabs<a class="headerlink" href="#avoid-spaces-instead-of-tabs" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Bad - Using spaces for indentation</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Using spaces for indentation</span>
 <span class="nf">build</span><span class="o">:</span>
 <span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Building...&quot;</span><span class="w">  </span><span class="c1"># This will fail!</span>
 
@@ -5470,9 +5448,8 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nf">build</span><span class="o">:</span>
 <span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Building...&quot;</span>
 </code></pre></div>
-
 <h3 id="avoid-not-using-phony">❌ Avoid: Not Using .PHONY<a class="headerlink" href="#avoid-not-using-phony" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Bad - Without .PHONY, make won&#39;t run if &#39;clean&#39; file exists</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Without .PHONY, make won&#39;t run if &#39;clean&#39; file exists</span>
 <span class="nf">clean</span><span class="o">:</span>
 <span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>build/
 
@@ -5481,9 +5458,8 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nf">clean</span><span class="o">:</span>
 <span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>build/
 </code></pre></div>
-
 <h3 id="avoid-hardcoded-paths">❌ Avoid: Hardcoded Paths<a class="headerlink" href="#avoid-hardcoded-paths" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c"># Bad - Hardcoded paths</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Hardcoded paths</span>
 <span class="nf">build</span><span class="o">:</span>
 <span class="w"> </span>gcc<span class="w"> </span>-o<span class="w"> </span>/home/user/myapp<span class="w"> </span>main.c
 
@@ -5492,11 +5468,10 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nf">build</span><span class="o">:</span>
 <span class="w"> </span>gcc<span class="w"> </span>-o<span class="w"> </span><span class="k">$(</span>BIN_DIR<span class="k">)</span>/myapp<span class="w"> </span>main.c
 </code></pre></div>
-
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="default-target">Default Target<a class="headerlink" href="#default-target" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nv">.DEFAULT_GOAL</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">help</span>
+<div class="highlight"><pre><span></span><code><span class="nv">.DEFAULT_GOAL</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">help</span>
 
 <span class="nf">help</span><span class="o">:</span>
 <span class="w"> </span>@echo<span class="w"> </span><span class="s2">&quot;Available targets: build, test, clean&quot;</span>
@@ -5510,9 +5485,8 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nf">clean</span><span class="o">:</span>
 <span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>app
 </code></pre></div>
-
 <h3 id="self-documenting-makefile">Self-Documenting Makefile<a class="headerlink" href="#self-documenting-makefile" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span>
+<div class="highlight"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span>
 
 <span class="nf">help</span><span class="o">:</span><span class="w"> </span><span class="c">## Show this help message</span>
 <span class="w"> </span>@grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;^[a-zA-Z_-]+:.*?## .*$$&#39;</span><span class="w"> </span><span class="k">$(</span>MAKEFILE_LIST<span class="k">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
@@ -5527,12 +5501,11 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nf">clean</span><span class="o">:</span><span class="w"> </span><span class="c">## Clean build artifacts</span>
 <span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>app
 </code></pre></div>
-
 <hr />
 <h2 id="tool-configuration">Tool Configuration<a class="headerlink" href="#tool-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="makefile-linting-with-checkmake">Makefile Linting with checkmake<a class="headerlink" href="#makefile-linting-with-checkmake" title="Permanent link">&para;</a></h3>
 <p>Install and use checkmake to lint Makefiles:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Install checkmake (Go)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install checkmake (Go)</span>
 go<span class="w"> </span>install<span class="w"> </span>github.com/mrtazz/checkmake/cmd/checkmake@latest
 
 <span class="c1"># Install checkmake (brew)</span>
@@ -5547,9 +5520,8 @@ checkmake<span class="w"> </span>--config<span class="w"> </span>.checkmake<span
 <span class="c1"># Output as JSON</span>
 checkmake<span class="w"> </span>--format<span class="o">=</span>json<span class="w"> </span>Makefile
 </code></pre></div>
-
 <h3 id="checkmake-configuration">.checkmake Configuration<a class="headerlink" href="#checkmake-configuration" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .checkmake</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .checkmake</span>
 <span class="k">[minphony]</span>
 <span class="w">  </span><span class="c1"># Minimum percentage of PHONY targets</span>
 <span class="w">  </span><span class="na">minPhonyTargets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.5</span>
@@ -5570,9 +5542,8 @@ checkmake<span class="w"> </span>--format<span class="o">=</span>json<span class
 <span class="w">  </span><span class="c1"># Minimum percentage of targets with help text</span>
 <span class="w">  </span><span class="na">minHelpTargets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.3</span>
 </code></pre></div>
-
 <h3 id="editorconfig">EditorConfig<a class="headerlink" href="#editorconfig" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .editorconfig</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .editorconfig</span>
 <span class="k">[Makefile]</span>
 <span class="na">indent_style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tab</span>
 <span class="na">indent_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
@@ -5589,9 +5560,8 @@ checkmake<span class="w"> </span>--format<span class="o">=</span>json<span class
 <span class="na">trim_trailing_whitespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
 <span class="na">insert_final_newline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
 </code></pre></div>
-
 <h3 id="vs-code-settings">VS Code Settings<a class="headerlink" href="#vs-code-settings" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;[makefile]&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;editor.insertSpaces&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;editor.detectIndentation&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
@@ -5611,9 +5581,8 @@ checkmake<span class="w"> </span>--format<span class="o">=</span>json<span class
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <h3 id="pre-commit-hooks">Pre-commit Hooks<a class="headerlink" href="#pre-commit-hooks" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
 <span class="nt">repos</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/pre-commit-hooks</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v4.5.0</span>
@@ -5631,10 +5600,9 @@ checkmake<span class="w"> </span>--format<span class="o">=</span>json<span class
 <span class="w">        </span><span class="nt">files</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">^Makefile$|\.mk$</span>
 <span class="w">        </span><span class="nt">pass_filenames</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
-
 <h3 id="makefile-self-documentation">Makefile Self-Documentation<a class="headerlink" href="#makefile-self-documentation" title="Permanent link">&para;</a></h3>
 <p>Add help target to Makefile for self-documentation:</p>
-<div class="codehilite"><pre><span></span><code><span class="c"># Makefile with self-documentation</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Makefile with self-documentation</span>
 <span class="nv">.DEFAULT_GOAL</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">help</span>
 
 <span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">help</span>
@@ -5658,10 +5626,9 @@ checkmake<span class="w"> </span>--format<span class="o">=</span>json<span class
 <span class="nf">clean</span><span class="o">:</span><span class="w"> </span><span class="c">## Clean build artifacts</span>
 <span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>bin/
 </code></pre></div>
-
 <h3 id="makefile-testing-with-bats">Makefile Testing with BATS<a class="headerlink" href="#makefile-testing-with-bats" title="Permanent link">&para;</a></h3>
 <p>Test Makefile targets using BATS (Bash Automated Testing System):</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env bats</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bats</span>
 <span class="c1"># test/makefile.bats</span>
 
 setup<span class="o">()</span><span class="w"> </span><span class="o">{</span>
@@ -5697,9 +5664,8 @@ teardown<span class="o">()</span><span class="w"> </span><span class="o">{</span
 <span class="w">  </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span><span class="s2">&quot;Usage:&quot;</span><span class="w"> </span><span class="o">]]</span>
 <span class="o">}</span>
 </code></pre></div>
-
 <h3 id="makefile-debugging">Makefile Debugging<a class="headerlink" href="#makefile-debugging" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Print all variables</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Print all variables</span>
 make<span class="w"> </span>-p
 
 <span class="c1"># Dry run (show commands without executing)</span>
@@ -5717,10 +5683,9 @@ make<span class="w"> </span>--warn-undefined-variables<span class="w"> </span>ta
 <span class="c1"># Print database of rules</span>
 make<span class="w"> </span>-p<span class="w"> </span>-f<span class="w"> </span>/dev/null
 </code></pre></div>
-
 <h3 id="makefile-include-pattern">Makefile Include Pattern<a class="headerlink" href="#makefile-include-pattern" title="Permanent link">&para;</a></h3>
 <p>Organize large Makefiles with includes:</p>
-<div class="codehilite"><pre><span></span><code><span class="c"># Makefile</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Makefile</span>
 <span class="nv">.DEFAULT_GOAL</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>all
 
 <span class="c"># Include sub-makefiles</span>
@@ -5746,9 +5711,8 @@ make<span class="w"> </span>-p<span class="w"> </span>-f<span class="w"> </span>
 <span class="nf">deploy</span><span class="o">:</span>
 <span class="w"> </span>./scripts/deploy.sh
 </code></pre></div>
-
 <h3 id="makefile-validation-script">Makefile Validation Script<a class="headerlink" href="#makefile-validation-script" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 <span class="c1"># scripts/validate-makefile.sh</span>
 
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
@@ -5782,10 +5746,9 @@ make<span class="w"> </span>-n<span class="w"> </span>--dry-run<span class="w"> 
 
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✓ Makefile validation passed&quot;</span>
 </code></pre></div>
-
 <h3 id="cicd-integration">CI/CD Integration<a class="headerlink" href="#cicd-integration" title="Permanent link">&para;</a></h3>
 <p>GitHub Actions workflow for Makefile validation:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate Makefile</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate Makefile</span>
 
 <span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
@@ -5813,7 +5776,6 @@ make<span class="w"> </span>-n<span class="w"> </span>--dry-run<span class="w"> 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test help target</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">make help</span>
 </code></pre></div>
-
 <hr />
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <h3 id="official-documentation">Official Documentation<a class="headerlink" href="#official-documentation" title="Permanent link">&para;</a></h3>

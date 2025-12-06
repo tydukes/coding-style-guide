@@ -3916,7 +3916,7 @@ industry best practices. Use this as a starting point for building modules that 
 easy to consume.</p>
 <hr />
 <h2 id="module-structure">Module Structure<a class="headerlink" href="#module-structure" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>terraform-&lt;provider&gt;-&lt;name&gt;/
+<div class="highlight"><pre><span></span><code>terraform-&lt;provider&gt;-&lt;name&gt;/
 ├── README.md
 ├── main.tf
 ├── variables.tf
@@ -3937,10 +3937,9 @@ easy to consume.</p>
 │   └── module_test.go
 └── .gitignore
 </code></pre></div>
-
 <hr />
 <h2 id="readmemd-template">README.md Template<a class="headerlink" href="#readmemd-template" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="gh"># Terraform [Provider] [Resource Name] Module</span>
+<div class="highlight"><pre><span></span><code><span class="gh"># Terraform [Provider] [Resource Name] Module</span>
 
 Terraform module for creating and managing [resource description].
 
@@ -4042,10 +4041,9 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 Apache 2.0 Licensed. See LICENSE for full details.
 </code></pre></div>
-
 <hr />
 <h2 id="maintf-template">main.tf Template<a class="headerlink" href="#maintf-template" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Main resource definitions</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Main resource definitions</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_example_resource&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.name</span>
 
@@ -4089,10 +4087,9 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.tags</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="variablestf-template">variables.tf Template<a class="headerlink" href="#variablestf-template" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Required variables</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Required variables</span>
 <span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;name&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Name of the resource. Used for resource naming and tagging.&quot;</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
@@ -4166,10 +4163,9 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="w">  </span><span class="nb">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="outputstf-template">outputs.tf Template<a class="headerlink" href="#outputstf-template" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Primary outputs</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Primary outputs</span>
 <span class="kr">output</span><span class="w"> </span><span class="nv">&quot;id&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;The ID of the resource.&quot;</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_example_resource.this.id</span>
@@ -4210,10 +4206,9 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="w">  </span><span class="na">sensitive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="versionstf-template">versions.tf Template<a class="headerlink" href="#versionstf-template" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.0&quot;</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
@@ -4224,10 +4219,9 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="examplessimplemaintf-template">examples/simple/main.tf Template<a class="headerlink" href="#examplessimplemaintf-template" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
 <span class="p">}</span>
 
@@ -4248,19 +4242,17 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">module.example.id</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="examplessimplevariablestf-template">examples/simple/variables.tf Template<a class="headerlink" href="#examplessimplevariablestf-template" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;aws_region&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;aws_region&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS region to deploy resources.&quot;</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="examplescompletemaintf-template">examples/complete/main.tf Template<a class="headerlink" href="#examplescompletemaintf-template" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.aws_region</span>
 <span class="p">}</span>
 
@@ -4336,19 +4328,17 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">module.example.endpoint</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="examplescompletevariablestf-template">examples/complete/variables.tf Template<a class="headerlink" href="#examplescompletevariablestf-template" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;aws_region&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;aws_region&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS region to deploy resources.&quot;</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="testmodule_testgo-template">test/module_test.go Template<a class="headerlink" href="#testmodule_testgo-template" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nx">test</span>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nx">test</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="p">(</span>
 <span class="w"> </span><span class="s">&quot;testing&quot;</span>
@@ -4414,59 +4404,57 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Contains</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceARN</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;arn:aws:&quot;</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="gitignore-template">.gitignore Template<a class="headerlink" href="#gitignore-template" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Local .terraform directories</span>
-<span class="o">**/.</span><span class="n">terraform</span><span class="o">/*</span>
+<div class="highlight"><pre><span></span><code># Local .terraform directories
+**/.terraform/*
 
-<span class="c1"># .tfstate files</span>
-<span class="o">*.</span><span class="n">tfstate</span>
-<span class="o">*.</span><span class="n">tfstate</span><span class="o">.*</span>
+# .tfstate files
+*.tfstate
+*.tfstate.*
 
-<span class="c1"># Crash log files</span>
-<span class="n">crash</span><span class="o">.</span><span class="n">log</span>
-<span class="n">crash</span><span class="o">.*.</span><span class="n">log</span>
+# Crash log files
+crash.log
+crash.*.log
 
-<span class="c1"># Exclude all .tfvars files</span>
-<span class="o">*.</span><span class="n">tfvars</span>
-<span class="o">*.</span><span class="n">tfvars</span><span class="o">.</span><span class="n">json</span>
+# Exclude all .tfvars files
+*.tfvars
+*.tfvars.json
 
-<span class="c1"># Ignore override files</span>
-<span class="n">override</span><span class="o">.</span><span class="n">tf</span>
-<span class="n">override</span><span class="o">.</span><span class="n">tf</span><span class="o">.</span><span class="n">json</span>
-<span class="o">*</span><span class="n">_override</span><span class="o">.</span><span class="n">tf</span>
-<span class="o">*</span><span class="n">_override</span><span class="o">.</span><span class="n">tf</span><span class="o">.</span><span class="n">json</span>
+# Ignore override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
 
-<span class="c1"># Ignore CLI configuration files</span>
-<span class="o">.</span><span class="n">terraformrc</span>
-<span class="n">terraform</span><span class="o">.</span><span class="n">rc</span>
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
 
-<span class="c1"># Ignore lock files (commit for modules)</span>
-<span class="c1"># .terraform.lock.hcl</span>
+# Ignore lock files (commit for modules)
+# .terraform.lock.hcl
 
-<span class="c1"># Test artifacts</span>
-<span class="n">test</span><span class="o">/.</span><span class="n">test</span><span class="o">-</span><span class="n">data</span>
-<span class="n">test</span><span class="o">/</span><span class="n">terraform</span><span class="o">.</span><span class="n">tfstate</span><span class="o">*</span>
-<span class="n">test</span><span class="o">/.</span><span class="n">terraform</span><span class="o">/*</span>
+# Test artifacts
+test/.test-data
+test/terraform.tfstate*
+test/.terraform/*
 
-<span class="c1"># IDE</span>
-<span class="o">.</span><span class="n">idea</span>
-<span class="o">.</span><span class="n">vscode</span>
-<span class="o">*.</span><span class="n">swp</span>
-<span class="o">*.</span><span class="n">swo</span>
-<span class="o">*.</span><span class="n">bak</span>
-<span class="o">*~</span>
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*.bak
+*~
 
-<span class="c1"># OS</span>
-<span class="o">.</span><span class="n">DS_Store</span>
-<span class="n">Thumbs</span><span class="o">.</span><span class="n">db</span>
+# OS
+.DS_Store
+Thumbs.db
 </code></pre></div>
-
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="module-naming">Module Naming<a class="headerlink" href="#module-naming" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>terraform-&lt;PROVIDER&gt;-&lt;NAME&gt;
+<div class="highlight"><pre><span></span><code>terraform-&lt;PROVIDER&gt;-&lt;NAME&gt;
 
 Examples:
 - terraform-aws-vpc
@@ -4474,7 +4462,6 @@ Examples:
 - terraform-azure-storage-account
 - terraform-google-gke-cluster
 </code></pre></div>
-
 <h3 id="variable-ordering">Variable Ordering<a class="headerlink" href="#variable-ordering" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Required variables</strong> (no defaults)</li>

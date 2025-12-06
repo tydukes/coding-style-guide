@@ -4577,7 +4577,7 @@ over standalone roles.</p>
 <hr />
 <h2 id="collections-first-approach">Collections-First Approach<a class="headerlink" href="#collections-first-approach" title="Permanent link">&para;</a></h2>
 <p><strong>Use Ansible Collections</strong> instead of standalone roles:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Good - Using collection</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good - Using collection</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure web servers</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webservers</span>
@@ -4596,9 +4596,8 @@ over standalone roles.</p>
 <span class="l l-Scalar l-Scalar-Plain">ansible-galaxy collection install community.general</span>
 <span class="l l-Scalar l-Scalar-Plain">ansible-galaxy collection install ansible.posix</span>
 </code></pre></div>
-
 <h3 id="collection-structure">Collection Structure<a class="headerlink" href="#collection-structure" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>my_namespace.my_collection/
+<div class="highlight"><pre><span></span><code>my_namespace.my_collection/
 ├── galaxy.yml
 ├── plugins/
 │   ├── modules/
@@ -4612,11 +4611,10 @@ over standalone roles.</p>
 │       └── meta/
 └── playbooks/
 </code></pre></div>
-
 <hr />
 <h2 id="playbook-structure">Playbook Structure<a class="headerlink" href="#playbook-structure" title="Permanent link">&para;</a></h2>
 <h3 id="basic-playbook">Basic Playbook<a class="headerlink" href="#basic-playbook" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="c1"># @module web_server_deployment</span>
 <span class="c1"># @description Deploy and configure nginx web servers</span>
 <span class="c1"># @dependencies ansible.builtin, community.general</span>
@@ -4657,9 +4655,8 @@ over standalone roles.</p>
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
 <span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reloaded</span>
 </code></pre></div>
-
 <h3 id="multi-play-playbook">Multi-Play Playbook<a class="headerlink" href="#multi-play-playbook" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prepare database servers</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dbservers</span>
 <span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -4690,11 +4687,10 @@ over standalone roles.</p>
 <span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/nginx/nginx.conf</span>
 <span class="w">      </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reload nginx</span>
 </code></pre></div>
-
 <hr />
 <h2 id="inventory-organization">Inventory Organization<a class="headerlink" href="#inventory-organization" title="Permanent link">&para;</a></h2>
 <h3 id="static-inventory-ini-format">Static Inventory (INI format)<a class="headerlink" href="#static-inventory-ini-format" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># inventory/production.ini</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># inventory/production.ini</span>
 <span class="k">[webservers]</span>
 <span class="na">web1.example.com ansible_host</span><span class="o">=</span><span class="s">192.168.1.10</span>
 <span class="na">web2.example.com ansible_host</span><span class="o">=</span><span class="s">192.168.1.11</span>
@@ -4716,9 +4712,8 @@ over standalone roles.</p>
 <span class="na">ansible_become</span><span class="o">=</span><span class="s">true</span>
 <span class="na">environment</span><span class="o">=</span><span class="s">production</span>
 </code></pre></div>
-
 <h3 id="static-inventory-yaml-format">Static Inventory (YAML format)<a class="headerlink" href="#static-inventory-yaml-format" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># inventory/production.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># inventory/production.yml</span>
 <span class="nt">all</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">children</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">webservers</span><span class="p">:</span>
@@ -4740,24 +4735,21 @@ over standalone roles.</p>
 <span class="w">    </span><span class="nt">ansible_become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
 </code></pre></div>
-
 <h3 id="group-variables">Group Variables<a class="headerlink" href="#group-variables" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>inventory/
+<div class="highlight"><pre><span></span><code>inventory/
 ├── production.yml
 └── group_vars/
     ├── all.yml
     ├── webservers.yml
     └── dbservers.yml
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="c1"># group_vars/webservers.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># group_vars/webservers.yml</span>
 <span class="nn">---</span>
 <span class="nt">nginx_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
 <span class="nt">nginx_worker_processes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
 <span class="nt">ssl_certificate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/ssl/certs/example.com.crt</span>
 <span class="nt">ssl_certificate_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/ssl/private/example.com.key</span>
 </code></pre></div>
-
 <hr />
 <h2 id="variable-precedence">Variable Precedence<a class="headerlink" href="#variable-precedence" title="Permanent link">&para;</a></h2>
 <p>Ansible variable precedence (lowest to highest):</p>
@@ -4785,7 +4777,7 @@ over standalone roles.</p>
 <li>Include params</li>
 <li>Extra vars (always win precedence)</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Example showing variable override</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Example showing variable override</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Variable precedence example</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all</span>
@@ -4798,11 +4790,10 @@ over standalone roles.</p>
 <span class="w">      </span><span class="nt">vars</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">app_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9000</span><span class="w">  </span><span class="c1"># Task vars (higher precedence)</span>
 </code></pre></div>
-
 <hr />
 <h2 id="role-structure">Role Structure<a class="headerlink" href="#role-structure" title="Permanent link">&para;</a></h2>
 <h3 id="modern-role-with-collection">Modern Role with Collection<a class="headerlink" href="#modern-role-with-collection" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>roles/webserver/
+<div class="highlight"><pre><span></span><code>roles/webserver/
 ├── defaults/
 │   └── main.yml          # Default variables (lowest precedence)
 ├── vars/
@@ -4819,9 +4810,8 @@ over standalone roles.</p>
 │   └── main.yml          # Role metadata and dependencies
 └── README.md             # Role documentation
 </code></pre></div>
-
 <h3 id="role-example">Role Example<a class="headerlink" href="#role-example" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># roles/webserver/tasks/main.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># roles/webserver/tasks/main.yml</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install nginx</span>
 <span class="w">  </span><span class="nt">ansible.builtin.package</span><span class="p">:</span>
@@ -4849,8 +4839,7 @@ over standalone roles.</p>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">started</span>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="c1"># roles/webserver/defaults/main.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># roles/webserver/defaults/main.yml</span>
 <span class="nn">---</span>
 <span class="nt">nginx_package_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
 <span class="nt">nginx_user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www-data</span>
@@ -4859,8 +4848,7 @@ over standalone roles.</p>
 <span class="nt">nginx_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
 <span class="nt">nginx_worker_processes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="c1"># roles/webserver/meta/main.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># roles/webserver/meta/main.yml</span>
 <span class="nn">---</span>
 <span class="nt">galaxy_info</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tyler Dukes</span>
@@ -4882,10 +4870,9 @@ over standalone roles.</p>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curl</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vim</span>
 </code></pre></div>
-
 <hr />
 <h2 id="handlers">Handlers<a class="headerlink" href="#handlers" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># handlers/main.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># handlers/main.yml</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reload nginx</span>
 <span class="w">  </span><span class="nt">ansible.builtin.service</span><span class="p">:</span>
@@ -4915,42 +4902,40 @@ over standalone roles.</p>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Flush handlers</span>
 <span class="w">  </span><span class="nt">ansible.builtin.meta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flush_handlers</span>
 </code></pre></div>
-
 <hr />
 <h2 id="jinja2-templates">Jinja2 Templates<a class="headerlink" href="#jinja2-templates" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c">{# templates/nginx.conf.j2 #}</span>
-<span class="x">user </span><span class="cp">{{</span> <span class="nv">nginx_user</span> <span class="cp">}}</span><span class="x">;</span>
-<span class="x">worker_processes </span><span class="cp">{{</span> <span class="nv">nginx_worker_processes</span> <span class="cp">}}</span><span class="x">;</span>
+<div class="highlight"><pre><span></span><code>{# templates/nginx.conf.j2 #}
+user {{ nginx_user }};
+worker_processes {{ nginx_worker_processes }};
 
-<span class="x">events {</span>
-<span class="x">    worker_connections </span><span class="cp">{{</span> <span class="nv">nginx_worker_connections</span> <span class="o">|</span> <span class="nf">default</span><span class="o">(</span><span class="m">1024</span><span class="o">)</span> <span class="cp">}}</span><span class="x">;</span>
-<span class="x">}</span>
+events {
+    worker_connections {{ nginx_worker_connections | default(1024) }};
+}
 
-<span class="x">http {</span>
-<span class="x">    include /etc/nginx/mime.types;</span>
-<span class="x">    default_type application/octet-stream;</span>
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
 
-<span class="x">    </span><span class="cp">{%</span> <span class="k">for</span> <span class="nv">server</span> <span class="k">in</span> <span class="nv">nginx_servers</span> <span class="cp">%}</span>
-<span class="x">    server {</span>
-<span class="x">        listen </span><span class="cp">{{</span> <span class="nv">server.port</span> <span class="o">|</span> <span class="nf">default</span><span class="o">(</span><span class="m">80</span><span class="o">)</span> <span class="cp">}}</span><span class="x">;</span>
-<span class="x">        server_name </span><span class="cp">{{</span> <span class="nv">server.name</span> <span class="cp">}}</span><span class="x">;</span>
-<span class="x">        root </span><span class="cp">{{</span> <span class="nv">server.document_root</span> <span class="cp">}}</span><span class="x">;</span>
+    {% for server in nginx_servers %}
+    server {
+        listen {{ server.port | default(80) }};
+        server_name {{ server.name }};
+        root {{ server.document_root }};
 
-<span class="x">        </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">server.ssl_enabled</span> <span class="o">|</span> <span class="nf">default</span><span class="o">(</span><span class="kp">false</span><span class="o">)</span> <span class="cp">%}</span>
-<span class="x">        ssl_certificate </span><span class="cp">{{</span> <span class="nv">server.ssl_cert</span> <span class="cp">}}</span><span class="x">;</span>
-<span class="x">        ssl_certificate_key </span><span class="cp">{{</span> <span class="nv">server.ssl_key</span> <span class="cp">}}</span><span class="x">;</span>
-<span class="x">        </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+        {% if server.ssl_enabled | default(false) %}
+        ssl_certificate {{ server.ssl_cert }};
+        ssl_certificate_key {{ server.ssl_key }};
+        {% endif %}
 
-<span class="x">        location / {</span>
-<span class="x">            try_files $uri $uri/ =404;</span>
-<span class="x">        }</span>
-<span class="x">    }</span>
-<span class="x">    </span><span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
-<span class="x">}</span>
+        location / {
+            try_files $uri $uri/ =404;
+        }
+    }
+    {% endfor %}
+}
 </code></pre></div>
-
 <h3 id="jinja2-filters">Jinja2 Filters<a class="headerlink" href="#jinja2-filters" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Common filters</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Common filters</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Use filters in templates</span>
 <span class="w">  </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
@@ -4963,10 +4948,9 @@ over standalone roles.</p>
 <span class="w">      </span><span class="no">To JSON: {{ my_dict | to_json }}</span>
 <span class="w">      </span><span class="no">To YAML: {{ my_dict | to_nice_yaml }}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="ansible-vault">Ansible Vault<a class="headerlink" href="#ansible-vault" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Create encrypted file</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create encrypted file</span>
 ansible-vault<span class="w"> </span>create<span class="w"> </span>secrets.yml
 
 <span class="c1"># Edit encrypted file</span>
@@ -4984,9 +4968,8 @@ ansible-vault<span class="w"> </span>view<span class="w"> </span>secrets.yml
 <span class="c1"># Rekey (change password)</span>
 ansible-vault<span class="w"> </span>rekey<span class="w"> </span>secrets.yml
 </code></pre></div>
-
 <h3 id="using-vault-in-playbooks">Using Vault in Playbooks<a class="headerlink" href="#using-vault-in-playbooks" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Store sensitive data in vault</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Store sensitive data in vault</span>
 <span class="c1"># vars/secrets.yml (encrypted)</span>
 <span class="nn">---</span>
 <span class="nt">db_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">super_secret_password</span>
@@ -5009,10 +4992,9 @@ ansible-vault<span class="w"> </span>rekey<span class="w"> </span>secrets.yml
 <span class="l l-Scalar l-Scalar-Plain">ansible-playbook site.yml --ask-vault-pass</span>
 <span class="l l-Scalar l-Scalar-Plain">ansible-playbook site.yml --vault-password-file ~/.vault_pass</span>
 </code></pre></div>
-
 <hr />
 <h2 id="tags-strategy">Tags Strategy<a class="headerlink" href="#tags-strategy" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Full application deployment</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">appservers</span>
 <span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
@@ -5058,10 +5040,9 @@ ansible-vault<span class="w"> </span>rekey<span class="w"> </span>secrets.yml
 <span class="c1"># ansible-playbook site.yml --tags &quot;packages,database&quot;</span>
 <span class="c1"># ansible-playbook site.yml --skip-tags &quot;migrations&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Error handling examples</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all</span>
 <span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
@@ -5120,10 +5101,9 @@ ansible-vault<span class="w"> </span>rekey<span class="w"> </span>secrets.yml
 <span class="w">            </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp/deploy</span>
 <span class="w">            </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
 </code></pre></div>
-
 <hr />
 <h2 id="testing-with-molecule">Testing with Molecule<a class="headerlink" href="#testing-with-molecule" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Initialize molecule scenario</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Initialize molecule scenario</span>
 molecule<span class="w"> </span>init<span class="w"> </span>scenario<span class="w"> </span>default
 
 <span class="c1"># Run full test sequence</span>
@@ -5135,9 +5115,8 @@ molecule<span class="w"> </span>converge<span class="w">     </span><span class=
 molecule<span class="w"> </span>verify<span class="w">       </span><span class="c1"># Run test assertions</span>
 molecule<span class="w"> </span>destroy<span class="w">      </span><span class="c1"># Destroy test instances</span>
 </code></pre></div>
-
 <h3 id="molecule-configuration">Molecule Configuration<a class="headerlink" href="#molecule-configuration" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># molecule/default/molecule.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># molecule/default/molecule.yml</span>
 <span class="nn">---</span>
 <span class="nt">driver</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker</span>
@@ -5164,9 +5143,8 @@ molecule<span class="w"> </span>destroy<span class="w">      </span><span class=
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verify</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">destroy</span>
 </code></pre></div>
-
 <h3 id="molecule-verify">Molecule Verify<a class="headerlink" href="#molecule-verify" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># molecule/default/verify.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># molecule/default/verify.yml</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verify</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all</span>
@@ -5195,11 +5173,10 @@ molecule<span class="w"> </span>destroy<span class="w">      </span><span class=
 <span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http_response</span>
 <span class="w">      </span><span class="nt">failed_when</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;Hello</span><span class="nv"> </span><span class="s">World&#39;</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">http_response.content&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-shellcommand-for-everything">❌ Avoid: Shell/Command for Everything<a class="headerlink" href="#avoid-shellcommand-for-everything" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Using shell when module exists</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Using shell when module exists</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install package</span>
 <span class="w">  </span><span class="nt">ansible.builtin.shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apt-get install -y nginx</span>
 
@@ -5209,9 +5186,8 @@ molecule<span class="w"> </span>destroy<span class="w">      </span><span class=
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 </code></pre></div>
-
 <h3 id="avoid-hardcoded-values">❌ Avoid: Hardcoded Values<a class="headerlink" href="#avoid-hardcoded-values" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Hardcoded paths and values</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Hardcoded paths and values</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy config</span>
 <span class="w">  </span><span class="nt">ansible.builtin.copy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app.conf</span>
@@ -5227,9 +5203,8 @@ molecule<span class="w"> </span>destroy<span class="w">      </span><span class=
 <span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">app_user</span><span class="nv"> </span><span class="s">}}&quot;</span>
 <span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">app_config_mode</span><span class="nv"> </span><span class="s">}}&quot;</span>
 </code></pre></div>
-
 <h3 id="avoid-no-idempotency">❌ Avoid: No Idempotency<a class="headerlink" href="#avoid-no-idempotency" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Not idempotent (runs every time)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Not idempotent (runs every time)</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Download file</span>
 <span class="w">  </span><span class="nt">ansible.builtin.command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wget https://example.com/file.tar.gz</span>
 <span class="w">  </span><span class="nt">args</span><span class="p">:</span>
@@ -5242,9 +5217,8 @@ molecule<span class="w"> </span>destroy<span class="w">      </span><span class=
 <span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp/file.tar.gz</span>
 <span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0644&#39;</span>
 </code></pre></div>
-
 <h3 id="avoid-ignoring-return-codes">❌ Avoid: Ignoring Return Codes<a class="headerlink" href="#avoid-ignoring-return-codes" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Bad - Ignoring all errors</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Ignoring all errors</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Stop service</span>
 <span class="w">  </span><span class="nt">ansible.builtin.command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">systemctl stop myapp</span>
 <span class="w">  </span><span class="nt">ignore_errors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -5259,11 +5233,10 @@ molecule<span class="w"> </span>destroy<span class="w">      </span><span class=
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_stop.failed</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&#39;could</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">found&#39;</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">service_stop.msg&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="tool-configuration">Tool Configuration<a class="headerlink" href="#tool-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="ansiblecfg">ansible.cfg<a class="headerlink" href="#ansiblecfg" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="k">[defaults]</span>
+<div class="highlight"><pre><span></span><code><span class="k">[defaults]</span>
 <span class="na">inventory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">inventory/production.yml</span>
 <span class="na">remote_user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">deploy</span>
 <span class="na">host_key_checking</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
@@ -5285,9 +5258,8 @@ molecule<span class="w"> </span>destroy<span class="w">      </span><span class=
 <span class="na">pipelining</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
 <span class="na">control_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/tmp/ansible-ssh-%%h-%%p-%%r</span>
 </code></pre></div>
-
 <h3 id="ansible-lint-configuration">ansible-lint Configuration<a class="headerlink" href="#ansible-lint-configuration" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .ansible-lint</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .ansible-lint</span>
 <span class="nn">---</span>
 <span class="nt">skip_list</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yaml[line-length]</span><span class="w">  </span><span class="c1"># Ignore long lines</span>
@@ -5301,7 +5273,6 @@ molecule<span class="w"> </span>destroy<span class="w">      </span><span class=
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">yaml</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;*.yaml&quot;</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">yaml</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;*.yml&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <h3 id="official-documentation">Official Documentation<a class="headerlink" href="#official-documentation" title="Permanent link">&para;</a></h3>

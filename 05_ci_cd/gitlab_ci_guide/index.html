@@ -4437,7 +4437,7 @@ optimization.</p>
 <hr />
 <h2 id="complete-cicd-pipeline-example">Complete CI/CD Pipeline Example<a class="headerlink" href="#complete-cicd-pipeline-example" title="Permanent link">&para;</a></h2>
 <h3 id="full-stack-application-pipeline">Full-Stack Application Pipeline<a class="headerlink" href="#full-stack-application-pipeline" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># .gitlab-ci.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># .gitlab-ci.yml</span>
 <span class="nt">variables</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">NODE_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;20&quot;</span>
 <span class="w">  </span><span class="nt">PYTHON_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span>
@@ -4846,11 +4846,10 @@ optimization.</p>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security/Container-Scanning.gitlab-ci.yml</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security/Secret-Detection.gitlab-ci.yml</span>
 </code></pre></div>
-
 <hr />
 <h2 id="deployment-strategies">Deployment Strategies<a class="headerlink" href="#deployment-strategies" title="Permanent link">&para;</a></h2>
 <h3 id="blue-green-deployment">Blue-Green Deployment<a class="headerlink" href="#blue-green-deployment" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">.deploy_template</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;deploy_template</span>
+<div class="highlight"><pre><span></span><code><span class="nt">.deploy_template</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;deploy_template</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest</span>
 <span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws --version</span>
@@ -4907,9 +4906,8 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
 </code></pre></div>
-
 <h3 id="canary-deployment">Canary Deployment<a class="headerlink" href="#canary-deployment" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">deploy:canary</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">deploy:canary</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bitnami/kubectl:latest</span>
 <span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
@@ -4944,9 +4942,8 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
 </code></pre></div>
-
 <h3 id="rolling-deployment-with-progressive-rollout">Rolling Deployment with Progressive Rollout<a class="headerlink" href="#rolling-deployment-with-progressive-rollout" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">deploy:progressive</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">deploy:progressive</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bitnami/kubectl:latest</span>
 <span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
@@ -4982,11 +4979,10 @@ optimization.</p>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 </code></pre></div>
-
 <hr />
 <h2 id="review-apps-dynamic-environments">Review Apps (Dynamic Environments)<a class="headerlink" href="#review-apps-dynamic-environments" title="Permanent link">&para;</a></h2>
 <h3 id="automatic-review-app-creation">Automatic Review App Creation<a class="headerlink" href="#automatic-review-app-creation" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">review:start</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">review:start</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bitnami/kubectl:latest</span>
 <span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
@@ -5031,11 +5027,10 @@ optimization.</p>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
 <span class="w">  </span><span class="nt">resource_group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">review/$CI_COMMIT_REF_SLUG</span>
 </code></pre></div>
-
 <hr />
 <h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="sast-dast-and-dependency-scanning">SAST, DAST, and Dependency Scanning<a class="headerlink" href="#sast-dast-and-dependency-scanning" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">include</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">include</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security/SAST.gitlab-ci.yml</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security/Dependency-Scanning.gitlab-ci.yml</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security/Container-Scanning.gitlab-ci.yml</span>
@@ -5069,9 +5064,8 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == &quot;develop&quot;</span>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
 </code></pre></div>
-
 <h3 id="secrets-management-with-hashicorp-vault">Secrets Management with HashiCorp Vault<a class="headerlink" href="#secrets-management-with-hashicorp-vault" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">.vault_template</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;vault_template</span>
+<div class="highlight"><pre><span></span><code><span class="nt">.vault_template</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;vault_template</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vault:latest</span>
 <span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export VAULT_ADDR=$VAULT_ADDR</span>
@@ -5096,9 +5090,8 @@ optimization.</p>
 <span class="w">      </span><span class="no"># Deploy application</span>
 <span class="w">      </span><span class="no">kubectl apply -f k8s/</span>
 </code></pre></div>
-
 <h3 id="oidc-with-aws">OIDC with AWS<a class="headerlink" href="#oidc-with-aws" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">deploy:aws:oidc</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">deploy:aws:oidc</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest</span>
 <span class="w">  </span><span class="nt">id_tokens</span><span class="p">:</span>
@@ -5121,11 +5114,10 @@ optimization.</p>
 <span class="w">      </span><span class="no"># Deploy to AWS</span>
 <span class="w">      </span><span class="no">aws s3 sync ./dist s3://$S3_BUCKET_PRODUCTION</span>
 </code></pre></div>
-
 <hr />
 <h2 id="performance-optimization">Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permanent link">&para;</a></h2>
 <h3 id="parallel-jobs-with-dag">Parallel Jobs with DAG<a class="headerlink" href="#parallel-jobs-with-dag" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">workflow</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">workflow</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
@@ -5154,9 +5146,8 @@ optimization.</p>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubectl apply -f k8s/</span>
 </code></pre></div>
-
 <h3 id="advanced-caching">Advanced Caching<a class="headerlink" href="#advanced-caching" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">.node_cache</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;node_cache</span>
+<div class="highlight"><pre><span></span><code><span class="nt">.node_cache</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;node_cache</span>
 <span class="w">  </span><span class="nt">cache</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">key</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">files</span><span class="p">:</span>
@@ -5187,9 +5178,8 @@ optimization.</p>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
 </code></pre></div>
-
 <h3 id="docker-layer-caching">Docker Layer Caching<a class="headerlink" href="#docker-layer-caching" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">build:image</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">build:image</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:24-dind</span>
 <span class="w">  </span><span class="nt">services</span><span class="p">:</span>
@@ -5206,9 +5196,8 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker push $CI_REGISTRY_IMAGE:latest</span>
 </code></pre></div>
-
 <h3 id="conditional-pipeline-rules">Conditional Pipeline Rules<a class="headerlink" href="#conditional-pipeline-rules" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">.frontend_changes</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;frontend_changes</span>
+<div class="highlight"><pre><span></span><code><span class="nt">.frontend_changes</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;frontend_changes</span>
 <span class="w">  </span><span class="nt">changes</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend/**/*</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">package.json</span>
@@ -5232,11 +5221,10 @@ optimization.</p>
 <span class="w">      </span><span class="nt">&lt;&lt;</span><span class="p">:</span><span class="w"> </span><span class="nv">*backend_changes</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 </code></pre></div>
-
 <hr />
 <h2 id="monorepo-patterns">Monorepo Patterns<a class="headerlink" href="#monorepo-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="selective-pipeline-execution">Selective Pipeline Execution<a class="headerlink" href="#selective-pipeline-execution" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">variables</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">variables</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">FRONTEND_CHANGES</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
 <span class="w">  </span><span class="nt">BACKEND_CHANGES</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
 <span class="w">  </span><span class="nt">SHARED_CHANGES</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
@@ -5281,9 +5269,8 @@ optimization.</p>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cd backend &amp;&amp; pytest</span>
 </code></pre></div>
-
 <h3 id="child-pipelines-for-microservices">Child Pipelines for Microservices<a class="headerlink" href="#child-pipelines-for-microservices" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Parent pipeline</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Parent pipeline</span>
 <span class="nt">trigger:service-a</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trigger</span>
 <span class="w">  </span><span class="nt">trigger</span><span class="p">:</span>
@@ -5323,11 +5310,10 @@ optimization.</p>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubectl apply -f k8s/</span>
 </code></pre></div>
-
 <hr />
 <h2 id="advanced-patterns">Advanced Patterns<a class="headerlink" href="#advanced-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="feature-flags-with-launchdarkly">Feature Flags with LaunchDarkly<a class="headerlink" href="#feature-flags-with-launchdarkly" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">deploy:with:feature:flags</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">deploy:with:feature:flags</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alpine:latest</span>
 <span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
@@ -5353,9 +5339,8 @@ optimization.</p>
 <span class="w">        </span><span class="no">sleep 300  # Monitor for 5 minutes</span>
 <span class="w">      </span><span class="no">done</span>
 </code></pre></div>
-
 <h3 id="matrix-jobs-parallel-execution">Matrix Jobs (Parallel Execution)<a class="headerlink" href="#matrix-jobs-parallel-execution" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">.test_template</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;test_template</span>
+<div class="highlight"><pre><span></span><code><span class="nt">.test_template</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;test_template</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python -m pytest tests/</span>
@@ -5382,9 +5367,8 @@ optimization.</p>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python -m pytest tests/</span>
 </code></pre></div>
-
 <h3 id="auto-devops-customization">Auto DevOps Customization<a class="headerlink" href="#auto-devops-customization" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">include</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">include</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Auto-DevOps.gitlab-ci.yml</span>
 
 <span class="nt">variables</span><span class="p">:</span>
@@ -5400,11 +5384,10 @@ optimization.</p>
 <span class="w">  </span><span class="nt">after_script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;Custom post-deployment tasks&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="debug-logging">Debug Logging<a class="headerlink" href="#debug-logging" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">debug:pipeline</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">debug:pipeline</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.pre</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME&quot;</span>
@@ -5415,9 +5398,8 @@ optimization.</p>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_MESSAGE =~ /\[debug\]/</span>
 </code></pre></div>
-
 <h3 id="retry-failed-jobs">Retry Failed Jobs<a class="headerlink" href="#retry-failed-jobs" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">test:flaky</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">test:flaky</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">retry</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 <span class="w">    </span><span class="nt">when</span><span class="p">:</span>
@@ -5427,9 +5409,8 @@ optimization.</p>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
 </code></pre></div>
-
 <h3 id="job-artifacts-for-debugging">Job Artifacts for Debugging<a class="headerlink" href="#job-artifacts-for-debugging" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">test:with:artifacts</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">test:with:artifacts</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test || true</span>
 <span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
@@ -5442,7 +5423,6 @@ optimization.</p>
 <span class="w">      </span><span class="nt">junit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test-results/junit.xml</span>
 <span class="w">    </span><span class="nt">expire_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 week</span>
 </code></pre></div>
-
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="pipeline-organization">Pipeline Organization<a class="headerlink" href="#pipeline-organization" title="Permanent link">&para;</a></h3>

@@ -4573,7 +4573,7 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <h2 id="terraform-anti-patterns">Terraform Anti-Patterns<a class="headerlink" href="#terraform-anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="hardcoded-values">❌ Hardcoded Values<a class="headerlink" href="#hardcoded-values" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Hardcoded values make modules inflexible and environment-specific</p>
-<div class="codehilite"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-0c55b159cbfafe1f0&quot;</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.medium&quot;</span>
 
@@ -4583,9 +4583,8 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use variables for configurability</p>
-<div class="codehilite"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;ami_id&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;ami_id&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AMI ID for the EC2 instance&quot;</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
@@ -4624,20 +4623,18 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Variables make modules reusable across environments and provide validation</p>
 <hr />
 <h3 id="missing-lifecycle-rules">❌ Missing Lifecycle Rules<a class="headerlink" href="#missing-lifecycle-rules" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Recreating resources destroys data</p>
-<div class="codehilite"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;database&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;database&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">identifier</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mydb&quot;</span>
 <span class="w">  </span><span class="na">instance_class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;db.t3.micro&quot;</span>
 <span class="w">  </span><span class="na">engine</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Protect critical resources with lifecycle rules</p>
-<div class="codehilite"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;database&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;database&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">identifier</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mydb&quot;</span>
 <span class="w">  </span><span class="na">instance_class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;db.t3.micro&quot;</span>
 <span class="w">  </span><span class="na">engine</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
@@ -4655,18 +4652,16 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Lifecycle rules prevent accidental deletion and ignore transient changes</p>
 <hr />
 <h3 id="no-remote-state">❌ No Remote State<a class="headerlink" href="#no-remote-state" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Local state causes collaboration and CI/CD issues</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.0&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use remote state with locking</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.0&quot;</span>
 
 <span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
@@ -4678,18 +4673,16 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Remote state enables team collaboration, state locking prevents corruption</p>
 <hr />
 <h3 id="missing-outputs">❌ Missing Outputs<a class="headerlink" href="#missing-outputs" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: No way to access resource attributes</p>
-<div class="codehilite"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Export important values as outputs</p>
-<div class="codehilite"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
 <span class="p">}</span>
 
@@ -4708,37 +4701,33 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.arn</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Outputs make resource attributes available to other modules and for reference</p>
 <hr />
 <h2 id="ansible-anti-patterns">Ansible Anti-Patterns<a class="headerlink" href="#ansible-anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="using-shell-when-module-exists">❌ Using Shell When Module Exists<a class="headerlink" href="#using-shell-when-module-exists" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Shell commands are not idempotent and error-prone</p>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install nginx</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install nginx</span>
 <span class="w">  </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apt-get install -y nginx</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use native modules for idempotency</p>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install nginx</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install nginx</span>
 <span class="w">  </span><span class="nt">ansible.builtin.apt</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 <span class="w">    </span><span class="nt">update_cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
 <span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Modules are idempotent, handle errors better, and provide better reporting</p>
 <hr />
 <h3 id="no-error-handling">❌ No Error Handling<a class="headerlink" href="#no-error-handling" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Failures stop playbook execution abruptly</p>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Download file</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Download file</span>
 <span class="w">  </span><span class="nt">ansible.builtin.get_url</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://example.com/file.tar.gz&quot;</span>
 <span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/file.tar.gz&quot;</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Handle errors gracefully with blocks</p>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Download and extract file</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Download and extract file</span>
 <span class="w">  </span><span class="nt">block</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Download file</span>
 <span class="w">      </span><span class="nt">ansible.builtin.get_url</span><span class="p">:</span>
@@ -4767,12 +4756,11 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">      </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Download</span><span class="nv"> </span><span class="s">attempt</span><span class="nv"> </span><span class="s">completed&quot;</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Block/rescue/always provides structured error handling and cleanup</p>
 <hr />
 <h3 id="hardcoded-values-in-tasks">❌ Hardcoded Values in Tasks<a class="headerlink" href="#hardcoded-values-in-tasks" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Playbooks tied to specific environments</p>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure application</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure application</span>
 <span class="w">  </span><span class="nt">ansible.builtin.template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app.conf.j2</span>
 <span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/app/app.conf</span>
@@ -4780,9 +4768,8 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">    </span><span class="nt">db_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;prod-db.example.com&quot;</span>
 <span class="w">    </span><span class="nt">db_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use variables and group_vars</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># group_vars/production.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># group_vars/production.yml</span>
 <span class="nt">db_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;prod-db.example.com&quot;</span>
 <span class="nt">db_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
 <span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;production&quot;</span>
@@ -4799,12 +4786,11 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/app/app.conf</span>
 <span class="w">  </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restart application</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Separating variables makes playbooks reusable across environments</p>
 <hr />
 <h3 id="no-tags-for-selective-execution">❌ No Tags for Selective Execution<a class="headerlink" href="#no-tags-for-selective-execution" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Must run entire playbook for small changes</p>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update system packages</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update system packages</span>
 <span class="w">  </span><span class="nt">ansible.builtin.apt</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">upgrade</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist</span>
 
@@ -4817,9 +4803,8 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config.j2</span>
 <span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/myapp/config</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Tag tasks for selective execution</p>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update system packages</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update system packages</span>
 <span class="w">  </span><span class="nt">ansible.builtin.apt</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">upgrade</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist</span>
 <span class="w">  </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">system</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">update</span><span class="p p-Indicator">]</span>
@@ -4836,22 +4821,20 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">  </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">application</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">config</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restart application</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Tags enable running specific tasks without executing entire playbook</p>
 <hr />
 <h2 id="python-anti-patterns">Python Anti-Patterns<a class="headerlink" href="#python-anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="mutable-default-arguments">❌ Mutable Default Arguments<a class="headerlink" href="#mutable-default-arguments" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Mutable defaults share state between calls</p>
-<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_item</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[]):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_item</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[]):</span>
     <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">items</span>
 
 <span class="n">result1</span> <span class="o">=</span> <span class="n">add_item</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [1]</span>
 <span class="n">result2</span> <span class="o">=</span> <span class="n">add_item</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># [1, 2] - unexpected!</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use None and create new instances</p>
-<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_item</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_item</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
@@ -4860,19 +4843,17 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="n">result1</span> <span class="o">=</span> <span class="n">add_item</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [1]</span>
 <span class="n">result2</span> <span class="o">=</span> <span class="n">add_item</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># [2] - correct!</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: None as default prevents shared mutable state between function calls</p>
 <hr />
 <h3 id="bare-except-clauses">❌ Bare except Clauses<a class="headerlink" href="#bare-except-clauses" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Catches everything, including KeyboardInterrupt and SystemExit</p>
-<div class="codehilite"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
     <span class="n">process_data</span><span class="p">()</span>
 <span class="k">except</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Something went wrong&quot;</span><span class="p">)</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Catch specific exceptions</p>
-<div class="codehilite"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
     <span class="n">process_data</span><span class="p">()</span>
 <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -4884,18 +4865,16 @@ practices, along with their correct implementations. Each anti-pattern includes:
     <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">raise</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Specific exceptions allow proper error handling without masking critical errors</p>
 <hr />
 <h3 id="using-imports">❌ Using * Imports<a class="headerlink" href="#using-imports" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Pollutes namespace and makes code unclear</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sys</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Import specific names or use qualified imports</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
@@ -4905,18 +4884,16 @@ practices, along with their correct implementations. Each anti-pattern includes:
     <span class="n">PurePath</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Explicit imports make code more maintainable and prevent naming conflicts</p>
 <hr />
 <h3 id="not-using-context-managers">❌ Not Using Context Managers<a class="headerlink" href="#not-using-context-managers" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: File handles may not be closed properly</p>
-<div class="codehilite"><pre><span></span><code><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># May not execute if exception occurs</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use context managers for automatic cleanup</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># Modern approach</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;file.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
@@ -4925,32 +4902,28 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Context managers ensure resources are properly released even if exceptions occur</p>
 <hr />
 <h3 id="string-concatenation-in-loops">❌ String Concatenation in Loops<a class="headerlink" href="#string-concatenation-in-loops" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Inefficient string building</p>
-<div class="codehilite"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
     <span class="n">result</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use join() for string building</p>
-<div class="codehilite"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: join() is O(n) instead of O(n²) for string concatenation</p>
 <hr />
 <h2 id="typescript-anti-patterns">TypeScript Anti-Patterns<a class="headerlink" href="#typescript-anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="using-any-type">❌ Using any Type<a class="headerlink" href="#using-any-type" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Defeats TypeScript's type safety</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">processData</span><span class="p">(</span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">processData</span><span class="p">(</span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use proper types or unknown</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">DataWithValue</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">DataWithValue</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="p">}</span>
 
@@ -4969,32 +4942,28 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Invalid data structure&#39;</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Proper types catch errors at compile time and enable IDE features</p>
 <hr />
 <h3 id="non-null-assertions-without-validation">❌ Non-null Assertions Without Validation<a class="headerlink" href="#non-null-assertions-without-validation" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Can cause runtime errors</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">u</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">u</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">)</span><span class="o">!</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">u</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">u</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">)</span><span class="o">!</span><span class="p">;</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span><span class="w">  </span><span class="c1">// May crash if not found</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Handle null/undefined explicitly</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">u</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">u</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">u</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">u</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`User </span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb"> not found`</span><span class="p">);</span>
 <span class="p">}</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span><span class="w">  </span><span class="c1">// Safe</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Explicit null checks prevent runtime errors and make intent clear</p>
 <hr />
 <h3 id="type-assertions-without-validation">❌ Type Assertions Without Validation<a class="headerlink" href="#type-assertions-without-validation" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Unsafe type coercion</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">User</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">User</span><span class="p">;</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Validate before asserting</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">isUser</span><span class="p">(</span><span class="nx">obj</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">obj</span><span class="w"> </span><span class="nx">is</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">isUser</span><span class="p">(</span><span class="nx">obj</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">obj</span><span class="w"> </span><span class="nx">is</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">obj</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span>
 <span class="w">    </span><span class="nx">obj</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span>
@@ -5013,32 +4982,28 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="p">}</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">parsed</span><span class="p">;</span><span class="w">  </span><span class="c1">// Safe</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Runtime validation ensures type safety for external data</p>
 <hr />
 <h3 id="not-using-optional-chaining">❌ Not Using Optional Chaining<a class="headerlink" href="#not-using-optional-chaining" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Verbose null checks</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">city</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">address</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">address</span><span class="p">.</span><span class="nx">city</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">city</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">address</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">address</span><span class="p">.</span><span class="nx">city</span><span class="p">;</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use optional chaining</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">city</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">user</span><span class="o">?</span><span class="p">.</span><span class="nx">address</span><span class="o">?</span><span class="p">.</span><span class="nx">city</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">city</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">user</span><span class="o">?</span><span class="p">.</span><span class="nx">address</span><span class="o">?</span><span class="p">.</span><span class="nx">city</span><span class="p">;</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Optional chaining is more concise and handles null/undefined safely</p>
 <hr />
 <h3 id="ignoring-promise-rejections">❌ Ignoring Promise Rejections<a class="headerlink" href="#ignoring-promise-rejections" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Unhandled promise rejections</p>
-<div class="codehilite"><pre><span></span><code><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">loadData</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">loadData</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetchData</span><span class="p">();</span>
 <span class="w">  </span><span class="nx">processData</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="nx">loadData</span><span class="p">();</span><span class="w">  </span><span class="c1">// No error handling</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Handle promise rejections</p>
-<div class="codehilite"><pre><span></span><code><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">loadData</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">loadData</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetchData</span><span class="p">();</span>
 <span class="w">    </span><span class="nx">processData</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
@@ -5053,47 +5018,41 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">  </span><span class="c1">// Report to error tracking service</span>
 <span class="p">});</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Proper error handling prevents silent failures and aids debugging</p>
 <hr />
 <h2 id="bash-anti-patterns">Bash Anti-Patterns<a class="headerlink" href="#bash-anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="not-quoting-variables">❌ Not Quoting Variables<a class="headerlink" href="#not-quoting-variables" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Breaks with spaces or special characters</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">file</span><span class="o">=</span><span class="nv">$1</span>
+<div class="highlight"><pre><span></span><code><span class="nv">file</span><span class="o">=</span><span class="nv">$1</span>
 rm<span class="w"> </span><span class="nv">$file</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Always quote variable expansions</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">file</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nv">file</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&quot;</span>
 rm<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">file</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Quoting prevents word splitting and glob expansion</p>
 <hr />
 <h3 id="using-ls-for-file-iteration">❌ Using ls for File Iteration<a class="headerlink" href="#using-ls-for-file-iteration" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Breaks with spaces and special characters</p>
-<div class="codehilite"><pre><span></span><code><span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>ls<span class="w"> </span>*.txt<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>ls<span class="w"> </span>*.txt<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
 <span class="w">  </span>process<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">file</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">done</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use glob patterns directly</p>
-<div class="codehilite"><pre><span></span><code><span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span>*.txt<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span>*.txt<span class="p">;</span><span class="w"> </span><span class="k">do</span>
 <span class="w">  </span><span class="o">[[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">file</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">continue</span>
 <span class="w">  </span>process<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">file</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">done</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Glob patterns handle special characters correctly and avoid parsing ls output</p>
 <hr />
 <h3 id="not-checking-command-success">❌ Not Checking Command Success<a class="headerlink" href="#not-checking-command-success" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Continues after failures</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/some/directory
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/some/directory
 rm<span class="w"> </span>-rf<span class="w"> </span>*
 </code></pre></div>
-
 <p><strong>Good</strong>: Check exit codes and use set -e</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
 <span class="k">if</span><span class="w"> </span>!<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/some/directory<span class="p">;</span><span class="w"> </span><span class="k">then</span>
@@ -5103,48 +5062,42 @@ rm<span class="w"> </span>-rf<span class="w"> </span>*
 
 rm<span class="w"> </span>-rf<span class="w"> </span>./*
 </code></pre></div>
-
 <p><strong>Why</strong>: Checking exit codes prevents cascading failures</p>
 <hr />
 <h3 id="useless-use-of-cat">❌ Useless Use of cat<a class="headerlink" href="#useless-use-of-cat" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Unnecessary process creation</p>
-<div class="codehilite"><pre><span></span><code>cat<span class="w"> </span>file.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>file.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use input redirection</p>
-<div class="codehilite"><pre><span></span><code>grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span>file.txt
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span>file.txt
 <span class="c1"># or</span>
 grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span>&lt;<span class="w"> </span>file.txt
 </code></pre></div>
-
 <p><strong>Why</strong>: Eliminates unnecessary process and improves performance</p>
 <hr />
 <h3 id="not-using-for-tests">❌ Not Using [[ ]] for Tests<a class="headerlink" href="#not-using-for-tests" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: [ ] is less powerful and error-prone</p>
-<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;match&quot;</span>
 <span class="k">fi</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use [[ ]] for safer tests</p>
-<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">var</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">var</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;match&quot;</span>
 <span class="k">fi</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: [[ ]] provides pattern matching, regex support, and safer variable handling</p>
 <hr />
 <h2 id="docker-anti-patterns">Docker Anti-Patterns<a class="headerlink" href="#docker-anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="using-latest-tag">❌ Using latest Tag<a class="headerlink" href="#using-latest-tag" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Unpredictable builds and deployments</p>
-<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:latest</span>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:latest</span>
 
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>install
 </code></pre></div>
-
 <p><strong>Good</strong>: Pin specific versions</p>
-<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:20.10.0-alpine3.18</span>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:20.10.0-alpine3.18</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
@@ -5156,20 +5109,18 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="k">USER</span><span class="w"> </span><span class="s">node</span>
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.js&quot;</span><span class="p">]</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Specific versions ensure reproducible builds and prevent breaking changes</p>
 <hr />
 <h3 id="running-as-root">❌ Running as Root<a class="headerlink" href="#running-as-root" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Security vulnerability</p>
-<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:22.04</span>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:22.04</span>
 
 <span class="k">COPY</span><span class="w"> </span>app<span class="w"> </span>/app
 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/app/server&quot;</span><span class="p">]</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Create and use non-root user</p>
-<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:22.04</span>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:22.04</span>
 
 <span class="k">RUN</span><span class="w"> </span>groupadd<span class="w"> </span>-r<span class="w"> </span>appuser<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>useradd<span class="w"> </span>-r<span class="w"> </span>-g<span class="w"> </span>appuser<span class="w"> </span>appuser
 
@@ -5181,12 +5132,11 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/app/server&quot;</span><span class="p">]</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Running as non-root reduces attack surface</p>
 <hr />
 <h3 id="not-using-multi-stage-builds">❌ Not Using Multi-stage Builds<a class="headerlink" href="#not-using-multi-stage-builds" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Large images with build dependencies</p>
-<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:20</span>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:20</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
@@ -5198,9 +5148,8 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/server.js&quot;</span><span class="p">]</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use multi-stage builds for smaller images</p>
-<div class="codehilite"><pre><span></span><code><span class="c"># Build stage</span>
+<div class="highlight"><pre><span></span><code><span class="c"># Build stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
@@ -5227,12 +5176,11 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/server.js&quot;</span><span class="p">]</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Multi-stage builds reduce final image size by excluding build dependencies</p>
 <hr />
 <h3 id="installing-unnecessary-packages">❌ Installing Unnecessary Packages<a class="headerlink" href="#installing-unnecessary-packages" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Bloated images with security vulnerabilities</p>
-<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:22.04</span>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:22.04</span>
 
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>curl<span class="w"> </span><span class="se">\</span>
@@ -5241,9 +5189,8 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">    </span>git<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>build-essential
 </code></pre></div>
-
 <p><strong>Good</strong>: Install only required packages</p>
-<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:22.04</span>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:22.04</span>
 
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span><span class="se">\</span>
@@ -5252,20 +5199,18 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">    </span>apt-get<span class="w"> </span>clean<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
 </code></pre></div>
-
 <p><strong>Why</strong>: Minimal images reduce attack surface and image size</p>
 <hr />
 <h3 id="no-health-checks">❌ No Health Checks<a class="headerlink" href="#no-health-checks" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Container appears healthy even when app crashes</p>
-<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span>
 
 <span class="k">COPY</span><span class="w"> </span>app<span class="w"> </span>/app
 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/app/server.js&quot;</span><span class="p">]</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Add health checks</p>
-<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
@@ -5279,13 +5224,12 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.js&quot;</span><span class="p">]</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Health checks enable container orchestrators to detect and restart failed containers</p>
 <hr />
 <h2 id="github-actions-anti-patterns">GitHub Actions Anti-Patterns<a class="headerlink" href="#github-actions-anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="no-job-dependencies">❌ No Job Dependencies<a class="headerlink" href="#no-job-dependencies" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Jobs run in wrong order or waste resources</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">test</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
@@ -5296,9 +5240,8 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run deploy</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Define job dependencies</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">test</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
@@ -5313,20 +5256,18 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run deploy</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Dependencies ensure jobs run in correct order and only when predecessors succeed</p>
 <hr />
 <h3 id="not-caching-dependencies">❌ Not Caching Dependencies<a class="headerlink" href="#not-caching-dependencies" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Wastes time reinstalling dependencies</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">steps</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">steps</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-node@v4</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm install</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Cache dependencies</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">steps</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">steps</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-node@v4</span>
@@ -5337,29 +5278,26 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Caching significantly reduces build times</p>
 <hr />
 <h3 id="hardcoded-secrets">❌ Hardcoded Secrets<a class="headerlink" href="#hardcoded-secrets" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Security vulnerability</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">steps</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">steps</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">curl -H &quot;Authorization: token ghp_xxxxxxxxxxxx&quot; \</span>
 <span class="w">        </span><span class="no">https://api.github.com/repos/...</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use GitHub Secrets</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">steps</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">steps</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">curl -H &quot;Authorization: token ${{ secrets.GITHUB_TOKEN }}&quot; \</span>
 <span class="w">        </span><span class="no">https://api.github.com/repos/...</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Secrets are encrypted and not visible in logs</p>
 <hr />
 <h3 id="not-using-matrix-builds">❌ Not Using Matrix Builds<a class="headerlink" href="#not-using-matrix-builds" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Duplicate job definitions</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">test-node-18</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
@@ -5376,9 +5314,8 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">          </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Use matrix strategy</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">test</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 
@@ -5397,20 +5334,18 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Matrix builds reduce duplication and test multiple versions efficiently</p>
 <hr />
 <h3 id="no-timeout-limits">❌ No Timeout Limits<a class="headerlink" href="#no-timeout-limits" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Stuck jobs consume runner time</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">build</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run build</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Set reasonable timeouts</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">build</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">timeout-minutes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
@@ -5419,20 +5354,18 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run build</span>
 <span class="w">        </span><span class="nt">timeout-minutes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Timeouts prevent hung jobs from consuming resources</p>
 <hr />
 <h2 id="cicd-general-anti-patterns">CI/CD General Anti-Patterns<a class="headerlink" href="#cicd-general-anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="testing-in-production">❌ Testing in Production<a class="headerlink" href="#testing-in-production" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Deploying untested code</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">deploy</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">deploy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubectl apply -f k8s/</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Test before deploying</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">test</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">test</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run test</span>
@@ -5456,34 +5389,30 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubectl apply -f k8s/ --context=production</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Staged deployments with testing catch issues before production</p>
 <hr />
 <h3 id="no-rollback-strategy">❌ No Rollback Strategy<a class="headerlink" href="#no-rollback-strategy" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Failed deployments require manual intervention</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">deploy</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">deploy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubectl set image deployment/app app=myapp:${CI_COMMIT_SHA}</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Implement automated rollback</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">deploy</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">deploy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubectl set image deployment/app app=myapp:${CI_COMMIT_SHA}</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubectl rollout status deployment/app --timeout=5m || kubectl rollout undo deployment/app</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Automated rollback minimizes downtime when deployments fail</p>
 <hr />
 <h3 id="long-running-pipelines">❌ Long-Running Pipelines<a class="headerlink" href="#long-running-pipelines" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: 30+ minute pipelines discourage frequent commits</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">test</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">test</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">run_all_tests.sh</span><span class="w">  </span><span class="c1"># Takes 45 minutes</span>
 </code></pre></div>
-
 <p><strong>Good</strong>: Parallelize and optimize</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">unit-test</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">unit-test</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run test:unit</span>
 <span class="w">  </span><span class="nt">parallel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
@@ -5498,7 +5427,6 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run test:e2e</span>
 <span class="w">  </span><span class="nt">parallel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 </code></pre></div>
-
 <p><strong>Why</strong>: Fast pipelines enable rapid iteration and quick feedback</p>
 <hr />
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>

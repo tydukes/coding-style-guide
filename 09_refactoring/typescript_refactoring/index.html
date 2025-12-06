@@ -3764,7 +3764,7 @@
 <h2 id="extract-components-from-monolithic-files">Extract Components from Monolithic Files<a class="headerlink" href="#extract-components-from-monolithic-files" title="Permanent link">&para;</a></h2>
 <h3 id="problem-large-component-file-with-mixed-concerns">Problem: Large component file with mixed concerns<a class="headerlink" href="#problem-large-component-file-with-mixed-concerns" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong> (UserDashboard.tsx - 400 lines):</p>
-<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useState</span><span class="p">,</span><span class="w"> </span><span class="nx">useEffect</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useState</span><span class="p">,</span><span class="w"> </span><span class="nx">useEffect</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react&#39;</span><span class="p">;</span>
 <span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
 
 <span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">UserDashboard</span><span class="p">({</span><span class="w"> </span><span class="nx">userId</span><span class="w"> </span><span class="p">}</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">userId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
@@ -3841,9 +3841,8 @@
 <span class="w">  </span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>After</strong> (Properly separated):</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// types/user.types.ts</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// types/user.types.ts</span>
 <span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
@@ -4041,7 +4040,6 @@
 <span class="w">  </span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Separated into focused, single-responsibility components</li>
@@ -4055,7 +4053,7 @@
 <h2 id="replace-any-with-proper-types">Replace <code>any</code> with Proper Types<a class="headerlink" href="#replace-any-with-proper-types" title="Permanent link">&para;</a></h2>
 <h3 id="problem-unsafe-any-types-throughout-codebase">Problem: Unsafe <code>any</code> types throughout codebase<a class="headerlink" href="#problem-unsafe-any-types-throughout-codebase" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">ApiResponse</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">ApiResponse</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
 <span class="p">}</span>
@@ -4076,9 +4074,8 @@
 <span class="kd">const</span><span class="w"> </span><span class="nx">users</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetchData</span><span class="p">(</span><span class="s1">&#39;/api/users&#39;</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">processed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">processUser</span><span class="p">);</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// Define specific response types</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Define specific response types</span>
 <span class="kd">interface</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
@@ -4128,7 +4125,6 @@
 <span class="kd">const</span><span class="w"> </span><span class="nx">users</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">processed</span><span class="o">:</span><span class="w"> </span><span class="kt">ProcessedUser</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">processUser</span><span class="p">);</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Zero <code>any</code> types</li>
@@ -4141,7 +4137,7 @@
 <h2 id="simplify-asyncawait-chains">Simplify Async/Await Chains<a class="headerlink" href="#simplify-asyncawait-chains" title="Permanent link">&para;</a></h2>
 <h3 id="problem-callback-hell-with-promises">Problem: Callback hell with promises<a class="headerlink" href="#problem-callback-hell-with-promises" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">deployApplication</span><span class="p">(</span><span class="nx">appId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">deployApplication</span><span class="p">(</span><span class="nx">appId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">validateApp</span><span class="p">(</span><span class="nx">appId</span><span class="p">)</span>
 <span class="w">    </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">app</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">buildApp</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
@@ -4170,9 +4166,8 @@
 <span class="w">    </span><span class="p">});</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">App</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">App</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
@@ -4258,7 +4253,6 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Linear, readable async/await flow</li>
@@ -4271,7 +4265,7 @@
 <h2 id="use-modern-es6-features">Use Modern ES6+ Features<a class="headerlink" href="#use-modern-es6-features" title="Permanent link">&para;</a></h2>
 <h3 id="problem-legacy-javascript-patterns">Problem: Legacy JavaScript patterns<a class="headerlink" href="#problem-legacy-javascript-patterns" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">var</span><span class="w"> </span><span class="nx">UserService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">var</span><span class="w"> </span><span class="nx">UserService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">apiUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;https://api.example.com&#39;</span><span class="p">;</span>
 <span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
 
@@ -4311,9 +4305,8 @@
 <span class="w">  </span><span class="p">};</span>
 <span class="p">})();</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">firstName</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">lastName</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
@@ -4367,7 +4360,6 @@
 <span class="kd">const</span><span class="w"> </span><span class="nx">fullName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">userService</span><span class="p">.</span><span class="nx">formatUserName</span><span class="p">(</span><span class="nx">user</span><span class="p">);</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">admins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">userService</span><span class="p">.</span><span class="nx">getUsersByRole</span><span class="p">([</span><span class="nx">user</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="p">);</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ ES6 class instead of IIFE</li>
@@ -4382,7 +4374,7 @@
 <h2 id="apply-functional-programming-patterns">Apply Functional Programming Patterns<a class="headerlink" href="#apply-functional-programming-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="problem-imperative-mutation-heavy-code">Problem: Imperative, mutation-heavy code<a class="headerlink" href="#problem-imperative-mutation-heavy-code" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">Product</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">Product</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">price</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
@@ -4430,9 +4422,8 @@
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">grouped</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <p><strong>After</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">Product</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">Product</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
 <span class="w">  </span><span class="nx">price</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
@@ -4499,7 +4490,6 @@
 <span class="w">    </span><span class="p">(</span><span class="nx">p</span><span class="o">:</span><span class="w"> </span><span class="kt">DiscountedProduct</span><span class="p">[])</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">groupByCategory</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>
 <span class="w">  </span><span class="p">)(</span><span class="nx">products</span><span class="p">);</span>
 </code></pre></div>
-
 <p><strong>Improvements</strong>:</p>
 <ul>
 <li>✅ Pure functions (no mutations)</li>

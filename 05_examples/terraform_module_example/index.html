@@ -3696,7 +3696,7 @@ all best practices from the Terraform Module Template.</p>
 multiple availability zones.</p>
 <hr />
 <h2 id="module-structure">Module Structure<a class="headerlink" href="#module-structure" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>terraform-aws-vpc/
+<div class="highlight"><pre><span></span><code>terraform-aws-vpc/
 ├── README.md
 ├── main.tf
 ├── variables.tf
@@ -3715,10 +3715,9 @@ multiple availability zones.</p>
 │   └── vpc_test.go
 └── .gitignore
 </code></pre></div>
-
 <hr />
 <h2 id="readmemd">README.md<a class="headerlink" href="#readmemd" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="gh"># AWS VPC Terraform Module</span>
+<div class="highlight"><pre><span></span><code><span class="gh"># AWS VPC Terraform Module</span>
 
 Terraform module for creating a highly available AWS VPC with public and private subnets.
 
@@ -3837,10 +3836,9 @@ go test -v -timeout 30m
 
 Apache 2.0
 </code></pre></div>
-
 <hr />
 <h2 id="maintf">main.tf<a class="headerlink" href="#maintf" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># VPC</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># VPC</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.cidr_block</span>
 <span class="w">  </span><span class="na">enable_dns_hostnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_dns_hostnames</span>
@@ -4072,10 +4070,9 @@ Apache 2.0
 <span class="w">  </span><span class="p">})</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="variablestf">variables.tf<a class="headerlink" href="#variablestf" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;name&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;name&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Name prefix for VPC resources&quot;</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 
@@ -4170,10 +4167,9 @@ Apache 2.0
 <span class="w">  </span><span class="nb">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="outputstf">outputs.tf<a class="headerlink" href="#outputstf" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_id&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_id&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;The ID of the VPC&quot;</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
 <span class="p">}</span>
@@ -4233,10 +4229,9 @@ Apache 2.0
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_route_table.private</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">id</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="versionstf">versions.tf<a class="headerlink" href="#versionstf" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.0&quot;</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
@@ -4247,10 +4242,9 @@ Apache 2.0
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="examplessimplemaintf">examples/simple/main.tf<a class="headerlink" href="#examplessimplemaintf" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
 <span class="p">}</span>
 
@@ -4270,10 +4264,9 @@ Apache 2.0
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="examplessimpleoutputstf">examples/simple/outputs.tf<a class="headerlink" href="#examplessimpleoutputstf" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_id&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_id&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;The ID of the VPC&quot;</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">module.vpc.vpc_id</span>
 <span class="p">}</span>
@@ -4288,10 +4281,9 @@ Apache 2.0
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">module.vpc.private_subnet_ids</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="examplescompletemaintf">examples/complete/main.tf<a class="headerlink" href="#examplescompletemaintf" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.aws_region</span>
 <span class="p">}</span>
 
@@ -4337,10 +4329,9 @@ Apache 2.0
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="examplescompleteoutputstf">examples/complete/outputs.tf<a class="headerlink" href="#examplescompleteoutputstf" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_id&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_id&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;The ID of the VPC&quot;</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">module.vpc.vpc_id</span>
 <span class="p">}</span>
@@ -4365,10 +4356,9 @@ Apache 2.0
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">module.vpc.nat_gateway_public_ips</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="testvpc_testgo">test/vpc_test.go<a class="headerlink" href="#testvpc_testgo" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nx">test</span>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nx">test</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="s">&quot;testing&quot;</span>
@@ -4443,7 +4433,6 @@ Apache 2.0
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="key-features-demonstrated">Key Features Demonstrated<a class="headerlink" href="#key-features-demonstrated" title="Permanent link">&para;</a></h2>
 <p>This complete Terraform module example demonstrates:</p>

@@ -4500,7 +4500,7 @@ production.</p>
 <hr />
 <h2 id="pipeline-architecture">Pipeline Architecture<a class="headerlink" href="#pipeline-architecture" title="Permanent link">&para;</a></h2>
 <h3 id="validation-stages">Validation Stages<a class="headerlink" href="#validation-stages" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>┌─────────────────┐
+<div class="highlight"><pre><span></span><code>┌─────────────────┐
 │  Developer      │
 │  Local Machine  │
 └────────┬────────┘
@@ -4557,14 +4557,13 @@ production.</p>
 │  Deployment     │
 └─────────────────┘
 </code></pre></div>
-
 <hr />
 <h2 id="stage-1-pre-commit-hooks">Stage 1: Pre-commit Hooks<a class="headerlink" href="#stage-1-pre-commit-hooks" title="Permanent link">&para;</a></h2>
 <h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h3>
 <p>Catch issues before code is committed to the repository, providing instant feedback to developers.</p>
 <h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
 <p>Create <code>.pre-commit-config.yaml</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">repos</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">repos</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># General file checks</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/pre-commit-hooks</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v4.5.0</span>
@@ -4631,9 +4630,8 @@ production.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">detect-secrets</span>
 <span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--baseline&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;.secrets.baseline&#39;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
-
 <h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Install pre-commit</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install pre-commit</span>
 pip<span class="w"> </span>install<span class="w"> </span>pre-commit
 
 <span class="c1"># Install hooks</span>
@@ -4645,7 +4643,6 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 <span class="c1"># Update hooks to latest versions</span>
 pre-commit<span class="w"> </span>autoupdate
 </code></pre></div>
-
 <h3 id="pre-commit-best-practices">Pre-commit Best Practices<a class="headerlink" href="#pre-commit-best-practices" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Run Locally First</strong>: Test pre-commit hooks before pushing</li>
@@ -4657,7 +4654,7 @@ pre-commit<span class="w"> </span>autoupdate
 <h2 id="stage-2-ci-pipeline-validation">Stage 2: CI Pipeline Validation<a class="headerlink" href="#stage-2-ci-pipeline-validation" title="Permanent link">&para;</a></h2>
 <h3 id="github-actions-example">GitHub Actions Example<a class="headerlink" href="#github-actions-example" title="Permanent link">&para;</a></h3>
 <p>Create <code>.github/workflows/validate.yml</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validation Pipeline</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validation Pipeline</span>
 
 <span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
@@ -4915,7 +4912,6 @@ pre-commit<span class="w"> </span>autoupdate
 <span class="w">          </span><span class="no">fi</span>
 <span class="w">          </span><span class="no">echo &quot;✅ All validation checks passed&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="stage-3-ai-code-review">Stage 3: AI Code Review<a class="headerlink" href="#stage-3-ai-code-review" title="Permanent link">&para;</a></h2>
 <h3 id="ai-review-bot-configuration">AI Review Bot Configuration<a class="headerlink" href="#ai-review-bot-configuration" title="Permanent link">&para;</a></h3>
@@ -4930,7 +4926,7 @@ pre-commit<span class="w"> </span>autoupdate
 </ul>
 <h3 id="review-types">Review Types<a class="headerlink" href="#review-types" title="Permanent link">&para;</a></h3>
 <h4 id="style-review">Style Review<a class="headerlink" href="#style-review" title="Permanent link">&para;</a></h4>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI Style Review</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI Style Review</span>
 <span class="w">  </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai/openai-pr-reviewer@v1</span>
 <span class="w">  </span><span class="nt">env</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">OPENAI_API_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.OPENAI_API_KEY }}</span>
@@ -4944,9 +4940,8 @@ pre-commit<span class="w"> </span>autoupdate
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documentation</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">formatting</span>
 </code></pre></div>
-
 <h4 id="security-review">Security Review<a class="headerlink" href="#security-review" title="Permanent link">&para;</a></h4>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI Security Review</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI Security Review</span>
 <span class="w">  </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai/openai-pr-reviewer@v1</span>
 <span class="w">  </span><span class="nt">env</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">OPENAI_API_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.OPENAI_API_KEY }}</span>
@@ -4960,9 +4955,8 @@ pre-commit<span class="w"> </span>autoupdate
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sql_injection</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xss_vulnerabilities</span>
 </code></pre></div>
-
 <h4 id="performance-review">Performance Review<a class="headerlink" href="#performance-review" title="Permanent link">&para;</a></h4>
-<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI Performance Review</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI Performance Review</span>
 <span class="w">  </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai/openai-pr-reviewer@v1</span>
 <span class="w">  </span><span class="nt">env</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">OPENAI_API_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.OPENAI_API_KEY }}</span>
@@ -4975,10 +4969,9 @@ pre-commit<span class="w"> </span>autoupdate
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">caching_opportunities</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resource_usage</span>
 </code></pre></div>
-
 <h3 id="custom-ai-review-prompts">Custom AI Review Prompts<a class="headerlink" href="#custom-ai-review-prompts" title="Permanent link">&para;</a></h3>
 <p>Create <code>.github/ai-review-prompts.yaml</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">style_review_prompt</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<div class="highlight"><pre><span></span><code><span class="nt">style_review_prompt</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">You are a senior DevOps engineer reviewing code against the Dukes Engineering Style Guide.</span>
 
 <span class="w">  </span><span class="no">Review the following code changes and provide feedback on:</span>
@@ -5028,12 +5021,11 @@ pre-commit<span class="w"> </span>autoupdate
 <span class="w">  </span><span class="no">- Provide optimized code example</span>
 <span class="w">  </span><span class="no">- Estimate performance improvement</span>
 </code></pre></div>
-
 <hr />
 <h2 id="stage-4-metadata-validation">Stage 4: Metadata Validation<a class="headerlink" href="#stage-4-metadata-validation" title="Permanent link">&para;</a></h2>
 <h3 id="metadata-validation-script">Metadata Validation Script<a class="headerlink" href="#metadata-validation-script" title="Permanent link">&para;</a></h3>
 <p>Create <code>scripts/validate_metadata.py</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Validate YAML frontmatter metadata in documentation files.</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -5184,16 +5176,14 @@ pre-commit<span class="w"> </span>autoupdate
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
-
 <p>Make it executable:</p>
-<div class="codehilite"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>scripts/validate_metadata.py
+<div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>scripts/validate_metadata.py
 </code></pre></div>
-
 <hr />
 <h2 id="stage-5-post-merge-validation">Stage 5: Post-Merge Validation<a class="headerlink" href="#stage-5-post-merge-validation" title="Permanent link">&para;</a></h2>
 <h3 id="deployment-validation">Deployment Validation<a class="headerlink" href="#deployment-validation" title="Permanent link">&para;</a></h3>
 <p>After code is merged to main, run additional validation:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Post-Merge Validation</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Post-Merge Validation</span>
 
 <span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">push</span><span class="p">:</span>
@@ -5264,11 +5254,10 @@ pre-commit<span class="w"> </span>autoupdate
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">python scripts/analyze_performance.py</span>
 </code></pre></div>
-
 <hr />
 <h2 id="gitlab-ci-example">GitLab CI Example<a class="headerlink" href="#gitlab-ci-example" title="Permanent link">&para;</a></h2>
 <p>Create <code>.gitlab-ci.yml</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">stages</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">stages</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security</span>
@@ -5351,11 +5340,10 @@ pre-commit<span class="w"> </span>autoupdate
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;$CI_COMMIT_BRANCH</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&quot;main&quot;&#39;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="jenkins-pipeline-example">Jenkins Pipeline Example<a class="headerlink" href="#jenkins-pipeline-example" title="Permanent link">&para;</a></h2>
 <p>Create <code>Jenkinsfile</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
 
 <span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
@@ -5476,7 +5464,6 @@ pre-commit<span class="w"> </span>autoupdate
 <span class="w">    </span><span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="performance-optimization">Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permanent link">&para;</a></h3>
@@ -5511,7 +5498,7 @@ pre-commit<span class="w"> </span>autoupdate
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
 <h4 id="pre-commit-hooks-fail">Pre-commit Hooks Fail<a class="headerlink" href="#pre-commit-hooks-fail" title="Permanent link">&para;</a></h4>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Update hooks to latest versions</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Update hooks to latest versions</span>
 pre-commit<span class="w"> </span>autoupdate
 
 <span class="c1"># Clear cache and reinstall</span>
@@ -5521,16 +5508,14 @@ pre-commit<span class="w"> </span>install-hooks
 <span class="c1"># Skip specific hook temporarily</span>
 <span class="nv">SKIP</span><span class="o">=</span>black<span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;commit message&quot;</span>
 </code></pre></div>
-
 <h4 id="ci-pipeline-timeout">CI Pipeline Timeout<a class="headerlink" href="#ci-pipeline-timeout" title="Permanent link">&para;</a></h4>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Increase timeout for specific job</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Increase timeout for specific job</span>
 <span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">test</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">timeout-minutes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">  </span><span class="c1"># Increase from default 10</span>
 </code></pre></div>
-
 <h4 id="ai-review-api-rate-limits">AI Review API Rate Limits<a class="headerlink" href="#ai-review-api-rate-limits" title="Permanent link">&para;</a></h4>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Add retry logic with exponential backoff</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Add retry logic with exponential backoff</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AI Review with Retry</span>
 <span class="w">  </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nick-invision/retry@v2</span>
 <span class="w">  </span><span class="nt">with</span><span class="p">:</span>
@@ -5539,16 +5524,14 @@ pre-commit<span class="w"> </span>install-hooks
 <span class="w">    </span><span class="nt">retry_wait_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
 <span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python scripts/ai_review.py</span>
 </code></pre></div>
-
 <h4 id="false-positives-in-security-scans">False Positives in Security Scans<a class="headerlink" href="#false-positives-in-security-scans" title="Permanent link">&para;</a></h4>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Create allowlist for known false positives</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create allowlist for known false positives</span>
 <span class="c1"># .trivyignore</span>
 <span class="l l-Scalar l-Scalar-Plain">CVE-2023-12345</span><span class="w">  </span><span class="c1"># False positive in test dependency</span>
 
 <span class="c1"># .semgrepignore</span>
 <span class="l l-Scalar l-Scalar-Plain">tests/</span><span class="w">  </span><span class="c1"># Ignore test files for certain rules</span>
 </code></pre></div>
-
 <hr />
 <h2 id="metrics-and-monitoring">Metrics and Monitoring<a class="headerlink" href="#metrics-and-monitoring" title="Permanent link">&para;</a></h2>
 <h3 id="key-metrics">Key Metrics<a class="headerlink" href="#key-metrics" title="Permanent link">&para;</a></h3>
@@ -5563,7 +5546,7 @@ pre-commit<span class="w"> </span>install-hooks
 </ul>
 <h3 id="monitoring-dashboard">Monitoring Dashboard<a class="headerlink" href="#monitoring-dashboard" title="Permanent link">&para;</a></h3>
 <p>Create a dashboard tracking:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">metrics</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">metrics</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">pipeline_success_rate</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;sum(pipeline_success)</span><span class="nv"> </span><span class="s">/</span><span class="nv"> </span><span class="s">sum(pipeline_total)&quot;</span>
 <span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&gt;</span><span class="nv"> </span><span class="s">95%&quot;</span>
@@ -5580,7 +5563,6 @@ pre-commit<span class="w"> </span>install-hooks
 <span class="w">    </span><span class="nt">query</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;avg(code_coverage_percentage)&quot;</span>
 <span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&gt;</span><span class="nv"> </span><span class="s">80%&quot;</span>
 </code></pre></div>
-
 <hr />
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <h3 id="tools-and-platforms">Tools and Platforms<a class="headerlink" href="#tools-and-platforms" title="Permanent link">&para;</a></h3>
