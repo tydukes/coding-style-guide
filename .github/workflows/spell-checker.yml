@@ -1,0 +1,159 @@
+name: Spell Checker
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run weekly on Mondays at 02:00 UTC
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  spell-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install cSpell
+        run: npm install -g cspell
+
+      - name: Run spell check
+        id: spell-check
+        continue-on-error: true
+        run: |
+          echo "Running cSpell on markdown files..."
+          cspell --config .github/cspell.json "docs/**/*.md" "*.md" > spell-check-results.txt 2>&1
+          SPELL_EXIT_CODE=$?
+
+          if [ $SPELL_EXIT_CODE -ne 0 ]; then
+            echo "Spelling errors found"
+            cat spell-check-results.txt
+            echo "spell_errors=true" >> $GITHUB_OUTPUT
+          else
+            echo "No spelling errors found"
+            echo "spell_errors=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload spell check results
+        if: steps.spell-check.outputs.spell_errors == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: spell-check-results
+          path: spell-check-results.txt
+          retention-days: 7
+
+      - name: Comment on PR with spell check results
+        if: |
+          steps.spell-check.outputs.spell_errors == 'true' &&
+          github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const results = fs.readFileSync('spell-check-results.txt', 'utf8');
+
+            const body = `## 📝 Spell Check Results
+
+            Potential spelling errors were detected in the documentation.
+
+            <details>
+            <summary>Click to view spelling errors</summary>
+
+            \`\`\`
+            ${results}
+            \`\`\`
+
+            </details>
+
+            ### Next Steps
+            1. Review the spelling errors above
+            2. Fix any genuine typos
+            3. Add technical terms or proper nouns to \`.github/cspell.json\` if they are correct
+
+            **Note:** This is an automated check. Some flagged words may be correct technical terms.
+
+            ---
+            *This comment was automatically created by the Spell Checker workflow.*`;
+
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body
+            });
+
+      - name: Create issue on failure
+        if: |
+          steps.spell-check.outputs.spell_errors == 'true' &&
+          github.event_name != 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const results = fs.readFileSync('spell-check-results.txt', 'utf8');
+            const title = '📝 Spelling errors detected in documentation';
+            const body = `## Spelling Errors Detected
+
+            The automated spell checker has detected potential spelling errors in the documentation.
+
+            **Workflow Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            **Branch:** ${{ github.ref_name }}
+            **Commit:** ${{ github.sha }}
+
+            <details>
+            <summary>Spelling Errors</summary>
+
+            \`\`\`
+            ${results}
+            \`\`\`
+
+            </details>
+
+            ### Next Steps
+            1. Review the spelling errors in the workflow logs
+            2. Fix any genuine typos in the documentation
+            3. Add technical terms, acronyms, or proper nouns to \`.github/cspell.json\` if they are correct
+            4. Common additions include:
+               - Technical terms (e.g., "kubectl", "Terragrunt", "pytest")
+               - Product names (e.g., "GitHub", "GitLab", "SonarQube")
+               - Acronyms (e.g., "CI/CD", "SAST", "DAST")
+
+            ---
+            *This issue was automatically created by the Spell Checker workflow.*`;
+
+            // Check if issue already exists
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'spelling'
+            });
+
+            if (issues.data.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['spelling', 'documentation', 'automated']
+              });
+            }
+
+      - name: Fail workflow if spelling errors found
+        if: steps.spell-check.outputs.spell_errors == 'true'
+        run: |
+          echo "::error::Spelling errors detected. Please review the results above."
+          exit 1
