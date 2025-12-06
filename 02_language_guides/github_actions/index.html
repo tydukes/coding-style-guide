@@ -1549,6 +1549,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-workflow-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3860,6 +3871,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-workflow-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4598,6 +4620,182 @@ secure workflows.</p>
 <li><strong>Primary Use</strong>: CI/CD pipelines, automation, repository management</li>
 <li><strong>Key Concepts</strong>: Workflows, jobs, steps, actions, runners</li>
 </ul>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>File Naming</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Workflows</td>
+<td><code>kebab-case.yml</code></td>
+<td><code>ci.yml</code>, <code>deploy-prod.yml</code></td>
+<td>Descriptive workflow names</td>
+</tr>
+<tr>
+<td>Location</td>
+<td><code>.github/workflows/</code></td>
+<td>Required directory</td>
+<td>Workflow files location</td>
+</tr>
+<tr>
+<td><strong>Workflow Structure</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Workflow name</td>
+<td><code>name: CI Pipeline</code></td>
+<td>Descriptive workflow name</td>
+</tr>
+<tr>
+<td><code>on</code></td>
+<td>Trigger events</td>
+<td><code>on: [push, pull_request]</code></td>
+<td>When workflow runs</td>
+</tr>
+<tr>
+<td><code>jobs</code></td>
+<td>Job definitions</td>
+<td><code>jobs:</code></td>
+<td>Container for jobs</td>
+</tr>
+<tr>
+<td><code>runs-on</code></td>
+<td>Runner OS</td>
+<td><code>runs-on: ubuntu-latest</code></td>
+<td>Execution environment</td>
+</tr>
+<tr>
+<td><code>steps</code></td>
+<td>Job steps</td>
+<td><code>steps:</code></td>
+<td>Sequential actions</td>
+</tr>
+<tr>
+<td><strong>Triggers</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Push</td>
+<td><code>on: push</code></td>
+<td>Branch pushes</td>
+<td>Code push events</td>
+</tr>
+<tr>
+<td>Pull Request</td>
+<td><code>on: pull_request</code></td>
+<td>PR events</td>
+<td>PR open/update</td>
+</tr>
+<tr>
+<td>Schedule</td>
+<td><code>on: schedule</code></td>
+<td><code>cron: '0 0 * * *'</code></td>
+<td>Scheduled runs</td>
+</tr>
+<tr>
+<td>Workflow Dispatch</td>
+<td><code>on: workflow_dispatch</code></td>
+<td>Manual triggers</td>
+<td>Manual workflow run</td>
+</tr>
+<tr>
+<td><strong>Steps</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Checkout</td>
+<td><code>actions/checkout@v4</code></td>
+<td>Clone repository</td>
+<td>Get code</td>
+</tr>
+<tr>
+<td>Run Command</td>
+<td><code>run: npm install</code></td>
+<td>Execute shell command</td>
+<td>Run scripts</td>
+</tr>
+<tr>
+<td>Use Action</td>
+<td><code>uses: actions/setup-node@v4</code></td>
+<td>Use marketplace action</td>
+<td>Reusable actions</td>
+</tr>
+<tr>
+<td>Set Environment</td>
+<td><code>env:</code></td>
+<td><code>NODE_ENV: production</code></td>
+<td>Environment variables</td>
+</tr>
+<tr>
+<td><strong>Secrets</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Access Secrets</td>
+<td><code>${{ secrets.SECRET_NAME }}</code></td>
+<td><code>${{ secrets.API_KEY }}</code></td>
+<td>Secure credentials</td>
+</tr>
+<tr>
+<td>Environment</td>
+<td><code>environment: production</code></td>
+<td>Deployment environment</td>
+<td>Environment protection</td>
+</tr>
+<tr>
+<td><strong>Best Practices</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Pin Versions</td>
+<td>Use specific versions</td>
+<td><code>actions/checkout@v4</code></td>
+<td>Not <code>@main</code> or <code>@master</code></td>
+</tr>
+<tr>
+<td>Matrix Builds</td>
+<td>Test multiple versions</td>
+<td><code>strategy: matrix:</code></td>
+<td>Test compatibility</td>
+</tr>
+<tr>
+<td>Caching</td>
+<td>Cache dependencies</td>
+<td><code>actions/cache@v4</code></td>
+<td>Speed up workflows</td>
+</tr>
+<tr>
+<td>Concurrency</td>
+<td>Control concurrent runs</td>
+<td><code>concurrency:</code></td>
+<td>Prevent conflicts</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="basic-workflow-structure">Basic Workflow Structure<a class="headerlink" href="#basic-workflow-structure" title="Permanent link">&para;</a></h2>
 <h3 id="simple-ci-workflow">Simple CI Workflow<a class="headerlink" href="#simple-ci-workflow" title="Permanent link">&para;</a></h3>

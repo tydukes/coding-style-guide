@@ -1432,6 +1432,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#keywords-and-identifiers" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3648,6 +3659,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#keywords-and-identifiers" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4166,6 +4188,146 @@ SQL-compliant databases.</p>
 <span class="k">Select</span><span class="w"> </span><span class="n">User_Id</span><span class="w"> </span><span class="k">From</span><span class="w"> </span><span class="n">Users</span><span class="w"> </span><span class="k">Where</span><span class="w"> </span><span class="n">Status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="p">;</span>
 </code></pre></div>
 
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Naming</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Keywords</td>
+<td><code>UPPERCASE</code></td>
+<td><code>SELECT</code>, <code>FROM</code>, <code>WHERE</code></td>
+<td>All SQL keywords uppercase</td>
+</tr>
+<tr>
+<td>Tables</td>
+<td><code>snake_case</code></td>
+<td><code>users</code>, <code>order_items</code></td>
+<td>Plural nouns, lowercase</td>
+</tr>
+<tr>
+<td>Columns</td>
+<td><code>snake_case</code></td>
+<td><code>user_id</code>, <code>created_at</code></td>
+<td>Descriptive, lowercase</td>
+</tr>
+<tr>
+<td>Indexes</td>
+<td><code>idx_table_columns</code></td>
+<td><code>idx_users_email</code></td>
+<td>Prefix with <code>idx_</code></td>
+</tr>
+<tr>
+<td>Primary Keys</td>
+<td><code>id</code> or <code>table_id</code></td>
+<td><code>id</code>, <code>user_id</code></td>
+<td>Singular, descriptive</td>
+</tr>
+<tr>
+<td>Foreign Keys</td>
+<td><code>table_id</code></td>
+<td><code>user_id</code>, <code>product_id</code></td>
+<td>Reference table name</td>
+</tr>
+<tr>
+<td>Constraints</td>
+<td><code>pk_</code>, <code>fk_</code>, <code>uk_</code>, <code>ck_</code></td>
+<td><code>pk_users</code>, <code>fk_orders_user_id</code></td>
+<td>Prefix by type</td>
+</tr>
+<tr>
+<td>Views</td>
+<td><code>v_descriptive_name</code></td>
+<td><code>v_active_users</code></td>
+<td>Prefix with <code>v_</code></td>
+</tr>
+<tr>
+<td><strong>Formatting</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Indentation</td>
+<td>2 or 4 spaces</td>
+<td><code>WHERE status = 'active'</code></td>
+<td>Consistent indentation</td>
+</tr>
+<tr>
+<td>Line Breaks</td>
+<td>One clause per line</td>
+<td><code>SELECT\n  column\nFROM</code></td>
+<td>Readable queries</td>
+</tr>
+<tr>
+<td>Commas</td>
+<td>Leading commas</td>
+<td><code>, column2\n, column3</code></td>
+<td>Or trailing (be consistent)</td>
+</tr>
+<tr>
+<td><strong>Query Structure</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SELECT</td>
+<td>Explicit columns</td>
+<td><code>SELECT id, name</code></td>
+<td>Avoid <code>SELECT *</code></td>
+</tr>
+<tr>
+<td>JOIN</td>
+<td>Explicit JOIN type</td>
+<td><code>INNER JOIN</code>, <code>LEFT JOIN</code></td>
+<td>Not implicit joins</td>
+</tr>
+<tr>
+<td>WHERE</td>
+<td>Use bind parameters</td>
+<td><code>WHERE id = $1</code></td>
+<td>Prevent SQL injection</td>
+</tr>
+<tr>
+<td><strong>Best Practices</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Comments</td>
+<td><code>--</code> for line</td>
+<td><code>-- Get active users</code></td>
+<td>Single-line comments</td>
+</tr>
+<tr>
+<td>Transactions</td>
+<td>Use when needed</td>
+<td><code>BEGIN; ... COMMIT;</code></td>
+<td>Atomic operations</td>
+</tr>
+<tr>
+<td>NULL Handling</td>
+<td>Explicit NULL checks</td>
+<td><code>WHERE col IS NULL</code></td>
+<td>Not <code>= NULL</code></td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="keywords-and-identifiers">Keywords and Identifiers<a class="headerlink" href="#keywords-and-identifiers" title="Permanent link">&para;</a></h2>
 <h3 id="sql-keywords">SQL Keywords<a class="headerlink" href="#sql-keywords" title="Permanent link">&para;</a></h3>

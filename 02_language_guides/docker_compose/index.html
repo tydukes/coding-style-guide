@@ -1840,6 +1840,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3738,6 +3749,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4354,6 +4376,176 @@ practices for maintainable, production-ready container orchestration.</p>
 <li><strong>Primary Use</strong>: Multi-container applications, development environments, testing</li>
 <li><strong>Version</strong>: Compose file format version 3.8+ (Docker Compose V2)</li>
 </ul>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>File Naming</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Development</td>
+<td><code>docker-compose.yml</code></td>
+<td><code>docker-compose.yml</code></td>
+<td>Default compose file</td>
+</tr>
+<tr>
+<td>Production</td>
+<td><code>docker-compose.prod.yml</code></td>
+<td><code>docker-compose.prod.yml</code></td>
+<td>Production overrides</td>
+</tr>
+<tr>
+<td>Testing</td>
+<td><code>docker-compose.test.yml</code></td>
+<td><code>docker-compose.test.yml</code></td>
+<td>Test environment</td>
+</tr>
+<tr>
+<td><strong>Top-Level Keys</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>Compose file version</td>
+<td><code>version: "3.8"</code></td>
+<td>File format version</td>
+</tr>
+<tr>
+<td><code>services</code></td>
+<td>Container definitions</td>
+<td>Service configurations</td>
+<td>Required</td>
+</tr>
+<tr>
+<td><code>networks</code></td>
+<td>Network definitions</td>
+<td>Custom networks</td>
+<td>Optional</td>
+</tr>
+<tr>
+<td><code>volumes</code></td>
+<td>Volume definitions</td>
+<td>Persistent storage</td>
+<td>Optional</td>
+</tr>
+<tr>
+<td><strong>Service Configuration</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>image</code></td>
+<td>Container image</td>
+<td><code>image: node:20-alpine</code></td>
+<td>Docker image to use</td>
+</tr>
+<tr>
+<td><code>build</code></td>
+<td>Build configuration</td>
+<td><code>build: ./app</code></td>
+<td>Build from Dockerfile</td>
+</tr>
+<tr>
+<td><code>ports</code></td>
+<td>Port mapping</td>
+<td><code>ports: ["3000:3000"]</code></td>
+<td>Host:container</td>
+</tr>
+<tr>
+<td><code>environment</code></td>
+<td>Environment vars</td>
+<td><code>NODE_ENV: production</code></td>
+<td>Container env vars</td>
+</tr>
+<tr>
+<td><code>volumes</code></td>
+<td>Mount points</td>
+<td><code>./src:/app/src</code></td>
+<td>Host:container paths</td>
+</tr>
+<tr>
+<td><code>depends_on</code></td>
+<td>Service dependencies</td>
+<td><code>depends_on: [db]</code></td>
+<td>Start order</td>
+</tr>
+<tr>
+<td><code>networks</code></td>
+<td>Network assignment</td>
+<td><code>networks: [frontend]</code></td>
+<td>Attach to networks</td>
+</tr>
+<tr>
+<td><strong>Best Practices</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Version Pinning</td>
+<td>Pin image versions</td>
+<td><code>node:20.10.0-alpine</code></td>
+<td>Avoid <code>latest</code> tag</td>
+</tr>
+<tr>
+<td><code>.env</code> Files</td>
+<td>Use env files</td>
+<td><code>.env</code> for secrets</td>
+<td>Never commit secrets</td>
+</tr>
+<tr>
+<td>Health Checks</td>
+<td>Define health checks</td>
+<td><code>healthcheck: {...}</code></td>
+<td>Service readiness</td>
+</tr>
+<tr>
+<td>Resource Limits</td>
+<td>Set limits</td>
+<td><code>mem_limit</code>, <code>cpus</code></td>
+<td>Prevent resource exhaustion</td>
+</tr>
+<tr>
+<td><strong>Common Patterns</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Web + DB</td>
+<td>Multi-tier apps</td>
+<td><code>web</code> + <code>db</code> services</td>
+<td>Standard pattern</td>
+</tr>
+<tr>
+<td>Dev Overrides</td>
+<td>Use multiple files</td>
+<td><code>-f compose.yml -f dev.yml</code></td>
+<td>Layer configurations</td>
+</tr>
+<tr>
+<td>Secrets</td>
+<td>Use secrets (v3.1+)</td>
+<td><code>secrets:</code> block</td>
+<td>Secure sensitive data</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="basic-structure">Basic Structure<a class="headerlink" href="#basic-structure" title="Permanent link">&para;</a></h2>
 <h3 id="simple-compose-file">Simple Compose File<a class="headerlink" href="#simple-compose-file" title="Permanent link">&para;</a></h3>

@@ -1025,6 +1025,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-syntax" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3681,6 +3692,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-syntax" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4240,6 +4262,176 @@ machine-friendly, combining declarative resource definitions with imperative pro
 <li><strong>Key Concepts</strong>: Blocks, attributes, expressions, functions</li>
 <li><strong>Tools</strong>: Terraform, Packer, Nomad, Consul, Vault</li>
 </ul>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Naming</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Blocks</td>
+<td><code>snake_case</code></td>
+<td><code>resource</code>, <code>variable</code>, <code>output</code></td>
+<td>Block types lowercase</td>
+</tr>
+<tr>
+<td>Identifiers</td>
+<td><code>snake_case</code></td>
+<td><code>aws_instance</code>, <code>vpc_config</code></td>
+<td>Lowercase with underscores</td>
+</tr>
+<tr>
+<td>Variables</td>
+<td><code>snake_case</code></td>
+<td><code>vpc_cidr</code>, <code>instance_type</code></td>
+<td>Descriptive names</td>
+</tr>
+<tr>
+<td>Locals</td>
+<td><code>snake_case</code></td>
+<td><code>common_tags</code>, <code>region_map</code></td>
+<td>Computed local values</td>
+</tr>
+<tr>
+<td><strong>Syntax</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Blocks</td>
+<td><code>type "label" { }</code></td>
+<td><code>resource "aws_vpc" "main" { }</code></td>
+<td>Type, optional labels, body</td>
+</tr>
+<tr>
+<td>Attributes</td>
+<td><code>key = value</code></td>
+<td><code>cidr_block = "10.0.0.0/16"</code></td>
+<td>Key-value assignment</td>
+</tr>
+<tr>
+<td>Comments</td>
+<td><code>#</code> or <code>//</code> or <code>/* */</code></td>
+<td><code># Comment</code>, <code>// Comment</code></td>
+<td>Single or multi-line</td>
+</tr>
+<tr>
+<td><strong>Data Types</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>String</td>
+<td><code>"text"</code></td>
+<td><code>"hello"</code></td>
+<td>Double-quoted strings</td>
+</tr>
+<tr>
+<td>Number</td>
+<td>Numeric</td>
+<td><code>42</code>, <code>3.14</code></td>
+<td>Integer or float</td>
+</tr>
+<tr>
+<td>Bool</td>
+<td><code>true</code> / <code>false</code></td>
+<td><code>enabled = true</code></td>
+<td>Boolean values</td>
+</tr>
+<tr>
+<td>List</td>
+<td><code>[...]</code></td>
+<td><code>["a", "b", "c"]</code></td>
+<td>Ordered collection</td>
+</tr>
+<tr>
+<td>Map</td>
+<td><code>{...}</code></td>
+<td><code>{key = "value"}</code></td>
+<td>Key-value pairs</td>
+</tr>
+<tr>
+<td><strong>Formatting</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Indentation</td>
+<td>2 spaces</td>
+<td><code>attribute = value</code></td>
+<td>Consistent 2-space indent</td>
+</tr>
+<tr>
+<td>Line Length</td>
+<td>120 characters</td>
+<td>Keep lines reasonable</td>
+<td>Readability</td>
+</tr>
+<tr>
+<td>Blank Lines</td>
+<td>Between blocks</td>
+<td><code>resource {...}\n\nresource {...}</code></td>
+<td>Separate blocks</td>
+</tr>
+<tr>
+<td><strong>Expressions</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Interpolation</td>
+<td><code>${ }</code></td>
+<td><code>"${var.name}"</code></td>
+<td>Embed expressions (legacy)</td>
+</tr>
+<tr>
+<td>References</td>
+<td>Direct reference</td>
+<td><code>var.name</code></td>
+<td>Modern syntax (preferred)</td>
+</tr>
+<tr>
+<td>Functions</td>
+<td>Built-in functions</td>
+<td><code>file("path")</code>, <code>join(",", list)</code></td>
+<td>Use HCL functions</td>
+</tr>
+<tr>
+<td><strong>Best Practices</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Terraform Fmt</td>
+<td>Use <code>terraform fmt</code></td>
+<td>Auto-format files</td>
+<td>Consistent formatting</td>
+</tr>
+<tr>
+<td>No Heredocs</td>
+<td>Avoid when possible</td>
+<td>Use <code>file()</code> function</td>
+<td>Better readability</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="basic-syntax">Basic Syntax<a class="headerlink" href="#basic-syntax" title="Permanent link">&para;</a></h2>
 <h3 id="blocks">Blocks<a class="headerlink" href="#blocks" title="Permanent link">&para;</a></h3>

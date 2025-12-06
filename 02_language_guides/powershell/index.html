@@ -1397,6 +1397,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#naming-conventions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3638,6 +3649,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#naming-conventions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4138,6 +4160,182 @@ cross-platform compatibility.</p>
 <li><strong>PowerShell 7.2+</strong>: Long-term support (LTS) versions</li>
 <li><strong>PowerShell 7.4+</strong>: Current stable version</li>
 </ul>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Naming</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Functions</td>
+<td><code>Verb-Noun</code> PascalCase</td>
+<td><code>Get-UserData</code>, <code>Set-Configuration</code></td>
+<td>Use approved verbs</td>
+</tr>
+<tr>
+<td>Variables</td>
+<td><code>$PascalCase</code></td>
+<td><code>$UserName</code>, <code>$ApiUrl</code></td>
+<td>Descriptive names</td>
+</tr>
+<tr>
+<td>Parameters</td>
+<td><code>PascalCase</code></td>
+<td><code>[string]$FilePath</code></td>
+<td>No <code>$</code> in declaration</td>
+</tr>
+<tr>
+<td>Constants</td>
+<td><code>$UPPER_CASE</code></td>
+<td><code>$MAX_RETRIES</code></td>
+<td>Uppercase for clarity</td>
+</tr>
+<tr>
+<td>Private Functions</td>
+<td><code>Verb-Noun</code></td>
+<td>Same as public</td>
+<td>No special prefix needed</td>
+</tr>
+<tr>
+<td><strong>Files</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Scripts</td>
+<td><code>Verb-Noun.ps1</code></td>
+<td><code>Deploy-Application.ps1</code></td>
+<td>PascalCase with <code>.ps1</code></td>
+</tr>
+<tr>
+<td>Modules</td>
+<td><code>ModuleName.psm1</code></td>
+<td><code>MyUtilities.psm1</code></td>
+<td>PascalCase with <code>.psm1</code></td>
+</tr>
+<tr>
+<td>Manifests</td>
+<td><code>ModuleName.psd1</code></td>
+<td><code>MyUtilities.psd1</code></td>
+<td>Module metadata</td>
+</tr>
+<tr>
+<td><strong>Formatting</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Indentation</td>
+<td>4 spaces</td>
+<td><code>if ($condition) {</code></td>
+<td>4 spaces per level</td>
+</tr>
+<tr>
+<td>Line Length</td>
+<td>115 characters</td>
+<td><code># Reasonable max</code></td>
+<td>Keep lines readable</td>
+</tr>
+<tr>
+<td>Braces</td>
+<td>Same line opening</td>
+<td><code>if ($x) {</code></td>
+<td>K&amp;R style</td>
+</tr>
+<tr>
+<td><strong>Syntax</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Comparison</td>
+<td><code>-eq</code>, <code>-ne</code>, <code>-lt</code>, <code>-gt</code></td>
+<td><code>if ($x -eq 5)</code></td>
+<td>Not <code>==</code>, <code>!=</code></td>
+</tr>
+<tr>
+<td>String Quotes</td>
+<td>Single <code>'</code> or double <code>"</code></td>
+<td><code>'static'</code>, <code>"$variable"</code></td>
+<td>Double for interpolation</td>
+</tr>
+<tr>
+<td>Comments</td>
+<td><code>#</code> for line, <code>&lt;# #&gt;</code> for block</td>
+<td><code># Comment</code></td>
+<td>Hash for comments</td>
+</tr>
+<tr>
+<td><strong>Parameters</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Type</td>
+<td>Always specify</td>
+<td><code>[string]$Path</code></td>
+<td>Strong typing</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Use attributes</td>
+<td><code>[ValidateNotNullOrEmpty()]</code></td>
+<td>Built-in validation</td>
+</tr>
+<tr>
+<td>Mandatory</td>
+<td>Mark required</td>
+<td><code>[Parameter(Mandatory=$true)]</code></td>
+<td>Required parameters</td>
+</tr>
+<tr>
+<td><strong>Best Practices</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Error Handling</td>
+<td>Use try/catch</td>
+<td><code>try { } catch { }</code></td>
+<td>Structured error handling</td>
+</tr>
+<tr>
+<td>Cmdlet Binding</td>
+<td>Use <code>[CmdletBinding()]</code></td>
+<td>Advanced functions</td>
+<td>Enable advanced features</td>
+</tr>
+<tr>
+<td>Pipeline</td>
+<td>Support pipeline</td>
+<td><code>[Parameter(ValueFromPipeline)]</code></td>
+<td>Accept pipeline input</td>
+</tr>
+<tr>
+<td>Write Output</td>
+<td>Use <code>Write-Output</code></td>
+<td>Not <code>Write-Host</code></td>
+<td>Proper output stream</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <h3 id="functions-and-cmdlets">Functions and Cmdlets<a class="headerlink" href="#functions-and-cmdlets" title="Permanent link">&para;</a></h3>

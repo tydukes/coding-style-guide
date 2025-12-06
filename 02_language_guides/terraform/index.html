@@ -966,6 +966,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#naming-conventions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3842,6 +3853,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#naming-conventions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4552,6 +4574,193 @@ Language).</p>
 <li>Monitoring and observability stack deployment</li>
 </ul>
 <hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Naming</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Resources</td>
+<td><code>snake_case</code></td>
+<td><code>aws_vpc.main</code>, <code>aws_subnet.private</code></td>
+<td>Type + descriptive identifier</td>
+</tr>
+<tr>
+<td>Variables</td>
+<td><code>snake_case</code></td>
+<td><code>vpc_cidr</code>, <code>instance_type</code></td>
+<td>Descriptive, no type prefix</td>
+</tr>
+<tr>
+<td>Outputs</td>
+<td><code>snake_case</code></td>
+<td><code>vpc_id</code>, <code>subnet_ids</code></td>
+<td>What is being output</td>
+</tr>
+<tr>
+<td>Modules</td>
+<td><code>kebab-case</code></td>
+<td><code>vpc-network</code>, <code>rds-database</code></td>
+<td>Folder names, lowercase with hyphens</td>
+</tr>
+<tr>
+<td>Locals</td>
+<td><code>snake_case</code></td>
+<td><code>common_tags</code>, <code>subnet_count</code></td>
+<td>Internal computed values</td>
+</tr>
+<tr>
+<td>Data Sources</td>
+<td><code>snake_case</code></td>
+<td><code>data.aws_ami.ubuntu</code></td>
+<td>Prefix with purpose or resource type</td>
+</tr>
+<tr>
+<td><strong>Files</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Main Config</td>
+<td><code>main.tf</code></td>
+<td><code>main.tf</code></td>
+<td>Primary resource definitions</td>
+</tr>
+<tr>
+<td>Variables</td>
+<td><code>variables.tf</code></td>
+<td><code>variables.tf</code></td>
+<td>All variable declarations</td>
+</tr>
+<tr>
+<td>Outputs</td>
+<td><code>outputs.tf</code></td>
+<td><code>outputs.tf</code></td>
+<td>All output declarations</td>
+</tr>
+<tr>
+<td>Providers</td>
+<td><code>providers.tf</code> or <code>versions.tf</code></td>
+<td><code>providers.tf</code></td>
+<td>Provider configuration</td>
+</tr>
+<tr>
+<td>Data Sources</td>
+<td><code>data.tf</code></td>
+<td><code>data.tf</code></td>
+<td>External data lookups</td>
+</tr>
+<tr>
+<td>Locals</td>
+<td><code>locals.tf</code></td>
+<td><code>locals.tf</code></td>
+<td>Local value computations</td>
+</tr>
+<tr>
+<td><strong>Formatting</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Indentation</td>
+<td>2 spaces</td>
+<td><code>resource "aws_vpc" "main" {</code></td>
+<td>Consistent 2-space indentation</td>
+</tr>
+<tr>
+<td>Line Length</td>
+<td>120 characters</td>
+<td><code># Maximum line length</code></td>
+<td>Keep lines readable</td>
+</tr>
+<tr>
+<td>Blank Lines</td>
+<td>1 between blocks</td>
+<td><code>resource "..." {}\n\nresource "..." {}</code></td>
+<td>Separate logical blocks</td>
+</tr>
+<tr>
+<td><strong>Variables</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Always required</td>
+<td><code>description = "VPC CIDR block"</code></td>
+<td>Document purpose and usage</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>Explicit types</td>
+<td><code>type = string</code>, <code>type = list(string)</code></td>
+<td>Never use <code>any</code></td>
+</tr>
+<tr>
+<td>Default</td>
+<td>Optional values only</td>
+<td><code>default = "10.0.0.0/16"</code></td>
+<td>Required vars have no default</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Use when needed</td>
+<td><code>validation { condition = ... }</code></td>
+<td>Enforce constraints</td>
+</tr>
+<tr>
+<td><strong>Modules</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Source</td>
+<td>Semantic versioning</td>
+<td><code>source = "terraform-aws-modules/vpc/aws"</code></td>
+<td>Pin versions</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>Always specify</td>
+<td><code>version = "~&gt; 5.0"</code></td>
+<td>Use version constraints</td>
+</tr>
+<tr>
+<td><strong>State</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Backend</td>
+<td>Remote with locking</td>
+<td><code>backend "s3" { ... }</code></td>
+<td>Never local for teams</td>
+</tr>
+<tr>
+<td>Workspace</td>
+<td>Environment isolation</td>
+<td><code>terraform workspace select prod</code></td>
+<td>Separate environments</td>
+</tr>
+</tbody>
+</table>
 <h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <h3 id="resource-names">Resource Names<a class="headerlink" href="#resource-names" title="Permanent link">&para;</a></h3>
 <p>Use <strong>snake_case</strong> for all Terraform resource identifiers:</p>

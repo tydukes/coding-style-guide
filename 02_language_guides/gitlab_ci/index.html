@@ -1584,6 +1584,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-pipeline-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3877,6 +3888,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-pipeline-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4632,6 +4654,194 @@ for creating maintainable, efficient pipelines.</p>
 <li><strong>Primary Use</strong>: CI/CD pipelines, automated testing, deployment automation</li>
 <li><strong>Key Concepts</strong>: Pipelines, stages, jobs, runners, artifacts, cache</li>
 </ul>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>File Naming</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Pipeline Config</td>
+<td><code>.gitlab-ci.yml</code></td>
+<td><code>.gitlab-ci.yml</code></td>
+<td>At repository root</td>
+</tr>
+<tr>
+<td><strong>Pipeline Structure</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>stages</code></td>
+<td>Pipeline stages</td>
+<td><code>stages: [build, test, deploy]</code></td>
+<td>Ordered execution phases</td>
+</tr>
+<tr>
+<td><code>image</code></td>
+<td>Docker image</td>
+<td><code>image: node:20-alpine</code></td>
+<td>Default container image</td>
+</tr>
+<tr>
+<td><code>before_script</code></td>
+<td>Pre-job commands</td>
+<td>Setup commands</td>
+<td>Runs before each job</td>
+</tr>
+<tr>
+<td><code>after_script</code></td>
+<td>Post-job commands</td>
+<td>Cleanup commands</td>
+<td>Runs after each job</td>
+</tr>
+<tr>
+<td><strong>Job Definition</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Job Name</td>
+<td><code>job_name:</code></td>
+<td><code>build_app:</code></td>
+<td>Descriptive job name</td>
+</tr>
+<tr>
+<td><code>stage</code></td>
+<td>Job stage</td>
+<td><code>stage: build</code></td>
+<td>Which stage job belongs to</td>
+</tr>
+<tr>
+<td><code>script</code></td>
+<td>Commands to run</td>
+<td><code>script: - npm install</code></td>
+<td>Required commands</td>
+</tr>
+<tr>
+<td><code>only</code> / <code>except</code></td>
+<td>Branch filters</td>
+<td><code>only: [main]</code></td>
+<td>When job runs (legacy)</td>
+</tr>
+<tr>
+<td><code>rules</code></td>
+<td>Conditional logic</td>
+<td><code>rules: - if: $CI_COMMIT_BRANCH</code></td>
+<td>Modern conditional execution</td>
+</tr>
+<tr>
+<td><strong>Artifacts</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>artifacts</code></td>
+<td>Save files</td>
+<td><code>paths: [dist/]</code></td>
+<td>Persist build outputs</td>
+</tr>
+<tr>
+<td><code>expire_in</code></td>
+<td>Artifact retention</td>
+<td><code>expire_in: 1 week</code></td>
+<td>Auto-cleanup</td>
+</tr>
+<tr>
+<td><code>reports</code></td>
+<td>Test reports</td>
+<td><code>reports: junit: report.xml</code></td>
+<td>Test result integration</td>
+</tr>
+<tr>
+<td><strong>Cache</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>cache</code></td>
+<td>Cache dependencies</td>
+<td><code>paths: [node_modules/]</code></td>
+<td>Speed up builds</td>
+</tr>
+<tr>
+<td><code>key</code></td>
+<td>Cache key</td>
+<td><code>key: $CI_COMMIT_REF_SLUG</code></td>
+<td>Cache versioning</td>
+</tr>
+<tr>
+<td><strong>Variables</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Predefined</td>
+<td><code>$CI_COMMIT_SHA</code></td>
+<td>GitLab-provided variables</td>
+<td>Built-in vars</td>
+</tr>
+<tr>
+<td>Custom</td>
+<td><code>variables:</code></td>
+<td><code>NODE_ENV: production</code></td>
+<td>User-defined vars</td>
+</tr>
+<tr>
+<td>Protected</td>
+<td>Masked variables</td>
+<td>Secure secrets</td>
+<td>Settings &gt; CI/CD</td>
+</tr>
+<tr>
+<td><strong>Best Practices</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Stages</td>
+<td>Logical grouping</td>
+<td><code>[build, test, deploy]</code></td>
+<td>Clear pipeline flow</td>
+</tr>
+<tr>
+<td>Docker Images</td>
+<td>Pin versions</td>
+<td><code>node:20.10.0-alpine</code></td>
+<td>Avoid <code>latest</code></td>
+</tr>
+<tr>
+<td>Rules</td>
+<td>Use <code>rules:</code></td>
+<td>Replace <code>only/except</code></td>
+<td>Modern syntax</td>
+</tr>
+<tr>
+<td>Cache</td>
+<td>Speed up builds</td>
+<td>Cache dependencies</td>
+<td>Reduce build time</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="basic-pipeline-structure">Basic Pipeline Structure<a class="headerlink" href="#basic-pipeline-structure" title="Permanent link">&para;</a></h2>
 <h3 id="simple-pipeline">Simple Pipeline<a class="headerlink" href="#simple-pipeline" title="Permanent link">&para;</a></h3>

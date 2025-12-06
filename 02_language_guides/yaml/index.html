@@ -1677,6 +1677,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-syntax" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3599,6 +3610,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-syntax" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4076,6 +4098,158 @@ configuration.</p>
 <li><strong>Primary Use</strong>: Configuration files, Kubernetes manifests, CI/CD pipelines, Ansible playbooks</li>
 <li><strong>Indentation</strong>: 2 spaces (never tabs)</li>
 </ul>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Syntax</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Indentation</td>
+<td>2 spaces</td>
+<td><code>key: value</code></td>
+<td>Never tabs, always 2 spaces</td>
+</tr>
+<tr>
+<td>Key-Value</td>
+<td><code>key: value</code></td>
+<td><code>name: John</code></td>
+<td>Space after colon</td>
+</tr>
+<tr>
+<td>Lists</td>
+<td><code>- item</code></td>
+<td><code>- apple</code></td>
+<td>Dash followed by space</td>
+</tr>
+<tr>
+<td>Multi-line</td>
+<td><code>\|</code> or <code>&gt;</code></td>
+<td><code>description: \| text</code></td>
+<td><code>\|</code> preserves newlines, <code>&gt;</code> folds</td>
+</tr>
+<tr>
+<td><strong>Data Types</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>String</td>
+<td>Unquoted or quoted</td>
+<td><code>name: John</code> or <code>name: "John"</code></td>
+<td>Quote when special chars</td>
+</tr>
+<tr>
+<td>Number</td>
+<td>Numeric</td>
+<td><code>count: 42</code>, <code>pi: 3.14</code></td>
+<td>Integer or float</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td><code>true</code>/<code>false</code></td>
+<td><code>enabled: true</code></td>
+<td>Lowercase</td>
+</tr>
+<tr>
+<td>Null</td>
+<td><code>null</code> or <code>~</code></td>
+<td><code>value: null</code></td>
+<td>Explicit null</td>
+</tr>
+<tr>
+<td><strong>Collections</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Mapping</td>
+<td><code>key: value</code></td>
+<td><code>person:\n  name: John</code></td>
+<td>Nested objects</td>
+</tr>
+<tr>
+<td>Sequence</td>
+<td><code>- item</code></td>
+<td><code>fruits:\n  - apple</code></td>
+<td>Arrays/lists</td>
+</tr>
+<tr>
+<td>Inline Map</td>
+<td><code>{key: value}</code></td>
+<td><code>{name: John, age: 30}</code></td>
+<td>Flow style</td>
+</tr>
+<tr>
+<td>Inline List</td>
+<td><code>[item1, item2]</code></td>
+<td><code>[1, 2, 3]</code></td>
+<td>Flow style</td>
+</tr>
+<tr>
+<td><strong>Files</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Extension</td>
+<td><code>.yaml</code> preferred</td>
+<td><code>config.yaml</code>, <code>values.yaml</code></td>
+<td>Avoid <code>.yml</code></td>
+</tr>
+<tr>
+<td>Multiple Docs</td>
+<td><code>---</code> separator</td>
+<td><code>---\ndoc1\n---\ndoc2</code></td>
+<td>Multiple YAML docs in one file</td>
+</tr>
+<tr>
+<td><strong>Best Practices</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Quotes</td>
+<td>Quote when needed</td>
+<td><code>version: "1.20"</code></td>
+<td>Avoid type coercion</td>
+</tr>
+<tr>
+<td>Comments</td>
+<td><code># comment</code></td>
+<td><code># Configuration</code></td>
+<td>Hash for comments</td>
+</tr>
+<tr>
+<td>Anchors</td>
+<td><code>&amp;anchor</code></td>
+<td><code>defaults: &amp;defaults</code></td>
+<td>Reuse with <code>*anchor</code></td>
+</tr>
+<tr>
+<td>Merge Keys</td>
+<td><code>&lt;&lt;: *anchor</code></td>
+<td><code>&lt;&lt;: *defaults</code></td>
+<td>Merge referenced keys</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="basic-syntax">Basic Syntax<a class="headerlink" href="#basic-syntax" title="Permanent link">&para;</a></h2>
 <h3 id="indentation">Indentation<a class="headerlink" href="#indentation" title="Permanent link">&para;</a></h3>

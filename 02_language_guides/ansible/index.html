@@ -1199,6 +1199,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#collections-first-approach" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3621,6 +3632,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#collections-first-approach" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4107,6 +4129,164 @@ over standalone roles.</p>
 <li>Security and compliance automation</li>
 <li>Orchestration and workflow automation</li>
 </ul>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Naming</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Playbooks</td>
+<td><code>kebab-case.yml</code></td>
+<td><code>deploy-app.yml</code>, <code>configure-server.yml</code></td>
+<td>Descriptive, lowercase</td>
+</tr>
+<tr>
+<td>Roles</td>
+<td><code>snake_case</code></td>
+<td><code>web_server</code>, <code>database_setup</code></td>
+<td>Lowercase with underscores</td>
+</tr>
+<tr>
+<td>Variables</td>
+<td><code>snake_case</code></td>
+<td><code>app_port</code>, <code>db_host</code></td>
+<td>Descriptive variable names</td>
+</tr>
+<tr>
+<td>Collections</td>
+<td><code>namespace.collection</code></td>
+<td><code>community.general</code>, <code>ansible.builtin</code></td>
+<td>Namespace required</td>
+</tr>
+<tr>
+<td><strong>Structure</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Collections</td>
+<td>Use collections</td>
+<td><code>community.general.docker_container</code></td>
+<td>Modern approach</td>
+</tr>
+<tr>
+<td>Playbook</td>
+<td>YAML list of plays</td>
+<td><code>- name: Configure servers</code></td>
+<td>List of plays</td>
+</tr>
+<tr>
+<td>Tasks</td>
+<td>YAML task list</td>
+<td><code>- name: Install package</code></td>
+<td>Descriptive task names</td>
+</tr>
+<tr>
+<td><strong>Files</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Playbook</td>
+<td><code>playbook-name.yml</code></td>
+<td><code>site.yml</code>, <code>deploy.yml</code></td>
+<td>Main playbooks</td>
+</tr>
+<tr>
+<td>Inventory</td>
+<td><code>inventory.yml</code> or <code>hosts</code></td>
+<td><code>inventory/production.yml</code></td>
+<td>Host definitions</td>
+</tr>
+<tr>
+<td>Variables</td>
+<td><code>group_vars/</code>, <code>host_vars/</code></td>
+<td><code>group_vars/webservers.yml</code></td>
+<td>Variable organization</td>
+</tr>
+<tr>
+<td>Roles Dir</td>
+<td><code>roles/role_name/</code></td>
+<td><code>roles/web_server/tasks/main.yml</code></td>
+<td>Standard role structure</td>
+</tr>
+<tr>
+<td><strong>Best Practices</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Idempotency</td>
+<td>Always idempotent</td>
+<td>Use <code>state: present</code></td>
+<td>Tasks can run multiple times</td>
+</tr>
+<tr>
+<td>Task Names</td>
+<td>Always name tasks</td>
+<td><code>name: Install Nginx</code></td>
+<td>Clear, descriptive names</td>
+</tr>
+<tr>
+<td>Collections</td>
+<td>Fully qualified</td>
+<td><code>ansible.builtin.copy</code></td>
+<td>Use FQCN (Fully Qualified Collection Name)</td>
+</tr>
+<tr>
+<td>Variables</td>
+<td>Prefix role vars</td>
+<td><code>rolename_variable</code></td>
+<td>Avoid collisions</td>
+</tr>
+<tr>
+<td><strong>Syntax</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Module Args</td>
+<td>YAML dict</td>
+<td><code>state: present\n  name: nginx</code></td>
+<td>Key-value pairs</td>
+</tr>
+<tr>
+<td>When</td>
+<td>Conditional</td>
+<td><code>when: ansible_os_family == "Debian"</code></td>
+<td>Jinja2 conditions</td>
+</tr>
+<tr>
+<td>Loop</td>
+<td><code>loop</code> keyword</td>
+<td><code>loop: "{{ users }}"</code></td>
+<td>Iterate over items</td>
+</tr>
+<tr>
+<td>Handlers</td>
+<td>Notify handlers</td>
+<td><code>notify: Restart nginx</code></td>
+<td>Triggered on changes</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="collections-first-approach">Collections-First Approach<a class="headerlink" href="#collections-first-approach" title="Permanent link">&para;</a></h2>
 <p><strong>Use Ansible Collections</strong> instead of standalone roles:</p>

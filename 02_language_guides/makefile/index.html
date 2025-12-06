@@ -1933,6 +1933,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3832,6 +3843,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4541,6 +4563,176 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <li><strong>Primary Use</strong>: Build automation, task execution, dependency management</li>
 <li><strong>Key Concepts</strong>: Targets, prerequisites, recipes, variables</li>
 </ul>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Syntax</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Indentation</td>
+<td><strong>TAB character</strong></td>
+<td><code>\tcommand</code></td>
+<td><strong>Must</strong> use tabs for recipes, not spaces</td>
+</tr>
+<tr>
+<td>Target Names</td>
+<td><code>lowercase</code> or <code>kebab-case</code></td>
+<td><code>build</code>, <code>clean</code>, <code>test-unit</code></td>
+<td>Descriptive target names</td>
+</tr>
+<tr>
+<td>Variables</td>
+<td><code>UPPER_CASE</code></td>
+<td><code>CC</code>, <code>CFLAGS</code>, <code>BUILD_DIR</code></td>
+<td>Uppercase for variables</td>
+</tr>
+<tr>
+<td>Phony Targets</td>
+<td><code>.PHONY</code> declaration</td>
+<td><code>.PHONY: clean test</code></td>
+<td>Non-file targets</td>
+</tr>
+<tr>
+<td><strong>Structure</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Target</td>
+<td><code>target: prerequisites</code></td>
+<td><code>build: compile link</code></td>
+<td>Target depends on prerequisites</td>
+</tr>
+<tr>
+<td>Recipe</td>
+<td>Tab-indented commands</td>
+<td><code>\t@echo "Building..."</code></td>
+<td>Commands to execute</td>
+</tr>
+<tr>
+<td>Variables</td>
+<td><code>VAR = value</code></td>
+<td><code>CC = gcc</code></td>
+<td>Simple assignment</td>
+</tr>
+<tr>
+<td><strong>Variables</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Simple</td>
+<td><code>=</code></td>
+<td><code>CC = gcc</code></td>
+<td>Recursive expansion</td>
+</tr>
+<tr>
+<td>Immediate</td>
+<td><code>:=</code></td>
+<td><code>BUILD_DIR := ./build</code></td>
+<td>Immediate expansion</td>
+</tr>
+<tr>
+<td>Conditional</td>
+<td><code>?=</code></td>
+<td><code>CC ?= gcc</code></td>
+<td>Set if not already set</td>
+</tr>
+<tr>
+<td>Append</td>
+<td><code>+=</code></td>
+<td><code>CFLAGS += -Wall</code></td>
+<td>Append to variable</td>
+</tr>
+<tr>
+<td><strong>Special Targets</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>.PHONY</code></td>
+<td>Non-file targets</td>
+<td><code>.PHONY: clean all test</code></td>
+<td>Prevent file conflicts</td>
+</tr>
+<tr>
+<td><code>.DEFAULT_GOAL</code></td>
+<td>Default target</td>
+<td><code>.DEFAULT_GOAL := build</code></td>
+<td>Run when no target specified</td>
+</tr>
+<tr>
+<td><strong>Automatic Variables</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>$@</code></td>
+<td>Target name</td>
+<td><code>$@</code></td>
+<td>Current target</td>
+</tr>
+<tr>
+<td><code>$&lt;</code></td>
+<td>First prerequisite</td>
+<td><code>$&lt;</code></td>
+<td>First dependency</td>
+</tr>
+<tr>
+<td><code>$^</code></td>
+<td>All prerequisites</td>
+<td><code>$^</code></td>
+<td>All dependencies</td>
+</tr>
+<tr>
+<td><strong>Best Practices</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Silent Commands</td>
+<td><code>@</code> prefix</td>
+<td><code>@echo "Building..."</code></td>
+<td>Suppress command echo</td>
+</tr>
+<tr>
+<td>Error Handling</td>
+<td><code>-</code> prefix</td>
+<td><code>-rm -rf build/</code></td>
+<td>Ignore errors</td>
+</tr>
+<tr>
+<td>Phony Targets</td>
+<td>Always declare</td>
+<td><code>.PHONY: clean test</code></td>
+<td>Avoid file name conflicts</td>
+</tr>
+<tr>
+<td>Help Target</td>
+<td>Include help</td>
+<td><code>help:</code></td>
+<td>Document available targets</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="basic-structure">Basic Structure<a class="headerlink" href="#basic-structure" title="Permanent link">&para;</a></h2>
 <h3 id="simple-makefile">Simple Makefile<a class="headerlink" href="#simple-makefile" title="Permanent link">&para;</a></h3>

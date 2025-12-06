@@ -1525,6 +1525,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#declarative-pipeline-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3667,6 +3678,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#declarative-pipeline-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4194,6 +4216,176 @@ define Jenkins pipelines. This guide focuses on Jenkins Pipeline (as code) using
 <li><strong>Declarative Pipeline</strong>: Simplified, structured syntax (preferred for most use cases)</li>
 <li><strong>Scripted Pipeline</strong>: Full Groovy power for complex workflows</li>
 </ul>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>File Naming</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Pipeline File</td>
+<td><code>Jenkinsfile</code></td>
+<td><code>Jenkinsfile</code></td>
+<td>At repository root</td>
+</tr>
+<tr>
+<td>Shared Library</td>
+<td><code>vars/functionName.groovy</code></td>
+<td><code>vars/buildDocker.groovy</code></td>
+<td>Shared pipeline functions</td>
+</tr>
+<tr>
+<td><strong>Declarative Pipeline</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>pipeline</code></td>
+<td>Top-level block</td>
+<td><code>pipeline { }</code></td>
+<td>Required wrapper</td>
+</tr>
+<tr>
+<td><code>agent</code></td>
+<td>Execution environment</td>
+<td><code>agent any</code> or <code>agent { docker }</code></td>
+<td>Where to run</td>
+</tr>
+<tr>
+<td><code>stages</code></td>
+<td>Pipeline phases</td>
+<td><code>stages { }</code></td>
+<td>Container for stages</td>
+</tr>
+<tr>
+<td><code>stage</code></td>
+<td>Individual phase</td>
+<td><code>stage('Build') { }</code></td>
+<td>Named pipeline stage</td>
+</tr>
+<tr>
+<td><code>steps</code></td>
+<td>Actual commands</td>
+<td><code>steps { sh 'make' }</code></td>
+<td>Commands to execute</td>
+</tr>
+<tr>
+<td><code>post</code></td>
+<td>Post-build actions</td>
+<td><code>post { always { } }</code></td>
+<td>Cleanup, notifications</td>
+</tr>
+<tr>
+<td><strong>Scripted Pipeline</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>node</code></td>
+<td>Execution block</td>
+<td><code>node { }</code></td>
+<td>Where pipeline runs</td>
+</tr>
+<tr>
+<td><code>stage</code></td>
+<td>Pipeline stage</td>
+<td><code>stage('Build') { }</code></td>
+<td>Same as declarative</td>
+</tr>
+<tr>
+<td><strong>Variables</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Environment</td>
+<td><code>environment { }</code></td>
+<td><code>environment { FOO = 'bar' }</code></td>
+<td>Environment variables</td>
+</tr>
+<tr>
+<td>Parameters</td>
+<td><code>parameters { }</code></td>
+<td><code>string(name: 'VERSION')</code></td>
+<td>Build parameters</td>
+</tr>
+<tr>
+<td><strong>Common Steps</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Shell</td>
+<td><code>sh</code></td>
+<td><code>sh 'make build'</code></td>
+<td>Execute shell commands</td>
+</tr>
+<tr>
+<td>Git</td>
+<td><code>git</code></td>
+<td><code>git 'https://repo.git'</code></td>
+<td>Checkout code</td>
+</tr>
+<tr>
+<td>Docker</td>
+<td><code>docker.build</code></td>
+<td><code>docker.build('image:tag')</code></td>
+<td>Build Docker images</td>
+</tr>
+<tr>
+<td>Archive</td>
+<td><code>archiveArtifacts</code></td>
+<td><code>archiveArtifacts '*.jar'</code></td>
+<td>Save build artifacts</td>
+</tr>
+<tr>
+<td><strong>Best Practices</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Declarative</td>
+<td>Prefer declarative</td>
+<td>Simpler, more maintainable</td>
+<td>Use scripted only when needed</td>
+</tr>
+<tr>
+<td>Shared Libraries</td>
+<td>DRY code</td>
+<td>Reusable pipeline functions</td>
+<td>Avoid duplication</td>
+</tr>
+<tr>
+<td>Credentials</td>
+<td>Use credentials()</td>
+<td>Never hardcode secrets</td>
+<td>Secure credential management</td>
+</tr>
+<tr>
+<td>Parallel</td>
+<td>Use parallel {}</td>
+<td>Speed up builds</td>
+<td>Run stages concurrently</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="declarative-pipeline-structure">Declarative Pipeline Structure<a class="headerlink" href="#declarative-pipeline-structure" title="Permanent link">&para;</a></h2>
 <h3 id="basic-declarative-pipeline">Basic Declarative Pipeline<a class="headerlink" href="#basic-declarative-pipeline" title="Permanent link">&para;</a></h3>

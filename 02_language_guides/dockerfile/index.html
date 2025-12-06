@@ -1805,6 +1805,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3643,6 +3654,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4162,6 +4184,158 @@ best practices for creating secure, efficient, and maintainable container images
 <li><strong>Primary Use</strong>: Building Docker container images</li>
 <li><strong>Key Principles</strong>: Multi-stage builds, layer caching, security, minimal image size</li>
 </ul>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Instructions</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Base Image</td>
+<td><code>FROM</code></td>
+<td><code>FROM node:20-alpine</code></td>
+<td>Use specific tags, prefer slim/alpine</td>
+</tr>
+<tr>
+<td>Working Dir</td>
+<td><code>WORKDIR</code></td>
+<td><code>WORKDIR /app</code></td>
+<td>Sets working directory</td>
+</tr>
+<tr>
+<td>Copy Files</td>
+<td><code>COPY</code></td>
+<td><code>COPY package.json ./</code></td>
+<td>Copy from build context</td>
+</tr>
+<tr>
+<td>Run Command</td>
+<td><code>RUN</code></td>
+<td><code>RUN npm install</code></td>
+<td>Execute at build time</td>
+</tr>
+<tr>
+<td>Environment</td>
+<td><code>ENV</code></td>
+<td><code>ENV NODE_ENV=production</code></td>
+<td>Set environment variables</td>
+</tr>
+<tr>
+<td>Expose Port</td>
+<td><code>EXPOSE</code></td>
+<td><code>EXPOSE 3000</code></td>
+<td>Document exposed ports</td>
+</tr>
+<tr>
+<td>User</td>
+<td><code>USER</code></td>
+<td><code>USER node</code></td>
+<td>Run as non-root user</td>
+</tr>
+<tr>
+<td>Entrypoint</td>
+<td><code>ENTRYPOINT</code></td>
+<td><code>ENTRYPOINT ["node", "app.js"]</code></td>
+<td>Main executable</td>
+</tr>
+<tr>
+<td>Command</td>
+<td><code>CMD</code></td>
+<td><code>CMD ["serve"]</code></td>
+<td>Default arguments</td>
+</tr>
+<tr>
+<td><strong>Best Practices</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Multi-stage</td>
+<td>Use stages</td>
+<td><code>FROM ... AS builder</code></td>
+<td>Separate build/runtime</td>
+</tr>
+<tr>
+<td>Layer Order</td>
+<td>Least to most changing</td>
+<td>Dependencies before source</td>
+<td>Optimize caching</td>
+</tr>
+<tr>
+<td><code>.dockerignore</code></td>
+<td>Always use</td>
+<td><code>.git</code>, <code>node_modules</code></td>
+<td>Exclude unnecessary files</td>
+</tr>
+<tr>
+<td>Combine RUN</td>
+<td>Chain commands</td>
+<td><code>RUN apt-get update &amp;&amp; \</code></td>
+<td>Reduce layers</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Non-root user</td>
+<td><code>USER node</code></td>
+<td>Never run as root</td>
+</tr>
+<tr>
+<td><strong>File Naming</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Standard</td>
+<td><code>Dockerfile</code></td>
+<td><code>Dockerfile</code></td>
+<td>No extension</td>
+</tr>
+<tr>
+<td>Multi-stage</td>
+<td><code>Dockerfile.{env}</code></td>
+<td><code>Dockerfile.prod</code></td>
+<td>Environment-specific</td>
+</tr>
+<tr>
+<td><strong>Common Patterns</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>Copy package.json first</td>
+<td><code>COPY package*.json ./</code></td>
+<td>Cache dependencies</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>Copy requirements first</td>
+<td><code>COPY requirements.txt ./</code></td>
+<td>Cache dependencies</td>
+</tr>
+<tr>
+<td>Go</td>
+<td>Multi-stage build</td>
+<td><code>FROM golang AS builder</code></td>
+<td>Small final image</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="basic-structure">Basic Structure<a class="headerlink" href="#basic-structure" title="Permanent link">&para;</a></h2>
 <h3 id="simple-dockerfile">Simple Dockerfile<a class="headerlink" href="#simple-dockerfile" title="Permanent link">&para;</a></h3>

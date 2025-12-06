@@ -990,6 +990,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#directory-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3572,6 +3583,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#directory-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4022,6 +4044,152 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <li><strong>Primary Use</strong>: Managing Terraform across multiple environments, regions, and accounts</li>
 <li><strong>Version</strong>: Terragrunt 0.45.x+ (compatible with Terraform 1.5.x+)</li>
 </ul>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Files</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Root Config</td>
+<td><code>terragrunt.hcl</code></td>
+<td><code>terragrunt.hcl</code></td>
+<td>Root configuration file</td>
+</tr>
+<tr>
+<td>Environment Config</td>
+<td><code>{env}/terragrunt.hcl</code></td>
+<td><code>prod/terragrunt.hcl</code></td>
+<td>Per-environment config</td>
+</tr>
+<tr>
+<td>Module Config</td>
+<td><code>{module}/terragrunt.hcl</code></td>
+<td><code>vpc/terragrunt.hcl</code></td>
+<td>Per-module config</td>
+</tr>
+<tr>
+<td><strong>Structure</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Directory Layout</td>
+<td>Environment-based</td>
+<td><code>{env}/{region}/{module}</code></td>
+<td>Hierarchical structure</td>
+</tr>
+<tr>
+<td>Root HCL</td>
+<td>Shared config</td>
+<td>DRY backend, provider config</td>
+<td>Reusable configuration</td>
+</tr>
+<tr>
+<td><strong>Key Blocks</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>terraform</code></td>
+<td>Terraform settings</td>
+<td><code>source = "../modules/vpc"</code></td>
+<td>Module source</td>
+</tr>
+<tr>
+<td><code>include</code></td>
+<td>Include parent config</td>
+<td><code>include { path = find_in_parent_folders() }</code></td>
+<td>Inherit settings</td>
+</tr>
+<tr>
+<td><code>inputs</code></td>
+<td>Module variables</td>
+<td><code>inputs = { vpc_cidr = "10.0.0.0/16" }</code></td>
+<td>Pass variables</td>
+</tr>
+<tr>
+<td><code>remote_state</code></td>
+<td>State configuration</td>
+<td>Backend settings</td>
+<td>S3, GCS, etc.</td>
+</tr>
+<tr>
+<td><code>dependency</code></td>
+<td>Module dependencies</td>
+<td><code>dependency "vpc" { }</code></td>
+<td>Inter-module deps</td>
+</tr>
+<tr>
+<td><strong>Functions</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>find_in_parent_folders()</code></td>
+<td>Find parent config</td>
+<td>Auto-locate root HCL</td>
+<td>Traverse up directories</td>
+</tr>
+<tr>
+<td><code>get_terragrunt_dir()</code></td>
+<td>Current directory</td>
+<td>Working directory path</td>
+<td>Current module path</td>
+</tr>
+<tr>
+<td><code>path_relative_to_include()</code></td>
+<td>Relative path</td>
+<td>Generate unique names</td>
+<td>Path-based naming</td>
+</tr>
+<tr>
+<td><strong>Best Practices</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>DRY Principle</td>
+<td>Use root HCL</td>
+<td>Shared backend, provider</td>
+<td>Avoid repetition</td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td>Explicit deps</td>
+<td>Use <code>dependency</code> blocks</td>
+<td>Clear relationships</td>
+</tr>
+<tr>
+<td>State Isolation</td>
+<td>Per-module state</td>
+<td>Separate state files</td>
+<td>Blast radius reduction</td>
+</tr>
+<tr>
+<td>Run All</td>
+<td>Use with caution</td>
+<td><code>terragrunt run-all</code></td>
+<td>Test in non-prod first</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h2>
 <h3 id="standard-layout">Standard Layout<a class="headerlink" href="#standard-layout" title="Permanent link">&para;</a></h3>

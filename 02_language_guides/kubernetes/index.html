@@ -1106,6 +1106,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#naming-conventions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3620,6 +3631,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#naming-conventions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4105,6 +4127,170 @@ install, and upgrade applications.</p>
 <li>Service discovery and load balancing</li>
 <li>Configuration and secret management</li>
 </ul>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Convention</strong></th>
+<th><strong>Example</strong></th>
+<th><strong>Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Naming</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Resources</td>
+<td><code>kebab-case</code></td>
+<td><code>my-app-deployment</code>, <code>web-service</code></td>
+<td>Lowercase with hyphens</td>
+</tr>
+<tr>
+<td>Namespaces</td>
+<td><code>kebab-case</code></td>
+<td><code>production</code>, <code>staging</code></td>
+<td>Environment or team based</td>
+</tr>
+<tr>
+<td>Labels</td>
+<td><code>kebab-case</code> keys</td>
+<td><code>app: my-app</code>, <code>env: prod</code></td>
+<td>Consistent label keys</td>
+</tr>
+<tr>
+<td>Helm Charts</td>
+<td><code>kebab-case</code></td>
+<td><code>my-application</code></td>
+<td>Chart directory name</td>
+</tr>
+<tr>
+<td><strong>Resource Types</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Application workloads</td>
+<td><code>kind: Deployment</code></td>
+<td>Stateless apps</td>
+</tr>
+<tr>
+<td>StatefulSet</td>
+<td>Stateful workloads</td>
+<td><code>kind: StatefulSet</code></td>
+<td>Databases, persistent apps</td>
+</tr>
+<tr>
+<td>Service</td>
+<td>Network services</td>
+<td><code>kind: Service</code></td>
+<td>Load balancing, discovery</td>
+</tr>
+<tr>
+<td>ConfigMap</td>
+<td>Configuration</td>
+<td><code>kind: ConfigMap</code></td>
+<td>Non-sensitive config</td>
+</tr>
+<tr>
+<td>Secret</td>
+<td>Sensitive data</td>
+<td><code>kind: Secret</code></td>
+<td>Passwords, tokens</td>
+</tr>
+<tr>
+<td>Ingress</td>
+<td>HTTP routing</td>
+<td><code>kind: Ingress</code></td>
+<td>External access</td>
+</tr>
+<tr>
+<td><strong>File Naming</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Manifests</td>
+<td><code>resource-type.yaml</code></td>
+<td><code>deployment.yaml</code>, <code>service.yaml</code></td>
+<td>One resource per file</td>
+</tr>
+<tr>
+<td>Combined</td>
+<td><code>app-name.yaml</code></td>
+<td><code>my-app.yaml</code></td>
+<td>All resources together</td>
+</tr>
+<tr>
+<td>Helm Values</td>
+<td><code>values.yaml</code></td>
+<td><code>values.yaml</code>, <code>values-prod.yaml</code></td>
+<td>Chart values</td>
+</tr>
+<tr>
+<td><strong>Labels</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>app</td>
+<td>Application name</td>
+<td><code>app: nginx</code></td>
+<td>Required label</td>
+</tr>
+<tr>
+<td>version</td>
+<td>App version</td>
+<td><code>version: "1.0.0"</code></td>
+<td>Deployment tracking</td>
+</tr>
+<tr>
+<td>environment</td>
+<td>Environment</td>
+<td><code>environment: production</code></td>
+<td>Env identification</td>
+</tr>
+<tr>
+<td><strong>Best Practices</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Resource Limits</td>
+<td>Always set</td>
+<td><code>limits:</code> and <code>requests:</code></td>
+<td>CPU and memory</td>
+</tr>
+<tr>
+<td>Readiness Probes</td>
+<td>Define probes</td>
+<td><code>readinessProbe:</code></td>
+<td>Health checking</td>
+</tr>
+<tr>
+<td>Namespaces</td>
+<td>Use namespaces</td>
+<td>Isolate workloads</td>
+<td>Multi-tenancy</td>
+</tr>
+<tr>
+<td>Helm Charts</td>
+<td>Package with Helm</td>
+<td>Reusable templates</td>
+<td>DRY principle</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <h3 id="resource-names">Resource Names<a class="headerlink" href="#resource-names" title="Permanent link">&para;</a></h3>
