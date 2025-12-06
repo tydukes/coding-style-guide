@@ -26,6 +26,44 @@ code modules, functions, and infrastructure components. This metadata serves thr
 - **Extensible**: New tags can be added as needed
 - **Human-Readable**: Clear and understandable without tooling
 
+### Metadata Flow
+
+This diagram shows how metadata flows from source code through validation, documentation, and AI integration:
+
+```mermaid
+flowchart LR
+    Source[Source Code<br/>with Metadata] --> Parser[Metadata Parser]
+
+    Parser --> Validate{Validation}
+
+    Validate -->|Invalid| Error[❌ Validation Error<br/>Missing/Invalid Tags]
+    Validate -->|Valid| Extract[Extract Metadata]
+
+    Extract --> Storage[(Metadata Store<br/>JSON/Database)]
+
+    Storage --> DocGen[Documentation<br/>Generator]
+    Storage --> AI[AI Assistant<br/>Context]
+    Storage --> Tools[Dev Tools<br/>IDEs, Linters]
+
+    DocGen --> APIDocs[API Docs]
+    DocGen --> ArchDocs[Architecture Docs]
+    DocGen --> DepGraph[Dependency Graph]
+
+    AI --> CodeReview[AI Code Review]
+    AI --> Autocomplete[Smart Autocomplete]
+    AI --> Search[Semantic Search]
+
+    Tools --> VSCode[VS Code Extension]
+    Tools --> PreCommit[Pre-commit Hooks]
+    Tools --> CI[CI/CD Pipeline]
+
+    style Source fill:#e1f5ff
+    style Storage fill:#fff4e6
+    style DocGen fill:#e8f5e9
+    style AI fill:#f3e5f5
+    style Tools fill:#fce4ec
+```
+
 ## Core Metadata Tags
 
 All code modules should include a metadata block at the file header with these core tags:

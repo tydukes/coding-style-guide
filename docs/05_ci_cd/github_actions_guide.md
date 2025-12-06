@@ -31,6 +31,68 @@ and performance optimization.
   for YAML syntax and basic concepts
 - **Validation Pipeline**: See [AI Validation Pipeline](./ai_validation_pipeline.md) for quality checks
 
+### CI/CD Pipeline Workflow
+
+This diagram illustrates a complete CI/CD pipeline flow from code commit to production deployment:
+
+```mermaid
+flowchart TD
+    Start([Code Push/PR]) --> Validate[Validation Stage]
+
+    Validate --> Lint[Lint Code]
+    Validate --> Format[Check Formatting]
+    Validate --> Types[Type Checking]
+    Validate --> Security[Security Scan]
+
+    Lint --> TestStage{All Checks Pass?}
+    Format --> TestStage
+    Types --> TestStage
+    Security --> TestStage
+
+    TestStage -->|No| FailFast[❌ Fail Fast<br/>Notify Team]
+    TestStage -->|Yes| UnitTests[Unit Tests]
+
+    UnitTests --> IntTests[Integration Tests]
+    IntTests --> E2E[E2E Tests]
+
+    E2E --> AllTests{All Tests Pass?}
+
+    AllTests -->|No| FailTests[❌ Test Failure<br/>Generate Report]
+    AllTests -->|Yes| Build[Build Stage]
+
+    Build --> BuildApp[Build Application]
+    BuildApp --> BuildImage[Build Container Image]
+    BuildImage --> ScanImage[Scan Image]
+
+    ScanImage --> BuildSuccess{Build OK?}
+
+    BuildSuccess -->|No| FailBuild[❌ Build Failed]
+    BuildSuccess -->|Yes| DeployStaging[Deploy to Staging]
+
+    DeployStaging --> SmokeTests[Smoke Tests]
+    SmokeTests --> StagingOK{Staging OK?}
+
+    StagingOK -->|No| Rollback[🔄 Rollback Staging]
+    StagingOK -->|Yes| Approval{Manual Approval?}
+
+    Approval -->|Rejected| Stop[⏸️ Deployment Stopped]
+    Approval -->|Approved| DeployProd[Deploy to Production]
+
+    DeployProd --> BlueGreen[Blue-Green Switch]
+    BlueGreen --> HealthCheck[Health Checks]
+
+    HealthCheck --> ProdOK{Production OK?}
+
+    ProdOK -->|No| RollbackProd[🔄 Rollback Production]
+    ProdOK -->|Yes| Success[✅ Deployment Complete<br/>Notify Team]
+
+    RollbackProd --> Notify[📢 Alert On-Call]
+    Rollback --> Notify
+    FailBuild --> Notify
+    FailTests --> Notify
+    FailFast --> Notify
+```
+
 ---
 
 ## Complete CI/CD Pipeline Example
