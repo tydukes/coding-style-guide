@@ -17,6 +17,48 @@ maintainability, and collaborative development.
 
 This repository follows **GitFlow**, a strict branching model that separates development work from stable releases.
 
+```mermaid
+gitGraph
+    commit id: "Initial commit"
+    branch develop
+    checkout develop
+    commit id: "Setup project"
+
+    branch feature/new-guide
+    checkout feature/new-guide
+    commit id: "Add Python guide"
+    commit id: "Add examples"
+    checkout develop
+    merge feature/new-guide tag: "Feature complete"
+
+    branch feature/add-diagrams
+    checkout feature/add-diagrams
+    commit id: "Add Mermaid diagrams"
+    checkout develop
+    merge feature/add-diagrams
+
+    branch release/v1.1.0
+    checkout release/v1.1.0
+    commit id: "Bump version to 1.1.0"
+    commit id: "Update changelog"
+    checkout main
+    merge release/v1.1.0 tag: "v1.1.0"
+    checkout develop
+    merge release/v1.1.0
+
+    checkout main
+    branch hotfix/v1.1.1
+    checkout hotfix/v1.1.1
+    commit id: "Fix critical bug"
+    checkout main
+    merge hotfix/v1.1.1 tag: "v1.1.1"
+    checkout develop
+    merge hotfix/v1.1.1
+
+    checkout develop
+    commit id: "Continue development"
+```
+
 ### Branch Types
 
 #### Main Branch (`main`)
