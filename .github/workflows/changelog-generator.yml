@@ -1,0 +1,269 @@
+name: Changelog Generator
+
+on:
+  schedule:
+    # Run weekly on Sundays at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm install -g conventional-changelog-cli
+
+      - name: Get last release date
+        id: get-last-release
+        run: |
+          # Get the date of the last release from changelog
+          LAST_DATE=$(grep -m 1 -oP '\[\d+\.\d+\.\d+\] - \K\d{4}-\d{2}-\d{2}' docs/changelog.md || echo "2025-10-27")
+          echo "last_date=$LAST_DATE" >> $GITHUB_OUTPUT
+          echo "Last release date: $LAST_DATE"
+
+      - name: Get merged PRs since last release
+        id: get-prs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const lastDate = '${{ steps.get-last-release.outputs.last_date }}';
+            const since = new Date(lastDate);
+
+            // Get all merged PRs since last release
+            const pulls = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'closed',
+              sort: 'updated',
+              direction: 'desc',
+              per_page: 100
+            });
+
+            const mergedPRs = pulls.data.filter(pr => {
+              if (!pr.merged_at) return false;
+              const mergedDate = new Date(pr.merged_at);
+              return mergedDate > since;
+            });
+
+            // Categorize PRs by labels and title
+            const categories = {
+              added: [],
+              changed: [],
+              fixed: [],
+              removed: [],
+              deprecated: [],
+              security: []
+            };
+
+            for (const pr of mergedPRs) {
+              const title = pr.title;
+              const labels = pr.labels.map(l => l.name.toLowerCase());
+              const prEntry = `- ${title} ([#${pr.number}](${pr.html_url}))`;
+
+              // Categorize based on labels first, then title prefix
+              if (labels.includes('security') || title.toLowerCase().includes('security')) {
+                categories.security.push(prEntry);
+              } else if (labels.includes('breaking') || labels.includes('breaking-change')) {
+                categories.changed.push(prEntry);
+              } else if (labels.includes('bug') || labels.includes('fix') || title.startsWith('fix:')) {
+                categories.fixed.push(prEntry);
+              } else if (labels.includes('enhancement') || title.startsWith('feat:')) {
+                categories.added.push(prEntry);
+              } else if (labels.includes('refactor') || title.startsWith('refactor:')) {
+                categories.changed.push(prEntry);
+              } else if (labels.includes('docs') || title.startsWith('docs:')) {
+                categories.added.push(prEntry);
+              } else if (labels.includes('deprecation')) {
+                categories.deprecated.push(prEntry);
+              } else if (title.startsWith('chore:') || title.startsWith('build:')) {
+                categories.changed.push(prEntry);
+              } else {
+                // Default to added for feat, changed for everything else
+                if (title.startsWith('feat:')) {
+                  categories.added.push(prEntry);
+                } else {
+                  categories.changed.push(prEntry);
+                }
+              }
+            }
+
+            // Store categories as output
+            core.setOutput('categories', JSON.stringify(categories));
+            core.setOutput('pr_count', mergedPRs.length);
+
+      - name: Generate changelog content
+        id: generate
+        run: |
+          PR_COUNT="${{ steps.get-prs.outputs.pr_count }}"
+
+          if [ "$PR_COUNT" -eq "0" ]; then
+            echo "No merged PRs since last release"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+
+          # Read categories from previous step
+          CATEGORIES='${{ steps.get-prs.outputs.categories }}'
+
+          # Create temporary changelog entries file
+          cat > /tmp/changelog-entries.md << 'CHANGELOG_EOF'
+          ## [Unreleased]
+
+          CHANGELOG_EOF
+
+          # Add sections only if they have entries
+          if [ "$(echo "$CATEGORIES" | jq -r '.added | length')" -gt "0" ]; then
+            echo "" >> /tmp/changelog-entries.md
+            echo "### Added" >> /tmp/changelog-entries.md
+            echo "" >> /tmp/changelog-entries.md
+            echo "$CATEGORIES" | jq -r '.added[]' >> /tmp/changelog-entries.md
+          fi
+
+          if [ "$(echo "$CATEGORIES" | jq -r '.changed | length')" -gt "0" ]; then
+            echo "" >> /tmp/changelog-entries.md
+            echo "### Changed" >> /tmp/changelog-entries.md
+            echo "" >> /tmp/changelog-entries.md
+            echo "$CATEGORIES" | jq -r '.changed[]' >> /tmp/changelog-entries.md
+          fi
+
+          if [ "$(echo "$CATEGORIES" | jq -r '.deprecated | length')" -gt "0" ]; then
+            echo "" >> /tmp/changelog-entries.md
+            echo "### Deprecated" >> /tmp/changelog-entries.md
+            echo "" >> /tmp/changelog-entries.md
+            echo "$CATEGORIES" | jq -r '.deprecated[]' >> /tmp/changelog-entries.md
+          fi
+
+          if [ "$(echo "$CATEGORIES" | jq -r '.removed | length')" -gt "0" ]; then
+            echo "" >> /tmp/changelog-entries.md
+            echo "### Removed" >> /tmp/changelog-entries.md
+            echo "" >> /tmp/changelog-entries.md
+            echo "$CATEGORIES" | jq -r '.removed[]' >> /tmp/changelog-entries.md
+          fi
+
+          if [ "$(echo "$CATEGORIES" | jq -r '.fixed | length')" -gt "0" ]; then
+            echo "" >> /tmp/changelog-entries.md
+            echo "### Fixed" >> /tmp/changelog-entries.md
+            echo "" >> /tmp/changelog-entries.md
+            echo "$CATEGORIES" | jq -r '.fixed[]' >> /tmp/changelog-entries.md
+          fi
+
+          if [ "$(echo "$CATEGORIES" | jq -r '.security | length')" -gt "0" ]; then
+            echo "" >> /tmp/changelog-entries.md
+            echo "### Security" >> /tmp/changelog-entries.md
+            echo "" >> /tmp/changelog-entries.md
+            echo "$CATEGORIES" | jq -r '.security[]' >> /tmp/changelog-entries.md
+          fi
+
+          echo "Changelog entries generated:"
+          cat /tmp/changelog-entries.md
+
+      - name: Update changelog file
+        if: steps.generate.outputs.has_changes == 'true'
+        run: |
+          # Read the current changelog
+          cp docs/changelog.md docs/changelog.md.bak
+
+          # Find the line number where [Unreleased] section starts
+          UNRELEASED_LINE=$(grep -n "## \[Unreleased\]" docs/changelog.md | head -1 | cut -d: -f1)
+
+          if [ -z "$UNRELEASED_LINE" ]; then
+            echo "Could not find [Unreleased] section in changelog"
+            exit 1
+          fi
+
+          # Extract the frontmatter and content before [Unreleased]
+          head -n $((UNRELEASED_LINE - 1)) docs/changelog.md > /tmp/changelog-before.md
+
+          # Find the next version section (e.g., ## [1.2.1])
+          NEXT_VERSION_LINE=$(tail -n +$((UNRELEASED_LINE + 1)) docs/changelog.md | \
+            grep -n "^## \[" | head -1 | cut -d: -f1)
+
+          if [ -z "$NEXT_VERSION_LINE" ]; then
+            # No version sections found, append to end
+            cat /tmp/changelog-before.md > docs/changelog.md
+            echo "" >> docs/changelog.md
+            cat /tmp/changelog-entries.md >> docs/changelog.md
+          else
+            # Extract content after [Unreleased] section
+            ACTUAL_LINE=$((UNRELEASED_LINE + NEXT_VERSION_LINE))
+            tail -n +$ACTUAL_LINE docs/changelog.md > /tmp/changelog-after.md
+
+            # Reconstruct changelog
+            cat /tmp/changelog-before.md > docs/changelog.md
+            echo "" >> docs/changelog.md
+            cat /tmp/changelog-entries.md >> docs/changelog.md
+            echo "" >> docs/changelog.md
+            cat /tmp/changelog-after.md >> docs/changelog.md
+          fi
+
+          echo "Changelog updated successfully"
+
+      - name: Create Pull Request
+        if: steps.generate.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            docs: update changelog with recent changes
+
+            Automated changelog update with ${{ steps.get-prs.outputs.pr_count }} merged PRs.
+
+            🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+            Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+          branch: automated/changelog-update
+          delete-branch: true
+          title: 'docs: update changelog with recent changes'
+          body: |
+            ## Summary
+
+            This PR updates the changelog with recent changes from merged pull requests.
+
+            ## Changes
+
+            - Updated `docs/changelog.md` [Unreleased] section
+            - Added ${{ steps.get-prs.outputs.pr_count }} merged PRs since last release
+            - Categorized changes as: Added, Changed, Fixed, Security, etc.
+
+            ## Review Notes
+
+            - Please review the categorization of changes
+            - Adjust any entries if needed before merging
+            - Consider creating a new release after merging
+
+            ---
+            🤖 This PR was automatically generated by the Changelog Generator workflow.
+          labels: |
+            automated
+            documentation
+            changelog
+          assignees: tydukes
+
+      - name: Summary
+        if: steps.generate.outputs.has_changes == 'true'
+        run: |
+          echo "✅ Changelog updated with ${{ steps.get-prs.outputs.pr_count }} merged PRs"
+          echo "📝 Pull request created for review"
+
+      - name: No changes summary
+        if: steps.generate.outputs.has_changes == 'false'
+        run: |
+          echo "ℹ️ No merged PRs since last release"
+          echo "📝 Changelog is up to date"
