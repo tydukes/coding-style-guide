@@ -54,6 +54,40 @@ limitations that make higher-level languages preferable for complex logic.
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Naming** | | | |
+| Variables | `lowercase` or `snake_case` | `user_count`, `max_retries` | Local variables lowercase |
+| Constants | `UPPER_SNAKE_CASE` | `MAX_RETRIES`, `API_URL` | Readonly global variables |
+| Functions | `lowercase` or `snake_case` | `get_user()`, `validate_input()` | Descriptive function names |
+| Environment Vars | `UPPER_SNAKE_CASE` | `PATH`, `HOME`, `MYAPP_CONFIG` | Exported variables |
+| **Files** | | | |
+| Scripts | `kebab-case.sh` | `deploy-app.sh`, `backup.sh` | Lowercase with `.sh` extension |
+| Executable | No extension | `deploy-app` | If in PATH, omit `.sh` |
+| **Shebang** | | | |
+| POSIX | `#!/bin/sh` | `#!/bin/sh` | Maximum portability |
+| Bash-specific | `#!/usr/bin/env bash` | `#!/usr/bin/env bash` | When Bash features needed |
+| **Formatting** | | | |
+| Indentation | 2 spaces | `if [ "$x" = "y" ]; then` | Never tabs |
+| Line Length | 80 characters | `# Keep lines short` | Maximum readability |
+| **Quoting** | | | |
+| Variables | Always quote | `"$variable"` | Prevent word splitting |
+| Arrays | Quote expansion | `"${array[@]}"` | Preserve elements |
+| **Conditionals** | | | |
+| POSIX Test | `[ condition ]` | `if [ "$x" = "y" ]; then` | Single brackets |
+| Bash Test | `[[ condition ]]` | `if [[ $x == y ]]; then` | Double brackets (non-POSIX) |
+| **Error Handling** | | | |
+| Exit on Error | `set -e` | `set -euo pipefail` | Fail fast on errors |
+| Undefined Vars | `set -u` | `set -euo pipefail` | Error on undefined variables |
+| Pipe Failures | `set -o pipefail` | `set -euo pipefail` | Catch pipe failures |
+| **Functions** | | | |
+| Declaration | POSIX style | `func_name() { ... }` | No `function` keyword |
+| Return | Exit code | `return 1` | 0 = success, non-zero = failure |
+
+---
+
 ## POSIX Compliance
 
 Write POSIX-compliant scripts for maximum portability across systems.

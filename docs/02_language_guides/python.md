@@ -38,6 +38,34 @@ web services.
 - Performance optimization patterns
 - Tool configuration (Black, Flake8, mypy, pytest)
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Naming** | | | |
+| Variables | `snake_case` | `user_count`, `api_response` | Descriptive, lowercase with underscores |
+| Constants | `UPPER_SNAKE_CASE` | `MAX_RETRIES`, `API_URL` | Module-level constants, all uppercase |
+| Functions | `snake_case` | `get_user()`, `validate_input()` | Verbs, descriptive action names |
+| Classes | `PascalCase` | `UserProfile`, `DataProcessor` | Nouns, capitalize each word |
+| Methods | `snake_case` | `calculate_total()`, `is_valid()` | Like functions, instance/class methods |
+| Modules | `snake_case` | `user_manager.py`, `api_client.py` | Short, lowercase, no hyphens |
+| Packages | `snake_case` | `data_utils/`, `auth_service/` | Short, lowercase, avoid underscores if possible |
+| Private | `_leading_underscore` | `_internal_method()`, `_cache` | Indicates internal use only |
+| **Formatting** | | | |
+| Line Length | 88 characters | `# Black default` | Max 88 (Black), 79 (PEP 8) acceptable |
+| Indentation | 4 spaces | `if condition:` | Never tabs, always 4 spaces |
+| Blank Lines | 2 between top-level | `class Foo:\n\n\nclass Bar:` | 2 blank lines between classes/functions |
+| String Quotes | Double quotes | `"hello world"` | Prefer double, single for avoiding escapes |
+| **Imports** | | | |
+| Order | stdlib, 3rd-party, local | `import os\nimport boto3\nfrom .utils import x` | Alphabetical within each group |
+| Style | Absolute imports | `from myapp.utils import helper` | Avoid relative imports except in packages |
+| **Documentation** | | | |
+| Docstrings | `"""Triple double quotes"""` | `"""Returns user by ID."""` | All public modules, classes, functions |
+| Type Hints | Required for functions | `def foo(x: int) -> str:` | All function signatures |
+| **Files** | | | |
+| Naming | `snake_case.py` | `user_service.py`, `__init__.py` | Lowercase, underscores, `.py` extension |
+| Encoding | UTF-8 | `# -*- coding: utf-8 -*-` | Default, explicit if non-ASCII |
+
 ## Naming Conventions
 
 ### Variables

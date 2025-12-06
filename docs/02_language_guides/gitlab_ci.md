@@ -24,6 +24,42 @@ for creating maintainable, efficient pipelines.
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **File Naming** | | | |
+| Pipeline Config | `.gitlab-ci.yml` | `.gitlab-ci.yml` | At repository root |
+| **Pipeline Structure** | | | |
+| `stages` | Pipeline stages | `stages: [build, test, deploy]` | Ordered execution phases |
+| `image` | Docker image | `image: node:20-alpine` | Default container image |
+| `before_script` | Pre-job commands | Setup commands | Runs before each job |
+| `after_script` | Post-job commands | Cleanup commands | Runs after each job |
+| **Job Definition** | | | |
+| Job Name | `job_name:` | `build_app:` | Descriptive job name |
+| `stage` | Job stage | `stage: build` | Which stage job belongs to |
+| `script` | Commands to run | `script: - npm install` | Required commands |
+| `only` / `except` | Branch filters | `only: [main]` | When job runs (legacy) |
+| `rules` | Conditional logic | `rules: - if: $CI_COMMIT_BRANCH` | Modern conditional execution |
+| **Artifacts** | | | |
+| `artifacts` | Save files | `paths: [dist/]` | Persist build outputs |
+| `expire_in` | Artifact retention | `expire_in: 1 week` | Auto-cleanup |
+| `reports` | Test reports | `reports: junit: report.xml` | Test result integration |
+| **Cache** | | | |
+| `cache` | Cache dependencies | `paths: [node_modules/]` | Speed up builds |
+| `key` | Cache key | `key: $CI_COMMIT_REF_SLUG` | Cache versioning |
+| **Variables** | | | |
+| Predefined | `$CI_COMMIT_SHA` | GitLab-provided variables | Built-in vars |
+| Custom | `variables:` | `NODE_ENV: production` | User-defined vars |
+| Protected | Masked variables | Secure secrets | Settings > CI/CD |
+| **Best Practices** | | | |
+| Stages | Logical grouping | `[build, test, deploy]` | Clear pipeline flow |
+| Docker Images | Pin versions | `node:20.10.0-alpine` | Avoid `latest` |
+| Rules | Use `rules:` | Replace `only/except` | Modern syntax |
+| Cache | Speed up builds | Cache dependencies | Reduce build time |
+
+---
+
 ## Basic Pipeline Structure
 
 ### Simple Pipeline

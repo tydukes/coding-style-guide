@@ -23,6 +23,39 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Syntax** | | | |
+| Indentation | **TAB character** | `\tcommand` | **Must** use tabs for recipes, not spaces |
+| Target Names | `lowercase` or `kebab-case` | `build`, `clean`, `test-unit` | Descriptive target names |
+| Variables | `UPPER_CASE` | `CC`, `CFLAGS`, `BUILD_DIR` | Uppercase for variables |
+| Phony Targets | `.PHONY` declaration | `.PHONY: clean test` | Non-file targets |
+| **Structure** | | | |
+| Target | `target: prerequisites` | `build: compile link` | Target depends on prerequisites |
+| Recipe | Tab-indented commands | `\t@echo "Building..."` | Commands to execute |
+| Variables | `VAR = value` | `CC = gcc` | Simple assignment |
+| **Variables** | | | |
+| Simple | `=` | `CC = gcc` | Recursive expansion |
+| Immediate | `:=` | `BUILD_DIR := ./build` | Immediate expansion |
+| Conditional | `?=` | `CC ?= gcc` | Set if not already set |
+| Append | `+=` | `CFLAGS += -Wall` | Append to variable |
+| **Special Targets** | | | |
+| `.PHONY` | Non-file targets | `.PHONY: clean all test` | Prevent file conflicts |
+| `.DEFAULT_GOAL` | Default target | `.DEFAULT_GOAL := build` | Run when no target specified |
+| **Automatic Variables** | | | |
+| `$@` | Target name | `$@` | Current target |
+| `$<` | First prerequisite | `$<` | First dependency |
+| `$^` | All prerequisites | `$^` | All dependencies |
+| **Best Practices** | | | |
+| Silent Commands | `@` prefix | `@echo "Building..."` | Suppress command echo |
+| Error Handling | `-` prefix | `-rm -rf build/` | Ignore errors |
+| Phony Targets | Always declare | `.PHONY: clean test` | Avoid file name conflicts |
+| Help Target | Include help | `help:` | Document available targets |
+
+---
+
 ## Basic Structure
 
 ### Simple Makefile

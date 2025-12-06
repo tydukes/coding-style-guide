@@ -40,6 +40,34 @@ Select User_Id From Users Where Status = 'active';
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Naming** | | | |
+| Keywords | `UPPERCASE` | `SELECT`, `FROM`, `WHERE` | All SQL keywords uppercase |
+| Tables | `snake_case` | `users`, `order_items` | Plural nouns, lowercase |
+| Columns | `snake_case` | `user_id`, `created_at` | Descriptive, lowercase |
+| Indexes | `idx_table_columns` | `idx_users_email` | Prefix with `idx_` |
+| Primary Keys | `id` or `table_id` | `id`, `user_id` | Singular, descriptive |
+| Foreign Keys | `table_id` | `user_id`, `product_id` | Reference table name |
+| Constraints | `pk_`, `fk_`, `uk_`, `ck_` | `pk_users`, `fk_orders_user_id` | Prefix by type |
+| Views | `v_descriptive_name` | `v_active_users` | Prefix with `v_` |
+| **Formatting** | | | |
+| Indentation | 2 or 4 spaces | `WHERE status = 'active'` | Consistent indentation |
+| Line Breaks | One clause per line | `SELECT\n  column\nFROM` | Readable queries |
+| Commas | Leading commas | `, column2\n, column3` | Or trailing (be consistent) |
+| **Query Structure** | | | |
+| SELECT | Explicit columns | `SELECT id, name` | Avoid `SELECT *` |
+| JOIN | Explicit JOIN type | `INNER JOIN`, `LEFT JOIN` | Not implicit joins |
+| WHERE | Use bind parameters | `WHERE id = $1` | Prevent SQL injection |
+| **Best Practices** | | | |
+| Comments | `--` for line | `-- Get active users` | Single-line comments |
+| Transactions | Use when needed | `BEGIN; ... COMMIT;` | Atomic operations |
+| NULL Handling | Explicit NULL checks | `WHERE col IS NULL` | Not `= NULL` |
+
+---
+
 ## Keywords and Identifiers
 
 ### SQL Keywords

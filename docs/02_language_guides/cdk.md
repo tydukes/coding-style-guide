@@ -24,6 +24,38 @@ maintainable, reusable infrastructure code.
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Naming** | | | |
+| Apps | `PascalCase` | `MyInfraApp` | CDK application class |
+| Stacks | `PascalCase` | `VpcStack`, `DatabaseStack` | Stack class names |
+| Constructs | `PascalCase` | `ApiGateway`, `LambdaFunction` | Custom construct classes |
+| Props Interfaces | `PascalCaseProps` | `VpcStackProps`, `ApiProps` | Props interface suffix |
+| Resources | `camelCase` | `myBucket`, `userTable` | Resource variables |
+| **File Naming** | | | |
+| App Entry | `bin/app-name.ts` | `bin/my-app.ts` | Application entry point |
+| Stacks | `lib/stack-name-stack.ts` | `lib/vpc-stack.ts` | Stack definitions |
+| Constructs | `lib/construct-name.ts` | `lib/api-gateway.ts` | Reusable constructs |
+| **Key Concepts** | | | |
+| App | Top-level container | `new cdk.App()` | CDK application |
+| Stack | Deployment unit | `new cdk.Stack(app, 'MyStack')` | CloudFormation stack |
+| Construct | Reusable component | Custom infrastructure patterns | Building blocks |
+| Props | Configuration | Interfaces for construct config | Type-safe configuration |
+| **Best Practices** | | | |
+| CDK v2 | Use CDK v2 | `aws-cdk-lib` | Single package |
+| TypeScript | Preferred language | Type safety, IDE support | Better developer experience |
+| Constructs | L3 > L2 > L1 | Use higher-level constructs | Opinionated patterns |
+| Environment | Pass explicitly | `env: { account, region }` | Avoid implicit environments |
+| Props | Required vs optional | Use TypeScript optionals | Clear interfaces |
+| **Common Patterns** | | | |
+| Stacks | One stack per env | `VpcStack`, `AppStack` | Logical separation |
+| Cross-Stack Refs | Export/import | `stack.export()` | Share resources |
+| Context | Use cdk.json | Configuration values | Environment-specific config |
+
+---
+
 ## Project Structure
 
 ### Basic CDK Project

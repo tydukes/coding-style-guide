@@ -30,6 +30,40 @@ cross-platform compatibility.
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Naming** | | | |
+| Functions | `Verb-Noun` PascalCase | `Get-UserData`, `Set-Configuration` | Use approved verbs |
+| Variables | `$PascalCase` | `$UserName`, `$ApiUrl` | Descriptive names |
+| Parameters | `PascalCase` | `[string]$FilePath` | No `$` in declaration |
+| Constants | `$UPPER_CASE` | `$MAX_RETRIES` | Uppercase for clarity |
+| Private Functions | `Verb-Noun` | Same as public | No special prefix needed |
+| **Files** | | | |
+| Scripts | `Verb-Noun.ps1` | `Deploy-Application.ps1` | PascalCase with `.ps1` |
+| Modules | `ModuleName.psm1` | `MyUtilities.psm1` | PascalCase with `.psm1` |
+| Manifests | `ModuleName.psd1` | `MyUtilities.psd1` | Module metadata |
+| **Formatting** | | | |
+| Indentation | 4 spaces | `if ($condition) {` | 4 spaces per level |
+| Line Length | 115 characters | `# Reasonable max` | Keep lines readable |
+| Braces | Same line opening | `if ($x) {` | K&R style |
+| **Syntax** | | | |
+| Comparison | `-eq`, `-ne`, `-lt`, `-gt` | `if ($x -eq 5)` | Not `==`, `!=` |
+| String Quotes | Single `'` or double `"` | `'static'`, `"$variable"` | Double for interpolation |
+| Comments | `#` for line, `<# #>` for block | `# Comment` | Hash for comments |
+| **Parameters** | | | |
+| Type | Always specify | `[string]$Path` | Strong typing |
+| Validation | Use attributes | `[ValidateNotNullOrEmpty()]` | Built-in validation |
+| Mandatory | Mark required | `[Parameter(Mandatory=$true)]` | Required parameters |
+| **Best Practices** | | | |
+| Error Handling | Use try/catch | `try { } catch { }` | Structured error handling |
+| Cmdlet Binding | Use `[CmdletBinding()]` | Advanced functions | Enable advanced features |
+| Pipeline | Support pipeline | `[Parameter(ValueFromPipeline)]` | Accept pipeline input |
+| Write Output | Use `Write-Output` | Not `Write-Host` | Proper output stream |
+
+---
+
 ## Naming Conventions
 
 ### Functions and Cmdlets
