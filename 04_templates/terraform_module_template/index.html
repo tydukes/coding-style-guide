@@ -3715,7 +3715,9 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [<span class="nt">aws_example_resource.this</span>](<span class="na">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/example_resource</span>) | resource |
+| [<span class="nt">aws_example_resource.this</span>][<span class="nl">aws_example_resource</span>] | resource |
+
+[<span class="nl">aws_example_resource</span>]: <span class="na">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/example_resource</span>
 
 <span class="gu">## Inputs</span>
 
@@ -4062,67 +4064,67 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <div class="codehilite"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nx">test</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;testing&quot;</span>
+<span class="w"> </span><span class="s">&quot;testing&quot;</span>
 
-<span class="w">    </span><span class="s">&quot;github.com/gruntwork-io/terratest/modules/terraform&quot;</span>
-<span class="w">    </span><span class="s">&quot;github.com/stretchr/testify/assert&quot;</span>
+<span class="w"> </span><span class="s">&quot;github.com/gruntwork-io/terratest/modules/terraform&quot;</span>
+<span class="w"> </span><span class="s">&quot;github.com/stretchr/testify/assert&quot;</span>
 <span class="p">)</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="nx">TestTerraformModule</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">t</span><span class="p">.</span><span class="nx">Parallel</span><span class="p">()</span>
+<span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nx">Parallel</span><span class="p">()</span>
 
-<span class="w">    </span><span class="nx">terraformOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">WithDefaultRetryableErrors</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Path to the Terraform code</span>
-<span class="w">        </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../examples/simple&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nx">terraformOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">WithDefaultRetryableErrors</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Path to the Terraform code</span>
+<span class="w">  </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../examples/simple&quot;</span><span class="p">,</span>
 
-<span class="w">        </span><span class="c1">// Variables to pass to the Terraform code</span>
-<span class="w">        </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
-<span class="w">            </span><span class="s">&quot;aws_region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="p">},</span>
+<span class="w">  </span><span class="c1">// Variables to pass to the Terraform code</span>
+<span class="w">  </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+<span class="w">   </span><span class="s">&quot;aws_region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
 
-<span class="w">        </span><span class="c1">// Environment variables</span>
-<span class="w">        </span><span class="nx">EnvVars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
-<span class="w">            </span><span class="s">&quot;AWS_DEFAULT_REGION&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">    </span><span class="p">})</span>
+<span class="w">  </span><span class="c1">// Environment variables</span>
+<span class="w">  </span><span class="nx">EnvVars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+<span class="w">   </span><span class="s">&quot;AWS_DEFAULT_REGION&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w"> </span><span class="p">})</span>
 
-<span class="w">    </span><span class="c1">// Clean up resources at the end of the test</span>
-<span class="w">    </span><span class="k">defer</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Destroy</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">// Clean up resources at the end of the test</span>
+<span class="w"> </span><span class="k">defer</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Destroy</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
 
-<span class="w">    </span><span class="c1">// Deploy the infrastructure</span>
-<span class="w">    </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">// Deploy the infrastructure</span>
+<span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
 
-<span class="w">    </span><span class="c1">// Validate outputs</span>
-<span class="w">    </span><span class="nx">resourceID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;resource_id&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceID</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">// Validate outputs</span>
+<span class="w"> </span><span class="nx">resourceID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;resource_id&quot;</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceID</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="nx">TestTerraformModuleComplete</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">t</span><span class="p">.</span><span class="nx">Parallel</span><span class="p">()</span>
+<span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nx">Parallel</span><span class="p">()</span>
 
-<span class="w">    </span><span class="nx">terraformOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">WithDefaultRetryableErrors</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
-<span class="w">        </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../examples/complete&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nx">terraformOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">WithDefaultRetryableErrors</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
+<span class="w">  </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../examples/complete&quot;</span><span class="p">,</span>
 
-<span class="w">        </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
-<span class="w">            </span><span class="s">&quot;aws_region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+<span class="w">   </span><span class="s">&quot;aws_region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
 
-<span class="w">        </span><span class="nx">EnvVars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
-<span class="w">            </span><span class="s">&quot;AWS_DEFAULT_REGION&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">    </span><span class="p">})</span>
+<span class="w">  </span><span class="nx">EnvVars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+<span class="w">   </span><span class="s">&quot;AWS_DEFAULT_REGION&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w"> </span><span class="p">})</span>
 
-<span class="w">    </span><span class="k">defer</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Destroy</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
+<span class="w"> </span><span class="k">defer</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Destroy</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
 
-<span class="w">    </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
 
-<span class="w">    </span><span class="c1">// Test outputs</span>
-<span class="w">    </span><span class="nx">resourceID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;resource_id&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">resourceARN</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;resource_arn&quot;</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">// Test outputs</span>
+<span class="w"> </span><span class="nx">resourceID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;resource_id&quot;</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">resourceARN</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;resource_arn&quot;</span><span class="p">)</span>
 
-<span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceID</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceARN</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Contains</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceARN</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;arn:aws:&quot;</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceID</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceARN</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Contains</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceARN</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;arn:aws:&quot;</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -4220,9 +4222,9 @@ Examples:
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <h3 id="official-documentation">Official Documentation<a class="headerlink" href="#official-documentation" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="https://www.terraform.io/docs/language/modules/develop/structure.html">Terraform Module Structure</a></li>
-<li><a href="https://www.terraform.io/docs/registry/modules/publish.html">Terraform Registry Publishing</a></li>
-<li><a href="https://www.terraform.io/docs/language/modules/develop/structure.html">Standard Module Structure</a></li>
+<li><a href="https://developer.hashicorp.com/terraform/language/modules/develop/structure">Terraform Module Structure</a></li>
+<li><a href="https://developer.hashicorp.com/terraform/registry/modules/publish">Terraform Registry Publishing</a></li>
+<li><a href="https://developer.hashicorp.com/terraform/language/modules/develop/structure">Standard Module Structure</a></li>
 </ul>
 <h3 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h3>
 <ul>
