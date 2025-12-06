@@ -645,6 +645,212 @@ services:
 
 ---
 
+## Tool Configuration
+
+### docker-compose.yml Validation
+
+```bash
+# Validate compose file syntax
+docker compose config
+
+# Validate and show final configuration
+docker compose config --no-interpolate
+
+# Validate specific file
+docker compose -f docker-compose.prod.yml config
+```
+
+### .dockerignore
+
+```text
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+
+# Documentation
+*.md
+docs/
+LICENSE
+
+# Dependencies
+node_modules/
+vendor/
+__pycache__/
+*.pyc
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env.local
+.env.*.local
+*.log
+
+# Testing
+coverage/
+.nyc_output/
+```
+
+### EditorConfig
+
+```ini
+# .editorconfig
+[docker-compose*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+```
+
+### VS Code Settings
+
+```json
+{
+  "[dockercompose]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true
+  },
+  "yaml.schemas": {
+    "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": [
+      "docker-compose*.yml",
+      "docker-compose*.yaml"
+    ]
+  },
+  "yaml.customTags": [
+    "!reference sequence"
+  ]
+}
+```
+
+### Pre-commit Hooks
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: ['--allow-multiple-documents']
+      - id: check-added-large-files
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: ['-d', '{extends: default, rules: {line-length: {max: 120}}}']
+        files: docker-compose.*\.ya?ml$
+```
+
+### yamllint Configuration
+
+```yaml
+# .yamllint
+extends: default
+
+rules:
+  line-length:
+    max: 120
+    level: warning
+  indentation:
+    spaces: 2
+    indent-sequences: true
+  comments:
+    min-spaces-from-content: 1
+  document-start: disable
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no']
+```
+
+### Makefile
+
+```makefile
+# Makefile
+.PHONY: up down build logs ps validate
+
+up:
+ docker compose up -d
+
+down:
+ docker compose down
+
+build:
+ docker compose build
+
+rebuild:
+ docker compose build --no-cache
+
+logs:
+ docker compose logs -f
+
+ps:
+ docker compose ps
+
+validate:
+ docker compose config --quiet
+ @echo "✓ docker-compose.yml is valid"
+
+validate-prod:
+ docker compose -f docker-compose.prod.yml config --quiet
+ @echo "✓ docker-compose.prod.yml is valid"
+
+clean:
+ docker compose down -v
+ docker system prune -f
+
+exec-web:
+ docker compose exec web sh
+
+exec-db:
+ docker compose exec db psql -U postgres
+```
+
+### docker-compose.override.yml
+
+Used for local development overrides:
+
+```yaml
+# docker-compose.override.yml
+# This file is automatically merged with docker-compose.yml
+# Use for local development settings
+
+services:
+  web:
+    environment:
+      - DEBUG=true
+      - LOG_LEVEL=debug
+    volumes:
+      - ./src:/app/src:delegated
+    ports:
+      - "3000:3000"
+      - "9229:9229"  # Node.js debug port
+    command: npm run dev
+
+  db:
+    ports:
+      - "5432:5432"  # Expose PostgreSQL locally
+```
+
+---
+
 ## References
 
 ### Official Documentation
@@ -653,7 +859,7 @@ services:
 - [Compose File Reference](https://docs.docker.com/compose/compose-file/)
 - [Compose CLI Reference](https://docs.docker.com/compose/reference/)
 
-### Best Practices
+### Additional Resources
 
 - [Production Best Practices](https://docs.docker.com/compose/production/)
 - [Compose in Production](https://docs.docker.com/compose/production/)

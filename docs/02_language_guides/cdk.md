@@ -572,6 +572,308 @@ describe('MyStack', () => {
 
 ---
 
+## Tool Configuration
+
+### cdk.json
+
+```json
+{
+  "app": "npx ts-node --prefer-ts-exts bin/app.ts",
+  "watch": {
+    "include": ["**"],
+    "exclude": [
+      "README.md",
+      "cdk*.json",
+      "**/*.d.ts",
+      "**/*.js",
+      "tsconfig.json",
+      "package*.json",
+      "yarn.lock",
+      "node_modules",
+      "test"
+    ]
+  },
+  "context": {
+    "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
+    "@aws-cdk/core:checkSecretUsage": true,
+    "@aws-cdk/core:target-partitions": ["aws", "aws-cn"],
+    "@aws-cdk-containers/ecs-service-extensions:enableDefaultLogDriver": true,
+    "@aws-cdk/aws-ec2:uniqueImdsv2TemplateName": true,
+    "@aws-cdk/aws-ecs:arnFormatIncludesClusterName": true,
+    "@aws-cdk/aws-iam:minimizePolicies": true,
+    "@aws-cdk/core:validateSnapshotRemovalPolicy": true,
+    "@aws-cdk/aws-codepipeline:crossAccountKeyAliasStackSafeResourceName": true,
+    "@aws-cdk/aws-s3:createDefaultLoggingPolicy": true,
+    "@aws-cdk/aws-sns-subscriptions:restrictSqsDescryption": true,
+    "@aws-cdk/aws-apigateway:disableCloudWatchRole": true,
+    "@aws-cdk/core:enablePartitionLiterals": true,
+    "@aws-cdk/aws-events:eventsTargetQueueSameAccount": true,
+    "@aws-cdk/aws-iam:standardizedServicePrincipals": true,
+    "@aws-cdk/aws-ecs:disableExplicitDeploymentControllerForCircuitBreaker": true,
+    "@aws-cdk/aws-iam:importedRoleStackSafeDefaultPolicyName": true,
+    "@aws-cdk/aws-s3:serverAccessLogsUseBucketPolicy": true,
+    "@aws-cdk/aws-route53-patters:useCertificate": true,
+    "@aws-cdk/customresources:installLatestAwsSdkDefault": false
+  }
+}
+```
+
+### tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["es2020"],
+    "declaration": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": false,
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "typeRoots": ["./node_modules/@types"],
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules", "cdk.out"]
+}
+```
+
+### package.json Scripts
+
+```json
+{
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "cdk": "cdk",
+    "synth": "cdk synth",
+    "deploy": "cdk deploy",
+    "deploy:all": "cdk deploy --all",
+    "diff": "cdk diff",
+    "destroy": "cdk destroy",
+    "bootstrap": "cdk bootstrap",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"**/*.ts\"",
+    "format:check": "prettier --check \"**/*.ts\"",
+    "validate": "npm run lint && npm run format:check && npm run test"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "aws-cdk": "^2.100.0",
+    "eslint": "^8.50.0",
+    "jest": "^29.5.0",
+    "prettier": "^3.0.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.2.0"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.100.0",
+    "constructs": "^10.0.0",
+    "source-map-support": "^0.5.21"
+  }
+}
+```
+
+### ESLint Configuration
+
+```javascript
+// .eslintrc.js
+module.exports = {
+  root: true,
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
+    project: './tsconfig.json',
+  },
+  plugins: ['@typescript-eslint'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+  ],
+  rules: {
+    '@typescript-eslint/no-explicit-any': 'error',
+    '@typescript-eslint/explicit-function-return-type': 'warn',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { argsIgnorePattern: '^_' },
+    ],
+    '@typescript-eslint/no-floating-promises': 'error',
+    '@typescript-eslint/await-thenable': 'error',
+  },
+  ignorePatterns: ['*.js', '*.d.ts', 'node_modules/', 'cdk.out/'],
+};
+```
+
+### Jest Configuration
+
+```javascript
+// jest.config.js
+module.exports = {
+  testEnvironment: 'node',
+  roots: ['<rootDir>/test'],
+  testMatch: ['**/*.test.ts'],
+  transform: {
+    '^.+\\.tsx?$': 'ts-jest',
+  },
+  collectCoverageFrom: [
+    'lib/**/*.ts',
+    '!lib/**/*.d.ts',
+    '!lib/**/*.test.ts',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 70,
+      functions: 70,
+      lines: 70,
+      statements: 70,
+    },
+  },
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+};
+```
+
+### Prettier Configuration
+
+```json
+{
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "arrowParens": "always"
+}
+```
+
+### Pre-commit Hooks
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        types_or: [javascript, jsx, ts, tsx, json]
+
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.56.0
+    hooks:
+      - id: eslint
+        files: \.[jt]sx?$
+        types: [file]
+        additional_dependencies:
+          - eslint@8.56.0
+          - '@typescript-eslint/eslint-plugin@6.21.0'
+          - '@typescript-eslint/parser@6.21.0'
+```
+
+### VS Code Settings
+
+```json
+{
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "cdk.path": "node_modules/.bin/cdk"
+}
+```
+
+### Makefile
+
+```makefile
+# Makefile
+.PHONY: install build test deploy clean
+
+install:
+ npm install
+
+build:
+ npm run build
+
+test:
+ npm run test
+
+test-coverage:
+ npm run test:coverage
+
+lint:
+ npm run lint
+
+lint-fix:
+ npm run lint:fix
+
+format:
+ npm run format
+
+format-check:
+ npm run format:check
+
+validate: lint format-check test
+ @echo "✓ All validations passed"
+
+synth:
+ npm run synth
+
+diff:
+ npm run diff
+
+deploy:
+ npm run deploy
+
+deploy-all:
+ npm run deploy:all
+
+destroy:
+ npm run destroy
+
+clean:
+ rm -rf node_modules cdk.out coverage .nyc_output
+ rm -f *.js *.d.ts
+
+bootstrap:
+ npm run bootstrap
+```
+
+---
+
 ## References
 
 ### Official Documentation
@@ -580,7 +882,7 @@ describe('MyStack', () => {
 - [CDK API Reference](https://docs.aws.amazon.com/cdk/api/v2/)
 - [CDK Workshop](https://cdkworkshop.com/)
 
-### Best Practices
+### Additional Resources
 
 - [Best Practices](https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html)
 - [CDK Patterns](https://cdkpatterns.com/)
