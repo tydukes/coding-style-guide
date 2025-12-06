@@ -31,19 +31,19 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 .PHONY: help clean build test
 
 help:
-	@echo "Available targets:"
-	@echo "  build  - Build the application"
-	@echo "  test   - Run tests"
-	@echo "  clean  - Clean build artifacts"
+ @echo "Available targets:"
+ @echo "  build  - Build the application"
+ @echo "  test   - Run tests"
+ @echo "  clean  - Clean build artifacts"
 
 build:
-	go build -o bin/app main.go
+ go build -o bin/app main.go
 
 test:
-	go test ./...
+ go test ./...
 
 clean:
-	rm -rf bin/
+ rm -rf bin/
 ```
 
 ---
@@ -58,8 +58,8 @@ clean:
 # Recipe: commands to execute (MUST be indented with TAB)
 
 target: prerequisite1 prerequisite2
-	command1
-	command2
+ command1
+ command2
 ```
 
 ### Target with Prerequisites
@@ -70,13 +70,13 @@ target: prerequisite1 prerequisite2
 all: build test
 
 build: compile
-	@echo "Build complete"
+ @echo "Build complete"
 
 compile:
-	gcc -o myapp main.c
+ gcc -o myapp main.c
 
 test: build
-	./myapp --test
+ ./myapp --test
 ```
 
 ---
@@ -89,19 +89,19 @@ Always declare targets that don't create files as `.PHONY`:
 .PHONY: clean test run install help
 
 clean:
-	rm -rf build/ dist/
+ rm -rf build/ dist/
 
 test:
-	pytest tests/
+ pytest tests/
 
 run:
-	python main.py
+ python main.py
 
 install:
-	pip install -r requirements.txt
+ pip install -r requirements.txt
 
 help:
-	@echo "Available targets: clean, test, run, install, help"
+ @echo "Available targets: clean, test, run, install, help"
 ```
 
 ---
@@ -138,7 +138,7 @@ CFLAGS = -Wall -Wextra
 SOURCES = main.c utils.c
 
 build:
-	$(CC) $(CFLAGS) $(SOURCES) -o app
+ $(CC) $(CFLAGS) $(SOURCES) -o app
 ```
 
 ### Common Variables
@@ -175,7 +175,7 @@ TARGET = $(BIN_DIR)/app
 ```makefile
 # Compile .c files to .o files
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+ $(CC) $(CFLAGS) -c $< -o $@
 
 # Automatic variables:
 # $@ - target name
@@ -192,13 +192,13 @@ BUILD_DIR = build
 
 # Pattern rule with directory paths
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+ @mkdir -p $(BUILD_DIR)
+ $(CC) $(CFLAGS) -c $< -o $@
 
 # Multiple targets
 %.o %.d: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-	$(CC) -MM $(CFLAGS) $< > $*.d
+ $(CC) $(CFLAGS) -c $< -o $@
+ $(CC) -MM $(CFLAGS) $< > $*.d
 ```
 
 ---
@@ -211,31 +211,31 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 .PHONY: help install build test lint clean dev
 
 help:
-	@echo "Available targets:"
-	@echo "  install  - Install dependencies"
-	@echo "  build    - Build the application"
-	@echo "  test     - Run tests"
-	@echo "  lint     - Run linter"
-	@echo "  clean    - Clean build artifacts"
-	@echo "  dev      - Start development server"
+ @echo "Available targets:"
+ @echo "  install  - Install dependencies"
+ @echo "  build    - Build the application"
+ @echo "  test     - Run tests"
+ @echo "  lint     - Run linter"
+ @echo "  clean    - Clean build artifacts"
+ @echo "  dev      - Start development server"
 
 install:
-	npm ci
+ npm ci
 
 build: install
-	npm run build
+ npm run build
 
 test: install
-	npm test
+ npm test
 
 lint:
-	npm run lint
+ npm run lint
 
 clean:
-	rm -rf node_modules dist build
+ rm -rf node_modules dist build
 
 dev: install
-	npm run dev
+ npm run dev
 ```
 
 ### Python Project
@@ -248,35 +248,35 @@ VENV = venv
 VENV_BIN = $(VENV)/bin
 
 help:
-	@echo "Available targets:"
-	@echo "  venv     - Create virtual environment"
-	@echo "  install  - Install dependencies"
-	@echo "  test     - Run tests"
-	@echo "  lint     - Run linter"
-	@echo "  format   - Format code"
-	@echo "  clean    - Clean artifacts"
+ @echo "Available targets:"
+ @echo "  venv     - Create virtual environment"
+ @echo "  install  - Install dependencies"
+ @echo "  test     - Run tests"
+ @echo "  lint     - Run linter"
+ @echo "  format   - Format code"
+ @echo "  clean    - Clean artifacts"
 
 venv:
-	$(PYTHON) -m venv $(VENV)
+ $(PYTHON) -m venv $(VENV)
 
 install: venv
-	$(VENV_BIN)/pip install -r requirements.txt
-	$(VENV_BIN)/pip install -r requirements-dev.txt
+ $(VENV_BIN)/pip install -r requirements.txt
+ $(VENV_BIN)/pip install -r requirements-dev.txt
 
 test: install
-	$(VENV_BIN)/pytest tests/
+ $(VENV_BIN)/pytest tests/
 
 lint: install
-	$(VENV_BIN)/flake8 src/ tests/
-	$(VENV_BIN)/mypy src/
+ $(VENV_BIN)/flake8 src/ tests/
+ $(VENV_BIN)/mypy src/
 
 format: install
-	$(VENV_BIN)/black src/ tests/
+ $(VENV_BIN)/black src/ tests/
 
 clean:
-	rm -rf $(VENV) .pytest_cache __pycache__
-	find . -type f -name '*.pyc' -delete
-	find . -type d -name '__pycache__' -delete
+ rm -rf $(VENV) .pytest_cache __pycache__
+ find . -type f -name '*.pyc' -delete
+ find . -type d -name '__pycache__' -delete
 ```
 
 ### Go Project
@@ -290,28 +290,28 @@ GOFLAGS = -v
 LDFLAGS = -ldflags="-s -w"
 
 help:
-	@echo "Available targets:"
-	@echo "  build    - Build the application"
-	@echo "  test     - Run tests"
-	@echo "  lint     - Run linter"
-	@echo "  clean    - Clean build artifacts"
-	@echo "  run      - Run the application"
+ @echo "Available targets:"
+ @echo "  build    - Build the application"
+ @echo "  test     - Run tests"
+ @echo "  lint     - Run linter"
+ @echo "  clean    - Clean build artifacts"
+ @echo "  run      - Run the application"
 
 build:
-	$(GO) build $(GOFLAGS) $(LDFLAGS) -o $(BINARY_NAME) .
+ $(GO) build $(GOFLAGS) $(LDFLAGS) -o $(BINARY_NAME) .
 
 test:
-	$(GO) test $(GOFLAGS) ./...
+ $(GO) test $(GOFLAGS) ./...
 
 lint:
-	golangci-lint run
+ golangci-lint run
 
 clean:
-	rm -f $(BINARY_NAME)
-	$(GO) clean
+ rm -f $(BINARY_NAME)
+ $(GO) clean
 
 run: build
-	./$(BINARY_NAME)
+ ./$(BINARY_NAME)
 ```
 
 ### Docker Project
@@ -325,28 +325,28 @@ REGISTRY = docker.io
 FULL_IMAGE = $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG)
 
 help:
-	@echo "Available targets:"
-	@echo "  build    - Build Docker image"
-	@echo "  push     - Push image to registry"
-	@echo "  run      - Run container"
-	@echo "  stop     - Stop container"
-	@echo "  clean    - Remove image"
+ @echo "Available targets:"
+ @echo "  build    - Build Docker image"
+ @echo "  push     - Push image to registry"
+ @echo "  run      - Run container"
+ @echo "  stop     - Stop container"
+ @echo "  clean    - Remove image"
 
 build:
-	docker build -t $(FULL_IMAGE) .
+ docker build -t $(FULL_IMAGE) .
 
 push: build
-	docker push $(FULL_IMAGE)
+ docker push $(FULL_IMAGE)
 
 run:
-	docker run -d -p 8080:8080 --name $(IMAGE_NAME) $(FULL_IMAGE)
+ docker run -d -p 8080:8080 --name $(IMAGE_NAME) $(FULL_IMAGE)
 
 stop:
-	docker stop $(IMAGE_NAME)
-	docker rm $(IMAGE_NAME)
+ docker stop $(IMAGE_NAME)
+ docker rm $(IMAGE_NAME)
 
 clean:
-	docker rmi $(FULL_IMAGE)
+ docker rmi $(FULL_IMAGE)
 ```
 
 ---
@@ -372,8 +372,8 @@ else
 endif
 
 build:
-	$(Q)echo "Building..."
-	$(Q)$(CC) $(CFLAGS) -o app main.c
+ $(Q)echo "Building..."
+ $(Q)$(CC) $(CFLAGS) -o app main.c
 ```
 
 ### OS Detection
@@ -395,8 +395,8 @@ ifeq ($(UNAME_S),MINGW64_NT)
 endif
 
 build:
-	@echo "Building for $(PLATFORM)"
-	$(CC) -o app$(EXE_EXT) main.c $(LDFLAGS)
+ @echo "Building for $(PLATFORM)"
+ $(CC) -o app$(EXE_EXT) main.c $(LDFLAGS)
 ```
 
 ---
@@ -434,23 +434,23 @@ NON_TEST = $(filter-out %_test.c,$(SOURCES))
 
 ```makefile
 build:
-	$(CC) \
-		$(CFLAGS) \
-		-I$(INCLUDE_DIR) \
-		-L$(LIB_DIR) \
-		$(SOURCES) \
-		-o $(TARGET)
+ $(CC) \
+  $(CFLAGS) \
+  -I$(INCLUDE_DIR) \
+  -L$(LIB_DIR) \
+  $(SOURCES) \
+  -o $(TARGET)
 ```
 
 ### Multi-Line Recipe
 
 ```makefile
 deploy:
-	@echo "Starting deployment..."
-	@docker build -t myapp:latest .
-	@docker tag myapp:latest registry.example.com/myapp:latest
-	@docker push registry.example.com/myapp:latest
-	@echo "Deployment complete!"
+ @echo "Starting deployment..."
+ @docker build -t myapp:latest .
+ @docker tag myapp:latest registry.example.com/myapp:latest
+ @docker push registry.example.com/myapp:latest
+ @echo "Deployment complete!"
 ```
 
 ---
@@ -462,23 +462,23 @@ deploy:
 ```makefile
 # Default: exit on error
 test:
-	pytest tests/
+ pytest tests/
 
 # Continue on error
 .IGNORE: test
 test:
-	pytest tests/
+ pytest tests/
 
 # Ignore errors for specific command
 test:
-	-pytest tests/
+ -pytest tests/
 ```
 
 ### Check Command Success
 
 ```makefile
 test:
-	@pytest tests/ || (echo "Tests failed!"; exit 1)
+ @pytest tests/ || (echo "Tests failed!"; exit 1)
 ```
 
 ---
@@ -488,14 +488,14 @@ test:
 ```makefile
 # Prefix with @ to suppress output
 build:
-	@echo "Building..."
-	@$(CC) -o app main.c
+ @echo "Building..."
+ @$(CC) -o app main.c
 
 # Make all commands silent
 .SILENT:
 build:
-	echo "Building..."
-	$(CC) -o app main.c
+ echo "Building..."
+ $(CC) -o app main.c
 ```
 
 ---
@@ -517,14 +517,14 @@ DEPS = $(OBJECTS:.o=.d)
 
 # Compile with dependency generation
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+ @mkdir -p $(BUILD_DIR)
+ $(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 
 build: $(OBJECTS)
-	$(CC) $(LDFLAGS) $^ -o $(TARGET)
+ $(CC) $(LDFLAGS) $^ -o $(TARGET)
 
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET)
+ rm -rf $(BUILD_DIR) $(TARGET)
 ```
 
 ---
@@ -540,7 +540,7 @@ build:
 
 # Good - Using tabs
 build:
-	echo "Building..."
+ echo "Building..."
 ```
 
 ### ❌ Avoid: Not Using .PHONY
@@ -548,12 +548,12 @@ build:
 ```makefile
 # Bad - Without .PHONY, make won't run if 'clean' file exists
 clean:
-	rm -rf build/
+ rm -rf build/
 
 # Good - Using .PHONY
 .PHONY: clean
 clean:
-	rm -rf build/
+ rm -rf build/
 ```
 
 ### ❌ Avoid: Hardcoded Paths
@@ -561,12 +561,12 @@ clean:
 ```makefile
 # Bad - Hardcoded paths
 build:
-	gcc -o /home/user/myapp main.c
+ gcc -o /home/user/myapp main.c
 
 # Good - Use variables
 BIN_DIR = bin
 build:
-	gcc -o $(BIN_DIR)/myapp main.c
+ gcc -o $(BIN_DIR)/myapp main.c
 ```
 
 ---
@@ -579,16 +579,16 @@ build:
 .DEFAULT_GOAL := help
 
 help:
-	@echo "Available targets: build, test, clean"
+ @echo "Available targets: build, test, clean"
 
 build:
-	go build -o app main.go
+ go build -o app main.go
 
 test:
-	go test ./...
+ go test ./...
 
 clean:
-	rm -f app
+ rm -f app
 ```
 
 ### Self-Documenting Makefile
@@ -597,17 +597,332 @@ clean:
 .PHONY: help
 
 help: ## Show this help message
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
-		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+ @grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
+  awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 build: ## Build the application
-	go build -o app main.go
+ go build -o app main.go
 
 test: ## Run tests
-	go test ./...
+ go test ./...
 
 clean: ## Clean build artifacts
-	rm -f app
+ rm -f app
+```
+
+---
+
+## Tool Configuration
+
+### Makefile Linting with checkmake
+
+Install and use checkmake to lint Makefiles:
+
+```bash
+# Install checkmake (Go)
+go install github.com/mrtazz/checkmake/cmd/checkmake@latest
+
+# Install checkmake (brew)
+brew install checkmake
+
+# Lint Makefile
+checkmake Makefile
+
+# Lint with specific rules
+checkmake --config .checkmake Makefile
+
+# Output as JSON
+checkmake --format=json Makefile
+```
+
+### .checkmake Configuration
+
+```ini
+# .checkmake
+[minphony]
+  # Minimum percentage of PHONY targets
+  minPhonyTargets = 0.5
+
+[phonydeclared]
+  # Require .PHONY declarations
+  requirePhonyDeclarations = true
+
+[timestampexpanded]
+  # Allow timestamp expansion in targets
+  allowTimestampExpansion = false
+
+[maxbodylength]
+  # Maximum lines in target body
+  maxBodyLength = 10
+
+[minhelp]
+  # Minimum percentage of targets with help text
+  minHelpTargets = 0.3
+```
+
+### EditorConfig
+
+```ini
+# .editorconfig
+[Makefile]
+indent_style = tab
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.mk]
+indent_style = tab
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+```
+
+### VS Code Settings
+
+```json
+{
+  "[makefile]": {
+    "editor.insertSpaces": false,
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4
+  },
+  "files.associations": {
+    "Makefile*": "makefile",
+    "*.mk": "makefile",
+    "*.make": "makefile"
+  },
+  "makefile.configureOnOpen": true,
+  "makefile.launchConfigurations": [
+    {
+      "makeArgs": ["test"],
+      "makeDirectory": "${workspaceFolder}"
+    }
+  ]
+}
+```
+
+### Pre-commit Hooks
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+
+  - repo: local
+    hooks:
+      - id: checkmake
+        name: Check Makefile
+        entry: checkmake
+        language: system
+        files: ^Makefile$|\.mk$
+        pass_filenames: true
+```
+
+### Makefile Self-Documentation
+
+Add help target to Makefile for self-documentation:
+
+```makefile
+# Makefile with self-documentation
+.DEFAULT_GOAL := help
+
+.PHONY: help
+help: ## Show this help message
+ @echo 'Usage:'
+ @echo '  make [target]'
+ @echo ''
+ @echo 'Targets:'
+ @awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / \
+  {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+
+.PHONY: build
+build: ## Build the project
+ go build -o bin/app .
+
+.PHONY: test
+test: ## Run tests
+ go test -v ./...
+
+.PHONY: clean
+clean: ## Clean build artifacts
+ rm -rf bin/
+```
+
+### Makefile Testing with BATS
+
+Test Makefile targets using BATS (Bash Automated Testing System):
+
+```bash
+#!/usr/bin/env bats
+# test/makefile.bats
+
+setup() {
+  # Run before each test
+  export TEST_DIR="$(mktemp -d)"
+}
+
+teardown() {
+  # Run after each test
+  rm -rf "$TEST_DIR"
+}
+
+@test "make build creates binary" {
+  run make build
+  [ "$status" -eq 0 ]
+  [ -f "bin/app" ]
+}
+
+@test "make test runs successfully" {
+  run make test
+  [ "$status" -eq 0 ]
+}
+
+@test "make clean removes artifacts" {
+  make build
+  make clean
+  [ ! -f "bin/app" ]
+}
+
+@test "make help shows usage" {
+  run make help
+  [ "$status" -eq 0 ]
+  [[ "$output" =~ "Usage:" ]]
+}
+```
+
+### Makefile Debugging
+
+```bash
+# Print all variables
+make -p
+
+# Dry run (show commands without executing)
+make -n target
+
+# Print debugging information
+make -d target
+
+# Trace target execution
+make --trace target
+
+# Warn about undefined variables
+make --warn-undefined-variables target
+
+# Print database of rules
+make -p -f /dev/null
+```
+
+### Makefile Include Pattern
+
+Organize large Makefiles with includes:
+
+```makefile
+# Makefile
+.DEFAULT_GOAL := all
+
+# Include sub-makefiles
+include makefiles/build.mk
+include makefiles/test.mk
+include makefiles/deploy.mk
+
+.PHONY: all
+all: build test
+
+# makefiles/build.mk
+.PHONY: build
+build:
+ go build -o bin/app .
+
+# makefiles/test.mk
+.PHONY: test
+test:
+ go test -v ./...
+
+# makefiles/deploy.mk
+.PHONY: deploy
+deploy:
+ ./scripts/deploy.sh
+```
+
+### Makefile Validation Script
+
+```bash
+#!/bin/bash
+# scripts/validate-makefile.sh
+
+set -euo pipefail
+
+echo "Validating Makefile..."
+
+# Check if Makefile exists
+if [ ! -f "Makefile" ]; then
+  echo "ERROR: Makefile not found"
+  exit 1
+fi
+
+# Check for tabs (Make requires tabs)
+if grep -P '^    [^\t]' Makefile > /dev/null; then
+  echo "ERROR: Found spaces instead of tabs in Makefile"
+  exit 1
+fi
+
+# Run checkmake if available
+if command -v checkmake &> /dev/null; then
+  checkmake Makefile
+else
+  echo "WARNING: checkmake not installed, skipping lint"
+fi
+
+# Dry run to check syntax
+make -n --dry-run > /dev/null 2>&1 || {
+  echo "ERROR: Makefile has syntax errors"
+  exit 1
+}
+
+echo "✓ Makefile validation passed"
+```
+
+### CI/CD Integration
+
+GitHub Actions workflow for Makefile validation:
+
+```yaml
+name: Validate Makefile
+
+on:
+  pull_request:
+    paths:
+      - 'Makefile'
+      - '**.mk'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install checkmake
+        run: |
+          go install github.com/mrtazz/checkmake/cmd/checkmake@latest
+          echo "$HOME/go/bin" >> $GITHUB_PATH
+
+      - name: Lint Makefile
+        run: checkmake Makefile
+
+      - name: Validate syntax
+        run: make -n --dry-run
+
+      - name: Test help target
+        run: make help
 ```
 
 ---

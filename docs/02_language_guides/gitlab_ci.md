@@ -722,6 +722,260 @@ build:
 
 ---
 
+## Tool Configuration
+
+### gitlab-ci-local - Local Pipeline Testing
+
+Install and configure gitlab-ci-local for testing pipelines locally:
+
+```bash
+# Install gitlab-ci-local (npm)
+npm install -g gitlab-ci-local
+
+# Install gitlab-ci-local (brew)
+brew install gitlab-ci-local
+
+# Run entire pipeline
+gitlab-ci-local
+
+# Run specific job
+gitlab-ci-local build
+
+# List all jobs
+gitlab-ci-local --list
+
+# Run with specific file
+gitlab-ci-local --file .gitlab-ci.custom.yml
+
+# Dry run
+gitlab-ci-local --preview
+
+# Use specific variables
+gitlab-ci-local --variable CI_COMMIT_REF_NAME=main
+```
+
+### .gitlab-ci-local-variables.yml
+
+```yaml
+# .gitlab-ci-local-variables.yml
+# Local development variables
+CI_PROJECT_NAME: my-project
+CI_COMMIT_BRANCH: main
+CI_COMMIT_REF_NAME: main
+DOCKER_REGISTRY: localhost:5000
+DEPLOY_ENV: development
+```
+
+### gitlab-ci-lint - Pipeline Validation
+
+```bash
+# Validate .gitlab-ci.yml syntax (requires GitLab instance)
+gitlab-ci-lint .gitlab-ci.yml
+
+# Using GitLab API
+curl --header "PRIVATE-TOKEN: ${GITLAB_TOKEN}" \
+  "https://gitlab.com/api/v4/projects/${PROJECT_ID}/ci/lint" \
+  --form "content@.gitlab-ci.yml"
+
+# Using glab CLI
+glab ci lint
+```
+
+### VS Code Settings
+
+```json
+{
+  "files.associations": {
+    ".gitlab-ci*.yml": "yaml"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true
+  },
+  "yaml.schemas": {
+    "https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json": [
+      ".gitlab-ci.yml",
+      ".gitlab-ci.*.yml"
+    ]
+  },
+  "yaml.customTags": [
+    "!reference sequence"
+  ]
+}
+```
+
+### Pre-commit Hooks
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        files: \.gitlab-ci.*\.ya?ml$
+      - id: check-added-large-files
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        files: \.gitlab-ci.*\.ya?ml$
+        args: ['-d', '{extends: default, rules: {line-length: {max: 120}}}']
+
+  # Optional: gitlab-ci-local validation
+  - repo: local
+    hooks:
+      - id: gitlab-ci-local-lint
+        name: GitLab CI Local Lint
+        entry: gitlab-ci-local --preview
+        language: system
+        files: \.gitlab-ci\.yml$
+        pass_filenames: false
+```
+
+### yamllint Configuration
+
+```yaml
+# .yamllint
+extends: default
+
+rules:
+  line-length:
+    max: 120
+    level: warning
+  indentation:
+    spaces: 2
+    indent-sequences: true
+  comments:
+    min-spaces-from-content: 1
+  document-start: disable
+  truthy:
+    allowed-values: ['true', 'false']
+  key-duplicates: enable
+```
+
+### EditorConfig
+
+```ini
+# .editorconfig
+[.gitlab-ci*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+```
+
+### Makefile
+
+```makefile
+# Makefile
+.PHONY: ci-local ci-list ci-validate
+
+ci-local:
+ gitlab-ci-local
+
+ci-list:
+ gitlab-ci-local --list
+
+ci-validate:
+ gitlab-ci-local --preview
+ yamllint .gitlab-ci.yml
+ @echo "✓ GitLab CI configuration is valid"
+
+ci-job:
+ gitlab-ci-local $(JOB)
+
+# Example: make ci-job JOB=build
+
+ci-debug:
+ gitlab-ci-local --shell-isolation=false $(JOB)
+```
+
+### .gitlab-ci-include-local.yml
+
+Template for reusable CI configurations:
+
+```yaml
+# .gitlab-ci/templates/docker.yml
+.docker_build:
+  image: docker:24
+  services:
+    - docker:24-dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: "/certs"
+
+.docker_push:
+  extends: .docker_build
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+```
+
+### GitLab CI Workflow Validation Job
+
+Add to your `.gitlab-ci.yml`:
+
+```yaml
+validate:ci:
+  stage: .pre
+  image: python:3.11-slim
+  before_script:
+    - pip install yamllint
+  script:
+    - yamllint .gitlab-ci.yml
+    - echo "✓ Pipeline configuration is valid"
+  rules:
+    - changes:
+        - .gitlab-ci.yml
+        - .gitlab-ci/**/*
+```
+
+### glab CLI Configuration
+
+```yaml
+# ~/.config/glab-cli/config.yml
+hosts:
+  gitlab.com:
+    user: your-username
+    token: glpat-xxxxxxxxxxxxx
+    git_protocol: ssh
+    api_protocol: https
+
+pager:
+  ci: false
+  mr: less
+
+editor: vim
+
+browser: firefox
+```
+
+### Docker Compose for Local GitLab Runner
+
+```yaml
+# docker-compose.gitlab-runner.yml
+version: '3.8'
+
+services:
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner-local
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./gitlab-runner-config:/etc/gitlab-runner
+    restart: unless-stopped
+```
+
+---
+
 ## References
 
 ### Official Documentation

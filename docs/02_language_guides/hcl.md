@@ -661,7 +661,160 @@ resource "aws_instance" "web" {
 
 ---
 
-## References
+## Tool Configuration
+
+### Terraform fmt
+
+Terraform includes a built-in formatter that follows HCL style conventions:
+
+```bash
+# Format all HCL files in current directory
+terraform fmt
+
+# Format specific directory
+terraform fmt modules/networking
+
+# Check formatting without making changes
+terraform fmt -check
+
+# Recursive formatting
+terraform fmt -recursive
+```
+
+### terraform.rc Configuration
+
+Configure Terraform CLI behavior:
+
+```hcl
+# ~/.terraformrc or terraform.rc
+plugin_cache_dir   = "$HOME/.terraform.d/plugin-cache"
+disable_checkpoint = true
+
+credentials "app.terraform.io" {
+  token = "xxxxxx.atlasv1.zzzzzzzzzzzzz"
+}
+```
+
+### tflint Configuration
+
+```hcl
+# .tflint.hcl
+config {
+  module = true
+  force = false
+}
+
+plugin "terraform" {
+  enabled = true
+  preset  = "recommended"
+}
+
+plugin "aws" {
+  enabled = true
+  version = "0.31.0"
+  source  = "github.com/terraform-linters/tflint-ruleset-aws"
+}
+
+rule "terraform_naming_convention" {
+  enabled = true
+}
+
+rule "terraform_typed_variables" {
+  enabled = true
+}
+
+rule "terraform_required_version" {
+  enabled = true
+}
+
+rule "terraform_required_providers" {
+  enabled = true
+}
+```
+
+### EditorConfig for HCL
+
+```ini
+# .editorconfig
+[*.{tf,hcl}]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+```
+
+### Pre-commit Hooks
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.88.4
+    hooks:
+      - id: terraform_fmt
+        args:
+          - --args=-diff
+          - --args=-write=true
+
+      - id: terraform_validate
+        args:
+          - --hook-config=--retry-once-with-cleanup=true
+
+      - id: terraform_tflint
+        args:
+          - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
+
+      - id: terraform_docs
+        args:
+          - --hook-config=--path-to-file=README.md
+          - --hook-config=--add-to-existing-file=true
+          - --hook-config=--create-file-if-not-exist=true
+```
+
+### VS Code Settings
+
+```json
+{
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file"
+  },
+  "[terraform-vars]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true
+  },
+  "terraform.languageServer.enable": true,
+  "terraform.validation.enableEnhancedValidation": true
+}
+```
+
+### Makefile Integration
+
+```makefile
+# Makefile
+.PHONY: fmt validate lint
+
+fmt:
+ terraform fmt -recursive
+
+validate:
+ terraform init -backend=false
+ terraform validate
+
+lint:
+ tflint --init
+ tflint --recursive
+
+check: fmt validate lint
+ @echo "All checks passed!"
+```
+
+---
+
+## Resources
 
 ### Official Documentation
 
@@ -669,7 +822,7 @@ resource "aws_instance" "web" {
 - [Terraform Language Documentation](https://www.terraform.io/language)
 - [HCL GitHub Repository](https://github.com/hashicorp/hcl)
 
-### Best Practices
+### Style Guides
 
 - [Terraform Best Practices](https://www.terraform-best-practices.com/)
 - [HCL Style Guide](https://www.terraform.io/docs/language/syntax/style.html)

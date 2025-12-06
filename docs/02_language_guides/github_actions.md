@@ -624,6 +624,251 @@ on:
 
 ---
 
+## Tool Configuration
+
+### act - Local GitHub Actions Testing
+
+Install and configure act for local workflow testing:
+
+```bash
+# Install act (macOS)
+brew install act
+
+# Install act (Linux)
+curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
+
+# Run default event (push)
+act
+
+# Run specific event
+act pull_request
+
+# Run specific job
+act -j build
+
+# Run with secrets file
+act --secret-file .secrets
+
+# List workflows
+act -l
+
+# Dry run
+act -n
+```
+
+### .actrc Configuration
+
+```ini
+# .actrc
+-P ubuntu-latest=catthehacker/ubuntu:act-latest
+-P ubuntu-22.04=catthehacker/ubuntu:act-22.04
+-P ubuntu-20.04=catthehacker/ubuntu:act-20.04
+--container-architecture linux/amd64
+```
+
+### actionlint - Workflow Linter
+
+```bash
+# Install actionlint
+brew install actionlint
+
+# Lint all workflows
+actionlint
+
+# Lint specific workflow
+actionlint .github/workflows/ci.yml
+
+# Show available checks
+actionlint -list
+
+# Output as JSON
+actionlint -format '{{json .}}'
+```
+
+### .github/actionlint.yml
+
+```yaml
+# .github/actionlint.yml
+self-hosted-runner:
+  labels:
+    - self-hosted
+    - linux
+    - x64
+
+config-variables:
+  # Define repository variables
+  - DEPLOY_ENV
+  - API_ENDPOINT
+
+shellcheck:
+  enable: true
+  shell-options: -e
+
+pyflakes:
+  enable: true
+  python-version: '3.11'
+```
+
+### VS Code Settings
+
+```json
+{
+  "files.associations": {
+    "*.yml": "yaml",
+    ".github/workflows/*.yml": "github-actions-workflow"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true
+  },
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": [
+      ".github/workflows/*.yml",
+      ".github/workflows/*.yaml"
+    ]
+  },
+  "yaml.customTags": [
+    "!reference sequence"
+  ]
+}
+```
+
+### Pre-commit Hooks
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        files: \.github/workflows/.*\.ya?ml$
+      - id: check-added-large-files
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        files: \.github/workflows/.*\.ya?ml$
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.6.27
+    hooks:
+      - id: actionlint
+```
+
+### GitHub Actions Workflow for Validation
+
+```yaml
+name: Workflow Validation
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run actionlint
+        uses: raven-actions/actionlint@v1
+        with:
+          fail-on-error: true
+
+      - name: Validate workflow syntax
+        run: |
+          for workflow in .github/workflows/*.yml; do
+            echo "Validating $workflow"
+            yamllint "$workflow"
+          done
+```
+
+### Makefile
+
+```makefile
+# Makefile
+.PHONY: act-list act-push act-pr lint-workflows
+
+act-list:
+ act -l
+
+act-push:
+ act push
+
+act-pr:
+ act pull_request
+
+act-dry:
+ act -n
+
+lint-workflows:
+ actionlint
+
+validate-workflows:
+ yamllint .github/workflows/*.yml
+ actionlint
+
+test-workflow:
+ act -j $(JOB)
+
+# Example: make test-workflow JOB=build
+```
+
+### .secrets File (for act)
+
+```bash
+# .secrets
+# DO NOT commit this file - add to .gitignore
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxx
+AWS_ACCESS_KEY_ID=AKIAXXXXXXXXXXXXX
+AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxx
+NPM_TOKEN=npm_xxxxxxxxxxxxx
+```
+
+### EditorConfig
+
+```ini
+# .editorconfig
+[.github/workflows/*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+```
+
+### yamllint Configuration
+
+```yaml
+# .yamllint
+extends: default
+
+rules:
+  line-length:
+    max: 120
+    level: warning
+  indentation:
+    spaces: 2
+    indent-sequences: true
+  comments:
+    min-spaces-from-content: 1
+  document-start: disable
+  truthy:
+    allowed-values: ['true', 'false', 'on', 'off']
+
+ignore: |
+  node_modules/
+  .venv/
+```
+
+---
+
 ## References
 
 ### Official Documentation
