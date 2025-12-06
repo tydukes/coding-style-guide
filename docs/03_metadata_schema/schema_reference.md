@@ -729,4 +729,4 @@ python scripts/validate_metadata.py --fix .
 - [Semantic Versioning 2.0.0](https://semver.org/)
 - [JSDoc Tag Reference](https://jsdoc.app/)
 - [Python Docstring Conventions (PEP 257)](https://peps.python.org/pep-0257/)
-- [Terraform Module Structure](https://www.terraform.io/docs/language/modules/develop/structure.html)
+- [Terraform Module Structure](https://developer.hashicorp.com/terraform/language/modules/develop/structure)

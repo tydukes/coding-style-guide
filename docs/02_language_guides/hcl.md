@@ -858,7 +858,7 @@ check: fmt validate lint
 ### Style Guides
 
 - [Terraform Best Practices](https://www.terraform-best-practices.com/)
-- [HCL Style Guide](https://www.terraform.io/docs/language/syntax/style.html)
+- [HCL Style Guide](https://developer.hashicorp.com/terraform/language/syntax/style)
 
 ---
 

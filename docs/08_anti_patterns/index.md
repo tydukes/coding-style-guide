@@ -1216,7 +1216,7 @@ e2e-test:
 
 ### Official Documentation
 
-- [Terraform Best Practices](https://www.terraform.io/docs/cloud/guides/recommended-practices/)
+- [Terraform Best Practices](https://developer.hashicorp.com/terraform/cloud-docs/recommended-practices)
 - [Ansible Best Practices](https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html)
 - [Python Anti-Patterns](https://docs.python-guide.org/writing/gotchas/)
 - [TypeScript Do's and Don'ts](https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html)

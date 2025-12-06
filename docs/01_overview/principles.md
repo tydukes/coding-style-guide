@@ -348,4 +348,4 @@ Propose changes via pull request with clear rationale. Major principle changes t
 - [Keep a Changelog](https://keepachangelog.com/)
 - [The Zen of Python](https://peps.python.org/pep-0020/)
 - [Google Style Guides](https://google.github.io/styleguide/)
-- [Infrastructure as Code Best Practices](https://www.terraform.io/docs/language/style.html)
+- [Infrastructure as Code Best Practices](https://developer.hashicorp.com/terraform/language/style)

@@ -648,7 +648,6 @@ Found something missing or incorrect?
 
 1. Open an issue: [GitHub Issues](https://github.com/tydukes/coding-style-guide/issues)
 2. Submit a pull request: [Contributing Guide](https://github.com/tydukes/coding-style-guide/blob/main/CONTRIBUTING.md)
-3. Join discussions: [GitHub Discussions](https://github.com/tydukes/coding-style-guide/discussions)
 
 ## See Also
 
@@ -701,7 +700,6 @@ Found something missing or incorrect?
 ### Tools
 
 - [Metadata Validator](https://github.com/tydukes/coding-style-guide/blob/main/scripts/validate_metadata.py)
-- [Container Image](https://github.com/tydukes/coding-style-guide/pkgs/container/coding-style-guide)
 - [GitHub Action](https://github.com/tydukes/coding-style-guide/tree/main/.github/actions/validate)
 
 ### Community
