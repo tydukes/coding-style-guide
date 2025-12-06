@@ -24,6 +24,39 @@ machine-friendly, combining declarative resource definitions with imperative pro
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Naming** | | | |
+| Blocks | `snake_case` | `resource`, `variable`, `output` | Block types lowercase |
+| Identifiers | `snake_case` | `aws_instance`, `vpc_config` | Lowercase with underscores |
+| Variables | `snake_case` | `vpc_cidr`, `instance_type` | Descriptive names |
+| Locals | `snake_case` | `common_tags`, `region_map` | Computed local values |
+| **Syntax** | | | |
+| Blocks | `type "label" { }` | `resource "aws_vpc" "main" { }` | Type, optional labels, body |
+| Attributes | `key = value` | `cidr_block = "10.0.0.0/16"` | Key-value assignment |
+| Comments | `#` or `//` or `/* */` | `# Comment`, `// Comment` | Single or multi-line |
+| **Data Types** | | | |
+| String | `"text"` | `"hello"` | Double-quoted strings |
+| Number | Numeric | `42`, `3.14` | Integer or float |
+| Bool | `true` / `false` | `enabled = true` | Boolean values |
+| List | `[...]` | `["a", "b", "c"]` | Ordered collection |
+| Map | `{...}` | `{key = "value"}` | Key-value pairs |
+| **Formatting** | | | |
+| Indentation | 2 spaces | `attribute = value` | Consistent 2-space indent |
+| Line Length | 120 characters | Keep lines reasonable | Readability |
+| Blank Lines | Between blocks | `resource {...}\n\nresource {...}` | Separate blocks |
+| **Expressions** | | | |
+| Interpolation | `${ }` | `"${var.name}"` | Embed expressions (legacy) |
+| References | Direct reference | `var.name` | Modern syntax (preferred) |
+| Functions | Built-in functions | `file("path")`, `join(",", list)` | Use HCL functions |
+| **Best Practices** | | | |
+| Terraform Fmt | Use `terraform fmt` | Auto-format files | Consistent formatting |
+| No Heredocs | Avoid when possible | Use `file()` function | Better readability |
+
+---
+
 ## Basic Syntax
 
 ### Blocks

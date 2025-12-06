@@ -24,6 +24,39 @@ practices for maintainable, production-ready container orchestration.
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **File Naming** | | | |
+| Development | `docker-compose.yml` | `docker-compose.yml` | Default compose file |
+| Production | `docker-compose.prod.yml` | `docker-compose.prod.yml` | Production overrides |
+| Testing | `docker-compose.test.yml` | `docker-compose.test.yml` | Test environment |
+| **Top-Level Keys** | | | |
+| `version` | Compose file version | `version: "3.8"` | File format version |
+| `services` | Container definitions | Service configurations | Required |
+| `networks` | Network definitions | Custom networks | Optional |
+| `volumes` | Volume definitions | Persistent storage | Optional |
+| **Service Configuration** | | | |
+| `image` | Container image | `image: node:20-alpine` | Docker image to use |
+| `build` | Build configuration | `build: ./app` | Build from Dockerfile |
+| `ports` | Port mapping | `ports: ["3000:3000"]` | Host:container |
+| `environment` | Environment vars | `NODE_ENV: production` | Container env vars |
+| `volumes` | Mount points | `./src:/app/src` | Host:container paths |
+| `depends_on` | Service dependencies | `depends_on: [db]` | Start order |
+| `networks` | Network assignment | `networks: [frontend]` | Attach to networks |
+| **Best Practices** | | | |
+| Version Pinning | Pin image versions | `node:20.10.0-alpine` | Avoid `latest` tag |
+| `.env` Files | Use env files | `.env` for secrets | Never commit secrets |
+| Health Checks | Define health checks | `healthcheck: {...}` | Service readiness |
+| Resource Limits | Set limits | `mem_limit`, `cpus` | Prevent resource exhaustion |
+| **Common Patterns** | | | |
+| Web + DB | Multi-tier apps | `web` + `db` services | Standard pattern |
+| Dev Overrides | Use multiple files | `-f compose.yml -f dev.yml` | Layer configurations |
+| Secrets | Use secrets (v3.1+) | `secrets:` block | Secure sensitive data |
+
+---
+
 ## Basic Structure
 
 ### Simple Compose File

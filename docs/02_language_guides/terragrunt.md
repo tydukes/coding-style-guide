@@ -24,6 +24,35 @@ Terragrunt best practices for multi-environment infrastructure.
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Files** | | | |
+| Root Config | `terragrunt.hcl` | `terragrunt.hcl` | Root configuration file |
+| Environment Config | `{env}/terragrunt.hcl` | `prod/terragrunt.hcl` | Per-environment config |
+| Module Config | `{module}/terragrunt.hcl` | `vpc/terragrunt.hcl` | Per-module config |
+| **Structure** | | | |
+| Directory Layout | Environment-based | `{env}/{region}/{module}` | Hierarchical structure |
+| Root HCL | Shared config | DRY backend, provider config | Reusable configuration |
+| **Key Blocks** | | | |
+| `terraform` | Terraform settings | `source = "../modules/vpc"` | Module source |
+| `include` | Include parent config | `include { path = find_in_parent_folders() }` | Inherit settings |
+| `inputs` | Module variables | `inputs = { vpc_cidr = "10.0.0.0/16" }` | Pass variables |
+| `remote_state` | State configuration | Backend settings | S3, GCS, etc. |
+| `dependency` | Module dependencies | `dependency "vpc" { }` | Inter-module deps |
+| **Functions** | | | |
+| `find_in_parent_folders()` | Find parent config | Auto-locate root HCL | Traverse up directories |
+| `get_terragrunt_dir()` | Current directory | Working directory path | Current module path |
+| `path_relative_to_include()` | Relative path | Generate unique names | Path-based naming |
+| **Best Practices** | | | |
+| DRY Principle | Use root HCL | Shared backend, provider | Avoid repetition |
+| Dependencies | Explicit deps | Use `dependency` blocks | Clear relationships |
+| State Isolation | Per-module state | Separate state files | Blast radius reduction |
+| Run All | Use with caution | `terragrunt run-all` | Test in non-prod first |
+
+---
+
 ## Directory Structure
 
 ### Standard Layout

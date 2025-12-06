@@ -24,6 +24,40 @@ secure workflows.
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **File Naming** | | | |
+| Workflows | `kebab-case.yml` | `ci.yml`, `deploy-prod.yml` | Descriptive workflow names |
+| Location | `.github/workflows/` | Required directory | Workflow files location |
+| **Workflow Structure** | | | |
+| `name` | Workflow name | `name: CI Pipeline` | Descriptive workflow name |
+| `on` | Trigger events | `on: [push, pull_request]` | When workflow runs |
+| `jobs` | Job definitions | `jobs:` | Container for jobs |
+| `runs-on` | Runner OS | `runs-on: ubuntu-latest` | Execution environment |
+| `steps` | Job steps | `steps:` | Sequential actions |
+| **Triggers** | | | |
+| Push | `on: push` | Branch pushes | Code push events |
+| Pull Request | `on: pull_request` | PR events | PR open/update |
+| Schedule | `on: schedule` | `cron: '0 0 * * *'` | Scheduled runs |
+| Workflow Dispatch | `on: workflow_dispatch` | Manual triggers | Manual workflow run |
+| **Steps** | | | |
+| Checkout | `actions/checkout@v4` | Clone repository | Get code |
+| Run Command | `run: npm install` | Execute shell command | Run scripts |
+| Use Action | `uses: actions/setup-node@v4` | Use marketplace action | Reusable actions |
+| Set Environment | `env:` | `NODE_ENV: production` | Environment variables |
+| **Secrets** | | | |
+| Access Secrets | `${{ secrets.SECRET_NAME }}` | `${{ secrets.API_KEY }}` | Secure credentials |
+| Environment | `environment: production` | Deployment environment | Environment protection |
+| **Best Practices** | | | |
+| Pin Versions | Use specific versions | `actions/checkout@v4` | Not `@main` or `@master` |
+| Matrix Builds | Test multiple versions | `strategy: matrix:` | Test compatibility |
+| Caching | Cache dependencies | `actions/cache@v4` | Speed up workflows |
+| Concurrency | Control concurrent runs | `concurrency:` | Prevent conflicts |
+
+---
+
 ## Basic Workflow Structure
 
 ### Simple CI Workflow

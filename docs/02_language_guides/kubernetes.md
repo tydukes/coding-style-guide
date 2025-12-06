@@ -33,6 +33,38 @@ install, and upgrade applications.
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Naming** | | | |
+| Resources | `kebab-case` | `my-app-deployment`, `web-service` | Lowercase with hyphens |
+| Namespaces | `kebab-case` | `production`, `staging` | Environment or team based |
+| Labels | `kebab-case` keys | `app: my-app`, `env: prod` | Consistent label keys |
+| Helm Charts | `kebab-case` | `my-application` | Chart directory name |
+| **Resource Types** | | | |
+| Deployment | Application workloads | `kind: Deployment` | Stateless apps |
+| StatefulSet | Stateful workloads | `kind: StatefulSet` | Databases, persistent apps |
+| Service | Network services | `kind: Service` | Load balancing, discovery |
+| ConfigMap | Configuration | `kind: ConfigMap` | Non-sensitive config |
+| Secret | Sensitive data | `kind: Secret` | Passwords, tokens |
+| Ingress | HTTP routing | `kind: Ingress` | External access |
+| **File Naming** | | | |
+| Manifests | `resource-type.yaml` | `deployment.yaml`, `service.yaml` | One resource per file |
+| Combined | `app-name.yaml` | `my-app.yaml` | All resources together |
+| Helm Values | `values.yaml` | `values.yaml`, `values-prod.yaml` | Chart values |
+| **Labels** | | | |
+| app | Application name | `app: nginx` | Required label |
+| version | App version | `version: "1.0.0"` | Deployment tracking |
+| environment | Environment | `environment: production` | Env identification |
+| **Best Practices** | | | |
+| Resource Limits | Always set | `limits:` and `requests:` | CPU and memory |
+| Readiness Probes | Define probes | `readinessProbe:` | Health checking |
+| Namespaces | Use namespaces | Isolate workloads | Multi-tenancy |
+| Helm Charts | Package with Helm | Reusable templates | DRY principle |
+
+---
+
 ## Naming Conventions
 
 ### Resource Names

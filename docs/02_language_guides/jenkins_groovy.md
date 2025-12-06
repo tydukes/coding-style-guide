@@ -28,6 +28,39 @@ define Jenkins pipelines. This guide focuses on Jenkins Pipeline (as code) using
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **File Naming** | | | |
+| Pipeline File | `Jenkinsfile` | `Jenkinsfile` | At repository root |
+| Shared Library | `vars/functionName.groovy` | `vars/buildDocker.groovy` | Shared pipeline functions |
+| **Declarative Pipeline** | | | |
+| `pipeline` | Top-level block | `pipeline { }` | Required wrapper |
+| `agent` | Execution environment | `agent any` or `agent { docker }` | Where to run |
+| `stages` | Pipeline phases | `stages { }` | Container for stages |
+| `stage` | Individual phase | `stage('Build') { }` | Named pipeline stage |
+| `steps` | Actual commands | `steps { sh 'make' }` | Commands to execute |
+| `post` | Post-build actions | `post { always { } }` | Cleanup, notifications |
+| **Scripted Pipeline** | | | |
+| `node` | Execution block | `node { }` | Where pipeline runs |
+| `stage` | Pipeline stage | `stage('Build') { }` | Same as declarative |
+| **Variables** | | | |
+| Environment | `environment { }` | `environment { FOO = 'bar' }` | Environment variables |
+| Parameters | `parameters { }` | `string(name: 'VERSION')` | Build parameters |
+| **Common Steps** | | | |
+| Shell | `sh` | `sh 'make build'` | Execute shell commands |
+| Git | `git` | `git 'https://repo.git'` | Checkout code |
+| Docker | `docker.build` | `docker.build('image:tag')` | Build Docker images |
+| Archive | `archiveArtifacts` | `archiveArtifacts '*.jar'` | Save build artifacts |
+| **Best Practices** | | | |
+| Declarative | Prefer declarative | Simpler, more maintainable | Use scripted only when needed |
+| Shared Libraries | DRY code | Reusable pipeline functions | Avoid duplication |
+| Credentials | Use credentials() | Never hardcode secrets | Secure credential management |
+| Parallel | Use parallel {} | Speed up builds | Run stages concurrently |
+
+---
+
 ## Declarative Pipeline Structure
 
 ### Basic Declarative Pipeline
