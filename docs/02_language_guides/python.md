@@ -794,8 +794,37 @@ def get_user(
 - [mypy Type Checker](https://mypy.readthedocs.io/)
 - [pytest Testing Framework](https://docs.pytest.org/)
 
-### Related Guides
+### See Also
 
-- [Metadata Schema Reference](../03_metadata_schema/schema_reference.md)
-- [Getting Started Guide](../01_overview/getting_started.md)
-- [CI/CD Integration](../05_ci_cd/ai_validation_pipeline.md)
+### Related Language Guides
+
+- [TypeScript Style Guide](typescript.md) - Modern type-safe programming
+- [Bash Style Guide](bash.md) - Shell scripting for automation
+
+### Development Tools & Practices
+
+- [IDE Integration Guide](../05_ci_cd/ide_integration_guide.md) - VS Code, PyCharm setup
+- [Pre-commit Hooks Guide](../05_ci_cd/precommit_hooks_guide.md) - Automated validation
+- [Local Validation Setup](../05_ci_cd/local_validation_setup.md) - Development environment
+
+### Testing & Quality
+
+- [Testing Strategies](../05_ci_cd/testing_strategies.md) - pytest patterns and best practices
+- [Security Scanning Guide](../05_ci_cd/security_scanning_guide.md) - Bandit, Safety integration
+
+### CI/CD Integration
+
+- [GitHub Actions Guide](../05_ci_cd/github_actions_guide.md) - Python workflow examples
+- [GitLab CI Guide](../05_ci_cd/gitlab_ci_guide.md) - Pipeline configuration
+- [AI Validation Pipeline](../05_ci_cd/ai_validation_pipeline.md) - Automated code review
+
+### Templates & Examples
+
+- [Python Package Template](../04_templates/python_package_template.md) - Project structure
+- [Python Package Example](../05_examples/python_package_example.md) - Complete implementation
+
+### Core Documentation
+
+- [Getting Started Guide](../01_overview/getting_started.md) - Repository setup
+- [Metadata Schema Reference](../03_metadata_schema/schema_reference.md) - Frontmatter requirements
+- [Principles](../01_overview/principles.md) - Style guide philosophy

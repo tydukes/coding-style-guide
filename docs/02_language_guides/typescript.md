@@ -953,6 +953,49 @@ if (!isUser(data)) {
 
 ---
 
+## See Also
+
+### Related Language Guides
+
+- [Python Style Guide](python.md) - Similar modern type-safe development
+- [JavaScript/JSON Guide](json.md) - JSON data structures and APIs
+- [Bash Style Guide](bash.md) - Build scripts and automation
+
+### Development Tools & Practices
+
+- [IDE Integration Guide](../05_ci_cd/ide_integration_guide.md) - VS Code, WebStorm setup
+- [Pre-commit Hooks Guide](../05_ci_cd/precommit_hooks_guide.md) - ESLint, Prettier automation
+- [Local Validation Setup](../05_ci_cd/local_validation_setup.md) - Node.js, npm/pnpm setup
+
+### Testing & Quality
+
+- [Testing Strategies](../05_ci_cd/testing_strategies.md) - Jest, Playwright, Cypress patterns
+- [Security Scanning Guide](../05_ci_cd/security_scanning_guide.md) - npm audit, Snyk integration
+
+### CI/CD Integration
+
+- [GitHub Actions Guide](../05_ci_cd/github_actions_guide.md) - Node.js workflow examples
+- [GitLab CI Guide](../05_ci_cd/gitlab_ci_guide.md) - TypeScript pipeline configuration
+- [AI Validation Pipeline](../05_ci_cd/ai_validation_pipeline.md) - Automated code review
+
+### Infrastructure & Deployment
+
+- [AWS CDK Guide](cdk.md) - Infrastructure as Code with TypeScript
+- [Dockerfile Guide](dockerfile.md) - Node.js containerization
+- [Docker Compose Guide](docker_compose.md) - Multi-container applications
+
+### Templates & Examples
+
+- [TypeScript Library Example](../05_examples/typescript_library_example.md) - Complete library setup
+
+### Core Documentation
+
+- [Getting Started Guide](../01_overview/getting_started.md) - Repository setup
+- [Metadata Schema Reference](../03_metadata_schema/schema_reference.md) - Frontmatter requirements
+- [Principles](../01_overview/principles.md) - Style guide philosophy
+
+---
+
 ## References
 
 ### Official Documentation

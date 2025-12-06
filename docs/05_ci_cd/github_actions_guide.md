@@ -1382,6 +1382,45 @@ jobs:
 
 ---
 
+## See Also
+
+### Related CI/CD Guides
+
+- [GitLab CI Guide](gitlab_ci_guide.md) - Alternative CI/CD platform
+- [Jenkins Pipeline Guide](jenkins_pipeline_guide.md) - Traditional CI/CD with Jenkins
+- [AI Validation Pipeline](ai_validation_pipeline.md) - Automated code review
+
+### Development Practices
+
+- [Pre-commit Hooks Guide](precommit_hooks_guide.md) - Local validation before commits
+- [Local Validation Setup](local_validation_setup.md) - Development environment setup
+- [IDE Integration Guide](ide_integration_guide.md) - Editor integration for validation
+
+### Testing & Security
+
+- [Testing Strategies](testing_strategies.md) - Test automation patterns
+- [Security Scanning Guide](security_scanning_guide.md) - SAST, SCA, secrets detection
+
+### Language-Specific Workflows
+
+- [Python Guide](../02_language_guides/python.md) - pytest, black, mypy workflows
+- [TypeScript Guide](../02_language_guides/typescript.md) - Jest, ESLint, Prettier workflows
+- [Terraform Guide](../02_language_guides/terraform.md) - terraform fmt, validate, plan workflows
+- [Docker Guide](../02_language_guides/dockerfile.md) - Container build and push workflows
+
+### Templates & Configuration
+
+- [GitHub Actions Workflow Templates](../04_templates/github_actions_workflow_templates.md) - Reusable workflows
+- [.gitignore Templates](../04_templates/gitignore_templates.md) - Ignore patterns
+
+### Core Documentation
+
+- [Getting Started Guide](../01_overview/getting_started.md) - Repository setup
+- [Principles](../01_overview/principles.md) - CI/CD philosophy
+- [Structure Guide](../01_overview/structure.md) - Project organization
+
+---
+
 ## References
 
 ### Official Documentation
