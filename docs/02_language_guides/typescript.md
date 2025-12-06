@@ -87,6 +87,40 @@ Gradually enable strict checks file-by-file with `// @ts-check` comments.
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Naming** | | | |
+| Variables | `camelCase` | `userName`, `apiResponse` | Descriptive, lowercase first letter |
+| Constants | `UPPER_SNAKE_CASE` | `MAX_RETRIES`, `API_URL` | Module-level constants, all uppercase |
+| Functions | `camelCase` | `getUser()`, `validateInput()` | Verbs, descriptive action names |
+| Interfaces | `PascalCase` | `User`, `ApiResponse` | Nouns, no 'I' prefix (modern convention) |
+| Types | `PascalCase` | `UserId`, `StatusCode` | Nouns, capitalize each word |
+| Classes | `PascalCase` | `UserService`, `DataProcessor` | Nouns, capitalize each word |
+| Enums | `PascalCase` | `Color`, `HttpStatus` | Singular nouns |
+| Enum Members | `PascalCase` | `Color.Red`, `HttpStatus.Ok` | PascalCase (not UPPER_CASE) |
+| Methods | `camelCase` | `calculateTotal()`, `isValid()` | Like functions, instance/class methods |
+| Private Fields | `#privateField` | `#cache`, `#internalState` | Use private class fields (TC39) |
+| **Formatting** | | | |
+| Line Length | 100 characters | `// Prettier default` | Max 100 characters per line |
+| Indentation | 2 spaces | `if (condition) {` | 2 spaces, never tabs |
+| Semicolons | Required | `const x = 5;` | Always use semicolons |
+| String Quotes | Double quotes | `"hello world"` | Prefer double, single for JSX |
+| **Imports** | | | |
+| Order | External, internal, types | `import React from "react"` | Group and alphabetize |
+| Style | ES6 imports | `import { User } from "./types"` | Named or default imports |
+| Type Imports | `import type` | `import type { User } from "./types"` | Use for type-only imports |
+| **Types** | | | |
+| Annotations | Explicit when needed | `const user: User = getData()` | Leverage type inference |
+| Return Types | Always on functions | `function foo(): string { }` | Explicit return types required |
+| Generics | `T`, `K`, `V` | `function map<T>(items: T[])` | Single letter for simple, descriptive for complex |
+| **Files** | | | |
+| Components | `PascalCase.tsx` | `UserProfile.tsx`, `Button.tsx` | React components |
+| Utilities | `camelCase.ts` | `apiClient.ts`, `validators.ts` | Utility modules |
+| Types | `camelCase.types.ts` | `user.types.ts`, `api.types.ts` | Type definition files |
+| Tests | `*.test.ts` or `*.spec.ts` | `user.test.ts`, `api.spec.ts` | Co-located with source |
+
 ## Naming Conventions
 
 ```typescript

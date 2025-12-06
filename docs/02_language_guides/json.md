@@ -24,6 +24,37 @@ responses, and data exchange.
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Syntax** | | | |
+| Indentation | 2 spaces | `"key": "value"` | Consistent 2-space indentation |
+| Key Names | `camelCase` or `snake_case` | `"userName"` or `"user_name"` | Be consistent project-wide |
+| Quotes | Double quotes only | `"key": "value"` | Strings must use double quotes |
+| Trailing Commas | Not allowed | `{"a": 1, "b": 2}` | No comma after last element |
+| **Data Types** | | | |
+| String | `"text"` | `"hello world"` | Double-quoted text |
+| Number | Numeric | `42`, `3.14`, `-10` | Integer or float |
+| Boolean | `true` / `false` | `"active": true` | Lowercase only |
+| Null | `null` | `"value": null` | Explicit null value |
+| Array | `[...]` | `[1, 2, 3]` | Ordered collection |
+| Object | `{...}` | `{"key": "value"}` | Key-value pairs |
+| **Formatting** | | | |
+| Arrays (short) | Single line | `[1, 2, 3]` | If fits on one line |
+| Arrays (long) | Multi-line | `[\n  "item1",\n  "item2"\n]` | One item per line |
+| Objects (short) | Single line | `{"id": 1}` | If fits on one line |
+| Objects (long) | Multi-line | `{\n  "key": "value"\n}` | One property per line |
+| **Best Practices** | | | |
+| Validation | Use JSON Schema | Define structure and constraints | Validate with schema |
+| Comments | Not supported | Use description fields | JSON doesn't allow comments |
+| File Size | Keep reasonable | Consider NDJSON for large data | Split large files |
+| **Files** | | | |
+| Extension | `.json` | `config.json`, `package.json` | Always `.json` |
+| Encoding | UTF-8 | `UTF-8 without BOM` | Standard encoding |
+
+---
+
 ## Basic Syntax
 
 ### Objects

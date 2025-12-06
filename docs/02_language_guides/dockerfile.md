@@ -22,6 +22,36 @@ best practices for creating secure, efficient, and maintainable container images
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Instructions** | | | |
+| Base Image | `FROM` | `FROM node:20-alpine` | Use specific tags, prefer slim/alpine |
+| Working Dir | `WORKDIR` | `WORKDIR /app` | Sets working directory |
+| Copy Files | `COPY` | `COPY package.json ./` | Copy from build context |
+| Run Command | `RUN` | `RUN npm install` | Execute at build time |
+| Environment | `ENV` | `ENV NODE_ENV=production` | Set environment variables |
+| Expose Port | `EXPOSE` | `EXPOSE 3000` | Document exposed ports |
+| User | `USER` | `USER node` | Run as non-root user |
+| Entrypoint | `ENTRYPOINT` | `ENTRYPOINT ["node", "app.js"]` | Main executable |
+| Command | `CMD` | `CMD ["serve"]` | Default arguments |
+| **Best Practices** | | | |
+| Multi-stage | Use stages | `FROM ... AS builder` | Separate build/runtime |
+| Layer Order | Least to most changing | Dependencies before source | Optimize caching |
+| `.dockerignore` | Always use | `.git`, `node_modules` | Exclude unnecessary files |
+| Combine RUN | Chain commands | `RUN apt-get update && \` | Reduce layers |
+| Security | Non-root user | `USER node` | Never run as root |
+| **File Naming** | | | |
+| Standard | `Dockerfile` | `Dockerfile` | No extension |
+| Multi-stage | `Dockerfile.{env}` | `Dockerfile.prod` | Environment-specific |
+| **Common Patterns** | | | |
+| Node.js | Copy package.json first | `COPY package*.json ./` | Cache dependencies |
+| Python | Copy requirements first | `COPY requirements.txt ./` | Cache dependencies |
+| Go | Multi-stage build | `FROM golang AS builder` | Small final image |
+
+---
+
 ## Basic Structure
 
 ### Simple Dockerfile

@@ -33,6 +33,37 @@ over standalone roles.
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Naming** | | | |
+| Playbooks | `kebab-case.yml` | `deploy-app.yml`, `configure-server.yml` | Descriptive, lowercase |
+| Roles | `snake_case` | `web_server`, `database_setup` | Lowercase with underscores |
+| Variables | `snake_case` | `app_port`, `db_host` | Descriptive variable names |
+| Collections | `namespace.collection` | `community.general`, `ansible.builtin` | Namespace required |
+| **Structure** | | | |
+| Collections | Use collections | `community.general.docker_container` | Modern approach |
+| Playbook | YAML list of plays | `- name: Configure servers` | List of plays |
+| Tasks | YAML task list | `- name: Install package` | Descriptive task names |
+| **Files** | | | |
+| Playbook | `playbook-name.yml` | `site.yml`, `deploy.yml` | Main playbooks |
+| Inventory | `inventory.yml` or `hosts` | `inventory/production.yml` | Host definitions |
+| Variables | `group_vars/`, `host_vars/` | `group_vars/webservers.yml` | Variable organization |
+| Roles Dir | `roles/role_name/` | `roles/web_server/tasks/main.yml` | Standard role structure |
+| **Best Practices** | | | |
+| Idempotency | Always idempotent | Use `state: present` | Tasks can run multiple times |
+| Task Names | Always name tasks | `name: Install Nginx` | Clear, descriptive names |
+| Collections | Fully qualified | `ansible.builtin.copy` | Use FQCN (Fully Qualified Collection Name) |
+| Variables | Prefix role vars | `rolename_variable` | Avoid collisions |
+| **Syntax** | | | |
+| Module Args | YAML dict | `state: present\n  name: nginx` | Key-value pairs |
+| When | Conditional | `when: ansible_os_family == "Debian"` | Jinja2 conditions |
+| Loop | `loop` keyword | `loop: "{{ users }}"` | Iterate over items |
+| Handlers | Notify handlers | `notify: Restart nginx` | Triggered on changes |
+
+---
+
 ## Collections-First Approach
 
 **Use Ansible Collections** instead of standalone roles:

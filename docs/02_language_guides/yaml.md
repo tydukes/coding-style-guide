@@ -24,6 +24,36 @@ configuration.
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Syntax** | | | |
+| Indentation | 2 spaces | `key: value` | Never tabs, always 2 spaces |
+| Key-Value | `key: value` | `name: John` | Space after colon |
+| Lists | `- item` | `- apple` | Dash followed by space |
+| Multi-line | `\|` or `>` | `description: \| text` | `\|` preserves newlines, `>` folds |
+| **Data Types** | | | |
+| String | Unquoted or quoted | `name: John` or `name: "John"` | Quote when special chars |
+| Number | Numeric | `count: 42`, `pi: 3.14` | Integer or float |
+| Boolean | `true`/`false` | `enabled: true` | Lowercase |
+| Null | `null` or `~` | `value: null` | Explicit null |
+| **Collections** | | | |
+| Mapping | `key: value` | `person:\n  name: John` | Nested objects |
+| Sequence | `- item` | `fruits:\n  - apple` | Arrays/lists |
+| Inline Map | `{key: value}` | `{name: John, age: 30}` | Flow style |
+| Inline List | `[item1, item2]` | `[1, 2, 3]` | Flow style |
+| **Files** | | | |
+| Extension | `.yaml` preferred | `config.yaml`, `values.yaml` | Avoid `.yml` |
+| Multiple Docs | `---` separator | `---\ndoc1\n---\ndoc2` | Multiple YAML docs in one file |
+| **Best Practices** | | | |
+| Quotes | Quote when needed | `version: "1.20"` | Avoid type coercion |
+| Comments | `# comment` | `# Configuration` | Hash for comments |
+| Anchors | `&anchor` | `defaults: &defaults` | Reuse with `*anchor` |
+| Merge Keys | `<<: *anchor` | `<<: *defaults` | Merge referenced keys |
+
+---
+
 ## Basic Syntax
 
 ### Indentation

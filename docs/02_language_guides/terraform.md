@@ -35,6 +35,40 @@ Language).
 
 ---
 
+## Quick Reference
+
+| **Category** | **Convention** | **Example** | **Notes** |
+|-------------|----------------|-------------|-----------|
+| **Naming** | | | |
+| Resources | `snake_case` | `aws_vpc.main`, `aws_subnet.private` | Type + descriptive identifier |
+| Variables | `snake_case` | `vpc_cidr`, `instance_type` | Descriptive, no type prefix |
+| Outputs | `snake_case` | `vpc_id`, `subnet_ids` | What is being output |
+| Modules | `kebab-case` | `vpc-network`, `rds-database` | Folder names, lowercase with hyphens |
+| Locals | `snake_case` | `common_tags`, `subnet_count` | Internal computed values |
+| Data Sources | `snake_case` | `data.aws_ami.ubuntu` | Prefix with purpose or resource type |
+| **Files** | | | |
+| Main Config | `main.tf` | `main.tf` | Primary resource definitions |
+| Variables | `variables.tf` | `variables.tf` | All variable declarations |
+| Outputs | `outputs.tf` | `outputs.tf` | All output declarations |
+| Providers | `providers.tf` or `versions.tf` | `providers.tf` | Provider configuration |
+| Data Sources | `data.tf` | `data.tf` | External data lookups |
+| Locals | `locals.tf` | `locals.tf` | Local value computations |
+| **Formatting** | | | |
+| Indentation | 2 spaces | `resource "aws_vpc" "main" {` | Consistent 2-space indentation |
+| Line Length | 120 characters | `# Maximum line length` | Keep lines readable |
+| Blank Lines | 1 between blocks | `resource "..." {}\n\nresource "..." {}` | Separate logical blocks |
+| **Variables** | | | |
+| Description | Always required | `description = "VPC CIDR block"` | Document purpose and usage |
+| Type | Explicit types | `type = string`, `type = list(string)` | Never use `any` |
+| Default | Optional values only | `default = "10.0.0.0/16"` | Required vars have no default |
+| Validation | Use when needed | `validation { condition = ... }` | Enforce constraints |
+| **Modules** | | | |
+| Source | Semantic versioning | `source = "terraform-aws-modules/vpc/aws"` | Pin versions |
+| Version | Always specify | `version = "~> 5.0"` | Use version constraints |
+| **State** | | | |
+| Backend | Remote with locking | `backend "s3" { ... }` | Never local for teams |
+| Workspace | Environment isolation | `terraform workspace select prod` | Separate environments |
+
 ## Naming Conventions
 
 ### Resource Names
