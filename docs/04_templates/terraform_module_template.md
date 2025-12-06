@@ -109,7 +109,9 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_example_resource.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/example_resource) | resource |
+| [aws_example_resource.this][aws_example_resource] | resource |
+
+[aws_example_resource]: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/example_resource
 
 ## Inputs
 
@@ -483,67 +485,67 @@ variable "aws_region" {
 package test
 
 import (
-	"testing"
+ "testing"
 
-	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/stretchr/testify/assert"
+ "github.com/gruntwork-io/terratest/modules/terraform"
+ "github.com/stretchr/testify/assert"
 )
 
 func TestTerraformModule(t *testing.T) {
-	t.Parallel()
+ t.Parallel()
 
-	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
-		// Path to the Terraform code
-		TerraformDir: "../examples/simple",
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  // Path to the Terraform code
+  TerraformDir: "../examples/simple",
 
-		// Variables to pass to the Terraform code
-		Vars: map[string]interface{}{
-			"aws_region": "us-east-1",
-		},
+  // Variables to pass to the Terraform code
+  Vars: map[string]interface{}{
+   "aws_region": "us-east-1",
+  },
 
-		// Environment variables
-		EnvVars: map[string]string{
-			"AWS_DEFAULT_REGION": "us-east-1",
-		},
-	})
+  // Environment variables
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": "us-east-1",
+  },
+ })
 
-	// Clean up resources at the end of the test
-	defer terraform.Destroy(t, terraformOptions)
+ // Clean up resources at the end of the test
+ defer terraform.Destroy(t, terraformOptions)
 
-	// Deploy the infrastructure
-	terraform.InitAndApply(t, terraformOptions)
+ // Deploy the infrastructure
+ terraform.InitAndApply(t, terraformOptions)
 
-	// Validate outputs
-	resourceID := terraform.Output(t, terraformOptions, "resource_id")
-	assert.NotEmpty(t, resourceID)
+ // Validate outputs
+ resourceID := terraform.Output(t, terraformOptions, "resource_id")
+ assert.NotEmpty(t, resourceID)
 }
 
 func TestTerraformModuleComplete(t *testing.T) {
-	t.Parallel()
+ t.Parallel()
 
-	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
-		TerraformDir: "../examples/complete",
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../examples/complete",
 
-		Vars: map[string]interface{}{
-			"aws_region": "us-east-1",
-		},
+  Vars: map[string]interface{}{
+   "aws_region": "us-east-1",
+  },
 
-		EnvVars: map[string]string{
-			"AWS_DEFAULT_REGION": "us-east-1",
-		},
-	})
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": "us-east-1",
+  },
+ })
 
-	defer terraform.Destroy(t, terraformOptions)
+ defer terraform.Destroy(t, terraformOptions)
 
-	terraform.InitAndApply(t, terraformOptions)
+ terraform.InitAndApply(t, terraformOptions)
 
-	// Test outputs
-	resourceID := terraform.Output(t, terraformOptions, "resource_id")
-	resourceARN := terraform.Output(t, terraformOptions, "resource_arn")
+ // Test outputs
+ resourceID := terraform.Output(t, terraformOptions, "resource_id")
+ resourceARN := terraform.Output(t, terraformOptions, "resource_arn")
 
-	assert.NotEmpty(t, resourceID)
-	assert.NotEmpty(t, resourceARN)
-	assert.Contains(t, resourceARN, "arn:aws:")
+ assert.NotEmpty(t, resourceID)
+ assert.NotEmpty(t, resourceARN)
+ assert.Contains(t, resourceARN, "arn:aws:")
 }
 ```
 
@@ -651,9 +653,9 @@ Use descriptive, consistent output names:
 
 ### Official Documentation
 
-- [Terraform Module Structure](https://www.terraform.io/docs/language/modules/develop/structure.html)
-- [Terraform Registry Publishing](https://www.terraform.io/docs/registry/modules/publish.html)
-- [Standard Module Structure](https://www.terraform.io/docs/language/modules/develop/structure.html)
+- [Terraform Module Structure](https://developer.hashicorp.com/terraform/language/modules/develop/structure)
+- [Terraform Registry Publishing](https://developer.hashicorp.com/terraform/registry/modules/publish)
+- [Standard Module Structure](https://developer.hashicorp.com/terraform/language/modules/develop/structure)
 
 ### Tools
 

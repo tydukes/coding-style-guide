@@ -1300,10 +1300,10 @@ output "internet_gateway_id" {
 
 ### Official Documentation
 
-- [Terraform Documentation](https://www.terraform.io/docs)
+- [Terraform Documentation](https://developer.hashicorp.com/terraform/docs)
 - [Terraform Registry](https://registry.terraform.io/)
-- [HCL Syntax](https://www.terraform.io/docs/language/syntax/configuration.html)
-- [Terraform Best Practices](https://www.terraform.io/docs/cloud/guides/recommended-practices/index.html)
+- [HCL Syntax](https://developer.hashicorp.com/terraform/language/syntax/configuration)
+- [Terraform Best Practices](https://developer.hashicorp.com/terraform/cloud-docs/recommended-practices)
 
 ### AWS Provider
 

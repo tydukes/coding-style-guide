@@ -156,7 +156,6 @@ Available modes:
 
 - **Full Documentation**: [Container Usage Guide](../docs/06_container/usage.md)
 - **GitHub Repository**: <https://github.com/tydukes/coding-style-guide>
-- **Container Registry**: <https://github.com/tydukes/coding-style-guide/pkgs/container/coding-style-guide>
 
 ## Support
 
