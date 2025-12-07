@@ -1000,6 +1000,228 @@ resource "aws_iam_role_policy_attachment" "app" {
 }
 ```
 
+### ❌ Avoid: Not Using Remote State
+
+```hcl
+# Bad - Local state only (risky for teams)
+# No backend configuration - state stored locally
+
+# Good - Remote state with locking
+terraform {
+  backend "s3" {
+    bucket         = "myapp-terraform-state"
+    key            = "prod/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "terraform-state-lock"
+  }
+}
+```
+
+### ❌ Avoid: Missing Required Providers Version
+
+```hcl
+# Bad - No version constraint
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      # No version specified - can break unexpectedly
+    }
+  }
+}
+
+# Good - Pin provider versions
+terraform {
+  required_version = ">= 1.6.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"  # Allow minor updates only
+    }
+  }
+}
+```
+
+### ❌ Avoid: Using Default VPC and Subnets
+
+```hcl
+# Bad - Relying on default VPC
+resource "aws_instance" "web" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+  # Implicitly uses default VPC - not reproducible
+}
+
+# Good - Explicitly create networking
+resource "aws_vpc" "main" {
+  cidr_block           = var.vpc_cidr
+  enable_dns_hostnames = true
+
+  tags = {
+    Name = "${var.project}-${var.environment}-vpc"
+  }
+}
+
+resource "aws_subnet" "public" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.public_subnet_cidr
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "${var.project}-${var.environment}-public"
+  }
+}
+
+resource "aws_instance" "web" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+  subnet_id     = aws_subnet.public.id
+}
+```
+
+### ❌ Avoid: Overly Permissive Security Groups
+
+```hcl
+# Bad - Open to the world
+resource "aws_security_group" "web" {
+  name = "web-sg"
+
+  ingress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # ❌ Everything open!
+  }
+}
+
+# Good - Specific rules with justification
+resource "aws_security_group" "web" {
+  name        = "${var.project}-${var.environment}-web-sg"
+  description = "Security group for web servers"
+  vpc_id      = aws_vpc.main.id
+
+  tags = {
+    Name = "${var.project}-${var.environment}-web-sg"
+  }
+}
+
+resource "aws_security_group_rule" "web_https" {
+  type              = "ingress"
+  description       = "Allow HTTPS from CloudFront"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = var.cloudfront_cidr_blocks
+  security_group_id = aws_security_group.web.id
+}
+
+resource "aws_security_group_rule" "web_egress" {
+  type              = "egress"
+  description       = "Allow outbound to specific services"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = var.service_endpoints
+  security_group_id = aws_security_group.web.id
+}
+```
+
+### ❌ Avoid: Not Using Data Sources for Existing Resources
+
+```hcl
+# Bad - Hardcoding existing resource IDs
+resource "aws_route_table_association" "public" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = "rtb-12345678"  # ❌ Hardcoded route table
+}
+
+# Good - Use data sources
+data "aws_route_table" "main" {
+  vpc_id = aws_vpc.main.id
+
+  filter {
+    name   = "tag:Name"
+    values = ["${var.project}-main-rt"]
+  }
+}
+
+resource "aws_route_table_association" "public" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = data.aws_route_table.main.id
+}
+```
+
+### ❌ Avoid: Missing Lifecycle Rules
+
+```hcl
+# Bad - Can accidentally destroy critical resources
+resource "aws_db_instance" "production" {
+  identifier        = "prod-db"
+  engine            = "postgres"
+  instance_class    = "db.t3.medium"
+  allocated_storage = 100
+  # No lifecycle protection - can be destroyed!
+}
+
+# Good - Protect critical resources
+resource "aws_db_instance" "production" {
+  identifier        = "prod-db"
+  engine            = "postgres"
+  instance_class    = "db.t3.medium"
+  allocated_storage = 100
+
+  lifecycle {
+    prevent_destroy = true  # ✅ Prevent accidental deletion
+    ignore_changes  = [      # ✅ Ignore password changes
+      password,
+    ]
+  }
+
+  tags = {
+    Name        = "${var.project}-prod-db"
+    Environment = "production"
+    Critical    = "true"
+  }
+}
+```
+
+### ❌ Avoid: Not Tagging Resources
+
+```hcl
+# Bad - No tags for cost tracking or management
+resource "aws_instance" "web" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+  # No tags - can't track costs or manage resources
+}
+
+# Good - Comprehensive tagging strategy
+locals {
+  common_tags = {
+    Project     = var.project
+    Environment = var.environment
+    ManagedBy   = "terraform"
+    CostCenter  = var.cost_center
+    Owner       = var.owner_email
+  }
+}
+
+resource "aws_instance" "web" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project}-${var.environment}-web"
+      Role = "web-server"
+    }
+  )
+}
+```
+
 ---
 
 ## Recommended Tools

@@ -551,6 +551,96 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 ```
 
+### ❌ Avoid: Multiple RUN Commands for Package Install
+
+```dockerfile
+# Bad - Creates multiple layers
+RUN apt-get update
+RUN apt-get install -y curl
+RUN apt-get install -y git
+RUN apt-get clean
+
+# Good - Single layer with cleanup
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl \
+        git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+```
+
+### ❌ Avoid: Copying Entire Context
+
+```dockerfile
+# Bad - Copies everything including .git, node_modules, etc.
+FROM node:18-alpine
+COPY . /app
+
+# Good - Use .dockerignore and copy selectively
+# .dockerignore:
+# node_modules
+# .git
+# .env
+# *.md
+
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY src/ ./src/
+COPY public/ ./public/
+```
+
+### ❌ Avoid: Not Using Multi-Stage Builds
+
+```dockerfile
+# Bad - Build tools remain in final image
+FROM node:18
+WORKDIR /app
+COPY package*.json ./
+RUN npm install  # Includes dev dependencies
+COPY . .
+RUN npm run build
+CMD ["npm", "start"]
+
+# Good - Multi-stage build
+FROM node:18 AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+RUN npm ci --only=production
+USER node
+CMD ["node", "dist/index.js"]
+```
+
+### ❌ Avoid: Exposing Secrets in Build
+
+```dockerfile
+# Bad - Secrets in image layers
+FROM node:18-alpine
+WORKDIR /app
+COPY .env .env  # ❌ Secret file in image!
+RUN echo "API_KEY=secret123" > config.txt  # ❌ In layer history!
+
+# Good - Use build secrets (Docker BuildKit)
+# syntax=docker/dockerfile:1
+FROM node:18-alpine
+WORKDIR /app
+RUN --mount=type=secret,id=npmrc,target=/root/.npmrc \
+    npm install private-package
+
+# Or use build args (for non-sensitive config)
+ARG NODE_ENV=production
+ENV NODE_ENV=$NODE_ENV
+```
+
 ---
 
 ## Building and Tagging

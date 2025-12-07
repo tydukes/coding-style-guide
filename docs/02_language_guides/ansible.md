@@ -816,6 +816,86 @@ scenario:
     - "'could not be found' not in service_stop.msg"
 ```
 
+### ❌ Avoid: Not Using Roles
+
+```yaml
+# Bad - Everything in one massive playbook
+- name: Configure web server
+  hosts: webservers
+  tasks:
+    - name: Install nginx
+      ansible.builtin.package:
+        name: nginx
+        state: present
+    - name: Copy nginx config
+      ansible.builtin.template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+    # ... 50 more tasks ...
+
+# Good - Organized into roles
+- name: Configure web server
+  hosts: webservers
+  roles:
+    - role: nginx
+      vars:
+        nginx_worker_processes: 4
+    - role: ssl_certificates
+    - role: application
+```
+
+### ❌ Avoid: Using Loop with Package Module
+
+```yaml
+# Bad - Inefficient loop
+- name: Install packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - nginx
+    - postgresql
+    - redis
+
+# Good - Install all at once
+- name: Install packages
+  ansible.builtin.package:
+    name:
+      - nginx
+      - postgresql
+      - redis
+    state: present
+```
+
+### ❌ Avoid: No Proper Secret Management
+
+```yaml
+# Bad - Secrets in plain text
+- name: Configure database
+  ansible.builtin.template:
+    src: database.yml.j2
+    dest: /etc/app/database.yml
+  vars:
+    db_password: "MySecretPassword123"  # ❌ Plain text!
+
+# Good - Use Ansible Vault
+# Encrypt with: ansible-vault encrypt vars/secrets.yml
+- name: Configure database
+  ansible.builtin.template:
+    src: database.yml.j2
+    dest: /etc/app/database.yml
+  vars_files:
+    - vars/secrets.yml  # ✅ Encrypted vault file
+
+# Or use vault inline
+- name: Configure database
+  ansible.builtin.template:
+    src: database.yml.j2
+    dest: /etc/app/database.yml
+  vars:
+    db_password: "{{ vault_db_password }}"  # ✅ From vault
+```
+
 ---
 
 ## Tool Configuration
