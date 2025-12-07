@@ -602,6 +602,95 @@ describe('MyStack', () => {
 });
 ```
 
+### ❌ Avoid: Not Using Constructs
+
+```typescript
+// Bad - Using low-level L1 constructs directly
+new s3.CfnBucket(this, 'Bucket', {
+  bucketName: 'my-bucket',
+  versioningConfiguration: {
+    status: 'Enabled'
+  }
+});
+
+// Good - Use high-level L2 constructs
+new s3.Bucket(this, 'Bucket', {
+  versioned: true,
+  encryption: s3.BucketEncryption.S3_MANAGED,
+  removalPolicy: cdk.RemovalPolicy.RETAIN
+});
+```
+
+### ❌ Avoid: Not Specifying Removal Policy
+
+```typescript
+// Bad - Default removal policy (may delete production data)
+new dynamodb.Table(this, 'Table', {
+  partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING }
+  // No removalPolicy - uses default
+});
+
+// Good - Explicit removal policy
+new dynamodb.Table(this, 'Table', {
+  partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+  removalPolicy: cdk.RemovalPolicy.RETAIN  // ✅ Protect production data
+});
+```
+
+### ❌ Avoid: Single Stack for Everything
+
+```typescript
+// Bad - Everything in one massive stack
+export class MonolithStack extends cdk.Stack {
+  constructor(scope: Construct, id: string) {
+    super(scope, id);
+    // VPC
+    // Database
+    // Lambda functions
+    // API Gateway
+    // S3 buckets
+    // ... 500 lines of resources
+  }
+}
+
+// Good - Separate stacks by concern
+export class NetworkStack extends cdk.Stack {
+  public readonly vpc: ec2.Vpc;
+  constructor(scope: Construct, id: string) {
+    super(scope, id);
+    this.vpc = new ec2.Vpc(this, 'VPC');
+  }
+}
+
+export class DatabaseStack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props: { vpc: ec2.Vpc }) {
+    super(scope, id);
+    new rds.DatabaseInstance(this, 'Database', {
+      vpc: props.vpc
+    });
+  }
+}
+```
+
+### ❌ Avoid: Not Using Environment Variables
+
+```typescript
+// Bad - Environment-specific values in code
+const app = new cdk.App();
+new MyStack(app, 'ProdStack', {
+  env: { account: '123456789012', region: 'us-east-1' }  // ❌ Hardcoded
+});
+
+// Good - Use environment variables
+const app = new cdk.App();
+new MyStack(app, 'Stack', {
+  env: {
+    account: process.env.CDK_DEFAULT_ACCOUNT,
+    region: process.env.CDK_DEFAULT_REGION
+  }
+});
+```
+
 ---
 
 ## Tool Configuration

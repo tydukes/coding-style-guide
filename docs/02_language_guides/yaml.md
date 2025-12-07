@@ -559,6 +559,94 @@ services:
       - "5432:5432"
 ```
 
+### ❌ Avoid: Unquoted Special Values
+
+```yaml
+# Bad - Unquoted values that could be misinterpreted
+version: 3.8          # Becomes float 3.8
+enabled: yes          # Becomes boolean true
+country: NO           # Becomes boolean false (Norway code!)
+version_string: 1.20  # Becomes float 1.2
+
+# Good - Quote strings
+version: "3.8"
+enabled: "yes"
+country: "NO"
+version_string: "1.20"
+```
+
+### ❌ Avoid: Duplicate Keys
+
+```yaml
+# Bad - Duplicate keys (last one wins)
+database:
+  host: localhost
+  port: 5432
+  host: prod-db.example.com  # ❌ Overwrites previous host
+
+# Good - Unique keys
+database:
+  host: prod-db.example.com
+  port: 5432
+```
+
+### ❌ Avoid: Not Using Anchors and Aliases
+
+```yaml
+# Bad - Repeated configuration
+services:
+  web1:
+    image: nginx:latest
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+  web2:
+    image: nginx:latest
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+
+# Good - Use anchors and aliases
+x-common-config: &common
+  restart: always
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+
+services:
+  web1:
+    <<: *common
+    image: nginx:latest
+  web2:
+    <<: *common
+    image: nginx:latest
+```
+
+### ❌ Avoid: Complex Multi-line Strings Without Proper Style
+
+```yaml
+# Bad - Unclear multi-line handling
+description: This is a very long description that
+spans multiple lines but doesn't specify
+how line breaks should be handled
+
+# Good - Use | for literal style or > for folded
+description_literal: |
+  This preserves line breaks.
+  Each line appears exactly as written.
+  Great for scripts or formatted text.
+
+description_folded: >
+  This folds lines into a single line.
+  Line breaks become spaces.
+  Great for long paragraphs.
+```
+
 ---
 
 ## YAML Linting
