@@ -931,6 +931,97 @@ containers:
         port: 8080
 ```
 
+### ❌ Avoid: Storing Secrets in ConfigMaps
+
+```yaml
+# Bad - Secrets in ConfigMap (visible in plain text)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  database_password: "MySecretPassword"  # ❌ Plain text!
+  api_key: "sk-1234567890"              # ❌ Plain text!
+
+# Good - Use Secrets with proper encryption
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secrets
+type: Opaque
+stringData:
+  database_password: "MySecretPassword"  # ✅ Base64 encoded
+  api_key: "sk-1234567890"              # ✅ Base64 encoded
+
+# Better - Use external secret management
+# Sealed Secrets, External Secrets Operator, or cloud provider KMS
+```
+
+### ❌ Avoid: No Pod Disruption Budgets
+
+```yaml
+# Bad - No protection during cluster maintenance
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 3
+  # No PodDisruptionBudget - all pods could be terminated at once
+
+# Good - Define disruption budget
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: web-pdb
+spec:
+  minAvailable: 2  # ✅ Always keep 2 pods running
+  selector:
+    matchLabels:
+      app: web
+```
+
+### ❌ Avoid: Missing Network Policies
+
+```yaml
+# Bad - No network restrictions (pods can talk to anything)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  # No NetworkPolicy - unrestricted network access
+
+# Good - Restrict network traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-netpol
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: database
+      ports:
+        - protocol: TCP
+          port: 5432
+```
+
 ---
 
 ## References

@@ -642,6 +642,66 @@ SET status = 'inactive'
 WHERE last_login < CURRENT_DATE - INTERVAL '90 days';
 ```
 
+### ❌ Avoid: Using DISTINCT to Fix Duplicates
+
+```sql
+-- Bad - DISTINCT hides the real problem
+SELECT DISTINCT
+    u.user_id,
+    u.email,
+    o.order_id
+FROM users u
+LEFT JOIN orders o ON u.user_id = o.user_id;  -- ❌ Multiple orders create duplicates
+
+-- Good - Fix the JOIN logic
+SELECT
+    u.user_id,
+    u.email,
+    ARRAY_AGG(o.order_id) AS order_ids
+FROM users u
+LEFT JOIN orders o ON u.user_id = o.user_id
+GROUP BY u.user_id, u.email;
+```
+
+### ❌ Avoid: Not Using Indexes
+
+```sql
+-- Bad - Querying without indexes
+CREATE TABLE users (
+    user_id INT PRIMARY KEY,
+    email VARCHAR(255),
+    status VARCHAR(50)
+);
+-- Queries on email and status will be slow!
+
+-- Good - Add appropriate indexes
+CREATE TABLE users (
+    user_id INT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    status VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_users_status ON users(status);
+CREATE INDEX idx_users_created_at ON users(created_at);
+```
+
+### ❌ Avoid: Large IN Clauses
+
+```sql
+-- Bad - Large IN clause (thousands of IDs)
+SELECT * FROM orders
+WHERE user_id IN (1, 2, 3, ..., 10000);  -- ❌ Performance issues!
+
+-- Good - Use temporary table or JOIN
+CREATE TEMP TABLE temp_user_ids (user_id INT);
+INSERT INTO temp_user_ids VALUES (1), (2), (3), ..., (10000);
+
+SELECT o.*
+FROM orders o
+INNER JOIN temp_user_ids t ON o.user_id = t.user_id;
+```
+
 ---
 
 ## Comments

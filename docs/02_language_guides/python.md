@@ -801,6 +801,282 @@ def get_user(
     return user
 ```
 
+## Anti-Patterns
+
+### Mutable Default Arguments
+
+**Problem**: Using mutable objects (lists, dicts) as default arguments causes unexpected behavior.
+
+**Bad**:
+
+```python
+def add_item(item, items=[]):  # ❌ Mutable default
+    items.append(item)
+    return items
+
+# Unexpected behavior
+list1 = add_item("a")  # ["a"]
+list2 = add_item("b")  # ["a", "b"] - unexpected!
+```
+
+**Good**:
+
+```python
+def add_item(item, items=None):  # ✅ Use None as default
+    if items is None:
+        items = []
+    items.append(item)
+    return items
+
+# Expected behavior
+list1 = add_item("a")  # ["a"]
+list2 = add_item("b")  # ["b"] - correct!
+```
+
+### Bare Except Clauses
+
+**Problem**: Catching all exceptions hides bugs and makes debugging impossible.
+
+**Bad**:
+
+```python
+def process_data(data):
+    try:
+        result = complex_operation(data)
+        return result
+    except:  # ❌ Catches everything, including KeyboardInterrupt!
+        return None
+```
+
+**Good**:
+
+```python
+def process_data(data):
+    try:
+        result = complex_operation(data)
+        return result
+    except (ValueError, TypeError) as e:  # ✅ Catch specific exceptions
+        logger.error(f"Failed to process data: {e}")
+        return None
+```
+
+### String Formatting with % or format()
+
+**Problem**: Old-style string formatting is less readable and more error-prone.
+
+**Bad**:
+
+```python
+# Old % formatting
+message = "User %s has %d points" % (username, points)  # ❌ Hard to read
+
+# Old .format()
+message = "User {} has {} points".format(username, points)  # ❌ Positional
+```
+
+**Good**:
+
+```python
+# f-strings (Python 3.6+)
+message = f"User {username} has {points} points"  # ✅ Clear and concise
+
+# With expressions
+message = f"User {username} has {points * 2} bonus points"  # ✅ Powerful
+```
+
+### Missing Type Hints
+
+**Problem**: Without type hints, IDEs can't help with autocomplete and type checking.
+
+**Bad**:
+
+```python
+def calculate_total(items):  # ❌ No type information
+    return sum(item['price'] for item in items)
+```
+
+**Good**:
+
+```python
+from typing import List, Dict, Any
+
+def calculate_total(items: List[Dict[str, Any]]) -> float:  # ✅ Clear types
+    """Calculate total price from list of items."""
+    return sum(float(item['price']) for item in items)
+```
+
+### Using Global Variables
+
+**Problem**: Global variables make code hard to test and reason about.
+
+**Bad**:
+
+```python
+# Module level
+user_cache = {}  # ❌ Global mutable state
+
+def get_user(user_id):
+    if user_id in user_cache:
+        return user_cache[user_id]
+    user = fetch_user(user_id)
+    user_cache[user_id] = user
+    return user
+```
+
+**Good**:
+
+```python
+class UserCache:  # ✅ Encapsulated state
+    def __init__(self):
+        self._cache: Dict[int, User] = {}
+
+    def get_user(self, user_id: int) -> User:
+        if user_id in self._cache:
+            return self._cache[user_id]
+        user = self._fetch_user(user_id)
+        self._cache[user_id] = user
+        return user
+
+    def _fetch_user(self, user_id: int) -> User:
+        # Implementation
+        pass
+```
+
+### Not Using Context Managers
+
+**Problem**: Manual resource management leads to resource leaks.
+
+**Bad**:
+
+```python
+def read_config():
+    file = open("config.json")  # ❌ No guarantee file will be closed
+    data = json.load(file)
+    file.close()  # May not execute if exception occurs
+    return data
+```
+
+**Good**:
+
+```python
+def read_config():
+    with open("config.json") as file:  # ✅ Automatically closed
+        return json.load(file)
+
+# Or for multiple resources
+def process_files(input_file, output_file):
+    with open(input_file) as infile, open(output_file, 'w') as outfile:
+        for line in infile:
+            outfile.write(line.upper())
+```
+
+### Checking for Empty Containers with len()
+
+**Problem**: Using `len()` to check if a container is empty is unnecessarily verbose.
+
+**Bad**:
+
+```python
+if len(items) == 0:  # ❌ Verbose
+    print("No items")
+
+if len(users) > 0:  # ❌ Unnecessary
+    process_users(users)
+```
+
+**Good**:
+
+```python
+if not items:  # ✅ Pythonic and clear
+    print("No items")
+
+if users:  # ✅ Direct boolean context
+    process_users(users)
+```
+
+### Ignoring List Comprehensions
+
+**Problem**: Using loops for simple transformations is less readable and slower.
+
+**Bad**:
+
+```python
+# Creating a new list
+squares = []  # ❌ Verbose
+for x in range(10):
+    squares.append(x**2)
+
+# Filtering
+evens = []  # ❌ Multiple lines
+for x in range(10):
+    if x % 2 == 0:
+        evens.append(x)
+```
+
+**Good**:
+
+```python
+# Creating a new list
+squares = [x**2 for x in range(10)]  # ✅ Concise
+
+# Filtering
+evens = [x for x in range(10) if x % 2 == 0]  # ✅ Clear intent
+
+# With transformation and filtering
+upper_names = [name.upper() for name in names if len(name) > 3]  # ✅ Powerful
+```
+
+### Not Using enumerate()
+
+**Problem**: Manual index tracking is error-prone and not Pythonic.
+
+**Bad**:
+
+```python
+items = ["apple", "banana", "cherry"]
+index = 0  # ❌ Manual index management
+for item in items:
+    print(f"{index}: {item}")
+    index += 1
+```
+
+**Good**:
+
+```python
+items = ["apple", "banana", "cherry"]
+for index, item in enumerate(items):  # ✅ Built-in enumeration
+    print(f"{index}: {item}")
+
+# With custom start index
+for index, item in enumerate(items, start=1):  # ✅ Start from 1
+    print(f"{index}: {item}")
+```
+
+### String Concatenation in Loops
+
+**Problem**: Concatenating strings in loops creates many intermediate objects.
+
+**Bad**:
+
+```python
+result = ""  # ❌ Inefficient
+for word in words:
+    result += word + " "
+```
+
+**Good**:
+
+```python
+# For simple joining
+result = " ".join(words)  # ✅ Efficient and clear
+
+# For complex building
+parts = []  # ✅ Build list first
+for word in words:
+    parts.append(f"<item>{word}</item>")
+result = "".join(parts)
+```
+
 ## References
 
 ### Official Documentation

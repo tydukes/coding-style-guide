@@ -756,6 +756,111 @@ build:
     expire_in: 1 week
 ```
 
+### ❌ Avoid: Not Using Rules Instead of only/except
+
+```yaml
+# Bad - Using deprecated only/except
+deploy:
+  only:
+    - main
+  except:
+    - schedules
+  script:
+    - ./deploy.sh
+
+# Good - Use rules
+deploy:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE != "schedule"
+  script:
+    - ./deploy.sh
+```
+
+### ❌ Avoid: Running All Jobs on All Branches
+
+```yaml
+# Bad - Expensive jobs run on every branch
+build-docker:
+  script:
+    - docker build -t myapp .
+    - docker push myapp  # ❌ Pushes on every branch!
+
+deploy-prod:
+  script:
+    - ./deploy-production.sh  # ❌ Deploys from any branch!
+
+# Good - Restrict jobs to appropriate branches
+build-docker:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_TAG
+  script:
+    - docker build -t myapp:$CI_COMMIT_SHORT_SHA .
+    - docker push myapp:$CI_COMMIT_SHORT_SHA
+
+deploy-prod:
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/
+  script:
+    - ./deploy-production.sh
+  environment:
+    name: production
+```
+
+### ❌ Avoid: Not Using extends for Shared Configuration
+
+```yaml
+# Bad - Duplicated configuration
+test-unit:
+  image: node:18
+  before_script:
+    - npm ci
+  script:
+    - npm run test:unit
+
+test-integration:
+  image: node:18
+  before_script:
+    - npm ci
+  script:
+    - npm run test:integration
+
+# Good - Use extends
+.node-base:
+  image: node:18
+  before_script:
+    - npm ci
+
+test-unit:
+  extends: .node-base
+  script:
+    - npm run test:unit
+
+test-integration:
+  extends: .node-base
+  script:
+    - npm run test:integration
+```
+
+### ❌ Avoid: Not Using Retry for Flaky Jobs
+
+```yaml
+# Bad - Flaky job fails pipeline
+integration-tests:
+  script:
+    - npm run test:integration  # ❌ No retry on failure
+
+# Good - Retry flaky jobs
+integration-tests:
+  script:
+    - npm run test:integration
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+```
+
 ---
 
 ## Tool Configuration

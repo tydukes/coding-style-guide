@@ -656,6 +656,106 @@ on:
 - run: npm ci
 ```
 
+### ❌ Avoid: Using Mutable Action Tags
+
+```yaml
+# Bad - Using mutable tags (can change unexpectedly)
+- uses: actions/checkout@main  # ❌ Can change anytime
+- uses: actions/setup-node@v4  # ❌ Major version can get updates
+
+# Good - Pin to specific SHA
+- uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+- uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8  # v4.0.2
+
+# Or use tags with SHA comment for clarity
+- uses: actions/checkout@v4.1.1  # SHA: b4ffde65f46336ab88eb53be808477a3936bae11
+```
+
+### ❌ Avoid: Overly Permissive Permissions
+
+```yaml
+# Bad - Default permissions (read/write to everything)
+name: CI
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # No permissions specified - gets all permissions!
+
+# Good - Minimal permissions
+name: CI
+on: [push]
+permissions:
+  contents: read  # ✅ Only read access
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm test
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # ✅ Write only where needed
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm publish
+```
+
+### ❌ Avoid: Not Using Concurrency Controls
+
+```yaml
+# Bad - Multiple workflow runs can conflict
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./deploy.sh  # ❌ Multiple deploys can run simultaneously!
+
+# Good - Prevent concurrent runs
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false  # ✅ Wait for current to finish
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./deploy.sh
+```
+
+### ❌ Avoid: Not Setting Timeout Limits
+
+```yaml
+# Bad - No timeout (can run forever)
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm test  # ❌ Could hang indefinitely
+
+# Good - Set reasonable timeouts
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10  # ✅ Fail after 10 minutes
+    steps:
+      - run: npm test
+        timeout-minutes: 5  # ✅ Per-step timeout too
+```
+
 ---
 
 ## Tool Configuration

@@ -920,6 +920,120 @@ if (!isUser(data)) {
 }
 ```
 
+### ❌ Avoid: Implicit any in Function Parameters
+
+```typescript
+// Bad - Implicit any
+function processItems(items) {  // ❌ Parameter has implicit 'any' type
+  return items.map(item => item.value);
+}
+
+// Good - Explicit types
+interface Item {
+  value: number;
+}
+
+function processItems(items: Item[]): number[] {  // ✅ Fully typed
+  return items.map(item => item.value);
+}
+```
+
+### ❌ Avoid: Using Enums for String Constants
+
+```typescript
+// Bad - Enums generate runtime code
+enum Color {  // ❌ Adds unnecessary runtime code
+  Red = 'red',
+  Green = 'green',
+  Blue = 'blue'
+}
+
+// Good - Use const objects or unions
+const Color = {  // ✅ No runtime overhead (with as const)
+  Red: 'red',
+  Green: 'green',
+  Blue: 'blue'
+} as const;
+
+type Color = typeof Color[keyof typeof Color];
+
+// Or even better - Use union types
+type Color = 'red' | 'green' | 'blue';  // ✅ Pure type, no runtime
+```
+
+### ❌ Avoid: Overusing Optional Chaining
+
+```typescript
+// Bad - Optional chaining everywhere
+function getUserEmail(user?: User) {
+  return user?.profile?.contact?.email?.toLowerCase();  // ❌ Hard to debug
+}
+
+// Good - Explicit null checks
+function getUserEmail(user: User | undefined): string | undefined {
+  if (!user?.profile?.contact?.email) {  // ✅ Clear validation
+    return undefined;
+  }
+  return user.profile.contact.email.toLowerCase();
+}
+
+// Better - Validate at boundaries
+function getUserEmail(user: User): string {  // ✅ Require valid user
+  if (!user.profile?.contact?.email) {
+    throw new Error('User email not found');
+  }
+  return user.profile.contact.email.toLowerCase();
+}
+```
+
+### ❌ Avoid: Generic any[] Arrays
+
+```typescript
+// Bad - Generic array
+function processItems(items: any[]) {  // ❌ Loses all type safety
+  return items.map(item => item.id);
+}
+
+// Good - Typed arrays
+interface Item {
+  id: string;
+  name: string;
+}
+
+function processItems(items: Item[]): string[] {  // ✅ Type-safe
+  return items.map(item => item.id);
+}
+
+// Or use generics for reusability
+function processItems<T extends { id: string }>(items: T[]): string[] {
+  return items.map(item => item.id);
+}
+```
+
+### ❌ Avoid: Disabling TypeScript Checks
+
+```typescript
+// Bad - Disabling type checking
+// @ts-ignore  // ❌ Hides real errors
+const result = dangerousOperation();
+
+// @ts-nocheck  // ❌ Disables checking for entire file
+function processData(data) {
+  return data.value;
+}
+
+// Good - Fix the root cause
+function dangerousOperation(): unknown {  // ✅ Proper typing
+  // Implementation
+  return {};
+}
+
+const result = dangerousOperation();
+if (isValidResult(result)) {
+  // Use result safely
+}
+```
+
 ---
 
 ## Tool Configuration
