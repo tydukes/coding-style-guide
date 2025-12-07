@@ -692,6 +692,102 @@ resource "aws_instance" "web" {
 }
 ```
 
+### ❌ Avoid: Not Using for_each for Maps
+
+```hcl
+# Bad - Using count with maps (fragile to reordering)
+variable "users" {
+  default = ["alice", "bob", "charlie"]
+}
+
+resource "aws_iam_user" "users" {
+  count = length(var.users)
+  name  = var.users[count.index]
+}
+
+# Good - Use for_each
+variable "users" {
+  type = set(string)
+  default = ["alice", "bob", "charlie"]
+}
+
+resource "aws_iam_user" "users" {
+  for_each = var.users
+  name     = each.value
+}
+```
+
+### ❌ Avoid: Mixing Resource Types in One File
+
+```hcl
+# Bad - All resources in main.tf
+# main.tf with VPC, EC2, S3, IAM, etc. (1000+ lines)
+
+# Good - Separate by resource type
+# network.tf - VPC, subnets, route tables
+# compute.tf - EC2 instances, auto-scaling
+# storage.tf - S3 buckets, EBS volumes
+# security.tf - IAM roles, security groups
+```
+
+### ❌ Avoid: Not Using Dynamic Blocks
+
+```hcl
+# Bad - Repetitive inline blocks
+resource "aws_security_group" "web" {
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Good - Dynamic block
+locals {
+  ingress_rules = [
+    { port = 80, protocol = "tcp" },
+    { port = 443, protocol = "tcp" }
+  ]
+}
+
+resource "aws_security_group" "web" {
+  dynamic "ingress" {
+    for_each = local.ingress_rules
+    content {
+      from_port   = ingress.value.port
+      to_port     = ingress.value.port
+      protocol    = ingress.value.protocol
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+}
+```
+
+### ❌ Avoid: Not Validating Variables
+
+```hcl
+# Bad - No validation
+variable "environment" {
+  type = string
+}
+
+# Good - With validation
+variable "environment" {
+  type = string
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "Environment must be dev, staging, or prod."
+  }
+}
+```
+
 ---
 
 ## Tool Configuration

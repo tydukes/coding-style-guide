@@ -624,6 +624,93 @@ volumes:
   db_data:
 ```
 
+### ❌ Avoid: Not Using Health Checks
+
+```yaml
+# Bad - No health checks
+services:
+  api:
+    image: myapi:1.0
+    ports:
+      - "8080:8080"
+
+# Good - With health check
+services:
+  api:
+    image: myapi:1.0
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+```
+
+### ❌ Avoid: Running as Root
+
+```yaml
+# Bad - Default root user
+services:
+  app:
+    image: node:18
+    command: npm start
+
+# Good - Specify non-root user
+services:
+  app:
+    image: node:18
+    user: "node"
+    command: npm start
+```
+
+### ❌ Avoid: Not Setting Resource Limits
+
+```yaml
+# Bad - No resource limits (can exhaust host)
+services:
+  app:
+    image: myapp:1.0
+
+# Good - Set limits
+services:
+  app:
+    image: myapp:1.0
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+```
+
+### ❌ Avoid: Not Using Depends On
+
+```yaml
+# Bad - Services start in parallel (race condition)
+services:
+  api:
+    image: myapi:1.0
+  database:
+    image: postgres:14
+
+# Good - Explicit dependencies
+services:
+  api:
+    image: myapi:1.0
+    depends_on:
+      database:
+        condition: service_healthy
+  database:
+    image: postgres:14
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+```
+
 ---
 
 ## Best Practices

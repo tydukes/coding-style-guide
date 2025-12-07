@@ -499,6 +499,93 @@ Always use **2 spaces**:
 }
 ```
 
+### ❌ Avoid: Deep Nesting
+
+```json
+// Bad - Deeply nested structure (hard to maintain)
+{
+  "app": {
+    "config": {
+      "database": {
+        "connections": {
+          "primary": {
+            "settings": {
+              "host": "localhost",
+              "port": 5432
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Good - Flatter structure
+{
+  "app_database_host": "localhost",
+  "app_database_port": 5432
+}
+
+// Or use references
+{
+  "database_settings": {
+    "host": "localhost",
+    "port": 5432
+  },
+  "app_config": {
+    "database": "$ref:database_settings"
+  }
+}
+```
+
+### ❌ Avoid: Inconsistent Naming Conventions
+
+```json
+// Bad - Mixed naming styles
+{
+  "firstName": "John",
+  "last_name": "Doe",
+  "EmailAddress": "john@example.com",
+  "phone-number": "555-1234"
+}
+
+// Good - Consistent camelCase (or snake_case throughout)
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "emailAddress": "john@example.com",
+  "phoneNumber": "555-1234"
+}
+```
+
+### ❌ Avoid: Storing Sensitive Data
+
+```json
+// Bad - Sensitive data in JSON (especially in version control)
+{
+  "database": {
+    "password": "MySecretPassword123",
+    "apiKey": "sk-1234567890abcdef"
+  }
+}
+
+// Good - Use environment variables or secure vaults
+{
+  "database": {
+    "password": "${DB_PASSWORD}",
+    "apiKey": "${API_KEY}"
+  }
+}
+
+// Or reference external secure storage
+{
+  "database": {
+    "password": "vault://secrets/db/password",
+    "apiKey": "vault://secrets/api/key"
+  }
+}
+```
+
 ---
 
 ## JSON Validation

@@ -785,6 +785,143 @@ pipeline {
 }
 ```
 
+### ❌ Avoid: Not Using Parallel Stages
+
+```groovy
+// Bad - Sequential execution
+pipeline {
+    agent any
+    stages {
+        stage('Test') {
+            steps {
+                sh 'npm run test:unit'      // Runs first
+                sh 'npm run test:integration' // Then this
+                sh 'npm run test:e2e'        // Then this
+            }
+        }
+    }
+}
+
+// Good - Parallel execution
+pipeline {
+    agent any
+    stages {
+        stage('Test') {
+            parallel {
+                stage('Unit') {
+                    steps { sh 'npm run test:unit' }
+                }
+                stage('Integration') {
+                    steps { sh 'npm run test:integration' }
+                }
+                stage('E2E') {
+                    steps { sh 'npm run test:e2e' }
+                }
+            }
+        }
+    }
+}
+```
+
+### ❌ Avoid: No Timeouts
+
+```groovy
+// Bad - Can hang indefinitely
+pipeline {
+    agent any
+    stages {
+        stage('Deploy') {
+            steps {
+                sh './deploy.sh'  // ❌ No timeout
+            }
+        }
+    }
+}
+
+// Good - Set timeouts
+pipeline {
+    agent any
+    options {
+        timeout(time: 1, unit: 'HOURS')  // ✅ Pipeline timeout
+    }
+    stages {
+        stage('Deploy') {
+            options {
+                timeout(time: 30, unit: 'MINUTES')  // ✅ Stage timeout
+            }
+            steps {
+                sh './deploy.sh'
+            }
+        }
+    }
+}
+```
+
+### ❌ Avoid: Using 'node' Instead of 'agent'
+
+```groovy
+// Bad - Old scripted pipeline syntax
+node {
+    stage('Build') {
+        checkout scm
+        sh 'make build'
+    }
+}
+
+// Good - Declarative pipeline with agent
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                checkout scm
+                sh 'make build'
+            }
+        }
+    }
+}
+```
+
+### ❌ Avoid: Not Handling Build Artifacts
+
+```groovy
+// Bad - No artifact preservation
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'make build'  // ❌ Artifacts lost after build
+            }
+        }
+    }
+}
+
+// Good - Archive and stash artifacts
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'make build'
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'dist/**/*', fingerprint: true
+                    stash name: 'build-artifacts', includes: 'dist/**/*'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                unstash 'build-artifacts'  // ✅ Retrieve artifacts
+                sh 'make test'
+            }
+        }
+    }
+}
+```
+
 ---
 
 ## Tool Configurations

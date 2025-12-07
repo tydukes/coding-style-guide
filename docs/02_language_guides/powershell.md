@@ -702,6 +702,71 @@ function Get-UserData { }
 function Remove-OldFiles { }
 ```
 
+### ❌ Avoid: Not Using Parameter Validation
+
+```powershell
+# Bad - No validation
+function Set-UserAge {
+    param($Age)
+    # No validation - can accept invalid values
+    $User.Age = $Age
+}
+
+# Good - With validation
+function Set-UserAge {
+    param(
+        [Parameter(Mandatory=$true)]
+        [ValidateRange(0, 150)]
+        [int]$Age
+    )
+    $User.Age = $Age
+}
+```
+
+### ❌ Avoid: Using Positional Parameters in Scripts
+
+```powershell
+# Bad - Positional parameters are unclear
+Get-ChildItem C:\Temp *.txt $true
+
+# Good - Named parameters
+Get-ChildItem -Path C:\Temp -Filter *.txt -Recurse
+```
+
+### ❌ Avoid: Suppressing Errors with Out-Null
+
+```powershell
+# Bad - Hiding errors
+Remove-Item $file -ErrorAction SilentlyContinue 2>&1 | Out-Null
+
+# Good - Explicit error handling
+try {
+    Remove-Item $file -ErrorAction Stop
+} catch {
+    Write-Warning "Failed to remove $file: $_"
+}
+```
+
+### ❌ Avoid: Not Using Splatting for Many Parameters
+
+```powershell
+# Bad - Long parameter list
+New-ADUser -Name "John Doe" -SamAccountName "jdoe" `
+  -UserPrincipalName "jdoe@contoso.com" `
+  -Path "OU=Users,DC=contoso,DC=com" -AccountPassword $password -Enabled $true
+
+# Good - Use splatting
+$userParams = @{
+    Name              = "John Doe"
+    SamAccountName    = "jdoe"
+    UserPrincipalName = "jdoe@contoso.com"
+    Path              = "OU=Users,DC=contoso,DC=com"
+    AccountPassword   = $password
+    Enabled           = $true
+}
+New-ADUser @userParams
+```
+
 ---
 
 ## Tool Configurations

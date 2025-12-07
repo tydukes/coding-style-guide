@@ -602,6 +602,62 @@ build:
  gcc -o $(BIN_DIR)/myapp main.c
 ```
 
+### ❌ Avoid: Not Declaring Dependencies
+
+```makefile
+# Bad - No dependencies declared
+test:
+ go test ./...
+
+# Good - Declare dependencies
+test: build  # test depends on build
+ go test ./...
+
+build: $(wildcard *.go)  # build depends on Go files
+ go build -o app main.go
+```
+
+### ❌ Avoid: Silent Failures
+
+```makefile
+# Bad - Errors hidden
+install:
+ -cp config.yaml /etc/app/  # '-' prefix ignores errors
+
+# Good - Fail on errors
+install:
+ cp config.yaml /etc/app/  # Will stop if copy fails
+ chmod 644 /etc/app/config.yaml
+```
+
+### ❌ Avoid: Not Using @ for Clean Output
+
+```makefile
+# Bad - Shows all commands (noisy output)
+build:
+ echo "Building application..."
+ go build -o app main.go
+ echo "Build complete!"
+
+# Good - Use @ to hide commands
+build:
+ @echo "Building application..."
+ @go build -o app main.go
+ @echo "Build complete!"
+```
+
+### ❌ Avoid: Recursive Make Without $(MAKE)
+
+```makefile
+# Bad - Direct make call
+deploy:
+ cd frontend && make build  # ❌ Won't pass flags correctly
+
+# Good - Use $(MAKE) variable
+deploy:
+ $(MAKE) -C frontend build  # ✅ Passes flags and parallel builds
+```
+
 ---
 
 ## Best Practices

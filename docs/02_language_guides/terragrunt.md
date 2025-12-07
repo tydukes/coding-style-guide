@@ -591,6 +591,79 @@ live/
 └── dev/us-east-1/vpc/
 ```
 
+### ❌ Avoid: Not Using generate Blocks
+
+```hcl
+# Bad - Provider configuration duplicated in every module
+# Repeated in every terragrunt.hcl
+
+# Good - Generate provider in root
+generate "provider" {
+  path      = "provider.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = <<EOF
+provider "aws" {
+  region = "${local.region}"
+  assume_role {
+    role_arn = "arn:aws:iam::${local.account_id}:role/TerraformRole"
+  }
+}
+EOF
+}
+```
+
+### ❌ Avoid: Not Using remote_state
+
+```hcl
+# Bad - Each module configures backend separately
+
+# Good - Configure remote state in root
+remote_state {
+  backend = "s3"
+  config = {
+    bucket         = "my-terraform-state-${local.account_id}"
+    key            = "${path_relative_to_include()}/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "terraform-locks"
+  }
+}
+```
+
+### ❌ Avoid: Not Using run_cmd for Dynamic Values
+
+```hcl
+# Bad - Static values that should be dynamic
+locals {
+  account_id = "123456789012"  # ❌ Hardcoded
+}
+
+# Good - Get dynamically
+locals {
+  account_id = run_cmd("aws", "sts", "get-caller-identity", "--query", "Account", "--output", "text")
+}
+```
+
+### ❌ Avoid: Deep Module Paths Without include
+
+```hcl
+# Bad - Duplicating terraform source in each child
+terraform {
+  source = "git::https://github.com/org/modules.git//vpc?ref=v1.0.0"
+}
+
+# Good - Define in root, reference in children
+# Root terragrunt.hcl
+terraform {
+  source = "${get_parent_terragrunt_dir()}/modules//vpc"
+}
+
+# Child just includes
+include "root" {
+  path = find_in_parent_folders()
+}
+```
+
 ---
 
 ## Tool Configurations
