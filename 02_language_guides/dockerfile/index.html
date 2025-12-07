@@ -2386,6 +2386,50 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#avoid-multiple-run-commands-for-package-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Multiple RUN Commands for Package Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-copying-entire-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Copying Entire Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-multi-stage-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using Multi-Stage Builds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-exposing-secrets-in-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Exposing Secrets in Build
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4664,6 +4708,50 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#avoid-multiple-run-commands-for-package-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Multiple RUN Commands for Package Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-copying-entire-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Copying Entire Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-multi-stage-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using Multi-Stage Builds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-exposing-secrets-in-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Exposing Secrets in Build
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5359,6 +5447,84 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>build-essential<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+</code></pre></div>
+<h3 id="avoid-multiple-run-commands-for-package-install">❌ Avoid: Multiple RUN Commands for Package Install<a class="headerlink" href="#avoid-multiple-run-commands-for-package-install" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Creates multiple layers</span>
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>git
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>clean
+
+<span class="c"># Good - Single layer with cleanup</span>
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>curl<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>git<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>apt-get<span class="w"> </span>clean<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+</code></pre></div>
+<h3 id="avoid-copying-entire-context">❌ Avoid: Copying Entire Context<a class="headerlink" href="#avoid-copying-entire-context" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Copies everything including .git, node_modules, etc.</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
+
+<span class="c"># Good - Use .dockerignore and copy selectively</span>
+<span class="c"># .dockerignore:</span>
+<span class="c"># node_modules</span>
+<span class="c"># .git</span>
+<span class="c"># .env</span>
+<span class="c"># *.md</span>
+
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production
+<span class="k">COPY</span><span class="w"> </span>src/<span class="w"> </span>./src/
+<span class="k">COPY</span><span class="w"> </span>public/<span class="w"> </span>./public/
+</code></pre></div>
+<h3 id="avoid-not-using-multi-stage-builds">❌ Avoid: Not Using Multi-Stage Builds<a class="headerlink" href="#avoid-not-using-multi-stage-builds" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Build tools remain in final image</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:18</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>install<span class="w">  </span>#<span class="w"> </span>Includes<span class="w"> </span>dev<span class="w"> </span>dependencies
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;start&quot;</span><span class="p">]</span>
+
+<span class="c"># Good - Multi-stage build</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:18</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
+
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/dist<span class="w"> </span>./dist
+<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/package*.json<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production
+<span class="k">USER</span><span class="w"> </span><span class="s">node</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
+</code></pre></div>
+<h3 id="avoid-exposing-secrets-in-build">❌ Avoid: Exposing Secrets in Build<a class="headerlink" href="#avoid-exposing-secrets-in-build" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Secrets in image layers</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>.env<span class="w"> </span>.env<span class="w">  </span>#<span class="w"> </span>❌<span class="w"> </span>Secret<span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span>image!
+<span class="k">RUN</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;API_KEY=secret123&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>config.txt<span class="w">  </span>#<span class="w"> </span>❌<span class="w"> </span>In<span class="w"> </span>layer<span class="w"> </span>history!
+
+<span class="c"># Good - Use build secrets (Docker BuildKit)</span>
+<span class="c"># syntax=docker/dockerfile:1</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">RUN</span><span class="w"> </span>--mount<span class="o">=</span><span class="nv">type</span><span class="o">=</span>secret,id<span class="o">=</span>npmrc,target<span class="o">=</span>/root/.npmrc<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>npm<span class="w"> </span>install<span class="w"> </span>private-package
+
+<span class="c"># Or use build args (for non-sensitive config)</span>
+<span class="k">ARG</span><span class="w"> </span><span class="nv">NODE_ENV</span><span class="o">=</span>production
+<span class="k">ENV</span><span class="w"> </span><span class="nv">NODE_ENV</span><span class="o">=</span><span class="nv">$NODE_ENV</span>
 </code></pre></div>
 <hr />
 <h2 id="building-and-tagging">Building and Tagging<a class="headerlink" href="#building-and-tagging" title="Permanent link">&para;</a></h2>

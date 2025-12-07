@@ -1880,6 +1880,61 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#avoid-implicit-any-in-function-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Implicit any in Function Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-using-enums-for-string-constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Using Enums for String Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-overusing-optional-chaining" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Overusing Optional Chaining
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-generic-any-arrays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Generic any[] Arrays
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-disabling-typescript-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Disabling TypeScript Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4735,6 +4790,61 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#avoid-implicit-any-in-function-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Implicit any in Function Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-using-enums-for-string-constants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Using Enums for String Constants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-overusing-optional-chaining" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Overusing Optional Chaining
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-generic-any-arrays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Generic any[] Arrays
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-disabling-typescript-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Disabling TypeScript Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5938,6 +6048,105 @@ interfaces, and compile-time type checking to enhance code quality and developer
 <span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">isUser</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Invalid user data&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="avoid-implicit-any-in-function-parameters">❌ Avoid: Implicit any in Function Parameters<a class="headerlink" href="#avoid-implicit-any-in-function-parameters" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Implicit any</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">processItems</span><span class="p">(</span><span class="nx">items</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// ❌ Parameter has implicit &#39;any&#39; type</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Good - Explicit types</span>
+<span class="kd">interface</span><span class="w"> </span><span class="nx">Item</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">processItems</span><span class="p">(</span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="kt">Item</span><span class="p">[])</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// ✅ Fully typed</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="avoid-using-enums-for-string-constants">❌ Avoid: Using Enums for String Constants<a class="headerlink" href="#avoid-using-enums-for-string-constants" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Enums generate runtime code</span>
+<span class="kd">enum</span><span class="w"> </span><span class="nx">Color</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// ❌ Adds unnecessary runtime code</span>
+<span class="w">  </span><span class="nx">Red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">Green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;green&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">Blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;blue&#39;</span>
+<span class="p">}</span>
+
+<span class="c1">// Good - Use const objects or unions</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">Color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// ✅ No runtime overhead (with as const)</span>
+<span class="w">  </span><span class="nx">Red</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">Green</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;green&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">Blue</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;blue&#39;</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="kd">const</span><span class="p">;</span>
+
+<span class="kr">type</span><span class="w"> </span><span class="nx">Color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">Color</span><span class="p">[</span><span class="nx">keyof</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">Color</span><span class="p">];</span>
+
+<span class="c1">// Or even better - Use union types</span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">Color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;red&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;green&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;blue&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">// ✅ Pure type, no runtime</span>
+</code></pre></div>
+<h3 id="avoid-overusing-optional-chaining">❌ Avoid: Overusing Optional Chaining<a class="headerlink" href="#avoid-overusing-optional-chaining" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Optional chaining everywhere</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">getUserEmail</span><span class="p">(</span><span class="nx">user?</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">user</span><span class="o">?</span><span class="p">.</span><span class="nx">profile</span><span class="o">?</span><span class="p">.</span><span class="nx">contact</span><span class="o">?</span><span class="p">.</span><span class="nx">email</span><span class="o">?</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">();</span><span class="w">  </span><span class="c1">// ❌ Hard to debug</span>
+<span class="p">}</span>
+
+<span class="c1">// Good - Explicit null checks</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">getUserEmail</span><span class="p">(</span><span class="nx">user</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="o">?</span><span class="p">.</span><span class="nx">profile</span><span class="o">?</span><span class="p">.</span><span class="nx">contact</span><span class="o">?</span><span class="p">.</span><span class="nx">email</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// ✅ Clear validation</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">profile</span><span class="p">.</span><span class="nx">contact</span><span class="p">.</span><span class="nx">email</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// Better - Validate at boundaries</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">getUserEmail</span><span class="p">(</span><span class="nx">user</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// ✅ Require valid user</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">.</span><span class="nx">profile</span><span class="o">?</span><span class="p">.</span><span class="nx">contact</span><span class="o">?</span><span class="p">.</span><span class="nx">email</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;User email not found&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">profile</span><span class="p">.</span><span class="nx">contact</span><span class="p">.</span><span class="nx">email</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="avoid-generic-any-arrays">❌ Avoid: Generic any[] Arrays<a class="headerlink" href="#avoid-generic-any-arrays" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Generic array</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">processItems</span><span class="p">(</span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">[])</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// ❌ Loses all type safety</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Good - Typed arrays</span>
+<span class="kd">interface</span><span class="w"> </span><span class="nx">Item</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">processItems</span><span class="p">(</span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="kt">Item</span><span class="p">[])</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// ✅ Type-safe</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Or use generics for reusability</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">processItems</span><span class="o">&lt;</span><span class="nx">T</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">}</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="kt">T</span><span class="p">[])</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="avoid-disabling-typescript-checks">❌ Avoid: Disabling TypeScript Checks<a class="headerlink" href="#avoid-disabling-typescript-checks" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Disabling type checking</span>
+<span class="c1">// @ts-ignore  // ❌ Hides real errors</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">dangerousOperation</span><span class="p">();</span>
+
+<span class="c1">// @ts-nocheck  // ❌ Disables checking for entire file</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">processData</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Good - Fix the root cause</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">dangerousOperation</span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="nx">unknown</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// ✅ Proper typing</span>
+<span class="w">  </span><span class="c1">// Implementation</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="p">}</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">dangerousOperation</span><span class="p">();</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">isValidResult</span><span class="p">(</span><span class="nx">result</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Use result safely</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
