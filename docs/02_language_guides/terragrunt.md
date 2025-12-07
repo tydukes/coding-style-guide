@@ -705,7 +705,7 @@ Add to `.gitignore`:
 
 ### Best Practice Guides
 
-- [Terragrunt Best Practices](https://terragrunt.gruntwork.io/docs/getting-started/recommended-best-practices/)
+- [Terragrunt Overview & Best Practices](https://terragrunt.gruntwork.io/docs/getting-started/overview/)
 - [Keep Your Terraform Code DRY](https://blog.gruntwork.io/terragrunt-how-to-keep-your-terraform-code-dry-and-maintainable-f61ae06959d8)
 
 ---
