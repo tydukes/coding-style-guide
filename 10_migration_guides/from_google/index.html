@@ -6,19 +6,19 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Step-by-step migration guide from standard PEP 8 to the enhanced Dukes Engineering Python style guide">
+        <meta name="description" content="Step-by-step migration guide from Google Python Style Guide to the Dukes Engineering Python style guide">
       
       
         <meta name="author" content="Tyler Dukes">
       
       
-        <link rel="canonical" href="https://tydukes.github.io/coding-style-guide/10_migration_guides/from_pep8/">
+        <link rel="canonical" href="https://tydukes.github.io/coding-style-guide/10_migration_guides/from_google/">
       
       
-        <link rel="prev" href="../../08_anti_patterns/">
+        <link rel="prev" href="../from_pep8/">
       
       
-        <link rel="next" href="../from_google/">
+        <link rel="next" href="../../05_ci_cd/ai_validation_pipeline/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Migrating from PEP 8 to Dukes Engineering Style Guide - The Dukes Engineering Style Guide</title>
+        <title>Migrating from Google Python Style Guide to Dukes Engineering Style Guide - The Dukes Engineering Style Guide</title>
       
     
     
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Migrating from PEP 8 to Dukes Engineering Style Guide
+              Migrating from Google Python Style Guide to Dukes Engineering Style Guide
             
           </span>
         </div>
@@ -397,7 +397,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../from_pep8/" class="md-tabs__link">
           
   
   
@@ -2872,6 +2872,41 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../from_pep8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From PEP 8
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -2889,7 +2924,7 @@
   <span class="md-ellipsis">
     
   
-    From PEP 8
+    From Google Style Guide
   
 
     
@@ -2914,7 +2949,7 @@
   <span class="md-ellipsis">
     
   
-    From PEP 8
+    From Google Style Guide
   
 
     
@@ -3018,10 +3053,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#code-structure" class="md-nav__link">
+  <a href="#import-organization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Code Structure ✅
+        Import Organization ✅
       
     </span>
   </a>
@@ -3029,10 +3064,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#formatting" class="md-nav__link">
+  <a href="#string-quotes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Formatting ✅
+        String Quotes ✅
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docstring-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docstring Format ✅
       
     </span>
   </a>
@@ -3045,22 +3091,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-changes-enhancements-beyond-pep-8" class="md-nav__link">
+  <a href="#what-changes-key-differences" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Changes: Enhancements Beyond PEP 8
+        What Changes: Key Differences
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="What Changes: Enhancements Beyond PEP 8">
+    <nav class="md-nav" aria-label="What Changes: Key Differences">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-line-length-79-88-characters" class="md-nav__link">
+  <a href="#1-indentation-2-spaces-4-spaces" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Line Length: 79 → 88 Characters
+        1. Indentation: 2 Spaces → 4 Spaces
       
     </span>
   </a>
@@ -3068,10 +3114,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-type-hints-optional-required" class="md-nav__link">
+  <a href="#2-line-length-80-characters-88-characters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Type Hints: Optional → Required
+        2. Line Length: 80 Characters → 88 Characters
       
     </span>
   </a>
@@ -3079,10 +3125,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-documentation-basic-enhanced-metadata" class="md-nav__link">
+  <a href="#3-type-hints-recommended-required" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Documentation: Basic → Enhanced Metadata
+        3. Type Hints: Recommended → Required
       
     </span>
   </a>
@@ -3090,10 +3136,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-docstrings-pep-257-googlenumpy-style-with-examples" class="md-nav__link">
+  <a href="#4-documentation-google-docstrings-enhanced-metadata" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Docstrings: PEP 257 → Google/NumPy Style with Examples
+        4. Documentation: Google Docstrings → Enhanced Metadata
       
     </span>
   </a>
@@ -3101,10 +3147,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-testing-recommended-required-coverage" class="md-nav__link">
+  <a href="#5-formatters-pylint-yapf-black-mypy-flake8" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Testing: Recommended → Required Coverage
+        5. Formatters: Pylint + YAPF → Black + mypy + Flake8
       
     </span>
   </a>
@@ -3112,10 +3158,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-security-implicit-explicit-best-practices" class="md-nav__link">
+  <a href="#6-testing-flexible-required-80-coverage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Security: Implicit → Explicit Best Practices
+        6. Testing: Flexible → Required 80%+ Coverage
       
     </span>
   </a>
@@ -3123,10 +3169,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#7-error-handling-general-specific-exceptions" class="md-nav__link">
+  <a href="#7-security-best-practices-explicit-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. Error Handling: General → Specific Exceptions
+        7. Security: Best Practices → Explicit Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-error-handling-flexible-fail-fast-with-specific-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Error Handling: Flexible → Fail-Fast with Specific Exceptions
       
     </span>
   </a>
@@ -3139,22 +3196,34 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#tool-configuration-changes" class="md-nav__link">
+  <a href="#tool-configuration-migration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tool Configuration Changes
+        Tool Configuration Migration
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Tool Configuration Changes">
+    <nav class="md-nav" aria-label="Tool Configuration Migration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#black-formatter-new-requirement" class="md-nav__link">
+  <a href="#from-pylint-to-black-flake8-mypy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Black Formatter (New Requirement)
+        From Pylint to Black + Flake8 + mypy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="From Pylint to Black + Flake8 + mypy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#remove-pylint-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remove Pylint Configuration
       
     </span>
   </a>
@@ -3162,10 +3231,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mypy-type-checker-new-requirement" class="md-nav__link">
+  <a href="#add-black-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        mypy Type Checker (New Requirement)
+        Add Black Configuration
       
     </span>
   </a>
@@ -3173,10 +3242,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#isort-import-organizer-enhanced" class="md-nav__link">
+  <a href="#add-mypy-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        isort Import Organizer (Enhanced)
+        Add mypy Configuration
       
     </span>
   </a>
@@ -3184,10 +3253,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pytest-with-coverage-new-requirement" class="md-nav__link">
+  <a href="#add-flake8-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        pytest with Coverage (New Requirement)
+        Add Flake8 Configuration
       
     </span>
   </a>
@@ -3195,10 +3264,37 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pre-commit-hooks-new-requirement" class="md-nav__link">
+  <a href="#add-isort-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-commit Hooks (New Requirement)
+        Add isort Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-yapf-to-black" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From YAPF to Black
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-commit-hooks-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-commit Hooks Setup
       
     </span>
   </a>
@@ -3223,10 +3319,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#phase-1-setup-and-configuration" class="md-nav__link">
+  <a href="#phase-1-tool-setup-and-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 1: Setup and Configuration
+        Phase 1: Tool Setup and Configuration
       
     </span>
   </a>
@@ -3234,10 +3330,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#phase-2-code-formatting" class="md-nav__link">
+  <a href="#phase-2-code-reformatting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 2: Code Formatting
+        Phase 2: Code Reformatting
       
     </span>
   </a>
@@ -3267,10 +3363,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#phase-5-add-tests" class="md-nav__link">
+  <a href="#phase-5-add-comprehensive-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 5: Add Tests
+        Phase 5: Add Comprehensive Testing
       
     </span>
   </a>
@@ -3289,10 +3385,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#phase-7-cicd-integration" class="md-nav__link">
+  <a href="#phase-7-error-handling" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 7: CI/CD Integration
+        Phase 7: Error Handling
       
     </span>
   </a>
@@ -3300,10 +3396,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#phase-8-documentation-and-training" class="md-nav__link">
+  <a href="#phase-8-cicd-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 8: Documentation and Training
+        Phase 8: CI/CD Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-9-documentation-and-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 9: Documentation and Training
       
     </span>
   </a>
@@ -3328,10 +3435,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-type-hint-complexity-overload" class="md-nav__link">
+  <a href="#1-indentation-inconsistency-during-transition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Type Hint Complexity Overload
+        1. Indentation Inconsistency During Transition
       
     </span>
   </a>
@@ -3339,10 +3446,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-over-reliance-on-any-type" class="md-nav__link">
+  <a href="#2-type-hint-complexity-overload" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Over-Reliance on Any Type
+        2. Type Hint Complexity Overload
       
     </span>
   </a>
@@ -3350,10 +3457,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-docstring-duplication" class="md-nav__link">
+  <a href="#3-over-reliance-on-type-ignore" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Docstring Duplication
+        3. Over-Reliance on # type: ignore
       
     </span>
   </a>
@@ -3361,10 +3468,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-test-naming-confusion" class="md-nav__link">
+  <a href="#4-breaking-cicd-during-formatter-migration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Test Naming Confusion
+        4. Breaking CI/CD During Formatter Migration
       
     </span>
   </a>
@@ -3372,10 +3479,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-ignoring-pre-commit-hook-failures" class="md-nav__link">
+  <a href="#5-test-naming-confusion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Ignoring Pre-commit Hook Failures
+        5. Test Naming Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-secrets-exposure-during-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Secrets Exposure During Migration
       
     </span>
   </a>
@@ -3400,10 +3518,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#week-1-2-tooling-setup" class="md-nav__link">
+  <a href="#weeks-1-2-tooling-foundation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Week 1-2: Tooling Setup
+        Weeks 1-2: Tooling Foundation
       
     </span>
   </a>
@@ -3411,10 +3529,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#week-3-4-type-hints-for-new-code" class="md-nav__link">
+  <a href="#weeks-3-4-cicd-and-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Week 3-4: Type Hints for New Code
+        Weeks 3-4: CI/CD and Testing
       
     </span>
   </a>
@@ -3422,10 +3540,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#week-5-8-documentation-enhancement" class="md-nav__link">
+  <a href="#weeks-5-6-type-hints-for-new-code" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Week 5-8: Documentation Enhancement
+        Weeks 5-6: Type Hints for New Code
       
     </span>
   </a>
@@ -3433,10 +3551,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#week-9-12-testing-and-coverage" class="md-nav__link">
+  <a href="#weeks-7-8-documentation-enhancement" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Week 9-12: Testing and Coverage
+        Weeks 7-8: Documentation Enhancement
       
     </span>
   </a>
@@ -3444,10 +3562,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#month-4-complete-migration" class="md-nav__link">
+  <a href="#weeks-9-12-legacy-code-migration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Month 4+: Complete Migration
+        Weeks 9-12: Legacy Code Migration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#month-4-complete-transition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Month 4+: Complete Transition
       
     </span>
   </a>
@@ -3464,6 +3593,17 @@
     <span class="md-ellipsis">
       
         Success Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#side-by-side-comparison-google-vs-dukes-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Side-by-Side Comparison: Google vs. Dukes Engineering
       
     </span>
   </a>
@@ -3505,10 +3645,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#community-support" class="md-nav__link">
+  <a href="#external-references" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Community Support
+        External References
       
     </span>
   </a>
@@ -3535,41 +3675,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../from_google/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    From Google Style Guide
-  
-
-    
-  </span>
-  
-  
-    
-  
-  
-    <span class="md-status md-status--active"></span>
-  
-
-  
-
-      </a>
     </li>
   
 
@@ -4188,10 +4293,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#code-structure" class="md-nav__link">
+  <a href="#import-organization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Code Structure ✅
+        Import Organization ✅
       
     </span>
   </a>
@@ -4199,10 +4304,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#formatting" class="md-nav__link">
+  <a href="#string-quotes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Formatting ✅
+        String Quotes ✅
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docstring-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docstring Format ✅
       
     </span>
   </a>
@@ -4215,22 +4331,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-changes-enhancements-beyond-pep-8" class="md-nav__link">
+  <a href="#what-changes-key-differences" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Changes: Enhancements Beyond PEP 8
+        What Changes: Key Differences
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="What Changes: Enhancements Beyond PEP 8">
+    <nav class="md-nav" aria-label="What Changes: Key Differences">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-line-length-79-88-characters" class="md-nav__link">
+  <a href="#1-indentation-2-spaces-4-spaces" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Line Length: 79 → 88 Characters
+        1. Indentation: 2 Spaces → 4 Spaces
       
     </span>
   </a>
@@ -4238,10 +4354,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-type-hints-optional-required" class="md-nav__link">
+  <a href="#2-line-length-80-characters-88-characters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Type Hints: Optional → Required
+        2. Line Length: 80 Characters → 88 Characters
       
     </span>
   </a>
@@ -4249,10 +4365,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-documentation-basic-enhanced-metadata" class="md-nav__link">
+  <a href="#3-type-hints-recommended-required" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Documentation: Basic → Enhanced Metadata
+        3. Type Hints: Recommended → Required
       
     </span>
   </a>
@@ -4260,10 +4376,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-docstrings-pep-257-googlenumpy-style-with-examples" class="md-nav__link">
+  <a href="#4-documentation-google-docstrings-enhanced-metadata" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Docstrings: PEP 257 → Google/NumPy Style with Examples
+        4. Documentation: Google Docstrings → Enhanced Metadata
       
     </span>
   </a>
@@ -4271,10 +4387,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-testing-recommended-required-coverage" class="md-nav__link">
+  <a href="#5-formatters-pylint-yapf-black-mypy-flake8" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Testing: Recommended → Required Coverage
+        5. Formatters: Pylint + YAPF → Black + mypy + Flake8
       
     </span>
   </a>
@@ -4282,10 +4398,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-security-implicit-explicit-best-practices" class="md-nav__link">
+  <a href="#6-testing-flexible-required-80-coverage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Security: Implicit → Explicit Best Practices
+        6. Testing: Flexible → Required 80%+ Coverage
       
     </span>
   </a>
@@ -4293,10 +4409,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#7-error-handling-general-specific-exceptions" class="md-nav__link">
+  <a href="#7-security-best-practices-explicit-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. Error Handling: General → Specific Exceptions
+        7. Security: Best Practices → Explicit Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-error-handling-flexible-fail-fast-with-specific-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Error Handling: Flexible → Fail-Fast with Specific Exceptions
       
     </span>
   </a>
@@ -4309,22 +4436,34 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#tool-configuration-changes" class="md-nav__link">
+  <a href="#tool-configuration-migration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tool Configuration Changes
+        Tool Configuration Migration
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Tool Configuration Changes">
+    <nav class="md-nav" aria-label="Tool Configuration Migration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#black-formatter-new-requirement" class="md-nav__link">
+  <a href="#from-pylint-to-black-flake8-mypy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Black Formatter (New Requirement)
+        From Pylint to Black + Flake8 + mypy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="From Pylint to Black + Flake8 + mypy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#remove-pylint-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remove Pylint Configuration
       
     </span>
   </a>
@@ -4332,10 +4471,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mypy-type-checker-new-requirement" class="md-nav__link">
+  <a href="#add-black-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        mypy Type Checker (New Requirement)
+        Add Black Configuration
       
     </span>
   </a>
@@ -4343,10 +4482,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#isort-import-organizer-enhanced" class="md-nav__link">
+  <a href="#add-mypy-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        isort Import Organizer (Enhanced)
+        Add mypy Configuration
       
     </span>
   </a>
@@ -4354,10 +4493,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pytest-with-coverage-new-requirement" class="md-nav__link">
+  <a href="#add-flake8-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        pytest with Coverage (New Requirement)
+        Add Flake8 Configuration
       
     </span>
   </a>
@@ -4365,10 +4504,37 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pre-commit-hooks-new-requirement" class="md-nav__link">
+  <a href="#add-isort-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-commit Hooks (New Requirement)
+        Add isort Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-yapf-to-black" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From YAPF to Black
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-commit-hooks-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-commit Hooks Setup
       
     </span>
   </a>
@@ -4393,10 +4559,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#phase-1-setup-and-configuration" class="md-nav__link">
+  <a href="#phase-1-tool-setup-and-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 1: Setup and Configuration
+        Phase 1: Tool Setup and Configuration
       
     </span>
   </a>
@@ -4404,10 +4570,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#phase-2-code-formatting" class="md-nav__link">
+  <a href="#phase-2-code-reformatting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 2: Code Formatting
+        Phase 2: Code Reformatting
       
     </span>
   </a>
@@ -4437,10 +4603,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#phase-5-add-tests" class="md-nav__link">
+  <a href="#phase-5-add-comprehensive-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 5: Add Tests
+        Phase 5: Add Comprehensive Testing
       
     </span>
   </a>
@@ -4459,10 +4625,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#phase-7-cicd-integration" class="md-nav__link">
+  <a href="#phase-7-error-handling" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 7: CI/CD Integration
+        Phase 7: Error Handling
       
     </span>
   </a>
@@ -4470,10 +4636,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#phase-8-documentation-and-training" class="md-nav__link">
+  <a href="#phase-8-cicd-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 8: Documentation and Training
+        Phase 8: CI/CD Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-9-documentation-and-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 9: Documentation and Training
       
     </span>
   </a>
@@ -4498,10 +4675,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-type-hint-complexity-overload" class="md-nav__link">
+  <a href="#1-indentation-inconsistency-during-transition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Type Hint Complexity Overload
+        1. Indentation Inconsistency During Transition
       
     </span>
   </a>
@@ -4509,10 +4686,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-over-reliance-on-any-type" class="md-nav__link">
+  <a href="#2-type-hint-complexity-overload" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Over-Reliance on Any Type
+        2. Type Hint Complexity Overload
       
     </span>
   </a>
@@ -4520,10 +4697,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-docstring-duplication" class="md-nav__link">
+  <a href="#3-over-reliance-on-type-ignore" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Docstring Duplication
+        3. Over-Reliance on # type: ignore
       
     </span>
   </a>
@@ -4531,10 +4708,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-test-naming-confusion" class="md-nav__link">
+  <a href="#4-breaking-cicd-during-formatter-migration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Test Naming Confusion
+        4. Breaking CI/CD During Formatter Migration
       
     </span>
   </a>
@@ -4542,10 +4719,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-ignoring-pre-commit-hook-failures" class="md-nav__link">
+  <a href="#5-test-naming-confusion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Ignoring Pre-commit Hook Failures
+        5. Test Naming Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-secrets-exposure-during-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Secrets Exposure During Migration
       
     </span>
   </a>
@@ -4570,10 +4758,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#week-1-2-tooling-setup" class="md-nav__link">
+  <a href="#weeks-1-2-tooling-foundation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Week 1-2: Tooling Setup
+        Weeks 1-2: Tooling Foundation
       
     </span>
   </a>
@@ -4581,10 +4769,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#week-3-4-type-hints-for-new-code" class="md-nav__link">
+  <a href="#weeks-3-4-cicd-and-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Week 3-4: Type Hints for New Code
+        Weeks 3-4: CI/CD and Testing
       
     </span>
   </a>
@@ -4592,10 +4780,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#week-5-8-documentation-enhancement" class="md-nav__link">
+  <a href="#weeks-5-6-type-hints-for-new-code" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Week 5-8: Documentation Enhancement
+        Weeks 5-6: Type Hints for New Code
       
     </span>
   </a>
@@ -4603,10 +4791,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#week-9-12-testing-and-coverage" class="md-nav__link">
+  <a href="#weeks-7-8-documentation-enhancement" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Week 9-12: Testing and Coverage
+        Weeks 7-8: Documentation Enhancement
       
     </span>
   </a>
@@ -4614,10 +4802,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#month-4-complete-migration" class="md-nav__link">
+  <a href="#weeks-9-12-legacy-code-migration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Month 4+: Complete Migration
+        Weeks 9-12: Legacy Code Migration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#month-4-complete-transition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Month 4+: Complete Transition
       
     </span>
   </a>
@@ -4634,6 +4833,17 @@
     <span class="md-ellipsis">
       
         Success Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#side-by-side-comparison-google-vs-dukes-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Side-by-Side Comparison: Google vs. Dukes Engineering
       
     </span>
   </a>
@@ -4675,10 +4885,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#community-support" class="md-nav__link">
+  <a href="#external-references" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Community Support
+        External References
       
     </span>
   </a>
@@ -4721,72 +4931,66 @@
   
 
 
-  <h1>From PEP 8</h1>
+  <h1>From Google Style Guide</h1>
 
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This guide helps Python developers transition from <strong>PEP 8</strong> (the standard Python style guide) to
-the <strong>Dukes Engineering Style Guide</strong>. Our guide builds on PEP 8's foundation while adding modern
-DevOps-oriented enhancements for infrastructure automation, type safety, and security.</p>
+<p>This guide helps Python developers transition from the <strong>Google Python Style Guide</strong> to the <strong>Dukes Engineering
+Style Guide</strong>. While both guides share many similarities and are both based on PEP 8, the Dukes Engineering guide
+adds DevOps-focused enhancements and modern tooling requirements for infrastructure automation.</p>
 <h3 id="what-this-guide-covers">What This Guide Covers<a class="headerlink" href="#what-this-guide-covers" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Compatibility assessment: What stays the same vs. what changes</li>
-<li>Enhanced requirements beyond PEP 8</li>
-<li>Tool configuration updates</li>
+<li>Compatibility assessment between Google and Dukes Engineering guides</li>
+<li>Key differences in formatting and conventions</li>
+<li>Enhanced requirements for DevOps workflows</li>
+<li>Tool migration (Pylint → Black + mypy + pytest)</li>
 <li>Step-by-step migration checklist</li>
-<li>Common migration pitfalls and solutions</li>
+<li>Before/after code examples</li>
 </ul>
 <h3 id="who-should-use-this-guide">Who Should Use This Guide<a class="headerlink" href="#who-should-use-this-guide" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Teams currently following PEP 8 who want enhanced DevOps standards</li>
-<li>Projects transitioning to infrastructure-as-code automation</li>
-<li>Python developers adding type hints and security best practices</li>
-<li>Organizations standardizing on modern Python tooling (Black, mypy)</li>
+<li>Google-style Python projects transitioning to Dukes Engineering standards</li>
+<li>Teams familiar with Google's conventions adopting DevOps best practices</li>
+<li>Projects adding infrastructure automation requirements</li>
+<li>Organizations standardizing on Black, mypy, and modern Python tooling</li>
 </ul>
 <h2 id="quick-compatibility-summary">Quick Compatibility Summary<a class="headerlink" href="#quick-compatibility-summary" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph LR
-    PEP8[PEP 8 Standards] --&gt; Same[100% Compatible&lt;br/&gt;Base Conventions]
-    PEP8 --&gt; Enhanced[Enhanced Requirements&lt;br/&gt;Type Hints, Docs, Security]
-    PEP8 --&gt; Relaxed[Relaxed Constraints&lt;br/&gt;Line Length 88 chars]
+    Google[Google Python&lt;br/&gt;Style Guide] --&gt; Compatible[High Compatibility&lt;br/&gt;Shared PEP 8 Base]
+    Google --&gt; Differences[Key Differences&lt;br/&gt;Indentation, Line Length, Tools]
+    Google --&gt; Enhanced[Enhanced for DevOps&lt;br/&gt;Type Hints, Metadata, Testing]
 
-    Same --&gt; Migration[Migration Path]
+    Compatible --&gt; Migration[Migration Path]
+    Differences --&gt; Migration
     Enhanced --&gt; Migration
-    Relaxed --&gt; Migration
 
-    Migration --&gt; DukesGuide[Dukes Engineering&lt;br/&gt;Style Guide]
+    Migration --&gt; Dukes[Dukes Engineering&lt;br/&gt;Style Guide]
 
-    style Same fill:#e8f5e9
-    style Enhanced fill:#fff3e0
-    style Relaxed fill:#e3f2fd
-    style DukesGuide fill:#f3e5f5</code></pre>
+    style Compatible fill:#e8f5e9
+    style Differences fill:#fff3e0
+    style Enhanced fill:#f3e5f5
+    style Dukes fill:#e3f2fd</code></pre>
 <h2 id="what-stays-the-same">What Stays the Same<a class="headerlink" href="#what-stays-the-same" title="Permanent link">&para;</a></h2>
-<p>The Dukes Engineering Style Guide maintains <strong>full compatibility</strong> with PEP 8 core conventions.
-If your code follows PEP 8, these aspects require <strong>no changes</strong>:</p>
+<p>Both Google and Dukes Engineering guides share these core PEP 8 conventions:</p>
 <h3 id="naming-conventions">Naming Conventions ✅<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Element</th>
 <th>Convention</th>
-<th>PEP 8</th>
+<th>Google</th>
 <th>Our Guide</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Variables</td>
+<td>Modules</td>
 <td><code>snake_case</code></td>
 <td>✅</td>
 <td>✅ Same</td>
 </tr>
 <tr>
-<td>Functions</td>
+<td>Packages</td>
 <td><code>snake_case</code></td>
-<td>✅</td>
-<td>✅ Same</td>
-</tr>
-<tr>
-<td>Constants</td>
-<td><code>UPPER_SNAKE_CASE</code></td>
 <td>✅</td>
 <td>✅ Same</td>
 </tr>
@@ -4797,7 +5001,31 @@ If your code follows PEP 8, these aspects require <strong>no changes</strong>:</
 <td>✅ Same</td>
 </tr>
 <tr>
-<td>Modules</td>
+<td>Exceptions</td>
+<td><code>Error</code> suffix</td>
+<td>✅</td>
+<td>✅ Same</td>
+</tr>
+<tr>
+<td>Functions</td>
+<td><code>snake_case</code></td>
+<td>✅</td>
+<td>✅ Same</td>
+</tr>
+<tr>
+<td>Global/Class Constants</td>
+<td><code>UPPER_SNAKE_CASE</code></td>
+<td>✅</td>
+<td>✅ Same</td>
+</tr>
+<tr>
+<td>Global/Class Variables</td>
+<td><code>snake_case</code></td>
+<td>✅</td>
+<td>✅ Same</td>
+</tr>
+<tr>
+<td>Instance Variables</td>
 <td><code>snake_case</code></td>
 <td>✅</td>
 <td>✅ Same</td>
@@ -4810,99 +5038,127 @@ If your code follows PEP 8, these aspects require <strong>no changes</strong>:</
 </tr>
 </tbody>
 </table>
-<h3 id="code-structure">Code Structure ✅<a class="headerlink" href="#code-structure" title="Permanent link">&para;</a></h3>
+<h3 id="import-organization">Import Organization ✅<a class="headerlink" href="#import-organization" title="Permanent link">&para;</a></h3>
+<p>Both guides require:</p>
 <ul>
-<li><strong>Indentation</strong>: 4 spaces (never tabs)</li>
-<li><strong>Blank lines</strong>: 2 between top-level definitions, 1 between methods</li>
-<li><strong>Import order</strong>: Standard library → third-party → local</li>
-<li><strong>Whitespace</strong>: Consistent spacing around operators</li>
-<li><strong>Comments</strong>: <code>#</code> for inline, <code>"""</code> for docstrings</li>
+<li>Standard library imports first</li>
+<li>Third-party library imports second</li>
+<li>Local application imports last</li>
+<li>Alphabetical ordering within each group</li>
+<li>Absolute imports preferred over relative</li>
 </ul>
-<h3 id="formatting">Formatting ✅<a class="headerlink" href="#formatting" title="Permanent link">&para;</a></h3>
-<ul>
-<li>String quotes (prefer double, use single to avoid escapes)</li>
-<li>Parentheses for line continuation</li>
-<li>Trailing commas in multi-line structures</li>
-<li>No trailing whitespace</li>
-</ul>
-<p><strong>Example - No Changes Needed:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># This PEP 8 code is already compliant</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">myapp.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">helper</span>
-
-
-<span class="n">MAX_RETRIES</span> <span class="o">=</span> <span class="mi">3</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">UserService</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service for user management.&quot;&quot;&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve user by ID.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="what-changes-enhancements-beyond-pep-8">What Changes: Enhancements Beyond PEP 8<a class="headerlink" href="#what-changes-enhancements-beyond-pep-8" title="Permanent link">&para;</a></h2>
-<h3 id="1-line-length-79-88-characters">1. Line Length: 79 → 88 Characters<a class="headerlink" href="#1-line-length-79-88-characters" title="Permanent link">&para;</a></h3>
-<p><strong>PEP 8</strong>: Maximum 79 characters
-<strong>Our Guide</strong>: Maximum 88 characters (Black default)</p>
-<p><strong>Why</strong>: Modern displays support wider lines, and Black's 88-character limit reduces unnecessary
-line breaks while maintaining readability.</p>
+<h3 id="string-quotes">String Quotes ✅<a class="headerlink" href="#string-quotes" title="Permanent link">&para;</a></h3>
+<p>Both allow single and double quotes (prefer consistency within a file)</p>
+<h3 id="docstring-format">Docstring Format ✅<a class="headerlink" href="#docstring-format" title="Permanent link">&para;</a></h3>
+<p>Both use Google-style docstrings with <code>Args:</code>, <code>Returns:</code>, <code>Raises:</code> sections</p>
+<h2 id="what-changes-key-differences">What Changes: Key Differences<a class="headerlink" href="#what-changes-key-differences" title="Permanent link">&para;</a></h2>
+<h3 id="1-indentation-2-spaces-4-spaces">1. Indentation: 2 Spaces → 4 Spaces<a class="headerlink" href="#1-indentation-2-spaces-4-spaces" title="Permanent link">&para;</a></h3>
+<p><strong>Google</strong>: 2 spaces per indentation level
+<strong>Our Guide</strong>: 4 spaces per indentation level (PEP 8 standard)</p>
+<p><strong>Why</strong>: PEP 8 specifies 4 spaces as the standard. Most Python tooling and IDEs default to 4 spaces.
+Consistency with the broader Python ecosystem improves code readability across projects.</p>
 <p><strong>Migration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8 (79 chars) - line breaks needed</span>
-<span class="n">user_data</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-    <span class="n">User</span><span class="o">.</span><span class="n">is_active</span> <span class="o">==</span> <span class="kc">True</span>
-<span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Google - 2 spaces</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_total</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+  <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+      <span class="n">total</span> <span class="o">+=</span> <span class="n">item</span><span class="o">.</span><span class="n">price</span>
+  <span class="k">return</span> <span class="n">total</span>
 
-<span class="c1"># Our Guide (88 chars) - more natural flow</span>
-<span class="n">user_data</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">is_active</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="c1"># Our Guide - 4 spaces</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_total</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="n">item</span><span class="o">.</span><span class="n">price</span>
+    <span class="k">return</span> <span class="n">total</span>
 </code></pre></div>
 <p><strong>Action Required</strong>:</p>
 <ul>
-<li>Update editor rulers to 88 characters</li>
-<li>Configure Black formatter with default settings</li>
-<li>Run <code>black .</code> to automatically reformat</li>
+<li>Configure editor to use 4 spaces for indentation</li>
+<li>Run Black formatter to automatically convert indentation</li>
+<li>Update <code>.editorconfig</code> if present:</li>
 </ul>
-<h3 id="2-type-hints-optional-required">2. Type Hints: Optional → Required<a class="headerlink" href="#2-type-hints-optional-required" title="Permanent link">&para;</a></h3>
-<p><strong>PEP 8</strong>: Type hints are optional (PEP 484 compliance)
-<strong>Our Guide</strong>: Type hints required for all function signatures</p>
-<p><strong>Why</strong>: Type hints enable static analysis, improve IDE support, prevent runtime errors, and serve
-as inline documentation for DevOps automation code.</p>
+<div class="highlight"><pre><span></span><code><span class="k">[*.py]</span>
+<span class="na">indent_style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">space</span>
+<span class="na">indent_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+</code></pre></div>
+<h3 id="2-line-length-80-characters-88-characters">2. Line Length: 80 Characters → 88 Characters<a class="headerlink" href="#2-line-length-80-characters-88-characters" title="Permanent link">&para;</a></h3>
+<p><strong>Google</strong>: Maximum 80 characters (strict)
+<strong>Our Guide</strong>: Maximum 88 characters (Black default)</p>
+<p><strong>Why</strong>: Black's 88-character limit provides a better balance between line length and code density,
+reducing unnecessary line breaks while maintaining readability on modern displays.</p>
 <p><strong>Migration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8 - acceptable without type hints</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Google - 80 chars, requires breaking</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+    <span class="n">User</span><span class="o">.</span><span class="n">is_active</span> <span class="o">==</span> <span class="kc">True</span>
+<span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">created_at</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+<span class="c1"># Our Guide - 88 chars, more natural</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">is_active</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span>
+    <span class="n">User</span><span class="o">.</span><span class="n">created_at</span>
+<span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Action Required</strong>:</p>
+<ul>
+<li>Update editor rulers from 80 to 88 characters</li>
+<li>Configure Black with default 88 character line length</li>
+<li>Update Pylint/Flake8 to allow 88 characters</li>
+</ul>
+<h3 id="3-type-hints-recommended-required">3. Type Hints: Recommended → Required<a class="headerlink" href="#3-type-hints-recommended-required" title="Permanent link">&para;</a></h3>
+<p><strong>Google</strong>: Type annotations encouraged but optional
+<strong>Our Guide</strong>: Type hints required for all function signatures</p>
+<p><strong>Why</strong>: Infrastructure automation and DevOps code benefits significantly from type safety.
+Type hints enable static analysis, prevent runtime errors, and serve as inline documentation.</p>
+<p><strong>Migration</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Google - optional type hints</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve user by ID.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve user by ID.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        user_id: The user ID to retrieve.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        User object if found, None otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
 
-<span class="c1"># Our Guide - type hints required</span>
+<span class="c1"># Our Guide - required type hints</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve user by ID.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve user by ID.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        user_id: The user ID to retrieve</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        User object if found, None otherwise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
 </code></pre></div>
 <p><strong>Action Required</strong>:</p>
 <ul>
 <li>Add type hints to all function signatures</li>
-<li>Import typing module: <code>from typing import List, Dict, Optional, Union</code></li>
-<li>Run <code>mypy</code> to validate type correctness</li>
-<li>Update docstrings to remove redundant type info (now in hints)</li>
+<li>Import from <code>typing</code> module: <code>List</code>, <code>Dict</code>, <code>Optional</code>, <code>Union</code>, <code>Tuple</code></li>
+<li>Run <code>mypy</code> for type validation</li>
+<li>Remove redundant type information from docstrings (types now in hints)</li>
 </ul>
-<h3 id="3-documentation-basic-enhanced-metadata">3. Documentation: Basic → Enhanced Metadata<a class="headerlink" href="#3-documentation-basic-enhanced-metadata" title="Permanent link">&para;</a></h3>
-<p><strong>PEP 8</strong>: Docstrings required for public modules, classes, functions
-<strong>Our Guide</strong>: Enhanced module docstrings with structured metadata</p>
-<p><strong>Why</strong>: Structured metadata enables automated documentation generation, dependency tracking, and AI-assisted code understanding.</p>
+<h3 id="4-documentation-google-docstrings-enhanced-metadata">4. Documentation: Google Docstrings → Enhanced Metadata<a class="headerlink" href="#4-documentation-google-docstrings-enhanced-metadata" title="Permanent link">&para;</a></h3>
+<p><strong>Google</strong>: Standard Google-style docstrings
+<strong>Our Guide</strong>: Google-style docstrings + structured module metadata</p>
+<p><strong>Why</strong>: Enhanced metadata enables automated documentation generation, dependency tracking,
+version management, and AI-assisted code analysis for DevOps workflows.</p>
 <p><strong>Migration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8 - basic module docstring</span>
-<span class="sd">&quot;&quot;&quot;User authentication module.&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Google - basic module docstring</span>
+<span class="sd">&quot;&quot;&quot;User authentication and session management.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">jwt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTTPException</span>
 
-<span class="c1"># Our Guide - enhanced metadata</span>
+<span class="c1"># Our Guide - enhanced module metadata</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@module user_authentication</span>
 <span class="sd">@description Handles user authentication, session management, and JWT token generation</span>
@@ -4920,146 +5176,121 @@ as inline documentation for DevOps automation code.</p>
 </code></pre></div>
 <p><strong>Action Required</strong>:</p>
 <ul>
-<li>Add metadata tags to module docstrings</li>
-<li>Document dependencies explicitly</li>
-<li>Add version and status information</li>
-<li>Specify minimum Python version requirements</li>
+<li>Add structured metadata to all module docstrings</li>
+<li>Document all dependencies explicitly</li>
+<li>Add version, author, and status information</li>
+<li>Specify security classification for sensitive modules</li>
+<li>Document minimum Python version requirements</li>
 </ul>
-<h3 id="4-docstrings-pep-257-googlenumpy-style-with-examples">4. Docstrings: PEP 257 → Google/NumPy Style with Examples<a class="headerlink" href="#4-docstrings-pep-257-googlenumpy-style-with-examples" title="Permanent link">&para;</a></h3>
-<p><strong>PEP 8/257</strong>: Basic docstring format
-<strong>Our Guide</strong>: Structured docstrings with Args, Returns, Raises, Examples</p>
-<p><strong>Why</strong>: Consistent structured docstrings improve API documentation, enable automated doc generation, and provide usage examples.</p>
-<p><strong>Migration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8/257 - basic docstring</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">authenticate_user</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Authenticate user and return user object or None.&quot;&quot;&quot;</span>
-    <span class="k">pass</span>
-
-<span class="c1"># Our Guide - structured with examples</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">authenticate_user</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Authenticate user credentials and return user object if valid.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        username: User&#39;s username or email address</span>
-<span class="sd">        password: Plain text password to verify</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        User object if authentication succeeds, None otherwise</span>
-
-<span class="sd">    Raises:</span>
-<span class="sd">        DatabaseError: If database connection fails</span>
-<span class="sd">        ValidationError: If username format is invalid</span>
-
-<span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; user = authenticate_user(&quot;john@example.com&quot;, &quot;secret123&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; if user:</span>
-<span class="sd">        ...     print(f&quot;Welcome {user.name}&quot;)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
+<h3 id="5-formatters-pylint-yapf-black-mypy-flake8">5. Formatters: Pylint + YAPF → Black + mypy + Flake8<a class="headerlink" href="#5-formatters-pylint-yapf-black-mypy-flake8" title="Permanent link">&para;</a></h3>
+<p><strong>Google</strong>: Pylint for linting, YAPF for formatting
+<strong>Our Guide</strong>: Black (formatting) + mypy (type checking) + Flake8 (linting)</p>
+<p><strong>Why</strong>: Black is opinionated and eliminates formatting debates. mypy provides comprehensive
+type checking. Flake8 catches style and logical errors.</p>
+<p><strong>Google Tool Stack</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Google typical setup</span>
+pip<span class="w"> </span>install<span class="w"> </span>pylint<span class="w"> </span>yapf
+pylint<span class="w"> </span>--rcfile<span class="o">=</span>.pylintrc<span class="w"> </span>src/
+yapf<span class="w"> </span>-i<span class="w"> </span>-r<span class="w"> </span>src/
+</code></pre></div>
+<p><strong>Our Tool Stack</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Dukes Engineering setup</span>
+pip<span class="w"> </span>install<span class="w"> </span>black<span class="w"> </span>mypy<span class="w"> </span>flake8<span class="w"> </span>isort
+black<span class="w"> </span>.
+isort<span class="w"> </span>.
+mypy<span class="w"> </span>src/
+flake8<span class="w"> </span>.
 </code></pre></div>
 <p><strong>Action Required</strong>:</p>
 <ul>
-<li>Restructure docstrings with Args/Returns/Raises sections</li>
-<li>Add usage examples to complex functions</li>
-<li>Document all exceptions that may be raised</li>
-<li>Use consistent formatting (Google or NumPy style)</li>
+<li>Remove YAPF and Pylint configurations</li>
+<li>Install Black, mypy, Flake8, isort</li>
+<li>Configure tools in <code>pyproject.toml</code></li>
+<li>Set up pre-commit hooks</li>
+<li>Update CI/CD pipelines</li>
 </ul>
-<h3 id="5-testing-recommended-required-coverage">5. Testing: Recommended → Required Coverage<a class="headerlink" href="#5-testing-recommended-required-coverage" title="Permanent link">&para;</a></h3>
-<p><strong>PEP 8</strong>: No specific testing requirements
-<strong>Our Guide</strong>: 80%+ unit test coverage required, structured test naming</p>
-<p><strong>Why</strong>: High test coverage ensures reliability for infrastructure automation where failures have production impact.</p>
+<h3 id="6-testing-flexible-required-80-coverage">6. Testing: Flexible → Required 80%+ Coverage<a class="headerlink" href="#6-testing-flexible-required-80-coverage" title="Permanent link">&para;</a></h3>
+<p><strong>Google</strong>: Testing encouraged, no specific coverage requirement
+<strong>Our Guide</strong>: 80%+ test coverage required, specific naming conventions</p>
+<p><strong>Why</strong>: DevOps and infrastructure code requires high reliability. Automated testing with strong
+coverage prevents production incidents.</p>
 <p><strong>Migration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># No PEP 8 equivalent - testing not mandated</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Google - flexible test naming and structure</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_user_creation</span><span class="p">():</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="s2">&quot;john@example.com&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s2">&quot;john@example.com&quot;</span>
 
-<span class="c1"># Our Guide - required test structure</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.services.user_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserService</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_should_return_user_when_valid_id_provided</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test get_user_by_id returns user for valid ID.&quot;&quot;&quot;</span>
+<span class="c1"># Our Guide - structured naming and Arrange-Act-Assert</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_should_create_user_when_valid_email_provided</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test create_user creates user with valid email.&quot;&quot;&quot;</span>
     <span class="c1"># Arrange</span>
-    <span class="n">user_id</span> <span class="o">=</span> <span class="mi">123</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="s2">&quot;john@example.com&quot;</span>
 
     <span class="c1"># Act</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
 
     <span class="c1"># Assert</span>
-    <span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">user_id</span>
-    <span class="k">assert</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_should_raise_error_when_user_not_found</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test get_user_by_id raises NotFoundError for invalid ID.&quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">NotFoundError</span><span class="p">):</span>
-        <span class="n">get_user_by_id</span><span class="p">(</span><span class="mi">999999</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span>
+    <span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 </code></pre></div>
 <p><strong>Action Required</strong>:</p>
 <ul>
-<li>Create <code>tests/</code> directory mirroring <code>src/</code> structure</li>
-<li>Write tests for all business logic (target 80%+ coverage)</li>
-<li>Use naming convention: <code>test_should_&lt;behavior&gt;_when_&lt;condition&gt;</code></li>
-<li>Set up pytest with coverage reporting</li>
-<li>Add pytest configuration to <code>pyproject.toml</code></li>
+<li>Adopt test naming: <code>test_should_&lt;behavior&gt;_when_&lt;condition&gt;</code></li>
+<li>Structure tests with Arrange-Act-Assert pattern</li>
+<li>Set up pytest with coverage reporting (target 80%+)</li>
+<li>Configure coverage enforcement in CI/CD</li>
+<li>Add coverage badges to README</li>
 </ul>
-<h3 id="6-security-implicit-explicit-best-practices">6. Security: Implicit → Explicit Best Practices<a class="headerlink" href="#6-security-implicit-explicit-best-practices" title="Permanent link">&para;</a></h3>
-<p><strong>PEP 8</strong>: No security-specific requirements
-<strong>Our Guide</strong>: Mandatory security practices for DevOps code</p>
-<p><strong>Why</strong>: Infrastructure automation code handles sensitive data, credentials, and production systems. Security must be explicit.</p>
+<h3 id="7-security-best-practices-explicit-requirements">7. Security: Best Practices → Explicit Requirements<a class="headerlink" href="#7-security-best-practices-explicit-requirements" title="Permanent link">&para;</a></h3>
+<p><strong>Google</strong>: Security best practices mentioned generally
+<strong>Our Guide</strong>: Explicit security requirements with tooling</p>
+<p><strong>Why</strong>: Infrastructure automation handles sensitive credentials, cloud resources, and production
+systems. Security must be enforced, not just recommended.</p>
 <p><strong>Migration - Input Validation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8 - basic validation</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Google - manual validation</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
-    <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT * FROM users WHERE email = &#39;</span><span class="si">{</span><span class="n">email</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
-    <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">email</span> <span class="ow">or</span> <span class="s1">&#39;@&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">email</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid email&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
 
-<span class="c1"># Our Guide - security-first with validation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">EmailStr</span><span class="p">,</span> <span class="n">validator</span>
+<span class="c1"># Our Guide - schema validation with Pydantic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">EmailStr</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">UserQuery</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validated user query request.&quot;&quot;&quot;</span>
     <span class="n">email</span><span class="p">:</span> <span class="n">EmailStr</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get user by email using parameterized query.&quot;&quot;&quot;</span>
-    <span class="c1"># Input validation with Pydantic</span>
-    <span class="n">user_query</span> <span class="o">=</span> <span class="n">UserQuery</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span>
-
-    <span class="c1"># Parameterized query prevents SQL injection</span>
-    <span class="n">query</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM users WHERE email = :email&quot;</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">user_query</span><span class="o">.</span><span class="n">email</span><span class="p">})</span>
-    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get user by email with validated input.&quot;&quot;&quot;</span>
+    <span class="n">query_data</span> <span class="o">=</span> <span class="n">UserQuery</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query_data</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Migration - Secret Management</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8 - no specific requirements</span>
-<span class="n">DATABASE_URL</span> <span class="o">=</span> <span class="s2">&quot;postgresql://user:pass@localhost/db&quot;</span>
-<span class="n">API_KEY</span> <span class="o">=</span> <span class="s2">&quot;sk_live_abc123&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Google - configuration flexibility</span>
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="s2">&quot;sk_live_abc123&quot;</span>  <span class="c1"># Not ideal but allowed</span>
 
-<span class="c1"># Our Guide - environment-based secrets</span>
+<span class="c1"># Our Guide - environment variables required</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
 
-<span class="nd">@lru_cache</span><span class="p">()</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_settings</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get application settings from environment.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;database_url&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DATABASE_URL&quot;</span><span class="p">),</span>
-        <span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">),</span>
-        <span class="s2">&quot;secret_key&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SECRET_KEY&quot;</span><span class="p">)</span>
-    <span class="p">}</span>
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">API_KEY</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">EnvironmentError</span><span class="p">(</span><span class="s2">&quot;API_KEY environment variable required&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Action Required</strong>:</p>
 <ul>
-<li>Add input validation with Pydantic or custom validators</li>
-<li>Replace string concatenation with parameterized queries</li>
+<li>Add input validation with Pydantic or similar</li>
 <li>Move all secrets to environment variables</li>
 <li>Add <code>.env</code> to <code>.gitignore</code></li>
-<li>Use validation libraries (Pydantic, Cerberus)</li>
-<li>Run security scanners (Bandit, Safety)</li>
+<li>Run Bandit security scanner in CI/CD</li>
+<li>Use parameterized queries (never string concatenation for SQL)</li>
 </ul>
-<h3 id="7-error-handling-general-specific-exceptions">7. Error Handling: General → Specific Exceptions<a class="headerlink" href="#7-error-handling-general-specific-exceptions" title="Permanent link">&para;</a></h3>
-<p><strong>PEP 8</strong>: No specific error handling patterns
-<strong>Our Guide</strong>: Fail-fast with specific custom exceptions</p>
+<h3 id="8-error-handling-flexible-fail-fast-with-specific-exceptions">8. Error Handling: Flexible → Fail-Fast with Specific Exceptions<a class="headerlink" href="#8-error-handling-flexible-fail-fast-with-specific-exceptions" title="Permanent link">&para;</a></h3>
+<p><strong>Google</strong>: Standard exception handling
+<strong>Our Guide</strong>: Fail-fast with custom exception hierarchies</p>
+<p><strong>Why</strong>: Infrastructure code should fail explicitly and early with clear error messages.
+Custom exceptions improve error handling and debugging.</p>
 <p><strong>Migration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8 - generic exception handling</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Google - standard exceptions</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">fetch_data</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
@@ -5068,7 +5299,7 @@ as inline documentation for DevOps automation code.</p>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-<span class="c1"># Our Guide - specific exceptions and proper cleanup</span>
+<span class="c1"># Our Guide - custom exceptions and proper logging</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">APIError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception for API-related errors.&quot;&quot;&quot;</span>
     <span class="k">pass</span>
@@ -5078,7 +5309,7 @@ as inline documentation for DevOps automation code.</p>
     <span class="k">pass</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">fetch_data</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch data from remote API with retry logic.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch data from remote API with proper error handling.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
@@ -5089,46 +5320,32 @@ as inline documentation for DevOps automation code.</p>
     <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;HTTP error </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to fetch data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid JSON response from </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="n">DataFormatError</span><span class="p">(</span><span class="s2">&quot;Response is not valid JSON&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Action Required</strong>:</p>
 <ul>
 <li>Create custom exception hierarchies for your domain</li>
 <li>Replace generic <code>except Exception</code> with specific exceptions</li>
-<li>Add proper logging before raising exceptions</li>
+<li>Add structured logging before raising exceptions</li>
+<li>Never silently catch exceptions</li>
 <li>Use context managers for resource cleanup</li>
-<li>Never silently catch exceptions (<code>except: pass</code>)</li>
 </ul>
-<h2 id="tool-configuration-changes">Tool Configuration Changes<a class="headerlink" href="#tool-configuration-changes" title="Permanent link">&para;</a></h2>
-<h3 id="black-formatter-new-requirement">Black Formatter (New Requirement)<a class="headerlink" href="#black-formatter-new-requirement" title="Permanent link">&para;</a></h3>
-<p>Black is required for consistent code formatting. PEP 8 doesn't mandate a specific formatter.</p>
-<p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>black
+<h2 id="tool-configuration-migration">Tool Configuration Migration<a class="headerlink" href="#tool-configuration-migration" title="Permanent link">&para;</a></h2>
+<h3 id="from-pylint-to-black-flake8-mypy">From Pylint to Black + Flake8 + mypy<a class="headerlink" href="#from-pylint-to-black-flake8-mypy" title="Permanent link">&para;</a></h3>
+<h4 id="remove-pylint-configuration">Remove Pylint Configuration<a class="headerlink" href="#remove-pylint-configuration" title="Permanent link">&para;</a></h4>
+<p>Delete or comment out in <code>setup.cfg</code> or <code>.pylintrc</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># [pylint]</span>
+<span class="c1"># max-line-length = 80</span>
+<span class="c1"># disable = ...</span>
 </code></pre></div>
-<p><strong>Configuration</strong> (<code>pyproject.toml</code>):</p>
+<h4 id="add-black-configuration">Add Black Configuration<a class="headerlink" href="#add-black-configuration" title="Permanent link">&para;</a></h4>
+<p>In <code>pyproject.toml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.black]</span>
 <span class="n">line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span>
 <span class="n">target-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;py39&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;py310&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;py311&#39;</span><span class="p">]</span>
 <span class="n">include</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;\.pyi?$&#39;</span>
 </code></pre></div>
-<p><strong>Usage</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Format entire project</span>
-black<span class="w"> </span>.
-
-<span class="c1"># Check without modifying</span>
-black<span class="w"> </span>--check<span class="w"> </span>.
-
-<span class="c1"># Format specific file</span>
-black<span class="w"> </span>src/mymodule.py
-</code></pre></div>
-<h3 id="mypy-type-checker-new-requirement">mypy Type Checker (New Requirement)<a class="headerlink" href="#mypy-type-checker-new-requirement" title="Permanent link">&para;</a></h3>
-<p>Static type checking is required. Configure mypy for your project.</p>
-<p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>mypy
-</code></pre></div>
-<p><strong>Configuration</strong> (<code>mypy.ini</code> or <code>pyproject.toml</code>):</p>
+<h4 id="add-mypy-configuration">Add mypy Configuration<a class="headerlink" href="#add-mypy-configuration" title="Permanent link">&para;</a></h4>
+<p>In <code>pyproject.toml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.mypy]</span>
 <span class="n">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3.9&quot;</span>
 <span class="n">warn_return_any</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
@@ -5142,16 +5359,16 @@ black<span class="w"> </span>src/mymodule.py
 <span class="n">check_untyped_defs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="n">strict_equality</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
-<p><strong>Usage</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Type check entire project</span>
-mypy<span class="w"> </span>src/
-
-<span class="c1"># Type check specific module</span>
-mypy<span class="w"> </span>src/mymodule.py
+<h4 id="add-flake8-configuration">Add Flake8 Configuration<a class="headerlink" href="#add-flake8-configuration" title="Permanent link">&para;</a></h4>
+<p>In <code>.flake8</code> or <code>setup.cfg</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[flake8]</span>
+<span class="na">max-line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">88</span>
+<span class="na">extend-ignore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">E203, E266, E501, W503</span>
+<span class="na">exclude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">.git,__pycache__,.venv,venv,migrations</span>
+<span class="na">max-complexity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
 </code></pre></div>
-<h3 id="isort-import-organizer-enhanced">isort Import Organizer (Enhanced)<a class="headerlink" href="#isort-import-organizer-enhanced" title="Permanent link">&para;</a></h3>
-<p>Configure isort to work with Black.</p>
-<p><strong>Configuration</strong> (<code>pyproject.toml</code>):</p>
+<h4 id="add-isort-configuration">Add isort Configuration<a class="headerlink" href="#add-isort-configuration" title="Permanent link">&para;</a></h4>
+<p>In <code>pyproject.toml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.isort]</span>
 <span class="n">profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;black&quot;</span>
 <span class="n">line_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span>
@@ -5161,33 +5378,29 @@ mypy<span class="w"> </span>src/mymodule.py
 <span class="n">use_parentheses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="n">ensure_newline_before_comments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
-<h3 id="pytest-with-coverage-new-requirement">pytest with Coverage (New Requirement)<a class="headerlink" href="#pytest-with-coverage-new-requirement" title="Permanent link">&para;</a></h3>
-<p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pytest<span class="w"> </span>pytest-cov<span class="w"> </span>pytest-mock
-</code></pre></div>
-<p><strong>Configuration</strong> (<code>pyproject.toml</code>):</p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.pytest.ini_options]</span>
-<span class="n">minversion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;7.0&quot;</span>
-<span class="n">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;-ra -q --strict-markers --cov=src --cov-report=term-missing --cov-fail-under=80&quot;</span>
-<span class="n">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tests&quot;</span><span class="p">]</span>
-<span class="n">python_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;test_*.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;*_test.py&quot;</span><span class="p">]</span>
-<span class="n">python_classes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Test*&quot;</span><span class="p">]</span>
-<span class="n">python_functions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;test_*&quot;</span><span class="p">]</span>
-</code></pre></div>
-<p><strong>Usage</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run tests with coverage</span>
-pytest<span class="w"> </span>--cov<span class="o">=</span>src<span class="w"> </span>tests/
+<h3 id="from-yapf-to-black">From YAPF to Black<a class="headerlink" href="#from-yapf-to-black" title="Permanent link">&para;</a></h3>
+<p>YAPF and Black both format code, but Black is non-configurable (opinionated).</p>
+<p><strong>Remove YAPF</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Uninstall YAPF</span>
+pip<span class="w"> </span>uninstall<span class="w"> </span>yapf
 
-<span class="c1"># Generate HTML coverage report</span>
-pytest<span class="w"> </span>--cov<span class="o">=</span>src<span class="w"> </span>--cov-report<span class="o">=</span>html<span class="w"> </span>tests/
+<span class="c1"># Remove .style.yapf or [yapf] sections in setup.cfg</span>
+rm<span class="w"> </span>.style.yapf
 </code></pre></div>
-<h3 id="pre-commit-hooks-new-requirement">Pre-commit Hooks (New Requirement)<a class="headerlink" href="#pre-commit-hooks-new-requirement" title="Permanent link">&para;</a></h3>
-<p>Automate code quality checks before commits.</p>
-<p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
+<p><strong>Install and Configure Black</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install Black</span>
+pip<span class="w"> </span>install<span class="w"> </span>black
+
+<span class="c1"># Format entire codebase</span>
+black<span class="w"> </span>.
+
+<span class="c1"># Check formatting without changes</span>
+black<span class="w"> </span>--check<span class="w"> </span>.
 </code></pre></div>
-<p><strong>Configuration</strong> (<code>.pre-commit-config.yaml</code>):</p>
-<div class="highlight"><pre><span></span><code><span class="nt">repos</span><span class="p">:</span>
+<h3 id="pre-commit-hooks-setup">Pre-commit Hooks Setup<a class="headerlink" href="#pre-commit-hooks-setup" title="Permanent link">&para;</a></h3>
+<p>Replace Google's pre-commit configuration with Dukes Engineering stack:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
+<span class="nt">repos</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/psf/black</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24.10.0</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
@@ -5217,153 +5430,155 @@ pytest<span class="w"> </span>--cov<span class="o">=</span>src<span class="w"> <
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bandit</span>
 <span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;-c&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pyproject.toml&quot;</span><span class="p p-Indicator">]</span>
-</code></pre></div>
-<p><strong>Setup</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Install hooks</span>
-pre-commit<span class="w"> </span>install
 
-<span class="c1"># Run manually on all files</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/pre-commit-hooks</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v4.6.0</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trailing-whitespace</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">end-of-file-fixer</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-yaml</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-added-large-files</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">detect-private-key</span>
+</code></pre></div>
+<p><strong>Install and Activate</strong>:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
+pre-commit<span class="w"> </span>install
 pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 </code></pre></div>
 <h2 id="migration-checklist">Migration Checklist<a class="headerlink" href="#migration-checklist" title="Permanent link">&para;</a></h2>
-<p>Use this checklist to systematically migrate your Python project from PEP 8 to the Dukes Engineering Style Guide.</p>
-<h3 id="phase-1-setup-and-configuration">Phase 1: Setup and Configuration<a class="headerlink" href="#phase-1-setup-and-configuration" title="Permanent link">&para;</a></h3>
+<h3 id="phase-1-tool-setup-and-configuration">Phase 1: Tool Setup and Configuration<a class="headerlink" href="#phase-1-tool-setup-and-configuration" title="Permanent link">&para;</a></h3>
 <ul>
-<li>[ ] <strong>Install required tools</strong></li>
+<li>[ ] <strong>Install new tooling</strong></li>
 </ul>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>black<span class="w"> </span>isort<span class="w"> </span>mypy<span class="w"> </span>pytest<span class="w"> </span>pytest-cov<span class="w"> </span>pre-commit<span class="w"> </span>bandit<span class="w"> </span>safety
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>black<span class="w"> </span>isort<span class="w"> </span>mypy<span class="w"> </span>flake8<span class="w"> </span>pytest<span class="w"> </span>pytest-cov<span class="w"> </span>pre-commit<span class="w"> </span>bandit
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Remove old tooling</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>uninstall<span class="w"> </span>yapf<span class="w"> </span>pylint
+rm<span class="w"> </span>.pylintrc<span class="w"> </span>.style.yapf
 </code></pre></div>
 <ul>
 <li>[ ] <strong>Create <code>pyproject.toml</code> configuration</strong></li>
 <li>Add Black configuration (88 char line length)</li>
-<li>Add isort configuration (Black-compatible)</li>
+<li>Add isort configuration (Black-compatible profile)</li>
 <li>Add mypy strict configuration</li>
 <li>
 <p>Add pytest configuration (80% coverage minimum)</p>
 </li>
 <li>
+<p>[ ] <strong>Create <code>.flake8</code> configuration</strong></p>
+</li>
+<li>Set max-line-length to 88</li>
+<li>
+<p>Configure ignore rules for Black compatibility</p>
+</li>
+<li>
 <p>[ ] <strong>Create <code>.pre-commit-config.yaml</code></strong></p>
 </li>
-<li>Add Black hook</li>
-<li>Add isort hook</li>
-<li>Add Flake8 hook (with 88 char limit)</li>
-<li>Add mypy hook</li>
+<li>Add Black, isort, Flake8, mypy hooks</li>
 <li>Add Bandit security scanner</li>
 <li>
 <p>Run <code>pre-commit install</code></p>
 </li>
 <li>
-<p>[ ] <strong>Update <code>.gitignore</code></strong></p>
+<p>[ ] <strong>Update <code>.editorconfig</code></strong></p>
 </li>
 </ul>
-<div class="highlight"><pre><span></span><code># Python
-__pycache__/
-*.py[cod]
-*$py.class
-.mypy_cache/
-.pytest_cache/
-htmlcov/
-.coverage
-
-# Environment
-.env
-.env.local
-venv/
+<div class="highlight"><pre><span></span><code><span class="k">[*.py]</span>
+<span class="na">indent_style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">space</span>
+<span class="na">indent_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+<span class="na">max_line_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">88</span>
 </code></pre></div>
-<h3 id="phase-2-code-formatting">Phase 2: Code Formatting<a class="headerlink" href="#phase-2-code-formatting" title="Permanent link">&para;</a></h3>
+<h3 id="phase-2-code-reformatting">Phase 2: Code Reformatting<a class="headerlink" href="#phase-2-code-reformatting" title="Permanent link">&para;</a></h3>
 <ul>
-<li>[ ] <strong>Run Black on entire codebase</strong></li>
+<li>[ ] <strong>Convert indentation from 2 to 4 spaces</strong></li>
 </ul>
-<div class="highlight"><pre><span></span><code>black<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><span class="c1"># Black will handle this automatically</span>
+black<span class="w"> </span>.
 </code></pre></div>
 <ul>
-<li>Review changes (line length adjustments)</li>
-<li>
-<p>Commit formatted code</p>
-</li>
-<li>
-<p>[ ] <strong>Run isort on imports</strong></p>
-</li>
+<li>[ ] <strong>Organize imports</strong></li>
 </ul>
 <div class="highlight"><pre><span></span><code>isort<span class="w"> </span>.
 </code></pre></div>
 <ul>
-<li>Verify import grouping</li>
-<li>
-<p>Commit organized imports</p>
-</li>
-<li>
-<p>[ ] <strong>Fix Flake8 issues</strong></p>
-</li>
+<li>[ ] <strong>Verify formatting</strong></li>
 </ul>
-<div class="highlight"><pre><span></span><code>flake8<span class="w"> </span>.<span class="w"> </span>--max-line-length<span class="o">=</span><span class="m">88</span><span class="w"> </span>--extend-ignore<span class="o">=</span>E203
+<div class="highlight"><pre><span></span><code>black<span class="w"> </span>--check<span class="w"> </span>.
+isort<span class="w"> </span>--check<span class="w"> </span>.
+flake8<span class="w"> </span>.
 </code></pre></div>
 <ul>
-<li>Address remaining style violations</li>
-<li>Commit fixes</li>
+<li>[ ] <strong>Commit formatted code</strong></li>
+<li>Separate commit for formatting changes</li>
+<li>Makes review easier</li>
 </ul>
 <h3 id="phase-3-add-type-hints">Phase 3: Add Type Hints<a class="headerlink" href="#phase-3-add-type-hints" title="Permanent link">&para;</a></h3>
 <ul>
-<li>[ ] <strong>Add type hints to function signatures</strong></li>
+<li>[ ] <strong>Audit existing type annotations</strong></li>
+<li>Identify functions missing type hints</li>
+<li>
+<p>Use <code>mypy --disallow-untyped-defs</code> to find gaps</p>
+</li>
+<li>
+<p>[ ] <strong>Add type hints incrementally</strong></p>
+</li>
 <li>Start with public APIs and exported functions</li>
-<li>Use <code>from typing import List, Dict, Optional, Union, Tuple</code></li>
+<li>Work through modules systematically</li>
 <li>
-<p>Work module by module</p>
+<p>Use <code>from typing import</code> for complex types</p>
 </li>
 <li>
-<p>[ ] <strong>Run mypy incrementally</strong></p>
-</li>
-</ul>
-<div class="highlight"><pre><span></span><code>mypy<span class="w"> </span>src/module_name.py
-</code></pre></div>
-<ul>
-<li>Fix type errors as you add hints</li>
-<li>
-<p>Use <code># type: ignore</code> sparingly for complex cases</p>
-</li>
-<li>
-<p>[ ] <strong>Add return type annotations</strong></p>
-</li>
-<li>Ensure all functions have <code>-&gt; ReturnType</code></li>
-<li>Use <code>-&gt; None</code> for functions without return</li>
-<li>
-<p>Use <code>Optional[Type]</code> for nullable returns</p>
-</li>
-<li>
-<p>[ ] <strong>Validate with mypy</strong></p>
+<p>[ ] <strong>Run mypy validation</strong></p>
 </li>
 </ul>
 <div class="highlight"><pre><span></span><code>mypy<span class="w"> </span>src/
 </code></pre></div>
 <ul>
-<li>Achieve zero mypy errors</li>
-<li>Commit type-hinted code</li>
+<li>[ ] <strong>Fix type errors</strong></li>
+<li>Address all mypy errors and warnings</li>
+<li>
+<p>Use <code># type: ignore</code> sparingly for edge cases</p>
+</li>
+<li>
+<p>[ ] <strong>Remove redundant type info from docstrings</strong></p>
+</li>
+<li>Types are now in annotations</li>
+<li>Docstrings focus on descriptions</li>
 </ul>
 <h3 id="phase-4-enhance-documentation">Phase 4: Enhance Documentation<a class="headerlink" href="#phase-4-enhance-documentation" title="Permanent link">&para;</a></h3>
 <ul>
-<li>[ ] <strong>Update module docstrings with metadata</strong></li>
-<li>Add <code>@module</code>, <code>@description</code>, <code>@dependencies</code> tags</li>
-<li>Add <code>@version</code>, <code>@author</code>, <code>@status</code> tags</li>
-<li>
-<p>Document security classification if applicable</p>
-</li>
-<li>
-<p>[ ] <strong>Restructure function docstrings</strong></p>
-</li>
-<li>Convert to Google/NumPy style with sections</li>
-<li>Add <code>Args:</code>, <code>Returns:</code>, <code>Raises:</code> sections</li>
-<li>Add usage examples for complex functions</li>
-<li>
-<p>Remove redundant type info (now in type hints)</p>
-</li>
-<li>
-<p>[ ] <strong>Document exceptions</strong></p>
-</li>
-<li>List all exceptions in <code>Raises:</code> section</li>
-<li>Create custom exception classes</li>
-<li>Add docstrings to exception classes</li>
+<li>[ ] <strong>Add module metadata to docstrings</strong></li>
 </ul>
-<h3 id="phase-5-add-tests">Phase 5: Add Tests<a class="headerlink" href="#phase-5-add-tests" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">@module module_name</span>
+<span class="sd">@description Clear description</span>
+<span class="sd">@dependencies package1, package2</span>
+<span class="sd">@version 1.0.0</span>
+<span class="sd">@author Your Name</span>
+<span class="sd">@last_updated 2025-12-07</span>
+<span class="sd">@status stable</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Verify Google-style docstrings</strong></li>
+<li>Ensure all functions have <code>Args:</code>, <code>Returns:</code>, <code>Raises:</code> sections</li>
+<li>
+<p>Add usage examples for complex functions</p>
+</li>
+<li>
+<p>[ ] <strong>Document security classification</strong></p>
+</li>
+<li>
+<p>Add <code>@security_classification</code> to sensitive modules</p>
+</li>
+<li>
+<p>[ ] <strong>Specify Python version requirements</strong></p>
+</li>
+<li>Add <code>@python_version &gt;= 3.9</code> metadata</li>
+</ul>
+<h3 id="phase-5-add-comprehensive-testing">Phase 5: Add Comprehensive Testing<a class="headerlink" href="#phase-5-add-comprehensive-testing" title="Permanent link">&para;</a></h3>
 <ul>
 <li>[ ] <strong>Create test directory structure</strong></li>
 </ul>
@@ -5371,44 +5586,44 @@ venv/
 <span class="c1"># Mirror src/ structure in tests/</span>
 </code></pre></div>
 <ul>
-<li>[ ] <strong>Write unit tests</strong></li>
-<li>Aim for 80%+ coverage</li>
-<li>Use naming: <code>test_should_&lt;behavior&gt;_when_&lt;condition&gt;</code></li>
+<li>[ ] <strong>Migrate existing tests to new naming</strong></li>
+<li>Pattern: <code>test_should_&lt;behavior&gt;_when_&lt;condition&gt;</code></li>
 <li>
-<p>Follow Arrange-Act-Assert pattern</p>
+<p>Add clear docstrings to tests</p>
+</li>
+<li>
+<p>[ ] <strong>Write missing tests</strong></p>
+</li>
+<li>Target 80%+ coverage for business logic</li>
+<li>
+<p>Focus on critical paths first</p>
 </li>
 <li>
 <p>[ ] <strong>Configure pytest</strong></p>
 </li>
-<li>Add pytest configuration to <code>pyproject.toml</code></li>
-<li>Set up coverage reporting</li>
-<li>
-<p>Configure test discovery patterns</p>
-</li>
-<li>
-<p>[ ] <strong>Run tests and verify coverage</strong></p>
-</li>
 </ul>
-<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>--cov<span class="o">=</span>src<span class="w"> </span>--cov-report<span class="o">=</span>term-missing<span class="w"> </span>tests/
+<div class="highlight"><pre><span></span><code><span class="k">[tool.pytest.ini_options]</span>
+<span class="n">minversion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;7.0&quot;</span>
+<span class="n">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;-ra -q --cov=src --cov-report=term-missing --cov-fail-under=80&quot;</span>
+<span class="n">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tests&quot;</span><span class="p">]</span>
 </code></pre></div>
 <ul>
-<li>Achieve 80%+ coverage target</li>
-<li>Add tests for uncovered code</li>
+<li>[ ] <strong>Run tests and verify coverage</strong></li>
 </ul>
+<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>--cov<span class="o">=</span>src<span class="w"> </span>--cov-report<span class="o">=</span>html<span class="w"> </span>tests/
+</code></pre></div>
 <h3 id="phase-6-security-enhancements">Phase 6: Security Enhancements<a class="headerlink" href="#phase-6-security-enhancements" title="Permanent link">&para;</a></h3>
 <ul>
-<li>[ ] <strong>Move secrets to environment variables</strong></li>
+<li>[ ] <strong>Move all secrets to environment variables</strong></li>
 <li>Create <code>.env.example</code> template</li>
-<li>Update code to use <code>os.getenv()</code></li>
 <li>Add <code>.env</code> to <code>.gitignore</code></li>
 <li>
-<p>Document required environment variables</p>
+<p>Use <code>python-dotenv</code> or <code>os.getenv()</code></p>
 </li>
 <li>
 <p>[ ] <strong>Add input validation</strong></p>
 </li>
-<li>Use Pydantic models for request validation</li>
-<li>Add custom validators for business rules</li>
+<li>Use Pydantic for request/response models</li>
 <li>
 <p>Validate all external inputs</p>
 </li>
@@ -5416,138 +5631,145 @@ venv/
 <p>[ ] <strong>Replace SQL string concatenation</strong></p>
 </li>
 <li>Use parameterized queries</li>
-<li>Use ORM query builders (SQLAlchemy)</li>
 <li>
-<p>Never use f-strings for SQL</p>
+<p>Use ORM query builders</p>
 </li>
 <li>
-<p>[ ] <strong>Run security scanners</strong></p>
+<p>[ ] <strong>Run security scans</strong></p>
 </li>
 </ul>
 <div class="highlight"><pre><span></span><code>bandit<span class="w"> </span>-r<span class="w"> </span>src/
 safety<span class="w"> </span>check
 </code></pre></div>
 <ul>
-<li>Fix identified vulnerabilities</li>
-<li>Document any accepted risks</li>
+<li>[ ] <strong>Fix security vulnerabilities</strong></li>
+<li>Address all high/critical Bandit findings</li>
+<li>Update vulnerable dependencies</li>
 </ul>
-<h3 id="phase-7-cicd-integration">Phase 7: CI/CD Integration<a class="headerlink" href="#phase-7-cicd-integration" title="Permanent link">&para;</a></h3>
+<h3 id="phase-7-error-handling">Phase 7: Error Handling<a class="headerlink" href="#phase-7-error-handling" title="Permanent link">&para;</a></h3>
 <ul>
-<li>[ ] <strong>Create GitHub Actions workflow</strong> (if using GitHub)</li>
+<li>[ ] <strong>Create custom exception hierarchies</strong></li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/python-ci.yml</span>
-<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Python CI</span>
-<span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pull_request</span><span class="p p-Indicator">]</span>
-<span class="nt">jobs</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">test</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
-<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v4</span>
-<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install -r requirements.txt</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">black --check .</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isort --check .</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flake8 .</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mypy src/</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest --cov=src tests/</span>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ServiceError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception for service errors.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ValidationError</span><span class="p">(</span><span class="n">ServiceError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Input validation failed.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
 </code></pre></div>
 <ul>
-<li>[ ] <strong>Add CI/CD badges to README</strong></li>
-<li>Test status badge</li>
-<li>Coverage badge</li>
+<li>[ ] <strong>Replace generic exception handling</strong></li>
+<li>Use specific exceptions</li>
 <li>
-<p>Code quality badge</p>
+<p>Add structured logging</p>
 </li>
 <li>
-<p>[ ] <strong>Configure branch protection</strong></p>
+<p>[ ] <strong>Implement context managers</strong></p>
 </li>
-<li>Require CI checks to pass</li>
-<li>Require code review</li>
-<li>Enforce pre-commit hooks</li>
+<li>For database sessions</li>
+<li>For file operations</li>
+<li>For API connections</li>
 </ul>
-<h3 id="phase-8-documentation-and-training">Phase 8: Documentation and Training<a class="headerlink" href="#phase-8-documentation-and-training" title="Permanent link">&para;</a></h3>
+<h3 id="phase-8-cicd-integration">Phase 8: CI/CD Integration<a class="headerlink" href="#phase-8-cicd-integration" title="Permanent link">&para;</a></h3>
 <ul>
-<li>[ ] <strong>Update README with tool requirements</strong></li>
-<li>List Black, mypy, pytest as requirements</li>
-<li>Add setup instructions</li>
+<li>[ ] <strong>Update CI/CD pipeline</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Example GitHub Actions</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Format check</span>
+<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">black --check .</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Import check</span>
+<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isort --check .</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lint</span>
+<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flake8 .</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Type check</span>
+<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mypy src/</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test</span>
+<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest --cov=src tests/</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Add branch protection rules</strong></li>
+<li>Require all checks to pass</li>
 <li>
-<p>Document development workflow</p>
+<p>Require code review</p>
+</li>
+<li>
+<p>[ ] <strong>Add status badges</strong></p>
+</li>
+<li>Test status</li>
+<li>Coverage percentage</li>
+<li>Code quality score</li>
+</ul>
+<h3 id="phase-9-documentation-and-training">Phase 9: Documentation and Training<a class="headerlink" href="#phase-9-documentation-and-training" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] <strong>Update README</strong></li>
+<li>Document new tooling requirements</li>
+<li>
+<p>Provide setup instructions</p>
 </li>
 <li>
 <p>[ ] <strong>Create CONTRIBUTING guide</strong></p>
 </li>
 <li>Reference Dukes Engineering Style Guide</li>
-<li>Explain pre-commit hook usage</li>
+<li>Explain pre-commit hooks</li>
 <li>
 <p>Provide testing guidelines</p>
 </li>
 <li>
 <p>[ ] <strong>Team training</strong></p>
 </li>
-<li>Share this migration guide with team</li>
-<li>Conduct style guide review session</li>
-<li>Set up IDE/editor configurations</li>
+<li>Share this migration guide</li>
+<li>Review key changes</li>
+<li>Set up developer environments</li>
 </ul>
 <h2 id="common-migration-pitfalls">Common Migration Pitfalls<a class="headerlink" href="#common-migration-pitfalls" title="Permanent link">&para;</a></h2>
-<h3 id="1-type-hint-complexity-overload">1. Type Hint Complexity Overload<a class="headerlink" href="#1-type-hint-complexity-overload" title="Permanent link">&para;</a></h3>
-<p><strong>Problem</strong>: Trying to add perfect type hints to complex legacy code all at once.</p>
-<p><strong>Solution</strong>: Migrate incrementally, module by module. Use <code># type: ignore</code> temporarily for complex cases, then refactor.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># During migration - acceptable temporarily</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">complex_function</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
+<h3 id="1-indentation-inconsistency-during-transition">1. Indentation Inconsistency During Transition<a class="headerlink" href="#1-indentation-inconsistency-during-transition" title="Permanent link">&para;</a></h3>
+<p><strong>Problem</strong>: Mixing 2-space and 4-space indentation during gradual migration.</p>
+<p><strong>Solution</strong>: Run Black on the entire codebase at once. Create a dedicated "Reformat with Black" commit.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Do this in one commit</span>
+black<span class="w"> </span>.
+git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor: convert to 4-space indentation with Black&quot;</span>
+</code></pre></div>
+<h3 id="2-type-hint-complexity-overload">2. Type Hint Complexity Overload<a class="headerlink" href="#2-type-hint-complexity-overload" title="Permanent link">&para;</a></h3>
+<p><strong>Problem</strong>: Trying to add perfect type hints to complex legacy code immediately.</p>
+<p><strong>Solution</strong>: Migrate incrementally. Start with new code and recently modified modules.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Acceptable during migration</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">legacy_function</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
 
 <span class="c1"># Target state after refactoring</span>
-<span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]]</span> <span class="o">=</span> <span class="n">complex_function</span><span class="p">()</span>
+<span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]]</span> <span class="o">=</span> <span class="n">legacy_function</span><span class="p">()</span>
 </code></pre></div>
-<h3 id="2-over-reliance-on-any-type">2. Over-Reliance on <code>Any</code> Type<a class="headerlink" href="#2-over-reliance-on-any-type" title="Permanent link">&para;</a></h3>
-<p><strong>Problem</strong>: Using <code>typing.Any</code> to satisfy mypy without actual type safety.</p>
-<p><strong>Solution</strong>: Use specific types or <code>Union</code> types. Reserve <code>Any</code> for truly dynamic cases.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Avoid - defeats purpose of type hints</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="k">pass</span>
+<h3 id="3-over-reliance-on-type-ignore">3. Over-Reliance on <code># type: ignore</code><a class="headerlink" href="#3-over-reliance-on-type-ignore" title="Permanent link">&para;</a></h3>
+<p><strong>Problem</strong>: Using <code># type: ignore</code> to bypass mypy without fixing root causes.</p>
+<p><strong>Solution</strong>: Use specific ignores and track them. Create issues to fix them later.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Avoid - too broad</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">complex_function</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
 
-<span class="c1"># Better - specific types</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-    <span class="k">pass</span>
+<span class="c1"># Better - specific and tracked</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">complex_function</span><span class="p">()</span>  <span class="c1"># type: ignore[arg-type]  # TODO: Fix in #123</span>
 </code></pre></div>
-<h3 id="3-docstring-duplication">3. Docstring Duplication<a class="headerlink" href="#3-docstring-duplication" title="Permanent link">&para;</a></h3>
-<p><strong>Problem</strong>: Repeating type information in both type hints and docstrings.</p>
-<p><strong>Solution</strong>: Remove type information from docstrings when type hints are present.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Redundant - types in both places</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get user by ID.</span>
+<h3 id="4-breaking-cicd-during-formatter-migration">4. Breaking CI/CD During Formatter Migration<a class="headerlink" href="#4-breaking-cicd-during-formatter-migration" title="Permanent link">&para;</a></h3>
+<p><strong>Problem</strong>: CI/CD fails after switching from YAPF to Black.</p>
+<p><strong>Solution</strong>: Update CI/CD configuration before reformatting code.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Update this FIRST</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Format check</span>
+<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">black --check .</span><span class="w">  </span><span class="c1"># Changed from yapf</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        user_id (int): The user ID</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Optional[User]: User object or None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
-
-<span class="c1"># Better - types in hints, descriptions in docstrings</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Retrieve user from database by ID.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        user_id: Unique identifier for the user</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        User object if found, None otherwise</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
+<span class="c1"># THEN run black on codebase</span>
 </code></pre></div>
-<h3 id="4-test-naming-confusion">4. Test Naming Confusion<a class="headerlink" href="#4-test-naming-confusion" title="Permanent link">&para;</a></h3>
-<p><strong>Problem</strong>: Inconsistent test naming makes test intent unclear.</p>
-<p><strong>Solution</strong>: Follow the pattern <code>test_should_&lt;behavior&gt;_when_&lt;condition&gt;</code> consistently.</p>
+<h3 id="5-test-naming-confusion">5. Test Naming Confusion<a class="headerlink" href="#5-test-naming-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Problem</strong>: Inconsistent test naming makes intent unclear.</p>
+<p><strong>Solution</strong>: Follow pattern strictly: <code>test_should_&lt;behavior&gt;_when_&lt;condition&gt;</code></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Inconsistent</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_user_creation</span><span class="p">():</span>
     <span class="k">pass</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">test_invalid_email</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_email_validation</span><span class="p">():</span>
     <span class="k">pass</span>
 
 <span class="c1"># Consistent and clear</span>
@@ -5557,96 +5779,247 @@ safety<span class="w"> </span>check
 <span class="k">def</span><span class="w"> </span><span class="nf">test_should_raise_error_when_invalid_email_provided</span><span class="p">():</span>
     <span class="k">pass</span>
 </code></pre></div>
-<h3 id="5-ignoring-pre-commit-hook-failures">5. Ignoring Pre-commit Hook Failures<a class="headerlink" href="#5-ignoring-pre-commit-hook-failures" title="Permanent link">&para;</a></h3>
-<p><strong>Problem</strong>: Committing code that fails pre-commit checks using <code>--no-verify</code>.</p>
-<p><strong>Solution</strong>: Fix the issues, don't bypass the checks. Pre-commit hooks catch real problems.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Wrong - bypassing checks</span>
-git<span class="w"> </span>commit<span class="w"> </span>--no-verify<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;quick fix&quot;</span>
+<h3 id="6-secrets-exposure-during-migration">6. Secrets Exposure During Migration<a class="headerlink" href="#6-secrets-exposure-during-migration" title="Permanent link">&para;</a></h3>
+<p><strong>Problem</strong>: Accidentally committing hardcoded secrets while refactoring.</p>
+<p><strong>Solution</strong>: Add <code>.env</code> to <code>.gitignore</code> FIRST, then migrate secrets.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Do this FIRST</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;.env&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;.env.local&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
+git<span class="w"> </span>add<span class="w"> </span>.gitignore
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: ignore environment files&quot;</span>
 
-<span class="c1"># Right - fix issues first</span>
-black<span class="w"> </span>.
-isort<span class="w"> </span>.
-mypy<span class="w"> </span>src/
-pytest
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add user validation&quot;</span>
+<span class="c1"># THEN migrate secrets</span>
+<span class="c1"># Create .env.example (safe to commit)</span>
+<span class="c1"># Move actual secrets to .env (never commit)</span>
 </code></pre></div>
 <h2 id="gradual-adoption-strategy">Gradual Adoption Strategy<a class="headerlink" href="#gradual-adoption-strategy" title="Permanent link">&para;</a></h2>
 <p>If immediate full migration is not feasible, adopt incrementally:</p>
-<h3 id="week-1-2-tooling-setup">Week 1-2: Tooling Setup<a class="headerlink" href="#week-1-2-tooling-setup" title="Permanent link">&para;</a></h3>
+<h3 id="weeks-1-2-tooling-foundation">Weeks 1-2: Tooling Foundation<a class="headerlink" href="#weeks-1-2-tooling-foundation" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Install Black, mypy, pytest, pre-commit</li>
-<li>Configure <code>pyproject.toml</code></li>
-<li>Run Black to reformat entire codebase</li>
-<li>Set up CI/CD with formatting checks</li>
+<li>Configure <code>pyproject.toml</code> and <code>.flake8</code></li>
+<li>Run Black to reformat entire codebase (single commit)</li>
+<li>Set up pre-commit hooks</li>
 </ul>
-<h3 id="week-3-4-type-hints-for-new-code">Week 3-4: Type Hints for New Code<a class="headerlink" href="#week-3-4-type-hints-for-new-code" title="Permanent link">&para;</a></h3>
+<h3 id="weeks-3-4-cicd-and-testing">Weeks 3-4: CI/CD and Testing<a class="headerlink" href="#weeks-3-4-cicd-and-testing" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Update CI/CD to use new tools</li>
+<li>Configure pytest with coverage reporting</li>
+<li>Write tests for new code (require 80% coverage for new modules)</li>
+<li>Add coverage tracking</li>
+</ul>
+<h3 id="weeks-5-6-type-hints-for-new-code">Weeks 5-6: Type Hints for New Code<a class="headerlink" href="#weeks-5-6-type-hints-for-new-code" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Require type hints for all new functions</li>
 <li>Add type hints to recently modified modules</li>
 <li>Start mypy checking on new modules only</li>
+<li>Gradually expand mypy coverage</li>
 </ul>
-<h3 id="week-5-8-documentation-enhancement">Week 5-8: Documentation Enhancement<a class="headerlink" href="#week-5-8-documentation-enhancement" title="Permanent link">&para;</a></h3>
+<h3 id="weeks-7-8-documentation-enhancement">Weeks 7-8: Documentation Enhancement<a class="headerlink" href="#weeks-7-8-documentation-enhancement" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Add structured metadata to module docstrings</li>
-<li>Improve docstrings for public APIs</li>
+<li>Add structured metadata to new module docstrings</li>
+<li>Enhance docstrings for public APIs</li>
 <li>Add usage examples to key functions</li>
+<li>Document security classifications</li>
 </ul>
-<h3 id="week-9-12-testing-and-coverage">Week 9-12: Testing and Coverage<a class="headerlink" href="#week-9-12-testing-and-coverage" title="Permanent link">&para;</a></h3>
+<h3 id="weeks-9-12-legacy-code-migration">Weeks 9-12: Legacy Code Migration<a class="headerlink" href="#weeks-9-12-legacy-code-migration" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Add pytest configuration</li>
-<li>Write tests for new features (require 80% coverage)</li>
-<li>Incrementally add tests to existing critical modules</li>
-</ul>
-<h3 id="month-4-complete-migration">Month 4+: Complete Migration<a class="headerlink" href="#month-4-complete-migration" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Systematically add type hints to remaining modules</li>
-<li>Achieve 80%+ test coverage across codebase</li>
+<li>Systematically add type hints to legacy modules</li>
+<li>Write tests for critical legacy code</li>
+<li>Achieve 80%+ coverage across codebase</li>
 <li>Enable strict mypy checking project-wide</li>
-<li>Full security audit with Bandit/Safety</li>
+</ul>
+<h3 id="month-4-complete-transition">Month 4+: Complete Transition<a class="headerlink" href="#month-4-complete-transition" title="Permanent link">&para;</a></h3>
+<ul>
+<li>All code follows Dukes Engineering standards</li>
+<li>100% type hint coverage</li>
+<li>80%+ test coverage</li>
+<li>Zero mypy errors</li>
+<li>All security scans passing</li>
 </ul>
 <h2 id="success-metrics">Success Metrics<a class="headerlink" href="#success-metrics" title="Permanent link">&para;</a></h2>
 <p>Track these metrics to measure migration progress:</p>
-<ul>
-<li><strong>Type Hint Coverage</strong>: % of functions with complete type hints (Target: 100%)</li>
-<li><strong>mypy Pass Rate</strong>: % of modules passing strict mypy checks (Target: 100%)</li>
-<li><strong>Test Coverage</strong>: % of code covered by tests (Target: 80%+)</li>
-<li><strong>Security Scan</strong>: Bandit/Safety issues count (Target: 0 high/critical)</li>
-<li><strong>Pre-commit Pass</strong>: % of commits passing all hooks (Target: 100%)</li>
-<li><strong>Docstring Completeness</strong>: % of functions with structured docstrings (Target: 100%)</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Target</th>
+<th>Measurement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type Hint Coverage</td>
+<td>100%</td>
+<td>% functions with type hints</td>
+</tr>
+<tr>
+<td>mypy Pass Rate</td>
+<td>100%</td>
+<td>% modules passing strict mypy</td>
+</tr>
+<tr>
+<td>Test Coverage</td>
+<td>80%+</td>
+<td>% code covered by tests</td>
+</tr>
+<tr>
+<td>Security Scan</td>
+<td>0 high/critical</td>
+<td>Bandit/Safety findings</td>
+</tr>
+<tr>
+<td>Pre-commit Pass</td>
+<td>100%</td>
+<td>% commits passing all hooks</td>
+</tr>
+<tr>
+<td>Docstring Completeness</td>
+<td>100%</td>
+<td>% functions with structured docs</td>
+</tr>
+<tr>
+<td>Formatting Compliance</td>
+<td>100%</td>
+<td>% files passing Black check</td>
+</tr>
+</tbody>
+</table>
+<h2 id="side-by-side-comparison-google-vs-dukes-engineering">Side-by-Side Comparison: Google vs. Dukes Engineering<a class="headerlink" href="#side-by-side-comparison-google-vs-dukes-engineering" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Google Python Style Guide</th>
+<th>Dukes Engineering Style Guide</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Base Standard</strong></td>
+<td>PEP 8</td>
+<td>PEP 8</td>
+</tr>
+<tr>
+<td><strong>Indentation</strong></td>
+<td>2 spaces</td>
+<td>4 spaces (PEP 8 standard)</td>
+</tr>
+<tr>
+<td><strong>Line Length</strong></td>
+<td>80 characters</td>
+<td>88 characters (Black default)</td>
+</tr>
+<tr>
+<td><strong>Type Hints</strong></td>
+<td>Recommended</td>
+<td><strong>Required</strong></td>
+</tr>
+<tr>
+<td><strong>Docstrings</strong></td>
+<td>Google style</td>
+<td>Google style + <strong>metadata</strong></td>
+</tr>
+<tr>
+<td><strong>Formatter</strong></td>
+<td>YAPF</td>
+<td><strong>Black</strong></td>
+</tr>
+<tr>
+<td><strong>Type Checker</strong></td>
+<td>Pytype (optional)</td>
+<td><strong>mypy</strong> (required)</td>
+</tr>
+<tr>
+<td><strong>Linter</strong></td>
+<td>Pylint</td>
+<td><strong>Flake8</strong></td>
+</tr>
+<tr>
+<td><strong>Import Sorter</strong></td>
+<td>Manual/YAPF</td>
+<td><strong>isort</strong></td>
+</tr>
+<tr>
+<td><strong>Test Coverage</strong></td>
+<td>Encouraged</td>
+<td><strong>Required 80%+</strong></td>
+</tr>
+<tr>
+<td><strong>Test Framework</strong></td>
+<td>Flexible</td>
+<td><strong>pytest</strong> with coverage</td>
+</tr>
+<tr>
+<td><strong>Test Naming</strong></td>
+<td>Flexible</td>
+<td><strong>Structured pattern</strong></td>
+</tr>
+<tr>
+<td><strong>Security</strong></td>
+<td>Best practices</td>
+<td><strong>Explicit requirements</strong></td>
+</tr>
+<tr>
+<td><strong>Secret Management</strong></td>
+<td>Flexible</td>
+<td><strong>Environment variables</strong></td>
+</tr>
+<tr>
+<td><strong>Input Validation</strong></td>
+<td>Manual</td>
+<td><strong>Pydantic schemas</strong></td>
+</tr>
+<tr>
+<td><strong>Pre-commit Hooks</strong></td>
+<td>Optional</td>
+<td><strong>Required</strong></td>
+</tr>
+<tr>
+<td><strong>CI/CD Integration</strong></td>
+<td>Recommended</td>
+<td><strong>Required</strong></td>
+</tr>
+</tbody>
+</table>
 <h2 id="support-and-resources">Support and Resources<a class="headerlink" href="#support-and-resources" title="Permanent link">&para;</a></h2>
 <h3 id="documentation-references">Documentation References<a class="headerlink" href="#documentation-references" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="../../02_language_guides/python/">Python Style Guide</a> - Full Dukes Engineering Python standards</li>
-<li><a href="../../05_ci_cd/testing_strategies/">Testing Strategies</a> - pytest patterns and best practices</li>
-<li><a href="../../05_ci_cd/security_scanning_guide/">Security Scanning Guide</a> - Bandit, Safety integration</li>
-<li><a href="../../05_ci_cd/github_actions_guide/">GitHub Actions Guide</a> - Python CI/CD workflows</li>
-<li><a href="../../05_ci_cd/ide_integration_guide/">IDE Integration Guide</a> - VS Code, PyCharm setup</li>
+<li><a href="../../05_ci_cd/testing_strategies/">Testing Strategies</a> - pytest patterns</li>
+<li><a href="../../05_ci_cd/security_scanning_guide/">Security Scanning Guide</a> - Bandit, Safety</li>
+<li><a href="../../05_ci_cd/github_actions_guide/">GitHub Actions Guide</a> - Python CI/CD</li>
+<li><a href="../../05_ci_cd/ide_integration_guide/">IDE Integration Guide</a> - VS Code, PyCharm</li>
 </ul>
 <h3 id="tool-documentation">Tool Documentation<a class="headerlink" href="#tool-documentation" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://black.readthedocs.io/">Black</a> - Code formatter</li>
 <li><a href="https://mypy.readthedocs.io/">mypy</a> - Static type checker</li>
 <li><a href="https://docs.pytest.org/">pytest</a> - Testing framework</li>
-<li><a href="https://bandit.readthedocs.io/">Bandit</a> - Security linter</li>
+<li><a href="https://pycqa.github.io/isort/">isort</a> - Import sorter</li>
+<li><a href="https://flake8.pycqa.org/">Flake8</a> - Linter</li>
+<li><a href="https://bandit.readthedocs.io/">Bandit</a> - Security scanner</li>
 </ul>
-<h3 id="community-support">Community Support<a class="headerlink" href="#community-support" title="Permanent link">&para;</a></h3>
+<h3 id="external-references">External References<a class="headerlink" href="#external-references" title="Permanent link">&para;</a></h3>
 <ul>
-<li>GitHub Issues: Report migration challenges</li>
-<li>Team Discussions: Share migration experiences</li>
-<li>Office Hours: Schedule style guide review sessions</li>
+<li><a href="https://google.github.io/styleguide/pyguide.html">Google Python Style Guide</a> - Original Google guide</li>
+<li><a href="https://peps.python.org/pep-0008/">PEP 8</a> - Python style guide</li>
+<li><a href="https://peps.python.org/pep-0484/">PEP 484</a> - Type hints</li>
 </ul>
 <h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
-<p>Migrating from PEP 8 to the Dukes Engineering Style Guide enhances your Python codebase with:</p>
-<p>✅ <strong>Type Safety</strong> - Catch errors before runtime with mypy
-✅ <strong>Consistency</strong> - Automated formatting with Black
-✅ <strong>Quality</strong> - 80%+ test coverage requirement
-✅ <strong>Security</strong> - Built-in security best practices
-✅ <strong>Documentation</strong> - Structured, AI-parseable metadata
-✅ <strong>Automation</strong> - Pre-commit hooks and CI/CD integration</p>
-<p>The migration builds on PEP 8's solid foundation while adding modern DevOps-oriented practices
-essential for infrastructure automation and production reliability.</p>
-<p><strong>Questions or need help?</strong> Open an issue or consult the <a href="../../01_overview/getting_started/">Getting Started Guide</a>.</p>
+<p>Migrating from Google Python Style Guide to Dukes Engineering Style Guide brings:</p>
+<p>✅ <strong>PEP 8 Alignment</strong> - 4-space indentation matches Python ecosystem standard
+✅ <strong>Modern Tooling</strong> - Black, mypy, pytest provide superior developer experience
+✅ <strong>Type Safety</strong> - Required type hints prevent runtime errors
+✅ <strong>Quality Assurance</strong> - 80%+ test coverage ensures reliability
+✅ <strong>Security First</strong> - Explicit security requirements protect infrastructure
+✅ <strong>Automation</strong> - Pre-commit hooks and CI/CD integration catch issues early
+✅ <strong>DevOps Ready</strong> - Enhanced metadata and documentation support automation</p>
+<p>While Google's guide is excellent for general Python development, Dukes Engineering guide adds
+the DevOps-focused enhancements essential for infrastructure automation, cloud deployments,
+and production reliability.</p>
+<p><strong>Questions or need help?</strong> Open an issue or consult the
+<a href="../../01_overview/getting_started/">Getting Started Guide</a>.</p>
 
 
 
