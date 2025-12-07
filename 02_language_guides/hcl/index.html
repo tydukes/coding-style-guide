@@ -1611,6 +1611,50 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-for_each-for-maps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using for_each for Maps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-mixing-resource-types-in-one-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Mixing Resource Types in One File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-dynamic-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using Dynamic Blocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-not-validating-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Validating Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4707,6 +4751,50 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-for_each-for-maps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using for_each for Maps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-mixing-resource-types-in-one-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Mixing Resource Types in One File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-dynamic-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using Dynamic Blocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-not-validating-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Validating Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5590,6 +5678,90 @@ machine-friendly, combining declarative resource definitions with imperative pro
 
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.instance_count</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="avoid-not-using-for_each-for-maps">❌ Avoid: Not Using for_each for Maps<a class="headerlink" href="#avoid-not-using-for_each-for-maps" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Using count with maps (fragile to reordering)</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;alice&quot;, &quot;bob&quot;, &quot;charlie&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_user&quot;</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.users</span><span class="p">)</span>
+<span class="w">  </span><span class="na">name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">var.users[count.index</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1"># Good - Use for_each</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">set</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
+<span class="w">  </span><span class="na">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;alice&quot;, &quot;bob&quot;, &quot;charlie&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_user&quot;</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.users</span>
+<span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">each.value</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="avoid-mixing-resource-types-in-one-file">❌ Avoid: Mixing Resource Types in One File<a class="headerlink" href="#avoid-mixing-resource-types-in-one-file" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - All resources in main.tf</span>
+<span class="c1"># main.tf with VPC, EC2, S3, IAM, etc. (1000+ lines)</span>
+
+<span class="c1"># Good - Separate by resource type</span>
+<span class="c1"># network.tf - VPC, subnets, route tables</span>
+<span class="c1"># compute.tf - EC2 instances, auto-scaling</span>
+<span class="c1"># storage.tf - S3 buckets, EBS volumes</span>
+<span class="c1"># security.tf - IAM roles, security groups</span>
+</code></pre></div>
+<h3 id="avoid-not-using-dynamic-blocks">❌ Avoid: Not Using Dynamic Blocks<a class="headerlink" href="#avoid-not-using-dynamic-blocks" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Repetitive inline blocks</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">ingress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">80</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">80</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">    </span><span class="na">cidr_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="nb">ingress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">443</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">443</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">    </span><span class="na">cidr_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Good - Dynamic block</span>
+<span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ingress_rules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="na">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">80</span><span class="p">,</span><span class="w"> </span><span class="na">protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="na">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">443</span><span class="p">,</span><span class="w"> </span><span class="na">protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="err">dynamic</span><span class="w"> </span><span class="s2">&quot;ingress&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.ingress_rules</span>
+<span class="w">    </span><span class="nb">content</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">from_port</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">ingress.value.port</span>
+<span class="w">      </span><span class="na">to_port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">ingress.value.port</span>
+<span class="w">      </span><span class="na">protocol</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">ingress.value.protocol</span>
+<span class="w">      </span><span class="na">cidr_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="avoid-not-validating-variables">❌ Avoid: Not Validating Variables<a class="headerlink" href="#avoid-not-validating-variables" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad - No validation</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environment&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1"># Good - With validation</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environment&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">([</span><span class="s2">&quot;dev&quot;, &quot;staging&quot;, &quot;prod&quot;</span><span class="p">],</span><span class="w"> </span><span class="nv">var.environment</span><span class="p">)</span>
+<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Environment must be dev, staging, or prod.&quot;</span>
+<span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />

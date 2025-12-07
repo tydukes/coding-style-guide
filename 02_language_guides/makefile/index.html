@@ -2587,6 +2587,50 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#avoid-not-declaring-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Declaring Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-silent-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Silent Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-for-clean-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using @ for Clean Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-recursive-make-without-make" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Recursive Make Without $(MAKE)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4926,6 +4970,50 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#avoid-not-declaring-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Declaring Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-silent-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Silent Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-for-clean-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using @ for Clean Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-recursive-make-without-make" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Recursive Make Without $(MAKE)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5796,6 +5884,50 @@ guide covers Makefile best practices for creating maintainable, portable, and ef
 <span class="nv">BIN_DIR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>bin
 <span class="nf">build</span><span class="o">:</span>
 <span class="w"> </span>gcc<span class="w"> </span>-o<span class="w"> </span><span class="k">$(</span>BIN_DIR<span class="k">)</span>/myapp<span class="w"> </span>main.c
+</code></pre></div>
+<h3 id="avoid-not-declaring-dependencies">❌ Avoid: Not Declaring Dependencies<a class="headerlink" href="#avoid-not-declaring-dependencies" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - No dependencies declared</span>
+<span class="nf">test</span><span class="o">:</span>
+<span class="w"> </span>go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>./...
+
+<span class="c"># Good - Declare dependencies</span>
+<span class="nf">test</span><span class="o">:</span><span class="w"> </span><span class="n">build</span>  <span class="c"># test depends on build</span>
+<span class="w"> </span>go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>./...
+
+<span class="nf">build</span><span class="o">:</span><span class="w"> </span><span class="k">$(</span><span class="nv">wildcard</span> *<span class="nv">.go</span><span class="k">)</span>  <span class="c"># build depends on Go files</span>
+<span class="w"> </span>go<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>app<span class="w"> </span>main.go
+</code></pre></div>
+<h3 id="avoid-silent-failures">❌ Avoid: Silent Failures<a class="headerlink" href="#avoid-silent-failures" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Errors hidden</span>
+<span class="nf">install</span><span class="o">:</span>
+<span class="w"> </span>-cp<span class="w"> </span>config.yaml<span class="w"> </span>/etc/app/<span class="w">  </span><span class="c1"># &#39;-&#39; prefix ignores errors</span>
+
+<span class="c"># Good - Fail on errors</span>
+<span class="nf">install</span><span class="o">:</span>
+<span class="w"> </span>cp<span class="w"> </span>config.yaml<span class="w"> </span>/etc/app/<span class="w">  </span><span class="c1"># Will stop if copy fails</span>
+<span class="w"> </span>chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>/etc/app/config.yaml
+</code></pre></div>
+<h3 id="avoid-not-using-for-clean-output">❌ Avoid: Not Using @ for Clean Output<a class="headerlink" href="#avoid-not-using-for-clean-output" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Shows all commands (noisy output)</span>
+<span class="nf">build</span><span class="o">:</span>
+<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Building application...&quot;</span>
+<span class="w"> </span>go<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>app<span class="w"> </span>main.go
+<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Build complete!&quot;</span>
+
+<span class="c"># Good - Use @ to hide commands</span>
+<span class="nf">build</span><span class="o">:</span>
+<span class="w"> </span>@echo<span class="w"> </span><span class="s2">&quot;Building application...&quot;</span>
+<span class="w"> </span>@go<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>app<span class="w"> </span>main.go
+<span class="w"> </span>@echo<span class="w"> </span><span class="s2">&quot;Build complete!&quot;</span>
+</code></pre></div>
+<h3 id="avoid-recursive-make-without-make">❌ Avoid: Recursive Make Without $(MAKE)<a class="headerlink" href="#avoid-recursive-make-without-make" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Direct make call</span>
+<span class="nf">deploy</span><span class="o">:</span>
+<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>build<span class="w">  </span><span class="c1"># ❌ Won&#39;t pass flags correctly</span>
+
+<span class="c"># Good - Use $(MAKE) variable</span>
+<span class="nf">deploy</span><span class="o">:</span>
+<span class="w"> </span><span class="k">$(</span>MAKE<span class="k">)</span><span class="w"> </span>-C<span class="w"> </span>frontend<span class="w"> </span>build<span class="w">  </span><span class="c1"># ✅ Passes flags and parallel builds</span>
 </code></pre></div>
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>

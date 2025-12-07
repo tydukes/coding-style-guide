@@ -1973,6 +1973,50 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-parameter-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using Parameter Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-using-positional-parameters-in-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Using Positional Parameters in Scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-suppressing-errors-with-out-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Suppressing Errors with Out-Null
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-splatting-for-many-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using Splatting for Many Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4654,6 +4698,50 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-parameter-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using Parameter Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-using-positional-parameters-in-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Using Positional Parameters in Scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-suppressing-errors-with-out-null" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Suppressing Errors with Out-Null
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-not-using-splatting-for-many-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Avoid: Not Using Splatting for Many Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5506,6 +5594,59 @@ cross-platform compatibility.</p>
 <span class="c"># Good - Approved verbs</span>
 <span class="k">function</span> <span class="nb">Get-UserData</span> <span class="p">{</span> <span class="p">}</span>
 <span class="k">function</span> <span class="nb">Remove-OldFiles</span> <span class="p">{</span> <span class="p">}</span>
+</code></pre></div>
+<h3 id="avoid-not-using-parameter-validation">❌ Avoid: Not Using Parameter Validation<a class="headerlink" href="#avoid-not-using-parameter-validation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - No validation</span>
+<span class="k">function</span> <span class="nb">Set-UserAge</span> <span class="p">{</span>
+    <span class="k">param</span><span class="p">(</span><span class="nv">$Age</span><span class="p">)</span>
+    <span class="c"># No validation - can accept invalid values</span>
+    <span class="nv">$User</span><span class="p">.</span><span class="n">Age</span> <span class="p">=</span> <span class="nv">$Age</span>
+<span class="p">}</span>
+
+<span class="c"># Good - With validation</span>
+<span class="k">function</span> <span class="nb">Set-UserAge</span> <span class="p">{</span>
+    <span class="k">param</span><span class="p">(</span>
+        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">=</span><span class="nv">$true</span><span class="p">)]</span>
+        <span class="p">[</span><span class="k">ValidateRange</span><span class="p">(</span><span class="n">0</span><span class="p">,</span> <span class="n">150</span><span class="p">)]</span>
+        <span class="no">[int]</span><span class="nv">$Age</span>
+    <span class="p">)</span>
+    <span class="nv">$User</span><span class="p">.</span><span class="n">Age</span> <span class="p">=</span> <span class="nv">$Age</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="avoid-using-positional-parameters-in-scripts">❌ Avoid: Using Positional Parameters in Scripts<a class="headerlink" href="#avoid-using-positional-parameters-in-scripts" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Positional parameters are unclear</span>
+<span class="nb">Get-ChildItem</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span> <span class="p">*.</span><span class="n">txt</span> <span class="nv">$true</span>
+
+<span class="c"># Good - Named parameters</span>
+<span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span> <span class="n">-Filter</span> <span class="p">*.</span><span class="n">txt</span> <span class="n">-Recurse</span>
+</code></pre></div>
+<h3 id="avoid-suppressing-errors-with-out-null">❌ Avoid: Suppressing Errors with Out-Null<a class="headerlink" href="#avoid-suppressing-errors-with-out-null" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Hiding errors</span>
+<span class="nb">Remove-Item</span> <span class="nv">$file</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="n">2</span><span class="p">&gt;&amp;</span><span class="n">1</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+
+<span class="c"># Good - Explicit error handling</span>
+<span class="k">try</span> <span class="p">{</span>
+    <span class="nb">Remove-Item</span> <span class="nv">$file</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+    <span class="nb">Write-Warning</span> <span class="s2">&quot;Failed to remove $file: $_&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="avoid-not-using-splatting-for-many-parameters">❌ Avoid: Not Using Splatting for Many Parameters<a class="headerlink" href="#avoid-not-using-splatting-for-many-parameters" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c"># Bad - Long parameter list</span>
+<span class="nb">New-ADUser</span> <span class="n">-Name</span> <span class="s2">&quot;John Doe&quot;</span> <span class="n">-SamAccountName</span> <span class="s2">&quot;jdoe&quot;</span> <span class="p">`</span>
+  <span class="n">-UserPrincipalName</span> <span class="s2">&quot;jdoe@contoso.com&quot;</span> <span class="p">`</span>
+  <span class="n">-Path</span> <span class="s2">&quot;OU=Users,DC=contoso,DC=com&quot;</span> <span class="n">-AccountPassword</span> <span class="nv">$password</span> <span class="n">-Enabled</span> <span class="nv">$true</span>
+
+<span class="c"># Good - Use splatting</span>
+<span class="nv">$userParams</span> <span class="p">=</span> <span class="p">@{</span>
+    <span class="n">Name</span>              <span class="p">=</span> <span class="s2">&quot;John Doe&quot;</span>
+    <span class="n">SamAccountName</span>    <span class="p">=</span> <span class="s2">&quot;jdoe&quot;</span>
+    <span class="n">UserPrincipalName</span> <span class="p">=</span> <span class="s2">&quot;jdoe@contoso.com&quot;</span>
+    <span class="n">Path</span>              <span class="p">=</span> <span class="s2">&quot;OU=Users,DC=contoso,DC=com&quot;</span>
+    <span class="n">AccountPassword</span>   <span class="p">=</span> <span class="nv">$password</span>
+    <span class="n">Enabled</span>           <span class="p">=</span> <span class="nv">$true</span>
+<span class="p">}</span>
+<span class="nb">New-ADUser</span> <span class="nv">@userParams</span>
 </code></pre></div>
 <hr />
 <h2 id="tool-configurations">Tool Configurations<a class="headerlink" href="#tool-configurations" title="Permanent link">&para;</a></h2>
