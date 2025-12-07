@@ -58,6 +58,55 @@ coding-style-guide/
 └── README.md                      # Repository overview
 ```
 
+### Visual Repository Structure
+
+```mermaid
+graph TD
+    Root[coding-style-guide/] --> Docs[docs/]
+    Root --> GitHub[.github/]
+    Root --> Scripts[scripts/]
+    Root --> Config[Configuration Files]
+
+    Docs --> Overview[01_overview/]
+    Docs --> Languages[02_language_guides/]
+    Docs --> Schema[03_metadata_schema/]
+    Docs --> Templates[04_templates/]
+    Docs --> CICD[05_ci_cd/]
+    Docs --> Examples[05_examples/]
+    Docs --> Container[06_container/]
+    Docs --> Integration[07_integration/]
+    Docs --> AntiPatterns[08_anti_patterns/]
+    Docs --> Refactoring[09_refactoring/]
+
+    Overview --> Principles[principles.md]
+    Overview --> Governance[governance.md]
+    Overview --> Structure[structure.md]
+
+    Languages --> Python[python.md]
+    Languages --> Terraform[terraform.md]
+    Languages --> TypeScript[typescript.md]
+    Languages --> Bash[bash.md]
+    Languages --> MoreLangs[...]
+
+    GitHub --> Workflows[workflows/]
+    GitHub --> Actions[actions/]
+
+    Workflows --> CI[ci.yml]
+    Workflows --> Deploy[deploy.yml]
+    Workflows --> ContainerBuild[container.yml]
+
+    Config --> MkDocs[mkdocs.yml]
+    Config --> PyProject[pyproject.toml]
+    Config --> Docker[Dockerfile]
+    Config --> Compose[docker-compose.yml]
+
+    style Root fill:#e3f2fd
+    style Docs fill:#f3e5f5
+    style GitHub fill:#e8f5e9
+    style Scripts fill:#fff3e0
+    style Config fill:#fce4ec
+```
+
 ### Why Monorepo for This Project?
 
 The monorepo structure is ideal for this style guide because:
@@ -119,6 +168,40 @@ project-name/
 └── README.md
 ```
 
+**Visual Structure:**
+
+```mermaid
+graph TD
+    MonoRoot[Monorepo Root] --> Services[services/]
+    MonoRoot --> Infra[infrastructure/]
+    MonoRoot --> Shared[shared/]
+    MonoRoot --> Docs[docs/]
+    MonoRoot --> GitHub[.github/]
+
+    Services --> API[api/]
+    Services --> Worker[worker/]
+    Services --> Frontend[frontend/]
+
+    API --> APISrc[src/]
+    API --> APITests[tests/]
+    API --> APIDocs[README.md]
+
+    Infra --> TF[terraform/]
+    Infra --> K8s[kubernetes/]
+
+    TF --> Modules[modules/]
+    TF --> Envs[environments/]
+
+    Shared --> Libs[libraries/]
+    Shared --> Schemas[schemas/]
+
+    style MonoRoot fill:#e3f2fd
+    style Services fill:#f3e5f5
+    style Infra fill:#e8f5e9
+    style Shared fill:#fff3e0
+    style Docs fill:#fce4ec
+```
+
 **Benefits:**
 
 - Atomic commits across services
@@ -160,6 +243,31 @@ service-name/
 ├── Dockerfile
 ├── Makefile
 └── README.md
+```
+
+**Visual Comparison:**
+
+```mermaid
+graph LR
+    subgraph MultiRepo[" Multi-Repository Pattern "]
+        Repo1[api-service<br/>Repository]
+        Repo2[worker-service<br/>Repository]
+        Repo3[frontend-app<br/>Repository]
+        Repo4[infrastructure<br/>Repository]
+    end
+
+    Repo1 -.->|References| Repo4
+    Repo2 -.->|References| Repo4
+    Repo3 -.->|References| Repo4
+
+    Repo1 -->|Independent<br/>Deployment| Deploy1[Deploy API]
+    Repo2 -->|Independent<br/>Deployment| Deploy2[Deploy Worker]
+    Repo3 -->|Independent<br/>Deployment| Deploy3[Deploy Frontend]
+
+    style Repo1 fill:#e3f2fd
+    style Repo2 fill:#f3e5f5
+    style Repo3 fill:#e8f5e9
+    style Repo4 fill:#fff3e0
 ```
 
 **Benefits:**
