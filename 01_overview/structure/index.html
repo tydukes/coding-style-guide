@@ -397,6 +397,26 @@
     
     
       <li class="md-tabs__item">
+        <a href="../../10_migration_guides/from_pep8/" class="md-tabs__link">
+          
+  
+  
+  Migration Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
         <a href="../../05_ci_cd/ai_validation_pipeline/" class="md-tabs__link">
           
   
@@ -817,6 +837,17 @@
     <span class="md-ellipsis">
       
         Directory Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-repository-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual Repository Structure
       
     </span>
   </a>
@@ -3265,7 +3296,7 @@
   <span class="md-ellipsis">
     
   
-    CI / CD
+    Migration Guides
   
 
     
@@ -3278,6 +3309,98 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Migration Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10_migration_guides/from_pep8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From PEP 8
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI / CD
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3793,6 +3916,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#visual-repository-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual Repository Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#why-monorepo-for-this-project" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4225,6 +4359,51 @@ in a single repository. This approach enables:</p>
 ├── pyproject.toml                 # Python project config
 └── README.md                      # Repository overview
 </code></pre></div>
+<h3 id="visual-repository-structure">Visual Repository Structure<a class="headerlink" href="#visual-repository-structure" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph TD
+    Root[coding-style-guide/] --&gt; Docs[docs/]
+    Root --&gt; GitHub[.github/]
+    Root --&gt; Scripts[scripts/]
+    Root --&gt; Config[Configuration Files]
+
+    Docs --&gt; Overview[01_overview/]
+    Docs --&gt; Languages[02_language_guides/]
+    Docs --&gt; Schema[03_metadata_schema/]
+    Docs --&gt; Templates[04_templates/]
+    Docs --&gt; CICD[05_ci_cd/]
+    Docs --&gt; Examples[05_examples/]
+    Docs --&gt; Container[06_container/]
+    Docs --&gt; Integration[07_integration/]
+    Docs --&gt; AntiPatterns[08_anti_patterns/]
+    Docs --&gt; Refactoring[09_refactoring/]
+
+    Overview --&gt; Principles[principles.md]
+    Overview --&gt; Governance[governance.md]
+    Overview --&gt; Structure[structure.md]
+
+    Languages --&gt; Python[python.md]
+    Languages --&gt; Terraform[terraform.md]
+    Languages --&gt; TypeScript[typescript.md]
+    Languages --&gt; Bash[bash.md]
+    Languages --&gt; MoreLangs[...]
+
+    GitHub --&gt; Workflows[workflows/]
+    GitHub --&gt; Actions[actions/]
+
+    Workflows --&gt; CI[ci.yml]
+    Workflows --&gt; Deploy[deploy.yml]
+    Workflows --&gt; ContainerBuild[container.yml]
+
+    Config --&gt; MkDocs[mkdocs.yml]
+    Config --&gt; PyProject[pyproject.toml]
+    Config --&gt; Docker[Dockerfile]
+    Config --&gt; Compose[docker-compose.yml]
+
+    style Root fill:#e3f2fd
+    style Docs fill:#f3e5f5
+    style GitHub fill:#e8f5e9
+    style Scripts fill:#fff3e0
+    style Config fill:#fce4ec</code></pre>
 <h3 id="why-monorepo-for-this-project">Why Monorepo for This Project?<a class="headerlink" href="#why-monorepo-for-this-project" title="Permanent link">&para;</a></h3>
 <p>The monorepo structure is ideal for this style guide because:</p>
 <ol>
@@ -4279,6 +4458,36 @@ in a single repository. This approach enables:</p>
 ├── Makefile
 └── README.md
 </code></pre></div>
+<p><strong>Visual Structure:</strong></p>
+<pre class="mermaid"><code>graph TD
+    MonoRoot[Monorepo Root] --&gt; Services[services/]
+    MonoRoot --&gt; Infra[infrastructure/]
+    MonoRoot --&gt; Shared[shared/]
+    MonoRoot --&gt; Docs[docs/]
+    MonoRoot --&gt; GitHub[.github/]
+
+    Services --&gt; API[api/]
+    Services --&gt; Worker[worker/]
+    Services --&gt; Frontend[frontend/]
+
+    API --&gt; APISrc[src/]
+    API --&gt; APITests[tests/]
+    API --&gt; APIDocs[README.md]
+
+    Infra --&gt; TF[terraform/]
+    Infra --&gt; K8s[kubernetes/]
+
+    TF --&gt; Modules[modules/]
+    TF --&gt; Envs[environments/]
+
+    Shared --&gt; Libs[libraries/]
+    Shared --&gt; Schemas[schemas/]
+
+    style MonoRoot fill:#e3f2fd
+    style Services fill:#f3e5f5
+    style Infra fill:#e8f5e9
+    style Shared fill:#fff3e0
+    style Docs fill:#fce4ec</code></pre>
 <p><strong>Benefits:</strong></p>
 <ul>
 <li>Atomic commits across services</li>
@@ -4318,6 +4527,27 @@ in a single repository. This approach enables:</p>
 ├── Makefile
 └── README.md
 </code></pre></div>
+<p><strong>Visual Comparison:</strong></p>
+<pre class="mermaid"><code>graph LR
+    subgraph MultiRepo[" Multi-Repository Pattern "]
+        Repo1[api-service&lt;br/&gt;Repository]
+        Repo2[worker-service&lt;br/&gt;Repository]
+        Repo3[frontend-app&lt;br/&gt;Repository]
+        Repo4[infrastructure&lt;br/&gt;Repository]
+    end
+
+    Repo1 -.-&gt;|References| Repo4
+    Repo2 -.-&gt;|References| Repo4
+    Repo3 -.-&gt;|References| Repo4
+
+    Repo1 --&gt;|Independent&lt;br/&gt;Deployment| Deploy1[Deploy API]
+    Repo2 --&gt;|Independent&lt;br/&gt;Deployment| Deploy2[Deploy Worker]
+    Repo3 --&gt;|Independent&lt;br/&gt;Deployment| Deploy3[Deploy Frontend]
+
+    style Repo1 fill:#e3f2fd
+    style Repo2 fill:#f3e5f5
+    style Repo3 fill:#e8f5e9
+    style Repo4 fill:#fff3e0</code></pre>
 <p><strong>Benefits:</strong></p>
 <ul>
 <li>Clear ownership boundaries</li>
