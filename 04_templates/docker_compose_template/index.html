@@ -4429,6 +4429,8 @@
 
   <h1>Docker Compose</h1>
 
+<!-- markdownlint-disable MD024 -->
+
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This document provides comprehensive Docker Compose templates for orchestrating multi-container applications.
 Docker Compose simplifies the management of multi-container environments for development, testing, and production.</p>
@@ -5042,13 +5044,13 @@ Docker Compose simplifies the management of multi-container environments for dev
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-exposing-all-ports">❌ Avoid: Exposing All Ports<a class="headerlink" href="#avoid-exposing-all-ports" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Exposes database to host</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Exposes database to host</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">database</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;5432:5432&quot;</span><span class="w">  </span><span class="c1"># Don&#39;t expose in production</span>
 
-<span class="c1"># Good - Use networks for internal communication</span>
+<span class="c1">## Good - Use networks for internal communication</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">database</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">expose</span><span class="p">:</span>
@@ -5057,34 +5059,34 @@ Docker Compose simplifies the management of multi-container environments for dev
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
 </code></pre></div>
 <h3 id="avoid-using-latest-tag">❌ Avoid: Using :latest Tag<a class="headerlink" href="#avoid-using-latest-tag" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Unpredictable versions</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Unpredictable versions</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">app</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:latest</span>
 
-<span class="c1"># Good - Pin specific versions</span>
+<span class="c1">## Good - Pin specific versions</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">app</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:1.2.3</span>
 </code></pre></div>
 <h3 id="avoid-hardcoded-secrets">❌ Avoid: Hardcoded Secrets<a class="headerlink" href="#avoid-hardcoded-secrets" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Secrets in plain text</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Secrets in plain text</span>
 <span class="nt">environment</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB_PASSWORD=supersecret123</span>
 
-<span class="c1"># Good - Use environment variables or secrets</span>
+<span class="c1">## Good - Use environment variables or secrets</span>
 <span class="nt">environment</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB_PASSWORD=${DB_PASSWORD}</span>
 <span class="nt">secrets</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db_password</span>
 </code></pre></div>
 <h3 id="avoid-missing-restart-policies">❌ Avoid: Missing Restart Policies<a class="headerlink" href="#avoid-missing-restart-policies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Service won&#39;t restart on failure</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Service won&#39;t restart on failure</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">app</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
 
-<span class="c1"># Good - Define restart policy</span>
+<span class="c1">## Good - Define restart policy</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">app</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
@@ -5092,63 +5094,63 @@ Docker Compose simplifies the management of multi-container environments for dev
 </code></pre></div>
 <hr />
 <h2 id="useful-commands">Useful Commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Start services</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Start services</span>
 docker-compose<span class="w"> </span>up<span class="w"> </span>-d
 
-<span class="c1"># Start with specific file</span>
+<span class="c1">## Start with specific file</span>
 docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.prod.yml<span class="w"> </span>up<span class="w"> </span>-d
 
-<span class="c1"># View logs</span>
+<span class="c1">## View logs</span>
 docker-compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>app
 
-<span class="c1"># Execute command in running container</span>
+<span class="c1">## Execute command in running container</span>
 docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>app<span class="w"> </span>bash
 
-<span class="c1"># Scale services</span>
+<span class="c1">## Scale services</span>
 docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--scale<span class="w"> </span><span class="nv">worker</span><span class="o">=</span><span class="m">3</span>
 
-<span class="c1"># Rebuild and start</span>
+<span class="c1">## Rebuild and start</span>
 docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build
 
-<span class="c1"># Stop and remove containers</span>
+<span class="c1">## Stop and remove containers</span>
 docker-compose<span class="w"> </span>down
 
-<span class="c1"># Stop and remove with volumes</span>
+<span class="c1">## Stop and remove with volumes</span>
 docker-compose<span class="w"> </span>down<span class="w"> </span>-v
 
-<span class="c1"># Validate compose file</span>
+<span class="c1">## Validate compose file</span>
 docker-compose<span class="w"> </span>config
 
-<span class="c1"># Check service status</span>
+<span class="c1">## Check service status</span>
 docker-compose<span class="w"> </span>ps
 
-<span class="c1"># View resource usage</span>
+<span class="c1">## View resource usage</span>
 docker-compose<span class="w"> </span>top
 </code></pre></div>
 <hr />
 <h2 id="env-template">.env Template<a class="headerlink" href="#env-template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Application</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Application</span>
 <span class="nv">APP_NAME</span><span class="o">=</span>myapp
 <span class="nv">ENVIRONMENT</span><span class="o">=</span>production
 <span class="nv">VERSION</span><span class="o">=</span><span class="m">1</span>.0.0
 
-<span class="c1"># Database</span>
+<span class="c1">## Database</span>
 <span class="nv">DB_PASSWORD</span><span class="o">=</span>changeme
 <span class="nv">DB_NAME</span><span class="o">=</span>appdb
 <span class="nv">DB_USER</span><span class="o">=</span>postgres
 
-<span class="c1"># Redis</span>
+<span class="c1">## Redis</span>
 <span class="nv">REDIS_PASSWORD</span><span class="o">=</span>changeme
 
-<span class="c1"># Secrets</span>
+<span class="c1">## Secrets</span>
 <span class="nv">SECRET_KEY</span><span class="o">=</span>changeme
 <span class="nv">API_KEY</span><span class="o">=</span>changeme
 
-<span class="c1"># Ports</span>
+<span class="c1">## Ports</span>
 <span class="nv">APP_PORT</span><span class="o">=</span><span class="m">3000</span>
 <span class="nv">DB_PORT</span><span class="o">=</span><span class="m">5432</span>
 
-<span class="c1"># Resource Limits</span>
+<span class="c1">## Resource Limits</span>
 <span class="nv">CPU_LIMIT</span><span class="o">=</span><span class="m">2</span>.0
 <span class="nv">MEMORY_LIMIT</span><span class="o">=</span>2G
 </code></pre></div>

@@ -4784,50 +4784,50 @@ for all languages in the Dukes Engineering Style Guide.</p>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <p>Install pre-commit via your preferred package manager:</p>
 <p><strong>Python (pip/pipx)</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Using pip</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Using pip</span>
 pip<span class="w"> </span>install<span class="w"> </span>pre-commit
 
-<span class="c1"># Using pipx (recommended for global install)</span>
+<span class="c1">## Using pipx (recommended for global install)</span>
 pipx<span class="w"> </span>install<span class="w"> </span>pre-commit
 </code></pre></div>
 <p><strong>Homebrew (macOS/Linux)</strong>:</p>
 <div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>pre-commit
 </code></pre></div>
 <p><strong>System Package Managers</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Ubuntu/Debian</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Ubuntu/Debian</span>
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>pre-commit
 
-<span class="c1"># Fedora</span>
+<span class="c1">## Fedora</span>
 sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>pre-commit
 
-<span class="c1"># Arch Linux</span>
+<span class="c1">## Arch Linux</span>
 sudo<span class="w"> </span>pacman<span class="w"> </span>-S<span class="w"> </span>pre-commit
 </code></pre></div>
 <h3 id="initialize-in-repository">Initialize in Repository<a class="headerlink" href="#initialize-in-repository" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Navigate to your repository</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Navigate to your repository</span>
 <span class="nb">cd</span><span class="w"> </span>/path/to/your/repo
 
-<span class="c1"># Install pre-commit hooks</span>
+<span class="c1">## Install pre-commit hooks</span>
 pre-commit<span class="w"> </span>install
 
-<span class="c1"># Install commit-msg hooks (optional, for conventional commits)</span>
+<span class="c1">## Install commit-msg hooks (optional, for conventional commits)</span>
 pre-commit<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg
 
-<span class="c1"># Install pre-push hooks (optional, for expensive checks)</span>
+<span class="c1">## Install pre-push hooks (optional, for expensive checks)</span>
 pre-commit<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>pre-push
 </code></pre></div>
 <h3 id="verify-installation">Verify Installation<a class="headerlink" href="#verify-installation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run hooks on all files to verify setup</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Run hooks on all files to verify setup</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 
-<span class="c1"># Check installed hooks</span>
+<span class="c1">## Check installed hooks</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>--hook-stage<span class="w"> </span>manual
 </code></pre></div>
 <hr />
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <h3 id="basic-pre-commit-configyaml">Basic .pre-commit-config.yaml<a class="headerlink" href="#basic-pre-commit-configyaml" title="Permanent link">&para;</a></h3>
 <p>Create <code>.pre-commit-config.yaml</code> in your repository root:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Basic pre-commit configuration</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Basic pre-commit configuration</span>
 <span class="nt">repos</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># General file checks</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/pre-commit-hooks</span>
@@ -4899,7 +4899,7 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--hook-stage<span c
 </code></pre></div>
 <h3 id="full-stack-configuration">Full-Stack Configuration<a class="headerlink" href="#full-stack-configuration" title="Permanent link">&para;</a></h3>
 <p>For projects with multiple languages:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml - Full-stack example</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .pre-commit-config.yaml - Full-stack example</span>
 <span class="nt">repos</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># ===== General =====</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/pre-commit-hooks</span>
@@ -5112,7 +5112,7 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--hook-stage<span c
 <h3 id="configuration-file-organization">Configuration File Organization<a class="headerlink" href="#configuration-file-organization" title="Permanent link">&para;</a></h3>
 <p>For large projects, split configuration by environment:</p>
 <p><strong>.pre-commit-config.yaml</strong> (main config):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Main pre-commit configuration</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Main pre-commit configuration</span>
 <span class="nt">default_install_hook_types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">pre-commit</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">commit-msg</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pre-push</span><span class="p p-Indicator">]</span>
 <span class="nt">default_stages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">commit</span><span class="p p-Indicator">]</span>
 
@@ -5419,7 +5419,7 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--hook-stage<span c
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;--exclude=.github/&#39;</span>
 </code></pre></div>
 <p><strong>.ansible-lint</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># .ansible-lint</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .ansible-lint</span>
 <span class="nt">profile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
 
 <span class="nt">exclude_paths</span><span class="p">:</span>
@@ -5436,7 +5436,7 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--hook-stage<span c
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">experimental</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">role-name</span>
 
-<span class="c1"># Enable specific rules</span>
+<span class="c1">## Enable specific rules</span>
 <span class="nt">enable_list</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">args</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">empty-string-compare</span>
@@ -5490,7 +5490,7 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--hook-stage<span c
 <span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;-f&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;docker-compose.yml&#39;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <p><strong>.hadolint.yaml</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># .hadolint.yaml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .hadolint.yaml</span>
 <span class="nt">ignored</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DL3008</span><span class="w">  </span><span class="c1"># Pin versions in apt-get install</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DL3009</span><span class="w">  </span><span class="c1"># Delete apt-get lists after installing</span>
@@ -5522,13 +5522,13 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--hook-stage<span c
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;package-lock\.json$&#39;</span>
 </code></pre></div>
 <p><strong>Initialize baseline</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Generate initial baseline</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Generate initial baseline</span>
 detect-secrets<span class="w"> </span>scan<span class="w"> </span>&gt;<span class="w"> </span>.secrets.baseline
 
-<span class="c1"># Audit findings</span>
+<span class="c1">## Audit findings</span>
 detect-secrets<span class="w"> </span>audit<span class="w"> </span>.secrets.baseline
 
-<span class="c1"># Update baseline after adding legitimate secrets</span>
+<span class="c1">## Update baseline after adding legitimate secrets</span>
 detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<span class="w"> </span>.secrets.baseline
 </code></pre></div>
 <p><strong>.secrets.baseline</strong> example:</p>
@@ -5565,7 +5565,7 @@ detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<spa
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;--json&#39;</span>
 </code></pre></div>
 <p><strong>.trufflehog-exclude.txt</strong>:</p>
-<div class="highlight"><pre><span></span><code># Exclude common false positives
+<div class="highlight"><pre><span></span><code>## Exclude common false positives
 **/*.lock
 **/*.min.js
 **/*.svg
@@ -5644,7 +5644,6 @@ detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<spa
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-
 <span class="k">def</span><span class="w"> </span><span class="nf">check_imports</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check import order and style.&quot;&quot;&quot;</span>
     <span class="n">content</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
@@ -5670,7 +5669,6 @@ detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<spa
 
     <span class="k">return</span> <span class="kc">True</span>
 
-
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
     <span class="n">all_passed</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">check_imports</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">)</span>
@@ -5678,7 +5676,7 @@ detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<spa
 </code></pre></div>
 <p><strong>scripts/check_license.sh</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
-<span class="c1"># Check that all source files have license headers</span>
+<span class="c1">## Check that all source files have license headers</span>
 
 <span class="nv">EXIT_CODE</span><span class="o">=</span><span class="m">0</span>
 
@@ -5698,9 +5696,8 @@ detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<spa
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="c1"># Required format: TODO(username): Description [TICKET-123]</span>
+<span class="c1">## Required format: TODO(username): Description [TICKET-123]</span>
 <span class="n">TODO_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;TODO\([a-z]+\):\s+.+\s+\[[A-Z]+-\d+\]&#39;</span><span class="p">)</span>
-
 
 <span class="k">def</span><span class="w"> </span><span class="nf">check_todos</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check TODO comments follow project convention.&quot;&quot;&quot;</span>
@@ -5722,7 +5719,6 @@ detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<spa
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">return</span> <span class="kc">True</span>
-
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
@@ -5834,10 +5830,10 @@ detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<spa
 </code></pre></div>
 <h3 id="skip-slow-hooks-locally">Skip Slow Hooks Locally<a class="headerlink" href="#skip-slow-hooks-locally" title="Permanent link">&para;</a></h3>
 <p>Use environment variables to skip expensive checks during development:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Skip expensive hooks locally</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Skip expensive hooks locally</span>
 <span class="nv">SKIP</span><span class="o">=</span>mypy,bandit,terraform_trivy<span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;WIP: feature development&quot;</span>
 
-<span class="c1"># Skip all hooks (emergency only)</span>
+<span class="c1">## Skip all hooks (emergency only)</span>
 git<span class="w"> </span>commit<span class="w"> </span>--no-verify<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;hotfix: critical bug&quot;</span>
 </code></pre></div>
 <h3 id="staged-hooks">Staged Hooks<a class="headerlink" href="#staged-hooks" title="Permanent link">&para;</a></h3>
@@ -5894,10 +5890,10 @@ git<span class="w"> </span>commit<span class="w"> </span>--no-verify<span class=
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
 <p><strong>Hook fails with "command not found"</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Solution 1: Install the tool globally</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Solution 1: Install the tool globally</span>
 pip<span class="w"> </span>install<span class="w"> </span>black<span class="w"> </span>flake8<span class="w"> </span>mypy
 
-<span class="c1"># Solution 2: Use language_version to specify Python</span>
+<span class="c1">## Solution 2: Use language_version to specify Python</span>
 repos:
 <span class="w">  </span>-<span class="w"> </span>repo:<span class="w"> </span>https://github.com/psf/black
 <span class="w">    </span>rev:<span class="w"> </span><span class="m">23</span>.12.1
@@ -5906,31 +5902,31 @@ repos:
 <span class="w">        </span>language_version:<span class="w"> </span>python3.11
 </code></pre></div>
 <p><strong>Hook modifies files, causing re-run</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># This is expected behavior - hooks auto-fix and re-stage</span>
-<span class="c1"># Just run git commit again after hooks modify files</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## This is expected behavior - hooks auto-fix and re-stage</span>
+<span class="c1">## Just run git commit again after hooks modify files</span>
 
-<span class="c1"># If you want to see what changed:</span>
+<span class="c1">## If you want to see what changed:</span>
 <span class="l l-Scalar l-Scalar-Plain">git diff</span>
 </code></pre></div>
 <p><strong>Hooks take too long</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run only on changed files (default)</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Run only on changed files (default)</span>
 pre-commit<span class="w"> </span>run
 
-<span class="c1"># Skip specific hooks</span>
+<span class="c1">## Skip specific hooks</span>
 <span class="nv">SKIP</span><span class="o">=</span>mypy,bandit<span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;message&quot;</span>
 
-<span class="c1"># Move expensive hooks to pre-push</span>
-<span class="c1"># See &quot;Staged Hooks&quot; section above</span>
+<span class="c1">## Move expensive hooks to pre-push</span>
+<span class="c1">## See &quot;Staged Hooks&quot; section above</span>
 </code></pre></div>
 <p><strong>Hook cache issues</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Clean pre-commit cache</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Clean pre-commit cache</span>
 pre-commit<span class="w"> </span>clean
 
-<span class="c1"># Reinstall all hooks</span>
+<span class="c1">## Reinstall all hooks</span>
 pre-commit<span class="w"> </span>uninstall
 pre-commit<span class="w"> </span>install
 
-<span class="c1"># Clear specific hook cache</span>
+<span class="c1">## Clear specific hook cache</span>
 rm<span class="w"> </span>-rf<span class="w"> </span>~/.cache/pre-commit/repo*
 </code></pre></div>
 <p><strong>Python version mismatch</strong>:</p>
@@ -5942,23 +5938,23 @@ rm<span class="w"> </span>-rf<span class="w"> </span>~/.cache/pre-commit/repo*
 <span class="w">        </span><span class="nt">language_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python3.11</span><span class="w">  </span><span class="c1"># Force specific version</span>
 </code></pre></div>
 <h3 id="debug-mode">Debug Mode<a class="headerlink" href="#debug-mode" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run with verbose output</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Run with verbose output</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>--verbose<span class="w"> </span>--all-files
 
-<span class="c1"># Debug specific hook</span>
+<span class="c1">## Debug specific hook</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>black<span class="w"> </span>--verbose
 
-<span class="c1"># Show hook execution environment</span>
+<span class="c1">## Show hook execution environment</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>--hook-stage<span class="w"> </span>manual<span class="w"> </span>--all-files<span class="w"> </span>-v
 </code></pre></div>
 <h3 id="updating-hooks">Updating Hooks<a class="headerlink" href="#updating-hooks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Update all hooks to latest versions</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Update all hooks to latest versions</span>
 pre-commit<span class="w"> </span>autoupdate
 
-<span class="c1"># Update specific hooks</span>
+<span class="c1">## Update specific hooks</span>
 pre-commit<span class="w"> </span>autoupdate<span class="w"> </span>--repo<span class="w"> </span>https://github.com/psf/black
 
-<span class="c1"># Freeze at current versions (for reproducibility)</span>
+<span class="c1">## Freeze at current versions (for reproducibility)</span>
 pre-commit<span class="w"> </span>autoupdate<span class="w"> </span>--freeze
 </code></pre></div>
 <hr />

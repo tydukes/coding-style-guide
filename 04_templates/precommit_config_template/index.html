@@ -4457,16 +4457,16 @@ all languages covered in this style guide. Pre-commit hooks run before each comm
 code quality standards.</p>
 <hr />
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Install pre-commit</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Install pre-commit</span>
 pip<span class="w"> </span>install<span class="w"> </span>pre-commit
 
-<span class="c1"># Install the git hook scripts</span>
+<span class="c1">## Install the git hook scripts</span>
 pre-commit<span class="w"> </span>install
 
-<span class="c1"># (Optional) Run against all files</span>
+<span class="c1">## (Optional) Run against all files</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 
-<span class="c1"># (Optional) Update hooks to latest versions</span>
+<span class="c1">## (Optional) Update hooks to latest versions</span>
 pre-commit<span class="w"> </span>autoupdate
 </code></pre></div>
 <hr />
@@ -5029,23 +5029,23 @@ pre-commit<span class="w"> </span>autoupdate
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="running-pre-commit-hooks">Running Pre-commit Hooks<a class="headerlink" href="#running-pre-commit-hooks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run hooks against all files</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Run hooks against all files</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 
-<span class="c1"># Run specific hook</span>
+<span class="c1">## Run specific hook</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>black<span class="w"> </span>--all-files
 
-<span class="c1"># Run hooks against staged files only</span>
+<span class="c1">## Run hooks against staged files only</span>
 pre-commit<span class="w"> </span>run
 
-<span class="c1"># Skip hooks for a specific commit (use sparingly)</span>
+<span class="c1">## Skip hooks for a specific commit (use sparingly)</span>
 git<span class="w"> </span>commit<span class="w"> </span>--no-verify<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;message&quot;</span>
 
-<span class="c1"># Update all hooks to latest versions</span>
+<span class="c1">## Update all hooks to latest versions</span>
 pre-commit<span class="w"> </span>autoupdate
 </code></pre></div>
 <h3 id="performance-optimization">Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Use local hooks for faster execution</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Use local hooks for faster execution</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local</span>
 <span class="w">  </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest-check</span>
@@ -5055,17 +5055,17 @@ pre-commit<span class="w"> </span>autoupdate
 <span class="w">      </span><span class="nt">pass_filenames</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">      </span><span class="nt">always_run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="c1"># Limit files checked</span>
+<span class="c1">## Limit files checked</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mypy</span>
 <span class="w">  </span><span class="nt">files</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">^src/</span>
 <span class="w">  </span><span class="nt">exclude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">^tests/</span>
 
-<span class="c1"># Use stages for specific git operations</span>
+<span class="c1">## Use stages for specific git operations</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
 <span class="w">  </span><span class="nt">stages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <h3 id="cicd-integration">CI/CD Integration<a class="headerlink" href="#cicd-integration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># GitHub Actions example</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## GitHub Actions example</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pre-commit</span>
 
 <span class="nt">on</span><span class="p">:</span>

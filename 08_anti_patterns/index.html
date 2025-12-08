@@ -5098,17 +5098,17 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">    </span><span class="nt">db_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use variables and group_vars</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># group_vars/production.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## group_vars/production.yml</span>
 <span class="nt">db_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;prod-db.example.com&quot;</span>
 <span class="nt">db_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
 <span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;production&quot;</span>
 
-<span class="c1"># group_vars/development.yml</span>
+<span class="c1">## group_vars/development.yml</span>
 <span class="nt">db_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;dev-db.example.com&quot;</span>
 <span class="nt">db_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
 <span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;development&quot;</span>
 
-<span class="c1"># playbook.yml</span>
+<span class="c1">## playbook.yml</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure application</span>
 <span class="w">  </span><span class="nt">ansible.builtin.template</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app.conf.j2</span>
@@ -5207,7 +5207,7 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
-<span class="c1"># or</span>
+<span class="c1">## or</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">Path</span><span class="p">,</span>
     <span class="n">PurePath</span><span class="p">,</span>
@@ -5224,10 +5224,10 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <p><strong>Good</strong>: Use context managers for automatic cleanup</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="c1"># Modern approach</span>
+<span class="c1">## Modern approach</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;file.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
 
-<span class="c1"># Or with context manager</span>
+<span class="c1">## Or with context manager</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 </code></pre></div>
@@ -5399,7 +5399,7 @@ rm<span class="w"> </span>-rf<span class="w"> </span>./*
 </code></pre></div>
 <p><strong>Good</strong>: Use input redirection</p>
 <div class="highlight"><pre><span></span><code>grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span>file.txt
-<span class="c1"># or</span>
+<span class="c1">## or</span>
 grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span>&lt;<span class="w"> </span>file.txt
 </code></pre></div>
 <p><strong>Why</strong>: Eliminates unnecessary process and improves performance</p>
@@ -5478,7 +5478,7 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/server.js&quot;</span><span class="p">]</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use multi-stage builds for smaller images</p>
-<div class="highlight"><pre><span></span><code><span class="c"># Build stage</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Build stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
@@ -5489,7 +5489,7 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
 
-<span class="c"># Production stage</span>
+<span class="c">## Production stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 
 <span class="k">RUN</span><span class="w"> </span>addgroup<span class="w"> </span>-g<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-S<span class="w"> </span>appuser<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>

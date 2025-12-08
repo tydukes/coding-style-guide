@@ -4093,7 +4093,7 @@
 <h2 id="extract-reusable-module">Extract Reusable Module<a class="headerlink" href="#extract-reusable-module" title="Permanent link">&para;</a></h2>
 <h3 id="problem-repeated-resource-definitions-across-environments">Problem: Repeated resource definitions across environments<a class="headerlink" href="#problem-repeated-resource-definitions-across-environments" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong> (separate files for each environment, lots of duplication):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># environments/dev/main.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## environments/dev/main.tf</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
 <span class="w">  </span><span class="na">enable_dns_hostnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
@@ -4142,11 +4142,11 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># ... 100+ more lines of route tables, NAT gateways, etc.</span>
-<span class="c1"># Same code repeated in staging/main.tf and production/main.tf</span>
+<span class="c1">## ... 100+ more lines of route tables, NAT gateways, etc.</span>
+<span class="c1">## Same code repeated in staging/main.tf and production/main.tf</span>
 </code></pre></div>
 <p><strong>After</strong> (reusable module):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># modules/vpc/main.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/vpc/main.tf</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
 <span class="w">    </span><span class="nv">var.tags</span><span class="p">,</span>
@@ -4203,7 +4203,7 @@
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="c1"># modules/vpc/variables.tf</span>
+<span class="c1">## modules/vpc/variables.tf</span>
 <span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;name&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Name prefix for VPC resources&quot;</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
@@ -4253,7 +4253,7 @@
 <span class="w">  </span><span class="nb">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
 <span class="p">}</span>
 
-<span class="c1"># environments/dev/main.tf (now much simpler)</span>
+<span class="c1">## environments/dev/main.tf (now much simpler)</span>
 <span class="kr">module</span><span class="w"> </span><span class="nv">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../../modules/vpc&quot;</span>
 
@@ -4310,15 +4310,15 @@
 <span class="w">  </span><span class="na">user</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_user.users[count.index].name</span>
 <span class="p">}</span>
 
-<span class="c1"># Problem: If you remove &quot;bob&quot; from the list:</span>
-<span class="c1"># variable &quot;users&quot; {</span>
-<span class="c1">#   default = [&quot;alice&quot;, &quot;charlie&quot;]  # bob removed</span>
-<span class="c1"># }</span>
-<span class="c1"># Terraform will:</span>
-<span class="c1"># 1. Destroy users[1] (bob) - GOOD</span>
-<span class="c1"># 2. Destroy users[2] (charlie) - BAD!</span>
-<span class="c1"># 3. Recreate users[1] (charlie) - BAD!</span>
-<span class="c1"># Charlie&#39;s access keys get destroyed and recreated!</span>
+<span class="c1">## Problem: If you remove &quot;bob&quot; from the list:</span>
+<span class="c1">## variable &quot;users&quot; {</span>
+<span class="c1">##   default = [&quot;alice&quot;, &quot;charlie&quot;]  # bob removed</span>
+<span class="c1">## }</span>
+<span class="c1">## Terraform will:</span>
+<span class="c1">## 1. Destroy users[1] (bob) - GOOD</span>
+<span class="c1">## 2. Destroy users[2] (charlie) - BAD!</span>
+<span class="c1">## 3. Recreate users[1] (charlie) - BAD!</span>
+<span class="c1">## Charlie&#39;s access keys get destroyed and recreated!</span>
 </code></pre></div>
 <p><strong>After</strong> (using for_each):</p>
 <div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
@@ -4343,13 +4343,13 @@
 <span class="w">  </span><span class="na">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_user.users[each.key].name</span>
 <span class="p">}</span>
 
-<span class="c1"># Now if you remove &quot;bob&quot; from the set:</span>
-<span class="c1"># variable &quot;users&quot; {</span>
-<span class="c1">#   default = [&quot;alice&quot;, &quot;charlie&quot;]  # bob removed</span>
-<span class="c1"># }</span>
-<span class="c1"># Terraform will:</span>
-<span class="c1"># 1. Destroy users[&quot;bob&quot;] - GOOD</span>
-<span class="c1"># Charlie is untouched because he&#39;s keyed by name, not index!</span>
+<span class="c1">## Now if you remove &quot;bob&quot; from the set:</span>
+<span class="c1">## variable &quot;users&quot; {</span>
+<span class="c1">##   default = [&quot;alice&quot;, &quot;charlie&quot;]  # bob removed</span>
+<span class="c1">## }</span>
+<span class="c1">## Terraform will:</span>
+<span class="c1">## 1. Destroy users[&quot;bob&quot;] - GOOD</span>
+<span class="c1">## Charlie is untouched because he&#39;s keyed by name, not index!</span>
 </code></pre></div>
 <p><strong>Even Better</strong> (using map for additional attributes):</p>
 <div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
@@ -4578,7 +4578,7 @@
 <span class="w">  </span><span class="p">})</span>
 <span class="p">}</span>
 
-<span class="c1"># Usage (very verbose and error-prone)</span>
+<span class="c1">## Usage (very verbose and error-prone)</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">var.config.infra.compute.count</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.config.infra.compute.instance_type</span>
@@ -4599,7 +4599,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>After</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Flatten and simplify variable structure</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Flatten and simplify variable structure</span>
 <span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;app_name&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Application name&quot;</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
@@ -4643,7 +4643,7 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># Usage (much simpler and clearer)</span>
+<span class="c1">## Usage (much simpler and clearer)</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instance_count</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instance_type</span>
@@ -4659,7 +4659,7 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># terraform.tfvars (easier to read and write)</span>
+<span class="c1">## terraform.tfvars (easier to read and write)</span>
 <span class="na">app_name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-application&quot;</span>
 <span class="na">app_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.2.3&quot;</span>
 
@@ -4722,15 +4722,15 @@
 <span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
 <span class="p">}</span>
 
-<span class="c1"># References are unclear:</span>
-<span class="c1"># - What is &quot;main&quot; vs &quot;vpc2&quot;?</span>
-<span class="c1"># - What&#39;s the difference between &quot;subnet1&quot; and &quot;pub_sub&quot;?</span>
-<span class="c1"># - What does &quot;server&quot; do vs &quot;web_server&quot;?</span>
+<span class="c1">## References are unclear:</span>
+<span class="c1">## - What is &quot;main&quot; vs &quot;vpc2&quot;?</span>
+<span class="c1">## - What&#39;s the difference between &quot;subnet1&quot; and &quot;pub_sub&quot;?</span>
+<span class="c1">## - What does &quot;server&quot; do vs &quot;web_server&quot;?</span>
 </code></pre></div>
 <p><strong>After</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Use descriptive, consistent naming patterns</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Use descriptive, consistent naming patterns</span>
 
-<span class="c1"># VPCs: describe purpose</span>
+<span class="c1">## VPCs: describe purpose</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;application&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
 
@@ -4747,7 +4747,7 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># Subnets: include type and purpose</span>
+<span class="c1">## Subnets: include type and purpose</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;application_private&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">toset</span><span class="p">([</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;, &quot;us-east-1c&quot;</span><span class="p">])</span>
 
@@ -4783,7 +4783,7 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># Instances: describe role and tier</span>
+<span class="c1">## Instances: describe role and tier</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;api_backend&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
 
@@ -4820,7 +4820,7 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># Security groups: describe what they protect</span>
+<span class="c1">## Security groups: describe what they protect</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;api_backend&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">name_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;api-backend-&quot;</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Security group for API backend instances&quot;</span>
@@ -4841,11 +4841,11 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># Now references are clear:</span>
-<span class="c1"># - aws_vpc.application vs aws_vpc.management (purpose-based)</span>
-<span class="c1"># - aws_subnet.application_private vs application_public (type-based)</span>
-<span class="c1"># - aws_instance.api_backend vs web_frontend (role-based)</span>
-<span class="c1"># - aws_security_group.api_backend (matches protected resource)</span>
+<span class="c1">## Now references are clear:</span>
+<span class="c1">## - aws_vpc.application vs aws_vpc.management (purpose-based)</span>
+<span class="c1">## - aws_subnet.application_private vs application_public (type-based)</span>
+<span class="c1">## - aws_instance.api_backend vs web_frontend (role-based)</span>
+<span class="c1">## - aws_security_group.api_backend (matches protected resource)</span>
 </code></pre></div>
 <p><strong>Naming Conventions Applied</strong>:</p>
 <ol>

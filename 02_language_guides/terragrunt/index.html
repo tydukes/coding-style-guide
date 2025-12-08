@@ -4931,13 +4931,13 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <hr />
 <h2 id="root-terragrunthcl">Root terragrunt.hcl<a class="headerlink" href="#root-terragrunthcl" title="Permanent link">&para;</a></h2>
 <h3 id="centralized-configuration">Centralized Configuration<a class="headerlink" href="#centralized-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># @module root_terragrunt</span>
-<span class="c1"># @description Root Terragrunt configuration for remote state and provider settings</span>
-<span class="c1"># @version 1.0.0</span>
-<span class="c1"># @author Tyler Dukes</span>
-<span class="c1"># @last_updated 2025-10-28</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## @module root_terragrunt</span>
+<span class="c1">## @description Root Terragrunt configuration for remote state and provider settings</span>
+<span class="c1">## @version 1.0.0</span>
+<span class="c1">## @author Tyler Dukes</span>
+<span class="c1">## @last_updated 2025-10-28</span>
 
-<span class="c1"># Generate backend configuration for all child modules</span>
+<span class="c1">## Generate backend configuration for all child modules</span>
 <span class="nb">remote_state</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span>
 
@@ -4965,7 +4965,7 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># Generate provider configuration</span>
+<span class="c1">## Generate provider configuration</span>
 <span class="err">generate</span><span class="w"> </span><span class="s2">&quot;provider&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;provider.tf&quot;</span>
 <span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite_terragrunt&quot;</span>
@@ -4985,7 +4985,7 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="dl">  EOF</span>
 <span class="p">}</span>
 
-<span class="c1"># Local variables available to all child configurations</span>
+<span class="c1">## Local variables available to all child configurations</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="c1">  # Parse environment and region from path</span>
 <span class="c1">  # Expected path: live/&lt;environment&gt;/&lt;region&gt;/&lt;stack&gt;/terragrunt.hcl</span>
@@ -5011,7 +5011,7 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># Terraform version constraints</span>
+<span class="c1">## Terraform version constraints</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="err">extra_arguments</span><span class="w"> </span><span class="s2">&quot;common_vars&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_terraform_commands_that_need_vars</span><span class="p">()</span>
@@ -5025,18 +5025,18 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <hr />
 <h2 id="child-terragrunthcl-files">Child terragrunt.hcl Files<a class="headerlink" href="#child-terragrunthcl-files" title="Permanent link">&para;</a></h2>
 <h3 id="basic-child-configuration">Basic Child Configuration<a class="headerlink" href="#basic-child-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># @module vpc_live</span>
-<span class="c1"># @description VPC configuration for production us-east-1</span>
-<span class="c1"># @version 1.0.0</span>
-<span class="c1"># @author Tyler Dukes</span>
-<span class="c1"># @last_updated 2025-10-28</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## @module vpc_live</span>
+<span class="c1">## @description VPC configuration for production us-east-1</span>
+<span class="c1">## @version 1.0.0</span>
+<span class="c1">## @author Tyler Dukes</span>
+<span class="c1">## @last_updated 2025-10-28</span>
 
-<span class="c1"># Include root configuration</span>
+<span class="c1">## Include root configuration</span>
 <span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
 <span class="p">}</span>
 
-<span class="c1"># Reference Terraform module</span>
+<span class="c1">## Reference Terraform module</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_repo_root()}/modules//vpc&quot;</span>
 
@@ -5044,7 +5044,7 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="c1">  # source = &quot;git::ssh://git@github.com/myorg/terraform-modules.git//vpc?ref=v1.2.0&quot;</span>
 <span class="p">}</span>
 
-<span class="c1"># Module inputs</span>
+<span class="c1">## Module inputs</span>
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">vpc_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-vpc-us-east-1&quot;</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
@@ -5061,11 +5061,11 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="configuration-with-dependencies">Configuration with Dependencies<a class="headerlink" href="#configuration-with-dependencies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># @module eks_live</span>
-<span class="c1"># @description EKS cluster depending on VPC</span>
-<span class="c1"># @version 1.0.0</span>
-<span class="c1"># @author Tyler Dukes</span>
-<span class="c1"># @last_updated 2025-10-28</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## @module eks_live</span>
+<span class="c1">## @description EKS cluster depending on VPC</span>
+<span class="c1">## @version 1.0.0</span>
+<span class="c1">## @author Tyler Dukes</span>
+<span class="c1">## @last_updated 2025-10-28</span>
 
 <span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
@@ -5075,7 +5075,7 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_repo_root()}/modules//eks&quot;</span>
 <span class="p">}</span>
 
-<span class="c1"># Dependency on VPC module</span>
+<span class="c1">## Dependency on VPC module</span>
 <span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
 
@@ -5107,11 +5107,11 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="configuration-with-multiple-dependencies">Configuration with Multiple Dependencies<a class="headerlink" href="#configuration-with-multiple-dependencies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># @module rds_live</span>
-<span class="c1"># @description RDS database depending on VPC and security groups</span>
-<span class="c1"># @version 1.0.0</span>
-<span class="c1"># @author Tyler Dukes</span>
-<span class="c1"># @last_updated 2025-10-28</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## @module rds_live</span>
+<span class="c1">## @description RDS database depending on VPC and security groups</span>
+<span class="c1">## @version 1.0.0</span>
+<span class="c1">## @author Tyler Dukes</span>
+<span class="c1">## @last_updated 2025-10-28</span>
 
 <span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
@@ -5160,7 +5160,7 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <hr />
 <h2 id="generate-blocks">Generate Blocks<a class="headerlink" href="#generate-blocks" title="Permanent link">&para;</a></h2>
 <h3 id="generating-files">Generating Files<a class="headerlink" href="#generating-files" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Generate versions.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Generate versions.tf</span>
 <span class="err">generate</span><span class="w"> </span><span class="s2">&quot;versions&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;versions.tf&quot;</span>
 <span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite&quot;</span>
@@ -5179,7 +5179,7 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="dl">  EOF</span>
 <span class="p">}</span>
 
-<span class="c1"># Generate data sources</span>
+<span class="c1">## Generate data sources</span>
 <span class="err">generate</span><span class="w"> </span><span class="s2">&quot;common_data&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;data.tf&quot;</span>
 <span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite&quot;</span>
@@ -5219,40 +5219,40 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <hr />
 <h2 id="running-terragrunt">Running Terragrunt<a class="headerlink" href="#running-terragrunt" title="Permanent link">&para;</a></h2>
 <h3 id="common-commands">Common Commands<a class="headerlink" href="#common-commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Initialize and apply single module</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Initialize and apply single module</span>
 <span class="nb">cd</span><span class="w"> </span>live/prod/us-east-1/vpc
 terragrunt<span class="w"> </span>init
 terragrunt<span class="w"> </span>plan
 terragrunt<span class="w"> </span>apply
 
-<span class="c1"># Run plan for all modules in current directory and subdirectories</span>
+<span class="c1">## Run plan for all modules in current directory and subdirectories</span>
 terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan
 
-<span class="c1"># Apply all modules in dependency order</span>
+<span class="c1">## Apply all modules in dependency order</span>
 terragrunt<span class="w"> </span>run-all<span class="w"> </span>apply
 
-<span class="c1"># Destroy specific module</span>
+<span class="c1">## Destroy specific module</span>
 terragrunt<span class="w"> </span>destroy
 
-<span class="c1"># Destroy all modules in reverse dependency order</span>
+<span class="c1">## Destroy all modules in reverse dependency order</span>
 terragrunt<span class="w"> </span>run-all<span class="w"> </span>destroy
 
-<span class="c1"># Validate all configurations</span>
+<span class="c1">## Validate all configurations</span>
 terragrunt<span class="w"> </span>run-all<span class="w"> </span>validate
 
-<span class="c1"># Format all HCL files</span>
+<span class="c1">## Format all HCL files</span>
 terragrunt<span class="w"> </span>hclfmt
 
-<span class="c1"># Show outputs</span>
+<span class="c1">## Show outputs</span>
 terragrunt<span class="w"> </span>output
 
-<span class="c1"># Show dependency graph</span>
+<span class="c1">## Show dependency graph</span>
 terragrunt<span class="w"> </span>graph-dependencies
 </code></pre></div>
 <hr />
 <h2 id="dependency-management">Dependency Management<a class="headerlink" href="#dependency-management" title="Permanent link">&para;</a></h2>
 <h3 id="explicit-dependencies">Explicit Dependencies<a class="headerlink" href="#explicit-dependencies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Define dependencies to ensure correct apply order</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Define dependencies to ensure correct apply order</span>
 <span class="nb">dependencies</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="s2">&quot;../vpc&quot;</span><span class="p">,</span>
@@ -5261,7 +5261,7 @@ terragrunt<span class="w"> </span>graph-dependencies
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="skip-dependencies">Skip Dependencies<a class="headerlink" href="#skip-dependencies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Skip dependency for faster iteration during development</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Skip dependency for faster iteration during development</span>
 <span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
 
@@ -5275,7 +5275,7 @@ terragrunt<span class="w"> </span>graph-dependencies
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="use-mock-outputs">Use Mock Outputs<a class="headerlink" href="#use-mock-outputs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Always provide mock outputs for faster plan/validate</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Always provide mock outputs for faster plan/validate</span>
 <span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
 
@@ -5290,12 +5290,12 @@ terragrunt<span class="w"> </span>graph-dependencies
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="use-get_repo_root">Use get_repo_root()<a class="headerlink" href="#use-get_repo_root" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good - Portable across different directory depths</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Portable across different directory depths</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_repo_root()}/modules//vpc&quot;</span>
 <span class="p">}</span>
 
-<span class="c1"># Avoid - Brittle with multiple ../</span>
+<span class="c1">## Avoid - Brittle with multiple ../</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../../../modules//vpc&quot;</span>
 <span class="p">}</span>
@@ -5326,13 +5326,13 @@ terragrunt<span class="w"> </span>graph-dependencies
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-hardcoded-values-everywhere">❌ Avoid: Hardcoded Values Everywhere<a class="headerlink" href="#avoid-hardcoded-values-everywhere" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Hardcoded values in each child</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Hardcoded values in each child</span>
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span>
 <span class="w">  </span><span class="na">region</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
 <span class="p">}</span>
 
-<span class="c1"># Good - Parse from path in root terragrunt.hcl</span>
+<span class="c1">## Good - Parse from path in root terragrunt.hcl</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path_parts</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="err">path_relative_to_include</span><span class="p">())</span>
 <span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.path_parts[0</span><span class="p">]</span>
@@ -5340,12 +5340,12 @@ terragrunt<span class="w"> </span>graph-dependencies
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-not-using-dependencies">❌ Avoid: Not Using Dependencies<a class="headerlink" href="#avoid-not-using-dependencies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Manually passing outputs</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Manually passing outputs</span>
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-1234567890abcdef&quot;</span><span class="c1">  # Hardcoded!</span>
 <span class="p">}</span>
 
-<span class="c1"># Good - Use dependency block</span>
+<span class="c1">## Good - Use dependency block</span>
 <span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
 <span class="p">}</span>
@@ -5355,23 +5355,23 @@ terragrunt<span class="w"> </span>graph-dependencies
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-inconsistent-directory-structure">❌ Avoid: Inconsistent Directory Structure<a class="headerlink" href="#avoid-inconsistent-directory-structure" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Inconsistent paths</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Inconsistent paths</span>
 <span class="err">live/</span>
 <span class="err">├──</span><span class="w"> </span><span class="err">prod-vpc/</span>
 <span class="err">├──</span><span class="w"> </span><span class="err">staging/vpc/</span>
 <span class="err">└──</span><span class="w"> </span><span class="err">dev_us_east_</span><span class="m">1</span><span class="err">/vpc/</span>
 
-<span class="c1"># Good - Consistent structure</span>
+<span class="c1">## Good - Consistent structure</span>
 <span class="err">live/</span>
 <span class="err">├──</span><span class="w"> </span><span class="err">prod/us-east-</span><span class="m">1</span><span class="err">/vpc/</span>
 <span class="err">├──</span><span class="w"> </span><span class="err">staging/us-east-</span><span class="m">1</span><span class="err">/vpc/</span>
 <span class="err">└──</span><span class="w"> </span><span class="err">dev/us-east-</span><span class="m">1</span><span class="err">/vpc/</span>
 </code></pre></div>
 <h3 id="avoid-not-using-generate-blocks">❌ Avoid: Not Using generate Blocks<a class="headerlink" href="#avoid-not-using-generate-blocks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Provider configuration duplicated in every module</span>
-<span class="c1"># Repeated in every terragrunt.hcl</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Provider configuration duplicated in every module</span>
+<span class="c1">## Repeated in every terragrunt.hcl</span>
 
-<span class="c1"># Good - Generate provider in root</span>
+<span class="c1">## Good - Generate provider in root</span>
 <span class="err">generate</span><span class="w"> </span><span class="s2">&quot;provider&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;provider.tf&quot;</span>
 <span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite_terragrunt&quot;</span>
@@ -5386,9 +5386,9 @@ terragrunt<span class="w"> </span>graph-dependencies
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-not-using-remote_state">❌ Avoid: Not Using remote_state<a class="headerlink" href="#avoid-not-using-remote_state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Each module configures backend separately</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Each module configures backend separately</span>
 
-<span class="c1"># Good - Configure remote state in root</span>
+<span class="c1">## Good - Configure remote state in root</span>
 <span class="nb">remote_state</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span>
 <span class="w">  </span><span class="nb">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -5401,29 +5401,29 @@ terragrunt<span class="w"> </span>graph-dependencies
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-not-using-run_cmd-for-dynamic-values">❌ Avoid: Not Using run_cmd for Dynamic Values<a class="headerlink" href="#avoid-not-using-run_cmd-for-dynamic-values" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Static values that should be dynamic</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Static values that should be dynamic</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;123456789012&quot;</span><span class="c1">  # ❌ Hardcoded</span>
 <span class="p">}</span>
 
-<span class="c1"># Good - Get dynamically</span>
+<span class="c1">## Good - Get dynamically</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">run_cmd</span><span class="p">(</span><span class="s2">&quot;aws&quot;, &quot;sts&quot;, &quot;get-caller-identity&quot;, &quot;--query&quot;, &quot;Account&quot;, &quot;--output&quot;, &quot;text&quot;</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-deep-module-paths-without-include">❌ Avoid: Deep Module Paths Without include<a class="headerlink" href="#avoid-deep-module-paths-without-include" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Duplicating terraform source in each child</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Duplicating terraform source in each child</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;git::https://github.com/org/modules.git//vpc?ref=v1.0.0&quot;</span>
 <span class="p">}</span>
 
-<span class="c1"># Good - Define in root, reference in children</span>
-<span class="c1"># Root terragrunt.hcl</span>
+<span class="c1">## Good - Define in root, reference in children</span>
+<span class="c1">## Root terragrunt.hcl</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_parent_terragrunt_dir()}/modules//vpc&quot;</span>
 <span class="p">}</span>
 
-<span class="c1"># Child just includes</span>
+<span class="c1">## Child just includes</span>
 <span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
 <span class="p">}</span>
@@ -5432,11 +5432,11 @@ terragrunt<span class="w"> </span>graph-dependencies
 <h2 id="tool-configurations">Tool Configurations<a class="headerlink" href="#tool-configurations" title="Permanent link">&para;</a></h2>
 <h3 id="terragrunt-cache">.terragrunt-cache<a class="headerlink" href="#terragrunt-cache" title="Permanent link">&para;</a></h3>
 <p>Add to <code>.gitignore</code>:</p>
-<div class="highlight"><pre><span></span><code># Terragrunt cache
+<div class="highlight"><pre><span></span><code>## Terragrunt cache
 .terragrunt-cache/
 **/.terragrunt-cache/
 
-# Terraform files
+## Terraform files
 *.tfstate
 *.tfstate.backup
 .terraform/

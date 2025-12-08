@@ -5534,7 +5534,7 @@ Language).</p>
 <h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <h3 id="resource-names">Resource Names<a class="headerlink" href="#resource-names" title="Permanent link">&para;</a></h3>
 <p>Use <strong>snake_case</strong> for all Terraform resource identifiers:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web_server&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.ami_id</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instance_type</span>
@@ -5544,7 +5544,7 @@ Language).</p>
 <span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;app-${var.environment}-sg&quot;</span>
 <span class="p">}</span>
 
-<span class="c1"># Bad</span>
+<span class="c1">## Bad</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;WebServer&quot;</span><span class="w"> </span><span class="p">{</span><span class="c1">      # PascalCase - avoid</span>
 <span class="w">  </span><span class="na">ami</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.ami_id</span>
 <span class="p">}</span>
@@ -5555,7 +5555,7 @@ Language).</p>
 </code></pre></div>
 <h3 id="variable-names">Variable Names<a class="headerlink" href="#variable-names" title="Permanent link">&para;</a></h3>
 <p>Use <strong>snake_case</strong> with descriptive names:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good</span>
 <span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;vpc_cidr_block&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CIDR block for VPC&quot;</span>
@@ -5567,7 +5567,7 @@ Language).</p>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
 <span class="p">}</span>
 
-<span class="c1"># Bad</span>
+<span class="c1">## Bad</span>
 <span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;vpcCIDR&quot;</span><span class="w"> </span><span class="p">{</span><span class="c1">           # camelCase - avoid</span>
 <span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
@@ -5578,7 +5578,7 @@ Language).</p>
 </code></pre></div>
 <h3 id="output-names">Output Names<a class="headerlink" href="#output-names" title="Permanent link">&para;</a></h3>
 <p>Use <strong>snake_case</strong> for outputs, prefixed by resource type when exporting IDs:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good</span>
 <span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_id&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ID of the created VPC&quot;</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
@@ -5589,7 +5589,7 @@ Language).</p>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_instance.web</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">public_ip</span>
 <span class="p">}</span>
 
-<span class="c1"># Bad</span>
+<span class="c1">## Bad</span>
 <span class="kr">output</span><span class="w"> </span><span class="nv">&quot;VpcId&quot;</span><span class="w"> </span><span class="p">{</span><span class="c1">               # PascalCase - avoid</span>
 <span class="w">  </span><span class="na">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
 <span class="p">}</span>
@@ -5612,7 +5612,7 @@ Language).</p>
 </code></pre></div>
 <h3 id="file-names">File Names<a class="headerlink" href="#file-names" title="Permanent link">&para;</a></h3>
 <p>Standard Terraform file naming conventions:</p>
-<div class="highlight"><pre><span></span><code># Root module structure
+<div class="highlight"><pre><span></span><code>## Root module structure
 main.tf                 # Primary resource definitions
 variables.tf            # Input variable declarations
 outputs.tf              # Output value definitions
@@ -5640,9 +5640,9 @@ terraform.tfvars        # Variable value assignments (gitignored)
     └── vpc_test.go              # Terratest tests
 </code></pre></div>
 <h3 id="file-organization-best-practices">File Organization Best Practices<a class="headerlink" href="#file-organization-best-practices" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># main.tf - Group related resources together with comments</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## main.tf - Group related resources together with comments</span>
 <span class="c1">#----------------------------------------------------------------------</span>
-<span class="c1"># VPC and Networking</span>
+<span class="c1">## VPC and Networking</span>
 <span class="c1">#----------------------------------------------------------------------</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vpc_cidr_block</span>
@@ -5674,7 +5674,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <span class="p">}</span>
 
 <span class="c1">#----------------------------------------------------------------------</span>
-<span class="c1"># Internet Gateway</span>
+<span class="c1">## Internet Gateway</span>
 <span class="c1">#----------------------------------------------------------------------</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_internet_gateway&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
@@ -5691,7 +5691,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <h2 id="variable-management">Variable Management<a class="headerlink" href="#variable-management" title="Permanent link">&para;</a></h2>
 <h3 id="variable-definitions-with-validation">Variable Definitions with Validation<a class="headerlink" href="#variable-definitions-with-validation" title="Permanent link">&para;</a></h3>
 <p>All variables must include <code>type</code>, <code>description</code>, and validation when applicable:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># variables.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## variables.tf</span>
 <span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environment&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deployment environment (dev, staging, prod)&quot;</span>
@@ -5751,7 +5751,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="complex-variable-types">Complex Variable Types<a class="headerlink" href="#complex-variable-types" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Object type for structured configuration</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Object type for structured configuration</span>
 <span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;database_config&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">object</span><span class="p">({</span>
 <span class="w">    </span><span class="na">engine</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
@@ -5769,7 +5769,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># Map of objects for multiple similar resources</span>
+<span class="c1">## Map of objects for multiple similar resources</span>
 <span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;applications&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">map</span><span class="p">(</span><span class="kt">object</span><span class="p">({</span>
 <span class="w">    </span><span class="na">instance_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">number</span>
@@ -5784,7 +5784,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <h2 id="resource-definitions-and-naming-patterns">Resource Definitions and Naming Patterns<a class="headerlink" href="#resource-definitions-and-naming-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="resource-naming-pattern">Resource Naming Pattern<a class="headerlink" href="#resource-naming-pattern" title="Permanent link">&para;</a></h3>
 <p>Use interpolation to create consistent, environment-aware resource names:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Pattern: ${project}-${environment}-${resource_type}-${identifier}</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Pattern: ${project}-${environment}-${resource_type}-${identifier}</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket&quot;</span><span class="w"> </span><span class="nv">&quot;application_data&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.project}-${var.environment}-app-data&quot;</span>
 
@@ -5812,7 +5812,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 </code></pre></div>
 <h3 id="tagging-conventions">Tagging Conventions<a class="headerlink" href="#tagging-conventions" title="Permanent link">&para;</a></h3>
 <p>Apply consistent tags to ALL resources that support tagging:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># locals.tf - Define common tags</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## locals.tf - Define common tags</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nb">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.project</span>
@@ -5824,7 +5824,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># main.tf - Use tags consistently</span>
+<span class="c1">## main.tf - Use tags consistently</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_ami.ubuntu.id</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instance_type</span>
@@ -5861,7 +5861,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <hr />
 <h2 id="output-definitions">Output Definitions<a class="headerlink" href="#output-definitions" title="Permanent link">&para;</a></h2>
 <p>Outputs should be well-documented and include sensitive flag when needed:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># outputs.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## outputs.tf</span>
 <span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_id&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ID of the VPC&quot;</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
@@ -5899,7 +5899,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <hr />
 <h2 id="data-sources">Data Sources<a class="headerlink" href="#data-sources" title="Permanent link">&para;</a></h2>
 <p>Use data sources for referencing existing resources:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># data.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## data.tf</span>
 <span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_availability_zones&quot;</span><span class="w"> </span><span class="nv">&quot;available&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;available&quot;</span>
 <span class="p">}</span>
@@ -5923,7 +5923,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 
 <span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_region&quot;</span><span class="w"> </span><span class="nv">&quot;current&quot;</span><span class="w"> </span><span class="p">{}</span>
 
-<span class="c1"># Use data sources in resources</span>
+<span class="c1">## Use data sources in resources</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;private&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">data.aws_availability_zones.available.names</span><span class="p">)</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
@@ -5938,7 +5938,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <hr />
 <h2 id="provider-configuration">Provider Configuration<a class="headerlink" href="#provider-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="provider-version-constraints">Provider Version Constraints<a class="headerlink" href="#provider-version-constraints" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># versions.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## versions.tf</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.5.0, &lt; 2.0.0&quot;</span>
 
@@ -5955,7 +5955,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="provider-setup">Provider Setup<a class="headerlink" href="#provider-setup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># providers.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## providers.tf</span>
 <span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.aws_region</span>
 
@@ -5968,7 +5968,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># Multi-region provider configuration</span>
+<span class="c1">## Multi-region provider configuration</span>
 <span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">alias</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us_west_2&quot;</span>
 <span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-west-2&quot;</span>
@@ -5979,7 +5979,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
 <span class="p">}</span>
 
-<span class="c1"># Use aliased provider</span>
+<span class="c1">## Use aliased provider</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket&quot;</span><span class="w"> </span><span class="nv">&quot;backup&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws.us_west_2</span>
 <span class="w">  </span><span class="na">bucket</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.project}-backup&quot;</span>
@@ -5988,7 +5988,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <hr />
 <h2 id="state-management">State Management<a class="headerlink" href="#state-management" title="Permanent link">&para;</a></h2>
 <h3 id="remote-backend-configuration">Remote Backend Configuration<a class="headerlink" href="#remote-backend-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># backend.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## backend.tf</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-terraform-state-bucket&quot;</span>
@@ -6001,7 +6001,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="state-management-best-practices">State Management Best Practices<a class="headerlink" href="#state-management-best-practices" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Use lifecycle meta-arguments for critical resources</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Use lifecycle meta-arguments for critical resources</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;production&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">allocated_storage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
 <span class="w">  </span><span class="na">engine</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
@@ -6013,7 +6013,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># Use terraform_remote_state for cross-stack references</span>
+<span class="c1">## Use terraform_remote_state for cross-stack references</span>
 <span class="kr">data</span><span class="w"> </span><span class="nc">&quot;terraform_remote_state&quot;</span><span class="w"> </span><span class="nv">&quot;network&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span>
 <span class="w">  </span><span class="nb">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -6031,7 +6031,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <hr />
 <h2 id="workspace-usage">Workspace Usage<a class="headerlink" href="#workspace-usage" title="Permanent link">&para;</a></h2>
 <p>Use workspaces for environment separation (when not using separate state files):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># locals.tf - Workspace-aware configuration</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## locals.tf - Workspace-aware configuration</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nb">workspace_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -6052,7 +6052,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <span class="w">  </span><span class="na">config</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">local.workspace_config[terraform.workspace</span><span class="p">]</span>
 <span class="p">}</span>
 
-<span class="c1"># main.tf - Use workspace configuration</span>
+<span class="c1">## main.tf - Use workspace configuration</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">local.config.instance_count</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.config.instance_type</span>
@@ -6065,25 +6065,25 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <span class="p">}</span>
 </code></pre></div>
 <p>Workspace commands:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create and switch to workspace</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Create and switch to workspace</span>
 terraform<span class="w"> </span>workspace<span class="w"> </span>new<span class="w"> </span>dev
 terraform<span class="w"> </span>workspace<span class="w"> </span>new<span class="w"> </span>staging
 terraform<span class="w"> </span>workspace<span class="w"> </span>new<span class="w"> </span>prod
 
-<span class="c1"># List workspaces</span>
+<span class="c1">## List workspaces</span>
 terraform<span class="w"> </span>workspace<span class="w"> </span>list
 
-<span class="c1"># Switch workspace</span>
+<span class="c1">## Switch workspace</span>
 terraform<span class="w"> </span>workspace<span class="w"> </span><span class="k">select</span><span class="w"> </span>prod
 
-<span class="c1"># Show current workspace</span>
+<span class="c1">## Show current workspace</span>
 terraform<span class="w"> </span>workspace<span class="w"> </span>show
 </code></pre></div>
 <hr />
 <h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
 <h3 id="native-terraform-testing-terraform-16">Native Terraform Testing (Terraform 1.6+)<a class="headerlink" href="#native-terraform-testing-terraform-16" title="Permanent link">&para;</a></h3>
 <p>Use Terraform's built-in testing framework:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># tests/vpc_validation.tftest.hcl</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## tests/vpc_validation.tftest.hcl</span>
 <span class="nb">variables</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">vpc_cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
 <span class="w">  </span><span class="na">environment</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;test&quot;</span>
@@ -6159,12 +6159,12 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="secrets-management">Secrets Management<a class="headerlink" href="#secrets-management" title="Permanent link">&para;</a></h3>
 <p><strong>NEVER</strong> hardcode secrets in Terraform code:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Hardcoded secrets</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Hardcoded secrets</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SuperSecretPassword123!&quot;</span><span class="c1">  # NEVER do this</span>
 <span class="p">}</span>
 
-<span class="c1"># Good - Use variables with sensitive flag</span>
+<span class="c1">## Good - Use variables with sensitive flag</span>
 <span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;database_password&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Database master password&quot;</span>
@@ -6175,7 +6175,7 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="w">  </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.database_password</span>
 <span class="p">}</span>
 
-<span class="c1"># Better - Generate secrets dynamically</span>
+<span class="c1">## Better - Generate secrets dynamically</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;random_password&quot;</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">length</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">32</span>
 <span class="w">  </span><span class="na">special</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
@@ -6252,14 +6252,14 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-hardcoded-values">❌ Avoid: Hardcoded Values<a class="headerlink" href="#avoid-hardcoded-values" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-0c55b159cbfafe1f0&quot;</span><span class="c1">  # Hardcoded AMI</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.medium&quot;</span><span class="c1">              # Hardcoded instance type</span>
 <span class="w">  </span><span class="na">subnet_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;subnet-12345678&quot;</span><span class="c1">        # Hardcoded subnet ID</span>
 <span class="p">}</span>
 
-<span class="c1"># Good</span>
+<span class="c1">## Good</span>
 <span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_ami&quot;</span><span class="w"> </span><span class="nv">&quot;latest_ubuntu&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">most_recent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="w">  </span><span class="na">owners</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;099720109477&quot;</span><span class="p">]</span>
@@ -6276,14 +6276,14 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-count-with-complex-resources">❌ Avoid: Count with Complex Resources<a class="headerlink" href="#avoid-count-with-complex-resources" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Using count can cause recreation issues</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Using count can cause recreation issues</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_ami.ubuntu.id</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instance_type</span>
 <span class="p">}</span>
 
-<span class="c1"># Good - Use for_each for stability</span>
+<span class="c1">## Good - Use for_each for stability</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">for_each</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nf">toset</span><span class="p">([</span><span class="s2">&quot;web-1&quot;, &quot;web-2&quot;, &quot;web-3&quot;</span><span class="p">])</span>
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_ami.ubuntu.id</span>
@@ -6295,7 +6295,7 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-inline-policies">❌ Avoid: Inline Policies<a class="headerlink" href="#avoid-inline-policies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Inline policy is harder to reuse and test</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Inline policy is harder to reuse and test</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_role&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;app-role&quot;</span>
 
@@ -6314,7 +6314,7 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># Good - Separate policy document and attachment</span>
+<span class="c1">## Good - Separate policy document and attachment</span>
 <span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_iam_policy_document&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;S3Access&quot;</span>
@@ -6338,10 +6338,10 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-not-using-remote-state">❌ Avoid: Not Using Remote State<a class="headerlink" href="#avoid-not-using-remote-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Local state only (risky for teams)</span>
-<span class="c1"># No backend configuration - state stored locally</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Local state only (risky for teams)</span>
+<span class="c1">## No backend configuration - state stored locally</span>
 
-<span class="c1"># Good - Remote state with locking</span>
+<span class="c1">## Good - Remote state with locking</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;myapp-terraform-state&quot;</span>
@@ -6353,7 +6353,7 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-missing-required-providers-version">❌ Avoid: Missing Required Providers Version<a class="headerlink" href="#avoid-missing-required-providers-version" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - No version constraint</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - No version constraint</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -6363,7 +6363,7 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># Good - Pin provider versions</span>
+<span class="c1">## Good - Pin provider versions</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.6.0&quot;</span>
 
@@ -6376,14 +6376,14 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-using-default-vpc-and-subnets">❌ Avoid: Using Default VPC and Subnets<a class="headerlink" href="#avoid-using-default-vpc-and-subnets" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Relying on default VPC</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Relying on default VPC</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_ami.ubuntu.id</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instance_type</span>
 <span class="c1">  # Implicitly uses default VPC - not reproducible</span>
 <span class="p">}</span>
 
-<span class="c1"># Good - Explicitly create networking</span>
+<span class="c1">## Good - Explicitly create networking</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vpc_cidr</span>
 <span class="w">  </span><span class="na">enable_dns_hostnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
@@ -6410,7 +6410,7 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-overly-permissive-security-groups">❌ Avoid: Overly Permissive Security Groups<a class="headerlink" href="#avoid-overly-permissive-security-groups" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Open to the world</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Open to the world</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;web-sg&quot;</span>
 
@@ -6422,7 +6422,7 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># Good - Specific rules with justification</span>
+<span class="c1">## Good - Specific rules with justification</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.project}-${var.environment}-web-sg&quot;</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Security group for web servers&quot;</span>
@@ -6454,13 +6454,13 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-not-using-data-sources-for-existing-resources">❌ Avoid: Not Using Data Sources for Existing Resources<a class="headerlink" href="#avoid-not-using-data-sources-for-existing-resources" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Hardcoding existing resource IDs</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Hardcoding existing resource IDs</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route_table_association&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">subnet_id</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.public.id</span>
 <span class="w">  </span><span class="na">route_table_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;rtb-12345678&quot;</span><span class="c1">  # ❌ Hardcoded route table</span>
 <span class="p">}</span>
 
-<span class="c1"># Good - Use data sources</span>
+<span class="c1">## Good - Use data sources</span>
 <span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_route_table&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
 
@@ -6476,7 +6476,7 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-missing-lifecycle-rules">❌ Avoid: Missing Lifecycle Rules<a class="headerlink" href="#avoid-missing-lifecycle-rules" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Can accidentally destroy critical resources</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Can accidentally destroy critical resources</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;production&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">identifier</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-db&quot;</span>
 <span class="w">  </span><span class="na">engine</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
@@ -6485,7 +6485,7 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="c1">  # No lifecycle protection - can be destroyed!</span>
 <span class="p">}</span>
 
-<span class="c1"># Good - Protect critical resources</span>
+<span class="c1">## Good - Protect critical resources</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;production&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">identifier</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-db&quot;</span>
 <span class="w">  </span><span class="na">engine</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
@@ -6507,14 +6507,14 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-not-tagging-resources">❌ Avoid: Not Tagging Resources<a class="headerlink" href="#avoid-not-tagging-resources" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - No tags for cost tracking or management</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - No tags for cost tracking or management</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_ami.ubuntu.id</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instance_type</span>
 <span class="c1">  # No tags - can&#39;t track costs or manage resources</span>
 <span class="p">}</span>
 
-<span class="c1"># Good - Comprehensive tagging strategy</span>
+<span class="c1">## Good - Comprehensive tagging strategy</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nb">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.project</span>
@@ -6541,7 +6541,7 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <hr />
 <h2 id="recommended-tools">Recommended Tools<a class="headerlink" href="#recommended-tools" title="Permanent link">&para;</a></h2>
 <h3 id="tflint-configuration">tflint Configuration<a class="headerlink" href="#tflint-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># .tflint.hcl</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .tflint.hcl</span>
 <span class="err">plugin</span><span class="w"> </span><span class="s2">&quot;terraform&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="w">  </span><span class="na">preset</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;recommended&quot;</span>
@@ -6570,7 +6570,7 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 tflint<span class="w"> </span>--recursive
 </code></pre></div>
 <h3 id="terraform-docs-configuration">terraform-docs Configuration<a class="headerlink" href="#terraform-docs-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># .terraform-docs.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .terraform-docs.yml</span>
 <span class="nt">formatter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">markdown table</span>
 
 <span class="nt">header-from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main.tf</span>
@@ -6601,7 +6601,7 @@ tflint<span class="w"> </span>--recursive
 <div class="highlight"><pre><span></span><code>terraform-docs<span class="w"> </span>.
 </code></pre></div>
 <h3 id="pre-commit-hook-configuration">Pre-commit Hook Configuration<a class="headerlink" href="#pre-commit-hook-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .pre-commit-config.yaml</span>
 <span class="nt">repos</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/antonbabenko/pre-commit-terraform</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.83.5</span>
@@ -6620,7 +6620,7 @@ tflint<span class="w"> </span>--recursive
 </code></pre></div>
 <hr />
 <h2 id="complete-module-example">Complete Module Example<a class="headerlink" href="#complete-module-example" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># modules/vpc-network/main.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/vpc-network/main.tf</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="err">@module</span><span class="w"> </span><span class="err">vpc-network</span>
 <span class="err">@description</span><span class="w"> </span><span class="err">Production-grade</span><span class="w"> </span><span class="err">VPC</span><span class="w"> </span><span class="err">module</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">public/private</span><span class="w"> </span><span class="err">subnets</span><span class="w"> </span><span class="err">and</span><span class="w"> </span><span class="err">NAT</span><span class="w"> </span><span class="err">gateway</span>
@@ -6632,7 +6632,7 @@ tflint<span class="w"> </span>--recursive
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="c1">#----------------------------------------------------------------------</span>
-<span class="c1"># VPC</span>
+<span class="c1">## VPC</span>
 <span class="c1">#----------------------------------------------------------------------</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vpc_cidr_block</span>
@@ -6648,7 +6648,7 @@ tflint<span class="w"> </span>--recursive
 <span class="p">}</span>
 
 <span class="c1">#----------------------------------------------------------------------</span>
-<span class="c1"># Public Subnets</span>
+<span class="c1">## Public Subnets</span>
 <span class="c1">#----------------------------------------------------------------------</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.availability_zones</span><span class="p">)</span>
@@ -6667,7 +6667,7 @@ tflint<span class="w"> </span>--recursive
 <span class="p">}</span>
 
 <span class="c1">#----------------------------------------------------------------------</span>
-<span class="c1"># Internet Gateway</span>
+<span class="c1">## Internet Gateway</span>
 <span class="c1">#----------------------------------------------------------------------</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_internet_gateway&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
@@ -6681,7 +6681,7 @@ tflint<span class="w"> </span>--recursive
 <span class="p">}</span>
 
 <span class="c1">#----------------------------------------------------------------------</span>
-<span class="c1"># Route Table for Public Subnets</span>
+<span class="c1">## Route Table for Public Subnets</span>
 <span class="c1">#----------------------------------------------------------------------</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route_table&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
@@ -6705,7 +6705,7 @@ tflint<span class="w"> </span>--recursive
 <span class="w">  </span><span class="na">route_table_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_route_table.public.id</span>
 <span class="p">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1"># modules/vpc-network/variables.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/vpc-network/variables.tf</span>
 <span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;project&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Project name for resource naming&quot;</span>
@@ -6742,7 +6742,7 @@ tflint<span class="w"> </span>--recursive
 <span class="w">  </span><span class="nb">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
 <span class="p">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1"># modules/vpc-network/outputs.tf</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/vpc-network/outputs.tf</span>
 <span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_id&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ID of the VPC&quot;</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>

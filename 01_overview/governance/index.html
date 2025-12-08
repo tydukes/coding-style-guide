@@ -4586,16 +4586,16 @@ feature/add-powershell-guide
 feature/improve-metadata-schema
 </code></pre></div>
 <p><strong>Workflow</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create feature branch</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Create feature branch</span>
 git<span class="w"> </span>checkout<span class="w"> </span>develop
 git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>develop
 git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/13-expand-principles-doc
 
-<span class="c1"># Make changes, commit</span>
+<span class="c1">## Make changes, commit</span>
 git<span class="w"> </span>add<span class="w"> </span>.
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: expand principles documentation&quot;</span>
 
-<span class="c1"># Push and create PR</span>
+<span class="c1">## Push and create PR</span>
 git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>feature/13-expand-principles-doc
 gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </span>--base<span class="w"> </span>develop
 </code></pre></div>
@@ -4623,27 +4623,27 @@ fix/broken-mkdocs-link
 hotfix/v1.0.1-container-build-failure
 </code></pre></div>
 <p><strong>Workflow</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create hotfix from main</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Create hotfix from main</span>
 git<span class="w"> </span>checkout<span class="w"> </span>main
 git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
 git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>hotfix/v1.2.2-security-fix
 
-<span class="c1"># Fix the issue, commit</span>
+<span class="c1">## Fix the issue, commit</span>
 git<span class="w"> </span>add<span class="w"> </span>.
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix: critical security vulnerability in metadata parser&quot;</span>
 
-<span class="c1"># Merge to main</span>
+<span class="c1">## Merge to main</span>
 git<span class="w"> </span>checkout<span class="w"> </span>main
 git<span class="w"> </span>merge<span class="w"> </span>--no-ff<span class="w"> </span>hotfix/v1.2.2-security-fix
 git<span class="w"> </span>tag<span class="w"> </span>v1.2.2
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main<span class="w"> </span>--tags
 
-<span class="c1"># Merge to develop</span>
+<span class="c1">## Merge to develop</span>
 git<span class="w"> </span>checkout<span class="w"> </span>develop
 git<span class="w"> </span>merge<span class="w"> </span>--no-ff<span class="w"> </span>hotfix/v1.2.2-security-fix
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>develop
 
-<span class="c1"># Delete hotfix branch</span>
+<span class="c1">## Delete hotfix branch</span>
 git<span class="w"> </span>branch<span class="w"> </span>-d<span class="w"> </span>hotfix/v1.2.2-security-fix
 </code></pre></div>
 <h4 id="release-branches-release">Release Branches (<code>release/*</code>)<a class="headerlink" href="#release-branches-release" title="Permanent link">&para;</a></h4>
@@ -4655,27 +4655,27 @@ git<span class="w"> </span>branch<span class="w"> </span>-d<span class="w"> </sp
 <li><strong>Activities</strong>: Version bumps, changelog updates, final testing</li>
 </ul>
 <p><strong>Workflow</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create release branch</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Create release branch</span>
 git<span class="w"> </span>checkout<span class="w"> </span>develop
 git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>develop
 git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>release/v1.3.0
 
-<span class="c1"># Update version, changelog</span>
-<span class="c1"># Run final tests</span>
-<span class="c1"># Fix any last-minute issues</span>
+<span class="c1">## Update version, changelog</span>
+<span class="c1">## Run final tests</span>
+<span class="c1">## Fix any last-minute issues</span>
 
-<span class="c1"># Merge to main</span>
+<span class="c1">## Merge to main</span>
 git<span class="w"> </span>checkout<span class="w"> </span>main
 git<span class="w"> </span>merge<span class="w"> </span>--no-ff<span class="w"> </span>release/v1.3.0
 git<span class="w"> </span>tag<span class="w"> </span>v1.3.0
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main<span class="w"> </span>--tags
 
-<span class="c1"># Merge back to develop</span>
+<span class="c1">## Merge back to develop</span>
 git<span class="w"> </span>checkout<span class="w"> </span>develop
 git<span class="w"> </span>merge<span class="w"> </span>--no-ff<span class="w"> </span>release/v1.3.0
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>develop
 
-<span class="c1"># Delete release branch</span>
+<span class="c1">## Delete release branch</span>
 git<span class="w"> </span>branch<span class="w"> </span>-d<span class="w"> </span>release/v1.3.0
 </code></pre></div>
 <h3 id="branch-naming-conventions">Branch Naming Conventions<a class="headerlink" href="#branch-naming-conventions" title="Permanent link">&para;</a></h3>
@@ -4771,13 +4771,13 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </span>--base<span class="w"> </span>main<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;feat: add Kubernetes guide&quot;</span><span class="w"> </span>--body<span class="w"> </span><span class="s2">&quot;...&quot;</span>
 </code></pre></div>
 <p><strong>4. Address Review Feedback</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Make requested changes</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Make requested changes</span>
 git<span class="w"> </span>add<span class="w"> </span>.
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix: address review feedback on Kubernetes guide&quot;</span>
 git<span class="w"> </span>push
 </code></pre></div>
 <p><strong>5. Merge (after approval)</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Squash and merge via GitHub UI or CLI</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Squash and merge via GitHub UI or CLI</span>
 gh<span class="w"> </span>pr<span class="w"> </span>merge<span class="w"> </span><span class="m">123</span><span class="w"> </span>--squash<span class="w"> </span>--delete-branch
 </code></pre></div>
 <h3 id="merge-strategies">Merge Strategies<a class="headerlink" href="#merge-strategies" title="Permanent link">&para;</a></h3>
@@ -4826,13 +4826,13 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
 <li>Update any version references in documentation</li>
 </ul>
 <p><strong>3. Final Testing</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Build and test documentation</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Build and test documentation</span>
 uv<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> </span>build<span class="w"> </span>--strict
 
-<span class="c1"># Run all pre-commit hooks</span>
+<span class="c1">## Run all pre-commit hooks</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 
-<span class="c1"># Test container build</span>
+<span class="c1">## Test container build</span>
 docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>coding-style-guide:v1.3.0<span class="w"> </span>.
 </code></pre></div>
 <p><strong>4. Create PR to Main</strong>:</p>
@@ -4840,10 +4840,10 @@ docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </
 gh<span class="w"> </span>pr<span class="w"> </span>create<span class="w"> </span>--base<span class="w"> </span>main<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Release v1.3.0&quot;</span>
 </code></pre></div>
 <p><strong>5. Merge and Tag</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Merge PR (via GitHub UI or CLI)</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Merge PR (via GitHub UI or CLI)</span>
 gh<span class="w"> </span>pr<span class="w"> </span>merge<span class="w"> </span>&lt;pr-number&gt;<span class="w"> </span>--merge<span class="w"> </span>--delete-branch
 
-<span class="c1"># Tag the release</span>
+<span class="c1">## Tag the release</span>
 git<span class="w"> </span>checkout<span class="w"> </span>main
 git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
 git<span class="w"> </span>tag<span class="w"> </span>v1.3.0
@@ -4855,7 +4855,7 @@ git<span class="w"> </span>merge<span class="w"> </span>main
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>develop
 </code></pre></div>
 <p><strong>7. Publish Release Notes</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create GitHub Release</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Create GitHub Release</span>
 gh<span class="w"> </span>release<span class="w"> </span>create<span class="w"> </span>v1.3.0<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Release v1.3.0&quot;</span><span class="w"> </span>--notes-file<span class="w"> </span>CHANGELOG.md
 </code></pre></div>
 <h3 id="pre-release-versions">Pre-release Versions<a class="headerlink" href="#pre-release-versions" title="Permanent link">&para;</a></h3>

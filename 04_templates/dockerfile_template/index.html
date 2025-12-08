@@ -4363,15 +4363,17 @@
 
   <h1>Dockerfile</h1>
 
+<!-- markdownlint-disable MD024 -->
+
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This document provides comprehensive multi-stage Dockerfile templates for building optimized, secure container images
 across all languages and frameworks. Multi-stage builds reduce image size, improve security, and enable better layer caching.</p>
 <hr />
 <h2 id="python-application">Python Application<a class="headerlink" href="#python-application" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c"># Multi-stage build for Python application</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Multi-stage build for Python application</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">python:3.12-slim</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 
-<span class="c"># Install build dependencies</span>
+<span class="c">## Install build dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>gcc<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>g++<span class="w"> </span><span class="se">\</span>
@@ -4379,229 +4381,229 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 <span class="w">    </span>libpq-dev<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
 
-<span class="c"># Set working directory</span>
+<span class="c">## Set working directory</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Copy dependency files</span>
+<span class="c">## Copy dependency files</span>
 <span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w"> </span>requirements-prod.txt<span class="w"> </span>./
 
-<span class="c"># Install dependencies</span>
+<span class="c">## Install dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>--upgrade<span class="w"> </span>pip<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>-r<span class="w"> </span>requirements-prod.txt
 
-<span class="c"># Production stage</span>
+<span class="c">## Production stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">python:3.12-slim</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 
-<span class="c"># Install runtime dependencies only</span>
+<span class="c">## Install runtime dependencies only</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>libpq5<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
 
-<span class="c"># Create non-root user</span>
+<span class="c">## Create non-root user</span>
 <span class="k">RUN</span><span class="w"> </span>groupadd<span class="w"> </span>-r<span class="w"> </span>appuser<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>useradd<span class="w"> </span>-r<span class="w"> </span>-g<span class="w"> </span>appuser<span class="w"> </span>appuser
 
-<span class="c"># Set working directory</span>
+<span class="c">## Set working directory</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Copy installed packages from builder</span>
+<span class="c">## Copy installed packages from builder</span>
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/usr/local/lib/python3.12/site-packages<span class="w"> </span>/usr/local/lib/python3.12/site-packages
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/usr/local/bin<span class="w"> </span>/usr/local/bin
 
-<span class="c"># Copy application code</span>
+<span class="c">## Copy application code</span>
 <span class="k">COPY</span><span class="w"> </span>--chown<span class="o">=</span>appuser:appuser<span class="w"> </span>.<span class="w"> </span>.
 
-<span class="c"># Switch to non-root user</span>
+<span class="c">## Switch to non-root user</span>
 <span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
 
-<span class="c"># Expose application port</span>
+<span class="c">## Expose application port</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8000</span>
 
-<span class="c"># Health check</span>
+<span class="c">## Health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>CMD<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import urllib.request; urllib.request.urlopen(&#39;http://localhost:8000/health&#39;)&quot;</span>
 
-<span class="c"># Run application</span>
+<span class="c">## Run application</span>
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;uvicorn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;app.main:app&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--port&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;8000&quot;</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="nodejs-typescript-application">Node.js / TypeScript Application<a class="headerlink" href="#nodejs-typescript-application" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c"># Multi-stage build for Node.js/TypeScript application</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Multi-stage build for Node.js/TypeScript application</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 
-<span class="c"># Set working directory</span>
+<span class="c">## Set working directory</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Copy package files</span>
+<span class="c">## Copy package files</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 
-<span class="c"># Install all dependencies (including dev dependencies)</span>
+<span class="c">## Install all dependencies (including dev dependencies)</span>
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci
 
-<span class="c"># Copy source code</span>
+<span class="c">## Copy source code</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 
-<span class="c"># Build TypeScript application</span>
+<span class="c">## Build TypeScript application</span>
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
 
-<span class="c"># Prune dev dependencies</span>
+<span class="c">## Prune dev dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>prune<span class="w"> </span>--production
 
-<span class="c"># Production stage</span>
+<span class="c">## Production stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 
-<span class="c"># Install dumb-init for proper signal handling</span>
+<span class="c">## Install dumb-init for proper signal handling</span>
 <span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>--no-cache<span class="w"> </span>dumb-init
 
-<span class="c"># Create non-root user</span>
+<span class="c">## Create non-root user</span>
 <span class="k">RUN</span><span class="w"> </span>addgroup<span class="w"> </span>-g<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-S<span class="w"> </span>nodejs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>adduser<span class="w"> </span>-S<span class="w"> </span>nodejs<span class="w"> </span>-u<span class="w"> </span><span class="m">1001</span>
 
-<span class="c"># Set working directory</span>
+<span class="c">## Set working directory</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Copy built application and production dependencies</span>
+<span class="c">## Copy built application and production dependencies</span>
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>--chown<span class="o">=</span>nodejs:nodejs<span class="w"> </span>/app/dist<span class="w"> </span>./dist
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>--chown<span class="o">=</span>nodejs:nodejs<span class="w"> </span>/app/node_modules<span class="w"> </span>./node_modules
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>--chown<span class="o">=</span>nodejs:nodejs<span class="w"> </span>/app/package*.json<span class="w"> </span>./
 
-<span class="c"># Switch to non-root user</span>
+<span class="c">## Switch to non-root user</span>
 <span class="k">USER</span><span class="w"> </span><span class="s">nodejs</span>
 
-<span class="c"># Expose application port</span>
+<span class="c">## Expose application port</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
 
-<span class="c"># Health check</span>
+<span class="c">## Health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>CMD<span class="w"> </span>node<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;require(&#39;http&#39;).get(&#39;http://localhost:3000/health&#39;, (r) =&gt; {process.exit(r.statusCode === 200 ? 0 : 1)})&quot;</span>
 
-<span class="c"># Use dumb-init to handle signals properly</span>
+<span class="c">## Use dumb-init to handle signals properly</span>
 <span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dumb-init&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--&quot;</span><span class="p">]</span>
 
-<span class="c"># Run application</span>
+<span class="c">## Run application</span>
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="go-application">Go Application<a class="headerlink" href="#go-application" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c"># Multi-stage build for Go application</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Multi-stage build for Go application</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.21-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 
-<span class="c"># Install build dependencies</span>
+<span class="c">## Install build dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>--no-cache<span class="w"> </span>git<span class="w"> </span>ca-certificates
 
-<span class="c"># Set working directory</span>
+<span class="c">## Set working directory</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Copy go mod files</span>
+<span class="c">## Copy go mod files</span>
 <span class="k">COPY</span><span class="w"> </span>go.mod<span class="w"> </span>go.sum<span class="w"> </span>./
 
-<span class="c"># Download dependencies</span>
+<span class="c">## Download dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>go<span class="w"> </span>mod<span class="w"> </span>download
 
-<span class="c"># Copy source code</span>
+<span class="c">## Copy source code</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 
-<span class="c"># Build application with optimizations</span>
+<span class="c">## Build application with optimizations</span>
 <span class="k">RUN</span><span class="w"> </span><span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">GOOS</span><span class="o">=</span>linux<span class="w"> </span><span class="nv">GOARCH</span><span class="o">=</span>amd64<span class="w"> </span>go<span class="w"> </span>build<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-ldflags<span class="o">=</span><span class="s1">&#39;-w -s -extldflags &quot;-static&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-a<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-o<span class="w"> </span>/app/server<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>./cmd/server
 
-<span class="c"># Production stage - minimal image</span>
+<span class="c">## Production stage - minimal image</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">scratch</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 
-<span class="c"># Copy CA certificates from builder</span>
+<span class="c">## Copy CA certificates from builder</span>
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span>/etc/ssl/certs/
 
-<span class="c"># Copy binary from builder</span>
+<span class="c">## Copy binary from builder</span>
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/server<span class="w"> </span>/server
 
-<span class="c"># Expose application port</span>
+<span class="c">## Expose application port</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
 
-<span class="c"># Health check (note: scratch doesn&#39;t have shell, so limited options)</span>
-<span class="c"># For health checks, consider using a sidecar or external monitoring</span>
+<span class="c">## Health check (note: scratch doesn&#39;t have shell, so limited options)</span>
+<span class="c">## For health checks, consider using a sidecar or external monitoring</span>
 
-<span class="c"># Run application</span>
+<span class="c">## Run application</span>
 <span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/server&quot;</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="react-nextjs-application">React / Next.js Application<a class="headerlink" href="#react-nextjs-application" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c"># Multi-stage build for React/Next.js application</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Multi-stage build for React/Next.js application</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">dependencies</span>
 
-<span class="c"># Set working directory</span>
+<span class="c">## Set working directory</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Copy package files</span>
+<span class="c">## Copy package files</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 
-<span class="c"># Install dependencies</span>
+<span class="c">## Install dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci
 
-<span class="c"># Builder stage</span>
+<span class="c">## Builder stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Copy dependencies from previous stage</span>
+<span class="c">## Copy dependencies from previous stage</span>
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>dependencies<span class="w"> </span>/app/node_modules<span class="w"> </span>./node_modules
 
-<span class="c"># Copy application code</span>
+<span class="c">## Copy application code</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 
-<span class="c"># Build application</span>
+<span class="c">## Build application</span>
 <span class="k">ENV</span><span class="w"> </span>NEXT_TELEMETRY_DISABLED<span class="w"> </span><span class="m">1</span>
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
 
-<span class="c"># Production stage</span>
+<span class="c">## Production stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 
-<span class="c"># Install dumb-init</span>
+<span class="c">## Install dumb-init</span>
 <span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>--no-cache<span class="w"> </span>dumb-init
 
-<span class="c"># Create non-root user</span>
+<span class="c">## Create non-root user</span>
 <span class="k">RUN</span><span class="w"> </span>addgroup<span class="w"> </span>-g<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-S<span class="w"> </span>nodejs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>adduser<span class="w"> </span>-S<span class="w"> </span>nextjs<span class="w"> </span>-u<span class="w"> </span><span class="m">1001</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Copy necessary files</span>
+<span class="c">## Copy necessary files</span>
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/public<span class="w"> </span>./public
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/.next/standalone<span class="w"> </span>./
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/.next/static<span class="w"> </span>./.next/static
 
-<span class="c"># Set ownership</span>
+<span class="c">## Set ownership</span>
 <span class="k">RUN</span><span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>nextjs:nodejs<span class="w"> </span>/app
 
-<span class="c"># Switch to non-root user</span>
+<span class="c">## Switch to non-root user</span>
 <span class="k">USER</span><span class="w"> </span><span class="s">nextjs</span>
 
-<span class="c"># Expose port</span>
+<span class="c">## Expose port</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
 
 <span class="k">ENV</span><span class="w"> </span>PORT<span class="w"> </span><span class="m">3000</span>
 <span class="k">ENV</span><span class="w"> </span>NODE_ENV<span class="w"> </span>production
 <span class="k">ENV</span><span class="w"> </span>NEXT_TELEMETRY_DISABLED<span class="w"> </span><span class="m">1</span>
 
-<span class="c"># Health check</span>
+<span class="c">## Health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>10s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>CMD<span class="w"> </span>node<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;require(&#39;http&#39;).get(&#39;http://localhost:3000&#39;, (r) =&gt; {process.exit(r.statusCode === 200 ? 0 : 1)})&quot;</span>
 
-<span class="c"># Run application</span>
+<span class="c">## Run application</span>
 <span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dumb-init&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--&quot;</span><span class="p">]</span>
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.js&quot;</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="django-application">Django Application<a class="headerlink" href="#django-application" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c"># Multi-stage build for Django application</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Multi-stage build for Django application</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">python:3.12-slim</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 
-<span class="c"># Set environment variables</span>
+<span class="c">## Set environment variables</span>
 <span class="k">ENV</span><span class="w"> </span><span class="nv">PYTHONDONTWRITEBYTECODE</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">PYTHONUNBUFFERED</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">PIP_NO_CACHE_DIR</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">PIP_DISABLE_PIP_VERSION_CHECK</span><span class="o">=</span><span class="m">1</span>
 
-<span class="c"># Install build dependencies</span>
+<span class="c">## Install build dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>gcc<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>postgresql-client<span class="w"> </span><span class="se">\</span>
@@ -4610,133 +4612,133 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Copy dependency files</span>
+<span class="c">## Copy dependency files</span>
 <span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w"> </span>./
 
-<span class="c"># Install Python dependencies</span>
+<span class="c">## Install Python dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 
-<span class="c"># Production stage</span>
+<span class="c">## Production stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">python:3.12-slim</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 
-<span class="c"># Set environment variables</span>
+<span class="c">## Set environment variables</span>
 <span class="k">ENV</span><span class="w"> </span><span class="nv">PYTHONDONTWRITEBYTECODE</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">PYTHONUNBUFFERED</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">DJANGO_SETTINGS_MODULE</span><span class="o">=</span>config.settings.production
 
-<span class="c"># Install runtime dependencies</span>
+<span class="c">## Install runtime dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>postgresql-client<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>libpq5<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
 
-<span class="c"># Create non-root user</span>
+<span class="c">## Create non-root user</span>
 <span class="k">RUN</span><span class="w"> </span>groupadd<span class="w"> </span>-r<span class="w"> </span>django<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>useradd<span class="w"> </span>-r<span class="w"> </span>-g<span class="w"> </span>django<span class="w"> </span>django
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Copy installed packages</span>
+<span class="c">## Copy installed packages</span>
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/usr/local/lib/python3.12/site-packages<span class="w"> </span>/usr/local/lib/python3.12/site-packages
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/usr/local/bin<span class="w"> </span>/usr/local/bin
 
-<span class="c"># Copy application code</span>
+<span class="c">## Copy application code</span>
 <span class="k">COPY</span><span class="w"> </span>--chown<span class="o">=</span>django:django<span class="w"> </span>.<span class="w"> </span>.
 
-<span class="c"># Collect static files</span>
+<span class="c">## Collect static files</span>
 <span class="k">RUN</span><span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>collectstatic<span class="w"> </span>--noinput
 
-<span class="c"># Switch to non-root user</span>
+<span class="c">## Switch to non-root user</span>
 <span class="k">USER</span><span class="w"> </span><span class="s">django</span>
 
-<span class="c"># Expose port</span>
+<span class="c">## Expose port</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8000</span>
 
-<span class="c"># Health check</span>
+<span class="c">## Health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>10s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>CMD<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import urllib.request; urllib.request.urlopen(&#39;http://localhost:8000/health/&#39;)&quot;</span>
 
-<span class="c"># Run application with gunicorn</span>
+<span class="c">## Run application with gunicorn</span>
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;gunicorn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--bind&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0:8000&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--workers&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;config.wsgi:application&quot;</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="nginx-static-site">Nginx Static Site<a class="headerlink" href="#nginx-static-site" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c"># Multi-stage build for static site</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Multi-stage build for static site</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Copy package files</span>
+<span class="c">## Copy package files</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 
-<span class="c"># Install dependencies</span>
+<span class="c">## Install dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci
 
-<span class="c"># Copy source</span>
+<span class="c">## Copy source</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 
-<span class="c"># Build static site</span>
+<span class="c">## Build static site</span>
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
 
-<span class="c"># Production stage with nginx</span>
+<span class="c">## Production stage with nginx</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">nginx:1.25-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 
-<span class="c"># Copy custom nginx config</span>
+<span class="c">## Copy custom nginx config</span>
 <span class="k">COPY</span><span class="w"> </span>nginx.conf<span class="w"> </span>/etc/nginx/nginx.conf
 
-<span class="c"># Copy built static files</span>
+<span class="c">## Copy built static files</span>
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/dist<span class="w"> </span>/usr/share/nginx/html
 
-<span class="c"># Create non-root user</span>
+<span class="c">## Create non-root user</span>
 <span class="k">RUN</span><span class="w"> </span>addgroup<span class="w"> </span>-g<span class="w"> </span><span class="m">101</span><span class="w"> </span>-S<span class="w"> </span>nginx<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>adduser<span class="w"> </span>-S<span class="w"> </span>-D<span class="w"> </span>-H<span class="w"> </span>-u<span class="w"> </span><span class="m">101</span><span class="w"> </span>-h<span class="w"> </span>/var/cache/nginx<span class="w"> </span>-s<span class="w"> </span>/sbin/nologin<span class="w"> </span>-G<span class="w"> </span>nginx<span class="w"> </span>-g<span class="w"> </span>nginx<span class="w"> </span>nginx
 
-<span class="c"># Set ownership</span>
+<span class="c">## Set ownership</span>
 <span class="k">RUN</span><span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>nginx:nginx<span class="w"> </span>/usr/share/nginx/html<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>chown<span class="w"> </span>-R<span class="w"> </span>nginx:nginx<span class="w"> </span>/var/cache/nginx<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>chown<span class="w"> </span>-R<span class="w"> </span>nginx:nginx<span class="w"> </span>/var/log/nginx<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>chown<span class="w"> </span>-R<span class="w"> </span>nginx:nginx<span class="w"> </span>/etc/nginx/conf.d
 
-<span class="c"># Make nginx run as non-root</span>
+<span class="c">## Make nginx run as non-root</span>
 <span class="k">RUN</span><span class="w"> </span>touch<span class="w"> </span>/var/run/nginx.pid<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>chown<span class="w"> </span>-R<span class="w"> </span>nginx:nginx<span class="w"> </span>/var/run/nginx.pid
 
-<span class="c"># Switch to non-root user</span>
+<span class="c">## Switch to non-root user</span>
 <span class="k">USER</span><span class="w"> </span><span class="s">nginx</span>
 
-<span class="c"># Expose port</span>
+<span class="c">## Expose port</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
 
-<span class="c"># Health check</span>
+<span class="c">## Health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>CMD<span class="w"> </span>wget<span class="w"> </span>--no-verbose<span class="w"> </span>--tries<span class="o">=</span><span class="m">1</span><span class="w"> </span>--spider<span class="w"> </span>http://localhost:8080/<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 
-<span class="c"># Run nginx</span>
+<span class="c">## Run nginx</span>
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;nginx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-g&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;daemon off;&quot;</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="development-vs-production">Development vs Production<a class="headerlink" href="#development-vs-production" title="Permanent link">&para;</a></h2>
 <h3 id="development-dockerfile">Development Dockerfile<a class="headerlink" href="#development-dockerfile" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Development Dockerfile with hot reload</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Development Dockerfile with hot reload</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Install dependencies</span>
+<span class="c">## Install dependencies</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>install
 
-<span class="c"># Copy source (will be overridden by volume mount)</span>
+<span class="c">## Copy source (will be overridden by volume mount)</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 
-<span class="c"># Expose port for development server</span>
+<span class="c">## Expose port for development server</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
 
-<span class="c"># Enable hot reload</span>
+<span class="c">## Enable hot reload</span>
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;run&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="production-dockerfile">Production Dockerfile<a class="headerlink" href="#production-dockerfile" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Production Dockerfile (optimized)</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Production Dockerfile (optimized)</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
@@ -4768,56 +4770,56 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="security">Security<a class="headerlink" href="#security" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># 1. Use specific version tags</span>
+<div class="highlight"><pre><span></span><code><span class="c">## 1. Use specific version tags</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20.10.0-alpine</span><span class="w">  </span><span class="c"># Not :latest</span>
 
-<span class="c"># 2. Run as non-root user</span>
+<span class="c">## 2. Run as non-root user</span>
 <span class="k">RUN</span><span class="w"> </span>addgroup<span class="w"> </span>-g<span class="w"> </span><span class="m">1001</span><span class="w"> </span>appgroup<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>adduser<span class="w"> </span>-S<span class="w"> </span>appuser<span class="w"> </span>-u<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-G<span class="w"> </span>appgroup
 <span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
 
-<span class="c"># 3. Scan for vulnerabilities</span>
-<span class="c"># Use tools like Trivy, Snyk, or Clair</span>
+<span class="c">## 3. Scan for vulnerabilities</span>
+<span class="c">## Use tools like Trivy, Snyk, or Clair</span>
 
-<span class="c"># 4. Use minimal base images</span>
+<span class="c">## 4. Use minimal base images</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">alpine:3.19</span><span class="w">  </span><span class="c"># Or scratch for Go apps</span>
 
-<span class="c"># 5. Don&#39;t include secrets</span>
-<span class="c"># Use build args or secret mounts instead</span>
+<span class="c">## 5. Don&#39;t include secrets</span>
+<span class="c">## Use build args or secret mounts instead</span>
 <span class="k">RUN</span><span class="w"> </span>--mount<span class="o">=</span><span class="nv">type</span><span class="o">=</span>secret,id<span class="o">=</span>npmrc,target<span class="o">=</span>/root/.npmrc<span class="w"> </span>npm<span class="w"> </span>install
 </code></pre></div>
 <h3 id="optimization">Optimization<a class="headerlink" href="#optimization" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># 1. Leverage layer caching - copy dependencies first</span>
+<div class="highlight"><pre><span></span><code><span class="c">## 1. Leverage layer caching - copy dependencies first</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.<span class="w">  </span>#<span class="w"> </span>This<span class="w"> </span>changes<span class="w"> </span>more<span class="w"> </span>frequently
 
-<span class="c"># 2. Use .dockerignore</span>
-<span class="c"># Create .dockerignore with:</span>
-<span class="c"># node_modules</span>
-<span class="c"># .git</span>
-<span class="c"># *.md</span>
+<span class="c">## 2. Use .dockerignore</span>
+<span class="c">## Create .dockerignore with:</span>
+<span class="c">## node_modules</span>
+<span class="c">## .git</span>
+<span class="c">## *.md</span>
 
-<span class="c"># 3. Multi-stage builds to reduce image size</span>
+<span class="c">## 3. Multi-stage builds to reduce image size</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">builder</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span><span class="w">  </span>#<span class="w"> </span>Only<span class="w"> </span>copy<span class="w"> </span>what<span class="err">&#39;</span>s<span class="w"> </span>needed
 
-<span class="c"># 4. Combine RUN commands to reduce layers</span>
+<span class="c">## 4. Combine RUN commands to reduce layers</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>pkg1<span class="w"> </span>pkg2<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
 
-<span class="c"># 5. Use --no-cache-dir for pip</span>
+<span class="c">## 5. Use --no-cache-dir for pip</span>
 <span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </code></pre></div>
 <h3 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># HTTP health check</span>
+<div class="highlight"><pre><span></span><code><span class="c">## HTTP health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>CMD<span class="w"> </span>curl<span class="w"> </span>-f<span class="w"> </span>http://localhost:8000/health<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 
-<span class="c"># Python health check (no curl)</span>
+<span class="c">## Python health check (no curl)</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>CMD<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import urllib.request; urllib.request.urlopen(&#39;http://localhost:8000/health&#39;)&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 
-<span class="c"># Node.js health check</span>
+<span class="c">## Node.js health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>CMD<span class="w"> </span>node<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;require(&#39;http&#39;).get(&#39;http://localhost:3000/health&#39;, (r) =&gt; {process.exit(r.statusCode === 200 ? 0 : 1)})&quot;</span>
 </code></pre></div>
@@ -4836,86 +4838,86 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 <span class="w">      </span>org.opencontainers.image.revision<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">REVISION</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></div>
 <h3 id="using-secrets-during-build">Using Secrets During Build<a class="headerlink" href="#using-secrets-during-build" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Mount secrets without storing in layers</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Mount secrets without storing in layers</span>
 <span class="k">RUN</span><span class="w"> </span>--mount<span class="o">=</span><span class="nv">type</span><span class="o">=</span>secret,id<span class="o">=</span>pip_config<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>pip<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global.index-url<span class="w"> </span><span class="k">$(</span>cat<span class="w"> </span>/run/secrets/pip_config<span class="k">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </code></pre></div>
 <h3 id="conditional-stages">Conditional Stages<a class="headerlink" href="#conditional-stages" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Base stage</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Base stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">base</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 
-<span class="c"># Development stage</span>
+<span class="c">## Development stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">base</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">development</span>
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>install
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;run&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span><span class="p">]</span>
 
-<span class="c"># Production stage</span>
+<span class="c">## Production stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">base</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
 
-<span class="c"># Build with: docker build --target production -t myapp:prod .</span>
+<span class="c">## Build with: docker build --target production -t myapp:prod .</span>
 </code></pre></div>
 <hr />
 <h2 id="dockerignore-template">.dockerignore Template<a class="headerlink" href="#dockerignore-template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code># Version control
+<div class="highlight"><pre><span></span><code>## Version control
 .git
 .gitignore
 .gitattributes
 
-# CI/CD
+## CI/CD
 .github
 .gitlab-ci.yml
 .travis.yml
 
-# Dependencies
+## Dependencies
 node_modules
 venv
 .venv
 
-# Build artifacts
+## Build artifacts
 dist
 build
 target
 *.pyc
 __pycache__
 
-# IDE
+## IDE
 .vscode
 .idea
 *.swp
 *.swo
 
-# OS
+## OS
 .DS_Store
 Thumbs.db
 
-# Logs
+## Logs
 *.log
 logs
 
-# Documentation
+## Documentation
 *.md
 docs
 
-# Tests
+## Tests
 tests
 __tests__
 *.test.js
 *.spec.js
 
-# Environment files
+## Environment files
 .env
 .env.local
 .env.*.local
 
-# Docker
+## Docker
 Dockerfile*
 docker-compose*.yml
 .dockerignore
@@ -4923,7 +4925,7 @@ docker-compose*.yml
 <hr />
 <h2 id="advanced-patterns">Advanced Patterns<a class="headerlink" href="#advanced-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="multi-architecture-build">Multi-Architecture Build<a class="headerlink" href="#multi-architecture-build" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Build for multiple architectures</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Build for multiple architectures</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">--platform=$BUILDPLATFORM</span><span class="w"> </span>golang:1.21-alpine<span class="w"> </span>AS<span class="w"> </span>builder
 
 <span class="k">ARG</span><span class="w"> </span>TARGETPLATFORM
@@ -4947,7 +4949,7 @@ docker-compose*.yml
 
 <span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/server&quot;</span><span class="p">]</span>
 
-<span class="c"># Build with: docker buildx build --platform linux/amd64,linux/arm64 -t myapp .</span>
+<span class="c">## Build with: docker buildx build --platform linux/amd64,linux/arm64 -t myapp .</span>
 </code></pre></div>
 <h3 id="using-cache-mounts">Using Cache Mounts<a class="headerlink" href="#using-cache-mounts" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.21-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
@@ -4956,13 +4958,13 @@ docker-compose*.yml
 
 <span class="k">COPY</span><span class="w"> </span>go.mod<span class="w"> </span>go.sum<span class="w"> </span>./
 
-<span class="c"># Use cache mount for go modules</span>
+<span class="c">## Use cache mount for go modules</span>
 <span class="k">RUN</span><span class="w"> </span>--mount<span class="o">=</span><span class="nv">type</span><span class="o">=</span>cache,target<span class="o">=</span>/go/pkg/mod<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>go<span class="w"> </span>mod<span class="w"> </span>download
 
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 
-<span class="c"># Use cache mount for build cache</span>
+<span class="c">## Use cache mount for build cache</span>
 <span class="k">RUN</span><span class="w"> </span>--mount<span class="o">=</span><span class="nv">type</span><span class="o">=</span>cache,target<span class="o">=</span>/go/pkg/mod<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--mount<span class="o">=</span><span class="nv">type</span><span class="o">=</span>cache,target<span class="o">=</span>/root/.cache/go-build<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>go<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>/app/server<span class="w"> </span>./cmd/server

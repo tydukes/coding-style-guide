@@ -4232,7 +4232,7 @@ multi-OS support, templating, handlers, and automated testing with Molecule.</p>
 </code></pre></div>
 <hr />
 <h2 id="readmemd">README.md<a class="headerlink" href="#readmemd" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="gh"># Ansible Role: Nginx</span>
+<div class="highlight"><pre><span></span><code><span class="gu">## Ansible Role: Nginx</span>
 
 [<span class="nt">![CI</span>](<span class="na">https://github.com/yourusername/ansible-role-nginx/workflows/CI/badge.svg</span>)](https://github.com/yourusername/ansible-role-nginx/actions)
 [<span class="nt">![Ansible Galaxy</span>](<span class="na">https://img.shields.io/badge/galaxy-yourusername.nginx-blue.svg</span>)](https://galaxy.ansible.com/yourusername/nginx)
@@ -4253,34 +4253,34 @@ Ansible role for installing and configuring Nginx web server with SSL support.
 Available variables are listed below, along with default values (see <span class="sb">`defaults/main.yml`</span>):
 
 \```yaml
-<span class="gh"># Nginx version (use &#39;latest&#39; or specific version)</span>
+<span class="gu">## Nginx version (use &#39;latest&#39; or specific version)</span>
 nginx_version: latest
 
-<span class="gh"># Enable/disable nginx service</span>
+<span class="gu">## Enable/disable nginx service</span>
 nginx_enabled: true
 nginx_state: started
 
-<span class="gh"># Nginx user and group</span>
+<span class="gu">## Nginx user and group</span>
 nginx_user: www-data
 nginx_group: www-data
 
-<span class="gh"># Performance tuning</span>
+<span class="gu">## Performance tuning</span>
 nginx_worker_processes: auto
 nginx_worker_connections: 1024
 
-<span class="gh"># SSL configuration</span>
+<span class="gu">## SSL configuration</span>
 nginx_ssl_enabled: true
 nginx_ssl_protocols: &quot;TLSv1.2 TLSv1.3&quot;
 nginx_ssl_ciphers: &quot;ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256&quot;
 
-<span class="gh"># Virtual hosts</span>
+<span class="gu">## Virtual hosts</span>
 nginx_sites: []
-<span class="gh">#  - name: example.com</span>
-<span class="gh">#    server_name: example.com www.example.com</span>
-<span class="gh">#    root: /var/www/example.com</span>
-<span class="gh">#    ssl_enabled: true</span>
-<span class="gh">#    ssl_certificate: /etc/ssl/certs/example.com.crt</span>
-<span class="gh">#    ssl_certificate_key: /etc/ssl/private/example.com.key</span>
+<span class="gu">##  - name: example.com</span>
+<span class="gu">##    server_name: example.com www.example.com</span>
+<span class="gu">##    root: /var/www/example.com</span>
+<span class="gu">##    ssl_enabled: true</span>
+<span class="gu">##    ssl_certificate: /etc/ssl/certs/example.com.crt</span>
+<span class="gu">##    ssl_certificate_key: /etc/ssl/private/example.com.key</span>
 \```
 
 <span class="gu">## Dependencies</span>
@@ -4308,10 +4308,10 @@ None.
 This role includes Molecule tests:
 
 \```bash
-<span class="gh"># Install dependencies</span>
+<span class="gu">## Install dependencies</span>
 pip install molecule molecule-docker ansible-lint
 
-<span class="gh"># Run tests</span>
+<span class="gu">## Run tests</span>
 molecule test
 \```
 
@@ -4360,33 +4360,33 @@ This role was created by [<span class="nt">Your Name</span>](<span class="na">ht
 <hr />
 <h2 id="defaultsmainyml">defaults/main.yml<a class="headerlink" href="#defaultsmainyml" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nn">---</span>
-<span class="c1"># Nginx version</span>
+<span class="c1">## Nginx version</span>
 <span class="nt">nginx_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latest</span>
 
-<span class="c1"># Service configuration</span>
+<span class="c1">## Service configuration</span>
 <span class="nt">nginx_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">nginx_state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">started</span>
 
-<span class="c1"># User and group (will be set per OS in vars/)</span>
+<span class="c1">## User and group (will be set per OS in vars/)</span>
 <span class="nt">nginx_user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www-data</span>
 <span class="nt">nginx_group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www-data</span>
 
-<span class="c1"># Performance tuning</span>
+<span class="c1">## Performance tuning</span>
 <span class="nt">nginx_worker_processes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>
 <span class="nt">nginx_worker_connections</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1024</span>
 <span class="nt">nginx_multi_accept</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;on&quot;</span>
 <span class="nt">nginx_keepalive_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65</span>
 
-<span class="c1"># Buffer sizes</span>
+<span class="c1">## Buffer sizes</span>
 <span class="nt">nginx_client_body_buffer_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128k</span>
 <span class="nt">nginx_client_max_body_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
 
-<span class="c1"># Logging</span>
+<span class="c1">## Logging</span>
 <span class="nt">nginx_access_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/log/nginx/access.log</span>
 <span class="nt">nginx_error_log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/log/nginx/error.log</span>
 <span class="nt">nginx_log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warn</span>
 
-<span class="c1"># SSL/TLS configuration</span>
+<span class="c1">## SSL/TLS configuration</span>
 <span class="nt">nginx_ssl_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">nginx_ssl_protocols</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TLSv1.2</span><span class="nv"> </span><span class="s">TLSv1.3&quot;</span>
 <span class="nt">nginx_ssl_ciphers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
@@ -4396,20 +4396,20 @@ This role was created by [<span class="nt">Your Name</span>](<span class="na">ht
 <span class="nt">nginx_ssl_session_cache</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;shared:SSL:10m&quot;</span>
 <span class="nt">nginx_ssl_session_timeout</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10m&quot;</span>
 
-<span class="c1"># Security headers</span>
+<span class="c1">## Security headers</span>
 <span class="nt">nginx_security_headers</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">X-Frame-Options</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;DENY&quot;</span>
 <span class="w">  </span><span class="nt">X-Content-Type-Options</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;nosniff&quot;</span>
 <span class="w">  </span><span class="nt">X-XSS-Protection</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1;</span><span class="nv"> </span><span class="s">mode=block&quot;</span>
 <span class="w">  </span><span class="nt">Referrer-Policy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;no-referrer-when-downgrade&quot;</span>
 
-<span class="c1"># Virtual hosts</span>
+<span class="c1">## Virtual hosts</span>
 <span class="nt">nginx_sites</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 
-<span class="c1"># Remove default site</span>
+<span class="c1">## Remove default site</span>
 <span class="nt">nginx_remove_default_site</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="c1"># Configuration paths</span>
+<span class="c1">## Configuration paths</span>
 <span class="nt">nginx_conf_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/nginx/nginx.conf</span>
 <span class="nt">nginx_sites_available_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/nginx/sites-available</span>
 <span class="nt">nginx_sites_enabled_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/nginx/sites-enabled</span>
@@ -4711,7 +4711,7 @@ This role was created by [<span class="nt">Your Name</span>](<span class="na">ht
 <hr />
 <h2 id="templatessiteconfj2">templates/site.conf.j2<a class="headerlink" href="#templatessiteconfj2" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="k">{%</span><span class="w"> </span><span class="s">if</span><span class="w"> </span><span class="s">item.ssl_enabled</span><span class="w"> </span><span class="s">|</span><span class="w"> </span><span class="s">default(false)</span><span class="w"> </span><span class="s">%</span><span class="err">}</span>
-<span class="c1"># Redirect HTTP to HTTPS</span>
+<span class="c1">## Redirect HTTP to HTTPS</span>
 <span class="s">server</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
 <span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="s">[::]:80</span><span class="p">;</span>
@@ -4762,23 +4762,23 @@ This role was created by [<span class="nt">Your Name</span>](<span class="na">ht
 </code></pre></div>
 <hr />
 <h2 id="templatessslconfj2">templates/ssl.conf.j2<a class="headerlink" href="#templatessslconfj2" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># SSL Protocols and Ciphers</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## SSL Protocols and Ciphers</span>
 <span class="k">ssl_protocols</span><span class="w"> </span><span class="p">{</span><span class="kn">{</span><span class="w"> </span><span class="s">nginx_ssl_protocols</span><span class="w"> </span><span class="err">}}</span><span class="p">;</span>
 <span class="kn">ssl_ciphers</span><span class="w"> </span><span class="p">{</span><span class="kn">{</span><span class="w"> </span><span class="s">nginx_ssl_ciphers</span><span class="w"> </span><span class="err">}}</span><span class="p">;</span>
 <span class="kn">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="p">{</span><span class="kn">{</span><span class="w"> </span><span class="s">nginx_ssl_prefer_server_ciphers</span><span class="w"> </span><span class="err">}}</span><span class="p">;</span>
 
-<span class="c1"># SSL Session</span>
+<span class="c1">## SSL Session</span>
 <span class="kn">ssl_session_cache</span><span class="w"> </span><span class="p">{</span><span class="kn">{</span><span class="w"> </span><span class="s">nginx_ssl_session_cache</span><span class="w"> </span><span class="err">}}</span><span class="p">;</span>
 <span class="kn">ssl_session_timeout</span><span class="w"> </span><span class="p">{</span><span class="kn">{</span><span class="w"> </span><span class="s">nginx_ssl_session_timeout</span><span class="w"> </span><span class="err">}}</span><span class="p">;</span>
 <span class="kn">ssl_session_tickets</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
 
-<span class="c1"># OCSP Stapling</span>
+<span class="c1">## OCSP Stapling</span>
 <span class="kn">ssl_stapling</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
 <span class="kn">ssl_stapling_verify</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
 <span class="kn">resolver</span><span class="w"> </span><span class="mi">8</span><span class="s">.8.8.8</span><span class="w"> </span><span class="mi">8</span><span class="s">.8.4.4</span><span class="w"> </span><span class="s">valid=300s</span><span class="p">;</span>
 <span class="kn">resolver_timeout</span><span class="w"> </span><span class="s">5s</span><span class="p">;</span>
 
-<span class="c1"># Security Headers</span>
+<span class="c1">## Security Headers</span>
 <span class="kn">add_header</span><span class="w"> </span><span class="s">Strict-Transport-Security</span><span class="w"> </span><span class="s">&quot;max-age=63072000&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
 </code></pre></div>
 <hr />

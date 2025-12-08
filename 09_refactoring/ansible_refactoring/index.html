@@ -4208,7 +4208,7 @@ to best practices.</p>
 <span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restarted</span>
 </code></pre></div>
 <p><strong>After</strong> (modular role-based structure):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># playbooks/configure_webservers.yml (now 20 lines)</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## playbooks/configure_webservers.yml (now 20 lines)</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure web servers</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webservers</span>
@@ -4237,7 +4237,7 @@ to best practices.</p>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> port</span><span class="p">:</span><span class="w"> </span><span class="nv">8080</span><span class="p p-Indicator">,</span><span class="nt"> proto</span><span class="p">:</span><span class="w"> </span><span class="nv">tcp</span><span class="w"> </span><span class="p p-Indicator">}</span>
 <span class="w">      </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">firewall</span>
 
-<span class="c1"># roles/common/tasks/main.yml</span>
+<span class="c1">## roles/common/tasks/main.yml</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install system packages</span>
 <span class="w">  </span><span class="nt">apt</span><span class="p">:</span>
@@ -4254,7 +4254,7 @@ to best practices.</p>
 <span class="w">  </span><span class="nt">hostname</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">inventory_hostname</span><span class="nv"> </span><span class="s">}}&quot;</span>
 
-<span class="c1"># roles/common/defaults/main.yml</span>
+<span class="c1">## roles/common/defaults/main.yml</span>
 <span class="nn">---</span>
 <span class="nt">common_packages</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curl</span>
@@ -4265,7 +4265,7 @@ to best practices.</p>
 
 <span class="nt">system_timezone</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;UTC&quot;</span>
 
-<span class="c1"># roles/application/tasks/main.yml</span>
+<span class="c1">## roles/application/tasks/main.yml</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Include user setup</span>
 <span class="w">  </span><span class="nt">import_tasks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user.yml</span>
@@ -4279,7 +4279,7 @@ to best practices.</p>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Include service configuration</span>
 <span class="w">  </span><span class="nt">import_tasks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service.yml</span>
 
-<span class="c1"># roles/application/tasks/user.yml</span>
+<span class="c1">## roles/application/tasks/user.yml</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create application user</span>
 <span class="w">  </span><span class="nt">user</span><span class="p">:</span>
@@ -4289,7 +4289,7 @@ to best practices.</p>
 <span class="w">    </span><span class="nt">home</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">app_home</span><span class="nv"> </span><span class="s">}}&quot;</span>
 <span class="w">    </span><span class="nt">create_home</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
 
-<span class="c1"># roles/application/tasks/directories.yml</span>
+<span class="c1">## roles/application/tasks/directories.yml</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create application directories</span>
 <span class="w">  </span><span class="nt">file</span><span class="p">:</span>
@@ -4300,7 +4300,7 @@ to best practices.</p>
 <span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0755&#39;</span>
 <span class="w">  </span><span class="nt">loop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">app_directories</span><span class="nv"> </span><span class="s">}}&quot;</span>
 
-<span class="c1"># roles/application/tasks/deploy.yml</span>
+<span class="c1">## roles/application/tasks/deploy.yml</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Clone application repository</span>
 <span class="w">  </span><span class="nt">git</span><span class="p">:</span>
@@ -4325,7 +4325,7 @@ to best practices.</p>
 <span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0640&#39;</span>
 <span class="w">  </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restart application</span>
 
-<span class="c1"># roles/application/tasks/service.yml</span>
+<span class="c1">## roles/application/tasks/service.yml</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create systemd service file</span>
 <span class="w">  </span><span class="nt">template</span><span class="p">:</span>
@@ -4342,7 +4342,7 @@ to best practices.</p>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">started</span>
 
-<span class="c1"># roles/application/defaults/main.yml</span>
+<span class="c1">## roles/application/defaults/main.yml</span>
 <span class="nn">---</span>
 <span class="nt">app_home</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/opt/{{</span><span class="nv"> </span><span class="s">app_name</span><span class="nv"> </span><span class="s">}}&quot;</span>
 <span class="nt">app_release_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">app_home</span><span class="nv"> </span><span class="s">}}/releases/{{</span><span class="nv"> </span><span class="s">app_version</span><span class="nv"> </span><span class="s">}}&quot;</span>
@@ -4355,7 +4355,7 @@ to best practices.</p>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">app_home</span><span class="nv"> </span><span class="s">}}/shared&quot;</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/var/log/{{</span><span class="nv"> </span><span class="s">app_name</span><span class="nv"> </span><span class="s">}}&quot;</span>
 
-<span class="c1"># roles/application/handlers/main.yml</span>
+<span class="c1">## roles/application/handlers/main.yml</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reload systemd</span>
 <span class="w">  </span><span class="nt">systemd</span><span class="p">:</span>
@@ -4366,7 +4366,7 @@ to best practices.</p>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">app_name</span><span class="nv"> </span><span class="s">}}&quot;</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restarted</span>
 
-<span class="c1"># roles/nginx/tasks/main.yml</span>
+<span class="c1">## roles/nginx/tasks/main.yml</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install nginx</span>
 <span class="w">  </span><span class="nt">apt</span><span class="p">:</span>
@@ -4393,7 +4393,7 @@ to best practices.</p>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">started</span>
 
-<span class="c1"># roles/firewall/tasks/main.yml</span>
+<span class="c1">## roles/firewall/tasks/main.yml</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure firewall rules</span>
 <span class="w">  </span><span class="nt">ufw</span><span class="p">:</span>
@@ -4828,7 +4828,7 @@ to best practices.</p>
 <span class="w">    </span><span class="c1"># Repeated conditionals throughout...</span>
 </code></pre></div>
 <p><strong>After</strong> (using includes and group_vars):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># group_vars/production.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## group_vars/production.yml</span>
 <span class="nn">---</span>
 <span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
 <span class="nt">app_package</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp-pro</span>
@@ -4836,7 +4836,7 @@ to best practices.</p>
 <span class="nt">log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">info</span>
 <span class="nt">enable_monitoring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="c1"># group_vars/staging.yml</span>
+<span class="c1">## group_vars/staging.yml</span>
 <span class="nn">---</span>
 <span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">staging</span>
 <span class="nt">app_package</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp-staging</span>
@@ -4844,7 +4844,7 @@ to best practices.</p>
 <span class="nt">log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">debug</span>
 <span class="nt">enable_monitoring</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 
-<span class="c1"># playbook.yml</span>
+<span class="c1">## playbook.yml</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure application</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all</span>
@@ -4861,7 +4861,7 @@ to best practices.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Include OS-specific tasks</span>
 <span class="w">      </span><span class="nt">include_tasks</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">ansible_os_family</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">lower</span><span class="nv"> </span><span class="s">}}.yml&quot;</span>
 
-<span class="c1"># tasks/debian.yml (for Ubuntu/Debian)</span>
+<span class="c1">## tasks/debian.yml (for Ubuntu/Debian)</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install application package (Debian)</span>
 <span class="w">  </span><span class="nt">apt</span><span class="p">:</span>
@@ -4876,7 +4876,7 @@ to best practices.</p>
 <span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/myapp/database.yml</span>
 <span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0640&#39;</span>
 
-<span class="c1"># tasks/redhat.yml (for CentOS/RHEL)</span>
+<span class="c1">## tasks/redhat.yml (for CentOS/RHEL)</span>
 <span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install application package (RedHat)</span>
 <span class="w">  </span><span class="nt">yum</span><span class="p">:</span>

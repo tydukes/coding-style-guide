@@ -4362,15 +4362,15 @@
 integrate validation into any repository without installing dependencies locally.</p>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <h3 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run full validation on current directory</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Run full validation on current directory</span>
 docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>validate
 
-<span class="c1"># Run linters only</span>
+<span class="c1">## Run linters only</span>
 docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>lint
 
-<span class="c1"># Format code in-place</span>
+<span class="c1">## Format code in-place</span>
 docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>format
 </code></pre></div>
@@ -4417,10 +4417,10 @@ docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </
 <span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate</span>
 </code></pre></div>
 <p>Then run:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Full validation</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Full validation</span>
 docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>validate
 
-<span class="c1"># Or specify command</span>
+<span class="c1">## Or specify command</span>
 docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>validate<span class="w"> </span>lint
 </code></pre></div>
 <h2 id="github-actions-integration">GitHub Actions Integration<a class="headerlink" href="#github-actions-integration" title="Permanent link">&para;</a></h2>
@@ -4503,17 +4503,17 @@ docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class
 </code></pre></div>
 <h2 id="cli-wrapper-script">CLI Wrapper Script<a class="headerlink" href="#cli-wrapper-script" title="Permanent link">&para;</a></h2>
 <p>For easier local usage, use the wrapper script:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Download wrapper script</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Download wrapper script</span>
 curl<span class="w"> </span>-sSL<span class="w"> </span>https://raw.githubusercontent.com/tydukes/coding-style-guide/main/scripts/validate-container.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-o<span class="w"> </span>validate-style.sh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>validate-style.sh
 
-<span class="c1"># Run validation</span>
+<span class="c1">## Run validation</span>
 ./validate-style.sh<span class="w"> </span>validate
 
-<span class="c1"># Run with custom workspace</span>
+<span class="c1">## Run with custom workspace</span>
 ./validate-style.sh<span class="w"> </span>lint<span class="w"> </span>--workspace<span class="w"> </span>/path/to/repo
 
-<span class="c1"># Use local image</span>
+<span class="c1">## Use local image</span>
 ./validate-style.sh<span class="w"> </span>validate<span class="w"> </span>--image<span class="w"> </span>coding-style-guide:local
 </code></pre></div>
 <h3 id="wrapper-options">Wrapper Options<a class="headerlink" href="#wrapper-options" title="Permanent link">&para;</a></h3>
@@ -4610,26 +4610,26 @@ Options:
 </code></pre></div>
 <h2 id="building-locally">Building Locally<a class="headerlink" href="#building-locally" title="Permanent link">&para;</a></h2>
 <p>To build and test locally:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Build image</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Build image</span>
 docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>coding-style-guide:local<span class="w"> </span>.
 
-<span class="c1"># Test with docker-compose</span>
+<span class="c1">## Test with docker-compose</span>
 docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>validator
 
-<span class="c1"># Or run directly</span>
+<span class="c1">## Or run directly</span>
 docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span>coding-style-guide:local<span class="w"> </span>validate
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="permission-issues">Permission Issues<a class="headerlink" href="#permission-issues" title="Permanent link">&para;</a></h3>
 <p>If you encounter permission issues with mounted volumes:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run as current user</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Run as current user</span>
 docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--user<span class="w"> </span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span>:<span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>validate
 </code></pre></div>
 <h3 id="missing-files">Missing Files<a class="headerlink" href="#missing-files" title="Permanent link">&para;</a></h3>
 <p>Ensure your repository is properly mounted:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Verify mount</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Verify mount</span>
 docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>/workspace
 </code></pre></div>

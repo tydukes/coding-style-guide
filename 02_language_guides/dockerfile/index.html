@@ -5043,8 +5043,8 @@ best practices for creating secure, efficient, and maintainable container images
 <hr />
 <h2 id="basic-structure">Basic Structure<a class="headerlink" href="#basic-structure" title="Permanent link">&para;</a></h2>
 <h3 id="simple-dockerfile">Simple Dockerfile<a class="headerlink" href="#simple-dockerfile" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Syntax version (optional but recommended)</span>
-<span class="c"># syntax=docker/dockerfile:1</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Syntax version (optional but recommended)</span>
+<span class="c">## syntax=docker/dockerfile:1</span>
 
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
 
@@ -5063,15 +5063,15 @@ best practices for creating secure, efficient, and maintainable container images
 <hr />
 <h2 id="from-instruction">FROM Instruction<a class="headerlink" href="#from-instruction" title="Permanent link">&para;</a></h2>
 <h3 id="always-pin-base-image-versions">Always Pin Base Image Versions<a class="headerlink" href="#always-pin-base-image-versions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Good - Pinned to specific version</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Pinned to specific version</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18.19-alpine3.19</span>
 
-<span class="c"># Avoid - Using latest or unpinned versions</span>
+<span class="c">## Avoid - Using latest or unpinned versions</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:latest</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18</span>
 </code></pre></div>
 <h3 id="multi-stage-builds">Multi-Stage Builds<a class="headerlink" href="#multi-stage-builds" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Build stage</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Build stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
@@ -5079,7 +5079,7 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
 
-<span class="c"># Production stage</span>
+<span class="c">## Production stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
@@ -5091,35 +5091,35 @@ best practices for creating secure, efficient, and maintainable container images
 <hr />
 <h2 id="workdir-instruction">WORKDIR Instruction<a class="headerlink" href="#workdir-instruction" title="Permanent link">&para;</a></h2>
 <p>Always use <code>WORKDIR</code> instead of <code>RUN cd</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="c"># Good - Using WORKDIR</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Using WORKDIR</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 
-<span class="c"># Bad - Using cd</span>
+<span class="c">## Bad - Using cd</span>
 <span class="k">RUN</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/app
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 </code></pre></div>
 <hr />
 <h2 id="copy-vs-add">COPY vs ADD<a class="headerlink" href="#copy-vs-add" title="Permanent link">&para;</a></h2>
 <h3 id="use-copy-for-local-files">Use COPY for Local Files<a class="headerlink" href="#use-copy-for-local-files" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Good - COPY for local files</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - COPY for local files</span>
 <span class="k">COPY</span><span class="w"> </span>package.json<span class="w"> </span>./
 <span class="k">COPY</span><span class="w"> </span>src/<span class="w"> </span>./src/
 
-<span class="c"># Avoid - ADD has implicit extraction behavior</span>
+<span class="c">## Avoid - ADD has implicit extraction behavior</span>
 <span class="k">ADD</span><span class="w"> </span>package.json<span class="w"> </span>./
 </code></pre></div>
 <h3 id="use-add-only-for-urls-or-tar-extraction">Use ADD Only for URLs or Tar Extraction<a class="headerlink" href="#use-add-only-for-urls-or-tar-extraction" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># ADD for remote URLs (but prefer RUN wget/curl for better control)</span>
+<div class="highlight"><pre><span></span><code><span class="c">## ADD for remote URLs (but prefer RUN wget/curl for better control)</span>
 <span class="k">ADD</span><span class="w"> </span>https://example.com/file.tar.gz<span class="w"> </span>/tmp/
 
-<span class="c"># ADD for automatic tar extraction</span>
+<span class="c">## ADD for automatic tar extraction</span>
 <span class="k">ADD</span><span class="w"> </span>archive.tar.gz<span class="w"> </span>/opt/
 </code></pre></div>
 <hr />
 <h2 id="run-instruction">RUN Instruction<a class="headerlink" href="#run-instruction" title="Permanent link">&para;</a></h2>
 <h3 id="combine-commands-to-reduce-layers">Combine Commands to Reduce Layers<a class="headerlink" href="#combine-commands-to-reduce-layers" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Good - Single layer</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Single layer</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="se">\</span>
 <span class="w">      </span>curl<span class="w"> </span><span class="se">\</span>
@@ -5128,14 +5128,14 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="w">    </span>apt-get<span class="w"> </span>clean<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
 
-<span class="c"># Avoid - Multiple layers</span>
+<span class="c">## Avoid - Multiple layers</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>git
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>vim
 </code></pre></div>
 <h3 id="clean-up-in-same-layer">Clean Up in Same Layer<a class="headerlink" href="#clean-up-in-same-layer" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Good - Clean up in same RUN instruction</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Clean up in same RUN instruction</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>build-essential<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>make<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
@@ -5143,7 +5143,7 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="w">    </span>apt-get<span class="w"> </span>autoremove<span class="w"> </span>-y<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
 
-<span class="c"># Bad - Clean up in separate layer (doesn&#39;t reduce image size)</span>
+<span class="c">## Bad - Clean up in separate layer (doesn&#39;t reduce image size)</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>build-essential
 <span class="k">RUN</span><span class="w"> </span>make
@@ -5151,17 +5151,17 @@ best practices for creating secure, efficient, and maintainable container images
 </code></pre></div>
 <hr />
 <h2 id="env-instruction">ENV Instruction<a class="headerlink" href="#env-instruction" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c"># Environment variables</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Environment variables</span>
 <span class="k">ENV</span><span class="w"> </span><span class="nv">NODE_ENV</span><span class="o">=</span>production<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">PORT</span><span class="o">=</span><span class="m">3000</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">LOG_LEVEL</span><span class="o">=</span>info
 
-<span class="c"># Path variables</span>
+<span class="c">## Path variables</span>
 <span class="k">ENV</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/app/node_modules/.bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="expose-instruction">EXPOSE Instruction<a class="headerlink" href="#expose-instruction" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c"># Document exposed ports</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Document exposed ports</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080/tcp</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8081/udp</span>
@@ -5169,21 +5169,21 @@ best practices for creating secure, efficient, and maintainable container images
 <hr />
 <h2 id="user-instruction">USER Instruction<a class="headerlink" href="#user-instruction" title="Permanent link">&para;</a></h2>
 <h3 id="always-run-as-non-root-user">Always Run as Non-Root User<a class="headerlink" href="#always-run-as-non-root-user" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Good - Create and use non-root user</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Create and use non-root user</span>
 <span class="k">RUN</span><span class="w"> </span>addgroup<span class="w"> </span>-g<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-S<span class="w"> </span>nodejs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>adduser<span class="w"> </span>-S<span class="w"> </span>nodejs<span class="w"> </span>-u<span class="w"> </span><span class="m">1001</span>
 
 <span class="k">USER</span><span class="w"> </span><span class="s">nodejs</span>
 
-<span class="c"># Bad - Running as root (default)</span>
-<span class="c"># (no USER instruction)</span>
+<span class="c">## Bad - Running as root (default)</span>
+<span class="c">## (no USER instruction)</span>
 </code></pre></div>
 <hr />
 <h2 id="multi-stage-build-examples">Multi-Stage Build Examples<a class="headerlink" href="#multi-stage-build-examples" title="Permanent link">&para;</a></h2>
 <h3 id="nodejs-application">Node.js Application<a class="headerlink" href="#nodejs-application" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># syntax=docker/dockerfile:1</span>
+<div class="highlight"><pre><span></span><code><span class="c">## syntax=docker/dockerfile:1</span>
 
-<span class="c"># Build stage</span>
+<span class="c">## Build stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
@@ -5192,15 +5192,15 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>npm<span class="w"> </span>prune<span class="w"> </span>--production
 
-<span class="c"># Production stage</span>
+<span class="c">## Production stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Create non-root user</span>
+<span class="c">## Create non-root user</span>
 <span class="k">RUN</span><span class="w"> </span>addgroup<span class="w"> </span>-g<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-S<span class="w"> </span>nodejs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>adduser<span class="w"> </span>-S<span class="w"> </span>nodejs<span class="w"> </span>-u<span class="w"> </span><span class="m">1001</span>
 
-<span class="c"># Copy files with correct ownership</span>
+<span class="c">## Copy files with correct ownership</span>
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>--chown<span class="o">=</span>nodejs:nodejs<span class="w"> </span>/app/dist<span class="w"> </span>./dist
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>--chown<span class="o">=</span>nodejs:nodejs<span class="w"> </span>/app/node_modules<span class="w"> </span>./node_modules
 <span class="k">COPY</span><span class="w"> </span>--chown<span class="o">=</span>nodejs:nodejs<span class="w"> </span>package.json<span class="w"> </span>./
@@ -5215,40 +5215,40 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="python-application">Python Application<a class="headerlink" href="#python-application" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># syntax=docker/dockerfile:1</span>
+<div class="highlight"><pre><span></span><code><span class="c">## syntax=docker/dockerfile:1</span>
 
-<span class="c"># Build stage</span>
+<span class="c">## Build stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Install build dependencies</span>
+<span class="c">## Install build dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span><span class="se">\</span>
 <span class="w">      </span>build-essential<span class="w"> </span><span class="se">\</span>
 <span class="w">      </span>libpq-dev<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
 
-<span class="c"># Install Python dependencies</span>
+<span class="c">## Install Python dependencies</span>
 <span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w"> </span>.
 <span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--no-cache-dir<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 
-<span class="c"># Production stage</span>
+<span class="c">## Production stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Install runtime dependencies</span>
+<span class="c">## Install runtime dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span><span class="se">\</span>
 <span class="w">      </span>libpq5<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
 
-<span class="c"># Create non-root user</span>
+<span class="c">## Create non-root user</span>
 <span class="k">RUN</span><span class="w"> </span>useradd<span class="w"> </span>-m<span class="w"> </span>-u<span class="w"> </span><span class="m">1001</span><span class="w"> </span>appuser
 
-<span class="c"># Copy Python packages from builder</span>
+<span class="c">## Copy Python packages from builder</span>
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/root/.local<span class="w"> </span>/home/appuser/.local
 
-<span class="c"># Copy application code</span>
+<span class="c">## Copy application code</span>
 <span class="k">COPY</span><span class="w"> </span>--chown<span class="o">=</span>appuser:appuser<span class="w"> </span>.<span class="w"> </span>.
 
 <span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
@@ -5264,37 +5264,37 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;uvicorn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;main:app&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--port&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;8000&quot;</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="go-application">Go Application<a class="headerlink" href="#go-application" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># syntax=docker/dockerfile:1</span>
+<div class="highlight"><pre><span></span><code><span class="c">## syntax=docker/dockerfile:1</span>
 
-<span class="c"># Build stage</span>
+<span class="c">## Build stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.21-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Install build dependencies</span>
+<span class="c">## Install build dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>--no-cache<span class="w"> </span>git
 
-<span class="c"># Copy go mod files</span>
+<span class="c">## Copy go mod files</span>
 <span class="k">COPY</span><span class="w"> </span>go.mod<span class="w"> </span>go.sum<span class="w"> </span>./
 <span class="k">RUN</span><span class="w"> </span>go<span class="w"> </span>mod<span class="w"> </span>download
 
-<span class="c"># Copy source code</span>
+<span class="c">## Copy source code</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 
-<span class="c"># Build binary</span>
+<span class="c">## Build binary</span>
 <span class="k">RUN</span><span class="w"> </span><span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">GOOS</span><span class="o">=</span>linux<span class="w"> </span>go<span class="w"> </span>build<span class="w"> </span>-a<span class="w"> </span>-installsuffix<span class="w"> </span>cgo<span class="w"> </span>-o<span class="w"> </span>main<span class="w"> </span>.
 
-<span class="c"># Production stage</span>
+<span class="c">## Production stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">alpine:3.19</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
-<span class="c"># Install ca-certificates for HTTPS</span>
+<span class="c">## Install ca-certificates for HTTPS</span>
 <span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>--no-cache<span class="w"> </span>add<span class="w"> </span>ca-certificates
 
-<span class="c"># Create non-root user</span>
+<span class="c">## Create non-root user</span>
 <span class="k">RUN</span><span class="w"> </span>addgroup<span class="w"> </span>-g<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-S<span class="w"> </span>appuser<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>adduser<span class="w"> </span>-S<span class="w"> </span>appuser<span class="w"> </span>-u<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-G<span class="w"> </span>appuser
 
-<span class="c"># Copy binary from builder</span>
+<span class="c">## Copy binary from builder</span>
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>--chown<span class="o">=</span>appuser:appuser<span class="w"> </span>/app/main<span class="w"> </span>.
 
 <span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
@@ -5309,15 +5309,15 @@ best practices for creating secure, efficient, and maintainable container images
 <hr />
 <h2 id="dockerignore">.dockerignore<a class="headerlink" href="#dockerignore" title="Permanent link">&para;</a></h2>
 <p>Always create a <code>.dockerignore</code> file:</p>
-<div class="highlight"><pre><span></span><code># Git
+<div class="highlight"><pre><span></span><code>## Git
 .git
 .gitignore
 
-# Node.js
+## Node.js
 node_modules
 npm-debug.log
 
-# Python
+## Python
 __pycache__
 *.py[cod]
 *$py.class
@@ -5325,80 +5325,80 @@ __pycache__
 venv/
 .env
 
-# Build artifacts
+## Build artifacts
 dist
 build
 *.o
 *.so
 
-# IDE
+## IDE
 .vscode
 .idea
 *.swp
 *.swo
 
-# Documentation
+## Documentation
 *.md
 docs/
 
-# Tests
+## Tests
 tests/
 *.test.js
 
-# CI/CD
+## CI/CD
 .github
 .gitlab-ci.yml
 Jenkinsfile
 
-# Docker
+## Docker
 Dockerfile*
 docker-compose*.yml
 </code></pre></div>
 <hr />
 <h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="scan-for-vulnerabilities">Scan for Vulnerabilities<a class="headerlink" href="#scan-for-vulnerabilities" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan image with Trivy</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan image with Trivy</span>
 trivy<span class="w"> </span>image<span class="w"> </span>myapp:latest
 
-<span class="c1"># Scan image with Grype</span>
+<span class="c1">## Scan image with Grype</span>
 grype<span class="w"> </span>myapp:latest
 
-<span class="c1"># Scan with Docker Scout</span>
+<span class="c1">## Scan with Docker Scout</span>
 docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> </span>myapp:latest
 </code></pre></div>
 <h3 id="use-minimal-base-images">Use Minimal Base Images<a class="headerlink" href="#use-minimal-base-images" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Good - Minimal alpine image</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Minimal alpine image</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
 
-<span class="c"># Good - Distroless image (even smaller, no shell)</span>
+<span class="c">## Good - Distroless image (even smaller, no shell)</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">gcr.io/distroless/nodejs18-debian11</span>
 
-<span class="c"># Avoid - Full Debian/Ubuntu images</span>
+<span class="c">## Avoid - Full Debian/Ubuntu images</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:22.04</span>
 </code></pre></div>
 <h3 id="dont-store-secrets-in-images">Don't Store Secrets in Images<a class="headerlink" href="#dont-store-secrets-in-images" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Bad - Secret in ENV</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Secret in ENV</span>
 <span class="k">ENV</span><span class="w"> </span><span class="nv">DB_PASSWORD</span><span class="o">=</span>supersecret
 
-<span class="c"># Bad - Secret in file</span>
+<span class="c">## Bad - Secret in file</span>
 <span class="k">COPY</span><span class="w"> </span>.env<span class="w"> </span>.
 
-<span class="c"># Good - Use runtime secrets</span>
-<span class="c"># Pass via environment variables at runtime</span>
-<span class="c"># docker run -e DB_PASSWORD=$DB_PASSWORD myapp</span>
+<span class="c">## Good - Use runtime secrets</span>
+<span class="c">## Pass via environment variables at runtime</span>
+<span class="c">## docker run -e DB_PASSWORD=$DB_PASSWORD myapp</span>
 </code></pre></div>
 <hr />
 <h2 id="healthcheck">HEALTHCHECK<a class="headerlink" href="#healthcheck" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c"># HTTP health check</span>
+<div class="highlight"><pre><span></span><code><span class="c">## HTTP health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>CMD<span class="w"> </span>curl<span class="w"> </span>-f<span class="w"> </span>http://localhost:3000/health<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 
-<span class="c"># TCP health check</span>
+<span class="c">## TCP health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="k">CMD</span><span class="w"> </span>nc<span class="w"> </span>-z<span class="w"> </span>localhost<span class="w"> </span><span class="m">3000</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 
-<span class="c"># Custom script</span>
+<span class="c">## Custom script</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="k">CMD</span><span class="w"> </span>node<span class="w"> </span>healthcheck.js
 </code></pre></div>
@@ -5415,12 +5415,12 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-running-as-root">❌ Avoid: Running as Root<a class="headerlink" href="#avoid-running-as-root" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Bad - Running as root</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Running as root</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;index.js&quot;</span><span class="p">]</span>
 
-<span class="c"># Good - Non-root user</span>
+<span class="c">## Good - Non-root user</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
 <span class="k">RUN</span><span class="w"> </span>adduser<span class="w"> </span>-D<span class="w"> </span>appuser
 <span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
@@ -5428,14 +5428,14 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;index.js&quot;</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="avoid-using-latest-tag">❌ Avoid: Using latest Tag<a class="headerlink" href="#avoid-using-latest-tag" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Bad - Unpredictable builds</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Unpredictable builds</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:latest</span>
 
-<span class="c"># Good - Pinned version</span>
+<span class="c">## Good - Pinned version</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18.19-alpine3.19</span>
 </code></pre></div>
 <h3 id="avoid-installing-unnecessary-packages">❌ Avoid: Installing Unnecessary Packages<a class="headerlink" href="#avoid-installing-unnecessary-packages" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Bad - Installing unnecessary packages</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Installing unnecessary packages</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>build-essential<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>python3<span class="w"> </span><span class="se">\</span>
@@ -5443,19 +5443,19 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="w">    </span>vim<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>nano
 
-<span class="c"># Good - Only install what&#39;s needed</span>
+<span class="c">## Good - Only install what&#39;s needed</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>build-essential<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
 </code></pre></div>
 <h3 id="avoid-multiple-run-commands-for-package-install">❌ Avoid: Multiple RUN Commands for Package Install<a class="headerlink" href="#avoid-multiple-run-commands-for-package-install" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Bad - Creates multiple layers</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Creates multiple layers</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>git
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>clean
 
-<span class="c"># Good - Single layer with cleanup</span>
+<span class="c">## Good - Single layer with cleanup</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>curl<span class="w"> </span><span class="se">\</span>
@@ -5464,16 +5464,16 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
 </code></pre></div>
 <h3 id="avoid-copying-entire-context">❌ Avoid: Copying Entire Context<a class="headerlink" href="#avoid-copying-entire-context" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Bad - Copies everything including .git, node_modules, etc.</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Copies everything including .git, node_modules, etc.</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
 
-<span class="c"># Good - Use .dockerignore and copy selectively</span>
-<span class="c"># .dockerignore:</span>
-<span class="c"># node_modules</span>
-<span class="c"># .git</span>
-<span class="c"># .env</span>
-<span class="c"># *.md</span>
+<span class="c">## Good - Use .dockerignore and copy selectively</span>
+<span class="c">## .dockerignore:</span>
+<span class="c">## node_modules</span>
+<span class="c">## .git</span>
+<span class="c">## .env</span>
+<span class="c">## *.md</span>
 
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
@@ -5483,7 +5483,7 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="k">COPY</span><span class="w"> </span>public/<span class="w"> </span>./public/
 </code></pre></div>
 <h3 id="avoid-not-using-multi-stage-builds">❌ Avoid: Not Using Multi-Stage Builds<a class="headerlink" href="#avoid-not-using-multi-stage-builds" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Bad - Build tools remain in final image</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Build tools remain in final image</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
@@ -5492,7 +5492,7 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;start&quot;</span><span class="p">]</span>
 
-<span class="c"># Good - Multi-stage build</span>
+<span class="c">## Good - Multi-stage build</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
@@ -5509,38 +5509,38 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="avoid-exposing-secrets-in-build">❌ Avoid: Exposing Secrets in Build<a class="headerlink" href="#avoid-exposing-secrets-in-build" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Bad - Secrets in image layers</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Secrets in image layers</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>.env<span class="w"> </span>.env<span class="w">  </span>#<span class="w"> </span>❌<span class="w"> </span>Secret<span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span>image!
 <span class="k">RUN</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;API_KEY=secret123&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>config.txt<span class="w">  </span>#<span class="w"> </span>❌<span class="w"> </span>In<span class="w"> </span>layer<span class="w"> </span>history!
 
-<span class="c"># Good - Use build secrets (Docker BuildKit)</span>
-<span class="c"># syntax=docker/dockerfile:1</span>
+<span class="c">## Good - Use build secrets (Docker BuildKit)</span>
+<span class="c">## syntax=docker/dockerfile:1</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">RUN</span><span class="w"> </span>--mount<span class="o">=</span><span class="nv">type</span><span class="o">=</span>secret,id<span class="o">=</span>npmrc,target<span class="o">=</span>/root/.npmrc<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>npm<span class="w"> </span>install<span class="w"> </span>private-package
 
-<span class="c"># Or use build args (for non-sensitive config)</span>
+<span class="c">## Or use build args (for non-sensitive config)</span>
 <span class="k">ARG</span><span class="w"> </span><span class="nv">NODE_ENV</span><span class="o">=</span>production
 <span class="k">ENV</span><span class="w"> </span><span class="nv">NODE_ENV</span><span class="o">=</span><span class="nv">$NODE_ENV</span>
 </code></pre></div>
 <hr />
 <h2 id="building-and-tagging">Building and Tagging<a class="headerlink" href="#building-and-tagging" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Build with tag</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Build with tag</span>
 docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>myapp:1.0.0<span class="w"> </span>.
 
-<span class="c1"># Build with multiple tags</span>
+<span class="c1">## Build with multiple tags</span>
 docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>myapp:1.0.0<span class="w"> </span>-t<span class="w"> </span>myapp:latest<span class="w"> </span>.
 
-<span class="c1"># Build with build args</span>
+<span class="c1">## Build with build args</span>
 docker<span class="w"> </span>build<span class="w"> </span>--build-arg<span class="w"> </span><span class="nv">NODE_ENV</span><span class="o">=</span>production<span class="w"> </span>-t<span class="w"> </span>myapp:1.0.0<span class="w"> </span>.
 
-<span class="c1"># Build with target stage</span>
+<span class="c1">## Build with target stage</span>
 docker<span class="w"> </span>build<span class="w"> </span>--target<span class="w"> </span>production<span class="w"> </span>-t<span class="w"> </span>myapp:1.0.0<span class="w"> </span>.
 
-<span class="c1"># Build with platform</span>
+<span class="c1">## Build with platform</span>
 docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64,linux/arm64<span class="w"> </span>-t<span class="w"> </span>myapp:1.0.0<span class="w"> </span>.
 </code></pre></div>
 <hr />
@@ -5556,13 +5556,13 @@ docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gcr.io</span>
 </code></pre></div>
 <h3 id="running-hadolint">Running hadolint<a class="headerlink" href="#running-hadolint" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Lint Dockerfile</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Lint Dockerfile</span>
 hadolint<span class="w"> </span>Dockerfile
 
-<span class="c1"># Lint with custom config</span>
+<span class="c1">## Lint with custom config</span>
 hadolint<span class="w"> </span>--config<span class="w"> </span>.hadolint.yaml<span class="w"> </span>Dockerfile
 
-<span class="c1"># Output as JSON</span>
+<span class="c1">## Output as JSON</span>
 hadolint<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>Dockerfile
 </code></pre></div>
 <hr />

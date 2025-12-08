@@ -4674,20 +4674,20 @@ container scanning, infrastructure scanning, and compliance validation.</p>
 <h2 id="secret-detection">Secret Detection<a class="headerlink" href="#secret-detection" title="Permanent link">&para;</a></h2>
 <h3 id="detect-secrets">detect-secrets<a class="headerlink" href="#detect-secrets" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Using pipx</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Using pipx</span>
 pipx<span class="w"> </span>install<span class="w"> </span>detect-secrets
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 detect-secrets<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Initialize baseline</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan current repository</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan current repository</span>
 detect-secrets<span class="w"> </span>scan<span class="w"> </span>&gt;<span class="w"> </span>.secrets.baseline
 
-<span class="c1"># Audit findings</span>
+<span class="c1">## Audit findings</span>
 detect-secrets<span class="w"> </span>audit<span class="w"> </span>.secrets.baseline
 
-<span class="c1"># Update baseline</span>
+<span class="c1">## Update baseline</span>
 detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<span class="w"> </span>.secrets.baseline
 </code></pre></div>
 <p><strong>.secrets.baseline</strong> configuration:</p>
@@ -4731,53 +4731,53 @@ detect-secrets<span class="w"> </span>scan<span class="w"> </span>--baseline<spa
 </code></pre></div>
 <h3 id="trufflehog">TruffleHog<a class="headerlink" href="#trufflehog" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>trufflesecurity/trufflehog/trufflehog
 
-<span class="c1"># Linux</span>
+<span class="c1">## Linux</span>
 curl<span class="w"> </span>-sSfL<span class="w"> </span>https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>sh<span class="w"> </span>-s<span class="w"> </span>--<span class="w"> </span>-b<span class="w"> </span>/usr/local/bin
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 trufflehog<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Scan filesystem</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan current directory</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan current directory</span>
 trufflehog<span class="w"> </span>filesystem<span class="w"> </span>.<span class="w"> </span>--json
 
-<span class="c1"># Scan with exclusions</span>
+<span class="c1">## Scan with exclusions</span>
 trufflehog<span class="w"> </span>filesystem<span class="w"> </span>.<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--exclude-paths<span class="w"> </span>.trufflehog-exclude.txt<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--json
 
-<span class="c1"># Scan specific branch</span>
+<span class="c1">## Scan specific branch</span>
 trufflehog<span class="w"> </span>git<span class="w"> </span>file://.<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--branch<span class="w"> </span>main<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--json
 </code></pre></div>
 <p><strong>.trufflehog-exclude.txt</strong>:</p>
-<div class="highlight"><pre><span></span><code># Dependency directories
+<div class="highlight"><pre><span></span><code>## Dependency directories
 node_modules/
 .venv/
 vendor/
 
-# Build outputs
+## Build outputs
 dist/
 build/
 *.min.js
 
-# Lock files
+## Lock files
 package-lock.json
 yarn.lock
 Pipfile.lock
 
-# Images
+## Images
 *.svg
 *.png
 *.jpg
 </code></pre></div>
 <p><strong>CI/CD integration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># GitHub Actions</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## GitHub Actions</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TruffleHog Secret Scan</span>
 <span class="w">  </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trufflesecurity/trufflehog@main</span>
 <span class="w">  </span><span class="nt">with</span><span class="p">:</span>
@@ -4787,15 +4787,15 @@ Pipfile.lock
 </code></pre></div>
 <h3 id="gitleaks">Gitleaks<a class="headerlink" href="#gitleaks" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>gitleaks
 
-<span class="c1"># Linux</span>
+<span class="c1">## Linux</span>
 wget<span class="w"> </span>https://github.com/gitleaks/gitleaks/releases/download/v8.18.1/gitleaks_8.18.1_linux_x64.tar.gz
 tar<span class="w"> </span>xvzf<span class="w"> </span>gitleaks_8.18.1_linux_x64.tar.gz
 sudo<span class="w"> </span>mv<span class="w"> </span>gitleaks<span class="w"> </span>/usr/local/bin/
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 gitleaks<span class="w"> </span>version
 </code></pre></div>
 <p><strong>Configuration (.gitleaks.toml)</strong>:</p>
@@ -4840,35 +4840,35 @@ gitleaks<span class="w"> </span>version
 <span class="p">]</span>
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan entire repository history</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan entire repository history</span>
 gitleaks<span class="w"> </span>detect<span class="w"> </span>--source<span class="w"> </span>.<span class="w"> </span>--verbose
 
-<span class="c1"># Scan specific commit range</span>
+<span class="c1">## Scan specific commit range</span>
 gitleaks<span class="w"> </span>detect<span class="w"> </span>--source<span class="w"> </span>.<span class="w"> </span>--log-opts<span class="o">=</span><span class="s2">&quot;HEAD~10..HEAD&quot;</span>
 
-<span class="c1"># Scan uncommitted changes</span>
+<span class="c1">## Scan uncommitted changes</span>
 gitleaks<span class="w"> </span>protect<span class="w"> </span>--staged
 
-<span class="c1"># Generate report</span>
+<span class="c1">## Generate report</span>
 gitleaks<span class="w"> </span>detect<span class="w"> </span>--report-path<span class="w"> </span>gitleaks-report.json<span class="w"> </span>--report-format<span class="w"> </span>json
 </code></pre></div>
 <hr />
 <h2 id="static-application-security-testing-sast">Static Application Security Testing (SAST)<a class="headerlink" href="#static-application-security-testing-sast" title="Permanent link">&para;</a></h2>
 <h3 id="sonarqubesonarcloud">SonarQube/SonarCloud<a class="headerlink" href="#sonarqubesonarcloud" title="Permanent link">&para;</a></h3>
 <p><strong>Installation (SonarQube)</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Docker</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Docker</span>
 docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>sonarqube<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-p<span class="w"> </span><span class="m">9000</span>:9000<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>sonarqube:lts-community
 
-<span class="c1"># Access at http://localhost:9000</span>
-<span class="c1"># Default credentials: admin/admin</span>
+<span class="c1">## Access at http://localhost:9000</span>
+<span class="c1">## Default credentials: admin/admin</span>
 </code></pre></div>
 <p><strong>Scanner installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>sonar-scanner
 
-<span class="c1"># Linux</span>
+<span class="c1">## Linux</span>
 wget<span class="w"> </span>https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
 unzip<span class="w"> </span>sonar-scanner-cli-5.0.1.3006-linux.zip
 sudo<span class="w"> </span>mv<span class="w"> </span>sonar-scanner-5.0.1.3006-linux<span class="w"> </span>/opt/sonar-scanner
@@ -4879,29 +4879,29 @@ sudo<span class="w"> </span>mv<span class="w"> </span>sonar-scanner-5.0.1.3006-l
 <span class="na">sonar.projectName</span><span class="o">=</span><span class="s">My Project</span>
 <span class="na">sonar.projectVersion</span><span class="o">=</span><span class="s">1.0</span>
 
-<span class="c1"># Source directories</span>
+<span class="c1">## Source directories</span>
 <span class="na">sonar.sources</span><span class="o">=</span><span class="s">src</span>
 <span class="na">sonar.tests</span><span class="o">=</span><span class="s">tests</span>
 
-<span class="c1"># Exclude patterns</span>
+<span class="c1">## Exclude patterns</span>
 <span class="na">sonar.exclusions</span><span class="o">=</span><span class="s">**/node_modules/**,**/dist/**,**/*.test.ts</span>
 
-<span class="c1"># Language-specific settings</span>
+<span class="c1">## Language-specific settings</span>
 <span class="na">sonar.python.version</span><span class="o">=</span><span class="s">3.11</span>
 <span class="na">sonar.javascript.node.maxspace</span><span class="o">=</span><span class="s">4096</span>
 
-<span class="c1"># Coverage reports</span>
+<span class="c1">## Coverage reports</span>
 <span class="na">sonar.python.coverage.reportPaths</span><span class="o">=</span><span class="s">coverage.xml</span>
 <span class="na">sonar.javascript.lcov.reportPaths</span><span class="o">=</span><span class="s">coverage/lcov.info</span>
 
-<span class="c1"># Quality gate</span>
+<span class="c1">## Quality gate</span>
 <span class="na">sonar.qualitygate.wait</span><span class="o">=</span><span class="s">true</span>
 </code></pre></div>
 <p><strong>Scan execution</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan with properties file</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan with properties file</span>
 sonar-scanner
 
-<span class="c1"># Scan with inline parameters</span>
+<span class="c1">## Scan with inline parameters</span>
 sonar-scanner<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-Dsonar.projectKey<span class="o">=</span>my-project<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-Dsonar.sources<span class="o">=</span>src<span class="w"> </span><span class="se">\</span>
@@ -4910,13 +4910,13 @@ sonar-scanner<span class="w"> </span><span class="se">\</span>
 </code></pre></div>
 <h3 id="semgrep">Semgrep<a class="headerlink" href="#semgrep" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Using pipx</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Using pipx</span>
 pipx<span class="w"> </span>install<span class="w"> </span>semgrep
 
-<span class="c1"># macOS</span>
+<span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>semgrep
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 semgrep<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Configuration (.semgrep.yml)</strong>:</p>
@@ -4945,19 +4945,19 @@ semgrep<span class="w"> </span>--version
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret = &quot;...&quot;</span>
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan with default rules</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan with default rules</span>
 semgrep<span class="w"> </span>--config<span class="o">=</span>auto<span class="w"> </span>.
 
-<span class="c1"># Scan with specific rulesets</span>
+<span class="c1">## Scan with specific rulesets</span>
 semgrep<span class="w"> </span>--config<span class="o">=</span>p/security-audit<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--config<span class="o">=</span>p/owasp-top-ten<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--config<span class="o">=</span>p/python<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>.
 
-<span class="c1"># Scan with custom rules</span>
+<span class="c1">## Scan with custom rules</span>
 semgrep<span class="w"> </span>--config<span class="o">=</span>.semgrep.yml<span class="w"> </span>.
 
-<span class="c1"># Generate SARIF report</span>
+<span class="c1">## Generate SARIF report</span>
 semgrep<span class="w"> </span>--config<span class="o">=</span>auto<span class="w"> </span>--sarif<span class="w"> </span>--output<span class="o">=</span>semgrep.sarif<span class="w"> </span>.
 </code></pre></div>
 <h3 id="bandit-python">Bandit (Python)<a class="headerlink" href="#bandit-python" title="Permanent link">&para;</a></h3>
@@ -4965,7 +4965,7 @@ semgrep<span class="w"> </span>--config<span class="o">=</span>auto<span class="
 <div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>bandit
 </code></pre></div>
 <p><strong>Configuration (.bandit)</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bandit configuration</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bandit configuration</span>
 <span class="nt">exclude_dirs</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/test</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tests</span>
@@ -4991,17 +4991,17 @@ semgrep<span class="w"> </span>--config<span class="o">=</span>auto<span class="
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">B503</span><span class="w">  </span><span class="c1"># ssl_with_bad_defaults</span>
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan directory</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan directory</span>
 bandit<span class="w"> </span>-r<span class="w"> </span>src/
 
-<span class="c1"># Scan with config</span>
+<span class="c1">## Scan with config</span>
 bandit<span class="w"> </span>-r<span class="w"> </span>src/<span class="w"> </span>-c<span class="w"> </span>.bandit
 
-<span class="c1"># Generate reports</span>
+<span class="c1">## Generate reports</span>
 bandit<span class="w"> </span>-r<span class="w"> </span>src/<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>-o<span class="w"> </span>bandit-report.json
 bandit<span class="w"> </span>-r<span class="w"> </span>src/<span class="w"> </span>-f<span class="w"> </span>html<span class="w"> </span>-o<span class="w"> </span>bandit-report.html
 
-<span class="c1"># Only show high severity</span>
+<span class="c1">## Only show high severity</span>
 bandit<span class="w"> </span>-r<span class="w"> </span>src/<span class="w"> </span>-ll
 </code></pre></div>
 <h3 id="eslint-security-plugins-javascripttypescript">ESLint Security Plugins (JavaScript/TypeScript)<a class="headerlink" href="#eslint-security-plugins-javascripttypescript" title="Permanent link">&para;</a></h3>
@@ -5037,32 +5037,32 @@ bandit<span class="w"> </span>-r<span class="w"> </span>src/<span class="w"> </s
 <h2 id="software-composition-analysis-sca">Software Composition Analysis (SCA)<a class="headerlink" href="#software-composition-analysis-sca" title="Permanent link">&para;</a></h2>
 <h3 id="snyk">Snyk<a class="headerlink" href="#snyk" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># npm</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## npm</span>
 npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>snyk
 
-<span class="c1"># Homebrew</span>
+<span class="c1">## Homebrew</span>
 brew<span class="w"> </span>install<span class="w"> </span>snyk
 
-<span class="c1"># Authenticate</span>
+<span class="c1">## Authenticate</span>
 snyk<span class="w"> </span>auth
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 snyk<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Test dependencies</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Test dependencies</span>
 snyk<span class="w"> </span><span class="nb">test</span>
 
-<span class="c1"># Test and monitor</span>
+<span class="c1">## Test and monitor</span>
 snyk<span class="w"> </span>monitor
 
-<span class="c1"># Test with severity threshold</span>
+<span class="c1">## Test with severity threshold</span>
 snyk<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--severity-threshold<span class="o">=</span>high
 
-<span class="c1"># Test Docker image</span>
+<span class="c1">## Test Docker image</span>
 snyk<span class="w"> </span>container<span class="w"> </span><span class="nb">test</span><span class="w"> </span>myapp:latest
 
-<span class="c1"># Test infrastructure as code</span>
+<span class="c1">## Test infrastructure as code</span>
 snyk<span class="w"> </span>iac<span class="w"> </span><span class="nb">test</span><span class="w"> </span>terraform/
 </code></pre></div>
 <p><strong>snyk.json configuration</strong>:</p>
@@ -5084,7 +5084,7 @@ snyk<span class="w"> </span>iac<span class="w"> </span><span class="nb">test</sp
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>.snyk policy file</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Snyk policy file</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Snyk policy file</span>
 <span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.25.0</span>
 
 <span class="nt">ignore</span><span class="p">:</span>
@@ -5105,18 +5105,18 @@ snyk<span class="w"> </span>iac<span class="w"> </span><span class="nb">test</sp
 </code></pre></div>
 <h3 id="owasp-dependency-check">OWASP Dependency-Check<a class="headerlink" href="#owasp-dependency-check" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Download</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Download</span>
 <span class="nv">VERSION</span><span class="o">=</span><span class="m">9</span>.0.9
 wget<span class="w"> </span>https://github.com/jeremylong/DependencyCheck/releases/download/v<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>/dependency-check-<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>-release.zip
 unzip<span class="w"> </span>dependency-check-<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>-release.zip
 sudo<span class="w"> </span>mv<span class="w"> </span>dependency-check<span class="w"> </span>/opt/
 <span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/opt/dependency-check/bin
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 dependency-check.sh<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan project</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan project</span>
 dependency-check.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--project<span class="w"> </span><span class="s2">&quot;My Project&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--scan<span class="w"> </span>./src<span class="w"> </span><span class="se">\</span>
@@ -5124,7 +5124,7 @@ dependency-check.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--format<span class="w"> </span>HTML<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--format<span class="w"> </span>JSON
 
-<span class="c1"># Scan with suppression file</span>
+<span class="c1">## Scan with suppression file</span>
 dependency-check.sh<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--project<span class="w"> </span><span class="s2">&quot;My Project&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--scan<span class="w"> </span>./src<span class="w"> </span><span class="se">\</span>
@@ -5150,20 +5150,20 @@ dependency-check.sh<span class="w"> </span><span class="se">\</span>
 <div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>safety
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Check requirements file</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Check requirements file</span>
 safety<span class="w"> </span>check<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 
-<span class="c1"># Check installed packages</span>
+<span class="c1">## Check installed packages</span>
 safety<span class="w"> </span>check
 
-<span class="c1"># Check with policy file</span>
+<span class="c1">## Check with policy file</span>
 safety<span class="w"> </span>check<span class="w"> </span>--policy-file<span class="w"> </span>.safety-policy.yml
 
-<span class="c1"># Generate JSON report</span>
+<span class="c1">## Generate JSON report</span>
 safety<span class="w"> </span>check<span class="w"> </span>--json<span class="w"> </span>--output<span class="w"> </span>safety-report.json
 </code></pre></div>
 <p><strong>.safety-policy.yml</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Safety policy file</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Safety policy file</span>
 <span class="nt">security</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># Ignore specific vulnerabilities</span>
 <span class="w">  </span><span class="nt">ignore-vulnerabilities</span><span class="p">:</span>
@@ -5184,10 +5184,10 @@ safety<span class="w"> </span>check<span class="w"> </span>--json<span class="w"
 <h2 id="container-security">Container Security<a class="headerlink" href="#container-security" title="Permanent link">&para;</a></h2>
 <h3 id="trivy">Trivy<a class="headerlink" href="#trivy" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>aquasecurity/trivy/trivy
 
-<span class="c1"># Ubuntu/Debian</span>
+<span class="c1">## Ubuntu/Debian</span>
 wget<span class="w"> </span>-qO<span class="w"> </span>-<span class="w"> </span>https://aquasecurity.github.io/trivy-repo/deb/public.key<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>sudo<span class="w"> </span>apt-key<span class="w"> </span>add<span class="w"> </span>-
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb https://aquasecurity.github.io/trivy-repo/deb </span><span class="k">$(</span>lsb_release<span class="w"> </span>-sc<span class="k">)</span><span class="s2"> main&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
@@ -5195,31 +5195,31 @@ wget<span class="w"> </span>-qO<span class="w"> </span>-<span class="w"> </span>
 sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>trivy
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 trivy<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan Docker image</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan Docker image</span>
 trivy<span class="w"> </span>image<span class="w"> </span>myapp:latest
 
-<span class="c1"># Scan with severity filter</span>
+<span class="c1">## Scan with severity filter</span>
 trivy<span class="w"> </span>image<span class="w"> </span>--severity<span class="w"> </span>HIGH,CRITICAL<span class="w"> </span>myapp:latest
 
-<span class="c1"># Scan filesystem</span>
+<span class="c1">## Scan filesystem</span>
 trivy<span class="w"> </span>fs<span class="w"> </span>.
 
-<span class="c1"># Scan Git repository</span>
+<span class="c1">## Scan Git repository</span>
 trivy<span class="w"> </span>repo<span class="w"> </span>https://github.com/user/repo
 
-<span class="c1"># Generate reports</span>
+<span class="c1">## Generate reports</span>
 trivy<span class="w"> </span>image<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>--output<span class="w"> </span>trivy-report.json<span class="w"> </span>myapp:latest
 trivy<span class="w"> </span>image<span class="w"> </span>--format<span class="w"> </span>sarif<span class="w"> </span>--output<span class="w"> </span>trivy.sarif<span class="w"> </span>myapp:latest
 
-<span class="c1"># Scan Kubernetes manifests</span>
+<span class="c1">## Scan Kubernetes manifests</span>
 trivy<span class="w"> </span>k8s<span class="w"> </span>--report<span class="w"> </span>summary<span class="w"> </span>cluster
 </code></pre></div>
 <p><strong>trivy.yaml configuration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Trivy configuration</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Trivy configuration</span>
 <span class="nt">severity</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CRITICAL</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HIGH</span>
@@ -5238,30 +5238,30 @@ trivy<span class="w"> </span>k8s<span class="w"> </span>--report<span class="w">
 </code></pre></div>
 <h3 id="grype">Grype<a class="headerlink" href="#grype" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>grype
 
-<span class="c1"># Linux</span>
+<span class="c1">## Linux</span>
 curl<span class="w"> </span>-sSfL<span class="w"> </span>https://raw.githubusercontent.com/anchore/grype/main/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh<span class="w"> </span>-s<span class="w"> </span>--<span class="w"> </span>-b<span class="w"> </span>/usr/local/bin
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 grype<span class="w"> </span>version
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan image</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan image</span>
 grype<span class="w"> </span>myapp:latest
 
-<span class="c1"># Scan with output format</span>
+<span class="c1">## Scan with output format</span>
 grype<span class="w"> </span>myapp:latest<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>grype-report.json
 
-<span class="c1"># Scan directory</span>
+<span class="c1">## Scan directory</span>
 grype<span class="w"> </span>dir:.
 
-<span class="c1"># Scan with fail on severity</span>
+<span class="c1">## Scan with fail on severity</span>
 grype<span class="w"> </span>myapp:latest<span class="w"> </span>--fail-on<span class="w"> </span>high
 </code></pre></div>
 <p><strong>.grype.yaml</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Grype configuration</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Grype configuration</span>
 <span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">json</span>
 
 <span class="nt">fail-on-severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">high</span>
@@ -5307,27 +5307,27 @@ grype<span class="w"> </span>myapp:latest<span class="w"> </span>--fail-on<span 
 <div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>checkov
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan Terraform</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan Terraform</span>
 checkov<span class="w"> </span>-d<span class="w"> </span>terraform/
 
-<span class="c1"># Scan with specific framework</span>
+<span class="c1">## Scan with specific framework</span>
 checkov<span class="w"> </span>--framework<span class="w"> </span>terraform<span class="w"> </span>-d<span class="w"> </span>terraform/
 
-<span class="c1"># Scan CloudFormation</span>
+<span class="c1">## Scan CloudFormation</span>
 checkov<span class="w"> </span>--framework<span class="w"> </span>cloudformation<span class="w"> </span>-f<span class="w"> </span>template.yaml
 
-<span class="c1"># Scan Kubernetes</span>
+<span class="c1">## Scan Kubernetes</span>
 checkov<span class="w"> </span>--framework<span class="w"> </span>kubernetes<span class="w"> </span>-f<span class="w"> </span>deployment.yaml
 
-<span class="c1"># Generate reports</span>
+<span class="c1">## Generate reports</span>
 checkov<span class="w"> </span>-d<span class="w"> </span>terraform/<span class="w"> </span>--output<span class="w"> </span>json<span class="w"> </span>--output-file<span class="w"> </span>checkov-report.json
 checkov<span class="w"> </span>-d<span class="w"> </span>terraform/<span class="w"> </span>--output<span class="w"> </span>sarif<span class="w"> </span>--output-file<span class="w"> </span>checkov.sarif
 
-<span class="c1"># Skip specific checks</span>
+<span class="c1">## Skip specific checks</span>
 checkov<span class="w"> </span>-d<span class="w"> </span>terraform/<span class="w"> </span>--skip-check<span class="w"> </span>CKV_AWS_1,CKV_AWS_2
 </code></pre></div>
 <p><strong>.checkov.yaml</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Checkov configuration</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Checkov configuration</span>
 <span class="nt">framework</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cloudformation</span>
@@ -5352,29 +5352,29 @@ checkov<span class="w"> </span>-d<span class="w"> </span>terraform/<span class="
 </code></pre></div>
 <h3 id="tfsec">tfsec<a class="headerlink" href="#tfsec" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>tfsec
 
-<span class="c1"># Linux</span>
+<span class="c1">## Linux</span>
 wget<span class="w"> </span>https://github.com/aquasecurity/tfsec/releases/download/v1.28.4/tfsec-linux-amd64
 chmod<span class="w"> </span>+x<span class="w"> </span>tfsec-linux-amd64
 sudo<span class="w"> </span>mv<span class="w"> </span>tfsec-linux-amd64<span class="w"> </span>/usr/local/bin/tfsec
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 tfsec<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan Terraform directory</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan Terraform directory</span>
 tfsec<span class="w"> </span>.
 
-<span class="c1"># Scan with severity filter</span>
+<span class="c1">## Scan with severity filter</span>
 tfsec<span class="w"> </span>--minimum-severity<span class="w"> </span>HIGH<span class="w"> </span>.
 
-<span class="c1"># Generate reports</span>
+<span class="c1">## Generate reports</span>
 tfsec<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>--out<span class="w"> </span>tfsec-report.json<span class="w"> </span>.
 tfsec<span class="w"> </span>--format<span class="w"> </span>sarif<span class="w"> </span>--out<span class="w"> </span>tfsec.sarif<span class="w"> </span>.
 
-<span class="c1"># Run specific checks</span>
+<span class="c1">## Run specific checks</span>
 tfsec<span class="w"> </span>--include-passed<span class="w"> </span>--include-ignored<span class="w"> </span>.
 </code></pre></div>
 <p><strong>tfsec.json configuration</strong>:</p>
@@ -5390,61 +5390,61 @@ tfsec<span class="w"> </span>--include-passed<span class="w"> </span>--include-i
 </code></pre></div>
 <h3 id="terrascan">Terrascan<a class="headerlink" href="#terrascan" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>terrascan
 
-<span class="c1"># Linux</span>
+<span class="c1">## Linux</span>
 curl<span class="w"> </span>-L<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>https://api.github.com/repos/tenable/terrascan/releases/latest<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>grep<span class="w"> </span>-o<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;https://.+?_Linux_x86_64.tar.gz&#39;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>terrascan.tar.gz
 tar<span class="w"> </span>-xf<span class="w"> </span>terrascan.tar.gz<span class="w"> </span>terrascan
 sudo<span class="w"> </span>mv<span class="w"> </span>terrascan<span class="w"> </span>/usr/local/bin/
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 terrascan<span class="w"> </span>version
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan Terraform</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan Terraform</span>
 terrascan<span class="w"> </span>scan<span class="w"> </span>-t<span class="w"> </span>terraform<span class="w"> </span>-d<span class="w"> </span>.
 
-<span class="c1"># Scan with specific policy</span>
+<span class="c1">## Scan with specific policy</span>
 terrascan<span class="w"> </span>scan<span class="w"> </span>-t<span class="w"> </span>terraform<span class="w"> </span>-p<span class="w"> </span>aws<span class="w"> </span>-d<span class="w"> </span>.
 
-<span class="c1"># Generate reports</span>
+<span class="c1">## Generate reports</span>
 terrascan<span class="w"> </span>scan<span class="w"> </span>-t<span class="w"> </span>terraform<span class="w"> </span>-d<span class="w"> </span>.<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>terrascan-report.json
 terrascan<span class="w"> </span>scan<span class="w"> </span>-t<span class="w"> </span>terraform<span class="w"> </span>-d<span class="w"> </span>.<span class="w"> </span>-o<span class="w"> </span>sarif<span class="w"> </span>&gt;<span class="w"> </span>terrascan.sarif
 
-<span class="c1"># Skip rules</span>
+<span class="c1">## Skip rules</span>
 terrascan<span class="w"> </span>scan<span class="w"> </span>-t<span class="w"> </span>terraform<span class="w"> </span>-d<span class="w"> </span>.<span class="w"> </span>--skip-rules<span class="w"> </span>AWS.S3Bucket.DS.High.1043
 </code></pre></div>
 <hr />
 <h2 id="dynamic-application-security-testing-dast">Dynamic Application Security Testing (DAST)<a class="headerlink" href="#dynamic-application-security-testing-dast" title="Permanent link">&para;</a></h2>
 <h3 id="owasp-zap">OWASP ZAP<a class="headerlink" href="#owasp-zap" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Docker</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Docker</span>
 docker<span class="w"> </span>pull<span class="w"> </span>zaproxy/zap-stable
 
-<span class="c1"># Run ZAP in daemon mode</span>
+<span class="c1">## Run ZAP in daemon mode</span>
 docker<span class="w"> </span>run<span class="w"> </span>-u<span class="w"> </span>zap<span class="w"> </span>-p<span class="w"> </span><span class="m">8080</span>:8080<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-d<span class="w"> </span>zaproxy/zap-stable<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>zap.sh<span class="w"> </span>-daemon<span class="w"> </span>-host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>-port<span class="w"> </span><span class="m">8080</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-config<span class="w"> </span>api.disablekey<span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <p><strong>Baseline scan</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Baseline scan</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Baseline scan</span>
 docker<span class="w"> </span>run<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/zap/wrk/:rw<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>zaproxy/zap-stable<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>zap-baseline.py<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-t<span class="w"> </span>https://example.com<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-r<span class="w"> </span>zap-baseline-report.html
 
-<span class="c1"># Full scan</span>
+<span class="c1">## Full scan</span>
 docker<span class="w"> </span>run<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/zap/wrk/:rw<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>zaproxy/zap-stable<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>zap-full-scan.py<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-t<span class="w"> </span>https://example.com<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-r<span class="w"> </span>zap-full-report.html
 
-<span class="c1"># API scan</span>
+<span class="c1">## API scan</span>
 docker<span class="w"> </span>run<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/zap/wrk/:rw<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>zaproxy/zap-stable<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>zap-api-scan.py<span class="w"> </span><span class="se">\</span>
@@ -5454,40 +5454,40 @@ docker<span class="w"> </span>run<span class="w"> </span>-v<span class="w"> </sp
 </code></pre></div>
 <h3 id="nuclei">Nuclei<a class="headerlink" href="#nuclei" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Go install</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Go install</span>
 go<span class="w"> </span>install<span class="w"> </span>-v<span class="w"> </span>github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 nuclei<span class="w"> </span>-version
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Update templates</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Update templates</span>
 nuclei<span class="w"> </span>-update-templates
 
-<span class="c1"># Scan target</span>
+<span class="c1">## Scan target</span>
 nuclei<span class="w"> </span>-u<span class="w"> </span>https://example.com
 
-<span class="c1"># Scan with severity filter</span>
+<span class="c1">## Scan with severity filter</span>
 nuclei<span class="w"> </span>-u<span class="w"> </span>https://example.com<span class="w"> </span>-severity<span class="w"> </span>critical,high
 
-<span class="c1"># Scan with specific templates</span>
+<span class="c1">## Scan with specific templates</span>
 nuclei<span class="w"> </span>-u<span class="w"> </span>https://example.com<span class="w"> </span>-t<span class="w"> </span>cves/<span class="w"> </span>-t<span class="w"> </span>vulnerabilities/
 
-<span class="c1"># Generate report</span>
+<span class="c1">## Generate report</span>
 nuclei<span class="w"> </span>-u<span class="w"> </span>https://example.com<span class="w"> </span>-json<span class="w"> </span>-o<span class="w"> </span>nuclei-report.json
 </code></pre></div>
 <hr />
 <h2 id="compliance-scanning">Compliance Scanning<a class="headerlink" href="#compliance-scanning" title="Permanent link">&para;</a></h2>
 <h3 id="openscap">OpenSCAP<a class="headerlink" href="#openscap" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Ubuntu/Debian</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Ubuntu/Debian</span>
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libopenscap8<span class="w"> </span>openscap-scanner
 
-<span class="c1"># RHEL/CentOS</span>
+<span class="c1">## RHEL/CentOS</span>
 sudo<span class="w"> </span>yum<span class="w"> </span>install<span class="w"> </span>openscap-scanner
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Scan system</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Scan system</span>
 sudo<span class="w"> </span>oscap<span class="w"> </span>xccdf<span class="w"> </span><span class="nb">eval</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--profile<span class="w"> </span>xccdf_org.ssgproject.content_profile_pci-dss<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--results<span class="w"> </span>scan-results.xml<span class="w"> </span><span class="se">\</span>
@@ -5496,14 +5496,14 @@ sudo<span class="w"> </span>oscap<span class="w"> </span>xccdf<span class="w"> <
 </code></pre></div>
 <h3 id="chef-inspec">Chef InSpec<a class="headerlink" href="#chef-inspec" title="Permanent link">&para;</a></h3>
 <p><strong>Installation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS/Linux</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS/Linux</span>
 curl<span class="w"> </span>https://omnitruck.chef.io/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>bash<span class="w"> </span>-s<span class="w"> </span>--<span class="w"> </span>-P<span class="w"> </span>inspec
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 inspec<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Profile example</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># controls/example.rb</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## controls/example.rb</span>
 <span class="n">control</span><span class="w"> </span><span class="s1">&#39;ssh-config&#39;</span><span class="w"> </span><span class="k">do</span>
 <span class="w">  </span><span class="n">impact</span><span class="w"> </span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span>
 <span class="w">  </span><span class="n">title</span><span class="w"> </span><span class="s1">&#39;SSH Configuration&#39;</span>
@@ -5517,13 +5517,13 @@ inspec<span class="w"> </span>--version
 <span class="k">end</span>
 </code></pre></div>
 <p><strong>Scanning</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run profile</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Run profile</span>
 inspec<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>/path/to/profile
 
-<span class="c1"># Run with reporter</span>
+<span class="c1">## Run with reporter</span>
 inspec<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>/path/to/profile<span class="w"> </span>--reporter<span class="w"> </span>json:inspec-report.json
 
-<span class="c1"># Run remote</span>
+<span class="c1">## Run remote</span>
 inspec<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>/path/to/profile<span class="w"> </span>-t<span class="w"> </span>ssh://user@host
 </code></pre></div>
 <hr />
@@ -5729,7 +5729,7 @@ Canonical: https://example.com/.well-known/security.txt
 Policy: https://example.com/security-policy
 </code></pre></div>
 <h3 id="vulnerability-disclosure-policy">Vulnerability Disclosure Policy<a class="headerlink" href="#vulnerability-disclosure-policy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="gh"># Vulnerability Disclosure Policy</span>
+<div class="highlight"><pre><span></span><code><span class="gu">## Vulnerability Disclosure Policy</span>
 
 <span class="gu">## Reporting</span>
 

@@ -5582,29 +5582,29 @@ responses, and data exchange.</p>
 <hr />
 <h2 id="json-validation">JSON Validation<a class="headerlink" href="#json-validation" title="Permanent link">&para;</a></h2>
 <h3 id="using-jq">Using jq<a class="headerlink" href="#using-jq" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Validate JSON file</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Validate JSON file</span>
 jq<span class="w"> </span>empty<span class="w"> </span>config.json
 
-<span class="c1"># Pretty print</span>
+<span class="c1">## Pretty print</span>
 jq<span class="w"> </span>.<span class="w"> </span>config.json
 
-<span class="c1"># Extract specific field</span>
+<span class="c1">## Extract specific field</span>
 jq<span class="w"> </span><span class="s1">&#39;.name&#39;</span><span class="w"> </span>package.json
 
-<span class="c1"># Filter array</span>
+<span class="c1">## Filter array</span>
 jq<span class="w"> </span><span class="s1">&#39;.users[] | select(.age &gt; 18)&#39;</span><span class="w"> </span>users.json
 </code></pre></div>
 <h3 id="using-jsonlint">Using jsonlint<a class="headerlink" href="#using-jsonlint" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Validate JSON</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Validate JSON</span>
 jsonlint<span class="w"> </span>config.json
 
-<span class="c1"># Format JSON</span>
+<span class="c1">## Format JSON</span>
 jsonlint<span class="w"> </span>-i<span class="w"> </span>config.json
 </code></pre></div>
 <h3 id="using-python">Using Python<a class="headerlink" href="#using-python" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
-<span class="c1"># Validate JSON</span>
+<span class="c1">## Validate JSON</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;config.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -5612,7 +5612,7 @@ jsonlint<span class="w"> </span>-i<span class="w"> </span>config.json
     <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid JSON: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="c1"># Pretty print</span>
+<span class="c1">## Pretty print</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 </code></pre></div>
 <hr />

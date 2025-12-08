@@ -4766,7 +4766,7 @@ optimization.</p>
 <hr />
 <h2 id="complete-cicd-pipeline-example">Complete CI/CD Pipeline Example<a class="headerlink" href="#complete-cicd-pipeline-example" title="Permanent link">&para;</a></h2>
 <h3 id="full-stack-application-pipeline">Full-Stack Application Pipeline<a class="headerlink" href="#full-stack-application-pipeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># .gitlab-ci.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .gitlab-ci.yml</span>
 <span class="nt">variables</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">NODE_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;20&quot;</span>
 <span class="w">  </span><span class="nt">PYTHON_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span>
@@ -4786,9 +4786,9 @@ optimization.</p>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy-production</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitor</span>
 
-<span class="c1"># ====================</span>
-<span class="c1"># VALIDATION STAGE</span>
-<span class="c1"># ====================</span>
+<span class="c1">## ====================</span>
+<span class="c1">## VALIDATION STAGE</span>
+<span class="c1">## ====================</span>
 <span class="nt">lint:frontend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:${NODE_VERSION}-alpine</span>
@@ -4834,9 +4834,9 @@ optimization.</p>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/**/*</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 
-<span class="c1"># ====================</span>
-<span class="c1"># TEST STAGE</span>
-<span class="c1"># ====================</span>
+<span class="c1">## ====================</span>
+<span class="c1">## TEST STAGE</span>
+<span class="c1">## ====================</span>
 <span class="nt">test:frontend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:${NODE_VERSION}-alpine</span>
@@ -4909,9 +4909,9 @@ optimization.</p>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/**/*</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 
-<span class="c1"># ====================</span>
-<span class="c1"># BUILD STAGE</span>
-<span class="c1"># ====================</span>
+<span class="c1">## ====================</span>
+<span class="c1">## BUILD STAGE</span>
+<span class="c1">## ====================</span>
 <span class="nt">build:frontend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:${NODE_VERSION}-alpine</span>
@@ -4962,9 +4962,9 @@ optimization.</p>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/**/*</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 
-<span class="c1"># ====================</span>
-<span class="c1"># SECURITY STAGE</span>
-<span class="c1"># ====================</span>
+<span class="c1">## ====================</span>
+<span class="c1">## SECURITY STAGE</span>
+<span class="c1">## ====================</span>
 <span class="nt">sast</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security</span>
 <span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
@@ -4988,9 +4988,9 @@ optimization.</p>
 <span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 <span class="w">  </span><span class="nt">allow_failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="c1"># ====================</span>
-<span class="c1"># DEPLOY TO STAGING</span>
-<span class="c1"># ====================</span>
+<span class="c1">## ====================</span>
+<span class="c1">## DEPLOY TO STAGING</span>
+<span class="c1">## ====================</span>
 <span class="nt">deploy:staging:frontend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy-staging</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest</span>
@@ -5028,9 +5028,9 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == &quot;develop&quot;</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
 
-<span class="c1"># ====================</span>
-<span class="c1"># SMOKE TESTS</span>
-<span class="c1"># ====================</span>
+<span class="c1">## ====================</span>
+<span class="c1">## SMOKE TESTS</span>
+<span class="c1">## ====================</span>
 <span class="nt">smoke-test:staging</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">smoke-test</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postman/newman:alpine</span>
@@ -5050,9 +5050,9 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == &quot;develop&quot;</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
 
-<span class="c1"># ====================</span>
-<span class="c1"># DEPLOY TO PRODUCTION</span>
-<span class="c1"># ====================</span>
+<span class="c1">## ====================</span>
+<span class="c1">## DEPLOY TO PRODUCTION</span>
+<span class="c1">## ====================</span>
 <span class="nt">deploy:production:frontend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy-production</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest</span>
@@ -5115,9 +5115,9 @@ optimization.</p>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
 <span class="w">  </span><span class="nt">resource_group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
 
-<span class="c1"># ====================</span>
-<span class="c1"># MONITORING</span>
-<span class="c1"># ====================</span>
+<span class="c1">## ====================</span>
+<span class="c1">## MONITORING</span>
+<span class="c1">## ====================</span>
 <span class="nt">performance-test:production</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitor</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/k6:latest</span>
@@ -5133,9 +5133,9 @@ optimization.</p>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
 <span class="w">  </span><span class="nt">allow_failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="c1"># ====================</span>
-<span class="c1"># ROLLBACK</span>
-<span class="c1"># ====================</span>
+<span class="c1">## ====================</span>
+<span class="c1">## ROLLBACK</span>
+<span class="c1">## ====================</span>
 <span class="nt">rollback:production</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy-production</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest</span>
@@ -5166,9 +5166,9 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
 
-<span class="c1"># ====================</span>
-<span class="c1"># TEMPLATES</span>
-<span class="c1"># ====================</span>
+<span class="c1">## ====================</span>
+<span class="c1">## TEMPLATES</span>
+<span class="c1">## ====================</span>
 <span class="nt">include</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security/SAST.gitlab-ci.yml</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security/Dependency-Scanning.gitlab-ci.yml</span>
@@ -5366,25 +5366,25 @@ optimization.</p>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security/Secret-Detection.gitlab-ci.yml</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security/DAST.gitlab-ci.yml</span>
 
-<span class="c1"># Customize SAST</span>
+<span class="c1">## Customize SAST</span>
 <span class="nt">sast</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">SAST_EXCLUDED_PATHS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spec, test, tests, tmp, node_modules</span>
 
-<span class="c1"># Customize Dependency Scanning</span>
+<span class="c1">## Customize Dependency Scanning</span>
 <span class="nt">dependency_scanning</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">DS_EXCLUDED_PATHS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spec, test, tests, tmp, node_modules</span>
 <span class="w">    </span><span class="nt">DS_DEFAULT_ANALYZERS</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;gemnasium,</span><span class="nv"> </span><span class="s">gemnasium-python,</span><span class="nv"> </span><span class="s">retire.js&quot;</span>
 
-<span class="c1"># Customize Container Scanning</span>
+<span class="c1">## Customize Container Scanning</span>
 <span class="nt">container_scanning</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">CS_SEVERITY_THRESHOLD</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;HIGH&quot;</span>
 <span class="w">    </span><span class="nt">CI_APPLICATION_REPOSITORY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_REGISTRY_IMAGE/backend</span>
 <span class="w">    </span><span class="nt">CI_APPLICATION_TAG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_SHA</span>
 
-<span class="c1"># Customize DAST</span>
+<span class="c1">## Customize DAST</span>
 <span class="nt">dast</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">DAST_WEBSITE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://staging.example.com</span>
@@ -5599,7 +5599,7 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cd backend &amp;&amp; pytest</span>
 </code></pre></div>
 <h3 id="child-pipelines-for-microservices">Child Pipelines for Microservices<a class="headerlink" href="#child-pipelines-for-microservices" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Parent pipeline</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Parent pipeline</span>
 <span class="nt">trigger:service-a</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trigger</span>
 <span class="w">  </span><span class="nt">trigger</span><span class="p">:</span>
@@ -5618,7 +5618,7 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">changes</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">services/service-b/**/*</span>
 
-<span class="c1"># services/service-a/.gitlab-ci.yml</span>
+<span class="c1">## services/service-a/.gitlab-ci.yml</span>
 <span class="nt">stages</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
@@ -5686,7 +5686,7 @@ optimization.</p>
 <span class="w">  </span><span class="nt">&lt;&lt;</span><span class="p">:</span><span class="w"> </span><span class="nv">*test_template</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python:3.12-slim</span>
 
-<span class="c1"># Or using parallel directive</span>
+<span class="c1">## Or using parallel directive</span>
 <span class="nt">test:parallel</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python:${PYTHON_VERSION}-slim</span>

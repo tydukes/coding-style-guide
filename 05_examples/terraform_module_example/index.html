@@ -4017,6 +4017,8 @@
 
   <h1>Terraform Module</h1>
 
+<!-- markdownlint-disable MD013 -->
+
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This is a complete, production-ready Terraform module called <strong>terraform-aws-vpc</strong> that creates a VPC
 with public and private subnets, NAT gateways, and all necessary networking components. It demonstrates
@@ -4046,7 +4048,7 @@ multiple availability zones.</p>
 </code></pre></div>
 <hr />
 <h2 id="readmemd">README.md<a class="headerlink" href="#readmemd" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="gh"># AWS VPC Terraform Module</span>
+<div class="highlight"><pre><span></span><code><span class="gu">## AWS VPC Terraform Module</span>
 
 Terraform module for creating a highly available AWS VPC with public and private subnets.
 
@@ -4167,7 +4169,7 @@ Apache 2.0
 </code></pre></div>
 <hr />
 <h2 id="maintf">main.tf<a class="headerlink" href="#maintf" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># VPC</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## VPC</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.cidr_block</span>
 <span class="w">  </span><span class="na">enable_dns_hostnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_dns_hostnames</span>
@@ -4181,7 +4183,7 @@ Apache 2.0
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="c1"># Internet Gateway</span>
+<span class="c1">## Internet Gateway</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_internet_gateway&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.public_subnet_cidrs</span><span class="p">)</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span>
 
@@ -4195,7 +4197,7 @@ Apache 2.0
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="c1"># Public Subnets</span>
+<span class="c1">## Public Subnets</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.public_subnet_cidrs</span><span class="p">)</span>
 
@@ -4213,7 +4215,7 @@ Apache 2.0
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="c1"># Private Subnets</span>
+<span class="c1">## Private Subnets</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;private&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.private_subnet_cidrs</span><span class="p">)</span>
 
@@ -4230,7 +4232,7 @@ Apache 2.0
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="c1"># Elastic IPs for NAT Gateways</span>
+<span class="c1">## Elastic IPs for NAT Gateways</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_eip&quot;</span><span class="w"> </span><span class="nv">&quot;nat&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_nat_gateway</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="p">(</span><span class="nv">var.single_nat_gateway</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="nv">var.one_nat_gateway_per_az</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.availability_zones</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.private_subnet_cidrs</span><span class="p">)))</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span>
 
@@ -4246,7 +4248,7 @@ Apache 2.0
 <span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_internet_gateway.this</span><span class="p">]</span>
 <span class="p">}</span>
 
-<span class="c1"># NAT Gateways</span>
+<span class="c1">## NAT Gateways</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_nat_gateway&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_nat_gateway</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="p">(</span><span class="nv">var.single_nat_gateway</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="nv">var.one_nat_gateway_per_az</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.availability_zones</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.private_subnet_cidrs</span><span class="p">)))</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span>
 
@@ -4263,7 +4265,7 @@ Apache 2.0
 <span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_internet_gateway.this</span><span class="p">]</span>
 <span class="p">}</span>
 
-<span class="c1"># Public Route Table</span>
+<span class="c1">## Public Route Table</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route_table&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.public_subnet_cidrs</span><span class="p">)</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span>
 
@@ -4277,7 +4279,7 @@ Apache 2.0
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="c1"># Public Route</span>
+<span class="c1">## Public Route</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route&quot;</span><span class="w"> </span><span class="nv">&quot;public_internet_gateway&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.public_subnet_cidrs</span><span class="p">)</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span>
 
@@ -4286,7 +4288,7 @@ Apache 2.0
 <span class="w">  </span><span class="na">gateway_id</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_internet_gateway.this[0].id</span>
 <span class="p">}</span>
 
-<span class="c1"># Public Subnet Route Table Associations</span>
+<span class="c1">## Public Subnet Route Table Associations</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route_table_association&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.public_subnet_cidrs</span><span class="p">)</span>
 
@@ -4294,7 +4296,7 @@ Apache 2.0
 <span class="w">  </span><span class="na">route_table_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_route_table.public[0].id</span>
 <span class="p">}</span>
 
-<span class="c1"># Private Route Tables</span>
+<span class="c1">## Private Route Tables</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route_table&quot;</span><span class="w"> </span><span class="nv">&quot;private&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_nat_gateway</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="p">(</span><span class="nv">var.single_nat_gateway</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="nv">var.one_nat_gateway_per_az</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.availability_zones</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.private_subnet_cidrs</span><span class="p">)))</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.private_subnet_cidrs</span><span class="p">)</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span>
 
@@ -4308,7 +4310,7 @@ Apache 2.0
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="c1"># Private Routes to NAT Gateway</span>
+<span class="c1">## Private Routes to NAT Gateway</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route&quot;</span><span class="w"> </span><span class="nv">&quot;private_nat_gateway&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_nat_gateway</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">aws_route_table.private</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span>
 
@@ -4317,7 +4319,7 @@ Apache 2.0
 <span class="w">  </span><span class="na">nat_gateway_id</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_nat_gateway.this[count.index].id</span>
 <span class="p">}</span>
 
-<span class="c1"># Private Subnet Route Table Associations</span>
+<span class="c1">## Private Subnet Route Table Associations</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route_table_association&quot;</span><span class="w"> </span><span class="nv">&quot;private&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.private_subnet_cidrs</span><span class="p">)</span>
 
@@ -4325,7 +4327,7 @@ Apache 2.0
 <span class="w">  </span><span class="na">route_table_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_route_table.private[var.single_nat_gateway</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="nv">var.one_nat_gateway_per_az</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">count.index</span><span class="w"> </span><span class="err">%</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.availability_zones</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nv">count.index</span><span class="p">)].</span><span class="err">id</span>
 <span class="p">}</span>
 
-<span class="c1"># VPC Flow Logs</span>
+<span class="c1">## VPC Flow Logs</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_flow_log&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_flow_logs</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span>
 
@@ -4342,7 +4344,7 @@ Apache 2.0
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="c1"># CloudWatch Log Group for Flow Logs</span>
+<span class="c1">## CloudWatch Log Group for Flow Logs</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_cloudwatch_log_group&quot;</span><span class="w"> </span><span class="nv">&quot;flow_logs&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_flow_logs</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span>
 
@@ -4352,7 +4354,7 @@ Apache 2.0
 <span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.tags</span>
 <span class="p">}</span>
 
-<span class="c1"># IAM Role for Flow Logs</span>
+<span class="c1">## IAM Role for Flow Logs</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_role&quot;</span><span class="w"> </span><span class="nv">&quot;flow_logs&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_flow_logs</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span>
 
@@ -4374,7 +4376,7 @@ Apache 2.0
 <span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.tags</span>
 <span class="p">}</span>
 
-<span class="c1"># IAM Policy for Flow Logs</span>
+<span class="c1">## IAM Policy for Flow Logs</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_role_policy&quot;</span><span class="w"> </span><span class="nv">&quot;flow_logs&quot;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_flow_logs</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span>
 
@@ -4690,76 +4692,76 @@ Apache 2.0
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nx">test</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;testing&quot;</span>
+<span class="w"> </span><span class="s">&quot;testing&quot;</span>
 
-<span class="w">    </span><span class="s">&quot;github.com/gruntwork-io/terratest/modules/aws&quot;</span>
-<span class="w">    </span><span class="s">&quot;github.com/gruntwork-io/terratest/modules/terraform&quot;</span>
-<span class="w">    </span><span class="s">&quot;github.com/stretchr/testify/assert&quot;</span>
+<span class="w"> </span><span class="s">&quot;github.com/gruntwork-io/terratest/modules/aws&quot;</span>
+<span class="w"> </span><span class="s">&quot;github.com/gruntwork-io/terratest/modules/terraform&quot;</span>
+<span class="w"> </span><span class="s">&quot;github.com/stretchr/testify/assert&quot;</span>
 <span class="p">)</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="nx">TestVPCModule</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">t</span><span class="p">.</span><span class="nx">Parallel</span><span class="p">()</span>
+<span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nx">Parallel</span><span class="p">()</span>
 
-<span class="w">    </span><span class="nx">expectedName</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;test-vpc&quot;</span>
-<span class="w">    </span><span class="nx">expectedCIDR</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;10.0.0.0/16&quot;</span>
-<span class="w">    </span><span class="nx">awsRegion</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span>
+<span class="w"> </span><span class="nx">expectedName</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;test-vpc&quot;</span>
+<span class="w"> </span><span class="nx">expectedCIDR</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;10.0.0.0/16&quot;</span>
+<span class="w"> </span><span class="nx">awsRegion</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span>
 
-<span class="w">    </span><span class="nx">terraformOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">WithDefaultRetryableErrors</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
-<span class="w">        </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../examples/simple&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nx">terraformOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">WithDefaultRetryableErrors</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
+<span class="w">  </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../examples/simple&quot;</span><span class="p">,</span>
 
-<span class="w">        </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
-<span class="w">            </span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="w">       </span><span class="nx">expectedName</span><span class="p">,</span>
-<span class="w">            </span><span class="s">&quot;cidr_block&quot;</span><span class="p">:</span><span class="w"> </span><span class="nx">expectedCIDR</span><span class="p">,</span>
-<span class="w">        </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+<span class="w">   </span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="w">       </span><span class="nx">expectedName</span><span class="p">,</span>
+<span class="w">   </span><span class="s">&quot;cidr_block&quot;</span><span class="p">:</span><span class="w"> </span><span class="nx">expectedCIDR</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
 
-<span class="w">        </span><span class="nx">EnvVars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
-<span class="w">            </span><span class="s">&quot;AWS_DEFAULT_REGION&quot;</span><span class="p">:</span><span class="w"> </span><span class="nx">awsRegion</span><span class="p">,</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">    </span><span class="p">})</span>
+<span class="w">  </span><span class="nx">EnvVars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+<span class="w">   </span><span class="s">&quot;AWS_DEFAULT_REGION&quot;</span><span class="p">:</span><span class="w"> </span><span class="nx">awsRegion</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w"> </span><span class="p">})</span>
 
-<span class="w">    </span><span class="k">defer</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Destroy</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
+<span class="w"> </span><span class="k">defer</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Destroy</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
 
-<span class="w">    </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
 
-<span class="w">    </span><span class="c1">// Validate VPC</span>
-<span class="w">    </span><span class="nx">vpcID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;vpc_id&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">vpcID</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">// Validate VPC</span>
+<span class="w"> </span><span class="nx">vpcID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;vpc_id&quot;</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">vpcID</span><span class="p">)</span>
 
-<span class="w">    </span><span class="nx">vpc</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">aws</span><span class="p">.</span><span class="nx">GetVpcById</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">vpcID</span><span class="p">,</span><span class="w"> </span><span class="nx">awsRegion</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">expectedCIDR</span><span class="p">,</span><span class="w"> </span><span class="nx">vpc</span><span class="p">.</span><span class="nx">Cidr</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">vpc</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">aws</span><span class="p">.</span><span class="nx">GetVpcById</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">vpcID</span><span class="p">,</span><span class="w"> </span><span class="nx">awsRegion</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">expectedCIDR</span><span class="p">,</span><span class="w"> </span><span class="nx">vpc</span><span class="p">.</span><span class="nx">Cidr</span><span class="p">)</span>
 
-<span class="w">    </span><span class="c1">// Validate subnets</span>
-<span class="w">    </span><span class="nx">publicSubnetIDs</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">OutputList</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;public_subnet_ids&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">publicSubnetIDs</span><span class="p">))</span>
+<span class="w"> </span><span class="c1">// Validate subnets</span>
+<span class="w"> </span><span class="nx">publicSubnetIDs</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">OutputList</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;public_subnet_ids&quot;</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">publicSubnetIDs</span><span class="p">))</span>
 
-<span class="w">    </span><span class="nx">privateSubnetIDs</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">OutputList</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;private_subnet_ids&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">privateSubnetIDs</span><span class="p">))</span>
+<span class="w"> </span><span class="nx">privateSubnetIDs</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">OutputList</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;private_subnet_ids&quot;</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">privateSubnetIDs</span><span class="p">))</span>
 <span class="p">}</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="nx">TestVPCModuleWithNATGateway</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">t</span><span class="p">.</span><span class="nx">Parallel</span><span class="p">()</span>
+<span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nx">Parallel</span><span class="p">()</span>
 
-<span class="w">    </span><span class="nx">awsRegion</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span>
+<span class="w"> </span><span class="nx">awsRegion</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span>
 
-<span class="w">    </span><span class="nx">terraformOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">WithDefaultRetryableErrors</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
-<span class="w">        </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../examples/complete&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nx">terraformOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">WithDefaultRetryableErrors</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
+<span class="w">  </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../examples/complete&quot;</span><span class="p">,</span>
 
-<span class="w">        </span><span class="nx">EnvVars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
-<span class="w">            </span><span class="s">&quot;AWS_DEFAULT_REGION&quot;</span><span class="p">:</span><span class="w"> </span><span class="nx">awsRegion</span><span class="p">,</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">    </span><span class="p">})</span>
+<span class="w">  </span><span class="nx">EnvVars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+<span class="w">   </span><span class="s">&quot;AWS_DEFAULT_REGION&quot;</span><span class="p">:</span><span class="w"> </span><span class="nx">awsRegion</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w"> </span><span class="p">})</span>
 
-<span class="w">    </span><span class="k">defer</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Destroy</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
+<span class="w"> </span><span class="k">defer</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Destroy</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
 
-<span class="w">    </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
 
-<span class="w">    </span><span class="c1">// Validate NAT Gateways</span>
-<span class="w">    </span><span class="nx">natGatewayIPs</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">OutputList</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;nat_gateway_public_ips&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">natGatewayIPs</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;Should have 3 NAT Gateways (one per AZ)&quot;</span><span class="p">)</span>
+<span class="w"> </span><span class="c1">// Validate NAT Gateways</span>
+<span class="w"> </span><span class="nx">natGatewayIPs</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">OutputList</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;nat_gateway_public_ips&quot;</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">natGatewayIPs</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;Should have 3 NAT Gateways (one per AZ)&quot;</span><span class="p">)</span>
 
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">ip</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">natGatewayIPs</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">ip</span><span class="p">)</span>
-<span class="w">    </span><span class="p">}</span>
+<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">ip</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">natGatewayIPs</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">ip</span><span class="p">)</span>
+<span class="w"> </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />

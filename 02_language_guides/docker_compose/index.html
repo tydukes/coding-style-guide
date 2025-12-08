@@ -5335,7 +5335,7 @@ practices for maintainable, production-ready container orchestration.</p>
 <hr />
 <h2 id="networks">Networks<a class="headerlink" href="#networks" title="Permanent link">&para;</a></h2>
 <h3 id="default-network">Default Network<a class="headerlink" href="#default-network" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Services can communicate using service names as hostnames</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Services can communicate using service names as hostnames</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">web</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
@@ -5614,10 +5614,10 @@ REDIS_URL=redis://redis:6379
 <span class="w">        </span><span class="nt">max-file</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3&quot;</span>
 </code></pre></div>
 <h3 id="using-multiple-compose-files">Using Multiple Compose Files<a class="headerlink" href="#using-multiple-compose-files" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Development</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Development</span>
 docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>docker-compose.dev.yml<span class="w"> </span>up
 
-<span class="c1"># Production</span>
+<span class="c1">## Production</span>
 docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>docker-compose.prod.yml<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
 <hr />
@@ -5653,81 +5653,81 @@ docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.y
 <hr />
 <h2 id="docker-compose-commands">Docker Compose Commands<a class="headerlink" href="#docker-compose-commands" title="Permanent link">&para;</a></h2>
 <h3 id="common-commands">Common Commands<a class="headerlink" href="#common-commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Start services</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Start services</span>
 docker-compose<span class="w"> </span>up
 
-<span class="c1"># Start in detached mode</span>
+<span class="c1">## Start in detached mode</span>
 docker-compose<span class="w"> </span>up<span class="w"> </span>-d
 
-<span class="c1"># Build images</span>
+<span class="c1">## Build images</span>
 docker-compose<span class="w"> </span>build
 
-<span class="c1"># Build with no cache</span>
+<span class="c1">## Build with no cache</span>
 docker-compose<span class="w"> </span>build<span class="w"> </span>--no-cache
 
-<span class="c1"># Stop services</span>
+<span class="c1">## Stop services</span>
 docker-compose<span class="w"> </span>stop
 
-<span class="c1"># Stop and remove containers</span>
+<span class="c1">## Stop and remove containers</span>
 docker-compose<span class="w"> </span>down
 
-<span class="c1"># Stop and remove containers, volumes, and images</span>
+<span class="c1">## Stop and remove containers, volumes, and images</span>
 docker-compose<span class="w"> </span>down<span class="w"> </span>-v<span class="w"> </span>--rmi<span class="w"> </span>all
 
-<span class="c1"># View logs</span>
+<span class="c1">## View logs</span>
 docker-compose<span class="w"> </span>logs
 
-<span class="c1"># Follow logs</span>
+<span class="c1">## Follow logs</span>
 docker-compose<span class="w"> </span>logs<span class="w"> </span>-f
 
-<span class="c1"># Logs for specific service</span>
+<span class="c1">## Logs for specific service</span>
 docker-compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>api
 
-<span class="c1"># Execute command in running container</span>
+<span class="c1">## Execute command in running container</span>
 docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>api<span class="w"> </span>sh
 
-<span class="c1"># Run one-off command</span>
+<span class="c1">## Run one-off command</span>
 docker-compose<span class="w"> </span>run<span class="w"> </span>api<span class="w"> </span>npm<span class="w"> </span><span class="nb">test</span>
 
-<span class="c1"># List containers</span>
+<span class="c1">## List containers</span>
 docker-compose<span class="w"> </span>ps
 
-<span class="c1"># View running processes</span>
+<span class="c1">## View running processes</span>
 docker-compose<span class="w"> </span>top
 </code></pre></div>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-hardcoded-secrets">❌ Avoid: Hardcoded Secrets<a class="headerlink" href="#avoid-hardcoded-secrets" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Hardcoded password</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Hardcoded password</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">database</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysecretpassword</span>
 
-<span class="c1"># Good - Use environment variables</span>
+<span class="c1">## Good - Use environment variables</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">database</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_PASSWORD}</span>
 </code></pre></div>
 <h3 id="avoid-latest-tag">❌ Avoid: latest Tag<a class="headerlink" href="#avoid-latest-tag" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Unpredictable</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Unpredictable</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">app</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:latest</span>
 
-<span class="c1"># Good - Specific version</span>
+<span class="c1">## Good - Specific version</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">app</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:1.2.3</span>
 </code></pre></div>
 <h3 id="avoid-not-using-volumes-for-data">❌ Avoid: Not Using Volumes for Data<a class="headerlink" href="#avoid-not-using-volumes-for-data" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Data lost when container stops</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Data lost when container stops</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">database</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
 
-<span class="c1"># Good - Persistent volume</span>
+<span class="c1">## Good - Persistent volume</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">database</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
@@ -5738,14 +5738,14 @@ docker-compose<span class="w"> </span>top
 <span class="w">  </span><span class="nt">db_data</span><span class="p">:</span>
 </code></pre></div>
 <h3 id="avoid-not-using-health-checks">❌ Avoid: Not Using Health Checks<a class="headerlink" href="#avoid-not-using-health-checks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - No health checks</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - No health checks</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">api</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapi:1.0</span>
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8080:8080&quot;</span>
 
-<span class="c1"># Good - With health check</span>
+<span class="c1">## Good - With health check</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">api</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapi:1.0</span>
@@ -5759,13 +5759,13 @@ docker-compose<span class="w"> </span>top
 <span class="w">      </span><span class="nt">start_period</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40s</span>
 </code></pre></div>
 <h3 id="avoid-running-as-root">❌ Avoid: Running as Root<a class="headerlink" href="#avoid-running-as-root" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Default root user</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Default root user</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">app</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:18</span>
 <span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm start</span>
 
-<span class="c1"># Good - Specify non-root user</span>
+<span class="c1">## Good - Specify non-root user</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">app</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:18</span>
@@ -5773,12 +5773,12 @@ docker-compose<span class="w"> </span>top
 <span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm start</span>
 </code></pre></div>
 <h3 id="avoid-not-setting-resource-limits">❌ Avoid: Not Setting Resource Limits<a class="headerlink" href="#avoid-not-setting-resource-limits" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - No resource limits (can exhaust host)</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - No resource limits (can exhaust host)</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">app</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:1.0</span>
 
-<span class="c1"># Good - Set limits</span>
+<span class="c1">## Good - Set limits</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">app</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:1.0</span>
@@ -5792,14 +5792,14 @@ docker-compose<span class="w"> </span>top
 <span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256M</span>
 </code></pre></div>
 <h3 id="avoid-not-using-depends-on">❌ Avoid: Not Using Depends On<a class="headerlink" href="#avoid-not-using-depends-on" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad - Services start in parallel (race condition)</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Services start in parallel (race condition)</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">api</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapi:1.0</span>
 <span class="w">  </span><span class="nt">database</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:14</span>
 
-<span class="c1"># Good - Explicit dependencies</span>
+<span class="c1">## Good - Explicit dependencies</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">api</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapi:1.0</span>
@@ -5853,59 +5853,59 @@ npm-debug.log
 <hr />
 <h2 id="tool-configuration">Tool Configuration<a class="headerlink" href="#tool-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="docker-composeyml-validation">docker-compose.yml Validation<a class="headerlink" href="#docker-composeyml-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Validate compose file syntax</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Validate compose file syntax</span>
 docker<span class="w"> </span>compose<span class="w"> </span>config
 
-<span class="c1"># Validate and show final configuration</span>
+<span class="c1">## Validate and show final configuration</span>
 docker<span class="w"> </span>compose<span class="w"> </span>config<span class="w"> </span>--no-interpolate
 
-<span class="c1"># Validate specific file</span>
+<span class="c1">## Validate specific file</span>
 docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.prod.yml<span class="w"> </span>config
 </code></pre></div>
 <h3 id="dockerignore">.dockerignore<a class="headerlink" href="#dockerignore" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code># Version control
+<div class="highlight"><pre><span></span><code>## Version control
 .git
 .gitignore
 .gitattributes
 
-# CI/CD
+## CI/CD
 .github
 .gitlab-ci.yml
 .travis.yml
 
-# Documentation
+## Documentation
 *.md
 docs/
 LICENSE
 
-# Dependencies
+## Dependencies
 node_modules/
 vendor/
 __pycache__/
 *.pyc
 
-# Build artifacts
+## Build artifacts
 dist/
 build/
 *.egg-info/
 
-# IDE
+## IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Environment
+## Environment
 .env.local
 .env.*.local
 *.log
 
-# Testing
+## Testing
 coverage/
 .nyc_output/
 </code></pre></div>
 <h3 id="editorconfig">EditorConfig<a class="headerlink" href="#editorconfig" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># .editorconfig</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .editorconfig</span>
 <span class="k">[docker-compose*.{yml,yaml}]</span>
 <span class="na">indent_style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">space</span>
 <span class="na">indent_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
@@ -5932,7 +5932,7 @@ coverage/
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="pre-commit-hooks">Pre-commit Hooks<a class="headerlink" href="#pre-commit-hooks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .pre-commit-config.yaml</span>
 <span class="nt">repos</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/pre-commit-hooks</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v4.5.0</span>
@@ -5951,7 +5951,7 @@ coverage/
 <span class="w">        </span><span class="nt">files</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker-compose.*\.ya?ml$</span>
 </code></pre></div>
 <h3 id="yamllint-configuration">yamllint Configuration<a class="headerlink" href="#yamllint-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># .yamllint</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .yamllint</span>
 <span class="nt">extends</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 
 <span class="nt">rules</span><span class="p">:</span>
@@ -5968,7 +5968,7 @@ coverage/
 <span class="w">    </span><span class="nt">allowed-values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;true&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;false&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;yes&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;no&#39;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <h3 id="makefile">Makefile<a class="headerlink" href="#makefile" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Makefile</span>
+<div class="highlight"><pre><span></span><code><span class="c">## Makefile</span>
 <span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">up</span> <span class="n">down</span> <span class="n">build</span> <span class="n">logs</span> <span class="n">ps</span> <span class="n">validate</span>
 
 <span class="nf">up</span><span class="o">:</span>
@@ -6009,9 +6009,9 @@ coverage/
 </code></pre></div>
 <h3 id="docker-composeoverrideyml">docker-compose.override.yml<a class="headerlink" href="#docker-composeoverrideyml" title="Permanent link">&para;</a></h3>
 <p>Used for local development overrides:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># docker-compose.override.yml</span>
-<span class="c1"># This file is automatically merged with docker-compose.yml</span>
-<span class="c1"># Use for local development settings</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## docker-compose.override.yml</span>
+<span class="c1">## This file is automatically merged with docker-compose.yml</span>
+<span class="c1">## Use for local development settings</span>
 
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">web</span><span class="p">:</span>

@@ -5412,12 +5412,12 @@ web services.</p>
 <h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">&para;</a></h3>
 <p><strong>Convention</strong>: <code>snake_case</code></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good</span>
 <span class="n">user_count</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">max_retry_attempts</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">api_response_data</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">()</span>
 
-<span class="c1"># Bad</span>
+<span class="c1">## Bad</span>
 <span class="n">UserCount</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># PascalCase for variables</span>
 <span class="n">maxRetryAttempts</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># camelCase</span>
 <span class="n">apiresponsedata</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">()</span>  <span class="c1"># No separation</span>
@@ -5431,18 +5431,18 @@ web services.</p>
 </ul>
 <h3 id="constants">Constants<a class="headerlink" href="#constants" title="Permanent link">&para;</a></h3>
 <p><strong>Convention</strong>: <code>UPPER_SNAKE_CASE</code></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good</span>
 <span class="n">MAX_CONNECTION_POOL_SIZE</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">API_BASE_URL</span> <span class="o">=</span> <span class="s2">&quot;https://api.example.com&quot;</span>
 <span class="n">DEFAULT_TIMEOUT_SECONDS</span> <span class="o">=</span> <span class="mi">30</span>
 
-<span class="c1"># Bad</span>
+<span class="c1">## Bad</span>
 <span class="n">max_connection_pool_size</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># Looks like a variable</span>
 <span class="n">MaxConnectionPoolSize</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># Not a constant style</span>
 </code></pre></div>
 <h3 id="functions-and-methods">Functions and Methods<a class="headerlink" href="#functions-and-methods" title="Permanent link">&para;</a></h3>
 <p><strong>Convention</strong>: <code>snake_case</code></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve user from database by ID.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
@@ -5451,7 +5451,7 @@ web services.</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate total monthly cost for EC2 instances.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">hourly_rate</span> <span class="o">*</span> <span class="mi">730</span> <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">)</span>
 
-<span class="c1"># Bad</span>
+<span class="c1">## Bad</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">GetUserById</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>  <span class="c1"># PascalCase</span>
     <span class="k">pass</span>
 
@@ -5467,7 +5467,7 @@ web services.</p>
 </ul>
 <h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
 <p><strong>Convention</strong>: <code>PascalCase</code></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">UserRepository</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Handles database operations for User entities.&quot;&quot;&quot;</span>
     <span class="k">pass</span>
@@ -5480,7 +5480,7 @@ web services.</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pool of reusable HTTP connections.&quot;&quot;&quot;</span>
     <span class="k">pass</span>
 
-<span class="c1"># Bad</span>
+<span class="c1">## Bad</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">user_repository</span><span class="p">:</span>  <span class="c1"># snake_case</span>
     <span class="k">pass</span>
 
@@ -5495,12 +5495,12 @@ web services.</p>
 </ul>
 <h3 id="files-and-modules">Files and Modules<a class="headerlink" href="#files-and-modules" title="Permanent link">&para;</a></h3>
 <p><strong>Convention</strong>: <code>snake_case.py</code></p>
-<div class="highlight"><pre><span></span><code># Good
+<div class="highlight"><pre><span></span><code>## Good
 user_repository.py
 aws_resource_manager.py
 http_client.py
 
-# Bad
+## Bad
 UserRepository.py  # PascalCase
 awsResourceManager.py  # camelCase
 httpClient.py  # camelCase
@@ -5517,14 +5517,14 @@ httpClient.py  # camelCase
 <li><strong>Style</strong>: Spaces only (no tabs)</li>
 <li><strong>Size</strong>: 4 spaces per indentation level</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
             <span class="n">save</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-<span class="c1"># Bad - 2 spaces</span>
+<span class="c1">## Bad - 2 spaces</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
   <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
@@ -5535,18 +5535,18 @@ httpClient.py  # camelCase
 <li><strong>Maximum</strong>: 88 characters (Black default) or 100 characters</li>
 <li><strong>Exception</strong>: Long strings, URLs, import statements can exceed</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good - line broken appropriately</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - line broken appropriately</span>
 <span class="n">user_data</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
     <span class="n">User</span><span class="o">.</span><span class="n">is_active</span> <span class="o">==</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">User</span><span class="o">.</span><span class="n">created_at</span> <span class="o">&gt;</span> <span class="n">start_date</span>
 <span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
-<span class="c1"># Good - long URL on its own line</span>
+<span class="c1">## Good - long URL on its own line</span>
 <span class="n">API_ENDPOINT</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;https://api.example.com/v2/resources/users/search?filter=active&amp;limit=100&quot;</span>
 <span class="p">)</span>
 
-<span class="c1"># Bad - line too long</span>
+<span class="c1">## Bad - line too long</span>
 <span class="n">user_data</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">is_active</span> <span class="o">==</span> <span class="kc">True</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">created_at</span> <span class="o">&gt;</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">department</span> <span class="o">==</span> <span class="s2">&quot;Engineering&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="blank-lines">Blank Lines<a class="headerlink" href="#blank-lines" title="Permanent link">&para;</a></h3>
@@ -5558,16 +5558,13 @@ httpClient.py  # camelCase
 </ul>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-
 <span class="k">def</span><span class="w"> </span><span class="nf">function_one</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;First function.&quot;&quot;&quot;</span>
     <span class="k">pass</span>
 
-
 <span class="k">def</span><span class="w"> </span><span class="nf">function_two</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Second function.&quot;&quot;&quot;</span>
     <span class="k">pass</span>
-
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Example class.&quot;&quot;&quot;</span>
@@ -5582,7 +5579,7 @@ httpClient.py  # camelCase
 </code></pre></div>
 <h3 id="imports">Imports<a class="headerlink" href="#imports" title="Permanent link">&para;</a></h3>
 <p><strong>Order</strong>: Standard library, third-party, local modules</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good - organized imports</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - organized imports</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -5595,7 +5592,7 @@ httpClient.py  # camelCase
 <span class="kn">from</span><span class="w"> </span><span class="nn">app.services.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">AuthService</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">app.utils.validators</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_email</span>
 
-<span class="c1"># Bad - mixed order, grouped incorrectly</span>
+<span class="c1">## Bad - mixed order, grouped incorrectly</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">app.models.user</span><span class="w"> </span><span class="kn">import</span> <span class="n">User</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -5661,7 +5658,7 @@ httpClient.py  # camelCase
 <p><strong>Required for</strong>: All function signatures in production code</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="c1"># Good - comprehensive type hints</span>
+<span class="c1">## Good - comprehensive type hints</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_active_users</span><span class="p">(</span>
     <span class="n">department</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
@@ -5676,14 +5673,14 @@ httpClient.py  # camelCase
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse configuration file and return settings dictionary.&quot;&quot;&quot;</span>
     <span class="k">pass</span>
 
-<span class="c1"># Bad - no type hints</span>
+<span class="c1">## Bad - no type hints</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_active_users</span><span class="p">(</span><span class="n">department</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="k">pass</span>
 </code></pre></div>
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <h3 id="exception-handling">Exception Handling<a class="headerlink" href="#exception-handling" title="Permanent link">&para;</a></h3>
 <p><strong>Strategy</strong>: Fail-fast, raise specific exceptions, clean up resources</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good - specific exceptions and cleanup</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - specific exceptions and cleanup</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">fetch_remote_data</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch data from remote API with retry logic.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -5700,7 +5697,7 @@ httpClient.py  # camelCase
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid JSON response from </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">DataFormatError</span><span class="p">(</span><span class="s2">&quot;Response is not valid JSON&quot;</span><span class="p">)</span>
 
-<span class="c1"># Bad - catching generic Exception</span>
+<span class="c1">## Bad - catching generic Exception</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">fetch_remote_data</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
@@ -5721,7 +5718,7 @@ httpClient.py  # camelCase
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when API response has invalid format.&quot;&quot;&quot;</span>
     <span class="k">pass</span>
 
-<span class="c1"># Usage</span>
+<span class="c1">## Usage</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">fetch_remote_data</span><span class="p">(</span><span class="s2">&quot;https://api.example.com/users&quot;</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">APITimeoutError</span><span class="p">:</span>
@@ -5733,7 +5730,7 @@ httpClient.py  # camelCase
 </code></pre></div>
 <h3 id="context-managers">Context Managers<a class="headerlink" href="#context-managers" title="Permanent link">&para;</a></h3>
 <p><strong>Use for</strong>: Resource cleanup (files, connections, locks)</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good - guaranteed cleanup</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - guaranteed cleanup</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
 
 <span class="nd">@contextmanager</span>
@@ -5749,7 +5746,7 @@ httpClient.py  # camelCase
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="c1"># Usage</span>
+<span class="c1">## Usage</span>
 <span class="k">with</span> <span class="n">database_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
     <span class="n">user</span><span class="o">.</span><span class="n">last_login</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
@@ -5804,7 +5801,7 @@ httpClient.py  # camelCase
 <h3 id="mocking">Mocking<a class="headerlink" href="#mocking" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mock</span><span class="p">,</span> <span class="n">patch</span><span class="p">,</span> <span class="n">MagicMock</span>
 
-<span class="c1"># Good - mock external dependencies</span>
+<span class="c1">## Good - mock external dependencies</span>
 <span class="nd">@patch</span><span class="p">(</span><span class="s1">&#39;app.services.email.send_email&#39;</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_should_send_welcome_email_after_signup</span><span class="p">(</span><span class="n">mock_send_email</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Test welcome email is sent after user signup.&quot;&quot;&quot;</span>
@@ -5842,7 +5839,7 @@ httpClient.py  # camelCase
         <span class="k">return</span> <span class="n">v</span>
 </code></pre></div>
 <h3 id="sql-injection-prevention">SQL Injection Prevention<a class="headerlink" href="#sql-injection-prevention" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good - parameterized queries</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - parameterized queries</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
@@ -5851,7 +5848,7 @@ httpClient.py  # camelCase
     <span class="n">result</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">email</span><span class="p">})</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
 
-<span class="c1"># Bad - string concatenation (NEVER DO THIS)</span>
+<span class="c1">## Bad - string concatenation (NEVER DO THIS)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT * FROM users WHERE email = &#39;</span><span class="si">{</span><span class="n">email</span><span class="si">}</span><span class="s2">&#39;&quot;</span>  <span class="c1"># Vulnerable!</span>
     <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
@@ -5860,7 +5857,7 @@ httpClient.py  # camelCase
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
 
-<span class="c1"># Good - environment variables</span>
+<span class="c1">## Good - environment variables</span>
 <span class="nd">@lru_cache</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_settings</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get application settings from environment.&quot;&quot;&quot;</span>
@@ -5870,7 +5867,7 @@ httpClient.py  # camelCase
         <span class="s2">&quot;secret_key&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SECRET_KEY&quot;</span><span class="p">)</span>
     <span class="p">}</span>
 
-<span class="c1"># Bad - hardcoded secrets (NEVER DO THIS)</span>
+<span class="c1">## Bad - hardcoded secrets (NEVER DO THIS)</span>
 <span class="n">DATABASE_URL</span> <span class="o">=</span> <span class="s2">&quot;postgresql://user:password@localhost/db&quot;</span>  <span class="c1"># Exposed!</span>
 <span class="n">API_KEY</span> <span class="o">=</span> <span class="s2">&quot;sk_live_abc123xyz...&quot;</span>  <span class="c1"># Committed to git!</span>
 </code></pre></div>
@@ -5917,7 +5914,7 @@ httpClient.py  # camelCase
 <li>Run: <code>pytest --cov=src tests/</code></li>
 </ul>
 <h3 id="pre-commit-configuration">Pre-commit Configuration<a class="headerlink" href="#pre-commit-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .pre-commit-config.yaml</span>
 <span class="nt">repos</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/psf/black</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24.10.0</span>
@@ -5969,13 +5966,11 @@ httpClient.py  # camelCase
 
 <span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;User Management API&quot;</span><span class="p">)</span>
 
-
 <span class="k">class</span><span class="w"> </span><span class="nc">UserCreate</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Schema for user creation.&quot;&quot;&quot;</span>
     <span class="n">username</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">email</span><span class="p">:</span> <span class="n">EmailStr</span>
     <span class="n">password</span><span class="p">:</span> <span class="nb">str</span>
-
 
 <span class="k">class</span><span class="w"> </span><span class="nc">UserResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Schema for user response.&quot;&quot;&quot;</span>
@@ -5987,7 +5982,6 @@ httpClient.py  # camelCase
     <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Pydantic configuration.&quot;&quot;&quot;</span>
         <span class="n">from_attributes</span> <span class="o">=</span> <span class="kc">True</span>
-
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/users&quot;</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">UserResponse</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_201_CREATED</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span>
@@ -6032,7 +6026,6 @@ httpClient.py  # camelCase
 
     <span class="k">return</span> <span class="n">user</span>
 
-
 <span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">UserResponse</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span>
     <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -6071,7 +6064,7 @@ httpClient.py  # camelCase
     <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">items</span>
 
-<span class="c1"># Unexpected behavior</span>
+<span class="c1">## Unexpected behavior</span>
 <span class="n">list1</span> <span class="o">=</span> <span class="n">add_item</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>  <span class="c1"># [&quot;a&quot;]</span>
 <span class="n">list2</span> <span class="o">=</span> <span class="n">add_item</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>  <span class="c1"># [&quot;a&quot;, &quot;b&quot;] - unexpected!</span>
 </code></pre></div>
@@ -6082,7 +6075,7 @@ httpClient.py  # camelCase
     <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">items</span>
 
-<span class="c1"># Expected behavior</span>
+<span class="c1">## Expected behavior</span>
 <span class="n">list1</span> <span class="o">=</span> <span class="n">add_item</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>  <span class="c1"># [&quot;a&quot;]</span>
 <span class="n">list2</span> <span class="o">=</span> <span class="n">add_item</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>  <span class="c1"># [&quot;b&quot;] - correct!</span>
 </code></pre></div>
@@ -6108,17 +6101,17 @@ httpClient.py  # camelCase
 <h3 id="string-formatting-with-or-format">String Formatting with % or format()<a class="headerlink" href="#string-formatting-with-or-format" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Old-style string formatting is less readable and more error-prone.</p>
 <p><strong>Bad</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Old % formatting</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Old % formatting</span>
 <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;User </span><span class="si">%s</span><span class="s2"> has </span><span class="si">%d</span><span class="s2"> points&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>  <span class="c1"># ❌ Hard to read</span>
 
-<span class="c1"># Old .format()</span>
+<span class="c1">## Old .format()</span>
 <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;User </span><span class="si">{}</span><span class="s2"> has </span><span class="si">{}</span><span class="s2"> points&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>  <span class="c1"># ❌ Positional</span>
 </code></pre></div>
 <p><strong>Good</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># f-strings (Python 3.6+)</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## f-strings (Python 3.6+)</span>
 <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="n">points</span><span class="si">}</span><span class="s2"> points&quot;</span>  <span class="c1"># ✅ Clear and concise</span>
 
-<span class="c1"># With expressions</span>
+<span class="c1">## With expressions</span>
 <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="n">points</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="si">}</span><span class="s2"> bonus points&quot;</span>  <span class="c1"># ✅ Powerful</span>
 </code></pre></div>
 <h3 id="missing-type-hints">Missing Type Hints<a class="headerlink" href="#missing-type-hints" title="Permanent link">&para;</a></h3>
@@ -6137,7 +6130,7 @@ httpClient.py  # camelCase
 <h3 id="using-global-variables">Using Global Variables<a class="headerlink" href="#using-global-variables" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Global variables make code hard to test and reason about.</p>
 <p><strong>Bad</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Module level</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Module level</span>
 <span class="n">user_cache</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># ❌ Global mutable state</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
@@ -6177,7 +6170,7 @@ httpClient.py  # camelCase
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;config.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>  <span class="c1"># ✅ Automatically closed</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
 
-<span class="c1"># Or for multiple resources</span>
+<span class="c1">## Or for multiple resources</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">process_files</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">infile</span><span class="p">:</span>
@@ -6202,25 +6195,25 @@ httpClient.py  # camelCase
 <h3 id="ignoring-list-comprehensions">Ignoring List Comprehensions<a class="headerlink" href="#ignoring-list-comprehensions" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Using loops for simple transformations is less readable and slower.</p>
 <p><strong>Bad</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Creating a new list</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Creating a new list</span>
 <span class="n">squares</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># ❌ Verbose</span>
 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
     <span class="n">squares</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="c1"># Filtering</span>
+<span class="c1">## Filtering</span>
 <span class="n">evens</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># ❌ Multiple lines</span>
 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">evens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Good</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Creating a new list</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Creating a new list</span>
 <span class="n">squares</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>  <span class="c1"># ✅ Concise</span>
 
-<span class="c1"># Filtering</span>
+<span class="c1">## Filtering</span>
 <span class="n">evens</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># ✅ Clear intent</span>
 
-<span class="c1"># With transformation and filtering</span>
+<span class="c1">## With transformation and filtering</span>
 <span class="n">upper_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">]</span>  <span class="c1"># ✅ Powerful</span>
 </code></pre></div>
 <h3 id="not-using-enumerate">Not Using enumerate()<a class="headerlink" href="#not-using-enumerate" title="Permanent link">&para;</a></h3>
@@ -6237,7 +6230,7 @@ httpClient.py  # camelCase
 <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>  <span class="c1"># ✅ Built-in enumeration</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="c1"># With custom start index</span>
+<span class="c1">## With custom start index</span>
 <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>  <span class="c1"># ✅ Start from 1</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
@@ -6249,10 +6242,10 @@ httpClient.py  # camelCase
     <span class="n">result</span> <span class="o">+=</span> <span class="n">word</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
 </code></pre></div>
 <p><strong>Good</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># For simple joining</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## For simple joining</span>
 <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>  <span class="c1"># ✅ Efficient and clear</span>
 
-<span class="c1"># For complex building</span>
+<span class="c1">## For complex building</span>
 <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># ✅ Build list first</span>
 <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
     <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;item&gt;</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&lt;/item&gt;&quot;</span><span class="p">)</span>

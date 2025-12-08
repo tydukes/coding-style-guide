@@ -4263,6 +4263,8 @@
 
   <h1>GitHub Actions Workflows</h1>
 
+<!-- markdownlint-disable MD013 MD024 -->
+
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This document provides comprehensive GitHub Actions workflow templates for CI/CD, testing, building, and deployment
 across all languages and frameworks covered in this style guide.</p>
@@ -4706,7 +4708,7 @@ across all languages and frameworks covered in this style guide.</p>
 </code></pre></div>
 <hr />
 <h2 id="reusable-workflow-test">Reusable Workflow - Test<a class="headerlink" href="#reusable-workflow-test" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/reusable-test.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .github/workflows/reusable-test.yml</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reusable Test Workflow</span>
 
 <span class="nt">on</span><span class="p">:</span>
@@ -4757,7 +4759,7 @@ across all languages and frameworks covered in this style guide.</p>
 <span class="w">          </span><span class="no">echo &quot;percentage=$COVERAGE&quot; &gt;&gt; $GITHUB_OUTPUT</span>
 </code></pre></div>
 <h3 id="using-reusable-workflow">Using Reusable Workflow<a class="headerlink" href="#using-reusable-workflow" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/ci.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .github/workflows/ci.yml</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI</span>
 
 <span class="nt">on</span><span class="p">:</span>
@@ -5010,7 +5012,7 @@ across all languages and frameworks covered in this style guide.</p>
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="workflow-optimization">Workflow Optimization<a class="headerlink" href="#workflow-optimization" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Cache dependencies</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Cache dependencies</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v3</span>
 <span class="w">  </span><span class="nt">with</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/.cache/pip</span>
@@ -5018,38 +5020,38 @@ across all languages and frameworks covered in this style guide.</p>
 <span class="w">    </span><span class="nt">restore-keys</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">${{ runner.os }}-pip-</span>
 
-<span class="c1"># Use matrix strategy for multiple versions</span>
+<span class="c1">## Use matrix strategy for multiple versions</span>
 <span class="nt">strategy</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">matrix</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;3.10&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;3.12&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">fail-fast</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># Continue other jobs if one fails</span>
 
-<span class="c1"># Conditional job execution</span>
+<span class="c1">## Conditional job execution</span>
 <span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.event_name == &#39;push&#39; &amp;&amp; github.ref == &#39;refs/heads/main&#39;</span>
 
-<span class="c1"># Job dependencies</span>
+<span class="c1">## Job dependencies</span>
 <span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">test</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">lint</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">security</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <h3 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Use environment protection rules</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Use environment protection rules</span>
 <span class="nt">environment</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
 <span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://example.com</span>
 
-<span class="c1"># Minimal permissions</span>
+<span class="c1">## Minimal permissions</span>
 <span class="nt">permissions</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
 <span class="w">  </span><span class="nt">packages</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
 
-<span class="c1"># Use secrets for sensitive data</span>
+<span class="c1">## Use secrets for sensitive data</span>
 <span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">API_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.API_KEY }}</span>
 
-<span class="c1"># Pin action versions</span>
+<span class="c1">## Pin action versions</span>
 <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span><span class="w">  </span><span class="c1"># Not @main</span>
 </code></pre></div>
 <h3 id="artifact-management">Artifact Management<a class="headerlink" href="#artifact-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Upload artifacts</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Upload artifacts</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
 <span class="w">  </span><span class="nt">with</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test-results</span>
@@ -5058,7 +5060,7 @@ across all languages and frameworks covered in this style guide.</p>
 <span class="w">      </span><span class="no">coverage/</span>
 <span class="w">    </span><span class="nt">retention-days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
 
-<span class="c1"># Download artifacts</span>
+<span class="c1">## Download artifacts</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/download-artifact@v4</span>
 <span class="w">  </span><span class="nt">with</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test-results</span>
@@ -5067,7 +5069,7 @@ across all languages and frameworks covered in this style guide.</p>
 <hr />
 <h2 id="composite-actions">Composite Actions<a class="headerlink" href="#composite-actions" title="Permanent link">&para;</a></h2>
 <h3 id="custom-action-example">Custom Action Example<a class="headerlink" href="#custom-action-example" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># .github/actions/setup-python-env/action.yml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## .github/actions/setup-python-env/action.yml</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Setup</span><span class="nv"> </span><span class="s">Python</span><span class="nv"> </span><span class="s">Environment&#39;</span>
 <span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Set</span><span class="nv"> </span><span class="s">up</span><span class="nv"> </span><span class="s">Python</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">caching</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">dependencies&#39;</span>
 

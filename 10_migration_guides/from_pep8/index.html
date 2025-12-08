@@ -5008,7 +5008,7 @@ If your code follows PEP 8, these aspects require <strong>no changes</strong>:</
 <li>No trailing whitespace</li>
 </ul>
 <p><strong>Example - No Changes Needed:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># This PEP 8 code is already compliant</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## This PEP 8 code is already compliant</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
@@ -5016,9 +5016,7 @@ If your code follows PEP 8, these aspects require <strong>no changes</strong>:</
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">myapp.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">helper</span>
 
-
 <span class="n">MAX_RETRIES</span> <span class="o">=</span> <span class="mi">3</span>
-
 
 <span class="k">class</span><span class="w"> </span><span class="nc">UserService</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Service for user management.&quot;&quot;&quot;</span>
@@ -5034,12 +5032,12 @@ If your code follows PEP 8, these aspects require <strong>no changes</strong>:</
 <p><strong>Why</strong>: Modern displays support wider lines, and Black's 88-character limit reduces unnecessary
 line breaks while maintaining readability.</p>
 <p><strong>Migration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8 (79 chars) - line breaks needed</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## PEP 8 (79 chars) - line breaks needed</span>
 <span class="n">user_data</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
     <span class="n">User</span><span class="o">.</span><span class="n">is_active</span> <span class="o">==</span> <span class="kc">True</span>
 <span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
-<span class="c1"># Our Guide (88 chars) - more natural flow</span>
+<span class="c1">## Our Guide (88 chars) - more natural flow</span>
 <span class="n">user_data</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">is_active</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 </code></pre></div>
 <p><strong>Action Required</strong>:</p>
@@ -5054,12 +5052,12 @@ line breaks while maintaining readability.</p>
 <p><strong>Why</strong>: Type hints enable static analysis, improve IDE support, prevent runtime errors, and serve
 as inline documentation for DevOps automation code.</p>
 <p><strong>Migration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8 - acceptable without type hints</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## PEP 8 - acceptable without type hints</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve user by ID.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
 
-<span class="c1"># Our Guide - type hints required</span>
+<span class="c1">## Our Guide - type hints required</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
@@ -5078,13 +5076,13 @@ as inline documentation for DevOps automation code.</p>
 <strong>Our Guide</strong>: Enhanced module docstrings with structured metadata</p>
 <p><strong>Why</strong>: Structured metadata enables automated documentation generation, dependency tracking, and AI-assisted code understanding.</p>
 <p><strong>Migration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8 - basic module docstring</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## PEP 8 - basic module docstring</span>
 <span class="sd">&quot;&quot;&quot;User authentication module.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">jwt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTTPException</span>
 
-<span class="c1"># Our Guide - enhanced metadata</span>
+<span class="c1">## Our Guide - enhanced metadata</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@module user_authentication</span>
 <span class="sd">@description Handles user authentication, session management, and JWT token generation</span>
@@ -5112,12 +5110,12 @@ as inline documentation for DevOps automation code.</p>
 <strong>Our Guide</strong>: Structured docstrings with Args, Returns, Raises, Examples</p>
 <p><strong>Why</strong>: Consistent structured docstrings improve API documentation, enable automated doc generation, and provide usage examples.</p>
 <p><strong>Migration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8/257 - basic docstring</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## PEP 8/257 - basic docstring</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">authenticate_user</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Authenticate user and return user object or None.&quot;&quot;&quot;</span>
     <span class="k">pass</span>
 
-<span class="c1"># Our Guide - structured with examples</span>
+<span class="c1">## Our Guide - structured with examples</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">authenticate_user</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Authenticate user credentials and return user object if valid.</span>
@@ -5152,9 +5150,9 @@ as inline documentation for DevOps automation code.</p>
 <strong>Our Guide</strong>: 80%+ unit test coverage required, structured test naming</p>
 <p><strong>Why</strong>: High test coverage ensures reliability for infrastructure automation where failures have production impact.</p>
 <p><strong>Migration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># No PEP 8 equivalent - testing not mandated</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## No PEP 8 equivalent - testing not mandated</span>
 
-<span class="c1"># Our Guide - required test structure</span>
+<span class="c1">## Our Guide - required test structure</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">app.services.user_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserService</span>
 
@@ -5188,12 +5186,12 @@ as inline documentation for DevOps automation code.</p>
 <strong>Our Guide</strong>: Mandatory security practices for DevOps code</p>
 <p><strong>Why</strong>: Infrastructure automation code handles sensitive data, credentials, and production systems. Security must be explicit.</p>
 <p><strong>Migration - Input Validation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8 - basic validation</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## PEP 8 - basic validation</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
     <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT * FROM users WHERE email = &#39;</span><span class="si">{</span><span class="n">email</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
     <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
-<span class="c1"># Our Guide - security-first with validation</span>
+<span class="c1">## Our Guide - security-first with validation</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">EmailStr</span><span class="p">,</span> <span class="n">validator</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">UserQuery</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -5211,11 +5209,11 @@ as inline documentation for DevOps automation code.</p>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
 </code></pre></div>
 <p><strong>Migration - Secret Management</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8 - no specific requirements</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## PEP 8 - no specific requirements</span>
 <span class="n">DATABASE_URL</span> <span class="o">=</span> <span class="s2">&quot;postgresql://user:pass@localhost/db&quot;</span>
 <span class="n">API_KEY</span> <span class="o">=</span> <span class="s2">&quot;sk_live_abc123&quot;</span>
 
-<span class="c1"># Our Guide - environment-based secrets</span>
+<span class="c1">## Our Guide - environment-based secrets</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
 
@@ -5241,7 +5239,7 @@ as inline documentation for DevOps automation code.</p>
 <p><strong>PEP 8</strong>: No specific error handling patterns
 <strong>Our Guide</strong>: Fail-fast with specific custom exceptions</p>
 <p><strong>Migration</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># PEP 8 - generic exception handling</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## PEP 8 - generic exception handling</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">fetch_data</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
@@ -5250,7 +5248,7 @@ as inline documentation for DevOps automation code.</p>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-<span class="c1"># Our Guide - specific exceptions and proper cleanup</span>
+<span class="c1">## Our Guide - specific exceptions and proper cleanup</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">APIError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception for API-related errors.&quot;&quot;&quot;</span>
     <span class="k">pass</span>
@@ -5296,13 +5294,13 @@ as inline documentation for DevOps automation code.</p>
 <span class="n">include</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;\.pyi?$&#39;</span>
 </code></pre></div>
 <p><strong>Usage</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Format entire project</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Format entire project</span>
 black<span class="w"> </span>.
 
-<span class="c1"># Check without modifying</span>
+<span class="c1">## Check without modifying</span>
 black<span class="w"> </span>--check<span class="w"> </span>.
 
-<span class="c1"># Format specific file</span>
+<span class="c1">## Format specific file</span>
 black<span class="w"> </span>src/mymodule.py
 </code></pre></div>
 <h3 id="mypy-type-checker-new-requirement">mypy Type Checker (New Requirement)<a class="headerlink" href="#mypy-type-checker-new-requirement" title="Permanent link">&para;</a></h3>
@@ -5325,10 +5323,10 @@ black<span class="w"> </span>src/mymodule.py
 <span class="n">strict_equality</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 <p><strong>Usage</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Type check entire project</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Type check entire project</span>
 mypy<span class="w"> </span>src/
 
-<span class="c1"># Type check specific module</span>
+<span class="c1">## Type check specific module</span>
 mypy<span class="w"> </span>src/mymodule.py
 </code></pre></div>
 <h3 id="isort-import-organizer-enhanced">isort Import Organizer (Enhanced)<a class="headerlink" href="#isort-import-organizer-enhanced" title="Permanent link">&para;</a></h3>
@@ -5357,10 +5355,10 @@ mypy<span class="w"> </span>src/mymodule.py
 <span class="n">python_functions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;test_*&quot;</span><span class="p">]</span>
 </code></pre></div>
 <p><strong>Usage</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run tests with coverage</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Run tests with coverage</span>
 pytest<span class="w"> </span>--cov<span class="o">=</span>src<span class="w"> </span>tests/
 
-<span class="c1"># Generate HTML coverage report</span>
+<span class="c1">## Generate HTML coverage report</span>
 pytest<span class="w"> </span>--cov<span class="o">=</span>src<span class="w"> </span>--cov-report<span class="o">=</span>html<span class="w"> </span>tests/
 </code></pre></div>
 <h3 id="pre-commit-hooks-new-requirement">Pre-commit Hooks (New Requirement)<a class="headerlink" href="#pre-commit-hooks-new-requirement" title="Permanent link">&para;</a></h3>
@@ -5401,10 +5399,10 @@ pytest<span class="w"> </span>--cov<span class="o">=</span>src<span class="w"> <
 <span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;-c&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pyproject.toml&quot;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <p><strong>Setup</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Install hooks</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Install hooks</span>
 pre-commit<span class="w"> </span>install
 
-<span class="c1"># Run manually on all files</span>
+<span class="c1">## Run manually on all files</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 </code></pre></div>
 <h2 id="migration-checklist">Migration Checklist<a class="headerlink" href="#migration-checklist" title="Permanent link">&para;</a></h2>
@@ -5676,27 +5674,27 @@ safety<span class="w"> </span>check
 <h3 id="1-type-hint-complexity-overload">1. Type Hint Complexity Overload<a class="headerlink" href="#1-type-hint-complexity-overload" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Trying to add perfect type hints to complex legacy code all at once.</p>
 <p><strong>Solution</strong>: Migrate incrementally, module by module. Use <code># type: ignore</code> temporarily for complex cases, then refactor.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># During migration - acceptable temporarily</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## During migration - acceptable temporarily</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">complex_function</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
 
-<span class="c1"># Target state after refactoring</span>
+<span class="c1">## Target state after refactoring</span>
 <span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]]</span> <span class="o">=</span> <span class="n">complex_function</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="2-over-reliance-on-any-type">2. Over-Reliance on <code>Any</code> Type<a class="headerlink" href="#2-over-reliance-on-any-type" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Using <code>typing.Any</code> to satisfy mypy without actual type safety.</p>
 <p><strong>Solution</strong>: Use specific types or <code>Union</code> types. Reserve <code>Any</code> for truly dynamic cases.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Avoid - defeats purpose of type hints</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Avoid - defeats purpose of type hints</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="k">pass</span>
 
-<span class="c1"># Better - specific types</span>
+<span class="c1">## Better - specific types</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
     <span class="k">pass</span>
 </code></pre></div>
 <h3 id="3-docstring-duplication">3. Docstring Duplication<a class="headerlink" href="#3-docstring-duplication" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Repeating type information in both type hints and docstrings.</p>
 <p><strong>Solution</strong>: Remove type information from docstrings when type hints are present.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Redundant - types in both places</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Redundant - types in both places</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get user by ID.</span>
@@ -5709,7 +5707,7 @@ safety<span class="w"> </span>check
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span>
 
-<span class="c1"># Better - types in hints, descriptions in docstrings</span>
+<span class="c1">## Better - types in hints, descriptions in docstrings</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve user from database by ID.</span>
@@ -5725,14 +5723,14 @@ safety<span class="w"> </span>check
 <h3 id="4-test-naming-confusion">4. Test Naming Confusion<a class="headerlink" href="#4-test-naming-confusion" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Inconsistent test naming makes test intent unclear.</p>
 <p><strong>Solution</strong>: Follow the pattern <code>test_should_&lt;behavior&gt;_when_&lt;condition&gt;</code> consistently.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Inconsistent</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Inconsistent</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_user_creation</span><span class="p">():</span>
     <span class="k">pass</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_invalid_email</span><span class="p">():</span>
     <span class="k">pass</span>
 
-<span class="c1"># Consistent and clear</span>
+<span class="c1">## Consistent and clear</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_should_create_user_when_valid_data_provided</span><span class="p">():</span>
     <span class="k">pass</span>
 
@@ -5742,10 +5740,10 @@ safety<span class="w"> </span>check
 <h3 id="5-ignoring-pre-commit-hook-failures">5. Ignoring Pre-commit Hook Failures<a class="headerlink" href="#5-ignoring-pre-commit-hook-failures" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Committing code that fails pre-commit checks using <code>--no-verify</code>.</p>
 <p><strong>Solution</strong>: Fix the issues, don't bypass the checks. Pre-commit hooks catch real problems.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Wrong - bypassing checks</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Wrong - bypassing checks</span>
 git<span class="w"> </span>commit<span class="w"> </span>--no-verify<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;quick fix&quot;</span>
 
-<span class="c1"># Right - fix issues first</span>
+<span class="c1">## Right - fix issues first</span>
 black<span class="w"> </span>.
 isort<span class="w"> </span>.
 mypy<span class="w"> </span>src/

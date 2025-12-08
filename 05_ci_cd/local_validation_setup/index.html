@@ -4876,166 +4876,166 @@ you can catch issues before committing code and maintain consistency with CI/CD 
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <h3 id="operating-system-setup">Operating System Setup<a class="headerlink" href="#operating-system-setup" title="Permanent link">&para;</a></h3>
 <p><strong>macOS</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Install Xcode Command Line Tools</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Install Xcode Command Line Tools</span>
 xcode-select<span class="w"> </span>--install
 
-<span class="c1"># Install Homebrew</span>
+<span class="c1">## Install Homebrew</span>
 /bin/bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh<span class="k">)</span><span class="s2">&quot;</span>
 </code></pre></div>
 <p><strong>Ubuntu/Debian</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Update package list</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Update package list</span>
 sudo<span class="w"> </span>apt<span class="w"> </span>update
 
-<span class="c1"># Install build essentials</span>
+<span class="c1">## Install build essentials</span>
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>build-essential<span class="w"> </span>curl<span class="w"> </span>git<span class="w"> </span>wget
 
-<span class="c1"># Install common utilities</span>
+<span class="c1">## Install common utilities</span>
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>ca-certificates<span class="w"> </span>gnupg<span class="w"> </span>lsb-release
 </code></pre></div>
 <p><strong>Fedora/RHEL</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Install development tools</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Install development tools</span>
 sudo<span class="w"> </span>dnf<span class="w"> </span>groupinstall<span class="w"> </span><span class="s2">&quot;Development Tools&quot;</span>
 
-<span class="c1"># Install utilities</span>
+<span class="c1">## Install utilities</span>
 sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl<span class="w"> </span>git<span class="w"> </span>wget
 </code></pre></div>
 <h3 id="git-configuration">Git Configuration<a class="headerlink" href="#git-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Set user information</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Set user information</span>
 git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.name<span class="w"> </span><span class="s2">&quot;Your Name&quot;</span>
 git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.email<span class="w"> </span><span class="s2">&quot;your.email@example.com&quot;</span>
 
-<span class="c1"># Set default branch name</span>
+<span class="c1">## Set default branch name</span>
 git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>init.defaultBranch<span class="w"> </span>main
 
-<span class="c1"># Enable credential caching</span>
+<span class="c1">## Enable credential caching</span>
 git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>cache
 
-<span class="c1"># Set line ending handling</span>
+<span class="c1">## Set line ending handling</span>
 git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>core.autocrlf<span class="w"> </span>input<span class="w">  </span><span class="c1"># macOS/Linux</span>
-<span class="c1"># git config --global core.autocrlf true  # Windows</span>
+<span class="c1">## git config --global core.autocrlf true  # Windows</span>
 
-<span class="c1"># Enable color output</span>
+<span class="c1">## Enable color output</span>
 git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>color.ui<span class="w"> </span>auto
 </code></pre></div>
 <hr />
 <h2 id="package-managers">Package Managers<a class="headerlink" href="#package-managers" title="Permanent link">&para;</a></h2>
 <h3 id="python-package-management">Python Package Management<a class="headerlink" href="#python-package-management" title="Permanent link">&para;</a></h3>
 <p><strong>Install uv (recommended)</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS/Linux</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS/Linux</span>
 curl<span class="w"> </span>-LsSf<span class="w"> </span>https://astral.sh/uv/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
 
-<span class="c1"># Verify installation</span>
+<span class="c1">## Verify installation</span>
 uv<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Alternative: pipx</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>pipx
 pipx<span class="w"> </span>ensurepath
 
-<span class="c1"># Ubuntu/Debian</span>
+<span class="c1">## Ubuntu/Debian</span>
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>pipx
 pipx<span class="w"> </span>ensurepath
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 pipx<span class="w"> </span>--version
 </code></pre></div>
 <h3 id="nodejs-package-management">Node.js Package Management<a class="headerlink" href="#nodejs-package-management" title="Permanent link">&para;</a></h3>
 <p><strong>Install Node.js via nvm</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Install nvm</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Install nvm</span>
 curl<span class="w"> </span>-o-<span class="w"> </span>https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
 
-<span class="c1"># Reload shell</span>
+<span class="c1">## Reload shell</span>
 <span class="nb">source</span><span class="w"> </span>~/.bashrc<span class="w">  </span><span class="c1"># or ~/.zshrc</span>
 
-<span class="c1"># Install LTS version</span>
+<span class="c1">## Install LTS version</span>
 nvm<span class="w"> </span>install<span class="w"> </span>--lts
 
-<span class="c1"># Set as default</span>
+<span class="c1">## Set as default</span>
 nvm<span class="w"> </span>use<span class="w"> </span>--lts
 nvm<span class="w"> </span><span class="nb">alias</span><span class="w"> </span>default<span class="w"> </span>node
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 node<span class="w"> </span>--version
 npm<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Enable pnpm (optional, faster alternative)</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Enable with corepack (Node.js 16.13+)</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Enable with corepack (Node.js 16.13+)</span>
 corepack<span class="w"> </span><span class="nb">enable</span>
 corepack<span class="w"> </span>prepare<span class="w"> </span>pnpm@latest<span class="w"> </span>--activate
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 pnpm<span class="w"> </span>--version
 </code></pre></div>
 <h3 id="ruby-for-some-tools">Ruby (for some tools)<a class="headerlink" href="#ruby-for-some-tools" title="Permanent link">&para;</a></h3>
 <p><strong>Install rbenv</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>rbenv<span class="w"> </span>ruby-build
 
-<span class="c1"># Ubuntu/Debian</span>
+<span class="c1">## Ubuntu/Debian</span>
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>rbenv
 
-<span class="c1"># Initialize</span>
+<span class="c1">## Initialize</span>
 rbenv<span class="w"> </span>init
 <span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;eval &quot;$(rbenv init -)&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
 
-<span class="c1"># Install Ruby</span>
+<span class="c1">## Install Ruby</span>
 rbenv<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.2.2
 rbenv<span class="w"> </span>global<span class="w"> </span><span class="m">3</span>.2.2
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 ruby<span class="w"> </span>--version
 </code></pre></div>
 <hr />
 <h2 id="python-development">Python Development<a class="headerlink" href="#python-development" title="Permanent link">&para;</a></h2>
 <h3 id="core-python-tools">Core Python Tools<a class="headerlink" href="#core-python-tools" title="Permanent link">&para;</a></h3>
 <p><strong>Install Python 3.11+ and tools</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>python@3.11
 
-<span class="c1"># Ubuntu/Debian (Python 3.11)</span>
+<span class="c1">## Ubuntu/Debian (Python 3.11)</span>
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>python3.11<span class="w"> </span>python3.11-venv<span class="w"> </span>python3.11-dev
 
-<span class="c1"># Set as default (if needed)</span>
+<span class="c1">## Set as default (if needed)</span>
 sudo<span class="w"> </span>update-alternatives<span class="w"> </span>--install<span class="w"> </span>/usr/bin/python3<span class="w"> </span>python3<span class="w"> </span>/usr/bin/python3.11<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <p><strong>Create virtual environment</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Using venv</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Using venv</span>
 python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
 <span class="nb">source</span><span class="w"> </span>.venv/bin/activate<span class="w">  </span><span class="c1"># macOS/Linux</span>
-<span class="c1"># .venv\Scripts\activate  # Windows</span>
+<span class="c1">## .venv\Scripts\activate  # Windows</span>
 
-<span class="c1"># Using uv (faster)</span>
+<span class="c1">## Using uv (faster)</span>
 uv<span class="w"> </span>venv
 <span class="nb">source</span><span class="w"> </span>.venv/bin/activate
 </code></pre></div>
 <h3 id="python-linting-and-formatting">Python Linting and Formatting<a class="headerlink" href="#python-linting-and-formatting" title="Permanent link">&para;</a></h3>
 <p><strong>Install tools globally with pipx</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Black (formatter)</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Black (formatter)</span>
 pipx<span class="w"> </span>install<span class="w"> </span>black
 
-<span class="c1"># isort (import sorter)</span>
+<span class="c1">## isort (import sorter)</span>
 pipx<span class="w"> </span>install<span class="w"> </span>isort
 
-<span class="c1"># flake8 (linter)</span>
+<span class="c1">## flake8 (linter)</span>
 pipx<span class="w"> </span>install<span class="w"> </span>flake8
 pipx<span class="w"> </span>inject<span class="w"> </span>flake8<span class="w"> </span>flake8-docstrings
 pipx<span class="w"> </span>inject<span class="w"> </span>flake8<span class="w"> </span>flake8-bugbear
 pipx<span class="w"> </span>inject<span class="w"> </span>flake8<span class="w"> </span>flake8-comprehensions
 
-<span class="c1"># mypy (type checker)</span>
+<span class="c1">## mypy (type checker)</span>
 pipx<span class="w"> </span>install<span class="w"> </span>mypy
 
-<span class="c1"># bandit (security checker)</span>
+<span class="c1">## bandit (security checker)</span>
 pipx<span class="w"> </span>install<span class="w"> </span>bandit
 
-<span class="c1"># pylint (comprehensive linter)</span>
+<span class="c1">## pylint (comprehensive linter)</span>
 pipx<span class="w"> </span>install<span class="w"> </span>pylint
 </code></pre></div>
 <p><strong>Or install in project</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Using uv</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Using uv</span>
 uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>black<span class="w"> </span>isort<span class="w"> </span>flake8<span class="w"> </span>mypy<span class="w"> </span>bandit<span class="w"> </span>pylint
 
-<span class="c1"># Using pip</span>
+<span class="c1">## Using pip</span>
 pip<span class="w"> </span>install<span class="w"> </span>black<span class="w"> </span>isort<span class="w"> </span>flake8<span class="w"> </span>mypy<span class="w"> </span>bandit<span class="w"> </span>pylint
 </code></pre></div>
 <h3 id="python-configuration-files">Python Configuration Files<a class="headerlink" href="#python-configuration-files" title="Permanent link">&para;</a></h3>
@@ -5130,36 +5130,36 @@ pipx<span class="w"> </span>inject<span class="w"> </span>pytest<span class="w">
 pipx<span class="w"> </span>inject<span class="w"> </span>pytest<span class="w"> </span>pytest-xdist<span class="w">  </span><span class="c1"># parallel testing</span>
 </code></pre></div>
 <p><strong>Run tests</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run all tests</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Run all tests</span>
 pytest
 
-<span class="c1"># Run with coverage</span>
+<span class="c1">## Run with coverage</span>
 pytest<span class="w"> </span>--cov<span class="o">=</span>src<span class="w"> </span>--cov-report<span class="o">=</span>html
 
-<span class="c1"># Run specific test file</span>
+<span class="c1">## Run specific test file</span>
 pytest<span class="w"> </span>tests/test_example.py
 
-<span class="c1"># Run with parallel execution</span>
+<span class="c1">## Run with parallel execution</span>
 pytest<span class="w"> </span>-n<span class="w"> </span>auto
 </code></pre></div>
 <hr />
 <h2 id="javascripttypescript-development">JavaScript/TypeScript Development<a class="headerlink" href="#javascripttypescript-development" title="Permanent link">&para;</a></h2>
 <h3 id="nodejs-tooling">Node.js Tooling<a class="headerlink" href="#nodejs-tooling" title="Permanent link">&para;</a></h3>
 <p><strong>Install core tools</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Using npm (globally)</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Using npm (globally)</span>
 npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>typescript
 npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>ts-node
 npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>prettier
 npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>eslint
 
-<span class="c1"># Or using pnpm</span>
+<span class="c1">## Or using pnpm</span>
 pnpm<span class="w"> </span>add<span class="w"> </span>-g<span class="w"> </span>typescript<span class="w"> </span>ts-node<span class="w"> </span>prettier<span class="w"> </span>eslint
 </code></pre></div>
 <p><strong>Project setup</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Initialize package.json</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Initialize package.json</span>
 npm<span class="w"> </span>init<span class="w"> </span>-y
 
-<span class="c1"># Install dev dependencies</span>
+<span class="c1">## Install dev dependencies</span>
 npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>typescript<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>@types/node<span class="w"> </span><span class="se">\</span>
@@ -5303,11 +5303,11 @@ npm<span class="w"> </span>install<span class="w"> </span>--save-dev<span class=
 <h2 id="infrastructure-as-code">Infrastructure as Code<a class="headerlink" href="#infrastructure-as-code" title="Permanent link">&para;</a></h2>
 <h3 id="terraformterragrunt">Terraform/Terragrunt<a class="headerlink" href="#terraformterragrunt" title="Permanent link">&para;</a></h3>
 <p><strong>Install Terraform</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>tap<span class="w"> </span>hashicorp/tap
 brew<span class="w"> </span>install<span class="w"> </span>hashicorp/tap/terraform
 
-<span class="c1"># Ubuntu/Debian</span>
+<span class="c1">## Ubuntu/Debian</span>
 wget<span class="w"> </span>-O-<span class="w"> </span>https://apt.releases.hashicorp.com/gpg<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>sudo<span class="w"> </span>gpg<span class="w"> </span>--dearmor<span class="w"> </span>-o<span class="w"> </span>/usr/share/keyrings/hashicorp-archive-keyring.gpg
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \</span>
@@ -5315,50 +5315,50 @@ wget<span class="w"> </span>-O-<span class="w"> </span>https://apt.releases.hash
 <span class="w">  </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/hashicorp.list
 sudo<span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>terraform
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 terraform<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Install Terragrunt</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>terragrunt
 
-<span class="c1"># Linux (direct download)</span>
+<span class="c1">## Linux (direct download)</span>
 <span class="nv">TERRAGRUNT_VERSION</span><span class="o">=</span><span class="s2">&quot;0.54.8&quot;</span>
 wget<span class="w"> </span>https://github.com/gruntwork-io/terragrunt/releases/download/v<span class="si">${</span><span class="nv">TERRAGRUNT_VERSION</span><span class="si">}</span>/terragrunt_linux_amd64
 sudo<span class="w"> </span>mv<span class="w"> </span>terragrunt_linux_amd64<span class="w"> </span>/usr/local/bin/terragrunt
 sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>/usr/local/bin/terragrunt
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 terragrunt<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Install TFLint</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>tflint
 
-<span class="c1"># Ubuntu/Debian</span>
+<span class="c1">## Ubuntu/Debian</span>
 curl<span class="w"> </span>-s<span class="w"> </span>https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 tflint<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Install terraform-docs</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>terraform-docs
 
-<span class="c1"># Linux</span>
+<span class="c1">## Linux</span>
 curl<span class="w"> </span>-sSLo<span class="w"> </span>./terraform-docs.tar.gz<span class="w"> </span>https://terraform-docs.io/dl/latest/terraform-docs-linux-amd64.tar.gz
 tar<span class="w"> </span>-xzf<span class="w"> </span>terraform-docs.tar.gz
 sudo<span class="w"> </span>mv<span class="w"> </span>terraform-docs<span class="w"> </span>/usr/local/bin/
 rm<span class="w"> </span>terraform-docs.tar.gz
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 terraform-docs<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Install Checkov</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Using pipx</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Using pipx</span>
 pipx<span class="w"> </span>install<span class="w"> </span>checkov
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 checkov<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>.tflint.hcl</strong>:</p>
@@ -5390,25 +5390,25 @@ checkov<span class="w"> </span>--version
 </code></pre></div>
 <h3 id="ansible">Ansible<a class="headerlink" href="#ansible" title="Permanent link">&para;</a></h3>
 <p><strong>Install Ansible</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>ansible
 
-<span class="c1"># Ubuntu/Debian</span>
+<span class="c1">## Ubuntu/Debian</span>
 sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ansible
 
-<span class="c1"># Using pipx (recommended)</span>
+<span class="c1">## Using pipx (recommended)</span>
 pipx<span class="w"> </span>install<span class="w"> </span>ansible-core
 pipx<span class="w"> </span>inject<span class="w"> </span>ansible-core<span class="w"> </span>ansible
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 ansible<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>Install ansible-lint</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Using pipx</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Using pipx</span>
 pipx<span class="w"> </span>install<span class="w"> </span>ansible-lint
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 ansible-lint<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>.ansible-lint</strong>:</p>
@@ -5431,21 +5431,21 @@ ansible-lint<span class="w"> </span>--version
 </code></pre></div>
 <h3 id="kuberneteshelm">Kubernetes/Helm<a class="headerlink" href="#kuberneteshelm" title="Permanent link">&para;</a></h3>
 <p><strong>Install kubectl</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>kubectl
 
-<span class="c1"># Ubuntu/Debian</span>
+<span class="c1">## Ubuntu/Debian</span>
 curl<span class="w"> </span>-LO<span class="w"> </span><span class="s2">&quot;https://dl.k8s.io/release/</span><span class="k">$(</span>curl<span class="w"> </span>-L<span class="w"> </span>-s<span class="w"> </span>https://dl.k8s.io/release/stable.txt<span class="k">)</span><span class="s2">/bin/linux/amd64/kubectl&quot;</span>
 sudo<span class="w"> </span>install<span class="w"> </span>-o<span class="w"> </span>root<span class="w"> </span>-g<span class="w"> </span>root<span class="w"> </span>-m<span class="w"> </span><span class="m">0755</span><span class="w"> </span>kubectl<span class="w"> </span>/usr/local/bin/kubectl
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 kubectl<span class="w"> </span>version<span class="w"> </span>--client
 </code></pre></div>
 <p><strong>Install Helm</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>helm
 
-<span class="c1"># Ubuntu/Debian</span>
+<span class="c1">## Ubuntu/Debian</span>
 curl<span class="w"> </span>https://baltocdn.com/helm/signing.asc<span class="w"> </span><span class="p">|</span><span class="w"> </span>gpg<span class="w"> </span>--dearmor<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>sudo<span class="w"> </span>tee<span class="w"> </span>/usr/share/keyrings/helm.gpg<span class="w"> </span>&gt;<span class="w"> </span>/dev/null
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb [arch=</span><span class="k">$(</span>dpkg<span class="w"> </span>--print-architecture<span class="k">)</span><span class="s2"> signed-by=/usr/share/keyrings/helm.gpg] \</span>
@@ -5454,23 +5454,23 @@ curl<span class="w"> </span>https://baltocdn.com/helm/signing.asc<span class="w"
 sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>helm
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 helm<span class="w"> </span>version
 </code></pre></div>
 <p><strong>Install kubeval</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>kubeval
 
-<span class="c1"># Linux</span>
+<span class="c1">## Linux</span>
 wget<span class="w"> </span>https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
 tar<span class="w"> </span>xf<span class="w"> </span>kubeval-linux-amd64.tar.gz
 sudo<span class="w"> </span>mv<span class="w"> </span>kubeval<span class="w"> </span>/usr/local/bin
 </code></pre></div>
 <p><strong>Install yamllint</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Using pipx</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Using pipx</span>
 pipx<span class="w"> </span>install<span class="w"> </span>yamllint
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 yamllint<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>.yamllint</strong>:</p>
@@ -5488,35 +5488,35 @@ yamllint<span class="w"> </span>--version
 <h2 id="shell-script-development">Shell Script Development<a class="headerlink" href="#shell-script-development" title="Permanent link">&para;</a></h2>
 <h3 id="shellcheck">ShellCheck<a class="headerlink" href="#shellcheck" title="Permanent link">&para;</a></h3>
 <p><strong>Install ShellCheck</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>shellcheck
 
-<span class="c1"># Ubuntu/Debian</span>
+<span class="c1">## Ubuntu/Debian</span>
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>shellcheck
 
-<span class="c1"># Fedora</span>
+<span class="c1">## Fedora</span>
 sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>ShellCheck
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 shellcheck<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>.shellcheckrc</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Disable specific checks</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Disable specific checks</span>
 <span class="nv">disable</span><span class="o">=</span>SC1091<span class="w">  </span><span class="c1"># Can&#39;t follow sourced files</span>
 <span class="nv">disable</span><span class="o">=</span>SC2034<span class="w">  </span><span class="c1"># Unused variables</span>
 
-<span class="c1"># Set shell dialect</span>
+<span class="c1">## Set shell dialect</span>
 <span class="nv">shell</span><span class="o">=</span>bash
 </code></pre></div>
 <h3 id="shfmt">shfmt<a class="headerlink" href="#shfmt" title="Permanent link">&para;</a></h3>
 <p><strong>Install shfmt</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>shfmt
 
-<span class="c1"># Using Go</span>
+<span class="c1">## Using Go</span>
 go<span class="w"> </span>install<span class="w"> </span>mvdan.cc/sh/v3/cmd/shfmt@latest
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 shfmt<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>.editorconfig</strong> (for shfmt):</p>
@@ -5531,10 +5531,10 @@ shfmt<span class="w"> </span>--version
 <h2 id="container-development">Container Development<a class="headerlink" href="#container-development" title="Permanent link">&para;</a></h2>
 <h3 id="docker">Docker<a class="headerlink" href="#docker" title="Permanent link">&para;</a></h3>
 <p><strong>Install Docker</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>--cask<span class="w"> </span>docker
 
-<span class="c1"># Ubuntu/Debian</span>
+<span class="c1">## Ubuntu/Debian</span>
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ca-certificates<span class="w"> </span>curl<span class="w"> </span>gnupg
 sudo<span class="w"> </span>install<span class="w"> </span>-m<span class="w"> </span><span class="m">0755</span><span class="w"> </span>-d<span class="w"> </span>/etc/apt/keyrings
 curl<span class="w"> </span>-fsSL<span class="w"> </span>https://download.docker.com/linux/ubuntu/gpg<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
@@ -5545,20 +5545,20 @@ curl<span class="w"> </span>-fsSL<span class="w"> </span>https://download.docker
 sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>docker-ce<span class="w"> </span>docker-ce-cli<span class="w"> </span>containerd.io<span class="w"> </span>docker-buildx-plugin<span class="w"> </span>docker-compose-plugin
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 docker<span class="w"> </span>--version
 docker<span class="w"> </span>compose<span class="w"> </span>version
 </code></pre></div>
 <h3 id="hadolint">Hadolint<a class="headerlink" href="#hadolint" title="Permanent link">&para;</a></h3>
 <p><strong>Install hadolint</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>hadolint
 
-<span class="c1"># Linux</span>
+<span class="c1">## Linux</span>
 wget<span class="w"> </span>-O<span class="w"> </span>/usr/local/bin/hadolint<span class="w"> </span>https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
 chmod<span class="w"> </span>+x<span class="w"> </span>/usr/local/bin/hadolint
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 hadolint<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>.hadolint.yaml</strong>:</p>
@@ -5575,38 +5575,38 @@ hadolint<span class="w"> </span>--version
 </code></pre></div>
 <h3 id="trivy">Trivy<a class="headerlink" href="#trivy" title="Permanent link">&para;</a></h3>
 <p><strong>Install Trivy</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>aquasecurity/trivy/trivy
 
-<span class="c1"># Ubuntu/Debian</span>
+<span class="c1">## Ubuntu/Debian</span>
 sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>wget<span class="w"> </span>apt-transport-https<span class="w"> </span>gnupg<span class="w"> </span>lsb-release
 wget<span class="w"> </span>-qO<span class="w"> </span>-<span class="w"> </span>https://aquasecurity.github.io/trivy-repo/deb/public.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>apt-key<span class="w"> </span>add<span class="w"> </span>-
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb https://aquasecurity.github.io/trivy-repo/deb </span><span class="k">$(</span>lsb_release<span class="w"> </span>-sc<span class="k">)</span><span class="s2"> main&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/apt/sources.list.d/trivy.list
 sudo<span class="w"> </span>apt-get<span class="w"> </span>update
 sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>trivy
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 trivy<span class="w"> </span>--version
 </code></pre></div>
 <hr />
 <h2 id="database-development">Database Development<a class="headerlink" href="#database-development" title="Permanent link">&para;</a></h2>
 <h3 id="postgresql-tools">PostgreSQL Tools<a class="headerlink" href="#postgresql-tools" title="Permanent link">&para;</a></h3>
 <p><strong>Install psql client</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># macOS</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## macOS</span>
 brew<span class="w"> </span>install<span class="w"> </span>postgresql
 
-<span class="c1"># Ubuntu/Debian</span>
+<span class="c1">## Ubuntu/Debian</span>
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>postgresql-client
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 psql<span class="w"> </span>--version
 </code></pre></div>
 <h3 id="sqlfluff">SQLFluff<a class="headerlink" href="#sqlfluff" title="Permanent link">&para;</a></h3>
 <p><strong>Install SQLFluff</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Using pipx</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Using pipx</span>
 pipx<span class="w"> </span>install<span class="w"> </span>sqlfluff
 
-<span class="c1"># Verify</span>
+<span class="c1">## Verify</span>
 sqlfluff<span class="w"> </span>--version
 </code></pre></div>
 <p><strong>.sqlfluff</strong>:</p>
@@ -5629,10 +5629,10 @@ sqlfluff<span class="w"> </span>--version
 <h2 id="editor-integration">Editor Integration<a class="headerlink" href="#editor-integration" title="Permanent link">&para;</a></h2>
 <h3 id="vs-code">VS Code<a class="headerlink" href="#vs-code" title="Permanent link">&para;</a></h3>
 <p><strong>Install extensions</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Install VS Code command line</span>
-<span class="c1"># macOS: Cmd+Shift+P &gt; &quot;Shell Command: Install &#39;code&#39; command in PATH&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Install VS Code command line</span>
+<span class="c1">## macOS: Cmd+Shift+P &gt; &quot;Shell Command: Install &#39;code&#39; command in PATH&quot;</span>
 
-<span class="c1"># Install extensions</span>
+<span class="c1">## Install extensions</span>
 code<span class="w"> </span>--install-extension<span class="w"> </span>ms-python.python
 code<span class="w"> </span>--install-extension<span class="w"> </span>ms-python.black-formatter
 code<span class="w"> </span>--install-extension<span class="w"> </span>ms-python.isort
@@ -5751,7 +5751,7 @@ code<span class="w"> </span>--install-extension<span class="w"> </span>ms-azuret
 
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Running Full Validation ===&quot;</span>
 
-<span class="c1"># Python validation</span>
+<span class="c1">## Python validation</span>
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;src&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;pyproject.toml&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Python Validation ---&quot;</span>
 <span class="w">  </span>black<span class="w"> </span>--check<span class="w"> </span>src/
@@ -5762,7 +5762,7 @@ code<span class="w"> </span>--install-extension<span class="w"> </span>ms-azuret
 <span class="w">  </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-v<span class="w"> </span>--cov<span class="o">=</span>src<span class="w"> </span>--cov-report<span class="o">=</span>term
 <span class="k">fi</span>
 
-<span class="c1"># JavaScript/TypeScript validation</span>
+<span class="c1">## JavaScript/TypeScript validation</span>
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;package.json&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- JavaScript/TypeScript Validation ---&quot;</span>
 <span class="w">  </span>npm<span class="w"> </span>run<span class="w"> </span>lint
@@ -5771,7 +5771,7 @@ code<span class="w"> </span>--install-extension<span class="w"> </span>ms-azuret
 <span class="w">  </span>npm<span class="w"> </span><span class="nb">test</span>
 <span class="k">fi</span>
 
-<span class="c1"># Terraform validation</span>
+<span class="c1">## Terraform validation</span>
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;terraform&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;*.tf&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Terraform Validation ---&quot;</span>
 <span class="w">  </span>terraform<span class="w"> </span>fmt<span class="w"> </span>-check<span class="w"> </span>-recursive
@@ -5779,13 +5779,13 @@ code<span class="w"> </span>--install-extension<span class="w"> </span>ms-azuret
 <span class="w">  </span>tflint
 <span class="k">fi</span>
 
-<span class="c1"># Shell script validation</span>
+<span class="c1">## Shell script validation</span>
 <span class="k">if</span><span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.sh&quot;</span><span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;./node_modules/*&quot;</span><span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;./.venv/*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span>.<span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Shell Script Validation ---&quot;</span>
 <span class="w">  </span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.sh&quot;</span><span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;./node_modules/*&quot;</span><span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;./.venv/*&quot;</span><span class="w"> </span>-exec<span class="w"> </span>shellcheck<span class="w"> </span><span class="o">{}</span><span class="w"> </span>+
 <span class="k">fi</span>
 
-<span class="c1"># Docker validation</span>
+<span class="c1">## Docker validation</span>
 <span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;Dockerfile&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 <span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Docker Validation ---&quot;</span>
 <span class="w">  </span>hadolint<span class="w"> </span>Dockerfile
@@ -5803,30 +5803,30 @@ code<span class="w"> </span>--install-extension<span class="w"> </span>ms-azuret
 
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Python Validation ===&quot;</span>
 
-<span class="c1"># Activate virtual environment</span>
+<span class="c1">## Activate virtual environment</span>
 <span class="nb">source</span><span class="w"> </span>.venv/bin/activate
 
-<span class="c1"># Format check</span>
+<span class="c1">## Format check</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Checking formatting...&quot;</span>
 black<span class="w"> </span>--check<span class="w"> </span>src/<span class="w"> </span>tests/
 
-<span class="c1"># Import sort check</span>
+<span class="c1">## Import sort check</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Checking import order...&quot;</span>
 isort<span class="w"> </span>--check-only<span class="w"> </span>src/<span class="w"> </span>tests/
 
-<span class="c1"># Linting</span>
+<span class="c1">## Linting</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Running flake8...&quot;</span>
 flake8<span class="w"> </span>src/<span class="w"> </span>tests/
 
-<span class="c1"># Type checking</span>
+<span class="c1">## Type checking</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Running mypy...&quot;</span>
 mypy<span class="w"> </span>src/
 
-<span class="c1"># Security</span>
+<span class="c1">## Security</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Running bandit...&quot;</span>
 bandit<span class="w"> </span>-r<span class="w"> </span>src/<span class="w"> </span>-ll
 
-<span class="c1"># Tests</span>
+<span class="c1">## Tests</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Running tests...&quot;</span>
 pytest<span class="w"> </span>tests/<span class="w"> </span>-v<span class="w"> </span>--cov<span class="o">=</span>src<span class="w"> </span>--cov-report<span class="o">=</span>html<span class="w"> </span>--cov-report<span class="o">=</span>term
 
@@ -5838,23 +5838,23 @@ pytest<span class="w"> </span>tests/<span class="w"> </span>-v<span class="w"> <
 
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== TypeScript Validation ===&quot;</span>
 
-<span class="c1"># Linting</span>
+<span class="c1">## Linting</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Running ESLint...&quot;</span>
 npm<span class="w"> </span>run<span class="w"> </span>lint
 
-<span class="c1"># Format check</span>
+<span class="c1">## Format check</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Checking formatting...&quot;</span>
 npm<span class="w"> </span>run<span class="w"> </span>format:check
 
-<span class="c1"># Type checking</span>
+<span class="c1">## Type checking</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Running type check...&quot;</span>
 npm<span class="w"> </span>run<span class="w"> </span>type-check
 
-<span class="c1"># Build</span>
+<span class="c1">## Build</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Building...&quot;</span>
 npm<span class="w"> </span>run<span class="w"> </span>build
 
-<span class="c1"># Tests</span>
+<span class="c1">## Tests</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Running tests...&quot;</span>
 npm<span class="w"> </span><span class="nb">test</span>
 
@@ -5864,61 +5864,61 @@ npm<span class="w"> </span><span class="nb">test</span>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
 <p><strong>Python: "ModuleNotFoundError"</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Ensure virtual environment is activated</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Ensure virtual environment is activated</span>
 <span class="nb">source</span><span class="w"> </span>.venv/bin/activate
 
-<span class="c1"># Reinstall dependencies</span>
+<span class="c1">## Reinstall dependencies</span>
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-<span class="c1"># or</span>
+<span class="c1">## or</span>
 uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </code></pre></div>
 <p><strong>Node.js: "command not found"</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Ensure Node.js is in PATH</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Ensure Node.js is in PATH</span>
 nvm<span class="w"> </span>use<span class="w"> </span>--lts
 
-<span class="c1"># Reinstall dependencies</span>
+<span class="c1">## Reinstall dependencies</span>
 rm<span class="w"> </span>-rf<span class="w"> </span>node_modules<span class="w"> </span>package-lock.json
 npm<span class="w"> </span>install
 </code></pre></div>
 <p><strong>Terraform: "command not found"</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Verify installation</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Verify installation</span>
 which<span class="w"> </span>terraform
 
-<span class="c1"># Reinstall if needed (macOS)</span>
+<span class="c1">## Reinstall if needed (macOS)</span>
 brew<span class="w"> </span>reinstall<span class="w"> </span>terraform
 </code></pre></div>
 <p><strong>Pre-commit hooks not running</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Reinstall hooks</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Reinstall hooks</span>
 pre-commit<span class="w"> </span>uninstall
 pre-commit<span class="w"> </span>install
 
-<span class="c1"># Clear cache</span>
+<span class="c1">## Clear cache</span>
 pre-commit<span class="w"> </span>clean
 
-<span class="c1"># Run manually</span>
+<span class="c1">## Run manually</span>
 pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 </code></pre></div>
 <h3 id="performance-optimization">Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permanent link">&para;</a></h3>
 <p><strong>Python: Use faster tools</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Use uv instead of pip</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Use uv instead of pip</span>
 uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 
-<span class="c1"># Use ruff instead of flake8 (much faster)</span>
+<span class="c1">## Use ruff instead of flake8 (much faster)</span>
 pipx<span class="w"> </span>install<span class="w"> </span>ruff
 </code></pre></div>
 <p><strong>Node.js: Use pnpm instead of npm</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Enable pnpm</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Enable pnpm</span>
 corepack<span class="w"> </span><span class="nb">enable</span>
 corepack<span class="w"> </span>prepare<span class="w"> </span>pnpm@latest<span class="w"> </span>--activate
 
-<span class="c1"># Install dependencies</span>
+<span class="c1">## Install dependencies</span>
 pnpm<span class="w"> </span>install
 </code></pre></div>
 <p><strong>Parallel execution</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run pytest in parallel</span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Run pytest in parallel</span>
 pytest<span class="w"> </span>-n<span class="w"> </span>auto
 
-<span class="c1"># Run multiple validation commands</span>
+<span class="c1">## Run multiple validation commands</span>
 black<span class="w"> </span>src/<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>isort<span class="w"> </span>src/<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>flake8<span class="w"> </span>src/<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span><span class="nb">wait</span>
 </code></pre></div>
 <hr />
