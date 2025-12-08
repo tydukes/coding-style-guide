@@ -62,7 +62,7 @@ machine-friendly, combining declarative resource definitions with imperative pro
 ### Blocks
 
 ```hcl
-# Basic block structure
+## Basic block structure
 block_type "label1" "label2" {
   attribute = value
 
@@ -71,7 +71,7 @@ block_type "label1" "label2" {
   }
 }
 
-# Terraform example
+## Terraform example
 resource "aws_instance" "web" {
   ami           = "ami-0c55b159cbfafe1f0"
   instance_type = "t3.micro"
@@ -85,26 +85,26 @@ resource "aws_instance" "web" {
 ### Attributes
 
 ```hcl
-# Simple attributes
+## Simple attributes
 name        = "my-instance"
 count       = 3
 enabled     = true
 price       = 19.99
 
-# Complex attributes
+## Complex attributes
 tags = {
   Environment = "production"
   Owner       = "platform-team"
 }
 
-# List attributes
+## List attributes
 availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c"]
 ```
 
 ### Comments
 
 ```hcl
-# Single-line comment
+## Single-line comment
 
 // Alternative single-line comment
 
@@ -125,47 +125,47 @@ resource "aws_instance" "web" {
 ### Primitive Types
 
 ```hcl
-# String
+## String
 name = "my-resource"
 description = "A description with spaces"
 
-# Number (integer or float)
+## Number (integer or float)
 count = 5
 price = 29.99
 
-# Boolean
+## Boolean
 enabled = true
 disabled = false
 
-# Null
+## Null
 optional_value = null
 ```
 
 ### Complex Types
 
 ```hcl
-# List (ordered collection)
+## List (ordered collection)
 availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c"]
 ports = [80, 443, 8080]
 
-# Map (key-value pairs)
+## Map (key-value pairs)
 tags = {
   Environment = "production"
   Project     = "web-app"
   CostCenter  = "engineering"
 }
 
-# Object (typed structure)
+## Object (typed structure)
 server_config = {
   instance_type = "t3.micro"
   ami           = "ami-0c55b159cbfafe1f0"
   disk_size     = 20
 }
 
-# Tuple (ordered, typed list)
+## Tuple (ordered, typed list)
 mixed_tuple = ["string", 42, true]
 
-# Set (unordered, unique values)
+## Set (unordered, unique values)
 unique_zones = toset(["us-east-1a", "us-east-1b", "us-east-1a"])
 ```
 
@@ -176,14 +176,14 @@ unique_zones = toset(["us-east-1a", "us-east-1b", "us-east-1a"])
 ### Variable Declaration
 
 ```hcl
-# Basic variable
+## Basic variable
 variable "instance_type" {
   type        = string
   description = "EC2 instance type"
   default     = "t3.micro"
 }
 
-# Variable with validation
+## Variable with validation
 variable "region" {
   type        = string
   description = "AWS region"
@@ -194,7 +194,7 @@ variable "region" {
   }
 }
 
-# Complex variable
+## Complex variable
 variable "server_config" {
   type = object({
     instance_type = string
@@ -209,7 +209,7 @@ variable "server_config" {
   }
 }
 
-# Sensitive variable
+## Sensitive variable
 variable "db_password" {
   type      = string
   sensitive = true
@@ -234,7 +234,7 @@ resource "aws_instance" "web" {
 ## Locals
 
 ```hcl
-# Define local values
+## Define local values
 locals {
   common_tags = {
     Environment = var.environment
@@ -249,7 +249,7 @@ locals {
   use_spot = var.environment == "dev" ? true : false
 }
 
-# Use local values
+## Use local values
 resource "aws_instance" "web" {
   ami           = var.ami_id
   instance_type = var.instance_type
@@ -270,24 +270,24 @@ resource "aws_instance" "web" {
 ### References
 
 ```hcl
-# Variable reference
+## Variable reference
 var.instance_type
 
-# Resource attribute reference
+## Resource attribute reference
 aws_instance.web.id
 aws_instance.web.private_ip
 
-# Local value reference
+## Local value reference
 local.common_tags
 
-# Module output reference
+## Module output reference
 module.vpc.vpc_id
 ```
 
 ### Operators
 
 ```hcl
-# Arithmetic
+## Arithmetic
 locals {
   total_size = var.base_size + 10
   doubled    = var.count * 2
@@ -295,7 +295,7 @@ locals {
   remainder  = var.number % 3
 }
 
-# Comparison
+## Comparison
 locals {
   is_production = var.environment == "prod"
   not_dev       = var.environment != "dev"
@@ -303,7 +303,7 @@ locals {
   is_valid      = var.port >= 1 && var.port <= 65535
 }
 
-# Logical
+## Logical
 locals {
   deploy = var.enabled && var.environment == "prod"
   skip   = !var.enabled || var.environment == "test"
@@ -313,7 +313,7 @@ locals {
 ### Conditional Expressions
 
 ```hcl
-# Ternary operator
+## Ternary operator
 locals {
   instance_type = var.environment == "prod" ? "t3.large" : "t3.micro"
 
@@ -433,7 +433,7 @@ locals {
 ## Dynamic Blocks
 
 ```hcl
-# Dynamic block for repeated nested blocks
+## Dynamic block for repeated nested blocks
 resource "aws_security_group" "web" {
   name        = "web-sg"
   description = "Security group for web servers"
@@ -451,7 +451,7 @@ resource "aws_security_group" "web" {
   }
 }
 
-# Variable definition
+## Variable definition
 variable "ingress_rules" {
   type = list(object({
     from_port   = number
@@ -485,7 +485,7 @@ variable "ingress_rules" {
 ## For Expressions
 
 ```hcl
-# List transformation
+## List transformation
 locals {
   # Transform list
   uppercase_names = [for name in var.names : upper(name)]
@@ -500,7 +500,7 @@ locals {
   instance_ids = [for k, v in var.instances : v.id]
 }
 
-# Map transformation
+## Map transformation
 locals {
   # Transform map
   uppercase_tags = {
@@ -527,7 +527,7 @@ locals {
 ## String Templates
 
 ```hcl
-# String interpolation
+## String interpolation
 locals {
   greeting = "Hello, ${var.name}!"
 
@@ -556,14 +556,14 @@ locals {
 ### Use Descriptive Names
 
 ```hcl
-# Good - Descriptive variable names
+## Good - Descriptive variable names
 variable "web_server_instance_type" {
   type        = string
   description = "EC2 instance type for web servers"
   default     = "t3.micro"
 }
 
-# Bad - Cryptic names
+## Bad - Cryptic names
 variable "wst" {
   type    = string
   default = "t3.micro"
@@ -573,14 +573,14 @@ variable "wst" {
 ### Provide Descriptions
 
 ```hcl
-# Good - Clear descriptions
+## Good - Clear descriptions
 variable "database_backup_retention_days" {
   type        = number
   description = "Number of days to retain automated database backups"
   default     = 7
 }
 
-# Bad - No description
+## Bad - No description
 variable "retention" {
   type    = number
   default = 7
@@ -590,7 +590,7 @@ variable "retention" {
 ### Use Type Constraints
 
 ```hcl
-# Good - Explicit types
+## Good - Explicit types
 variable "server_config" {
   type = object({
     instance_type = string
@@ -599,7 +599,7 @@ variable "server_config" {
   })
 }
 
-# Bad - No type constraint
+## Bad - No type constraint
 variable "server_config" {
   default = {}
 }
@@ -608,7 +608,7 @@ variable "server_config" {
 ### Group Related Resources
 
 ```hcl
-# Good - Logical grouping with locals
+## Good - Logical grouping with locals
 locals {
   network_config = {
     vpc_cidr           = "10.0.0.0/16"
@@ -631,7 +631,7 @@ locals {
 ### ❌ Avoid: Hardcoded Values
 
 ```hcl
-# Bad - Hardcoded values
+## Bad - Hardcoded values
 resource "aws_instance" "web" {
   ami           = "ami-0c55b159cbfafe1f0"
   instance_type = "t3.micro"
@@ -641,7 +641,7 @@ resource "aws_instance" "web" {
   }
 }
 
-# Good - Use variables
+## Good - Use variables
 resource "aws_instance" "web" {
   ami           = var.ami_id
   instance_type = var.instance_type
@@ -655,12 +655,12 @@ resource "aws_instance" "web" {
 ### ❌ Avoid: Missing Type Constraints
 
 ```hcl
-# Bad - No type constraint
+## Bad - No type constraint
 variable "config" {
   default = {}
 }
 
-# Good - Explicit type
+## Good - Explicit type
 variable "config" {
   type = object({
     name    = string
@@ -672,12 +672,12 @@ variable "config" {
 ### ❌ Avoid: Complex Inline Logic
 
 ```hcl
-# Bad - Complex inline logic
+## Bad - Complex inline logic
 resource "aws_instance" "web" {
   count = var.environment == "prod" ? (var.high_availability ? 3 : 1) : (var.environment == "staging" ? 2 : 1)
 }
 
-# Good - Use locals for clarity
+## Good - Use locals for clarity
 locals {
   instance_count = (
     var.environment == "prod" && var.high_availability ? 3 :
@@ -695,7 +695,7 @@ resource "aws_instance" "web" {
 ### ❌ Avoid: Not Using for_each for Maps
 
 ```hcl
-# Bad - Using count with maps (fragile to reordering)
+## Bad - Using count with maps (fragile to reordering)
 variable "users" {
   default = ["alice", "bob", "charlie"]
 }
@@ -705,7 +705,7 @@ resource "aws_iam_user" "users" {
   name  = var.users[count.index]
 }
 
-# Good - Use for_each
+## Good - Use for_each
 variable "users" {
   type = set(string)
   default = ["alice", "bob", "charlie"]
@@ -720,20 +720,20 @@ resource "aws_iam_user" "users" {
 ### ❌ Avoid: Mixing Resource Types in One File
 
 ```hcl
-# Bad - All resources in main.tf
-# main.tf with VPC, EC2, S3, IAM, etc. (1000+ lines)
+## Bad - All resources in main.tf
+## main.tf with VPC, EC2, S3, IAM, etc. (1000+ lines)
 
-# Good - Separate by resource type
-# network.tf - VPC, subnets, route tables
-# compute.tf - EC2 instances, auto-scaling
-# storage.tf - S3 buckets, EBS volumes
-# security.tf - IAM roles, security groups
+## Good - Separate by resource type
+## network.tf - VPC, subnets, route tables
+## compute.tf - EC2 instances, auto-scaling
+## storage.tf - S3 buckets, EBS volumes
+## security.tf - IAM roles, security groups
 ```
 
 ### ❌ Avoid: Not Using Dynamic Blocks
 
 ```hcl
-# Bad - Repetitive inline blocks
+## Bad - Repetitive inline blocks
 resource "aws_security_group" "web" {
   ingress {
     from_port   = 80
@@ -749,7 +749,7 @@ resource "aws_security_group" "web" {
   }
 }
 
-# Good - Dynamic block
+## Good - Dynamic block
 locals {
   ingress_rules = [
     { port = 80, protocol = "tcp" },
@@ -773,12 +773,12 @@ resource "aws_security_group" "web" {
 ### ❌ Avoid: Not Validating Variables
 
 ```hcl
-# Bad - No validation
+## Bad - No validation
 variable "environment" {
   type = string
 }
 
-# Good - With validation
+## Good - With validation
 variable "environment" {
   type = string
   validation {
@@ -797,16 +797,16 @@ variable "environment" {
 Terraform includes a built-in formatter that follows HCL style conventions:
 
 ```bash
-# Format all HCL files in current directory
+## Format all HCL files in current directory
 terraform fmt
 
-# Format specific directory
+## Format specific directory
 terraform fmt modules/networking
 
-# Check formatting without making changes
+## Check formatting without making changes
 terraform fmt -check
 
-# Recursive formatting
+## Recursive formatting
 terraform fmt -recursive
 ```
 
@@ -815,7 +815,7 @@ terraform fmt -recursive
 Configure Terraform CLI behavior:
 
 ```hcl
-# ~/.terraformrc or terraform.rc
+## ~/.terraformrc or terraform.rc
 plugin_cache_dir   = "$HOME/.terraform.d/plugin-cache"
 disable_checkpoint = true
 
@@ -827,7 +827,7 @@ credentials "app.terraform.io" {
 ### tflint Configuration
 
 ```hcl
-# .tflint.hcl
+## .tflint.hcl
 config {
   module = true
   force = false
@@ -864,7 +864,7 @@ rule "terraform_required_providers" {
 ### EditorConfig for HCL
 
 ```ini
-# .editorconfig
+## .editorconfig
 [*.{tf,hcl}]
 indent_style = space
 indent_size = 2
@@ -877,7 +877,7 @@ insert_final_newline = true
 ### Pre-commit Hooks
 
 ```yaml
-# .pre-commit-config.yaml
+## .pre-commit-config.yaml
 repos:
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.88.4
@@ -923,7 +923,7 @@ repos:
 ### Makefile Integration
 
 ```makefile
-# Makefile
+## Makefile
 .PHONY: fmt validate lint
 
 fmt:

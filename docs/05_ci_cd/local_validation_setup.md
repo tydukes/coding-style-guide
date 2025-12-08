@@ -40,54 +40,54 @@ you can catch issues before committing code and maintain consistency with CI/CD 
 **macOS**:
 
 ```bash
-# Install Xcode Command Line Tools
+## Install Xcode Command Line Tools
 xcode-select --install
 
-# Install Homebrew
+## Install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
 **Ubuntu/Debian**:
 
 ```bash
-# Update package list
+## Update package list
 sudo apt update
 
-# Install build essentials
+## Install build essentials
 sudo apt install -y build-essential curl git wget
 
-# Install common utilities
+## Install common utilities
 sudo apt install -y ca-certificates gnupg lsb-release
 ```
 
 **Fedora/RHEL**:
 
 ```bash
-# Install development tools
+## Install development tools
 sudo dnf groupinstall "Development Tools"
 
-# Install utilities
+## Install utilities
 sudo dnf install -y curl git wget
 ```
 
 ### Git Configuration
 
 ```bash
-# Set user information
+## Set user information
 git config --global user.name "Your Name"
 git config --global user.email "your.email@example.com"
 
-# Set default branch name
+## Set default branch name
 git config --global init.defaultBranch main
 
-# Enable credential caching
+## Enable credential caching
 git config --global credential.helper cache
 
-# Set line ending handling
+## Set line ending handling
 git config --global core.autocrlf input  # macOS/Linux
-# git config --global core.autocrlf true  # Windows
+## git config --global core.autocrlf true  # Windows
 
-# Enable color output
+## Enable color output
 git config --global color.ui auto
 ```
 
@@ -100,25 +100,25 @@ git config --global color.ui auto
 **Install uv (recommended)**:
 
 ```bash
-# macOS/Linux
+## macOS/Linux
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Verify installation
+## Verify installation
 uv --version
 ```
 
 **Alternative: pipx**:
 
 ```bash
-# macOS
+## macOS
 brew install pipx
 pipx ensurepath
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 sudo apt install pipx
 pipx ensurepath
 
-# Verify
+## Verify
 pipx --version
 ```
 
@@ -127,20 +127,20 @@ pipx --version
 **Install Node.js via nvm**:
 
 ```bash
-# Install nvm
+## Install nvm
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
-# Reload shell
+## Reload shell
 source ~/.bashrc  # or ~/.zshrc
 
-# Install LTS version
+## Install LTS version
 nvm install --lts
 
-# Set as default
+## Set as default
 nvm use --lts
 nvm alias default node
 
-# Verify
+## Verify
 node --version
 npm --version
 ```
@@ -148,11 +148,11 @@ npm --version
 **Enable pnpm (optional, faster alternative)**:
 
 ```bash
-# Enable with corepack (Node.js 16.13+)
+## Enable with corepack (Node.js 16.13+)
 corepack enable
 corepack prepare pnpm@latest --activate
 
-# Verify
+## Verify
 pnpm --version
 ```
 
@@ -161,21 +161,21 @@ pnpm --version
 **Install rbenv**:
 
 ```bash
-# macOS
+## macOS
 brew install rbenv ruby-build
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 sudo apt install rbenv
 
-# Initialize
+## Initialize
 rbenv init
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
 
-# Install Ruby
+## Install Ruby
 rbenv install 3.2.2
 rbenv global 3.2.2
 
-# Verify
+## Verify
 ruby --version
 ```
 
@@ -188,25 +188,25 @@ ruby --version
 **Install Python 3.11+ and tools**:
 
 ```bash
-# macOS
+## macOS
 brew install python@3.11
 
-# Ubuntu/Debian (Python 3.11)
+## Ubuntu/Debian (Python 3.11)
 sudo apt install -y python3.11 python3.11-venv python3.11-dev
 
-# Set as default (if needed)
+## Set as default (if needed)
 sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
 ```
 
 **Create virtual environment**:
 
 ```bash
-# Using venv
+## Using venv
 python3 -m venv .venv
 source .venv/bin/activate  # macOS/Linux
-# .venv\Scripts\activate  # Windows
+## .venv\Scripts\activate  # Windows
 
-# Using uv (faster)
+## Using uv (faster)
 uv venv
 source .venv/bin/activate
 ```
@@ -216,35 +216,35 @@ source .venv/bin/activate
 **Install tools globally with pipx**:
 
 ```bash
-# Black (formatter)
+## Black (formatter)
 pipx install black
 
-# isort (import sorter)
+## isort (import sorter)
 pipx install isort
 
-# flake8 (linter)
+## flake8 (linter)
 pipx install flake8
 pipx inject flake8 flake8-docstrings
 pipx inject flake8 flake8-bugbear
 pipx inject flake8 flake8-comprehensions
 
-# mypy (type checker)
+## mypy (type checker)
 pipx install mypy
 
-# bandit (security checker)
+## bandit (security checker)
 pipx install bandit
 
-# pylint (comprehensive linter)
+## pylint (comprehensive linter)
 pipx install pylint
 ```
 
 **Or install in project**:
 
 ```bash
-# Using uv
+## Using uv
 uv pip install black isort flake8 mypy bandit pylint
 
-# Using pip
+## Using pip
 pip install black isort flake8 mypy bandit pylint
 ```
 
@@ -353,16 +353,16 @@ pipx inject pytest pytest-xdist  # parallel testing
 **Run tests**:
 
 ```bash
-# Run all tests
+## Run all tests
 pytest
 
-# Run with coverage
+## Run with coverage
 pytest --cov=src --cov-report=html
 
-# Run specific test file
+## Run specific test file
 pytest tests/test_example.py
 
-# Run with parallel execution
+## Run with parallel execution
 pytest -n auto
 ```
 
@@ -375,23 +375,23 @@ pytest -n auto
 **Install core tools**:
 
 ```bash
-# Using npm (globally)
+## Using npm (globally)
 npm install -g typescript
 npm install -g ts-node
 npm install -g prettier
 npm install -g eslint
 
-# Or using pnpm
+## Or using pnpm
 pnpm add -g typescript ts-node prettier eslint
 ```
 
 **Project setup**:
 
 ```bash
-# Initialize package.json
+## Initialize package.json
 npm init -y
 
-# Install dev dependencies
+## Install dev dependencies
 npm install --save-dev \
   typescript \
   @types/node \
@@ -563,11 +563,11 @@ module.exports = {
 **Install Terraform**:
 
 ```bash
-# macOS
+## macOS
 brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 wget -O- https://apt.releases.hashicorp.com/gpg | \
   sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
@@ -575,62 +575,62 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
   sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt update && sudo apt install terraform
 
-# Verify
+## Verify
 terraform --version
 ```
 
 **Install Terragrunt**:
 
 ```bash
-# macOS
+## macOS
 brew install terragrunt
 
-# Linux (direct download)
+## Linux (direct download)
 TERRAGRUNT_VERSION="0.54.8"
 wget https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64
 sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
 sudo chmod +x /usr/local/bin/terragrunt
 
-# Verify
+## Verify
 terragrunt --version
 ```
 
 **Install TFLint**:
 
 ```bash
-# macOS
+## macOS
 brew install tflint
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
-# Verify
+## Verify
 tflint --version
 ```
 
 **Install terraform-docs**:
 
 ```bash
-# macOS
+## macOS
 brew install terraform-docs
 
-# Linux
+## Linux
 curl -sSLo ./terraform-docs.tar.gz https://terraform-docs.io/dl/latest/terraform-docs-linux-amd64.tar.gz
 tar -xzf terraform-docs.tar.gz
 sudo mv terraform-docs /usr/local/bin/
 rm terraform-docs.tar.gz
 
-# Verify
+## Verify
 terraform-docs --version
 ```
 
 **Install Checkov**:
 
 ```bash
-# Using pipx
+## Using pipx
 pipx install checkov
 
-# Verify
+## Verify
 checkov --version
 ```
 
@@ -669,28 +669,28 @@ rule "terraform_required_version" {
 **Install Ansible**:
 
 ```bash
-# macOS
+## macOS
 brew install ansible
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 sudo apt update
 sudo apt install ansible
 
-# Using pipx (recommended)
+## Using pipx (recommended)
 pipx install ansible-core
 pipx inject ansible-core ansible
 
-# Verify
+## Verify
 ansible --version
 ```
 
 **Install ansible-lint**:
 
 ```bash
-# Using pipx
+## Using pipx
 pipx install ansible-lint
 
-# Verify
+## Verify
 ansible-lint --version
 ```
 
@@ -720,24 +720,24 @@ enable_list:
 **Install kubectl**:
 
 ```bash
-# macOS
+## macOS
 brew install kubectl
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
-# Verify
+## Verify
 kubectl version --client
 ```
 
 **Install Helm**:
 
 ```bash
-# macOS
+## macOS
 brew install helm
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | \
   sudo tee /usr/share/keyrings/helm.gpg > /dev/null
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] \
@@ -746,17 +746,17 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.
 sudo apt update
 sudo apt install helm
 
-# Verify
+## Verify
 helm version
 ```
 
 **Install kubeval**:
 
 ```bash
-# macOS
+## macOS
 brew install kubeval
 
-# Linux
+## Linux
 wget https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
 tar xf kubeval-linux-amd64.tar.gz
 sudo mv kubeval /usr/local/bin
@@ -765,10 +765,10 @@ sudo mv kubeval /usr/local/bin
 **Install yamllint**:
 
 ```bash
-# Using pipx
+## Using pipx
 pipx install yamllint
 
-# Verify
+## Verify
 yamllint --version
 ```
 
@@ -795,27 +795,27 @@ rules:
 **Install ShellCheck**:
 
 ```bash
-# macOS
+## macOS
 brew install shellcheck
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 sudo apt install shellcheck
 
-# Fedora
+## Fedora
 sudo dnf install ShellCheck
 
-# Verify
+## Verify
 shellcheck --version
 ```
 
 **.shellcheckrc**:
 
 ```bash
-# Disable specific checks
+## Disable specific checks
 disable=SC1091  # Can't follow sourced files
 disable=SC2034  # Unused variables
 
-# Set shell dialect
+## Set shell dialect
 shell=bash
 ```
 
@@ -824,13 +824,13 @@ shell=bash
 **Install shfmt**:
 
 ```bash
-# macOS
+## macOS
 brew install shfmt
 
-# Using Go
+## Using Go
 go install mvdan.cc/sh/v3/cmd/shfmt@latest
 
-# Verify
+## Verify
 shfmt --version
 ```
 
@@ -854,10 +854,10 @@ trim_trailing_whitespace = true
 **Install Docker**:
 
 ```bash
-# macOS
+## macOS
 brew install --cask docker
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 sudo apt install ca-certificates curl gnupg
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
@@ -868,7 +868,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 sudo apt update
 sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# Verify
+## Verify
 docker --version
 docker compose version
 ```
@@ -878,14 +878,14 @@ docker compose version
 **Install hadolint**:
 
 ```bash
-# macOS
+## macOS
 brew install hadolint
 
-# Linux
+## Linux
 wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
 chmod +x /usr/local/bin/hadolint
 
-# Verify
+## Verify
 hadolint --version
 ```
 
@@ -909,17 +909,17 @@ failure-threshold: warning
 **Install Trivy**:
 
 ```bash
-# macOS
+## macOS
 brew install aquasecurity/trivy/trivy
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 sudo apt-get install wget apt-transport-https gnupg lsb-release
 wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
 echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
 sudo apt-get update
 sudo apt-get install trivy
 
-# Verify
+## Verify
 trivy --version
 ```
 
@@ -932,13 +932,13 @@ trivy --version
 **Install psql client**:
 
 ```bash
-# macOS
+## macOS
 brew install postgresql
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 sudo apt install postgresql-client
 
-# Verify
+## Verify
 psql --version
 ```
 
@@ -947,10 +947,10 @@ psql --version
 **Install SQLFluff**:
 
 ```bash
-# Using pipx
+## Using pipx
 pipx install sqlfluff
 
-# Verify
+## Verify
 sqlfluff --version
 ```
 
@@ -982,10 +982,10 @@ unquoted_identifiers_policy = all
 **Install extensions**:
 
 ```bash
-# Install VS Code command line
-# macOS: Cmd+Shift+P > "Shell Command: Install 'code' command in PATH"
+## Install VS Code command line
+## macOS: Cmd+Shift+P > "Shell Command: Install 'code' command in PATH"
 
-# Install extensions
+## Install extensions
 code --install-extension ms-python.python
 code --install-extension ms-python.black-formatter
 code --install-extension ms-python.isort
@@ -1108,7 +1108,7 @@ cd "${PROJECT_ROOT}"
 
 echo "=== Running Full Validation ==="
 
-# Python validation
+## Python validation
 if [ -d "src" ] && [ -f "pyproject.toml" ]; then
   echo "--- Python Validation ---"
   black --check src/
@@ -1119,7 +1119,7 @@ if [ -d "src" ] && [ -f "pyproject.toml" ]; then
   pytest tests/ -v --cov=src --cov-report=term
 fi
 
-# JavaScript/TypeScript validation
+## JavaScript/TypeScript validation
 if [ -f "package.json" ]; then
   echo "--- JavaScript/TypeScript Validation ---"
   npm run lint
@@ -1128,7 +1128,7 @@ if [ -f "package.json" ]; then
   npm test
 fi
 
-# Terraform validation
+## Terraform validation
 if [ -d "terraform" ] || [ -f "*.tf" ]; then
   echo "--- Terraform Validation ---"
   terraform fmt -check -recursive
@@ -1136,13 +1136,13 @@ if [ -d "terraform" ] || [ -f "*.tf" ]; then
   tflint
 fi
 
-# Shell script validation
+## Shell script validation
 if find . -name "*.sh" -not -path "./node_modules/*" -not -path "./.venv/*" | grep -q .; then
   echo "--- Shell Script Validation ---"
   find . -name "*.sh" -not -path "./node_modules/*" -not -path "./.venv/*" -exec shellcheck {} +
 fi
 
-# Docker validation
+## Docker validation
 if [ -f "Dockerfile" ]; then
   echo "--- Docker Validation ---"
   hadolint Dockerfile
@@ -1167,30 +1167,30 @@ set -euo pipefail
 
 echo "=== Python Validation ==="
 
-# Activate virtual environment
+## Activate virtual environment
 source .venv/bin/activate
 
-# Format check
+## Format check
 echo "Checking formatting..."
 black --check src/ tests/
 
-# Import sort check
+## Import sort check
 echo "Checking import order..."
 isort --check-only src/ tests/
 
-# Linting
+## Linting
 echo "Running flake8..."
 flake8 src/ tests/
 
-# Type checking
+## Type checking
 echo "Running mypy..."
 mypy src/
 
-# Security
+## Security
 echo "Running bandit..."
 bandit -r src/ -ll
 
-# Tests
+## Tests
 echo "Running tests..."
 pytest tests/ -v --cov=src --cov-report=html --cov-report=term
 
@@ -1205,23 +1205,23 @@ set -euo pipefail
 
 echo "=== TypeScript Validation ==="
 
-# Linting
+## Linting
 echo "Running ESLint..."
 npm run lint
 
-# Format check
+## Format check
 echo "Checking formatting..."
 npm run format:check
 
-# Type checking
+## Type checking
 echo "Running type check..."
 npm run type-check
 
-# Build
+## Build
 echo "Building..."
 npm run build
 
-# Tests
+## Tests
 echo "Running tests..."
 npm test
 
@@ -1237,22 +1237,22 @@ echo "=== TypeScript Validation Complete ==="
 **Python: "ModuleNotFoundError"**:
 
 ```bash
-# Ensure virtual environment is activated
+## Ensure virtual environment is activated
 source .venv/bin/activate
 
-# Reinstall dependencies
+## Reinstall dependencies
 pip install -e .
-# or
+## or
 uv pip install -e .
 ```
 
 **Node.js: "command not found"**:
 
 ```bash
-# Ensure Node.js is in PATH
+## Ensure Node.js is in PATH
 nvm use --lts
 
-# Reinstall dependencies
+## Reinstall dependencies
 rm -rf node_modules package-lock.json
 npm install
 ```
@@ -1260,24 +1260,24 @@ npm install
 **Terraform: "command not found"**:
 
 ```bash
-# Verify installation
+## Verify installation
 which terraform
 
-# Reinstall if needed (macOS)
+## Reinstall if needed (macOS)
 brew reinstall terraform
 ```
 
 **Pre-commit hooks not running**:
 
 ```bash
-# Reinstall hooks
+## Reinstall hooks
 pre-commit uninstall
 pre-commit install
 
-# Clear cache
+## Clear cache
 pre-commit clean
 
-# Run manually
+## Run manually
 pre-commit run --all-files
 ```
 
@@ -1286,31 +1286,31 @@ pre-commit run --all-files
 **Python: Use faster tools**:
 
 ```bash
-# Use uv instead of pip
+## Use uv instead of pip
 uv pip install -r requirements.txt
 
-# Use ruff instead of flake8 (much faster)
+## Use ruff instead of flake8 (much faster)
 pipx install ruff
 ```
 
 **Node.js: Use pnpm instead of npm**:
 
 ```bash
-# Enable pnpm
+## Enable pnpm
 corepack enable
 corepack prepare pnpm@latest --activate
 
-# Install dependencies
+## Install dependencies
 pnpm install
 ```
 
 **Parallel execution**:
 
 ```bash
-# Run pytest in parallel
+## Run pytest in parallel
 pytest -n auto
 
-# Run multiple validation commands
+## Run multiple validation commands
 black src/ & isort src/ & flake8 src/ & wait
 ```
 

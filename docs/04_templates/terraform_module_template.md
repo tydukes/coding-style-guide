@@ -47,7 +47,7 @@ terraform-<provider>-<name>/
 ## README.md Template
 
 ```markdown
-# Terraform [Provider] [Resource Name] Module
+## Terraform [Provider] [Resource Name] Module
 
 Terraform module for creating and managing [resource description].
 
@@ -155,7 +155,7 @@ Apache 2.0 Licensed. See LICENSE for full details.
 ## main.tf Template
 
 ```hcl
-# Main resource definitions
+## Main resource definitions
 resource "aws_example_resource" "this" {
   name = var.name
 
@@ -174,7 +174,7 @@ resource "aws_example_resource" "this" {
   )
 }
 
-# Supporting resources
+## Supporting resources
 resource "aws_example_policy" "this" {
   count = var.enable_policy ? 1 : 0
 
@@ -205,7 +205,7 @@ resource "aws_example_policy" "this" {
 ## variables.tf Template
 
 ```hcl
-# Required variables
+## Required variables
 variable "name" {
   description = "Name of the resource. Used for resource naming and tagging."
   type        = string
@@ -226,7 +226,7 @@ variable "environment" {
   }
 }
 
-# Optional variables with defaults
+## Optional variables with defaults
 variable "enabled" {
   description = "Whether the resource is enabled."
   type        = bool
@@ -261,7 +261,7 @@ variable "retention_days" {
   }
 }
 
-# Complex variables
+## Complex variables
 variable "network_config" {
   description = "Network configuration for the resource."
   type = object({
@@ -272,7 +272,7 @@ variable "network_config" {
   default = null
 }
 
-# Tags
+## Tags
 variable "tags" {
   description = "A map of tags to add to all resources."
   type        = map(string)
@@ -285,7 +285,7 @@ variable "tags" {
 ## outputs.tf Template
 
 ```hcl
-# Primary outputs
+## Primary outputs
 output "id" {
   description = "The ID of the resource."
   value       = aws_example_resource.this.id
@@ -301,13 +301,13 @@ output "name" {
   value       = aws_example_resource.this.name
 }
 
-# Conditional outputs
+## Conditional outputs
 output "policy_arn" {
   description = "The ARN of the IAM policy (if enabled)."
   value       = var.enable_policy ? aws_example_policy.this[0].arn : null
 }
 
-# Complex outputs
+## Complex outputs
 output "endpoint" {
   description = "Endpoint information for the resource."
   value = {
@@ -316,7 +316,7 @@ output "endpoint" {
   }
 }
 
-# Sensitive outputs
+## Sensitive outputs
 output "credentials" {
   description = "Credentials for accessing the resource."
   value = {
@@ -392,7 +392,7 @@ provider "aws" {
   region = var.aws_region
 }
 
-# VPC for the example
+## VPC for the example
 resource "aws_vpc" "example" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
@@ -419,7 +419,7 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
-# Complete module usage
+## Complete module usage
 module "example" {
   source = "../../"
 
@@ -448,7 +448,7 @@ module "example" {
   }
 }
 
-# Outputs
+## Outputs
 output "resource_id" {
   description = "The ID of the created resource."
   value       = module.example.id
@@ -554,40 +554,40 @@ func TestTerraformModuleComplete(t *testing.T) {
 ## .gitignore Template
 
 ```gitignore
-# Local .terraform directories
+## Local .terraform directories
 **/.terraform/*
 
-# .tfstate files
+## .tfstate files
 *.tfstate
 *.tfstate.*
 
-# Crash log files
+## Crash log files
 crash.log
 crash.*.log
 
-# Exclude all .tfvars files
+## Exclude all .tfvars files
 *.tfvars
 *.tfvars.json
 
-# Ignore override files
+## Ignore override files
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
 
-# Ignore CLI configuration files
+## Ignore CLI configuration files
 .terraformrc
 terraform.rc
 
-# Ignore lock files (commit for modules)
-# .terraform.lock.hcl
+## Ignore lock files (commit for modules)
+## .terraform.lock.hcl
 
-# Test artifacts
+## Test artifacts
 test/.test-data
 test/terraform.tfstate*
 test/.terraform/*
 
-# IDE
+## IDE
 .idea
 .vscode
 *.swp
@@ -595,7 +595,7 @@ test/.terraform/*
 *.bak
 *~
 
-# OS
+## OS
 .DS_Store
 Thumbs.db
 ```

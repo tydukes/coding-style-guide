@@ -76,7 +76,7 @@ Language).
 Use **snake_case** for all Terraform resource identifiers:
 
 ```hcl
-# Good
+## Good
 resource "aws_instance" "web_server" {
   ami           = var.ami_id
   instance_type = var.instance_type
@@ -86,7 +86,7 @@ resource "aws_security_group" "application_sg" {
   name = "app-${var.environment}-sg"
 }
 
-# Bad
+## Bad
 resource "aws_instance" "WebServer" {      # PascalCase - avoid
   ami = var.ami_id
 }
@@ -101,7 +101,7 @@ resource "aws_security_group" "app-sg" {   # kebab-case in identifier - avoid
 Use **snake_case** with descriptive names:
 
 ```hcl
-# Good
+## Good
 variable "vpc_cidr_block" {
   type        = string
   description = "CIDR block for VPC"
@@ -113,7 +113,7 @@ variable "instance_count" {
   default     = 2
 }
 
-# Bad
+## Bad
 variable "vpcCIDR" {           # camelCase - avoid
   type = string
 }
@@ -128,7 +128,7 @@ variable "cnt" {               # Abbreviation - avoid
 Use **snake_case** for outputs, prefixed by resource type when exporting IDs:
 
 ```hcl
-# Good
+## Good
 output "vpc_id" {
   description = "ID of the created VPC"
   value       = aws_vpc.main.id
@@ -139,7 +139,7 @@ output "instance_public_ips" {
   value       = aws_instance.web[*].public_ip
 }
 
-# Bad
+## Bad
 output "VpcId" {               # PascalCase - avoid
   value = aws_vpc.main.id
 }
@@ -170,7 +170,7 @@ modules/
 Standard Terraform file naming conventions:
 
 ```text
-# Root module structure
+## Root module structure
 main.tf                 # Primary resource definitions
 variables.tf            # Input variable declarations
 outputs.tf              # Output value definitions
@@ -206,9 +206,9 @@ modules/vpc-network/
 ### File Organization Best Practices
 
 ```hcl
-# main.tf - Group related resources together with comments
+## main.tf - Group related resources together with comments
 #----------------------------------------------------------------------
-# VPC and Networking
+## VPC and Networking
 #----------------------------------------------------------------------
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr_block
@@ -240,7 +240,7 @@ resource "aws_subnet" "public" {
 }
 
 #----------------------------------------------------------------------
-# Internet Gateway
+## Internet Gateway
 #----------------------------------------------------------------------
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
@@ -263,7 +263,7 @@ resource "aws_internet_gateway" "main" {
 All variables must include `type`, `description`, and validation when applicable:
 
 ```hcl
-# variables.tf
+## variables.tf
 variable "environment" {
   type        = string
   description = "Deployment environment (dev, staging, prod)"
@@ -326,7 +326,7 @@ variable "allowed_cidr_blocks" {
 ### Complex Variable Types
 
 ```hcl
-# Object type for structured configuration
+## Object type for structured configuration
 variable "database_config" {
   type = object({
     engine               = string
@@ -344,7 +344,7 @@ variable "database_config" {
   }
 }
 
-# Map of objects for multiple similar resources
+## Map of objects for multiple similar resources
 variable "applications" {
   type = map(object({
     instance_count = number
@@ -365,7 +365,7 @@ variable "applications" {
 Use interpolation to create consistent, environment-aware resource names:
 
 ```hcl
-# Pattern: ${project}-${environment}-${resource_type}-${identifier}
+## Pattern: ${project}-${environment}-${resource_type}-${identifier}
 resource "aws_s3_bucket" "application_data" {
   bucket = "${var.project}-${var.environment}-app-data"
 
@@ -397,7 +397,7 @@ resource "aws_security_group" "web_server" {
 Apply consistent tags to ALL resources that support tagging:
 
 ```hcl
-# locals.tf - Define common tags
+## locals.tf - Define common tags
 locals {
   common_tags = {
     Project     = var.project
@@ -409,7 +409,7 @@ locals {
   }
 }
 
-# main.tf - Use tags consistently
+## main.tf - Use tags consistently
 resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
@@ -455,7 +455,7 @@ resource "aws_security_group" "application" {
 Outputs should be well-documented and include sensitive flag when needed:
 
 ```hcl
-# outputs.tf
+## outputs.tf
 output "vpc_id" {
   description = "ID of the VPC"
   value       = aws_vpc.main.id
@@ -498,7 +498,7 @@ output "load_balancer_dns" {
 Use data sources for referencing existing resources:
 
 ```hcl
-# data.tf
+## data.tf
 data "aws_availability_zones" "available" {
   state = "available"
 }
@@ -522,7 +522,7 @@ data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
 
-# Use data sources in resources
+## Use data sources in resources
 resource "aws_subnet" "private" {
   count             = length(data.aws_availability_zones.available.names)
   vpc_id            = aws_vpc.main.id
@@ -542,7 +542,7 @@ resource "aws_subnet" "private" {
 ### Provider Version Constraints
 
 ```hcl
-# versions.tf
+## versions.tf
 terraform {
   required_version = ">= 1.5.0, < 2.0.0"
 
@@ -562,7 +562,7 @@ terraform {
 ### Provider Setup
 
 ```hcl
-# providers.tf
+## providers.tf
 provider "aws" {
   region = var.aws_region
 
@@ -575,7 +575,7 @@ provider "aws" {
   }
 }
 
-# Multi-region provider configuration
+## Multi-region provider configuration
 provider "aws" {
   alias  = "us_west_2"
   region = "us-west-2"
@@ -586,7 +586,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
-# Use aliased provider
+## Use aliased provider
 resource "aws_s3_bucket" "backup" {
   provider = aws.us_west_2
   bucket   = "${var.project}-backup"
@@ -600,7 +600,7 @@ resource "aws_s3_bucket" "backup" {
 ### Remote Backend Configuration
 
 ```hcl
-# backend.tf
+## backend.tf
 terraform {
   backend "s3" {
     bucket         = "my-terraform-state-bucket"
@@ -616,7 +616,7 @@ terraform {
 ### State Management Best Practices
 
 ```hcl
-# Use lifecycle meta-arguments for critical resources
+## Use lifecycle meta-arguments for critical resources
 resource "aws_db_instance" "production" {
   allocated_storage = 100
   engine            = "postgres"
@@ -628,7 +628,7 @@ resource "aws_db_instance" "production" {
   }
 }
 
-# Use terraform_remote_state for cross-stack references
+## Use terraform_remote_state for cross-stack references
 data "terraform_remote_state" "network" {
   backend = "s3"
   config = {
@@ -651,7 +651,7 @@ resource "aws_instance" "app" {
 Use workspaces for environment separation (when not using separate state files):
 
 ```hcl
-# locals.tf - Workspace-aware configuration
+## locals.tf - Workspace-aware configuration
 locals {
   workspace_config = {
     dev = {
@@ -672,7 +672,7 @@ locals {
   config      = local.workspace_config[terraform.workspace]
 }
 
-# main.tf - Use workspace configuration
+## main.tf - Use workspace configuration
 resource "aws_instance" "app" {
   count         = local.config.instance_count
   instance_type = local.config.instance_type
@@ -688,18 +688,18 @@ resource "aws_instance" "app" {
 Workspace commands:
 
 ```bash
-# Create and switch to workspace
+## Create and switch to workspace
 terraform workspace new dev
 terraform workspace new staging
 terraform workspace new prod
 
-# List workspaces
+## List workspaces
 terraform workspace list
 
-# Switch workspace
+## Switch workspace
 terraform workspace select prod
 
-# Show current workspace
+## Show current workspace
 terraform workspace show
 ```
 
@@ -712,7 +712,7 @@ terraform workspace show
 Use Terraform's built-in testing framework:
 
 ```hcl
-# tests/vpc_validation.tftest.hcl
+## tests/vpc_validation.tftest.hcl
 variables {
   vpc_cidr_block = "10.0.0.0/16"
   environment    = "test"
@@ -803,12 +803,12 @@ go test -v -timeout 30m
 **NEVER** hardcode secrets in Terraform code:
 
 ```hcl
-# Bad - Hardcoded secrets
+## Bad - Hardcoded secrets
 resource "aws_db_instance" "bad" {
   password = "SuperSecretPassword123!"  # NEVER do this
 }
 
-# Good - Use variables with sensitive flag
+## Good - Use variables with sensitive flag
 variable "database_password" {
   type        = string
   description = "Database master password"
@@ -819,7 +819,7 @@ resource "aws_db_instance" "good" {
   password = var.database_password
 }
 
-# Better - Generate secrets dynamically
+## Better - Generate secrets dynamically
 resource "random_password" "db_password" {
   length  = 32
   special = true
@@ -908,14 +908,14 @@ resource "aws_iam_policy" "app" {
 ### ❌ Avoid: Hardcoded Values
 
 ```hcl
-# Bad
+## Bad
 resource "aws_instance" "web" {
   ami           = "ami-0c55b159cbfafe1f0"  # Hardcoded AMI
   instance_type = "t3.medium"              # Hardcoded instance type
   subnet_id     = "subnet-12345678"        # Hardcoded subnet ID
 }
 
-# Good
+## Good
 data "aws_ami" "latest_ubuntu" {
   most_recent = true
   owners      = ["099720109477"]
@@ -935,14 +935,14 @@ resource "aws_instance" "web" {
 ### ❌ Avoid: Count with Complex Resources
 
 ```hcl
-# Bad - Using count can cause recreation issues
+## Bad - Using count can cause recreation issues
 resource "aws_instance" "web" {
   count         = 3
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
 }
 
-# Good - Use for_each for stability
+## Good - Use for_each for stability
 resource "aws_instance" "web" {
   for_each      = toset(["web-1", "web-2", "web-3"])
   ami           = data.aws_ami.ubuntu.id
@@ -957,7 +957,7 @@ resource "aws_instance" "web" {
 ### ❌ Avoid: Inline Policies
 
 ```hcl
-# Bad - Inline policy is harder to reuse and test
+## Bad - Inline policy is harder to reuse and test
 resource "aws_iam_role" "app" {
   name = "app-role"
 
@@ -976,7 +976,7 @@ resource "aws_iam_role" "app" {
   }
 }
 
-# Good - Separate policy document and attachment
+## Good - Separate policy document and attachment
 data "aws_iam_policy_document" "app" {
   statement {
     sid    = "S3Access"
@@ -1003,10 +1003,10 @@ resource "aws_iam_role_policy_attachment" "app" {
 ### ❌ Avoid: Not Using Remote State
 
 ```hcl
-# Bad - Local state only (risky for teams)
-# No backend configuration - state stored locally
+## Bad - Local state only (risky for teams)
+## No backend configuration - state stored locally
 
-# Good - Remote state with locking
+## Good - Remote state with locking
 terraform {
   backend "s3" {
     bucket         = "myapp-terraform-state"
@@ -1021,7 +1021,7 @@ terraform {
 ### ❌ Avoid: Missing Required Providers Version
 
 ```hcl
-# Bad - No version constraint
+## Bad - No version constraint
 terraform {
   required_providers {
     aws = {
@@ -1031,7 +1031,7 @@ terraform {
   }
 }
 
-# Good - Pin provider versions
+## Good - Pin provider versions
 terraform {
   required_version = ">= 1.6.0"
 
@@ -1047,14 +1047,14 @@ terraform {
 ### ❌ Avoid: Using Default VPC and Subnets
 
 ```hcl
-# Bad - Relying on default VPC
+## Bad - Relying on default VPC
 resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
   # Implicitly uses default VPC - not reproducible
 }
 
-# Good - Explicitly create networking
+## Good - Explicitly create networking
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
@@ -1084,7 +1084,7 @@ resource "aws_instance" "web" {
 ### ❌ Avoid: Overly Permissive Security Groups
 
 ```hcl
-# Bad - Open to the world
+## Bad - Open to the world
 resource "aws_security_group" "web" {
   name = "web-sg"
 
@@ -1096,7 +1096,7 @@ resource "aws_security_group" "web" {
   }
 }
 
-# Good - Specific rules with justification
+## Good - Specific rules with justification
 resource "aws_security_group" "web" {
   name        = "${var.project}-${var.environment}-web-sg"
   description = "Security group for web servers"
@@ -1131,13 +1131,13 @@ resource "aws_security_group_rule" "web_egress" {
 ### ❌ Avoid: Not Using Data Sources for Existing Resources
 
 ```hcl
-# Bad - Hardcoding existing resource IDs
+## Bad - Hardcoding existing resource IDs
 resource "aws_route_table_association" "public" {
   subnet_id      = aws_subnet.public.id
   route_table_id = "rtb-12345678"  # ❌ Hardcoded route table
 }
 
-# Good - Use data sources
+## Good - Use data sources
 data "aws_route_table" "main" {
   vpc_id = aws_vpc.main.id
 
@@ -1156,7 +1156,7 @@ resource "aws_route_table_association" "public" {
 ### ❌ Avoid: Missing Lifecycle Rules
 
 ```hcl
-# Bad - Can accidentally destroy critical resources
+## Bad - Can accidentally destroy critical resources
 resource "aws_db_instance" "production" {
   identifier        = "prod-db"
   engine            = "postgres"
@@ -1165,7 +1165,7 @@ resource "aws_db_instance" "production" {
   # No lifecycle protection - can be destroyed!
 }
 
-# Good - Protect critical resources
+## Good - Protect critical resources
 resource "aws_db_instance" "production" {
   identifier        = "prod-db"
   engine            = "postgres"
@@ -1190,14 +1190,14 @@ resource "aws_db_instance" "production" {
 ### ❌ Avoid: Not Tagging Resources
 
 ```hcl
-# Bad - No tags for cost tracking or management
+## Bad - No tags for cost tracking or management
 resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
   # No tags - can't track costs or manage resources
 }
 
-# Good - Comprehensive tagging strategy
+## Good - Comprehensive tagging strategy
 locals {
   common_tags = {
     Project     = var.project
@@ -1229,7 +1229,7 @@ resource "aws_instance" "web" {
 ### tflint Configuration
 
 ```hcl
-# .tflint.hcl
+## .tflint.hcl
 plugin "terraform" {
   enabled = true
   preset  = "recommended"
@@ -1264,7 +1264,7 @@ tflint --recursive
 ### terraform-docs Configuration
 
 ```yaml
-# .terraform-docs.yml
+## .terraform-docs.yml
 formatter: markdown table
 
 header-from: main.tf
@@ -1301,7 +1301,7 @@ terraform-docs .
 ### Pre-commit Hook Configuration
 
 ```yaml
-# .pre-commit-config.yaml
+## .pre-commit-config.yaml
 repos:
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.83.5
@@ -1324,7 +1324,7 @@ repos:
 ## Complete Module Example
 
 ```hcl
-# modules/vpc-network/main.tf
+## modules/vpc-network/main.tf
 """
 @module vpc-network
 @description Production-grade VPC module with public/private subnets and NAT gateway
@@ -1336,7 +1336,7 @@ repos:
 """
 
 #----------------------------------------------------------------------
-# VPC
+## VPC
 #----------------------------------------------------------------------
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr_block
@@ -1352,7 +1352,7 @@ resource "aws_vpc" "main" {
 }
 
 #----------------------------------------------------------------------
-# Public Subnets
+## Public Subnets
 #----------------------------------------------------------------------
 resource "aws_subnet" "public" {
   count                   = length(var.availability_zones)
@@ -1371,7 +1371,7 @@ resource "aws_subnet" "public" {
 }
 
 #----------------------------------------------------------------------
-# Internet Gateway
+## Internet Gateway
 #----------------------------------------------------------------------
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
@@ -1385,7 +1385,7 @@ resource "aws_internet_gateway" "main" {
 }
 
 #----------------------------------------------------------------------
-# Route Table for Public Subnets
+## Route Table for Public Subnets
 #----------------------------------------------------------------------
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
@@ -1411,7 +1411,7 @@ resource "aws_route_table_association" "public" {
 ```
 
 ```hcl
-# modules/vpc-network/variables.tf
+## modules/vpc-network/variables.tf
 variable "project" {
   type        = string
   description = "Project name for resource naming"
@@ -1450,7 +1450,7 @@ variable "common_tags" {
 ```
 
 ```hcl
-# modules/vpc-network/outputs.tf
+## modules/vpc-network/outputs.tf
 output "vpc_id" {
   description = "ID of the VPC"
   value       = aws_vpc.main.id

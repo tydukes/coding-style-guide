@@ -98,13 +98,13 @@ infrastructure/
 ### Centralized Configuration
 
 ```hcl
-# @module root_terragrunt
-# @description Root Terragrunt configuration for remote state and provider settings
-# @version 1.0.0
-# @author Tyler Dukes
-# @last_updated 2025-10-28
+## @module root_terragrunt
+## @description Root Terragrunt configuration for remote state and provider settings
+## @version 1.0.0
+## @author Tyler Dukes
+## @last_updated 2025-10-28
 
-# Generate backend configuration for all child modules
+## Generate backend configuration for all child modules
 remote_state {
   backend = "s3"
 
@@ -132,7 +132,7 @@ remote_state {
   }
 }
 
-# Generate provider configuration
+## Generate provider configuration
 generate "provider" {
   path      = "provider.tf"
   if_exists = "overwrite_terragrunt"
@@ -152,7 +152,7 @@ generate "provider" {
   EOF
 }
 
-# Local variables available to all child configurations
+## Local variables available to all child configurations
 locals {
   # Parse environment and region from path
   # Expected path: live/<environment>/<region>/<stack>/terragrunt.hcl
@@ -178,7 +178,7 @@ locals {
   }
 }
 
-# Terraform version constraints
+## Terraform version constraints
 terraform {
   extra_arguments "common_vars" {
     commands = get_terraform_commands_that_need_vars()
@@ -197,18 +197,18 @@ terraform {
 ### Basic Child Configuration
 
 ```hcl
-# @module vpc_live
-# @description VPC configuration for production us-east-1
-# @version 1.0.0
-# @author Tyler Dukes
-# @last_updated 2025-10-28
+## @module vpc_live
+## @description VPC configuration for production us-east-1
+## @version 1.0.0
+## @author Tyler Dukes
+## @last_updated 2025-10-28
 
-# Include root configuration
+## Include root configuration
 include "root" {
   path = find_in_parent_folders()
 }
 
-# Reference Terraform module
+## Reference Terraform module
 terraform {
   source = "${get_repo_root()}/modules//vpc"
 
@@ -216,7 +216,7 @@ terraform {
   # source = "git::ssh://git@github.com/myorg/terraform-modules.git//vpc?ref=v1.2.0"
 }
 
-# Module inputs
+## Module inputs
 inputs = {
   vpc_name            = "prod-vpc-us-east-1"
   cidr_block          = "10.0.0.0/16"
@@ -236,11 +236,11 @@ inputs = {
 ### Configuration with Dependencies
 
 ```hcl
-# @module eks_live
-# @description EKS cluster depending on VPC
-# @version 1.0.0
-# @author Tyler Dukes
-# @last_updated 2025-10-28
+## @module eks_live
+## @description EKS cluster depending on VPC
+## @version 1.0.0
+## @author Tyler Dukes
+## @last_updated 2025-10-28
 
 include "root" {
   path = find_in_parent_folders()
@@ -250,7 +250,7 @@ terraform {
   source = "${get_repo_root()}/modules//eks"
 }
 
-# Dependency on VPC module
+## Dependency on VPC module
 dependency "vpc" {
   config_path = "../vpc"
 
@@ -285,11 +285,11 @@ inputs = {
 ### Configuration with Multiple Dependencies
 
 ```hcl
-# @module rds_live
-# @description RDS database depending on VPC and security groups
-# @version 1.0.0
-# @author Tyler Dukes
-# @last_updated 2025-10-28
+## @module rds_live
+## @description RDS database depending on VPC and security groups
+## @version 1.0.0
+## @author Tyler Dukes
+## @last_updated 2025-10-28
 
 include "root" {
   path = find_in_parent_folders()
@@ -343,7 +343,7 @@ inputs = {
 ### Generating Files
 
 ```hcl
-# Generate versions.tf
+## Generate versions.tf
 generate "versions" {
   path      = "versions.tf"
   if_exists = "overwrite"
@@ -362,7 +362,7 @@ generate "versions" {
   EOF
 }
 
-# Generate data sources
+## Generate data sources
 generate "common_data" {
   path      = "data.tf"
   if_exists = "overwrite"
@@ -412,34 +412,34 @@ terraform {
 ### Common Commands
 
 ```bash
-# Initialize and apply single module
+## Initialize and apply single module
 cd live/prod/us-east-1/vpc
 terragrunt init
 terragrunt plan
 terragrunt apply
 
-# Run plan for all modules in current directory and subdirectories
+## Run plan for all modules in current directory and subdirectories
 terragrunt run-all plan
 
-# Apply all modules in dependency order
+## Apply all modules in dependency order
 terragrunt run-all apply
 
-# Destroy specific module
+## Destroy specific module
 terragrunt destroy
 
-# Destroy all modules in reverse dependency order
+## Destroy all modules in reverse dependency order
 terragrunt run-all destroy
 
-# Validate all configurations
+## Validate all configurations
 terragrunt run-all validate
 
-# Format all HCL files
+## Format all HCL files
 terragrunt hclfmt
 
-# Show outputs
+## Show outputs
 terragrunt output
 
-# Show dependency graph
+## Show dependency graph
 terragrunt graph-dependencies
 ```
 
@@ -450,7 +450,7 @@ terragrunt graph-dependencies
 ### Explicit Dependencies
 
 ```hcl
-# Define dependencies to ensure correct apply order
+## Define dependencies to ensure correct apply order
 dependencies {
   paths = [
     "../vpc",
@@ -462,7 +462,7 @@ dependencies {
 ### Skip Dependencies
 
 ```hcl
-# Skip dependency for faster iteration during development
+## Skip dependency for faster iteration during development
 dependency "vpc" {
   config_path = "../vpc"
 
@@ -481,7 +481,7 @@ dependency "vpc" {
 ### Use Mock Outputs
 
 ```hcl
-# Always provide mock outputs for faster plan/validate
+## Always provide mock outputs for faster plan/validate
 dependency "vpc" {
   config_path = "../vpc"
 
@@ -499,12 +499,12 @@ dependency "vpc" {
 ### Use get_repo_root()
 
 ```hcl
-# Good - Portable across different directory depths
+## Good - Portable across different directory depths
 terraform {
   source = "${get_repo_root()}/modules//vpc"
 }
 
-# Avoid - Brittle with multiple ../
+## Avoid - Brittle with multiple ../
 terraform {
   source = "../../../modules//vpc"
 }
@@ -543,13 +543,13 @@ inputs = merge(
 ### ❌ Avoid: Hardcoded Values Everywhere
 
 ```hcl
-# Bad - Hardcoded values in each child
+## Bad - Hardcoded values in each child
 inputs = {
   environment = "prod"
   region      = "us-east-1"
 }
 
-# Good - Parse from path in root terragrunt.hcl
+## Good - Parse from path in root terragrunt.hcl
 locals {
   path_parts  = split("/", path_relative_to_include())
   environment = local.path_parts[0]
@@ -560,12 +560,12 @@ locals {
 ### ❌ Avoid: Not Using Dependencies
 
 ```hcl
-# Bad - Manually passing outputs
+## Bad - Manually passing outputs
 inputs = {
   vpc_id = "vpc-1234567890abcdef"  # Hardcoded!
 }
 
-# Good - Use dependency block
+## Good - Use dependency block
 dependency "vpc" {
   config_path = "../vpc"
 }
@@ -578,13 +578,13 @@ inputs = {
 ### ❌ Avoid: Inconsistent Directory Structure
 
 ```hcl
-# Bad - Inconsistent paths
+## Bad - Inconsistent paths
 live/
 ├── prod-vpc/
 ├── staging/vpc/
 └── dev_us_east_1/vpc/
 
-# Good - Consistent structure
+## Good - Consistent structure
 live/
 ├── prod/us-east-1/vpc/
 ├── staging/us-east-1/vpc/
@@ -594,10 +594,10 @@ live/
 ### ❌ Avoid: Not Using generate Blocks
 
 ```hcl
-# Bad - Provider configuration duplicated in every module
-# Repeated in every terragrunt.hcl
+## Bad - Provider configuration duplicated in every module
+## Repeated in every terragrunt.hcl
 
-# Good - Generate provider in root
+## Good - Generate provider in root
 generate "provider" {
   path      = "provider.tf"
   if_exists = "overwrite_terragrunt"
@@ -615,9 +615,9 @@ EOF
 ### ❌ Avoid: Not Using remote_state
 
 ```hcl
-# Bad - Each module configures backend separately
+## Bad - Each module configures backend separately
 
-# Good - Configure remote state in root
+## Good - Configure remote state in root
 remote_state {
   backend = "s3"
   config = {
@@ -633,12 +633,12 @@ remote_state {
 ### ❌ Avoid: Not Using run_cmd for Dynamic Values
 
 ```hcl
-# Bad - Static values that should be dynamic
+## Bad - Static values that should be dynamic
 locals {
   account_id = "123456789012"  # ❌ Hardcoded
 }
 
-# Good - Get dynamically
+## Good - Get dynamically
 locals {
   account_id = run_cmd("aws", "sts", "get-caller-identity", "--query", "Account", "--output", "text")
 }
@@ -647,18 +647,18 @@ locals {
 ### ❌ Avoid: Deep Module Paths Without include
 
 ```hcl
-# Bad - Duplicating terraform source in each child
+## Bad - Duplicating terraform source in each child
 terraform {
   source = "git::https://github.com/org/modules.git//vpc?ref=v1.0.0"
 }
 
-# Good - Define in root, reference in children
-# Root terragrunt.hcl
+## Good - Define in root, reference in children
+## Root terragrunt.hcl
 terraform {
   source = "${get_parent_terragrunt_dir()}/modules//vpc"
 }
 
-# Child just includes
+## Child just includes
 include "root" {
   path = find_in_parent_folders()
 }
@@ -673,11 +673,11 @@ include "root" {
 Add to `.gitignore`:
 
 ```gitignore
-# Terragrunt cache
+## Terragrunt cache
 .terragrunt-cache/
 **/.terragrunt-cache/
 
-# Terraform files
+## Terraform files
 *.tfstate
 *.tfstate.backup
 .terraform/

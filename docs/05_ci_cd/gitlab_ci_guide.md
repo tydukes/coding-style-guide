@@ -39,7 +39,7 @@ optimization.
 ### Full-Stack Application Pipeline
 
 ```yaml
-# .gitlab-ci.yml
+## .gitlab-ci.yml
 variables:
   NODE_VERSION: "20"
   PYTHON_VERSION: "3.11"
@@ -59,9 +59,9 @@ stages:
   - deploy-production
   - monitor
 
-# ====================
-# VALIDATION STAGE
-# ====================
+## ====================
+## VALIDATION STAGE
+## ====================
 lint:frontend:
   stage: validate
   image: node:${NODE_VERSION}-alpine
@@ -107,9 +107,9 @@ lint:backend:
         - backend/**/*
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
-# ====================
-# TEST STAGE
-# ====================
+## ====================
+## TEST STAGE
+## ====================
 test:frontend:
   stage: test
   image: node:${NODE_VERSION}-alpine
@@ -182,9 +182,9 @@ test:backend:
         - backend/**/*
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
-# ====================
-# BUILD STAGE
-# ====================
+## ====================
+## BUILD STAGE
+## ====================
 build:frontend:
   stage: build
   image: node:${NODE_VERSION}-alpine
@@ -235,9 +235,9 @@ build:backend:image:
         - backend/**/*
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
-# ====================
-# SECURITY STAGE
-# ====================
+## ====================
+## SECURITY STAGE
+## ====================
 sast:
   stage: security
   needs: []
@@ -261,9 +261,9 @@ secret_detection:
   needs: []
   allow_failure: true
 
-# ====================
-# DEPLOY TO STAGING
-# ====================
+## ====================
+## DEPLOY TO STAGING
+## ====================
 deploy:staging:frontend:
   stage: deploy-staging
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
@@ -301,9 +301,9 @@ deploy:staging:backend:
     - if: $CI_COMMIT_BRANCH == "develop"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
-# ====================
-# SMOKE TESTS
-# ====================
+## ====================
+## SMOKE TESTS
+## ====================
 smoke-test:staging:
   stage: smoke-test
   image: postman/newman:alpine
@@ -323,9 +323,9 @@ smoke-test:staging:
     - if: $CI_COMMIT_BRANCH == "develop"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
-# ====================
-# DEPLOY TO PRODUCTION
-# ====================
+## ====================
+## DEPLOY TO PRODUCTION
+## ====================
 deploy:production:frontend:
   stage: deploy-production
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
@@ -388,9 +388,9 @@ deploy:production:backend:
       when: manual
   resource_group: production
 
-# ====================
-# MONITORING
-# ====================
+## ====================
+## MONITORING
+## ====================
 performance-test:production:
   stage: monitor
   image: grafana/k6:latest
@@ -406,9 +406,9 @@ performance-test:production:
       when: manual
   allow_failure: true
 
-# ====================
-# ROLLBACK
-# ====================
+## ====================
+## ROLLBACK
+## ====================
 rollback:production:
   stage: deploy-production
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
@@ -439,9 +439,9 @@ stop:staging:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: manual
 
-# ====================
-# TEMPLATES
-# ====================
+## ====================
+## TEMPLATES
+## ====================
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
@@ -660,25 +660,25 @@ include:
   - template: Security/Secret-Detection.gitlab-ci.yml
   - template: Security/DAST.gitlab-ci.yml
 
-# Customize SAST
+## Customize SAST
 sast:
   variables:
     SAST_EXCLUDED_PATHS: spec, test, tests, tmp, node_modules
 
-# Customize Dependency Scanning
+## Customize Dependency Scanning
 dependency_scanning:
   variables:
     DS_EXCLUDED_PATHS: spec, test, tests, tmp, node_modules
     DS_DEFAULT_ANALYZERS: "gemnasium, gemnasium-python, retire.js"
 
-# Customize Container Scanning
+## Customize Container Scanning
 container_scanning:
   variables:
     CS_SEVERITY_THRESHOLD: "HIGH"
     CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE/backend
     CI_APPLICATION_TAG: $CI_COMMIT_SHA
 
-# Customize DAST
+## Customize DAST
 dast:
   variables:
     DAST_WEBSITE: https://staging.example.com
@@ -921,7 +921,7 @@ test:backend:
 ### Child Pipelines for Microservices
 
 ```yaml
-# Parent pipeline
+## Parent pipeline
 trigger:service-a:
   stage: trigger
   trigger:
@@ -940,7 +940,7 @@ trigger:service-b:
     - changes:
         - services/service-b/**/*
 
-# services/service-a/.gitlab-ci.yml
+## services/service-a/.gitlab-ci.yml
 stages:
   - test
   - build
@@ -1016,7 +1016,7 @@ test:python:3.12:
   <<: *test_template
   image: python:3.12-slim
 
-# Or using parallel directive
+## Or using parallel directive
 test:parallel:
   stage: test
   image: python:${PYTHON_VERSION}-slim

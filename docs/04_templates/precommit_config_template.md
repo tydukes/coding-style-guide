@@ -20,16 +20,16 @@ code quality standards.
 ## Installation
 
 ```bash
-# Install pre-commit
+## Install pre-commit
 pip install pre-commit
 
-# Install the git hook scripts
+## Install the git hook scripts
 pre-commit install
 
-# (Optional) Run against all files
+## (Optional) Run against all files
 pre-commit run --all-files
 
-# (Optional) Update hooks to latest versions
+## (Optional) Update hooks to latest versions
 pre-commit autoupdate
 ```
 
@@ -648,26 +648,26 @@ rules:
 ### Running Pre-commit Hooks
 
 ```bash
-# Run hooks against all files
+## Run hooks against all files
 pre-commit run --all-files
 
-# Run specific hook
+## Run specific hook
 pre-commit run black --all-files
 
-# Run hooks against staged files only
+## Run hooks against staged files only
 pre-commit run
 
-# Skip hooks for a specific commit (use sparingly)
+## Skip hooks for a specific commit (use sparingly)
 git commit --no-verify -m "message"
 
-# Update all hooks to latest versions
+## Update all hooks to latest versions
 pre-commit autoupdate
 ```
 
 ### Performance Optimization
 
 ```yaml
-# Use local hooks for faster execution
+## Use local hooks for faster execution
 - repo: local
   hooks:
     - id: pytest-check
@@ -677,12 +677,12 @@ pre-commit autoupdate
       pass_filenames: false
       always_run: true
 
-# Limit files checked
+## Limit files checked
 - id: mypy
   files: ^src/
   exclude: ^tests/
 
-# Use stages for specific git operations
+## Use stages for specific git operations
 - id: pytest
   stages: [push]
 ```
@@ -690,7 +690,7 @@ pre-commit autoupdate
 ### CI/CD Integration
 
 ```yaml
-# GitHub Actions example
+## GitHub Actions example
 name: Pre-commit
 
 on:

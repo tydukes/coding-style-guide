@@ -76,10 +76,9 @@ pip install pytest pytest-cov pytest-mock pytest-asyncio
 **Example test**:
 
 ```python
-# tests/test_calculator.py
+## tests/test_calculator.py
 import pytest
 from src.calculator import Calculator
-
 
 class TestCalculator:
     """Test suite for Calculator class."""
@@ -139,20 +138,20 @@ markers =
 **Run tests**:
 
 ```bash
-# Run all tests
+## Run all tests
 pytest
 
-# Run with coverage
+## Run with coverage
 pytest --cov=src --cov-report=html
 
-# Run specific test
+## Run specific test
 pytest tests/test_calculator.py::TestCalculator::test_add
 
-# Run with markers
+## Run with markers
 pytest -m unit
 pytest -m "not slow"
 
-# Run in parallel
+## Run in parallel
 pytest -n auto
 ```
 
@@ -271,19 +270,19 @@ describe('UserService', () => {
 **Run tests**:
 
 ```bash
-# Run all tests
+## Run all tests
 npm test
 
-# Run with coverage
+## Run with coverage
 npm test -- --coverage
 
-# Run in watch mode
+## Run in watch mode
 npm test -- --watch
 
-# Run specific test
+## Run specific test
 npm test -- calculator.test.ts
 
-# Update snapshots
+## Update snapshots
 npm test -- -u
 ```
 
@@ -331,18 +330,18 @@ func BenchmarkAdd(b *testing.B) {
 **Run tests**:
 
 ```bash
-# Run all tests
+## Run all tests
 go test ./...
 
-# Run with coverage
+## Run with coverage
 go test -cover ./...
 go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out
 
-# Run benchmarks
+## Run benchmarks
 go test -bench=. ./...
 
-# Run with race detector
+## Run with race detector
 go test -race ./...
 ```
 
@@ -355,7 +354,7 @@ go test -race ./...
 **Using testcontainers**:
 
 ```python
-# tests/integration/test_user_repository.py
+## tests/integration/test_user_repository.py
 import pytest
 from testcontainers.postgres import PostgresContainer
 from sqlalchemy import create_engine
@@ -364,13 +363,11 @@ from sqlalchemy.orm import sessionmaker
 from src.models import Base, User
 from src.repositories import UserRepository
 
-
 @pytest.fixture(scope="module")
 def postgres_container():
     """Start PostgreSQL container for testing."""
     with PostgresContainer("postgres:15-alpine") as postgres:
         yield postgres
-
 
 @pytest.fixture(scope="module")
 def db_engine(postgres_container):
@@ -380,7 +377,6 @@ def db_engine(postgres_container):
     yield engine
     Base.metadata.drop_all(engine)
 
-
 @pytest.fixture
 def db_session(db_engine):
     """Create database session for each test."""
@@ -389,7 +385,6 @@ def db_session(db_engine):
     yield session
     session.rollback()
     session.close()
-
 
 class TestUserRepository:
     """Integration tests for UserRepository."""
@@ -539,10 +534,10 @@ services:
 **Run integration tests**:
 
 ```bash
-# Start services and run tests
+## Start services and run tests
 docker-compose -f docker-compose.test.yml up --abort-on-container-exit
 
-# Cleanup
+## Cleanup
 docker-compose -f docker-compose.test.yml down -v
 ```
 
@@ -680,19 +675,19 @@ test('should login with page object', async ({ page }) => {
 **Run tests**:
 
 ```bash
-# Run all E2E tests
+## Run all E2E tests
 npx playwright test
 
-# Run in headed mode
+## Run in headed mode
 npx playwright test --headed
 
-# Run specific browser
+## Run specific browser
 npx playwright test --project=chromium
 
-# Debug mode
+## Debug mode
 npx playwright test --debug
 
-# Show report
+## Show report
 npx playwright show-report
 ```
 
@@ -759,10 +754,10 @@ describe('Login Flow', () => {
 **Installation**:
 
 ```bash
-# macOS
+## macOS
 brew install k6
 
-# Linux
+## Linux
 wget https://github.com/grafana/k6/releases/download/v0.48.0/k6-v0.48.0-linux-amd64.tar.gz
 tar -xzf k6-v0.48.0-linux-amd64.tar.gz
 sudo mv k6-v0.48.0-linux-amd64/k6 /usr/local/bin/
@@ -822,13 +817,13 @@ export default function () {
 **Run load test**:
 
 ```bash
-# Run test
+## Run test
 k6 run tests/load/api-load-test.js
 
-# Run with specific VUs and duration
+## Run with specific VUs and duration
 k6 run --vus 100 --duration 30s tests/load/api-load-test.js
 
-# Output to InfluxDB
+## Output to InfluxDB
 k6 run --out influxdb=http://localhost:8086/mydb tests/load/api-load-test.js
 ```
 
@@ -837,10 +832,10 @@ k6 run --out influxdb=http://localhost:8086/mydb tests/load/api-load-test.js
 **Installation**:
 
 ```bash
-# macOS
+## macOS
 brew install jmeter
 
-# Manual download
+## Manual download
 wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.2.tgz
 tar -xzf apache-jmeter-5.6.2.tgz
 ```
@@ -848,13 +843,13 @@ tar -xzf apache-jmeter-5.6.2.tgz
 **Run JMeter**:
 
 ```bash
-# GUI mode
+## GUI mode
 jmeter
 
-# CLI mode
+## CLI mode
 jmeter -n -t test-plan.jmx -l results.jtl -e -o report/
 
-# With variables
+## With variables
 jmeter -n -t test-plan.jmx -Jusers=100 -Jduration=300
 ```
 
@@ -904,10 +899,10 @@ class WebsiteUser(HttpUser):
 **Run Locust**:
 
 ```bash
-# Web UI
+## Web UI
 locust -f locustfile.py --host=https://api.example.com
 
-# Headless
+## Headless
 locust -f locustfile.py \
   --host=https://api.example.com \
   --users 100 \
@@ -925,7 +920,7 @@ locust -f locustfile.py \
 **zap-api-scan.yaml**:
 
 ```yaml
-# ZAP API scan configuration
+## ZAP API scan configuration
 env:
   contexts:
     - name: api-context
@@ -1043,13 +1038,13 @@ runner = pytest
 **Run mutation testing**:
 
 ```bash
-# Run mutation tests
+## Run mutation tests
 mutmut run
 
-# Show results
+## Show results
 mutmut results
 
-# Show surviving mutants
+## Show surviving mutants
 mutmut show
 ```
 
@@ -1201,14 +1196,14 @@ tests/
 ### Test Naming Conventions
 
 ```python
-# Good naming
+## Good naming
 def test_user_creation_with_valid_email_succeeds():
     pass
 
 def test_division_by_zero_raises_value_error():
     pass
 
-# Poor naming
+## Poor naming
 def test_user():
     pass
 
@@ -1235,7 +1230,7 @@ def test_user_login():
 ### Test Independence
 
 ```python
-# Good - Each test is independent
+## Good - Each test is independent
 def test_create_user():
     user = create_user("test@example.com")
     assert user.email == "test@example.com"
@@ -1245,7 +1240,7 @@ def test_delete_user():
     delete_user(user.id)
     assert get_user(user.id) is None
 
-# Bad - Tests depend on execution order
+## Bad - Tests depend on execution order
 def test_create_user():
     global user_id
     user = create_user("test@example.com")

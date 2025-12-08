@@ -345,17 +345,17 @@ const firstName = getFirstItem(['a', 'b']); // Type: string | null
 #### Remove JavaScript-only Tools
 
 ```bash
-# Uninstall PropTypes (replaced by TypeScript)
+## Uninstall PropTypes (replaced by TypeScript)
 npm uninstall prop-types
 
-# Remove Babel if only used for type checking
+## Remove Babel if only used for type checking
 npm uninstall @babel/preset-typescript
 ```
 
 #### Install TypeScript Tooling
 
 ```bash
-# Install TypeScript and related tools
+## Install TypeScript and related tools
 npm install --save-dev typescript
 npm install --save-dev @types/react @types/react-dom @types/node
 npm install --save-dev ts-node tsx
@@ -402,7 +402,7 @@ Create `tsconfig.json`:
 #### Update ESLint for TypeScript
 
 ```bash
-# Install TypeScript ESLint
+## Install TypeScript ESLint
 npm install --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin
 ```
 

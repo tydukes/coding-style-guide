@@ -260,7 +260,7 @@ block and 3 for the inner block:
 `````markdown
 ````markdown
 ```python
-# This is shown as an example
+## This is shown as an example
 print("Hello")
 ```
 ````
@@ -280,7 +280,7 @@ generic `text` tag:
 **Preferred** - When showing a Python template:
 
 ```python
-# Replace [function_name] with actual function name
+## Replace [function_name] with actual function name
 def [function_name]([parameters]):
     """Replace with actual docstring."""
     pass
@@ -293,7 +293,7 @@ def [function_name]([parameters]):
 You can verify all code blocks have language tags using:
 
 ```bash
-# Find code blocks without language tags
+## Find code blocks without language tags
 grep -rn '^```$' docs/
 ```
 
@@ -314,7 +314,7 @@ grep -rh '^```\w' docs/ | sed 's/```//' | sort | uniq -c | sort -rn
 Add markdownlint rules to enforce language tags:
 
 ```yaml
-# .markdownlint.yaml
+## .markdownlint.yaml
 MD040:  # Fenced code blocks should have a language specified
   enabled: true
   allowed_languages: []  # Empty = allow any language

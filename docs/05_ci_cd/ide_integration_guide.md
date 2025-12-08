@@ -36,14 +36,14 @@ and a seamless development experience.
 **Install VS Code**:
 
 ```bash
-# macOS
+## macOS
 brew install --cask visual-studio-code
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 sudo snap install code --classic
 
-# Manual download
-# https://code.visualstudio.com/download
+## Manual download
+## https://code.visualstudio.com/download
 ```
 
 **Enable command line access**:
@@ -58,7 +58,7 @@ sudo snap install code --classic
 **Install core extensions**:
 
 ```bash
-# Python
+## Python
 code --install-extension ms-python.python
 code --install-extension ms-python.black-formatter
 code --install-extension ms-python.isort
@@ -66,37 +66,37 @@ code --install-extension ms-python.flake8
 code --install-extension ms-python.mypy-type-checker
 code --install-extension ms-python.pylint
 
-# JavaScript/TypeScript
+## JavaScript/TypeScript
 code --install-extension dbaeumer.vscode-eslint
 code --install-extension esbenp.prettier-vscode
 code --install-extension yoavbls.pretty-ts-errors
 
-# Terraform
+## Terraform
 code --install-extension hashicorp.terraform
 code --install-extension hashicorp.hcl
 
-# Ansible
+## Ansible
 code --install-extension redhat.ansible
 
-# Docker
+## Docker
 code --install-extension ms-azuretools.vscode-docker
 
-# Shell
+## Shell
 code --install-extension timonwong.shellcheck
 code --install-extension foxundermoon.shell-format
 
-# YAML
+## YAML
 code --install-extension redhat.vscode-yaml
 
-# Markdown
+## Markdown
 code --install-extension yzhang.markdown-all-in-one
 code --install-extension davidanson.vscode-markdownlint
 
-# Git
+## Git
 code --install-extension eamodio.gitlens
 code --install-extension mhutchie.git-graph
 
-# General
+## General
 code --install-extension editorconfig.editorconfig
 code --install-extension streetsidesoftware.code-spell-checker
 code --install-extension ryanluker.vscode-coverage-gutters
@@ -641,13 +641,13 @@ code --install-extension gruntfuggly.todo-tree
 **Install Neovim**:
 
 ```bash
-# macOS
+## macOS
 brew install neovim
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 sudo apt install neovim
 
-# Verify
+## Verify
 nvim --version
 ```
 
@@ -989,10 +989,10 @@ Preferences > Settings:
 **Install Emacs**:
 
 ```bash
-# macOS
+## macOS
 brew install --cask emacs
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 sudo apt install emacs
 ```
 
@@ -1143,10 +1143,10 @@ code --install-extension ms-vscode-remote.remote-containers
 **Disable unused extensions**:
 
 ```bash
-# List installed extensions
+## List installed extensions
 code --list-extensions
 
-# Disable specific extension
+## Disable specific extension
 code --disable-extension <extension-id>
 ```
 

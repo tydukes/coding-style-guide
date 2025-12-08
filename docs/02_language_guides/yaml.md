@@ -61,14 +61,14 @@ configuration.
 Always use **2 spaces** for indentation:
 
 ```yaml
-# Good - 2 spaces
+## Good - 2 spaces
 services:
   web:
     image: nginx:latest
     ports:
       - "80:80"
 
-# Bad - 4 spaces or tabs
+## Bad - 4 spaces or tabs
 services:
     web:
         image: nginx:latest
@@ -77,12 +77,12 @@ services:
 ### Key-Value Pairs
 
 ```yaml
-# Simple key-value pairs
+## Simple key-value pairs
 name: my-application
 version: 1.0.0
 environment: production
 
-# Nested structures
+## Nested structures
 database:
   host: localhost
   port: 5432
@@ -98,21 +98,21 @@ database:
 ### Strings
 
 ```yaml
-# Unquoted strings (preferred for simple strings)
+## Unquoted strings (preferred for simple strings)
 name: my-application
 description: A simple web application
 
-# Quoted strings (use when needed)
+## Quoted strings (use when needed)
 message: "String with: special characters"
 path: 'C:\Windows\System32'
 
-# Multi-line strings - literal block (preserves newlines)
+## Multi-line strings - literal block (preserves newlines)
 script: |
   #!/bin/bash
   echo "Hello World"
   exit 0
 
-# Multi-line strings - folded block (single line)
+## Multi-line strings - folded block (single line)
 description: >
   This is a long description
   that will be folded into
@@ -122,40 +122,40 @@ description: >
 ### Numbers
 
 ```yaml
-# Integers
+## Integers
 count: 42
 port: 8080
 
-# Floats
+## Floats
 pi: 3.14159
 percentage: 99.9
 
-# Exponential notation
+## Exponential notation
 scientific: 1.23e-4
 ```
 
 ### Booleans
 
 ```yaml
-# Preferred boolean values
+## Preferred boolean values
 enabled: true
 disabled: false
 
-# Avoid these (but they work)
-# legacy_enabled: yes
-# legacy_disabled: no
+## Avoid these (but they work)
+## legacy_enabled: yes
+## legacy_disabled: no
 ```
 
 ### Null Values
 
 ```yaml
-# Explicit null
+## Explicit null
 value: null
 
-# Implicit null (empty value)
+## Implicit null (empty value)
 empty_value:
 
-# Tilde also means null
+## Tilde also means null
 another_null: ~
 ```
 
@@ -166,30 +166,30 @@ another_null: ~
 ### Lists
 
 ```yaml
-# Dash notation (preferred)
+## Dash notation (preferred)
 fruits:
   - apple
   - banana
   - orange
 
-# Flow style (use sparingly)
+## Flow style (use sparingly)
 colors: [red, green, blue]
 
-# List of objects
+## List of objects
 users:
   - name: Alice
     role: admin
   - name: Bob
     role: user
 
-# Empty list
+## Empty list
 empty_list: []
 ```
 
 ### Dictionaries
 
 ```yaml
-# Nested dictionaries
+## Nested dictionaries
 application:
   name: my-app
   version: 1.0.0
@@ -201,7 +201,7 @@ application:
       type: redis
       ttl: 3600
 
-# Empty dictionary
+## Empty dictionary
 empty_dict: {}
 ```
 
@@ -449,11 +449,11 @@ jobs:
 ## Comments
 
 ```yaml
-# Single-line comment
+## Single-line comment
 
-# Multi-line comment block
-# that spans multiple lines
-# to explain complex configuration
+## Multi-line comment block
+## that spans multiple lines
+## to explain complex configuration
 
 services:
   web:
@@ -470,13 +470,13 @@ services:
 ### Reusing Configuration
 
 ```yaml
-# Define anchor with &
+## Define anchor with &
 default_settings: &defaults
   timeout: 30
   retries: 3
   log_level: info
 
-# Reuse with *
+## Reuse with *
 production:
   <<: *defaults
   environment: production
@@ -486,7 +486,7 @@ staging:
   environment: staging
   timeout: 60  # Override specific value
 
-# List anchors
+## List anchors
 common_env: &common_env
   - name: APP_NAME
     value: my-app
@@ -507,12 +507,12 @@ service_b:
 ### ❌ Avoid: Tabs for Indentation
 
 ```yaml
-# Bad - Using tabs
+## Bad - Using tabs
 services:
  web:
   image: nginx
 
-# Good - Using 2 spaces
+## Good - Using 2 spaces
 services:
   web:
     image: nginx
@@ -521,14 +521,14 @@ services:
 ### ❌ Avoid: Inconsistent Indentation
 
 ```yaml
-# Bad - Inconsistent spacing
+## Bad - Inconsistent spacing
 services:
   web:
       image: nginx
     ports:
      - "80:80"
 
-# Good - Consistent 2-space indentation
+## Good - Consistent 2-space indentation
 services:
   web:
     image: nginx
@@ -539,7 +539,7 @@ services:
 ### ❌ Avoid: Mixing Styles
 
 ```yaml
-# Bad - Mixing block and flow styles
+## Bad - Mixing block and flow styles
 services:
   web: {image: nginx, ports: ["80:80"]}
   db:
@@ -547,7 +547,7 @@ services:
     ports:
       - "5432:5432"
 
-# Good - Consistent block style
+## Good - Consistent block style
 services:
   web:
     image: nginx
@@ -562,13 +562,13 @@ services:
 ### ❌ Avoid: Unquoted Special Values
 
 ```yaml
-# Bad - Unquoted values that could be misinterpreted
+## Bad - Unquoted values that could be misinterpreted
 version: 3.8          # Becomes float 3.8
 enabled: yes          # Becomes boolean true
 country: NO           # Becomes boolean false (Norway code!)
 version_string: 1.20  # Becomes float 1.2
 
-# Good - Quote strings
+## Good - Quote strings
 version: "3.8"
 enabled: "yes"
 country: "NO"
@@ -578,13 +578,13 @@ version_string: "1.20"
 ### ❌ Avoid: Duplicate Keys
 
 ```yaml
-# Bad - Duplicate keys (last one wins)
+## Bad - Duplicate keys (last one wins)
 database:
   host: localhost
   port: 5432
   host: prod-db.example.com  # ❌ Overwrites previous host
 
-# Good - Unique keys
+## Good - Unique keys
 database:
   host: prod-db.example.com
   port: 5432
@@ -593,7 +593,7 @@ database:
 ### ❌ Avoid: Not Using Anchors and Aliases
 
 ```yaml
-# Bad - Repeated configuration
+## Bad - Repeated configuration
 services:
   web1:
     image: nginx:latest
@@ -610,7 +610,7 @@ services:
       options:
         max-size: "10m"
 
-# Good - Use anchors and aliases
+## Good - Use anchors and aliases
 x-common-config: &common
   restart: always
   logging:
@@ -630,12 +630,12 @@ services:
 ### ❌ Avoid: Complex Multi-line Strings Without Proper Style
 
 ```yaml
-# Bad - Unclear multi-line handling
+## Bad - Unclear multi-line handling
 description: This is a very long description that
 spans multiple lines but doesn't specify
 how line breaks should be handled
 
-# Good - Use | for literal style or > for folded
+## Good - Use | for literal style or > for folded
 description_literal: |
   This preserves line breaks.
   Each line appears exactly as written.
@@ -682,16 +682,16 @@ rules:
 ### Running yamllint
 
 ```bash
-# Lint all YAML files
+## Lint all YAML files
 yamllint .
 
-# Lint specific file
+## Lint specific file
 yamllint config.yaml
 
-# Lint with custom config
+## Lint with custom config
 yamllint -c .yamllint .
 
-# Format output
+## Format output
 yamllint -f parsable .
 ```
 
@@ -702,7 +702,7 @@ yamllint -f parsable .
 ### Using JSON Schema
 
 ```yaml
-# config.yaml
+## config.yaml
 database:
   host: localhost
   port: 5432

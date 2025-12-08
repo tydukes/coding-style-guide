@@ -38,23 +38,23 @@ container scanning, infrastructure scanning, and compliance validation.
 **Installation**:
 
 ```bash
-# Using pipx
+## Using pipx
 pipx install detect-secrets
 
-# Verify
+## Verify
 detect-secrets --version
 ```
 
 **Initialize baseline**:
 
 ```bash
-# Scan current repository
+## Scan current repository
 detect-secrets scan > .secrets.baseline
 
-# Audit findings
+## Audit findings
 detect-secrets audit .secrets.baseline
 
-# Update baseline
+## Update baseline
 detect-secrets scan --baseline .secrets.baseline
 ```
 
@@ -108,29 +108,29 @@ repos:
 **Installation**:
 
 ```bash
-# macOS
+## macOS
 brew install trufflesecurity/trufflehog/trufflehog
 
-# Linux
+## Linux
 curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | \
   sh -s -- -b /usr/local/bin
 
-# Verify
+## Verify
 trufflehog --version
 ```
 
 **Scan filesystem**:
 
 ```bash
-# Scan current directory
+## Scan current directory
 trufflehog filesystem . --json
 
-# Scan with exclusions
+## Scan with exclusions
 trufflehog filesystem . \
   --exclude-paths .trufflehog-exclude.txt \
   --json
 
-# Scan specific branch
+## Scan specific branch
 trufflehog git file://. \
   --branch main \
   --json
@@ -139,22 +139,22 @@ trufflehog git file://. \
 **.trufflehog-exclude.txt**:
 
 ```text
-# Dependency directories
+## Dependency directories
 node_modules/
 .venv/
 vendor/
 
-# Build outputs
+## Build outputs
 dist/
 build/
 *.min.js
 
-# Lock files
+## Lock files
 package-lock.json
 yarn.lock
 Pipfile.lock
 
-# Images
+## Images
 *.svg
 *.png
 *.jpg
@@ -163,7 +163,7 @@ Pipfile.lock
 **CI/CD integration**:
 
 ```yaml
-# GitHub Actions
+## GitHub Actions
 - name: TruffleHog Secret Scan
   uses: trufflesecurity/trufflehog@main
   with:
@@ -177,15 +177,15 @@ Pipfile.lock
 **Installation**:
 
 ```bash
-# macOS
+## macOS
 brew install gitleaks
 
-# Linux
+## Linux
 wget https://github.com/gitleaks/gitleaks/releases/download/v8.18.1/gitleaks_8.18.1_linux_x64.tar.gz
 tar xvzf gitleaks_8.18.1_linux_x64.tar.gz
 sudo mv gitleaks /usr/local/bin/
 
-# Verify
+## Verify
 gitleaks version
 ```
 
@@ -236,16 +236,16 @@ regexes = [
 **Scanning**:
 
 ```bash
-# Scan entire repository history
+## Scan entire repository history
 gitleaks detect --source . --verbose
 
-# Scan specific commit range
+## Scan specific commit range
 gitleaks detect --source . --log-opts="HEAD~10..HEAD"
 
-# Scan uncommitted changes
+## Scan uncommitted changes
 gitleaks protect --staged
 
-# Generate report
+## Generate report
 gitleaks detect --report-path gitleaks-report.json --report-format json
 ```
 
@@ -258,22 +258,22 @@ gitleaks detect --report-path gitleaks-report.json --report-format json
 **Installation (SonarQube)**:
 
 ```bash
-# Docker
+## Docker
 docker run -d --name sonarqube \
   -p 9000:9000 \
   sonarqube:lts-community
 
-# Access at http://localhost:9000
-# Default credentials: admin/admin
+## Access at http://localhost:9000
+## Default credentials: admin/admin
 ```
 
 **Scanner installation**:
 
 ```bash
-# macOS
+## macOS
 brew install sonar-scanner
 
-# Linux
+## Linux
 wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
 unzip sonar-scanner-cli-5.0.1.3006-linux.zip
 sudo mv sonar-scanner-5.0.1.3006-linux /opt/sonar-scanner
@@ -287,32 +287,32 @@ sonar.projectKey=my-project
 sonar.projectName=My Project
 sonar.projectVersion=1.0
 
-# Source directories
+## Source directories
 sonar.sources=src
 sonar.tests=tests
 
-# Exclude patterns
+## Exclude patterns
 sonar.exclusions=**/node_modules/**,**/dist/**,**/*.test.ts
 
-# Language-specific settings
+## Language-specific settings
 sonar.python.version=3.11
 sonar.javascript.node.maxspace=4096
 
-# Coverage reports
+## Coverage reports
 sonar.python.coverage.reportPaths=coverage.xml
 sonar.javascript.lcov.reportPaths=coverage/lcov.info
 
-# Quality gate
+## Quality gate
 sonar.qualitygate.wait=true
 ```
 
 **Scan execution**:
 
 ```bash
-# Scan with properties file
+## Scan with properties file
 sonar-scanner
 
-# Scan with inline parameters
+## Scan with inline parameters
 sonar-scanner \
   -Dsonar.projectKey=my-project \
   -Dsonar.sources=src \
@@ -325,13 +325,13 @@ sonar-scanner \
 **Installation**:
 
 ```bash
-# Using pipx
+## Using pipx
 pipx install semgrep
 
-# macOS
+## macOS
 brew install semgrep
 
-# Verify
+## Verify
 semgrep --version
 ```
 
@@ -366,19 +366,19 @@ rules:
 **Scanning**:
 
 ```bash
-# Scan with default rules
+## Scan with default rules
 semgrep --config=auto .
 
-# Scan with specific rulesets
+## Scan with specific rulesets
 semgrep --config=p/security-audit \
   --config=p/owasp-top-ten \
   --config=p/python \
   .
 
-# Scan with custom rules
+## Scan with custom rules
 semgrep --config=.semgrep.yml .
 
-# Generate SARIF report
+## Generate SARIF report
 semgrep --config=auto --sarif --output=semgrep.sarif .
 ```
 
@@ -393,7 +393,7 @@ pipx install bandit
 **Configuration (.bandit)**:
 
 ```yaml
-# Bandit configuration
+## Bandit configuration
 exclude_dirs:
   - /test
   - /tests
@@ -422,17 +422,17 @@ tests:
 **Scanning**:
 
 ```bash
-# Scan directory
+## Scan directory
 bandit -r src/
 
-# Scan with config
+## Scan with config
 bandit -r src/ -c .bandit
 
-# Generate reports
+## Generate reports
 bandit -r src/ -f json -o bandit-report.json
 bandit -r src/ -f html -o bandit-report.html
 
-# Only show high severity
+## Only show high severity
 bandit -r src/ -ll
 ```
 
@@ -481,35 +481,35 @@ npm install --save-dev \
 **Installation**:
 
 ```bash
-# npm
+## npm
 npm install -g snyk
 
-# Homebrew
+## Homebrew
 brew install snyk
 
-# Authenticate
+## Authenticate
 snyk auth
 
-# Verify
+## Verify
 snyk --version
 ```
 
 **Scanning**:
 
 ```bash
-# Test dependencies
+## Test dependencies
 snyk test
 
-# Test and monitor
+## Test and monitor
 snyk monitor
 
-# Test with severity threshold
+## Test with severity threshold
 snyk test --severity-threshold=high
 
-# Test Docker image
+## Test Docker image
 snyk container test myapp:latest
 
-# Test infrastructure as code
+## Test infrastructure as code
 snyk iac test terraform/
 ```
 
@@ -537,7 +537,7 @@ snyk iac test terraform/
 **.snyk policy file**:
 
 ```yaml
-# Snyk policy file
+## Snyk policy file
 version: v1.25.0
 
 ignore:
@@ -562,21 +562,21 @@ patch: {}
 **Installation**:
 
 ```bash
-# Download
+## Download
 VERSION=9.0.9
 wget https://github.com/jeremylong/DependencyCheck/releases/download/v${VERSION}/dependency-check-${VERSION}-release.zip
 unzip dependency-check-${VERSION}-release.zip
 sudo mv dependency-check /opt/
 export PATH=$PATH:/opt/dependency-check/bin
 
-# Verify
+## Verify
 dependency-check.sh --version
 ```
 
 **Scanning**:
 
 ```bash
-# Scan project
+## Scan project
 dependency-check.sh \
   --project "My Project" \
   --scan ./src \
@@ -584,7 +584,7 @@ dependency-check.sh \
   --format HTML \
   --format JSON
 
-# Scan with suppression file
+## Scan with suppression file
 dependency-check.sh \
   --project "My Project" \
   --scan ./src \
@@ -620,23 +620,23 @@ pipx install safety
 **Scanning**:
 
 ```bash
-# Check requirements file
+## Check requirements file
 safety check -r requirements.txt
 
-# Check installed packages
+## Check installed packages
 safety check
 
-# Check with policy file
+## Check with policy file
 safety check --policy-file .safety-policy.yml
 
-# Generate JSON report
+## Generate JSON report
 safety check --json --output safety-report.json
 ```
 
 **.safety-policy.yml**:
 
 ```yaml
-# Safety policy file
+## Safety policy file
 security:
   # Ignore specific vulnerabilities
   ignore-vulnerabilities:
@@ -663,10 +663,10 @@ security:
 **Installation**:
 
 ```bash
-# macOS
+## macOS
 brew install aquasecurity/trivy/trivy
 
-# Ubuntu/Debian
+## Ubuntu/Debian
 wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | \
   sudo apt-key add -
 echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | \
@@ -674,37 +674,37 @@ echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main"
 sudo apt update
 sudo apt install trivy
 
-# Verify
+## Verify
 trivy --version
 ```
 
 **Scanning**:
 
 ```bash
-# Scan Docker image
+## Scan Docker image
 trivy image myapp:latest
 
-# Scan with severity filter
+## Scan with severity filter
 trivy image --severity HIGH,CRITICAL myapp:latest
 
-# Scan filesystem
+## Scan filesystem
 trivy fs .
 
-# Scan Git repository
+## Scan Git repository
 trivy repo https://github.com/user/repo
 
-# Generate reports
+## Generate reports
 trivy image --format json --output trivy-report.json myapp:latest
 trivy image --format sarif --output trivy.sarif myapp:latest
 
-# Scan Kubernetes manifests
+## Scan Kubernetes manifests
 trivy k8s --report summary cluster
 ```
 
 **trivy.yaml configuration**:
 
 ```yaml
-# Trivy configuration
+## Trivy configuration
 severity:
   - CRITICAL
   - HIGH
@@ -727,36 +727,36 @@ exit-code: 1
 **Installation**:
 
 ```bash
-# macOS
+## macOS
 brew install grype
 
-# Linux
+## Linux
 curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
 
-# Verify
+## Verify
 grype version
 ```
 
 **Scanning**:
 
 ```bash
-# Scan image
+## Scan image
 grype myapp:latest
 
-# Scan with output format
+## Scan with output format
 grype myapp:latest -o json > grype-report.json
 
-# Scan directory
+## Scan directory
 grype dir:.
 
-# Scan with fail on severity
+## Scan with fail on severity
 grype myapp:latest --fail-on high
 ```
 
 **.grype.yaml**:
 
 ```yaml
-# Grype configuration
+## Grype configuration
 output: json
 
 fail-on-severity: high
@@ -815,30 +815,30 @@ pipx install checkov
 **Scanning**:
 
 ```bash
-# Scan Terraform
+## Scan Terraform
 checkov -d terraform/
 
-# Scan with specific framework
+## Scan with specific framework
 checkov --framework terraform -d terraform/
 
-# Scan CloudFormation
+## Scan CloudFormation
 checkov --framework cloudformation -f template.yaml
 
-# Scan Kubernetes
+## Scan Kubernetes
 checkov --framework kubernetes -f deployment.yaml
 
-# Generate reports
+## Generate reports
 checkov -d terraform/ --output json --output-file checkov-report.json
 checkov -d terraform/ --output sarif --output-file checkov.sarif
 
-# Skip specific checks
+## Skip specific checks
 checkov -d terraform/ --skip-check CKV_AWS_1,CKV_AWS_2
 ```
 
 **.checkov.yaml**:
 
 ```yaml
-# Checkov configuration
+## Checkov configuration
 framework:
   - terraform
   - cloudformation
@@ -867,32 +867,32 @@ directory:
 **Installation**:
 
 ```bash
-# macOS
+## macOS
 brew install tfsec
 
-# Linux
+## Linux
 wget https://github.com/aquasecurity/tfsec/releases/download/v1.28.4/tfsec-linux-amd64
 chmod +x tfsec-linux-amd64
 sudo mv tfsec-linux-amd64 /usr/local/bin/tfsec
 
-# Verify
+## Verify
 tfsec --version
 ```
 
 **Scanning**:
 
 ```bash
-# Scan Terraform directory
+## Scan Terraform directory
 tfsec .
 
-# Scan with severity filter
+## Scan with severity filter
 tfsec --minimum-severity HIGH .
 
-# Generate reports
+## Generate reports
 tfsec --format json --out tfsec-report.json .
 tfsec --format sarif --out tfsec.sarif .
 
-# Run specific checks
+## Run specific checks
 tfsec --include-passed --include-ignored .
 ```
 
@@ -915,33 +915,33 @@ tfsec --include-passed --include-ignored .
 **Installation**:
 
 ```bash
-# macOS
+## macOS
 brew install terrascan
 
-# Linux
+## Linux
 curl -L "$(curl -s https://api.github.com/repos/tenable/terrascan/releases/latest | \
   grep -o -E 'https://.+?_Linux_x86_64.tar.gz')" > terrascan.tar.gz
 tar -xf terrascan.tar.gz terrascan
 sudo mv terrascan /usr/local/bin/
 
-# Verify
+## Verify
 terrascan version
 ```
 
 **Scanning**:
 
 ```bash
-# Scan Terraform
+## Scan Terraform
 terrascan scan -t terraform -d .
 
-# Scan with specific policy
+## Scan with specific policy
 terrascan scan -t terraform -p aws -d .
 
-# Generate reports
+## Generate reports
 terrascan scan -t terraform -d . -o json > terrascan-report.json
 terrascan scan -t terraform -d . -o sarif > terrascan.sarif
 
-# Skip rules
+## Skip rules
 terrascan scan -t terraform -d . --skip-rules AWS.S3Bucket.DS.High.1043
 ```
 
@@ -954,10 +954,10 @@ terrascan scan -t terraform -d . --skip-rules AWS.S3Bucket.DS.High.1043
 **Installation**:
 
 ```bash
-# Docker
+## Docker
 docker pull zaproxy/zap-stable
 
-# Run ZAP in daemon mode
+## Run ZAP in daemon mode
 docker run -u zap -p 8080:8080 \
   -d zaproxy/zap-stable \
   zap.sh -daemon -host 0.0.0.0 -port 8080 \
@@ -967,21 +967,21 @@ docker run -u zap -p 8080:8080 \
 **Baseline scan**:
 
 ```bash
-# Baseline scan
+## Baseline scan
 docker run -v $(pwd):/zap/wrk/:rw \
   zaproxy/zap-stable \
   zap-baseline.py \
   -t https://example.com \
   -r zap-baseline-report.html
 
-# Full scan
+## Full scan
 docker run -v $(pwd):/zap/wrk/:rw \
   zaproxy/zap-stable \
   zap-full-scan.py \
   -t https://example.com \
   -r zap-full-report.html
 
-# API scan
+## API scan
 docker run -v $(pwd):/zap/wrk/:rw \
   zaproxy/zap-stable \
   zap-api-scan.py \
@@ -995,29 +995,29 @@ docker run -v $(pwd):/zap/wrk/:rw \
 **Installation**:
 
 ```bash
-# Go install
+## Go install
 go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
 
-# Verify
+## Verify
 nuclei -version
 ```
 
 **Scanning**:
 
 ```bash
-# Update templates
+## Update templates
 nuclei -update-templates
 
-# Scan target
+## Scan target
 nuclei -u https://example.com
 
-# Scan with severity filter
+## Scan with severity filter
 nuclei -u https://example.com -severity critical,high
 
-# Scan with specific templates
+## Scan with specific templates
 nuclei -u https://example.com -t cves/ -t vulnerabilities/
 
-# Generate report
+## Generate report
 nuclei -u https://example.com -json -o nuclei-report.json
 ```
 
@@ -1030,17 +1030,17 @@ nuclei -u https://example.com -json -o nuclei-report.json
 **Installation**:
 
 ```bash
-# Ubuntu/Debian
+## Ubuntu/Debian
 sudo apt install libopenscap8 openscap-scanner
 
-# RHEL/CentOS
+## RHEL/CentOS
 sudo yum install openscap-scanner
 ```
 
 **Scanning**:
 
 ```bash
-# Scan system
+## Scan system
 sudo oscap xccdf eval \
   --profile xccdf_org.ssgproject.content_profile_pci-dss \
   --results scan-results.xml \
@@ -1053,17 +1053,17 @@ sudo oscap xccdf eval \
 **Installation**:
 
 ```bash
-# macOS/Linux
+## macOS/Linux
 curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
 
-# Verify
+## Verify
 inspec --version
 ```
 
 **Profile example**:
 
 ```ruby
-# controls/example.rb
+## controls/example.rb
 control 'ssh-config' do
   impact 1.0
   title 'SSH Configuration'
@@ -1080,13 +1080,13 @@ end
 **Scanning**:
 
 ```bash
-# Run profile
+## Run profile
 inspec exec /path/to/profile
 
-# Run with reporter
+## Run with reporter
 inspec exec /path/to/profile --reporter json:inspec-report.json
 
-# Run remote
+## Run remote
 inspec exec /path/to/profile -t ssh://user@host
 ```
 
@@ -1312,7 +1312,7 @@ Policy: https://example.com/security-policy
 ### Vulnerability Disclosure Policy
 
 ```markdown
-# Vulnerability Disclosure Policy
+## Vulnerability Disclosure Policy
 
 ## Reporting
 

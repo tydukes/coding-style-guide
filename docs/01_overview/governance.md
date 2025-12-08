@@ -110,16 +110,16 @@ feature/improve-metadata-schema
 **Workflow**:
 
 ```bash
-# Create feature branch
+## Create feature branch
 git checkout develop
 git pull origin develop
 git checkout -b feature/13-expand-principles-doc
 
-# Make changes, commit
+## Make changes, commit
 git add .
 git commit -m "feat: expand principles documentation"
 
-# Push and create PR
+## Push and create PR
 git push -u origin feature/13-expand-principles-doc
 gh pr create --base develop
 ```
@@ -156,27 +156,27 @@ hotfix/v1.0.1-container-build-failure
 **Workflow**:
 
 ```bash
-# Create hotfix from main
+## Create hotfix from main
 git checkout main
 git pull origin main
 git checkout -b hotfix/v1.2.2-security-fix
 
-# Fix the issue, commit
+## Fix the issue, commit
 git add .
 git commit -m "fix: critical security vulnerability in metadata parser"
 
-# Merge to main
+## Merge to main
 git checkout main
 git merge --no-ff hotfix/v1.2.2-security-fix
 git tag v1.2.2
 git push origin main --tags
 
-# Merge to develop
+## Merge to develop
 git checkout develop
 git merge --no-ff hotfix/v1.2.2-security-fix
 git push origin develop
 
-# Delete hotfix branch
+## Delete hotfix branch
 git branch -d hotfix/v1.2.2-security-fix
 ```
 
@@ -191,27 +191,27 @@ git branch -d hotfix/v1.2.2-security-fix
 **Workflow**:
 
 ```bash
-# Create release branch
+## Create release branch
 git checkout develop
 git pull origin develop
 git checkout -b release/v1.3.0
 
-# Update version, changelog
-# Run final tests
-# Fix any last-minute issues
+## Update version, changelog
+## Run final tests
+## Fix any last-minute issues
 
-# Merge to main
+## Merge to main
 git checkout main
 git merge --no-ff release/v1.3.0
 git tag v1.3.0
 git push origin main --tags
 
-# Merge back to develop
+## Merge back to develop
 git checkout develop
 git merge --no-ff release/v1.3.0
 git push origin develop
 
-# Delete release branch
+## Delete release branch
 git branch -d release/v1.3.0
 ```
 
@@ -320,7 +320,7 @@ gh pr create --base main --title "feat: add Kubernetes guide" --body "..."
 **4. Address Review Feedback**:
 
 ```bash
-# Make requested changes
+## Make requested changes
 git add .
 git commit -m "fix: address review feedback on Kubernetes guide"
 git push
@@ -329,7 +329,7 @@ git push
 **5. Merge (after approval)**:
 
 ```bash
-# Squash and merge via GitHub UI or CLI
+## Squash and merge via GitHub UI or CLI
 gh pr merge 123 --squash --delete-branch
 ```
 
@@ -389,13 +389,13 @@ git checkout -b release/v1.3.0
 **3. Final Testing**:
 
 ```bash
-# Build and test documentation
+## Build and test documentation
 uv run mkdocs build --strict
 
-# Run all pre-commit hooks
+## Run all pre-commit hooks
 pre-commit run --all-files
 
-# Test container build
+## Test container build
 docker build -t coding-style-guide:v1.3.0 .
 ```
 
@@ -409,10 +409,10 @@ gh pr create --base main --title "Release v1.3.0"
 **5. Merge and Tag**:
 
 ```bash
-# Merge PR (via GitHub UI or CLI)
+## Merge PR (via GitHub UI or CLI)
 gh pr merge <pr-number> --merge --delete-branch
 
-# Tag the release
+## Tag the release
 git checkout main
 git pull origin main
 git tag v1.3.0
@@ -430,7 +430,7 @@ git push origin develop
 **7. Publish Release Notes**:
 
 ```bash
-# Create GitHub Release
+## Create GitHub Release
 gh release create v1.3.0 --title "Release v1.3.0" --notes-file CHANGELOG.md
 ```
 

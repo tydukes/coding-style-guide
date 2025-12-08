@@ -176,16 +176,16 @@ repos:
 ### Installation
 
 ```bash
-# Install pre-commit
+## Install pre-commit
 pip install pre-commit
 
-# Install hooks
+## Install hooks
 pre-commit install
 
-# Run manually on all files
+## Run manually on all files
 pre-commit run --all-files
 
-# Update hooks to latest versions
+## Update hooks to latest versions
 pre-commit autoupdate
 ```
 
@@ -609,7 +609,6 @@ from typing import Dict, List, Any
 import yaml
 import re
 
-
 REQUIRED_FIELDS = {
     "title": str,
     "description": str,
@@ -633,7 +632,6 @@ VALID_CATEGORIES = [
     "CI/CD",
 ]
 
-
 def extract_frontmatter(file_path: Path) -> Dict[str, Any] | None:
     """Extract YAML frontmatter from markdown file."""
     content = file_path.read_text()
@@ -648,7 +646,6 @@ def extract_frontmatter(file_path: Path) -> Dict[str, Any] | None:
     except yaml.YAMLError as e:
         print(f"❌ {file_path}: Invalid YAML frontmatter: {e}")
         return None
-
 
 def validate_metadata(file_path: Path, metadata: Dict[str, Any]) -> List[str]:
     """Validate metadata against schema."""
@@ -697,7 +694,6 @@ def validate_metadata(file_path: Path, metadata: Dict[str, Any]) -> List[str]:
 
     return errors
 
-
 def main() -> int:
     """Main validation function."""
     docs_dir = Path("docs")
@@ -745,7 +741,6 @@ def main() -> int:
         print(f"❌ {files_with_errors}/{total_files} files have errors")
         print(f"   Total errors: {total_errors}")
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())
@@ -1099,21 +1094,21 @@ pipeline {
 #### Pre-commit Hooks Fail
 
 ```bash
-# Update hooks to latest versions
+## Update hooks to latest versions
 pre-commit autoupdate
 
-# Clear cache and reinstall
+## Clear cache and reinstall
 pre-commit clean
 pre-commit install-hooks
 
-# Skip specific hook temporarily
+## Skip specific hook temporarily
 SKIP=black git commit -m "commit message"
 ```
 
 #### CI Pipeline Timeout
 
 ```yaml
-# Increase timeout for specific job
+## Increase timeout for specific job
 jobs:
   test:
     timeout-minutes: 30  # Increase from default 10
@@ -1122,7 +1117,7 @@ jobs:
 #### AI Review API Rate Limits
 
 ```yaml
-# Add retry logic with exponential backoff
+## Add retry logic with exponential backoff
 - name: AI Review with Retry
   uses: nick-invision/retry@v2
   with:
@@ -1135,11 +1130,11 @@ jobs:
 #### False Positives in Security Scans
 
 ```yaml
-# Create allowlist for known false positives
-# .trivyignore
+## Create allowlist for known false positives
+## .trivyignore
 CVE-2023-12345  # False positive in test dependency
 
-# .semgrepignore
+## .semgrepignore
 tests/  # Ignore test files for certain rules
 ```
 

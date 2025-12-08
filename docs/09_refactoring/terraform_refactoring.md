@@ -18,7 +18,7 @@ Real-world examples of refactoring Terraform code to improve maintainability, re
 **Before** (separate files for each environment, lots of duplication):
 
 ```hcl
-# environments/dev/main.tf
+## environments/dev/main.tf
 resource "aws_vpc" "main" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
@@ -67,14 +67,14 @@ resource "aws_internet_gateway" "main" {
   }
 }
 
-# ... 100+ more lines of route tables, NAT gateways, etc.
-# Same code repeated in staging/main.tf and production/main.tf
+## ... 100+ more lines of route tables, NAT gateways, etc.
+## Same code repeated in staging/main.tf and production/main.tf
 ```
 
 **After** (reusable module):
 
 ```hcl
-# modules/vpc/main.tf
+## modules/vpc/main.tf
 locals {
   common_tags = merge(
     var.tags,
@@ -131,7 +131,7 @@ resource "aws_subnet" "public" {
   )
 }
 
-# modules/vpc/variables.tf
+## modules/vpc/variables.tf
 variable "name" {
   description = "Name prefix for VPC resources"
   type        = string
@@ -181,7 +181,7 @@ variable "tags" {
   default     = {}
 }
 
-# environments/dev/main.tf (now much simpler)
+## environments/dev/main.tf (now much simpler)
 module "vpc" {
   source = "../../modules/vpc"
 
@@ -244,15 +244,15 @@ resource "aws_iam_access_key" "users" {
   user  = aws_iam_user.users[count.index].name
 }
 
-# Problem: If you remove "bob" from the list:
-# variable "users" {
-#   default = ["alice", "charlie"]  # bob removed
-# }
-# Terraform will:
-# 1. Destroy users[1] (bob) - GOOD
-# 2. Destroy users[2] (charlie) - BAD!
-# 3. Recreate users[1] (charlie) - BAD!
-# Charlie's access keys get destroyed and recreated!
+## Problem: If you remove "bob" from the list:
+## variable "users" {
+##   default = ["alice", "charlie"]  # bob removed
+## }
+## Terraform will:
+## 1. Destroy users[1] (bob) - GOOD
+## 2. Destroy users[2] (charlie) - BAD!
+## 3. Recreate users[1] (charlie) - BAD!
+## Charlie's access keys get destroyed and recreated!
 ```
 
 **After** (using for_each):
@@ -280,13 +280,13 @@ resource "aws_iam_access_key" "users" {
   user = aws_iam_user.users[each.key].name
 }
 
-# Now if you remove "bob" from the set:
-# variable "users" {
-#   default = ["alice", "charlie"]  # bob removed
-# }
-# Terraform will:
-# 1. Destroy users["bob"] - GOOD
-# Charlie is untouched because he's keyed by name, not index!
+## Now if you remove "bob" from the set:
+## variable "users" {
+##   default = ["alice", "charlie"]  # bob removed
+## }
+## Terraform will:
+## 1. Destroy users["bob"] - GOOD
+## Charlie is untouched because he's keyed by name, not index!
 ```
 
 **Even Better** (using map for additional attributes):
@@ -533,7 +533,7 @@ variable "config" {
   })
 }
 
-# Usage (very verbose and error-prone)
+## Usage (very verbose and error-prone)
 resource "aws_instance" "app" {
   count         = var.config.infra.compute.count
   instance_type = var.config.infra.compute.instance_type
@@ -557,7 +557,7 @@ resource "aws_instance" "app" {
 **After**:
 
 ```hcl
-# Flatten and simplify variable structure
+## Flatten and simplify variable structure
 variable "app_name" {
   description = "Application name"
   type        = string
@@ -601,7 +601,7 @@ variable "instance_count" {
   }
 }
 
-# Usage (much simpler and clearer)
+## Usage (much simpler and clearer)
 resource "aws_instance" "app" {
   count         = var.instance_count
   instance_type = var.instance_type
@@ -617,7 +617,7 @@ resource "aws_instance" "app" {
   }
 }
 
-# terraform.tfvars (easier to read and write)
+## terraform.tfvars (easier to read and write)
 app_name    = "my-application"
 app_version = "1.2.3"
 
@@ -686,18 +686,18 @@ resource "aws_security_group" "sg" {
   vpc_id = aws_vpc.main.id
 }
 
-# References are unclear:
-# - What is "main" vs "vpc2"?
-# - What's the difference between "subnet1" and "pub_sub"?
-# - What does "server" do vs "web_server"?
+## References are unclear:
+## - What is "main" vs "vpc2"?
+## - What's the difference between "subnet1" and "pub_sub"?
+## - What does "server" do vs "web_server"?
 ```
 
 **After**:
 
 ```hcl
-# Use descriptive, consistent naming patterns
+## Use descriptive, consistent naming patterns
 
-# VPCs: describe purpose
+## VPCs: describe purpose
 resource "aws_vpc" "application" {
   cidr_block = "10.0.0.0/16"
 
@@ -714,7 +714,7 @@ resource "aws_vpc" "management" {
   }
 }
 
-# Subnets: include type and purpose
+## Subnets: include type and purpose
 resource "aws_subnet" "application_private" {
   for_each = toset(["us-east-1a", "us-east-1b", "us-east-1c"])
 
@@ -750,7 +750,7 @@ resource "aws_subnet" "application_public" {
   }
 }
 
-# Instances: describe role and tier
+## Instances: describe role and tier
 resource "aws_instance" "api_backend" {
   count = 2
 
@@ -787,7 +787,7 @@ resource "aws_instance" "web_frontend" {
   }
 }
 
-# Security groups: describe what they protect
+## Security groups: describe what they protect
 resource "aws_security_group" "api_backend" {
   name_prefix = "api-backend-"
   description = "Security group for API backend instances"
@@ -808,11 +808,11 @@ resource "aws_security_group" "web_frontend" {
   }
 }
 
-# Now references are clear:
-# - aws_vpc.application vs aws_vpc.management (purpose-based)
-# - aws_subnet.application_private vs application_public (type-based)
-# - aws_instance.api_backend vs web_frontend (role-based)
-# - aws_security_group.api_backend (matches protected resource)
+## Now references are clear:
+## - aws_vpc.application vs aws_vpc.management (purpose-based)
+## - aws_subnet.application_private vs application_public (type-based)
+## - aws_instance.api_backend vs web_frontend (role-based)
+## - aws_security_group.api_backend (matches protected resource)
 ```
 
 **Naming Conventions Applied**:

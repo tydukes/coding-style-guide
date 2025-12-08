@@ -58,7 +58,7 @@ ansible-role-nginx/
 ## README.md
 
 ```markdown
-# Ansible Role: Nginx
+## Ansible Role: Nginx
 
 [![CI](https://github.com/yourusername/ansible-role-nginx/workflows/CI/badge.svg)](https://github.com/yourusername/ansible-role-nginx/actions)
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-yourusername.nginx-blue.svg)](https://galaxy.ansible.com/yourusername/nginx)
@@ -79,34 +79,34 @@ Ansible role for installing and configuring Nginx web server with SSL support.
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
 \```yaml
-# Nginx version (use 'latest' or specific version)
+## Nginx version (use 'latest' or specific version)
 nginx_version: latest
 
-# Enable/disable nginx service
+## Enable/disable nginx service
 nginx_enabled: true
 nginx_state: started
 
-# Nginx user and group
+## Nginx user and group
 nginx_user: www-data
 nginx_group: www-data
 
-# Performance tuning
+## Performance tuning
 nginx_worker_processes: auto
 nginx_worker_connections: 1024
 
-# SSL configuration
+## SSL configuration
 nginx_ssl_enabled: true
 nginx_ssl_protocols: "TLSv1.2 TLSv1.3"
 nginx_ssl_ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256"
 
-# Virtual hosts
+## Virtual hosts
 nginx_sites: []
-#  - name: example.com
-#    server_name: example.com www.example.com
-#    root: /var/www/example.com
-#    ssl_enabled: true
-#    ssl_certificate: /etc/ssl/certs/example.com.crt
-#    ssl_certificate_key: /etc/ssl/private/example.com.key
+##  - name: example.com
+##    server_name: example.com www.example.com
+##    root: /var/www/example.com
+##    ssl_enabled: true
+##    ssl_certificate: /etc/ssl/certs/example.com.crt
+##    ssl_certificate_key: /etc/ssl/private/example.com.key
 \```
 
 ## Dependencies
@@ -134,10 +134,10 @@ None.
 This role includes Molecule tests:
 
 \```bash
-# Install dependencies
+## Install dependencies
 pip install molecule molecule-docker ansible-lint
 
-# Run tests
+## Run tests
 molecule test
 \```
 
@@ -194,33 +194,33 @@ dependencies: []
 
 ```yaml
 ---
-# Nginx version
+## Nginx version
 nginx_version: latest
 
-# Service configuration
+## Service configuration
 nginx_enabled: true
 nginx_state: started
 
-# User and group (will be set per OS in vars/)
+## User and group (will be set per OS in vars/)
 nginx_user: www-data
 nginx_group: www-data
 
-# Performance tuning
+## Performance tuning
 nginx_worker_processes: auto
 nginx_worker_connections: 1024
 nginx_multi_accept: "on"
 nginx_keepalive_timeout: 65
 
-# Buffer sizes
+## Buffer sizes
 nginx_client_body_buffer_size: 128k
 nginx_client_max_body_size: 10m
 
-# Logging
+## Logging
 nginx_access_log: /var/log/nginx/access.log
 nginx_error_log: /var/log/nginx/error.log
 nginx_log_level: warn
 
-# SSL/TLS configuration
+## SSL/TLS configuration
 nginx_ssl_enabled: true
 nginx_ssl_protocols: "TLSv1.2 TLSv1.3"
 nginx_ssl_ciphers: >-
@@ -230,20 +230,20 @@ nginx_ssl_prefer_server_ciphers: "off"
 nginx_ssl_session_cache: "shared:SSL:10m"
 nginx_ssl_session_timeout: "10m"
 
-# Security headers
+## Security headers
 nginx_security_headers:
   X-Frame-Options: "DENY"
   X-Content-Type-Options: "nosniff"
   X-XSS-Protection: "1; mode=block"
   Referrer-Policy: "no-referrer-when-downgrade"
 
-# Virtual hosts
+## Virtual hosts
 nginx_sites: []
 
-# Remove default site
+## Remove default site
 nginx_remove_default_site: true
 
-# Configuration paths
+## Configuration paths
 nginx_conf_path: /etc/nginx/nginx.conf
 nginx_sites_available_path: /etc/nginx/sites-available
 nginx_sites_enabled_path: /etc/nginx/sites-enabled
@@ -585,7 +585,7 @@ http {
 
 ```nginx
 {% if item.ssl_enabled | default(false) %}
-# Redirect HTTP to HTTPS
+## Redirect HTTP to HTTPS
 server {
     listen 80;
     listen [::]:80;
@@ -640,23 +640,23 @@ server {
 ## templates/ssl.conf.j2
 
 ```nginx
-# SSL Protocols and Ciphers
+## SSL Protocols and Ciphers
 ssl_protocols {{ nginx_ssl_protocols }};
 ssl_ciphers {{ nginx_ssl_ciphers }};
 ssl_prefer_server_ciphers {{ nginx_ssl_prefer_server_ciphers }};
 
-# SSL Session
+## SSL Session
 ssl_session_cache {{ nginx_ssl_session_cache }};
 ssl_session_timeout {{ nginx_ssl_session_timeout }};
 ssl_session_tickets off;
 
-# OCSP Stapling
+## OCSP Stapling
 ssl_stapling on;
 ssl_stapling_verify on;
 resolver 8.8.8.8 8.8.4.4 valid=300s;
 resolver_timeout 5s;
 
-# Security Headers
+## Security Headers
 add_header Strict-Transport-Security "max-age=63072000" always;
 ```
 

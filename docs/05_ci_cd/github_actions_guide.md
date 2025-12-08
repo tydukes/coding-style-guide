@@ -1055,7 +1055,7 @@ jobs:
 ### Caller Workflow
 
 ```yaml
-# .github/workflows/deploy.yml
+## .github/workflows/deploy.yml
 name: Deploy Application
 
 on:
@@ -1085,7 +1085,7 @@ jobs:
 ### Reusable Workflow
 
 ```yaml
-# .github/workflows/reusable-deploy.yml
+## .github/workflows/reusable-deploy.yml
 name: Reusable Deploy
 
 on:
@@ -1263,7 +1263,7 @@ jobs:
 ### Composite Actions
 
 ```yaml
-# .github/actions/setup-app/action.yml
+## .github/actions/setup-app/action.yml
 name: 'Setup Application'
 description: 'Setup Node.js and install dependencies'
 
@@ -1296,7 +1296,7 @@ runs:
       shell: bash
       run: npm ci
 
-# Usage in workflow
+## Usage in workflow
 jobs:
   build:
     runs-on: ubuntu-latest

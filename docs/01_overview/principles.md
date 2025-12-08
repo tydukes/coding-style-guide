@@ -11,6 +11,8 @@ version: "1.1.0"
 
 <!-- markdownlint-disable MD024 -->
 
+## Core Principles
+
 The Dukes Engineering Style Guide is built on core principles that prioritize automation, AI integration, consistency,
 and maintainability. These principles guide every decision in the style guide and shape how teams write, review, and
 maintain code.
@@ -44,7 +46,7 @@ architecture, and design—not formatting or style violations.
 **Pre-commit Hooks**: Enforce standards before code reaches version control
 
 ```yaml
-# .pre-commit-config.yaml
+## .pre-commit-config.yaml
 repos:
   - repo: https://github.com/psf/black
     hooks:
@@ -57,7 +59,7 @@ repos:
 **CI/CD Validation**: Fail builds on standard violations
 
 ```yaml
-# .github/workflows/ci.yml
+## .github/workflows/ci.yml
 - name: Validate coding standards
   uses: tydukes/coding-style-guide/.github/actions/validate@v1.0.0
   with:
@@ -215,12 +217,12 @@ tests/
 #### Version Tags
 
 ```bash
-# Releases
+## Releases
 git tag v1.0.0
 git tag v1.1.0
 git tag v2.0.0
 
-# Pre-releases
+## Pre-releases
 git tag v1.0.0-rc.1
 git tag v1.0.0-beta.2
 ```

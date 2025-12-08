@@ -1405,7 +1405,7 @@ jobs:
 ### README.md
 
 ```markdown
-# ts-validator
+## ts-validator
 
 Lightweight, type-safe validation library for TypeScript with zero dependencies.
 
@@ -1423,9 +1423,9 @@ Lightweight, type-safe validation library for TypeScript with zero dependencies.
 
 ```bash
 npm install ts-validator
-# or
+## or
 yarn add ts-validator
-# or
+## or
 pnpm add ts-validator
 ```
 

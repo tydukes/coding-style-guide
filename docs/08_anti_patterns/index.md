@@ -282,17 +282,17 @@ output "vpc_arn" {
 **Good**: Use variables and group_vars
 
 ```yaml
-# group_vars/production.yml
+## group_vars/production.yml
 db_host: "prod-db.example.com"
 db_port: 5432
 environment: "production"
 
-# group_vars/development.yml
+## group_vars/development.yml
 db_host: "dev-db.example.com"
 db_port: 5432
 environment: "development"
 
-# playbook.yml
+## playbook.yml
 - name: Configure application
   ansible.builtin.template:
     src: app.conf.j2
@@ -428,7 +428,7 @@ from pathlib import Path
 import os
 import sys
 
-# or
+## or
 from pathlib import (
     Path,
     PurePath,
@@ -454,10 +454,10 @@ f.close()  # May not execute if exception occurs
 ```python
 from pathlib import Path
 
-# Modern approach
+## Modern approach
 data = Path('file.txt').read_text()
 
-# Or with context manager
+## Or with context manager
 with open('file.txt', 'r') as f:
     data = f.read()
 ```
@@ -721,7 +721,7 @@ cat file.txt | grep "pattern"
 
 ```bash
 grep "pattern" file.txt
-# or
+## or
 grep "pattern" < file.txt
 ```
 
@@ -837,7 +837,7 @@ CMD ["node", "dist/server.js"]
 **Good**: Use multi-stage builds for smaller images
 
 ```dockerfile
-# Build stage
+## Build stage
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -848,7 +848,7 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Production stage
+## Production stage
 FROM node:20-alpine AS production
 
 RUN addgroup -g 1001 -S appuser && \

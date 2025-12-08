@@ -593,26 +593,26 @@ Always use **2 spaces**:
 ### Using jq
 
 ```bash
-# Validate JSON file
+## Validate JSON file
 jq empty config.json
 
-# Pretty print
+## Pretty print
 jq . config.json
 
-# Extract specific field
+## Extract specific field
 jq '.name' package.json
 
-# Filter array
+## Filter array
 jq '.users[] | select(.age > 18)' users.json
 ```
 
 ### Using jsonlint
 
 ```bash
-# Validate JSON
+## Validate JSON
 jsonlint config.json
 
-# Format JSON
+## Format JSON
 jsonlint -i config.json
 ```
 
@@ -621,7 +621,7 @@ jsonlint -i config.json
 ```python
 import json
 
-# Validate JSON
+## Validate JSON
 with open('config.json') as f:
     try:
         data = json.load(f)
@@ -629,7 +629,7 @@ with open('config.json') as f:
     except json.JSONDecodeError as e:
         print(f"Invalid JSON: {e}")
 
-# Pretty print
+## Pretty print
 print(json.dumps(data, indent=2))
 ```
 

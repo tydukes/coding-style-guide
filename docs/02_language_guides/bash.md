@@ -94,35 +94,35 @@ Write POSIX-compliant scripts for maximum portability across systems.
 
 ```bash
 #!/bin/sh
-# Good - POSIX compliant shebang
+## Good - POSIX compliant shebang
 ```
 
 ```bash
 #!/usr/bin/env bash
-# Acceptable - When bash-specific features are needed
-# Document bash requirement in README
+## Acceptable - When bash-specific features are needed
+## Document bash requirement in README
 ```
 
 ### Bash-only Features to Avoid
 
 ```bash
-# Bad - Bash-specific array syntax
+## Bad - Bash-specific array syntax
 declare -a my_array=("item1" "item2")
 
-# Bad - Bash-specific [[ ]] test
+## Bad - Bash-specific [[ ]] test
 if [[ "$var" == "value" ]]; then
   echo "match"
 fi
 
-# Good - POSIX compliant [ ] test
+## Good - POSIX compliant [ ] test
 if [ "$var" = "value" ]; then
   echo "match"
 fi
 
-# Bad - Bash process substitution
+## Bad - Bash process substitution
 diff <(command1) <(command2)
 
-# Good - Use temporary files
+## Good - Use temporary files
 command1 > /tmp/file1
 command2 > /tmp/file2
 diff /tmp/file1 /tmp/file2
@@ -145,17 +145,17 @@ Every script must start with a header including metadata and error handling:
 @last_updated 2025-10-28
 """
 
-# Strict error handling
+## Strict error handling
 set -o errexit   # Exit on error
 set -o nounset   # Exit on undefined variable
 set -o pipefail  # Catch errors in pipelines
 
-# Script constants
+## Script constants
 readonly SCRIPT_NAME="$(basename "$0")"
 readonly SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 readonly LOG_FILE="/var/log/${SCRIPT_NAME}.log"
 
-# Color codes for output
+## Color codes for output
 readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
 readonly YELLOW='\033[1;33m'
@@ -169,7 +169,7 @@ set -o errexit    # Exit immediately if a command exits with non-zero status
 set -o nounset    # Treat unset variables as errors
 set -o pipefail   # Return exit status of last failed command in pipeline
 
-# Alternative short form
+## Alternative short form
 set -euo pipefail
 ```
 
@@ -180,7 +180,7 @@ set -euo pipefail
 Use functions for reusable code blocks:
 
 ```bash
-# Function definition - no 'function' keyword for POSIX compliance
+## Function definition - no 'function' keyword for POSIX compliance
 log_info() {
   local message="$1"
   echo "${GREEN}[INFO]${NC} $(date '+%Y-%m-%d %H:%M:%S') - $message" >&2
@@ -196,7 +196,7 @@ log_warning() {
   echo "${YELLOW}[WARNING]${NC} $(date '+%Y-%m-%d %H:%M:%S') - $message" >&2
 }
 
-# Function with return value
+## Function with return value
 check_command_exists() {
   local cmd="$1"
   if command -v "$cmd" >/dev/null 2>&1; then
@@ -206,7 +206,7 @@ check_command_exists() {
   fi
 }
 
-# Function with multiple parameters
+## Function with multiple parameters
 deploy_service() {
   local service_name="$1"
   local environment="$2"
@@ -255,7 +255,7 @@ EXAMPLES:
 EOF
 }
 
-# Parse command-line arguments
+## Parse command-line arguments
 parse_arguments() {
   DRY_RUN=false
   FORCE=false
@@ -317,7 +317,7 @@ parse_arguments() {
 ### Trap Signals for Cleanup
 
 ```bash
-# Cleanup function
+## Cleanup function
 cleanup() {
   local exit_code=$?
 
@@ -334,10 +334,10 @@ cleanup() {
   exit $exit_code
 }
 
-# Register cleanup trap
+## Register cleanup trap
 trap cleanup EXIT INT TERM
 
-# Create temporary files
+## Create temporary files
 TEMP_FILE=$(mktemp)
 TEMP_DIR=$(mktemp -d)
 ```
@@ -345,13 +345,13 @@ TEMP_DIR=$(mktemp -d)
 ### Error Handling Patterns
 
 ```bash
-# Check command success
+## Check command success
 if ! check_command_exists "docker"; then
   log_error "docker is not installed"
   exit 1
 fi
 
-# Capture command output and check status
+## Capture command output and check status
 if output=$(docker ps 2>&1); then
   log_info "Docker is running"
 else
@@ -359,13 +359,13 @@ else
   exit 1
 fi
 
-# Conditional execution with error messages
+## Conditional execution with error messages
 docker pull "$IMAGE_NAME" || {
   log_error "Failed to pull Docker image $IMAGE_NAME"
   exit 1
 }
 
-# Use subshell to prevent exit on error
+## Use subshell to prevent exit on error
 if (set -e; command1 && command2 && command3); then
   log_info "All commands succeeded"
 else
@@ -380,22 +380,22 @@ fi
 Always use `mktemp` for temporary files and ensure cleanup:
 
 ```bash
-# Create temporary file
+## Create temporary file
 TEMP_FILE=$(mktemp) || {
   log_error "Failed to create temporary file"
   exit 1
 }
 
-# Create temporary directory
+## Create temporary directory
 TEMP_DIR=$(mktemp -d) || {
   log_error "Failed to create temporary directory"
   exit 1
 }
 
-# Ensure cleanup on exit
+## Ensure cleanup on exit
 trap 'rm -f "$TEMP_FILE"; rm -rf "$TEMP_DIR"' EXIT
 
-# Use temporary file
+## Use temporary file
 echo "data" > "$TEMP_FILE"
 process_file "$TEMP_FILE"
 ```
@@ -405,32 +405,32 @@ process_file "$TEMP_FILE"
 ## String Manipulation
 
 ```bash
-# Variable assignment
+## Variable assignment
 name="John Doe"
 
-# String length
+## String length
 length=${#name}
 
-# Substring extraction (not POSIX - use cut/awk instead for portability)
-# ${variable:offset:length} is bash-specific
+## Substring extraction (not POSIX - use cut/awk instead for portability)
+## ${variable:offset:length} is bash-specific
 
-# POSIX-compliant substring with cut
+## POSIX-compliant substring with cut
 first_name=$(echo "$name" | cut -d' ' -f1)
 
-# String replacement (use sed for POSIX)
-# ${variable/pattern/replacement} is bash-specific
+## String replacement (use sed for POSIX)
+## ${variable/pattern/replacement} is bash-specific
 
-# POSIX-compliant replacement
+## POSIX-compliant replacement
 new_name=$(echo "$name" | sed 's/John/Jane/')
 
-# Case conversion (use tr for POSIX)
+## Case conversion (use tr for POSIX)
 upper_name=$(echo "$name" | tr '[:lower:]' '[:upper:]')
 lower_name=$(echo "$name" | tr '[:upper:]' '[:lower:]')
 
-# String concatenation
+## String concatenation
 full_path="${directory}/${filename}"
 
-# Default values
+## Default values
 database_host="${DB_HOST:-localhost}"
 database_port="${DB_PORT:-5432}"
 ```
@@ -440,12 +440,12 @@ database_port="${DB_PORT:-5432}"
 ## Conditional Statements
 
 ```bash
-# Basic if statement
+## Basic if statement
 if [ "$ENVIRONMENT" = "prod" ]; then
   log_warning "Deploying to production"
 fi
 
-# If-else
+## If-else
 if [ -f "$config_file" ]; then
   log_info "Config file found: $config_file"
 else
@@ -453,7 +453,7 @@ else
   exit 1
 fi
 
-# If-elif-else
+## If-elif-else
 if [ "$status_code" -eq 200 ]; then
   log_info "Request successful"
 elif [ "$status_code" -eq 404 ]; then
@@ -464,7 +464,7 @@ else
   log_warning "Unexpected status code: $status_code"
 fi
 
-# Test operators
+## Test operators
 [ -f "$file" ]       # File exists and is regular file
 [ -d "$dir" ]        # Directory exists
 [ -z "$var" ]        # String is empty
@@ -478,7 +478,7 @@ fi
 [ "$a" -gt "$b" ]    # a greater than b
 [ "$a" -ge "$b" ]    # a greater than or equal to b
 
-# Logical operators
+## Logical operators
 [ -f "$file" ] && [ -r "$file" ]   # AND
 [ -f "$file" ] || [ -d "$dir" ]    # OR
 [ ! -f "$file" ]                    # NOT
@@ -489,37 +489,37 @@ fi
 ## Loops
 
 ```bash
-# For loop with list
+## For loop with list
 for env in dev staging prod; do
   log_info "Deploying to $env"
   deploy_to_environment "$env"
 done
 
-# For loop with command output
+## For loop with command output
 for file in *.txt; do
   if [ -f "$file" ]; then
     process_file "$file"
   fi
 done
 
-# For loop with range (use seq for POSIX)
+## For loop with range (use seq for POSIX)
 for i in $(seq 1 5); do
   echo "Iteration $i"
 done
 
-# While loop
+## While loop
 count=0
 while [ $count -lt 10 ]; do
   log_info "Count: $count"
   count=$((count + 1))
 done
 
-# Read file line by line
+## Read file line by line
 while IFS= read -r line; do
   process_line "$line"
 done < "$input_file"
 
-# Until loop
+## Until loop
 until check_service_health; do
   log_info "Waiting for service to be healthy..."
   sleep 5
@@ -531,27 +531,27 @@ done
 ## HERE Documents
 
 ```bash
-# Basic HERE document
+## Basic HERE document
 cat << EOF
 This is a multi-line
 text block that will
 be printed as-is
 EOF
 
-# HERE document with variable expansion
+## HERE document with variable expansion
 cat << EOF
 Environment: $ENVIRONMENT
 Deployment time: $(date)
 User: $USER
 EOF
 
-# HERE document without variable expansion (quoted delimiter)
+## HERE document without variable expansion (quoted delimiter)
 cat << 'EOF'
 This will not expand $VARIABLES
 Use this for literal text
 EOF
 
-# HERE document to file
+## HERE document to file
 cat << EOF > config.yaml
 ---
 environment: $ENVIRONMENT
@@ -560,7 +560,7 @@ database:
   port: $DB_PORT
 EOF
 
-# HERE document to command
+## HERE document to command
 docker run -i myimage << EOF
 command1
 command2
@@ -573,15 +573,15 @@ EOF
 ## Command Substitution
 
 ```bash
-# Modern command substitution (POSIX)
+## Modern command substitution (POSIX)
 current_date=$(date '+%Y-%m-%d')
 file_count=$(ls -1 | wc -l)
 git_branch=$(git rev-parse --abbrev-ref HEAD)
 
-# Nested command substitution
+## Nested command substitution
 project_root=$(cd "$(dirname "$0")/.." && pwd)
 
-# Capture command output and status
+## Capture command output and status
 if output=$(docker ps 2>&1); then
   log_info "Docker running with $(echo "$output" | wc -l) containers"
 fi
@@ -594,24 +594,24 @@ fi
 For POSIX compliance, use whitespace-separated strings or multiple variables:
 
 ```bash
-# POSIX-compliant approach - avoid arrays
+## POSIX-compliant approach - avoid arrays
 environments="dev staging prod"
 for env in $environments; do
   echo "$env"
 done
 
-# If you MUST use arrays (bash-only), document the requirement
+## If you MUST use arrays (bash-only), document the requirement
 #!/bin/bash  # Note: requires bash, not POSIX sh
 
-# Bash array declaration
+## Bash array declaration
 declare -a servers=("server1" "server2" "server3")
 
-# Array iteration
+## Array iteration
 for server in "${servers[@]}"; do
   echo "Processing $server"
 done
 
-# Array length
+## Array length
 count=${#servers[@]}
 ```
 
@@ -622,13 +622,13 @@ count=${#servers[@]}
 ### ❌ Avoid: Unquoted Variables
 
 ```bash
-# Bad - Word splitting and globbing issues
+## Bad - Word splitting and globbing issues
 file=$1
 if [ -f $file ]; then  # Breaks with spaces in filename
   cat $file
 fi
 
-# Good - Always quote variables
+## Good - Always quote variables
 file="$1"
 if [ -f "$file" ]; then
   cat "$file"
@@ -638,11 +638,11 @@ fi
 ### ❌ Avoid: Using `eval`
 
 ```bash
-# Bad - Security risk, arbitrary code execution
+## Bad - Security risk, arbitrary code execution
 user_input="$1"
 eval "$user_input"
 
-# Good - Use explicit commands
+## Good - Use explicit commands
 case "$command" in
   start) start_service ;;
   stop)  stop_service ;;
@@ -653,12 +653,12 @@ esac
 ### ❌ Avoid: Parsing ls Output
 
 ```bash
-# Bad - Breaks with spaces, special characters
+## Bad - Breaks with spaces, special characters
 for file in $(ls *.txt); do
   echo "$file"
 done
 
-# Good - Use glob patterns
+## Good - Use glob patterns
 for file in *.txt; do
   if [ -f "$file" ]; then
     echo "$file"
@@ -669,22 +669,22 @@ done
 ### ❌ Avoid: Useless cat
 
 ```bash
-# Bad - Unnecessary use of cat
+## Bad - Unnecessary use of cat
 cat file.txt | grep "pattern"
 
-# Good - Direct input redirection
+## Good - Direct input redirection
 grep "pattern" file.txt
 ```
 
 ### ❌ Avoid: Test with ==
 
 ```bash
-# Bad - Not POSIX compliant
+## Bad - Not POSIX compliant
 if [ "$var" == "value" ]; then
   echo "match"
 fi
 
-# Good - POSIX single =
+## Good - POSIX single =
 if [ "$var" = "value" ]; then
   echo "match"
 fi
@@ -693,11 +693,11 @@ fi
 ### ❌ Avoid: Ignoring Exit Codes
 
 ```bash
-# Bad - No error checking
+## Bad - No error checking
 curl -o file.txt https://example.com/file.txt
 process_file file.txt
 
-# Good - Check exit codes
+## Good - Check exit codes
 if curl -o file.txt https://example.com/file.txt; then
   process_file file.txt
 else
@@ -709,18 +709,18 @@ fi
 ### ❌ Avoid: Using cd Without Checks
 
 ```bash
-# Bad - cd might fail
+## Bad - cd might fail
 cd /some/directory
 rm -rf *
 
-# Good - Check cd success
+## Good - Check cd success
 if ! cd /some/directory; then
   log_error "Failed to change directory"
   exit 1
 fi
 rm -rf *
 
-# Better - Use subshell
+## Better - Use subshell
 (
   cd /some/directory || exit 1
   rm -rf *
@@ -736,14 +736,14 @@ rm -rf *
 `.shellcheckrc`:
 
 ```text
-# Disable specific warnings
+## Disable specific warnings
 disable=SC2034  # Unused variable
 disable=SC2086  # Unquoted variable (if intentional)
 
-# Enable all optional checks
+## Enable all optional checks
 enable=all
 
-# Specify shell dialect
+## Specify shell dialect
 shell=sh
 ```
 
@@ -805,25 +805,25 @@ repos:
 @last_updated 2025-10-28
 """
 
-# Strict error handling
+## Strict error handling
 set -o errexit
 set -o nounset
 set -o pipefail
 
-# Constants
+## Constants
 readonly SCRIPT_NAME="$(basename "$0")"
 readonly SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 readonly BACKUP_DIR="/var/backups/postgres"
 readonly RETENTION_DAYS=7
 readonly S3_BUCKET="s3://my-backups/postgres"
 
-# Color codes
+## Color codes
 readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
 readonly YELLOW='\033[1;33m'
 readonly NC='\033[0m'
 
-# Logging functions
+## Logging functions
 log_info() {
   echo "${GREEN}[INFO]${NC} $(date '+%Y-%m-%d %H:%M:%S') - $1" >&2
 }
@@ -836,7 +836,7 @@ log_warning() {
   echo "${YELLOW}[WARNING]${NC} $(date '+%Y-%m-%d %H:%M:%S') - $1" >&2
 }
 
-# Cleanup function
+## Cleanup function
 cleanup() {
   local exit_code=$?
 
@@ -850,10 +850,10 @@ cleanup() {
   exit $exit_code
 }
 
-# Register cleanup trap
+## Register cleanup trap
 trap cleanup EXIT INT TERM
 
-# Check prerequisites
+## Check prerequisites
 check_prerequisites() {
   local missing_deps=""
 
@@ -871,7 +871,7 @@ check_prerequisites() {
   return 0
 }
 
-# Create backup
+## Create backup
 create_backup() {
   local database="$1"
   local timestamp=$(date '+%Y%m%d_%H%M%S')
@@ -893,7 +893,7 @@ create_backup() {
   fi
 }
 
-# Upload to S3
+## Upload to S3
 upload_to_s3() {
   local backup_file="$1"
   local s3_path="${S3_BUCKET}/$(basename "$backup_file")"
@@ -909,7 +909,7 @@ upload_to_s3() {
   fi
 }
 
-# Rotate old backups
+## Rotate old backups
 rotate_backups() {
   log_info "Rotating backups older than $RETENTION_DAYS days"
 
@@ -919,7 +919,7 @@ rotate_backups() {
   log_info "Deleted $deleted_count old backup(s)"
 }
 
-# Main function
+## Main function
 main() {
   local database="${1:-myapp_production}"
 
@@ -953,7 +953,7 @@ main() {
   log_info "Backup process completed successfully"
 }
 
-# Run main function with arguments
+## Run main function with arguments
 main "$@"
 ```
 
@@ -990,15 +990,15 @@ Replace Bash with Python, Go, or TypeScript when you need:
 ### Example: When NOT to Use Bash
 
 ```bash
-# Bad - Complex JSON parsing in Bash
-# This should be Python/Go/TypeScript
+## Bad - Complex JSON parsing in Bash
+## This should be Python/Go/TypeScript
 response=$(curl -s https://api.example.com/users)
-# Trying to parse JSON with grep/sed is fragile and error-prone
+## Trying to parse JSON with grep/sed is fragile and error-prone
 user_id=$(echo "$response" | grep -o '"id":[0-9]*' | cut -d: -f2)
 ```
 
 ```python
-# Good - Use Python for JSON APIs
+## Good - Use Python for JSON APIs
 import requests
 
 response = requests.get('https://api.example.com/users')

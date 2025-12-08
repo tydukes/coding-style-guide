@@ -929,10 +929,10 @@ pipeline {
 ### Jenkinsfile Validation
 
 ```bash
-# Validate Jenkinsfile syntax
+## Validate Jenkinsfile syntax
 curl -X POST -F "jenkinsfile=<Jenkinsfile" http://jenkins.example.com/pipeline-model-converter/validate
 
-# Use Jenkins CLI
+## Use Jenkins CLI
 java -jar jenkins-cli.jar -s http://jenkins.example.com/ declarative-linter < Jenkinsfile
 ```
 

@@ -19,15 +19,15 @@ Use these templates to exclude build artifacts, dependencies, IDE files, and sen
 ## Python
 
 ```gitignore
-# Byte-compiled / optimized / DLL files
+## Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
+## C extensions
 *.so
 
-# Distribution / packaging
+## Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -48,15 +48,15 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# PyInstaller
+## PyInstaller
 *.manifest
 *.spec
 
-# Installer logs
+## Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+## Unit test / coverage reports
 htmlcov/
 .tox/
 .nox/
@@ -71,56 +71,56 @@ coverage.xml
 .pytest_cache/
 .ruff_cache/
 
-# Translations
+## Translations
 *.mo
 *.pot
 
-# Django
+## Django
 *.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
-# Flask
+## Flask
 instance/
 .webassets-cache
 
-# Scrapy
+## Scrapy
 .scrapy
 
-# Sphinx documentation
+## Sphinx documentation
 docs/_build/
 
-# PyBuilder
+## PyBuilder
 target/
 
-# Jupyter Notebook
+## Jupyter Notebook
 .ipynb_checkpoints
 
-# IPython
+## IPython
 profile_default/
 ipython_config.py
 
-# pyenv
+## pyenv
 .python-version
 
-# pipenv
+## pipenv
 Pipfile.lock
 
-# poetry
+## poetry
 poetry.lock
 
-# PEP 582
+## PEP 582
 __pypackages__/
 
-# Celery
+## Celery
 celerybeat-schedule
 celerybeat.pid
 
-# SageMath
+## SageMath
 *.sage.py
 
-# Environments
+## Environments
 .env
 .venv
 env/
@@ -129,28 +129,28 @@ ENV/
 env.bak/
 venv.bak/
 
-# Spyder
+## Spyder
 .spyderproject
 .spyproject
 
-# Rope
+## Rope
 .ropeproject
 
-# mkdocs
+## mkdocs
 /site
 
-# mypy
+## mypy
 .mypy_cache/
 .dmypy.json
 dmypy.json
 
-# Pyre
+## Pyre
 .pyre/
 
-# pytype
+## pytype
 .pytype/
 
-# Cython
+## Cython
 cython_debug/
 ```
 
@@ -159,7 +159,7 @@ cython_debug/
 ## TypeScript / JavaScript / Node.js
 
 ```gitignore
-# Logs
+## Logs
 logs
 *.log
 npm-debug.log*
@@ -168,67 +168,67 @@ yarn-error.log*
 lerna-debug.log*
 pnpm-debug.log*
 
-# Diagnostic reports
+## Diagnostic reports
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
-# Runtime data
+## Runtime data
 pids
 *.pid
 *.seed
 *.pid.lock
 
-# Directory for instrumented libs
+## Directory for instrumented libs
 lib-cov
 
-# Coverage directory
+## Coverage directory
 coverage
 *.lcov
 .nyc_output
 
-# Grunt intermediate storage
+## Grunt intermediate storage
 .grunt
 
-# Bower dependency directory
+## Bower dependency directory
 bower_components
 
-# node-waf configuration
+## node-waf configuration
 .lock-wscript
 
-# Compiled binary addons
+## Compiled binary addons
 build/Release
 
-# Dependency directories
+## Dependency directories
 node_modules/
 jspm_packages/
 
-# Snowpack dependency directory
+## Snowpack dependency directory
 web_modules/
 
-# TypeScript cache
+## TypeScript cache
 *.tsbuildinfo
 
-# Optional npm cache directory
+## Optional npm cache directory
 .npm
 
-# Optional eslint cache
+## Optional eslint cache
 .eslintcache
 
-# Optional stylelint cache
+## Optional stylelint cache
 .stylelintcache
 
-# Microbundle cache
+## Microbundle cache
 .rpt2_cache/
 .rts2_cache_cjs/
 .rts2_cache_es/
 .rts2_cache_umd/
 
-# Optional REPL history
+## Optional REPL history
 .node_repl_history
 
-# Output of 'npm pack'
+## Output of 'npm pack'
 *.tgz
 
-# Yarn
+## Yarn
 .yarn-integrity
 .yarn/cache
 .yarn/unplugged
@@ -236,54 +236,54 @@ web_modules/
 .yarn/install-state.gz
 .pnp.*
 
-# parcel-bundler cache
+## parcel-bundler cache
 .cache
 .parcel-cache
 
-# Next.js
+## Next.js
 .next/
 out/
 
-# Nuxt.js
+## Nuxt.js
 .nuxt
 dist
 
-# Gatsby
+## Gatsby
 .cache/
 public
 
-# vuepress
+## vuepress
 .vuepress/dist
 
-# Serverless
+## Serverless
 .serverless/
 
-# FuseBox
+## FuseBox
 .fusebox/
 
-# DynamoDB Local
+## DynamoDB Local
 .dynamodb/
 
-# TernJS
+## TernJS
 .tern-port
 
-# Stores VSCode versions
+## Stores VSCode versions
 .vscode-test
 
-# yarn v2
+## yarn v2
 .yarn/cache
 .yarn/unplugged
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
 
-# Turborepo
+## Turborepo
 .turbo
 
-# Vercel
+## Vercel
 .vercel
 
-# Environment variables
+## Environment variables
 .env
 .env.local
 .env.development.local
@@ -296,47 +296,47 @@ public
 ## Terraform
 
 ```gitignore
-# Local .terraform directories
+## Local .terraform directories
 **/.terraform/*
 
-# .tfstate files
+## .tfstate files
 *.tfstate
 *.tfstate.*
 
-# Crash log files
+## Crash log files
 crash.log
 crash.*.log
 
-# Exclude all .tfvars files (may contain sensitive data)
+## Exclude all .tfvars files (may contain sensitive data)
 *.tfvars
 *.tfvars.json
 
-# Ignore override files
+## Ignore override files
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
 
-# Include override files you do wish to add to version control
-# !example_override.tf
+## Include override files you do wish to add to version control
+## !example_override.tf
 
-# Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
-# *tfplan*
+## Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
+## *tfplan*
 
-# Ignore CLI configuration files
+## Ignore CLI configuration files
 .terraformrc
 terraform.rc
 
-# Terraform lock file (uncomment to ignore)
-# .terraform.lock.hcl
+## Terraform lock file (uncomment to ignore)
+## .terraform.lock.hcl
 
-# Terragrunt cache
+## Terragrunt cache
 .terragrunt-cache/
 
-# Terraform provider cache
+## Terraform provider cache
 .terraform.d/
 
-# Sentinel runtime directory
+## Sentinel runtime directory
 .sentinel
 ```
 
@@ -345,43 +345,43 @@ terraform.rc
 ## Ansible
 
 ```gitignore
-# Ansible retry files
+## Ansible retry files
 *.retry
 
-# Ansible vault password files
+## Ansible vault password files
 .vault_pass
 vault_pass.txt
 .vault-password
 
-# Ansible temporary files
+## Ansible temporary files
 .ansible/
 
-# Inventory files with sensitive data
+## Inventory files with sensitive data
 inventory/production/hosts
 inventory/production/*.yml
 
-# Ansible roles downloaded by ansible-galaxy
+## Ansible roles downloaded by ansible-galaxy
 roles/*/
 !roles/.gitkeep
 
-# Molecule
+## Molecule
 .molecule/
 molecule/.cache/
 
-# Python virtualenv
+## Python virtualenv
 venv/
 .venv/
 
-# Logs
+## Logs
 *.log
 
-# Test results
+## Test results
 test-results/
 
-# Collections
+## Collections
 collections/
 
-# Variables with secrets
+## Variables with secrets
 group_vars/*/vault.yml
 host_vars/*/vault.yml
 ```
@@ -391,29 +391,29 @@ host_vars/*/vault.yml
 ## Bash
 
 ```gitignore
-# Logs
+## Logs
 *.log
 
-# Backup files
+## Backup files
 *~
 *.bak
 *.swp
 *.swo
 *.tmp
 
-# Shell history
+## Shell history
 .bash_history
 .zsh_history
 
-# Environment files
+## Environment files
 .env
 .env.local
 
-# Scripts output
+## Scripts output
 output/
 logs/
 
-# Lock files
+## Lock files
 *.lock
 ```
 
@@ -422,26 +422,26 @@ logs/
 ## PowerShell
 
 ```gitignore
-# Logs
+## Logs
 *.log
 *.txt
 
-# Module directories
+## Module directories
 PSScriptAnalyzerSettings/
 
-# Test results
+## Test results
 TestResults/
 *.trx
 
-# Package files
+## Package files
 *.nupkg
 *.zip
 
-# Environment files
+## Environment files
 .env
 .env.local
 
-# PowerShell profile backups
+## PowerShell profile backups
 profile.ps1.bak
 ```
 
@@ -450,37 +450,37 @@ profile.ps1.bak
 ## Go
 
 ```gitignore
-# Binaries for programs and plugins
+## Binaries for programs and plugins
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
 
-# Test binary, built with `go test -c`
+## Test binary, built with `go test -c`
 *.test
 
-# Output of the go coverage tool
+## Output of the go coverage tool
 *.out
 
-# Dependency directories
+## Dependency directories
 vendor/
 
-# Go workspace file
+## Go workspace file
 go.work
 
-# Build output
+## Build output
 bin/
 dist/
 build/
 
-# IDEs
+## IDEs
 .idea/
 *.swp
 *.swo
 *~
 
-# Air (live reload for Go)
+## Air (live reload for Go)
 tmp/
 ```
 
@@ -489,22 +489,22 @@ tmp/
 ## SQL
 
 ```gitignore
-# Database files
+## Database files
 *.db
 *.sqlite
 *.sqlite3
 *.db-shm
 *.db-wal
 
-# Backup files
+## Backup files
 *.bak
 *.backup
 *.sql.bak
 
-# Query logs
+## Query logs
 *.log
 
-# Migration generated files
+## Migration generated files
 migrations/tmp/
 ```
 
@@ -513,20 +513,20 @@ migrations/tmp/
 ## Docker
 
 ```gitignore
-# Docker build context
+## Docker build context
 .dockerignore
 
-# Docker volumes
+## Docker volumes
 volumes/
 
-# Docker secrets
+## Docker secrets
 secrets/
 *.secret
 
-# Build artifacts
+## Build artifacts
 .docker/
 
-# Environment files
+## Environment files
 .env
 .env.local
 docker-compose.override.yml
@@ -537,20 +537,20 @@ docker-compose.override.yml
 ## Jenkins / Groovy
 
 ```gitignore
-# Jenkins
+## Jenkins
 .jenkins
 jobs/
 workspace/
 builds/
 logs/
 
-# Groovy compiled classes
+## Groovy compiled classes
 *.class
 
-# Logs
+## Logs
 *.log
 
-# Temporary files
+## Temporary files
 *.tmp
 ```
 
@@ -559,24 +559,24 @@ logs/
 ## Kubernetes / Helm
 
 ```gitignore
-# Helm
+## Helm
 charts/*/charts/
 *.tgz
 
-# Kubernetes secrets
+## Kubernetes secrets
 secrets.yml
 secrets.yaml
 *-secrets.yml
 *-secrets.yaml
 
-# Kustomize
+## Kustomize
 kustomization.yaml.bak
 
-# Temporary manifests
+## Temporary manifests
 tmp/
 temp/
 
-# Rendered templates
+## Rendered templates
 rendered/
 ```
 
@@ -585,34 +585,34 @@ rendered/
 ## General IDE / Editor Files
 
 ```gitignore
-# VSCode
+## VSCode
 .vscode/
 *.code-workspace
 
-# IntelliJ IDEA
+## IntelliJ IDEA
 .idea/
 *.iml
 *.ipr
 *.iws
 out/
 
-# Eclipse
+## Eclipse
 .project
 .classpath
 .settings/
 bin/
 
-# Sublime Text
+## Sublime Text
 *.sublime-project
 *.sublime-workspace
 
-# Vim
+## Vim
 *.swp
 *.swo
 *~
 .netrwhist
 
-# Emacs
+## Emacs
 *~
 \#*\#
 /.emacs.desktop
@@ -622,14 +622,14 @@ auto-save-list
 tramp
 .\#*
 
-# JetBrains
+## JetBrains
 .idea/
 *.iml
 *.ipr
 *.iws
 .idea_modules/
 
-# Atom
+## Atom
 .atom/
 ```
 
@@ -638,7 +638,7 @@ tramp
 ## General OS Files
 
 ```gitignore
-# macOS
+## macOS
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -657,7 +657,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# Windows
+## Windows
 Thumbs.db
 Thumbs.db:encryptable
 ehthumbs.db
@@ -672,7 +672,7 @@ $RECYCLE.BIN/
 *.msp
 *.lnk
 
-# Linux
+## Linux
 *~
 .fuse_hidden*
 .directory
@@ -685,13 +685,13 @@ $RECYCLE.BIN/
 ## Combined DevOps .gitignore
 
 ```gitignore
-# ============================================
-# Combined DevOps .gitignore Template
-# ============================================
+## ============================================
+## Combined DevOps .gitignore Template
+## ============================================
 
-# ----------------
-# Python
-# ----------------
+## ----------------
+## Python
+## ----------------
 __pycache__/
 *.py[cod]
 *$py.class
@@ -707,9 +707,9 @@ venv/
 .venv/
 .env
 
-# ----------------
-# Node.js / TypeScript
-# ----------------
+## ----------------
+## Node.js / TypeScript
+## ----------------
 node_modules/
 npm-debug.log*
 yarn-error.log*
@@ -719,9 +719,9 @@ dist/
 *.tsbuildinfo
 .eslintcache
 
-# ----------------
-# Terraform
-# ----------------
+## ----------------
+## Terraform
+## ----------------
 .terraform/
 *.tfstate
 *.tfstate.*
@@ -729,62 +729,62 @@ dist/
 .terraform.lock.hcl
 .terragrunt-cache/
 
-# ----------------
-# Ansible
-# ----------------
+## ----------------
+## Ansible
+## ----------------
 *.retry
 .ansible/
 roles/*/
 .molecule/
 
-# ----------------
-# Docker
-# ----------------
+## ----------------
+## Docker
+## ----------------
 .dockerignore
 docker-compose.override.yml
 
-# ----------------
-# Kubernetes / Helm
-# ----------------
+## ----------------
+## Kubernetes / Helm
+## ----------------
 charts/*/charts/
 *.tgz
 secrets.yml
 secrets.yaml
 
-# ----------------
-# CI/CD
-# ----------------
+## ----------------
+## CI/CD
+## ----------------
 .jenkins/
 .github/workflows/*.log
 
-# ----------------
-# IDE / Editors
-# ----------------
+## ----------------
+## IDE / Editors
+## ----------------
 .vscode/
 .idea/
 *.swp
 *.swo
 *.iml
 
-# ----------------
-# OS
-# ----------------
+## ----------------
+## OS
+## ----------------
 .DS_Store
 Thumbs.db
 *~
 
-# ----------------
-# Logs & Temporary Files
-# ----------------
+## ----------------
+## Logs & Temporary Files
+## ----------------
 *.log
 *.tmp
 *.bak
 logs/
 tmp/
 
-# ----------------
-# Secrets & Credentials
-# ----------------
+## ----------------
+## Secrets & Credentials
+## ----------------
 *.pem
 *.key
 *.crt
@@ -799,21 +799,21 @@ tmp/
 ## Multi-Language Project .gitignore
 
 ```gitignore
-# ============================================
-# Multi-Language Project .gitignore
-# ============================================
+## ============================================
+## Multi-Language Project .gitignore
+## ============================================
 
-# ----------------
-# Dependencies
-# ----------------
+## ----------------
+## Dependencies
+## ----------------
 node_modules/
 vendor/
 venv/
 .venv/
 
-# ----------------
-# Build Artifacts
-# ----------------
+## ----------------
+## Build Artifacts
+## ----------------
 build/
 dist/
 out/
@@ -824,9 +824,9 @@ bin/
 *.so
 *.dylib
 
-# ----------------
-# Test & Coverage
-# ----------------
+## ----------------
+## Test & Coverage
+## ----------------
 coverage/
 .coverage
 htmlcov/
@@ -835,27 +835,27 @@ htmlcov/
 test-results/
 *.test
 
-# ----------------
-# Package Files
-# ----------------
+## ----------------
+## Package Files
+## ----------------
 *.egg-info/
 *.nupkg
 *.tgz
 *.tar.gz
 *.zip
 
-# ----------------
-# Infrastructure
-# ----------------
+## ----------------
+## Infrastructure
+## ----------------
 .terraform/
 *.tfstate
 *.tfstate.*
 .terragrunt-cache/
 .ansible/
 
-# ----------------
-# Environment & Config
-# ----------------
+## ----------------
+## Environment & Config
+## ----------------
 .env
 .env.local
 .env.*.local
@@ -863,9 +863,9 @@ test-results/
 secrets/
 credentials/
 
-# ----------------
-# IDE & Editors
-# ----------------
+## ----------------
+## IDE & Editors
+## ----------------
 .vscode/
 .idea/
 *.swp
@@ -874,33 +874,33 @@ credentials/
 .project
 .classpath
 
-# ----------------
-# OS Files
-# ----------------
+## ----------------
+## OS Files
+## ----------------
 .DS_Store
 Thumbs.db
 Desktop.ini
 
-# ----------------
-# Logs
-# ----------------
+## ----------------
+## Logs
+## ----------------
 *.log
 logs/
 npm-debug.log*
 yarn-debug.log*
 
-# ----------------
-# Cache
-# ----------------
+## ----------------
+## Cache
+## ----------------
 .cache/
 .eslintcache
 .ruff_cache/
 .mypy_cache/
 *.tsbuildinfo
 
-# ----------------
-# CI/CD
-# ----------------
+## ----------------
+## CI/CD
+## ----------------
 .github/workflows/*.log
 .jenkins/
 ```
@@ -912,7 +912,7 @@ yarn-debug.log*
 ### Go Projects
 
 ```gitignore
-# Go
+## Go
 vendor/
 *.test
 *.out
@@ -923,7 +923,7 @@ bin/
 ### Ruby Projects
 
 ```gitignore
-# Ruby
+## Ruby
 *.gem
 *.rbc
 /.config
@@ -943,7 +943,7 @@ bin/
 ### Java Projects
 
 ```gitignore
-# Java
+## Java
 *.class
 *.jar
 *.war
@@ -962,7 +962,7 @@ dependency-reduced-pom.xml
 ### Rust Projects
 
 ```gitignore
-# Rust
+## Rust
 target/
 Cargo.lock
 **/*.rs.bk
@@ -972,7 +972,7 @@ Cargo.lock
 ### C/C++ Projects
 
 ```gitignore
-# C/C++
+## C/C++
 *.o
 *.obj
 *.exe
@@ -1017,24 +1017,24 @@ Cargo.lock
 ### Using .gitignore
 
 ```bash
-# Check if a file would be ignored
+## Check if a file would be ignored
 git check-ignore -v path/to/file
 
-# Remove already tracked files from git
+## Remove already tracked files from git
 git rm --cached <file>
 git rm -r --cached <directory>
 
-# Force add an ignored file (use carefully)
+## Force add an ignored file (use carefully)
 git add -f <file>
 ```
 
 ### Global .gitignore
 
 ```bash
-# Set global .gitignore for all repositories
+## Set global .gitignore for all repositories
 git config --global core.excludesfile ~/.gitignore_global
 
-# Create global .gitignore
+## Create global .gitignore
 cat > ~/.gitignore_global <<EOF
 .DS_Store
 .vscode/

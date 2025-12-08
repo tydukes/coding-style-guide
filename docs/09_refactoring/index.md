@@ -131,7 +131,7 @@ This directory includes language-specific refactoring examples:
 ### 1. Ensure Tests Exist
 
 ```bash
-# Run existing tests before refactoring
+## Run existing tests before refactoring
 pytest tests/
 npm test
 terraform test
@@ -162,7 +162,7 @@ terraform test
 ### 5. Document Rationale
 
 ```git
-# Good commit message
+## Good commit message
 refactor: extract user validation into separate function
 
 Moved user input validation from main() into validate_user()
