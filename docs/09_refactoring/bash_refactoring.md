@@ -20,7 +20,7 @@ Real-world examples of refactoring Bash scripts to improve reliability, maintain
 ```bash
 #!/bin/bash
 
-# Deploy application script
+## Deploy application script
 APP_NAME="myapp"
 ENVIRONMENT=$1
 
@@ -34,7 +34,7 @@ if [ "$ENVIRONMENT" != "dev" ] && [ "$ENVIRONMENT" != "staging" ] && [ "$ENVIRON
     exit 1
 fi
 
-# Stop application
+## Stop application
 echo "Stopping $APP_NAME..."
 systemctl stop $APP_NAME
 if [ $? -ne 0 ]; then
@@ -42,7 +42,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Backup current version
+## Backup current version
 BACKUP_DIR="/opt/$APP_NAME/backups"
 mkdir -p $BACKUP_DIR
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
@@ -53,7 +53,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Download new version
+## Download new version
 echo "Downloading new version..."
 curl -o /tmp/$APP_NAME.tar.gz https://releases.example.com/$APP_NAME/latest.tar.gz
 if [ $? -ne 0 ]; then
@@ -61,7 +61,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Extract new version
+## Extract new version
 echo "Extracting new version..."
 rm -rf /opt/$APP_NAME/current
 tar -xzf /tmp/$APP_NAME.tar.gz -C /opt/$APP_NAME/
@@ -74,7 +74,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Start application
+## Start application
 echo "Starting $APP_NAME..."
 systemctl start $APP_NAME
 if [ $? -ne 0 ]; then
@@ -86,7 +86,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Check application health
+## Check application health
 echo "Checking application health..."
 sleep 5
 curl -f http://localhost:8080/health
@@ -101,7 +101,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Deployment completed successfully"
-# ... 200+ more lines with similar patterns
+## ... 200+ more lines with similar patterns
 ```
 
 **After** (modular with functions):
@@ -109,38 +109,38 @@ echo "Deployment completed successfully"
 ```bash
 #!/bin/bash
 #
-# Deploy application script
+## Deploy application script
 #
-# Usage: deploy.sh <environment>
-# Example: deploy.sh production
+## Usage: deploy.sh <environment>
+## Example: deploy.sh production
 
 set -euo pipefail
 IFS=$'\n\t'
 
-# Constants
+## Constants
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly APP_NAME="myapp"
 readonly APP_DIR="/opt/${APP_NAME}"
 readonly BACKUP_DIR="${APP_DIR}/backups"
 readonly HEALTH_ENDPOINT="http://localhost:8080/health"
 
-# Colors for output
+## Colors for output
 readonly COLOR_RED='\033[0;31m'
 readonly COLOR_GREEN='\033[0;32m'
 readonly COLOR_YELLOW='\033[1;33m'
 readonly COLOR_NC='\033[0m' # No Color
 
-# Global variables
+## Global variables
 ENVIRONMENT=""
 TIMESTAMP=""
 BACKUP_FILE=""
 
 #######################################
-# Print error message and exit
-# Arguments:
-#   $1 - Error message
-# Returns:
-#   None (exits with code 1)
+## Print error message and exit
+## Arguments:
+##   $1 - Error message
+## Returns:
+##   None (exits with code 1)
 #######################################
 error_exit() {
     echo -e "${COLOR_RED}Error: $1${COLOR_NC}" >&2
@@ -148,29 +148,29 @@ error_exit() {
 }
 
 #######################################
-# Print info message
-# Arguments:
-#   $1 - Info message
+## Print info message
+## Arguments:
+##   $1 - Info message
 #######################################
 info() {
     echo -e "${COLOR_GREEN}[INFO]${COLOR_NC} $1"
 }
 
 #######################################
-# Print warning message
-# Arguments:
-#   $1 - Warning message
+## Print warning message
+## Arguments:
+##   $1 - Warning message
 #######################################
 warn() {
     echo -e "${COLOR_YELLOW}[WARN]${COLOR_NC} $1"
 }
 
 #######################################
-# Validate environment parameter
-# Arguments:
-#   $1 - Environment name
-# Returns:
-#   0 if valid, exits if invalid
+## Validate environment parameter
+## Arguments:
+##   $1 - Environment name
+## Returns:
+##   0 if valid, exits if invalid
 #######################################
 validate_environment() {
     local env=$1
@@ -189,9 +189,9 @@ validate_environment() {
 }
 
 #######################################
-# Stop the application service
-# Returns:
-#   0 on success, exits on failure
+## Stop the application service
+## Returns:
+##   0 on success, exits on failure
 #######################################
 stop_service() {
     info "Stopping ${APP_NAME} service..."
@@ -204,9 +204,9 @@ stop_service() {
 }
 
 #######################################
-# Start the application service
-# Returns:
-#   0 on success, exits on failure
+## Start the application service
+## Returns:
+##   0 on success, exits on failure
 #######################################
 start_service() {
     info "Starting ${APP_NAME} service..."
@@ -219,11 +219,11 @@ start_service() {
 }
 
 #######################################
-# Create backup of current version
-# Sets:
-#   BACKUP_FILE - Path to created backup
-# Returns:
-#   0 on success, exits on failure
+## Create backup of current version
+## Sets:
+##   BACKUP_FILE - Path to created backup
+## Returns:
+##   0 on success, exits on failure
 #######################################
 create_backup() {
     info "Creating backup of current version..."
@@ -240,11 +240,11 @@ create_backup() {
 }
 
 #######################################
-# Restore from backup file
-# Arguments:
-#   $1 - Backup file path
-# Returns:
-#   0 on success, 1 on failure
+## Restore from backup file
+## Arguments:
+##   $1 - Backup file path
+## Returns:
+##   0 on success, 1 on failure
 #######################################
 restore_backup() {
     local backup_file=$1
@@ -268,9 +268,9 @@ restore_backup() {
 }
 
 #######################################
-# Download new application version
-# Returns:
-#   0 on success, exits on failure
+## Download new application version
+## Returns:
+##   0 on success, exits on failure
 #######################################
 download_release() {
     local release_url="https://releases.example.com/${APP_NAME}/latest.tar.gz"
@@ -286,9 +286,9 @@ download_release() {
 }
 
 #######################################
-# Extract downloaded release
-# Returns:
-#   0 on success, exits on failure
+## Extract downloaded release
+## Returns:
+##   0 on success, exits on failure
 #######################################
 extract_release() {
     local archive_path="/tmp/${APP_NAME}.tar.gz"
@@ -307,12 +307,12 @@ extract_release() {
 }
 
 #######################################
-# Check application health
-# Arguments:
-#   $1 - Max retries (default: 5)
-#   $2 - Retry delay in seconds (default: 5)
-# Returns:
-#   0 if healthy, 1 if unhealthy
+## Check application health
+## Arguments:
+##   $1 - Max retries (default: 5)
+##   $2 - Retry delay in seconds (default: 5)
+## Returns:
+##   0 if healthy, 1 if unhealthy
 #######################################
 check_health() {
     local max_retries=${1:-5}
@@ -341,9 +341,9 @@ check_health() {
 }
 
 #######################################
-# Rollback deployment
-# Returns:
-#   None (exits after rollback attempt)
+## Rollback deployment
+## Returns:
+##   None (exits after rollback attempt)
 #######################################
 rollback_deployment() {
     warn "Rolling back deployment..."
@@ -364,7 +364,7 @@ rollback_deployment() {
 }
 
 #######################################
-# Main deployment workflow
+## Main deployment workflow
 #######################################
 main() {
     validate_environment "$1"
@@ -397,7 +397,7 @@ main() {
     info "Deployment completed successfully!"
 }
 
-# Script entry point
+## Script entry point
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     main "$@"
 fi
@@ -425,30 +425,30 @@ fi
 ```bash
 #!/bin/bash
 
-# Process log files
+## Process log files
 LOG_DIR="/var/log/myapp"
 ARCHIVE_DIR="/var/log/myapp/archive"
 
-# Create archive directory
+## Create archive directory
 mkdir $ARCHIVE_DIR
 
-# Find old logs
+## Find old logs
 OLD_LOGS=$(find $LOG_DIR -name "*.log" -mtime +7)
 
-# Compress old logs
+## Compress old logs
 for log in $OLD_LOGS; do
     gzip $log
     mv $log.gz $ARCHIVE_DIR/
 done
 
-# Delete very old archives
+## Delete very old archives
 find $ARCHIVE_DIR -name "*.gz" -mtime +30 -delete
 
-# Upload to S3
+## Upload to S3
 aws s3 sync $ARCHIVE_DIR s3://my-bucket/logs/
 
 echo "Log processing complete"
-# If any command fails, we might delete logs before uploading!
+## If any command fails, we might delete logs before uploading!
 ```
 
 **After**:
@@ -456,21 +456,21 @@ echo "Log processing complete"
 ```bash
 #!/bin/bash
 #
-# Process and archive application logs
+## Process and archive application logs
 #
-# This script:
-#   1. Compresses logs older than 7 days
-#   2. Moves compressed logs to archive directory
-#   3. Uploads archives to S3
-#   4. Deletes archives older than 30 days
+## This script:
+##   1. Compresses logs older than 7 days
+##   2. Moves compressed logs to archive directory
+##   3. Uploads archives to S3
+##   4. Deletes archives older than 30 days
 
-# Exit on error, undefined variables, and pipe failures
+## Exit on error, undefined variables, and pipe failures
 set -euo pipefail
 
-# Set IFS to prevent word splitting issues
+## Set IFS to prevent word splitting issues
 IFS=$'\n\t'
 
-# Constants
+## Constants
 readonly SCRIPT_NAME=$(basename "$0")
 readonly LOG_DIR="/var/log/myapp"
 readonly ARCHIVE_DIR="${LOG_DIR}/archive"
@@ -478,7 +478,7 @@ readonly S3_BUCKET="s3://my-bucket/logs"
 readonly RETENTION_DAYS=7
 readonly ARCHIVE_RETENTION_DAYS=30
 
-# Logging functions
+## Logging functions
 log_info() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] [INFO] $*" >&2
 }
@@ -493,8 +493,8 @@ log_fatal() {
 }
 
 #######################################
-# Validate prerequisites
-# Checks that required commands and directories exist
+## Validate prerequisites
+## Checks that required commands and directories exist
 #######################################
 validate_prerequisites() {
     log_info "Validating prerequisites..."
@@ -521,7 +521,7 @@ validate_prerequisites() {
 }
 
 #######################################
-# Create archive directory if it doesn't exist
+## Create archive directory if it doesn't exist
 #######################################
 create_archive_dir() {
     log_info "Creating archive directory..."
@@ -537,9 +537,9 @@ create_archive_dir() {
 }
 
 #######################################
-# Compress old log files
-# Returns:
-#   Number of files compressed
+## Compress old log files
+## Returns:
+##   Number of files compressed
 #######################################
 compress_old_logs() {
     log_info "Searching for logs older than ${RETENTION_DAYS} days..."
@@ -570,7 +570,7 @@ compress_old_logs() {
 }
 
 #######################################
-# Move compressed logs to archive
+## Move compressed logs to archive
 #######################################
 move_to_archive() {
     log_info "Moving compressed logs to archive..."
@@ -601,7 +601,7 @@ move_to_archive() {
 }
 
 #######################################
-# Upload archives to S3
+## Upload archives to S3
 #######################################
 upload_to_s3() {
     log_info "Uploading archives to S3: ${S3_BUCKET}..."
@@ -630,7 +630,7 @@ upload_to_s3() {
 }
 
 #######################################
-# Delete old archives (already uploaded to S3)
+## Delete old archives (already uploaded to S3)
 #######################################
 cleanup_old_archives() {
     log_info "Cleaning up archives older than ${ARCHIVE_RETENTION_DAYS} days..."
@@ -653,7 +653,7 @@ cleanup_old_archives() {
 }
 
 #######################################
-# Main execution
+## Main execution
 #######################################
 main() {
     log_info "Starting log archival process"
@@ -683,10 +683,10 @@ main() {
     log_info "Log archival process completed successfully"
 }
 
-# Trap errors for additional logging
+## Trap errors for additional logging
 trap 'log_error "Script failed on line $LINENO"' ERR
 
-# Run main function
+## Run main function
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     main "$@"
 fi
@@ -714,15 +714,15 @@ fi
 ```bash
 #!/bin/bash
 
-# Install packages
+## Install packages
 PACKAGES="nginx mysql-server redis-server git curl wget"
 
-# Install each package
+## Install each package
 for package in $PACKAGES; do
     apt-get install -y $package
 done
 
-# Process files
+## Process files
 FILES=$(find /var/log -name "*.log")
 
 for file in $FILES; do
@@ -730,10 +730,10 @@ for file in $FILES; do
     gzip $file
 done
 
-# Server list
+## Server list
 SERVERS="web-01 web-02 db-01 cache-01"
 
-# Check server status
+## Check server status
 for server in $SERVERS; do
     ssh $server "systemctl status myapp"
 done
@@ -746,7 +746,7 @@ done
 
 set -euo pipefail
 
-# Use arrays for lists
+## Use arrays for lists
 declare -a PACKAGES=(
     "nginx"
     "mysql-server"
@@ -756,7 +756,7 @@ declare -a PACKAGES=(
     "wget"
 )
 
-# Install packages
+## Install packages
 install_packages() {
     local package
 
@@ -769,7 +769,7 @@ install_packages() {
     done
 }
 
-# Process files safely
+## Process files safely
 process_log_files() {
     local -a log_files
 
@@ -792,7 +792,7 @@ process_log_files() {
     done
 }
 
-# Server configuration
+## Server configuration
 declare -A SERVERS=(
     [web-01]="10.0.1.10"
     [web-02]="10.0.1.11"
@@ -800,7 +800,7 @@ declare -A SERVERS=(
     [cache-01]="10.0.3.10"
 )
 
-# Check server status
+## Check server status
 check_servers() {
     local hostname
     local ip_address
@@ -818,14 +818,14 @@ check_servers() {
     done
 }
 
-# Example with array of complex objects
+## Example with array of complex objects
 declare -a DEPLOYMENTS=(
     "app:myapp version:1.0.0 env:production"
     "app:api version:2.1.0 env:staging"
     "app:frontend version:1.5.2 env:production"
 )
 
-# Process deployments
+## Process deployments
 process_deployments() {
     local deployment
     local app version env
@@ -859,7 +859,7 @@ fi
 
 set -euo pipefail
 
-# Server configuration with associative arrays
+## Server configuration with associative arrays
 declare -A WEB01=(
     [hostname]="web-01"
     [ip]="10.0.1.10"
@@ -881,10 +881,10 @@ declare -A DB01=(
     [environment]="production"
 )
 
-# Array of server variable names
+## Array of server variable names
 declare -a ALL_SERVERS=(WEB01 WEB02 DB01)
 
-# Check server with full configuration
+## Check server with full configuration
 check_server() {
     local -n server=$1  # nameref to associative array
 
@@ -901,7 +901,7 @@ check_server() {
     fi
 }
 
-# Main execution
+## Main execution
 main() {
     local server_name
     local failed_count=0
@@ -946,7 +946,7 @@ fi
 ```bash
 #!/bin/bash
 
-# Bash-specific features
+## Bash-specific features
 function deploy_app() {
     local APP_NAME=$1
     local VERSION=$2
@@ -979,12 +979,12 @@ deploy_app "myapp" "v1.2.3"
 ```bash
 #!/bin/sh
 #
-# POSIX-compliant deployment script
-# Compatible with sh, dash, bash, and other POSIX shells
+## POSIX-compliant deployment script
+## Compatible with sh, dash, bash, and other POSIX shells
 
 set -eu
 
-# POSIX-compliant functions (no 'function' keyword)
+## POSIX-compliant functions (no 'function' keyword)
 deploy_app() {
     app_name="$1"
     version="$2"
@@ -1032,7 +1032,7 @@ EOF
     return 0
 }
 
-# Main execution
+## Main execution
 main() {
     if [ $# -ne 2 ]; then
         printf 'Usage: %s <app-name> <version>\n' "$0" >&2
@@ -1042,7 +1042,7 @@ main() {
     deploy_app "$1" "$2"
 }
 
-# Script entry point
+## Script entry point
 if [ "${0##*/}" = "$(basename "${0}")" ]; then
     main "$@"
 fi
@@ -1051,37 +1051,37 @@ fi
 **Comparison of Features**:
 
 ```bash
-# Bash vs POSIX
+## Bash vs POSIX
 
-# Function declaration
+## Function declaration
 function bash_func() { ... }     # Bash
 bash_func() { ... }               # POSIX
 
-# Variable declaration
+## Variable declaration
 declare -r VAR="value"            # Bash
 readonly VAR="value"              # POSIX
 
-# Arrays
+## Arrays
 declare -a arr=("a" "b")          # Bash (no POSIX equivalent)
 list="a b c"                      # POSIX (space-separated)
 
-# String comparison
+## String comparison
 [[ "$a" == "$b" ]]                # Bash
 [ "$a" = "$b" ]                   # POSIX
 
-# Pattern matching
+## Pattern matching
 [[ "$str" =~ ^[0-9]+$ ]]          # Bash
 case "$str" in [0-9]*) ;; esac    # POSIX
 
-# Process substitution
+## Process substitution
 diff <(cmd1) <(cmd2)              # Bash
 cmd1 > file1; cmd2 > file2; diff file1 file2  # POSIX
 
-# Here-string
+## Here-string
 cmd <<< "string"                  # Bash
 printf '%s\n' "string" | cmd      # POSIX
 
-# Command substitution
+## Command substitution
 output=$(command)                 # Bash/POSIX (preferred)
 output=`command`                  # POSIX (old style)
 ```
@@ -1109,23 +1109,23 @@ FILE_NAME="my document.txt"
 DIR_PATH="/tmp/my files"
 USER_INPUT=$1
 
-# Unsafe operations
+## Unsafe operations
 cd $DIR_PATH
 cat $FILE_NAME
 rm $USER_INPUT
 
-# Unsafe command substitution
+## Unsafe command substitution
 FILES=$(ls *.txt)
 for f in $FILES; do
     echo $f
 done
 
-# Unsafe in conditionals
+## Unsafe in conditionals
 if [ $USER_INPUT = "admin" ]; then
     echo "Admin user"
 fi
 
-# Unsafe array expansion
+## Unsafe array expansion
 SERVERS=(web-01 web-02)
 ssh ${SERVERS[0]} "echo $HOME"
 ```
@@ -1141,39 +1141,39 @@ readonly FILE_NAME="my document.txt"
 readonly DIR_PATH="/tmp/my files"
 readonly USER_INPUT="${1:-}"
 
-# Safe operations
+## Safe operations
 cd "${DIR_PATH}"
 cat "${FILE_NAME}"
 rm "${USER_INPUT}"
 
-# Safe command substitution (use arrays)
+## Safe command substitution (use arrays)
 mapfile -t files < <(find . -name "*.txt" -type f)
 for file in "${files[@]}"; do
     echo "${file}"
 done
 
-# Safe conditionals
+## Safe conditionals
 if [ "${USER_INPUT}" = "admin" ]; then
     echo "Admin user"
 fi
 
-# Safe array expansion
+## Safe array expansion
 declare -a SERVERS=(web-01 web-02)
 ssh "${SERVERS[0]}" "echo \${HOME}"  # Escape $ to run on remote
 
-# Safe variable defaults
+## Safe variable defaults
 USERNAME="${2:-default_user}"
 TIMEOUT="${TIMEOUT:-30}"
 
-# Safe concatenation
+## Safe concatenation
 OUTPUT_FILE="${DIR_PATH}/${FILE_NAME}.processed"
 
-# Safe in arithmetic (quotes not needed but ok)
+## Safe in arithmetic (quotes not needed but ok)
 count=0
 ((count++))
 total=$((count + 5))
 
-# Safe globbing
+## Safe globbing
 shopt -s nullglob  # Empty glob returns empty, not literal pattern
 for log_file in /var/log/*.log; do
     if [ -f "${log_file}" ]; then
@@ -1185,28 +1185,28 @@ done
 **Quoting Rules Summary**:
 
 ```bash
-# Always quote:
+## Always quote:
 "${variable}"                 # Variables
 "${array[@]}"                 # Array expansion (all elements)
 "$(command)"                  # Command substitution
 "$*"                          # All positional parameters as single word
 "$@"                          # All positional parameters as separate words
 
-# Don't quote:
+## Don't quote:
 $((arithmetic))               # Arithmetic expansion
 $(( $var + 1 ))              # Variables in arithmetic (but ok to quote)
 ${#array[@]}                  # Array length
 case "$var" in pattern)       # Patterns in case statements
 
-# Quote unless you explicitly want word splitting:
+## Quote unless you explicitly want word splitting:
 echo "${variable}"            # Correct - preserves spaces
 echo ${variable}              # Dangerous - splits on spaces
 
-# Quote in assignments:
+## Quote in assignments:
 var="${value}"                # Correct
 var=${value}                  # Usually works, but quote for consistency
 
-# Always quote empty checks:
+## Always quote empty checks:
 if [ -z "${var}" ]; then      # Correct
 if [ -z $var ]; then          # Fails if var is unset
 ```
@@ -1234,17 +1234,17 @@ if [ -z $var ]; then          # Fails if var is unset
 ### Running ShellCheck
 
 ```bash
-# Check a script
+## Check a script
 shellcheck script.sh
 
-# Check with specific shell
+## Check with specific shell
 shellcheck --shell=bash script.sh
 shellcheck --shell=sh script.sh  # POSIX
 
-# Exclude specific warnings
+## Exclude specific warnings
 shellcheck --exclude=SC2086 script.sh
 
-# Format as JSON
+## Format as JSON
 shellcheck --format=json script.sh
 ```
 

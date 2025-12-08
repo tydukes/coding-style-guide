@@ -8,6 +8,7 @@ category: "Templates"
 status: "active"
 version: "1.0.0"
 ---
+<!-- markdownlint-disable MD013 -->
 
 ## Overview
 
@@ -88,7 +89,7 @@ annotations:
 ## values.yaml
 
 ```yaml
-# Default values for my-app
+## Default values for my-app
 replicaCount: 2
 
 image:
@@ -175,13 +176,13 @@ affinity:
                   - my-app
           topologyKey: kubernetes.io/hostname
 
-# Application configuration
+## Application configuration
 config:
   logLevel: info
   port: 8080
   environment: production
 
-# Environment variables
+## Environment variables
 env:
   - name: NODE_ENV
     value: production
@@ -191,14 +192,14 @@ env:
         name: my-app-config
         key: logLevel
 
-# Secrets
+## Secrets
 secrets:
   enabled: true
   data:
     DATABASE_URL: ""
     API_KEY: ""
 
-# Health checks
+## Health checks
 livenessProbe:
   httpGet:
     path: /health
@@ -217,12 +218,12 @@ readinessProbe:
   timeoutSeconds: 3
   failureThreshold: 3
 
-# Pod Disruption Budget
+## Pod Disruption Budget
 podDisruptionBudget:
   enabled: false
   minAvailable: 1
 
-# Persistent Volume
+## Persistent Volume
 persistence:
   enabled: false
   storageClass: ""
@@ -230,7 +231,7 @@ persistence:
   size: 10Gi
   mountPath: /data
 
-# PostgreSQL dependency
+## PostgreSQL dependency
 postgresql:
   enabled: true
   auth:
@@ -242,7 +243,7 @@ postgresql:
       enabled: true
       size: 10Gi
 
-# Redis dependency
+## Redis dependency
 redis:
   enabled: true
   auth:
@@ -634,7 +635,7 @@ spec:
 ## .helmignore
 
 ```gitignore
-# Patterns to ignore when building packages
+## Patterns to ignore when building packages
 .git/
 .gitignore
 .DS_Store
@@ -648,11 +649,11 @@ spec:
 .project
 .settings/
 
-# CI/CD
+## CI/CD
 .github/
 .gitlab-ci.yml
 
-# Documentation
+## Documentation
 README.md
 CONTRIBUTING.md
 ```
@@ -664,7 +665,7 @@ CONTRIBUTING.md
 ### Using Helper Templates
 
 ```yaml
-# In _helpers.tpl
+## In _helpers.tpl
 {{- define "my-app.database.url" -}}
 {{- if .Values.postgresql.enabled }}
 {{- printf "postgresql://%s:%s@%s:5432/%s" .Values.postgresql.auth.username .Values.postgresql.auth.password (include "my-app.fullname" .) .Values.postgresql.auth.database }}
@@ -673,7 +674,7 @@ CONTRIBUTING.md
 {{- end }}
 {{- end }}
 
-# In deployment.yaml
+## In deployment.yaml
 env:
   - name: DATABASE_URL
     value: {{ include "my-app.database.url" . | quote }}
@@ -682,7 +683,7 @@ env:
 ### Checksum Annotations
 
 ```yaml
-# Force pod restart when ConfigMap or Secret changes
+## Force pod restart when ConfigMap or Secret changes
 annotations:
   checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
   checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
@@ -691,11 +692,11 @@ annotations:
 ### Conditional Resources
 
 ```yaml
-# Only create resource if enabled
+## Only create resource if enabled
 {{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
-# ...
+## ...
 {{- end }}
 ```
 
@@ -704,49 +705,49 @@ kind: Ingress
 ## Useful Commands
 
 ```bash
-# Create new chart
+## Create new chart
 helm create my-app
 
-# Lint chart
+## Lint chart
 helm lint my-app
 
-# Validate templates
+## Validate templates
 helm template my-app ./my-app
 
-# Dry run install
+## Dry run install
 helm install my-app ./my-app --dry-run --debug
 
-# Install chart
+## Install chart
 helm install my-app ./my-app
 
-# Install with custom values
+## Install with custom values
 helm install my-app ./my-app -f values-prod.yaml
 
-# Upgrade release
+## Upgrade release
 helm upgrade my-app ./my-app
 
-# Upgrade with custom values
+## Upgrade with custom values
 helm upgrade my-app ./my-app -f values-prod.yaml
 
-# Rollback release
+## Rollback release
 helm rollback my-app 1
 
-# Uninstall release
+## Uninstall release
 helm uninstall my-app
 
-# List releases
+## List releases
 helm list
 
-# Get release status
+## Get release status
 helm status my-app
 
-# Get release values
+## Get release values
 helm get values my-app
 
-# Package chart
+## Package chart
 helm package my-app
 
-# Test chart
+## Test chart
 helm test my-app
 ```
 

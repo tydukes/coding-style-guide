@@ -157,7 +157,7 @@ services:
 ### Default Network
 
 ```yaml
-# Services can communicate using service names as hostnames
+## Services can communicate using service names as hostnames
 services:
   web:
     image: nginx
@@ -479,10 +479,10 @@ services:
 ### Using Multiple Compose Files
 
 ```bash
-# Development
+## Development
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 
-# Production
+## Production
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
@@ -528,46 +528,46 @@ services:
 ### Common Commands
 
 ```bash
-# Start services
+## Start services
 docker-compose up
 
-# Start in detached mode
+## Start in detached mode
 docker-compose up -d
 
-# Build images
+## Build images
 docker-compose build
 
-# Build with no cache
+## Build with no cache
 docker-compose build --no-cache
 
-# Stop services
+## Stop services
 docker-compose stop
 
-# Stop and remove containers
+## Stop and remove containers
 docker-compose down
 
-# Stop and remove containers, volumes, and images
+## Stop and remove containers, volumes, and images
 docker-compose down -v --rmi all
 
-# View logs
+## View logs
 docker-compose logs
 
-# Follow logs
+## Follow logs
 docker-compose logs -f
 
-# Logs for specific service
+## Logs for specific service
 docker-compose logs -f api
 
-# Execute command in running container
+## Execute command in running container
 docker-compose exec api sh
 
-# Run one-off command
+## Run one-off command
 docker-compose run api npm test
 
-# List containers
+## List containers
 docker-compose ps
 
-# View running processes
+## View running processes
 docker-compose top
 ```
 
@@ -578,13 +578,13 @@ docker-compose top
 ### ❌ Avoid: Hardcoded Secrets
 
 ```yaml
-# Bad - Hardcoded password
+## Bad - Hardcoded password
 services:
   database:
     environment:
       POSTGRES_PASSWORD: mysecretpassword
 
-# Good - Use environment variables
+## Good - Use environment variables
 services:
   database:
     environment:
@@ -594,12 +594,12 @@ services:
 ### ❌ Avoid: latest Tag
 
 ```yaml
-# Bad - Unpredictable
+## Bad - Unpredictable
 services:
   app:
     image: myapp:latest
 
-# Good - Specific version
+## Good - Specific version
 services:
   app:
     image: myapp:1.2.3
@@ -608,12 +608,12 @@ services:
 ### ❌ Avoid: Not Using Volumes for Data
 
 ```yaml
-# Bad - Data lost when container stops
+## Bad - Data lost when container stops
 services:
   database:
     image: postgres
 
-# Good - Persistent volume
+## Good - Persistent volume
 services:
   database:
     image: postgres
@@ -627,14 +627,14 @@ volumes:
 ### ❌ Avoid: Not Using Health Checks
 
 ```yaml
-# Bad - No health checks
+## Bad - No health checks
 services:
   api:
     image: myapi:1.0
     ports:
       - "8080:8080"
 
-# Good - With health check
+## Good - With health check
 services:
   api:
     image: myapi:1.0
@@ -651,13 +651,13 @@ services:
 ### ❌ Avoid: Running as Root
 
 ```yaml
-# Bad - Default root user
+## Bad - Default root user
 services:
   app:
     image: node:18
     command: npm start
 
-# Good - Specify non-root user
+## Good - Specify non-root user
 services:
   app:
     image: node:18
@@ -668,12 +668,12 @@ services:
 ### ❌ Avoid: Not Setting Resource Limits
 
 ```yaml
-# Bad - No resource limits (can exhaust host)
+## Bad - No resource limits (can exhaust host)
 services:
   app:
     image: myapp:1.0
 
-# Good - Set limits
+## Good - Set limits
 services:
   app:
     image: myapp:1.0
@@ -690,14 +690,14 @@ services:
 ### ❌ Avoid: Not Using Depends On
 
 ```yaml
-# Bad - Services start in parallel (race condition)
+## Bad - Services start in parallel (race condition)
 services:
   api:
     image: myapi:1.0
   database:
     image: postgres:14
 
-# Good - Explicit dependencies
+## Good - Explicit dependencies
 services:
   api:
     image: myapi:1.0
@@ -770,57 +770,57 @@ services:
 ### docker-compose.yml Validation
 
 ```bash
-# Validate compose file syntax
+## Validate compose file syntax
 docker compose config
 
-# Validate and show final configuration
+## Validate and show final configuration
 docker compose config --no-interpolate
 
-# Validate specific file
+## Validate specific file
 docker compose -f docker-compose.prod.yml config
 ```
 
 ### .dockerignore
 
 ```text
-# Version control
+## Version control
 .git
 .gitignore
 .gitattributes
 
-# CI/CD
+## CI/CD
 .github
 .gitlab-ci.yml
 .travis.yml
 
-# Documentation
+## Documentation
 *.md
 docs/
 LICENSE
 
-# Dependencies
+## Dependencies
 node_modules/
 vendor/
 __pycache__/
 *.pyc
 
-# Build artifacts
+## Build artifacts
 dist/
 build/
 *.egg-info/
 
-# IDE
+## IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Environment
+## Environment
 .env.local
 .env.*.local
 *.log
 
-# Testing
+## Testing
 coverage/
 .nyc_output/
 ```
@@ -828,7 +828,7 @@ coverage/
 ### EditorConfig
 
 ```ini
-# .editorconfig
+## .editorconfig
 [docker-compose*.{yml,yaml}]
 indent_style = space
 indent_size = 2
@@ -861,7 +861,7 @@ insert_final_newline = true
 ### Pre-commit Hooks
 
 ```yaml
-# .pre-commit-config.yaml
+## .pre-commit-config.yaml
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
@@ -883,7 +883,7 @@ repos:
 ### yamllint Configuration
 
 ```yaml
-# .yamllint
+## .yamllint
 extends: default
 
 rules:
@@ -903,7 +903,7 @@ rules:
 ### Makefile
 
 ```makefile
-# Makefile
+## Makefile
 .PHONY: up down build logs ps validate
 
 up:
@@ -948,9 +948,9 @@ exec-db:
 Used for local development overrides:
 
 ```yaml
-# docker-compose.override.yml
-# This file is automatically merged with docker-compose.yml
-# Use for local development settings
+## docker-compose.override.yml
+## This file is automatically merged with docker-compose.yml
+## Use for local development settings
 
 services:
   web:

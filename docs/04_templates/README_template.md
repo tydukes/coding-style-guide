@@ -9,8 +9,6 @@ status: "active"
 version: "0.1.0"
 ---
 
-
-
 ## Purpose
 
 Short description.

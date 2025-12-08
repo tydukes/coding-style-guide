@@ -8,6 +8,7 @@ category: "Examples"
 status: "active"
 version: "1.0.0"
 ---
+<!-- markdownlint-disable MD013 -->
 
 ## Overview
 
@@ -48,7 +49,7 @@ terraform-aws-vpc/
 ## README.md
 
 ```markdown
-# AWS VPC Terraform Module
+## AWS VPC Terraform Module
 
 Terraform module for creating a highly available AWS VPC with public and private subnets.
 
@@ -173,7 +174,7 @@ Apache 2.0
 ## main.tf
 
 ```hcl
-# VPC
+## VPC
 resource "aws_vpc" "this" {
   cidr_block           = var.cidr_block
   enable_dns_hostnames = var.enable_dns_hostnames
@@ -187,7 +188,7 @@ resource "aws_vpc" "this" {
   )
 }
 
-# Internet Gateway
+## Internet Gateway
 resource "aws_internet_gateway" "this" {
   count = length(var.public_subnet_cidrs) > 0 ? 1 : 0
 
@@ -201,7 +202,7 @@ resource "aws_internet_gateway" "this" {
   )
 }
 
-# Public Subnets
+## Public Subnets
 resource "aws_subnet" "public" {
   count = length(var.public_subnet_cidrs)
 
@@ -219,7 +220,7 @@ resource "aws_subnet" "public" {
   )
 }
 
-# Private Subnets
+## Private Subnets
 resource "aws_subnet" "private" {
   count = length(var.private_subnet_cidrs)
 
@@ -236,7 +237,7 @@ resource "aws_subnet" "private" {
   )
 }
 
-# Elastic IPs for NAT Gateways
+## Elastic IPs for NAT Gateways
 resource "aws_eip" "nat" {
   count = var.enable_nat_gateway ? (var.single_nat_gateway ? 1 : (var.one_nat_gateway_per_az ? length(var.availability_zones) : length(var.private_subnet_cidrs))) : 0
 
@@ -252,7 +253,7 @@ resource "aws_eip" "nat" {
   depends_on = [aws_internet_gateway.this]
 }
 
-# NAT Gateways
+## NAT Gateways
 resource "aws_nat_gateway" "this" {
   count = var.enable_nat_gateway ? (var.single_nat_gateway ? 1 : (var.one_nat_gateway_per_az ? length(var.availability_zones) : length(var.private_subnet_cidrs))) : 0
 
@@ -269,7 +270,7 @@ resource "aws_nat_gateway" "this" {
   depends_on = [aws_internet_gateway.this]
 }
 
-# Public Route Table
+## Public Route Table
 resource "aws_route_table" "public" {
   count = length(var.public_subnet_cidrs) > 0 ? 1 : 0
 
@@ -283,7 +284,7 @@ resource "aws_route_table" "public" {
   )
 }
 
-# Public Route
+## Public Route
 resource "aws_route" "public_internet_gateway" {
   count = length(var.public_subnet_cidrs) > 0 ? 1 : 0
 
@@ -292,7 +293,7 @@ resource "aws_route" "public_internet_gateway" {
   gateway_id             = aws_internet_gateway.this[0].id
 }
 
-# Public Subnet Route Table Associations
+## Public Subnet Route Table Associations
 resource "aws_route_table_association" "public" {
   count = length(var.public_subnet_cidrs)
 
@@ -300,7 +301,7 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public[0].id
 }
 
-# Private Route Tables
+## Private Route Tables
 resource "aws_route_table" "private" {
   count = var.enable_nat_gateway ? (var.single_nat_gateway ? 1 : (var.one_nat_gateway_per_az ? length(var.availability_zones) : length(var.private_subnet_cidrs))) : length(var.private_subnet_cidrs) > 0 ? 1 : 0
 
@@ -314,7 +315,7 @@ resource "aws_route_table" "private" {
   )
 }
 
-# Private Routes to NAT Gateway
+## Private Routes to NAT Gateway
 resource "aws_route" "private_nat_gateway" {
   count = var.enable_nat_gateway ? length(aws_route_table.private) : 0
 
@@ -323,7 +324,7 @@ resource "aws_route" "private_nat_gateway" {
   nat_gateway_id         = aws_nat_gateway.this[count.index].id
 }
 
-# Private Subnet Route Table Associations
+## Private Subnet Route Table Associations
 resource "aws_route_table_association" "private" {
   count = length(var.private_subnet_cidrs)
 
@@ -331,7 +332,7 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.private[var.single_nat_gateway ? 0 : (var.one_nat_gateway_per_az ? count.index % length(var.availability_zones) : count.index)].id
 }
 
-# VPC Flow Logs
+## VPC Flow Logs
 resource "aws_flow_log" "this" {
   count = var.enable_flow_logs ? 1 : 0
 
@@ -348,7 +349,7 @@ resource "aws_flow_log" "this" {
   )
 }
 
-# CloudWatch Log Group for Flow Logs
+## CloudWatch Log Group for Flow Logs
 resource "aws_cloudwatch_log_group" "flow_logs" {
   count = var.enable_flow_logs ? 1 : 0
 
@@ -358,7 +359,7 @@ resource "aws_cloudwatch_log_group" "flow_logs" {
   tags = var.tags
 }
 
-# IAM Role for Flow Logs
+## IAM Role for Flow Logs
 resource "aws_iam_role" "flow_logs" {
   count = var.enable_flow_logs ? 1 : 0
 
@@ -380,7 +381,7 @@ resource "aws_iam_role" "flow_logs" {
   tags = var.tags
 }
 
-# IAM Policy for Flow Logs
+## IAM Policy for Flow Logs
 resource "aws_iam_role_policy" "flow_logs" {
   count = var.enable_flow_logs ? 1 : 0
 
@@ -728,76 +729,76 @@ output "nat_gateway_public_ips" {
 package test
 
 import (
-	"testing"
+ "testing"
 
-	"github.com/gruntwork-io/terratest/modules/aws"
-	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/stretchr/testify/assert"
+ "github.com/gruntwork-io/terratest/modules/aws"
+ "github.com/gruntwork-io/terratest/modules/terraform"
+ "github.com/stretchr/testify/assert"
 )
 
 func TestVPCModule(t *testing.T) {
-	t.Parallel()
+ t.Parallel()
 
-	expectedName := "test-vpc"
-	expectedCIDR := "10.0.0.0/16"
-	awsRegion := "us-east-1"
+ expectedName := "test-vpc"
+ expectedCIDR := "10.0.0.0/16"
+ awsRegion := "us-east-1"
 
-	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
-		TerraformDir: "../examples/simple",
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../examples/simple",
 
-		Vars: map[string]interface{}{
-			"name":       expectedName,
-			"cidr_block": expectedCIDR,
-		},
+  Vars: map[string]interface{}{
+   "name":       expectedName,
+   "cidr_block": expectedCIDR,
+  },
 
-		EnvVars: map[string]string{
-			"AWS_DEFAULT_REGION": awsRegion,
-		},
-	})
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
 
-	defer terraform.Destroy(t, terraformOptions)
+ defer terraform.Destroy(t, terraformOptions)
 
-	terraform.InitAndApply(t, terraformOptions)
+ terraform.InitAndApply(t, terraformOptions)
 
-	// Validate VPC
-	vpcID := terraform.Output(t, terraformOptions, "vpc_id")
-	assert.NotEmpty(t, vpcID)
+ // Validate VPC
+ vpcID := terraform.Output(t, terraformOptions, "vpc_id")
+ assert.NotEmpty(t, vpcID)
 
-	vpc := aws.GetVpcById(t, vpcID, awsRegion)
-	assert.Equal(t, expectedCIDR, vpc.Cidr)
+ vpc := aws.GetVpcById(t, vpcID, awsRegion)
+ assert.Equal(t, expectedCIDR, vpc.Cidr)
 
-	// Validate subnets
-	publicSubnetIDs := terraform.OutputList(t, terraformOptions, "public_subnet_ids")
-	assert.Equal(t, 2, len(publicSubnetIDs))
+ // Validate subnets
+ publicSubnetIDs := terraform.OutputList(t, terraformOptions, "public_subnet_ids")
+ assert.Equal(t, 2, len(publicSubnetIDs))
 
-	privateSubnetIDs := terraform.OutputList(t, terraformOptions, "private_subnet_ids")
-	assert.Equal(t, 2, len(privateSubnetIDs))
+ privateSubnetIDs := terraform.OutputList(t, terraformOptions, "private_subnet_ids")
+ assert.Equal(t, 2, len(privateSubnetIDs))
 }
 
 func TestVPCModuleWithNATGateway(t *testing.T) {
-	t.Parallel()
+ t.Parallel()
 
-	awsRegion := "us-east-1"
+ awsRegion := "us-east-1"
 
-	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
-		TerraformDir: "../examples/complete",
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../examples/complete",
 
-		EnvVars: map[string]string{
-			"AWS_DEFAULT_REGION": awsRegion,
-		},
-	})
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
 
-	defer terraform.Destroy(t, terraformOptions)
+ defer terraform.Destroy(t, terraformOptions)
 
-	terraform.InitAndApply(t, terraformOptions)
+ terraform.InitAndApply(t, terraformOptions)
 
-	// Validate NAT Gateways
-	natGatewayIPs := terraform.OutputList(t, terraformOptions, "nat_gateway_public_ips")
-	assert.Equal(t, 3, len(natGatewayIPs), "Should have 3 NAT Gateways (one per AZ)")
+ // Validate NAT Gateways
+ natGatewayIPs := terraform.OutputList(t, terraformOptions, "nat_gateway_public_ips")
+ assert.Equal(t, 3, len(natGatewayIPs), "Should have 3 NAT Gateways (one per AZ)")
 
-	for _, ip := range natGatewayIPs {
-		assert.NotEmpty(t, ip)
-	}
+ for _, ip := range natGatewayIPs {
+  assert.NotEmpty(t, ip)
+ }
 }
 ```
 

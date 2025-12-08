@@ -84,7 +84,7 @@ If your code follows PEP 8, these aspects require **no changes**:
 **Example - No Changes Needed:**
 
 ```python
-# This PEP 8 code is already compliant
+## This PEP 8 code is already compliant
 import os
 import sys
 
@@ -92,9 +92,7 @@ import requests
 
 from myapp.utils import helper
 
-
 MAX_RETRIES = 3
-
 
 class UserService:
     """Service for user management."""
@@ -117,12 +115,12 @@ line breaks while maintaining readability.
 **Migration**:
 
 ```python
-# PEP 8 (79 chars) - line breaks needed
+## PEP 8 (79 chars) - line breaks needed
 user_data = database.query(User).filter(
     User.is_active == True
 ).all()
 
-# Our Guide (88 chars) - more natural flow
+## Our Guide (88 chars) - more natural flow
 user_data = database.query(User).filter(User.is_active == True).all()
 ```
 
@@ -143,12 +141,12 @@ as inline documentation for DevOps automation code.
 **Migration**:
 
 ```python
-# PEP 8 - acceptable without type hints
+## PEP 8 - acceptable without type hints
 def get_user(user_id):
     """Retrieve user by ID."""
     return database.query(User).filter(User.id == user_id).first()
 
-# Our Guide - type hints required
+## Our Guide - type hints required
 from typing import Optional
 
 def get_user(user_id: int) -> Optional[User]:
@@ -173,13 +171,13 @@ def get_user(user_id: int) -> Optional[User]:
 **Migration**:
 
 ```python
-# PEP 8 - basic module docstring
+## PEP 8 - basic module docstring
 """User authentication module."""
 
 import jwt
 from fastapi import HTTPException
 
-# Our Guide - enhanced metadata
+## Our Guide - enhanced metadata
 """
 @module user_authentication
 @description Handles user authentication, session management, and JWT token generation
@@ -213,12 +211,12 @@ from fastapi import HTTPException
 **Migration**:
 
 ```python
-# PEP 8/257 - basic docstring
+## PEP 8/257 - basic docstring
 def authenticate_user(username, password):
     """Authenticate user and return user object or None."""
     pass
 
-# Our Guide - structured with examples
+## Our Guide - structured with examples
 def authenticate_user(username: str, password: str) -> Optional[User]:
     """
     Authenticate user credentials and return user object if valid.
@@ -259,9 +257,9 @@ def authenticate_user(username: str, password: str) -> Optional[User]:
 **Migration**:
 
 ```python
-# No PEP 8 equivalent - testing not mandated
+## No PEP 8 equivalent - testing not mandated
 
-# Our Guide - required test structure
+## Our Guide - required test structure
 import pytest
 from app.services.user_service import UserService
 
@@ -301,12 +299,12 @@ def test_should_raise_error_when_user_not_found():
 **Migration - Input Validation**:
 
 ```python
-# PEP 8 - basic validation
+## PEP 8 - basic validation
 def get_user_by_email(email):
     query = f"SELECT * FROM users WHERE email = '{email}'"
     return db.execute(query)
 
-# Our Guide - security-first with validation
+## Our Guide - security-first with validation
 from pydantic import BaseModel, EmailStr, validator
 
 class UserQuery(BaseModel):
@@ -327,11 +325,11 @@ def get_user_by_email(email: str) -> Optional[User]:
 **Migration - Secret Management**:
 
 ```python
-# PEP 8 - no specific requirements
+## PEP 8 - no specific requirements
 DATABASE_URL = "postgresql://user:pass@localhost/db"
 API_KEY = "sk_live_abc123"
 
-# Our Guide - environment-based secrets
+## Our Guide - environment-based secrets
 import os
 from functools import lru_cache
 
@@ -362,7 +360,7 @@ def get_settings():
 **Migration**:
 
 ```python
-# PEP 8 - generic exception handling
+## PEP 8 - generic exception handling
 def fetch_data(url):
     try:
         response = requests.get(url)
@@ -371,7 +369,7 @@ def fetch_data(url):
         print(f"Error: {e}")
         return None
 
-# Our Guide - specific exceptions and proper cleanup
+## Our Guide - specific exceptions and proper cleanup
 class APIError(Exception):
     """Base exception for API-related errors."""
     pass
@@ -429,13 +427,13 @@ include = '\.pyi?$'
 **Usage**:
 
 ```bash
-# Format entire project
+## Format entire project
 black .
 
-# Check without modifying
+## Check without modifying
 black --check .
 
-# Format specific file
+## Format specific file
 black src/mymodule.py
 ```
 
@@ -469,10 +467,10 @@ strict_equality = true
 **Usage**:
 
 ```bash
-# Type check entire project
+## Type check entire project
 mypy src/
 
-# Type check specific module
+## Type check specific module
 mypy src/mymodule.py
 ```
 
@@ -516,10 +514,10 @@ python_functions = ["test_*"]
 **Usage**:
 
 ```bash
-# Run tests with coverage
+## Run tests with coverage
 pytest --cov=src tests/
 
-# Generate HTML coverage report
+## Generate HTML coverage report
 pytest --cov=src --cov-report=html tests/
 ```
 
@@ -571,10 +569,10 @@ repos:
 **Setup**:
 
 ```bash
-# Install hooks
+## Install hooks
 pre-commit install
 
-# Run manually on all files
+## Run manually on all files
 pre-commit run --all-files
 ```
 
@@ -815,10 +813,10 @@ Use this checklist to systematically migrate your Python project from PEP 8 to t
 **Solution**: Migrate incrementally, module by module. Use `# type: ignore` temporarily for complex cases, then refactor.
 
 ```python
-# During migration - acceptable temporarily
+## During migration - acceptable temporarily
 result = complex_function()  # type: ignore
 
-# Target state after refactoring
+## Target state after refactoring
 result: Dict[str, List[User]] = complex_function()
 ```
 
@@ -829,11 +827,11 @@ result: Dict[str, List[User]] = complex_function()
 **Solution**: Use specific types or `Union` types. Reserve `Any` for truly dynamic cases.
 
 ```python
-# Avoid - defeats purpose of type hints
+## Avoid - defeats purpose of type hints
 def process(data: Any) -> Any:
     pass
 
-# Better - specific types
+## Better - specific types
 def process(data: Union[str, int, List[str]]) -> Dict[str, int]:
     pass
 ```
@@ -845,7 +843,7 @@ def process(data: Union[str, int, List[str]]) -> Dict[str, int]:
 **Solution**: Remove type information from docstrings when type hints are present.
 
 ```python
-# Redundant - types in both places
+## Redundant - types in both places
 def get_user(user_id: int) -> Optional[User]:
     """
     Get user by ID.
@@ -858,7 +856,7 @@ def get_user(user_id: int) -> Optional[User]:
     """
     pass
 
-# Better - types in hints, descriptions in docstrings
+## Better - types in hints, descriptions in docstrings
 def get_user(user_id: int) -> Optional[User]:
     """
     Retrieve user from database by ID.
@@ -879,14 +877,14 @@ def get_user(user_id: int) -> Optional[User]:
 **Solution**: Follow the pattern `test_should_<behavior>_when_<condition>` consistently.
 
 ```python
-# Inconsistent
+## Inconsistent
 def test_user_creation():
     pass
 
 def test_invalid_email():
     pass
 
-# Consistent and clear
+## Consistent and clear
 def test_should_create_user_when_valid_data_provided():
     pass
 
@@ -901,10 +899,10 @@ def test_should_raise_error_when_invalid_email_provided():
 **Solution**: Fix the issues, don't bypass the checks. Pre-commit hooks catch real problems.
 
 ```bash
-# Wrong - bypassing checks
+## Wrong - bypassing checks
 git commit --no-verify -m "quick fix"
 
-# Right - fix issues first
+## Right - fix issues first
 black .
 isort .
 mypy src/

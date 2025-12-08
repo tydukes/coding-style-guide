@@ -71,13 +71,13 @@ cross-platform compatibility.
 Use **PascalCase** with **Verb-Noun** pattern using approved verbs:
 
 ```powershell
-# Good - Approved verb + PascalCase noun
+## Good - Approved verb + PascalCase noun
 function Get-UserProfile { }
 function Set-ServiceConfiguration { }
 function New-DeploymentPackage { }
 function Remove-TemporaryFiles { }
 
-# Bad - Unapproved verb or incorrect casing
+## Bad - Unapproved verb or incorrect casing
 function Fetch-UserProfile { }      # Use Get, not Fetch
 function get-userProfile { }        # Incorrect casing
 function Delete-TempFiles { }       # Use Remove, not Delete
@@ -88,16 +88,16 @@ function Delete-TempFiles { }       # Use Remove, not Delete
 Use `Get-Verb` to see all approved verbs. Common categories:
 
 ```powershell
-# Data Operations
+## Data Operations
 Get, Set, New, Remove, Clear, Add, Copy, Move
 
-# Lifecycle
+## Lifecycle
 Start, Stop, Restart, Enable, Disable, Initialize, Complete
 
-# Diagnostics
+## Diagnostics
 Debug, Trace, Measure, Test, Watch, Confirm
 
-# Communication
+## Communication
 Send, Receive, Read, Write, Invoke, Connect, Disconnect
 ```
 
@@ -106,12 +106,12 @@ Send, Receive, Read, Write, Invoke, Connect, Disconnect
 Use **PascalCase** for variables:
 
 ```powershell
-# Good
+## Good
 $UserName = "john.doe"
 $ServiceEndpoint = "https://api.example.com"
 $MaxRetryCount = 3
 
-# Bad - Incorrect casing
+## Bad - Incorrect casing
 $username = "john.doe"
 $service_endpoint = "https://api.example.com"
 ```
@@ -121,7 +121,7 @@ $service_endpoint = "https://api.example.com"
 Use **UPPER_SNAKE_CASE** for constants:
 
 ```powershell
-# Good
+## Good
 $MAX_TIMEOUT_SECONDS = 300
 $DEFAULT_API_VERSION = "v1"
 $LOG_FILE_PATH = "/var/log/app.log"
@@ -409,14 +409,14 @@ function Invoke-ApiRequest {
 ### ErrorAction and ErrorVariable
 
 ```powershell
-# Suppress errors for specific commands
+## Suppress errors for specific commands
 $Service = Get-Service -Name 'NonExistentService' -ErrorAction SilentlyContinue
 
 if ($null -eq $Service) {
     Write-Warning "Service not found, creating..."
 }
 
-# Capture errors for analysis
+## Capture errors for analysis
 Get-Process -Name 'chrome' -ErrorAction SilentlyContinue -ErrorVariable ProcessErrors
 if ($ProcessErrors) {
     Write-Error "Failed to get process: $($ProcessErrors[0].Exception.Message)"
@@ -455,29 +455,29 @@ function Export-UserData {
     }
 }
 
-# Usage
+## Usage
 Get-ADUser -Filter * | Export-UserData -OutputPath 'users.csv'
 ```
 
 ### Pipeline Best Practices
 
 ```powershell
-# Good - Efficient pipeline usage
+## Good - Efficient pipeline usage
 Get-Process | Where-Object { $_.WorkingSet -gt 100MB } | Sort-Object WorkingSet -Descending | Select-Object -First 10
 
-# Good - Named parameters for clarity
+## Good - Named parameters for clarity
 Get-ChildItem -Path C:\Logs -Filter *.log |
     Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-30) } |
     Remove-Item -Force
 
-# Avoid - Unnecessary loops when pipeline works
-# Bad
+## Avoid - Unnecessary loops when pipeline works
+## Bad
 $Files = Get-ChildItem -Path C:\Logs
 foreach ($File in $Files) {
     Remove-Item -Path $File.FullName
 }
 
-# Good
+## Good
 Get-ChildItem -Path C:\Logs | Remove-Item
 ```
 
@@ -538,9 +538,9 @@ MyModule/
 ### Root Module (.psm1)
 
 ```powershell
-# MyModule.psm1
+## MyModule.psm1
 
-# Import all public functions
+## Import all public functions
 $PublicFunctions = @(Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue)
 foreach ($Function in $PublicFunctions) {
     try {
@@ -551,7 +551,7 @@ foreach ($Function in $PublicFunctions) {
     }
 }
 
-# Import all private functions
+## Import all private functions
 $PrivateFunctions = @(Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue)
 foreach ($Function in $PrivateFunctions) {
     try {
@@ -562,7 +562,7 @@ foreach ($Function in $PrivateFunctions) {
     }
 }
 
-# Export only public functions
+## Export only public functions
 Export-ModuleMember -Function $PublicFunctions.BaseName
 ```
 
@@ -573,7 +573,7 @@ Export-ModuleMember -Function $PublicFunctions.BaseName
 ### Basic Pester Test
 
 ```powershell
-# Get-UserProfile.Tests.ps1
+## Get-UserProfile.Tests.ps1
 BeforeAll {
     . $PSScriptRoot/../Public/Get-UserProfile.ps1
 }
@@ -650,13 +650,13 @@ Describe 'Get-UserProfile' {
 ### Running PSScriptAnalyzer
 
 ```powershell
-# Analyze single file
+## Analyze single file
 Invoke-ScriptAnalyzer -Path .\MyScript.ps1
 
-# Analyze entire directory
+## Analyze entire directory
 Invoke-ScriptAnalyzer -Path .\MyModule -Recurse
 
-# With custom settings
+## With custom settings
 Invoke-ScriptAnalyzer -Path .\MyModule -Settings .\.pslintrc.psd1
 ```
 
@@ -667,22 +667,22 @@ Invoke-ScriptAnalyzer -Path .\MyModule -Settings .\.pslintrc.psd1
 ### ❌ Avoid: Using Aliases in Scripts
 
 ```powershell
-# Bad - Aliases reduce readability
+## Bad - Aliases reduce readability
 gci | ? { $_.Length -gt 1MB } | % { ri $_ }
 
-# Good - Full cmdlet names
+## Good - Full cmdlet names
 Get-ChildItem | Where-Object { $_.Length -gt 1MB } | ForEach-Object { Remove-Item $_ }
 ```
 
 ### ❌ Avoid: Write-Host for Output
 
 ```powershell
-# Bad - Write-Host cannot be captured
+## Bad - Write-Host cannot be captured
 function Get-ComputerStatus {
     Write-Host "Computer is online"
 }
 
-# Good - Use Write-Output or return
+## Good - Use Write-Output or return
 function Get-ComputerStatus {
     return [PSCustomObject]@{
         Status = 'Online'
@@ -693,11 +693,11 @@ function Get-ComputerStatus {
 ### ❌ Avoid: Unapproved Verbs
 
 ```powershell
-# Bad - Unapproved verbs
+## Bad - Unapproved verbs
 function Fetch-UserData { }
 function Delete-OldFiles { }
 
-# Good - Approved verbs
+## Good - Approved verbs
 function Get-UserData { }
 function Remove-OldFiles { }
 ```
@@ -705,14 +705,14 @@ function Remove-OldFiles { }
 ### ❌ Avoid: Not Using Parameter Validation
 
 ```powershell
-# Bad - No validation
+## Bad - No validation
 function Set-UserAge {
     param($Age)
     # No validation - can accept invalid values
     $User.Age = $Age
 }
 
-# Good - With validation
+## Good - With validation
 function Set-UserAge {
     param(
         [Parameter(Mandatory=$true)]
@@ -726,20 +726,20 @@ function Set-UserAge {
 ### ❌ Avoid: Using Positional Parameters in Scripts
 
 ```powershell
-# Bad - Positional parameters are unclear
+## Bad - Positional parameters are unclear
 Get-ChildItem C:\Temp *.txt $true
 
-# Good - Named parameters
+## Good - Named parameters
 Get-ChildItem -Path C:\Temp -Filter *.txt -Recurse
 ```
 
 ### ❌ Avoid: Suppressing Errors with Out-Null
 
 ```powershell
-# Bad - Hiding errors
+## Bad - Hiding errors
 Remove-Item $file -ErrorAction SilentlyContinue 2>&1 | Out-Null
 
-# Good - Explicit error handling
+## Good - Explicit error handling
 try {
     Remove-Item $file -ErrorAction Stop
 } catch {
@@ -750,12 +750,12 @@ try {
 ### ❌ Avoid: Not Using Splatting for Many Parameters
 
 ```powershell
-# Bad - Long parameter list
+## Bad - Long parameter list
 New-ADUser -Name "John Doe" -SamAccountName "jdoe" `
   -UserPrincipalName "jdoe@contoso.com" `
   -Path "OU=Users,DC=contoso,DC=com" -AccountPassword $password -Enabled $true
 
-# Good - Use splatting
+## Good - Use splatting
 $userParams = @{
     Name              = "John Doe"
     SamAccountName    = "jdoe"

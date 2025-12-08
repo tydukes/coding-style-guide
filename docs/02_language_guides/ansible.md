@@ -69,7 +69,7 @@ over standalone roles.
 **Use Ansible Collections** instead of standalone roles:
 
 ```yaml
-# Good - Using collection
+## Good - Using collection
 ---
 - name: Configure web servers
   hosts: webservers
@@ -84,7 +84,7 @@ over standalone roles.
         src: index.html.j2
         dest: /var/www/html/index.html
 
-# Install collections from Ansible Galaxy
+## Install collections from Ansible Galaxy
 ansible-galaxy collection install community.general
 ansible-galaxy collection install ansible.posix
 ```
@@ -115,12 +115,12 @@ my_namespace.my_collection/
 
 ```yaml
 ---
-# @module web_server_deployment
-# @description Deploy and configure nginx web servers
-# @dependencies ansible.builtin, community.general
-# @version 1.0.0
-# @author Tyler Dukes
-# @last_updated 2025-10-28
+## @module web_server_deployment
+## @description Deploy and configure nginx web servers
+## @dependencies ansible.builtin, community.general
+## @version 1.0.0
+## @author Tyler Dukes
+## @last_updated 2025-10-28
 
 - name: Configure web servers
   hosts: webservers
@@ -198,7 +198,7 @@ my_namespace.my_collection/
 ### Static Inventory (INI format)
 
 ```ini
-# inventory/production.ini
+## inventory/production.ini
 [webservers]
 web1.example.com ansible_host=192.168.1.10
 web2.example.com ansible_host=192.168.1.11
@@ -224,7 +224,7 @@ environment=production
 ### Static Inventory (YAML format)
 
 ```yaml
-# inventory/production.yml
+## inventory/production.yml
 all:
   children:
     webservers:
@@ -259,7 +259,7 @@ inventory/
 ```
 
 ```yaml
-# group_vars/webservers.yml
+## group_vars/webservers.yml
 ---
 nginx_port: 80
 nginx_worker_processes: 4
@@ -297,7 +297,7 @@ Ansible variable precedence (lowest to highest):
 22. Extra vars (always win precedence)
 
 ```yaml
-# Example showing variable override
+## Example showing variable override
 ---
 - name: Variable precedence example
   hosts: all
@@ -339,7 +339,7 @@ roles/webserver/
 ### Role Example
 
 ```yaml
-# roles/webserver/tasks/main.yml
+## roles/webserver/tasks/main.yml
 ---
 - name: Install nginx
   ansible.builtin.package:
@@ -369,7 +369,7 @@ roles/webserver/
 ```
 
 ```yaml
-# roles/webserver/defaults/main.yml
+## roles/webserver/defaults/main.yml
 ---
 nginx_package_name: nginx
 nginx_user: www-data
@@ -380,7 +380,7 @@ nginx_worker_processes: auto
 ```
 
 ```yaml
-# roles/webserver/meta/main.yml
+## roles/webserver/meta/main.yml
 ---
 galaxy_info:
   author: Tyler Dukes
@@ -408,7 +408,7 @@ dependencies:
 ## Handlers
 
 ```yaml
-# handlers/main.yml
+## handlers/main.yml
 ---
 - name: Reload nginx
   ansible.builtin.service:
@@ -424,7 +424,7 @@ dependencies:
   ansible.builtin.systemd:
     daemon_reload: true
 
-# Using handlers in tasks
+## Using handlers in tasks
 ---
 - name: Update nginx configuration
   ansible.builtin.template:
@@ -434,7 +434,7 @@ dependencies:
     - Reload systemd
     - Reload nginx  # Handlers run in order defined
 
-# Force handler execution
+## Force handler execution
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 ```
@@ -478,7 +478,7 @@ http {
 ### Jinja2 Filters
 
 ```yaml
-# Common filters
+## Common filters
 - name: Use filters in templates
   ansible.builtin.debug:
     msg: |
@@ -497,35 +497,35 @@ http {
 ## Ansible Vault
 
 ```bash
-# Create encrypted file
+## Create encrypted file
 ansible-vault create secrets.yml
 
-# Edit encrypted file
+## Edit encrypted file
 ansible-vault edit secrets.yml
 
-# Encrypt existing file
+## Encrypt existing file
 ansible-vault encrypt vars/secrets.yml
 
-# Decrypt file
+## Decrypt file
 ansible-vault decrypt vars/secrets.yml
 
-# View encrypted file
+## View encrypted file
 ansible-vault view secrets.yml
 
-# Rekey (change password)
+## Rekey (change password)
 ansible-vault rekey secrets.yml
 ```
 
 ### Using Vault in Playbooks
 
 ```yaml
-# Store sensitive data in vault
-# vars/secrets.yml (encrypted)
+## Store sensitive data in vault
+## vars/secrets.yml (encrypted)
 ---
 db_password: super_secret_password
 api_key: secret_api_key_12345
 
-# Reference vault file in playbook
+## Reference vault file in playbook
 ---
 - name: Deploy application
   hosts: appservers
@@ -538,7 +538,7 @@ api_key: secret_api_key_12345
         dest: /etc/app/database.yml
       no_log: true  # Don't log sensitive data
 
-# Run playbook with vault password
+## Run playbook with vault password
 ansible-playbook site.yml --ask-vault-pass
 ansible-playbook site.yml --vault-password-file ~/.vault_pass
 ```
@@ -589,10 +589,10 @@ ansible-playbook site.yml --vault-password-file ~/.vault_pass
         - deploy
         - restart
 
-# Run specific tags
-# ansible-playbook site.yml --tags "deploy"
-# ansible-playbook site.yml --tags "packages,database"
-# ansible-playbook site.yml --skip-tags "migrations"
+## Run specific tags
+## ansible-playbook site.yml --tags "deploy"
+## ansible-playbook site.yml --tags "packages,database"
+## ansible-playbook site.yml --skip-tags "migrations"
 ```
 
 ---
@@ -665,13 +665,13 @@ ansible-playbook site.yml --vault-password-file ~/.vault_pass
 ## Testing with Molecule
 
 ```bash
-# Initialize molecule scenario
+## Initialize molecule scenario
 molecule init scenario default
 
-# Run full test sequence
+## Run full test sequence
 molecule test
 
-# Individual steps
+## Individual steps
 molecule create       # Create test instances
 molecule converge     # Run playbook
 molecule verify       # Run test assertions
@@ -681,7 +681,7 @@ molecule destroy      # Destroy test instances
 ### Molecule Configuration
 
 ```yaml
-# molecule/default/molecule.yml
+## molecule/default/molecule.yml
 ---
 driver:
   name: docker
@@ -712,7 +712,7 @@ scenario:
 ### Molecule Verify
 
 ```yaml
-# molecule/default/verify.yml
+## molecule/default/verify.yml
 ---
 - name: Verify
   hosts: all
@@ -749,11 +749,11 @@ scenario:
 ### ❌ Avoid: Shell/Command for Everything
 
 ```yaml
-# Bad - Using shell when module exists
+## Bad - Using shell when module exists
 - name: Install package
   ansible.builtin.shell: apt-get install -y nginx
 
-# Good - Use appropriate module
+## Good - Use appropriate module
 - name: Install package
   ansible.builtin.package:
     name: nginx
@@ -763,7 +763,7 @@ scenario:
 ### ❌ Avoid: Hardcoded Values
 
 ```yaml
-# Bad - Hardcoded paths and values
+## Bad - Hardcoded paths and values
 - name: Deploy config
   ansible.builtin.copy:
     src: app.conf
@@ -771,7 +771,7 @@ scenario:
     owner: ubuntu
     mode: '0644'
 
-# Good - Use variables
+## Good - Use variables
 - name: Deploy config
   ansible.builtin.copy:
     src: app.conf
@@ -783,13 +783,13 @@ scenario:
 ### ❌ Avoid: No Idempotency
 
 ```yaml
-# Bad - Not idempotent (runs every time)
+## Bad - Not idempotent (runs every time)
 - name: Download file
   ansible.builtin.command: wget https://example.com/file.tar.gz
   args:
     chdir: /tmp
 
-# Good - Idempotent check
+## Good - Idempotent check
 - name: Download file
   ansible.builtin.get_url:
     url: https://example.com/file.tar.gz
@@ -800,12 +800,12 @@ scenario:
 ### ❌ Avoid: Ignoring Return Codes
 
 ```yaml
-# Bad - Ignoring all errors
+## Bad - Ignoring all errors
 - name: Stop service
   ansible.builtin.command: systemctl stop myapp
   ignore_errors: true
 
-# Good - Specific error handling
+## Good - Specific error handling
 - name: Stop service
   ansible.builtin.service:
     name: myapp
@@ -819,7 +819,7 @@ scenario:
 ### ❌ Avoid: Not Using Roles
 
 ```yaml
-# Bad - Everything in one massive playbook
+## Bad - Everything in one massive playbook
 - name: Configure web server
   hosts: webservers
   tasks:
@@ -833,7 +833,7 @@ scenario:
         dest: /etc/nginx/nginx.conf
     # ... 50 more tasks ...
 
-# Good - Organized into roles
+## Good - Organized into roles
 - name: Configure web server
   hosts: webservers
   roles:
@@ -847,7 +847,7 @@ scenario:
 ### ❌ Avoid: Using Loop with Package Module
 
 ```yaml
-# Bad - Inefficient loop
+## Bad - Inefficient loop
 - name: Install packages
   ansible.builtin.package:
     name: "{{ item }}"
@@ -857,7 +857,7 @@ scenario:
     - postgresql
     - redis
 
-# Good - Install all at once
+## Good - Install all at once
 - name: Install packages
   ansible.builtin.package:
     name:
@@ -870,7 +870,7 @@ scenario:
 ### ❌ Avoid: No Proper Secret Management
 
 ```yaml
-# Bad - Secrets in plain text
+## Bad - Secrets in plain text
 - name: Configure database
   ansible.builtin.template:
     src: database.yml.j2
@@ -878,8 +878,8 @@ scenario:
   vars:
     db_password: "MySecretPassword123"  # ❌ Plain text!
 
-# Good - Use Ansible Vault
-# Encrypt with: ansible-vault encrypt vars/secrets.yml
+## Good - Use Ansible Vault
+## Encrypt with: ansible-vault encrypt vars/secrets.yml
 - name: Configure database
   ansible.builtin.template:
     src: database.yml.j2
@@ -887,7 +887,7 @@ scenario:
   vars_files:
     - vars/secrets.yml  # ✅ Encrypted vault file
 
-# Or use vault inline
+## Or use vault inline
 - name: Configure database
   ansible.builtin.template:
     src: database.yml.j2
@@ -929,7 +929,7 @@ control_path = /tmp/ansible-ssh-%%h-%%p-%%r
 ### ansible-lint Configuration
 
 ```yaml
-# .ansible-lint
+## .ansible-lint
 ---
 skip_list:
   - yaml[line-length]  # Ignore long lines

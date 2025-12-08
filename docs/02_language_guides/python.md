@@ -73,12 +73,12 @@ web services.
 **Convention**: `snake_case`
 
 ```python
-# Good
+## Good
 user_count = 10
 max_retry_attempts = 3
 api_response_data = fetch_data()
 
-# Bad
+## Bad
 UserCount = 10  # PascalCase for variables
 maxRetryAttempts = 3  # camelCase
 apiresponsedata = fetch_data()  # No separation
@@ -96,12 +96,12 @@ apiresponsedata = fetch_data()  # No separation
 **Convention**: `UPPER_SNAKE_CASE`
 
 ```python
-# Good
+## Good
 MAX_CONNECTION_POOL_SIZE = 100
 API_BASE_URL = "https://api.example.com"
 DEFAULT_TIMEOUT_SECONDS = 30
 
-# Bad
+## Bad
 max_connection_pool_size = 100  # Looks like a variable
 MaxConnectionPoolSize = 100  # Not a constant style
 ```
@@ -111,7 +111,7 @@ MaxConnectionPoolSize = 100  # Not a constant style
 **Convention**: `snake_case`
 
 ```python
-# Good
+## Good
 def get_user_by_id(user_id: int) -> User:
     """Retrieve user from database by ID."""
     return database.query(User).filter(User.id == user_id).first()
@@ -120,7 +120,7 @@ def calculate_monthly_cost(instances: List[Instance]) -> Decimal:
     """Calculate total monthly cost for EC2 instances."""
     return sum(instance.hourly_rate * 730 for instance in instances)
 
-# Bad
+## Bad
 def GetUserById(user_id: int):  # PascalCase
     pass
 
@@ -140,7 +140,7 @@ def calcCost(inst):  # camelCase, abbreviations
 **Convention**: `PascalCase`
 
 ```python
-# Good
+## Good
 class UserRepository:
     """Handles database operations for User entities."""
     pass
@@ -153,7 +153,7 @@ class HTTPConnectionPool:
     """Pool of reusable HTTP connections."""
     pass
 
-# Bad
+## Bad
 class user_repository:  # snake_case
     pass
 
@@ -172,12 +172,12 @@ class awsResourceManager:  # camelCase
 **Convention**: `snake_case.py`
 
 ```text
-# Good
+## Good
 user_repository.py
 aws_resource_manager.py
 http_client.py
 
-# Bad
+## Bad
 UserRepository.py  # PascalCase
 awsResourceManager.py  # camelCase
 httpClient.py  # camelCase
@@ -197,14 +197,14 @@ httpClient.py  # camelCase
 - **Size**: 4 spaces per indentation level
 
 ```python
-# Good
+## Good
 def process_data(items):
     for item in items:
         if item.is_valid:
             result = transform(item)
             save(result)
 
-# Bad - 2 spaces
+## Bad - 2 spaces
 def process_data(items):
   for item in items:
     if item.is_valid:
@@ -217,18 +217,18 @@ def process_data(items):
 - **Exception**: Long strings, URLs, import statements can exceed
 
 ```python
-# Good - line broken appropriately
+## Good - line broken appropriately
 user_data = database.query(User).filter(
     User.is_active == True,
     User.created_at > start_date
 ).all()
 
-# Good - long URL on its own line
+## Good - long URL on its own line
 API_ENDPOINT = (
     "https://api.example.com/v2/resources/users/search?filter=active&limit=100"
 )
 
-# Bad - line too long
+## Bad - line too long
 user_data = database.query(User).filter(User.is_active == True, User.created_at > start_date, User.department == "Engineering").all()
 ```
 
@@ -242,16 +242,13 @@ user_data = database.query(User).filter(User.is_active == True, User.created_at 
 ```python
 import os
 
-
 def function_one():
     """First function."""
     pass
 
-
 def function_two():
     """Second function."""
     pass
-
 
 class MyClass:
     """Example class."""
@@ -270,7 +267,7 @@ class MyClass:
 **Order**: Standard library, third-party, local modules
 
 ```python
-# Good - organized imports
+## Good - organized imports
 import os
 import sys
 from pathlib import Path
@@ -283,7 +280,7 @@ from app.models.user import User
 from app.services.auth import AuthService
 from app.utils.validators import validate_email
 
-# Bad - mixed order, grouped incorrectly
+## Bad - mixed order, grouped incorrectly
 from app.models.user import User
 import requests
 import os
@@ -362,7 +359,7 @@ def authenticate_user(username: str, password: str) -> Optional[User]:
 ```python
 from typing import List, Dict, Optional, Union, Tuple
 
-# Good - comprehensive type hints
+## Good - comprehensive type hints
 def get_active_users(
     department: str,
     limit: int = 100,
@@ -377,7 +374,7 @@ def parse_config(
     """Parse configuration file and return settings dictionary."""
     pass
 
-# Bad - no type hints
+## Bad - no type hints
 def get_active_users(department, limit=100):
     pass
 ```
@@ -389,7 +386,7 @@ def get_active_users(department, limit=100):
 **Strategy**: Fail-fast, raise specific exceptions, clean up resources
 
 ```python
-# Good - specific exceptions and cleanup
+## Good - specific exceptions and cleanup
 def fetch_remote_data(url: str) -> Dict:
     """Fetch data from remote API with retry logic."""
     try:
@@ -406,7 +403,7 @@ def fetch_remote_data(url: str) -> Dict:
         logger.error(f"Invalid JSON response from {url}")
         raise DataFormatError("Response is not valid JSON")
 
-# Bad - catching generic Exception
+## Bad - catching generic Exception
 def fetch_remote_data(url):
     try:
         response = requests.get(url)
@@ -430,7 +427,7 @@ class DataFormatError(APIError):
     """Raised when API response has invalid format."""
     pass
 
-# Usage
+## Usage
 try:
     data = fetch_remote_data("https://api.example.com/users")
 except APITimeoutError:
@@ -446,7 +443,7 @@ except APIError as e:
 **Use for**: Resource cleanup (files, connections, locks)
 
 ```python
-# Good - guaranteed cleanup
+## Good - guaranteed cleanup
 from contextlib import contextmanager
 
 @contextmanager
@@ -462,7 +459,7 @@ def database_session():
     finally:
         session.close()
 
-# Usage
+## Usage
 with database_session() as session:
     user = session.query(User).first()
     user.last_login = datetime.now()
@@ -529,7 +526,7 @@ def test_should_create_user_with_valid_data(user_service):
 ```python
 from unittest.mock import Mock, patch, MagicMock
 
-# Good - mock external dependencies
+## Good - mock external dependencies
 @patch('app.services.email.send_email')
 def test_should_send_welcome_email_after_signup(mock_send_email):
     """Test welcome email is sent after user signup."""
@@ -574,7 +571,7 @@ class UserCreate(BaseModel):
 ### SQL Injection Prevention
 
 ```python
-# Good - parameterized queries
+## Good - parameterized queries
 from sqlalchemy import text
 
 def get_user_by_email(email: str) -> Optional[User]:
@@ -583,7 +580,7 @@ def get_user_by_email(email: str) -> Optional[User]:
     result = db.execute(query, {"email": email})
     return result.first()
 
-# Bad - string concatenation (NEVER DO THIS)
+## Bad - string concatenation (NEVER DO THIS)
 def get_user_by_email(email: str):
     query = f"SELECT * FROM users WHERE email = '{email}'"  # Vulnerable!
     return db.execute(query)
@@ -595,7 +592,7 @@ def get_user_by_email(email: str):
 import os
 from functools import lru_cache
 
-# Good - environment variables
+## Good - environment variables
 @lru_cache()
 def get_settings():
     """Get application settings from environment."""
@@ -605,7 +602,7 @@ def get_settings():
         "secret_key": os.getenv("SECRET_KEY")
     }
 
-# Bad - hardcoded secrets (NEVER DO THIS)
+## Bad - hardcoded secrets (NEVER DO THIS)
 DATABASE_URL = "postgresql://user:password@localhost/db"  # Exposed!
 API_KEY = "sk_live_abc123xyz..."  # Committed to git!
 ```
@@ -650,7 +647,7 @@ API_KEY = "sk_live_abc123xyz..."  # Committed to git!
 ### Pre-commit Configuration
 
 ```yaml
-# .pre-commit-config.yaml
+## .pre-commit-config.yaml
 repos:
   - repo: https://github.com/psf/black
     rev: 24.10.0
@@ -706,13 +703,11 @@ from app.services.auth import get_current_user
 
 app = FastAPI(title="User Management API")
 
-
 class UserCreate(BaseModel):
     """Schema for user creation."""
     username: str
     email: EmailStr
     password: str
-
 
 class UserResponse(BaseModel):
     """Schema for user response."""
@@ -724,7 +719,6 @@ class UserResponse(BaseModel):
     class Config:
         """Pydantic configuration."""
         from_attributes = True
-
 
 @app.post("/users", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def create_user(
@@ -768,7 +762,6 @@ def create_user(
     db.refresh(user)
 
     return user
-
 
 @app.get("/users/{user_id}", response_model=UserResponse)
 def get_user(
@@ -814,7 +807,7 @@ def add_item(item, items=[]):  # ❌ Mutable default
     items.append(item)
     return items
 
-# Unexpected behavior
+## Unexpected behavior
 list1 = add_item("a")  # ["a"]
 list2 = add_item("b")  # ["a", "b"] - unexpected!
 ```
@@ -828,7 +821,7 @@ def add_item(item, items=None):  # ✅ Use None as default
     items.append(item)
     return items
 
-# Expected behavior
+## Expected behavior
 list1 = add_item("a")  # ["a"]
 list2 = add_item("b")  # ["b"] - correct!
 ```
@@ -867,20 +860,20 @@ def process_data(data):
 **Bad**:
 
 ```python
-# Old % formatting
+## Old % formatting
 message = "User %s has %d points" % (username, points)  # ❌ Hard to read
 
-# Old .format()
+## Old .format()
 message = "User {} has {} points".format(username, points)  # ❌ Positional
 ```
 
 **Good**:
 
 ```python
-# f-strings (Python 3.6+)
+## f-strings (Python 3.6+)
 message = f"User {username} has {points} points"  # ✅ Clear and concise
 
-# With expressions
+## With expressions
 message = f"User {username} has {points * 2} bonus points"  # ✅ Powerful
 ```
 
@@ -912,7 +905,7 @@ def calculate_total(items: List[Dict[str, Any]]) -> float:  # ✅ Clear types
 **Bad**:
 
 ```python
-# Module level
+## Module level
 user_cache = {}  # ❌ Global mutable state
 
 def get_user(user_id):
@@ -963,7 +956,7 @@ def read_config():
     with open("config.json") as file:  # ✅ Automatically closed
         return json.load(file)
 
-# Or for multiple resources
+## Or for multiple resources
 def process_files(input_file, output_file):
     with open(input_file) as infile, open(output_file, 'w') as outfile:
         for line in infile:
@@ -1001,12 +994,12 @@ if users:  # ✅ Direct boolean context
 **Bad**:
 
 ```python
-# Creating a new list
+## Creating a new list
 squares = []  # ❌ Verbose
 for x in range(10):
     squares.append(x**2)
 
-# Filtering
+## Filtering
 evens = []  # ❌ Multiple lines
 for x in range(10):
     if x % 2 == 0:
@@ -1016,13 +1009,13 @@ for x in range(10):
 **Good**:
 
 ```python
-# Creating a new list
+## Creating a new list
 squares = [x**2 for x in range(10)]  # ✅ Concise
 
-# Filtering
+## Filtering
 evens = [x for x in range(10) if x % 2 == 0]  # ✅ Clear intent
 
-# With transformation and filtering
+## With transformation and filtering
 upper_names = [name.upper() for name in names if len(name) > 3]  # ✅ Powerful
 ```
 
@@ -1047,7 +1040,7 @@ items = ["apple", "banana", "cherry"]
 for index, item in enumerate(items):  # ✅ Built-in enumeration
     print(f"{index}: {item}")
 
-# With custom start index
+## With custom start index
 for index, item in enumerate(items, start=1):  # ✅ Start from 1
     print(f"{index}: {item}")
 ```
@@ -1067,10 +1060,10 @@ for word in words:
 **Good**:
 
 ```python
-# For simple joining
+## For simple joining
 result = " ".join(words)  # ✅ Efficient and clear
 
-# For complex building
+## For complex building
 parts = []  # ✅ Build list first
 for word in words:
     parts.append(f"<item>{word}</item>")

@@ -161,7 +161,7 @@ exclude_lines = [
 
 ---
 
-## src/dataproc/__init__.py
+## src/dataproc/**init**.py
 
 ```python
 """DataProc - A modern data processing library."""
@@ -185,7 +185,7 @@ __all__ = [
 
 ---
 
-## src/dataproc/__main__.py
+## src/dataproc/**main**.py
 
 ```python
 """CLI entry point for dataproc."""
@@ -198,7 +198,6 @@ from typing import Optional
 from dataproc import __version__
 from dataproc.core import DataProcessor
 from dataproc.exporters import CSVExporter, JSONExporter
-
 
 def parse_args(args: Optional[list[str]] = None) -> argparse.Namespace:
     """Parse command line arguments."""
@@ -242,7 +241,6 @@ def parse_args(args: Optional[list[str]] = None) -> argparse.Namespace:
     )
 
     return parser.parse_args(args)
-
 
 def main(args: Optional[list[str]] = None) -> int:
     """Main CLI entry point."""
@@ -292,7 +290,6 @@ def main(args: Optional[list[str]] = None) -> int:
         print(f"Error: {e}", file=sys.stderr)
         return 1
 
-
 if __name__ == "__main__":
     sys.exit(main())
 ```
@@ -310,14 +307,12 @@ from typing import Any
 import pandas as pd
 from pydantic import BaseModel, Field
 
-
 class ValidationResult(BaseModel):
     """Result of data validation."""
 
     is_valid: bool = Field(description="Whether validation passed")
     errors: list[str] = Field(default_factory=list, description="List of validation errors")
     warnings: list[str] = Field(default_factory=list, description="List of warnings")
-
 
 class DataProcessor:
     """Main data processor class.
@@ -418,7 +413,6 @@ import re
 from abc import ABC, abstractmethod
 from typing import Any
 
-
 class Validator(ABC):
     """Base validator class."""
 
@@ -433,7 +427,6 @@ class Validator(ABC):
             True if valid, False otherwise
         """
         pass
-
 
 class EmailValidator(Validator):
     """Validate email addresses."""
@@ -453,7 +446,6 @@ class EmailValidator(Validator):
             return False
 
         return bool(self.EMAIL_REGEX.match(value))
-
 
 class RangeValidator(Validator):
     """Validate numeric values within range."""
@@ -493,7 +485,6 @@ class RangeValidator(Validator):
 
 import re
 
-
 def clean_text(text: str) -> str:
     """Clean text by removing extra whitespace and special characters.
 
@@ -510,7 +501,6 @@ def clean_text(text: str) -> str:
     text = re.sub(r"[^\w\s.,!?-]", "", text)
 
     return text.strip()
-
 
 def normalize_numeric(value: float, min_val: float = 0.0, max_val: float = 1.0) -> float:
     """Normalize numeric value to specified range.
@@ -543,7 +533,6 @@ from pathlib import Path
 
 import pandas as pd
 
-
 class Exporter(ABC):
     """Base exporter class."""
 
@@ -556,7 +545,6 @@ class Exporter(ABC):
             output_path: Path to output file
         """
         pass
-
 
 class CSVExporter(Exporter):
     """Export data to CSV format."""
@@ -577,7 +565,6 @@ class CSVExporter(Exporter):
             output_path: Path to output CSV file
         """
         data.to_csv(output_path, sep=self.delimiter, index=False)
-
 
 class JSONExporter(Exporter):
     """Export data to JSON format."""
@@ -612,7 +599,6 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-
 @pytest.fixture
 def sample_csv(tmp_path: Path) -> Path:
     """Create sample CSV file.
@@ -631,7 +617,6 @@ def sample_csv(tmp_path: Path) -> Path:
     })
     data.to_csv(csv_path, index=False)
     return csv_path
-
 
 @pytest.fixture
 def sample_dataframe() -> pd.DataFrame:
@@ -660,7 +645,6 @@ import pandas as pd
 import pytest
 
 from dataproc.core import DataProcessor, ValidationResult
-
 
 class TestDataProcessor:
     """Tests for DataProcessor class."""
@@ -724,7 +708,6 @@ import pytest
 
 from dataproc.validators import EmailValidator, RangeValidator
 
-
 class TestEmailValidator:
     """Tests for EmailValidator."""
 
@@ -743,7 +726,6 @@ class TestEmailValidator:
         assert not validator.validate("@example.com")
         assert not validator.validate("user@")
         assert not validator.validate(123)
-
 
 class TestRangeValidator:
     """Tests for RangeValidator."""
@@ -782,20 +764,17 @@ import pytest
 
 from dataproc.transformers import clean_text, normalize_numeric
 
-
 def test_clean_text() -> None:
     """Test text cleaning."""
     assert clean_text("  Hello   World  ") == "Hello World"
     assert clean_text("Test@#$%Text") == "TestText"
     assert clean_text("Keep, this! and? that-") == "Keep, this! and? that-"
 
-
 def test_normalize_numeric() -> None:
     """Test numeric normalization."""
     assert normalize_numeric(50.0, 0.0, 100.0) == 0.5
     assert normalize_numeric(0.0, 0.0, 100.0) == 0.0
     assert normalize_numeric(100.0, 0.0, 100.0) == 1.0
-
 
 def test_normalize_numeric_invalid_range() -> None:
     """Test normalization with invalid range."""
@@ -818,7 +797,6 @@ import pytest
 
 from dataproc.exporters import CSVExporter, JSONExporter
 
-
 def test_csv_exporter(sample_dataframe: pd.DataFrame, tmp_path: Path) -> None:
     """Test CSV export."""
     exporter = CSVExporter()
@@ -829,7 +807,6 @@ def test_csv_exporter(sample_dataframe: pd.DataFrame, tmp_path: Path) -> None:
     assert output_path.exists()
     loaded = pd.read_csv(output_path)
     assert len(loaded) == len(sample_dataframe)
-
 
 def test_json_exporter(sample_dataframe: pd.DataFrame, tmp_path: Path) -> None:
     """Test JSON export."""
@@ -849,7 +826,7 @@ def test_json_exporter(sample_dataframe: pd.DataFrame, tmp_path: Path) -> None:
 ## README.md
 
 ```markdown
-# DataProc
+## DataProc
 
 [![CI](https://github.com/tydukes/dataproc/workflows/CI/badge.svg)](https://github.com/tydukes/dataproc/actions)
 [![codecov](https://codecov.io/gh/tydukes/dataproc/branch/main/graph/badge.svg)](https://codecov.io/gh/tydukes/dataproc)
@@ -878,21 +855,21 @@ pip install dataproc
 ```python
 from dataproc import DataProcessor, EmailValidator
 
-# Initialize processor
+## Initialize processor
 processor = DataProcessor()
 
-# Load data
+## Load data
 data = processor.load_csv("data.csv")
 
-# Validate
+## Validate
 result = processor.validate(data)
 if result.is_valid:
     print("Data is valid!")
 
-# Transform
+## Transform
 cleaned = processor.transform(data, ["drop_duplicates", "drop_na"])
 
-# Export
+## Export
 from dataproc import JSONExporter
 exporter = JSONExporter()
 exporter.export(cleaned, "output.json")
@@ -901,35 +878,36 @@ exporter.export(cleaned, "output.json")
 ## CLI Usage
 
 ```bash
-# Process CSV file
+## Process CSV file
 dataproc input.csv -o output.json -f json
 
-# With verbose output
+## With verbose output
 dataproc input.csv --verbose
 ```
 
 ## Development
 
 ```bash
-# Clone repository
+## Clone repository
 git clone https://github.com/tydukes/dataproc.git
 cd dataproc
 
-# Install with dev dependencies
+## Install with dev dependencies
 pip install -e ".[dev]"
 
-# Run tests
+## Run tests
 pytest
 
-# Run linters
+## Run linters
 black src tests
 ruff check src tests
 mypy src
-```
+```text
 
 ## License
 
 MIT License - see LICENSE file for details.
+
 ```
 
 ---

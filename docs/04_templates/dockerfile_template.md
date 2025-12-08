@@ -8,6 +8,7 @@ category: "Templates"
 status: "active"
 version: "1.0.0"
 ---
+<!-- markdownlint-disable MD024 -->
 
 ## Overview
 
@@ -19,10 +20,10 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 ## Python Application
 
 ```dockerfile
-# Multi-stage build for Python application
+## Multi-stage build for Python application
 FROM python:3.12-slim AS builder
 
-# Install build dependencies
+## Install build dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
@@ -30,48 +31,48 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
+## Set working directory
 WORKDIR /app
 
-# Copy dependency files
+## Copy dependency files
 COPY requirements.txt requirements-prod.txt ./
 
-# Install dependencies
+## Install dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements-prod.txt
 
-# Production stage
+## Production stage
 FROM python:3.12-slim AS production
 
-# Install runtime dependencies only
+## Install runtime dependencies only
 RUN apt-get update && apt-get install -y \
     libpq5 \
     && rm -rf /var/lib/apt/lists/*
 
-# Create non-root user
+## Create non-root user
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
-# Set working directory
+## Set working directory
 WORKDIR /app
 
-# Copy installed packages from builder
+## Copy installed packages from builder
 COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Copy application code
+## Copy application code
 COPY --chown=appuser:appuser . .
 
-# Switch to non-root user
+## Switch to non-root user
 USER appuser
 
-# Expose application port
+## Expose application port
 EXPOSE 8000
 
-# Health check
+## Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
 
-# Run application
+## Run application
 CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
@@ -80,58 +81,58 @@ CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "
 ## Node.js / TypeScript Application
 
 ```dockerfile
-# Multi-stage build for Node.js/TypeScript application
+## Multi-stage build for Node.js/TypeScript application
 FROM node:20-alpine AS builder
 
-# Set working directory
+## Set working directory
 WORKDIR /app
 
-# Copy package files
+## Copy package files
 COPY package*.json ./
 
-# Install all dependencies (including dev dependencies)
+## Install all dependencies (including dev dependencies)
 RUN npm ci
 
-# Copy source code
+## Copy source code
 COPY . .
 
-# Build TypeScript application
+## Build TypeScript application
 RUN npm run build
 
-# Prune dev dependencies
+## Prune dev dependencies
 RUN npm prune --production
 
-# Production stage
+## Production stage
 FROM node:20-alpine AS production
 
-# Install dumb-init for proper signal handling
+## Install dumb-init for proper signal handling
 RUN apk add --no-cache dumb-init
 
-# Create non-root user
+## Create non-root user
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 
-# Set working directory
+## Set working directory
 WORKDIR /app
 
-# Copy built application and production dependencies
+## Copy built application and production dependencies
 COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nodejs:nodejs /app/package*.json ./
 
-# Switch to non-root user
+## Switch to non-root user
 USER nodejs
 
-# Expose application port
+## Expose application port
 EXPOSE 3000
 
-# Health check
+## Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD node -e "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
-# Use dumb-init to handle signals properly
+## Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]
 
-# Run application
+## Run application
 CMD ["node", "dist/index.js"]
 ```
 
@@ -140,47 +141,47 @@ CMD ["node", "dist/index.js"]
 ## Go Application
 
 ```dockerfile
-# Multi-stage build for Go application
+## Multi-stage build for Go application
 FROM golang:1.21-alpine AS builder
 
-# Install build dependencies
+## Install build dependencies
 RUN apk add --no-cache git ca-certificates
 
-# Set working directory
+## Set working directory
 WORKDIR /app
 
-# Copy go mod files
+## Copy go mod files
 COPY go.mod go.sum ./
 
-# Download dependencies
+## Download dependencies
 RUN go mod download
 
-# Copy source code
+## Copy source code
 COPY . .
 
-# Build application with optimizations
+## Build application with optimizations
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     -ldflags='-w -s -extldflags "-static"' \
     -a \
     -o /app/server \
     ./cmd/server
 
-# Production stage - minimal image
+## Production stage - minimal image
 FROM scratch AS production
 
-# Copy CA certificates from builder
+## Copy CA certificates from builder
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-# Copy binary from builder
+## Copy binary from builder
 COPY --from=builder /app/server /server
 
-# Expose application port
+## Expose application port
 EXPOSE 8080
 
-# Health check (note: scratch doesn't have shell, so limited options)
-# For health checks, consider using a sidecar or external monitoring
+## Health check (note: scratch doesn't have shell, so limited options)
+## For health checks, consider using a sidecar or external monitoring
 
-# Run application
+## Run application
 ENTRYPOINT ["/server"]
 ```
 
@@ -189,67 +190,67 @@ ENTRYPOINT ["/server"]
 ## React / Next.js Application
 
 ```dockerfile
-# Multi-stage build for React/Next.js application
+## Multi-stage build for React/Next.js application
 FROM node:20-alpine AS dependencies
 
-# Set working directory
+## Set working directory
 WORKDIR /app
 
-# Copy package files
+## Copy package files
 COPY package*.json ./
 
-# Install dependencies
+## Install dependencies
 RUN npm ci
 
-# Builder stage
+## Builder stage
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy dependencies from previous stage
+## Copy dependencies from previous stage
 COPY --from=dependencies /app/node_modules ./node_modules
 
-# Copy application code
+## Copy application code
 COPY . .
 
-# Build application
+## Build application
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build
 
-# Production stage
+## Production stage
 FROM node:20-alpine AS production
 
-# Install dumb-init
+## Install dumb-init
 RUN apk add --no-cache dumb-init
 
-# Create non-root user
+## Create non-root user
 RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 
 WORKDIR /app
 
-# Copy necessary files
+## Copy necessary files
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Set ownership
+## Set ownership
 RUN chown -R nextjs:nodejs /app
 
-# Switch to non-root user
+## Switch to non-root user
 USER nextjs
 
-# Expose port
+## Expose port
 EXPOSE 3000
 
 ENV PORT 3000
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Health check
+## Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
     CMD node -e "require('http').get('http://localhost:3000', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
-# Run application
+## Run application
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "server.js"]
 ```
@@ -259,16 +260,16 @@ CMD ["node", "server.js"]
 ## Django Application
 
 ```dockerfile
-# Multi-stage build for Django application
+## Multi-stage build for Django application
 FROM python:3.12-slim AS builder
 
-# Set environment variables
+## Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
-# Install build dependencies
+## Install build dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
     postgresql-client \
@@ -277,53 +278,53 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy dependency files
+## Copy dependency files
 COPY requirements.txt ./
 
-# Install Python dependencies
+## Install Python dependencies
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
-# Production stage
+## Production stage
 FROM python:3.12-slim AS production
 
-# Set environment variables
+## Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     DJANGO_SETTINGS_MODULE=config.settings.production
 
-# Install runtime dependencies
+## Install runtime dependencies
 RUN apt-get update && apt-get install -y \
     postgresql-client \
     libpq5 \
     && rm -rf /var/lib/apt/lists/*
 
-# Create non-root user
+## Create non-root user
 RUN groupadd -r django && useradd -r -g django django
 
 WORKDIR /app
 
-# Copy installed packages
+## Copy installed packages
 COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Copy application code
+## Copy application code
 COPY --chown=django:django . .
 
-# Collect static files
+## Collect static files
 RUN python manage.py collectstatic --noinput
 
-# Switch to non-root user
+## Switch to non-root user
 USER django
 
-# Expose port
+## Expose port
 EXPOSE 8000
 
-# Health check
+## Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/')"
 
-# Run application with gunicorn
+## Run application with gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "config.wsgi:application"]
 ```
 
@@ -332,57 +333,57 @@ CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "config.wsgi:applic
 ## Nginx Static Site
 
 ```dockerfile
-# Multi-stage build for static site
+## Multi-stage build for static site
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
+## Copy package files
 COPY package*.json ./
 
-# Install dependencies
+## Install dependencies
 RUN npm ci
 
-# Copy source
+## Copy source
 COPY . .
 
-# Build static site
+## Build static site
 RUN npm run build
 
-# Production stage with nginx
+## Production stage with nginx
 FROM nginx:1.25-alpine AS production
 
-# Copy custom nginx config
+## Copy custom nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copy built static files
+## Copy built static files
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Create non-root user
+## Create non-root user
 RUN addgroup -g 101 -S nginx && \
     adduser -S -D -H -u 101 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx
 
-# Set ownership
+## Set ownership
 RUN chown -R nginx:nginx /usr/share/nginx/html && \
     chown -R nginx:nginx /var/cache/nginx && \
     chown -R nginx:nginx /var/log/nginx && \
     chown -R nginx:nginx /etc/nginx/conf.d
 
-# Make nginx run as non-root
+## Make nginx run as non-root
 RUN touch /var/run/nginx.pid && \
     chown -R nginx:nginx /var/run/nginx.pid
 
-# Switch to non-root user
+## Switch to non-root user
 USER nginx
 
-# Expose port
+## Expose port
 EXPOSE 8080
 
-# Health check
+## Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:8080/ || exit 1
 
-# Run nginx
+## Run nginx
 CMD ["nginx", "-g", "daemon off;"]
 ```
 
@@ -393,29 +394,29 @@ CMD ["nginx", "-g", "daemon off;"]
 ### Development Dockerfile
 
 ```dockerfile
-# Development Dockerfile with hot reload
+## Development Dockerfile with hot reload
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Install dependencies
+## Install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy source (will be overridden by volume mount)
+## Copy source (will be overridden by volume mount)
 COPY . .
 
-# Expose port for development server
+## Expose port for development server
 EXPOSE 3000
 
-# Enable hot reload
+## Enable hot reload
 CMD ["npm", "run", "dev"]
 ```
 
 ### Production Dockerfile
 
 ```dockerfile
-# Production Dockerfile (optimized)
+## Production Dockerfile (optimized)
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -452,62 +453,62 @@ CMD ["node", "dist/index.js"]
 ### Security
 
 ```dockerfile
-# 1. Use specific version tags
+## 1. Use specific version tags
 FROM node:20.10.0-alpine  # Not :latest
 
-# 2. Run as non-root user
+## 2. Run as non-root user
 RUN addgroup -g 1001 appgroup && adduser -S appuser -u 1001 -G appgroup
 USER appuser
 
-# 3. Scan for vulnerabilities
-# Use tools like Trivy, Snyk, or Clair
+## 3. Scan for vulnerabilities
+## Use tools like Trivy, Snyk, or Clair
 
-# 4. Use minimal base images
+## 4. Use minimal base images
 FROM alpine:3.19  # Or scratch for Go apps
 
-# 5. Don't include secrets
-# Use build args or secret mounts instead
+## 5. Don't include secrets
+## Use build args or secret mounts instead
 RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm install
 ```
 
 ### Optimization
 
 ```dockerfile
-# 1. Leverage layer caching - copy dependencies first
+## 1. Leverage layer caching - copy dependencies first
 COPY package*.json ./
 RUN npm ci
 COPY . .  # This changes more frequently
 
-# 2. Use .dockerignore
-# Create .dockerignore with:
-# node_modules
-# .git
-# *.md
+## 2. Use .dockerignore
+## Create .dockerignore with:
+## node_modules
+## .git
+## *.md
 
-# 3. Multi-stage builds to reduce image size
+## 3. Multi-stage builds to reduce image size
 FROM builder AS production  # Only copy what's needed
 
-# 4. Combine RUN commands to reduce layers
+## 4. Combine RUN commands to reduce layers
 RUN apt-get update && \
     apt-get install -y pkg1 pkg2 && \
     rm -rf /var/lib/apt/lists/*
 
-# 5. Use --no-cache-dir for pip
+## 5. Use --no-cache-dir for pip
 RUN pip install --no-cache-dir -r requirements.txt
 ```
 
 ### Health Checks
 
 ```dockerfile
-# HTTP health check
+## HTTP health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
-# Python health check (no curl)
+## Python health check (no curl)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
 
-# Node.js health check
+## Node.js health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD node -e "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 ```
@@ -534,7 +535,7 @@ LABEL org.opencontainers.image.created="${BUILD_DATE}" \
 ### Using Secrets During Build
 
 ```dockerfile
-# Mount secrets without storing in layers
+## Mount secrets without storing in layers
 RUN --mount=type=secret,id=pip_config \
     pip config set global.index-url $(cat /run/secrets/pip_config) && \
     pip install -r requirements.txt
@@ -543,25 +544,25 @@ RUN --mount=type=secret,id=pip_config \
 ### Conditional Stages
 
 ```dockerfile
-# Base stage
+## Base stage
 FROM node:20-alpine AS base
 WORKDIR /app
 COPY package*.json ./
 
-# Development stage
+## Development stage
 FROM base AS development
 RUN npm install
 COPY . .
 CMD ["npm", "run", "dev"]
 
-# Production stage
+## Production stage
 FROM base AS production
 RUN npm ci --only=production
 COPY . .
 RUN npm run build
 CMD ["node", "dist/index.js"]
 
-# Build with: docker build --target production -t myapp:prod .
+## Build with: docker build --target production -t myapp:prod .
 ```
 
 ---
@@ -569,58 +570,58 @@ CMD ["node", "dist/index.js"]
 ## .dockerignore Template
 
 ```dockerignore
-# Version control
+## Version control
 .git
 .gitignore
 .gitattributes
 
-# CI/CD
+## CI/CD
 .github
 .gitlab-ci.yml
 .travis.yml
 
-# Dependencies
+## Dependencies
 node_modules
 venv
 .venv
 
-# Build artifacts
+## Build artifacts
 dist
 build
 target
 *.pyc
 __pycache__
 
-# IDE
+## IDE
 .vscode
 .idea
 *.swp
 *.swo
 
-# OS
+## OS
 .DS_Store
 Thumbs.db
 
-# Logs
+## Logs
 *.log
 logs
 
-# Documentation
+## Documentation
 *.md
 docs
 
-# Tests
+## Tests
 tests
 __tests__
 *.test.js
 *.spec.js
 
-# Environment files
+## Environment files
 .env
 .env.local
 .env.*.local
 
-# Docker
+## Docker
 Dockerfile*
 docker-compose*.yml
 .dockerignore
@@ -633,7 +634,7 @@ docker-compose*.yml
 ### Multi-Architecture Build
 
 ```dockerfile
-# Build for multiple architectures
+## Build for multiple architectures
 FROM --platform=$BUILDPLATFORM golang:1.21-alpine AS builder
 
 ARG TARGETPLATFORM
@@ -657,7 +658,7 @@ COPY --from=builder /app/server /server
 
 ENTRYPOINT ["/server"]
 
-# Build with: docker buildx build --platform linux/amd64,linux/arm64 -t myapp .
+## Build with: docker buildx build --platform linux/amd64,linux/arm64 -t myapp .
 ```
 
 ### Using Cache Mounts
@@ -669,13 +670,13 @@ WORKDIR /app
 
 COPY go.mod go.sum ./
 
-# Use cache mount for go modules
+## Use cache mount for go modules
 RUN --mount=type=cache,target=/go/pkg/mod \
     go mod download
 
 COPY . .
 
-# Use cache mount for build cache
+## Use cache mount for build cache
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
     CGO_ENABLED=0 go build -o /app/server ./cmd/server

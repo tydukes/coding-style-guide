@@ -109,7 +109,7 @@ deploy_job:
 ### Define Stages
 
 ```yaml
-# Stages execute in order
+## Stages execute in order
 stages:
   - build
   - test
@@ -117,8 +117,8 @@ stages:
   - deploy
   - cleanup
 
-# Jobs in same stage run in parallel
-# Jobs in next stage wait for previous stage to complete
+## Jobs in same stage run in parallel
+## Jobs in next stage wait for previous stage to complete
 ```
 
 ---
@@ -324,7 +324,7 @@ build_image:
 ### Only/Except
 
 ```yaml
-# Run only on specific branches
+## Run only on specific branches
 deploy_production:
   stage: deploy
   script:
@@ -332,7 +332,7 @@ deploy_production:
   only:
     - main
 
-# Run except on tags
+## Run except on tags
 test:
   stage: test
   script:
@@ -340,7 +340,7 @@ test:
   except:
     - tags
 
-# Run only on merge requests
+## Run only on merge requests
 mr_check:
   stage: test
   script:
@@ -564,7 +564,7 @@ variables:
   POSTGRES_USER: testuser
   POSTGRES_PASSWORD: testpass
 
-# Reusable templates
+## Reusable templates
 .node_base:
   image: node:18-alpine
   cache:
@@ -575,7 +575,7 @@ variables:
   before_script:
     - npm ci --cache .npm
 
-# Build stage
+## Build stage
 build_frontend:
   extends: .node_base
   stage: build
@@ -598,7 +598,7 @@ build_backend:
       - backend/dist/
     expire_in: 1 day
 
-# Test stage
+## Test stage
 test_frontend:
   extends: .node_base
   stage: test
@@ -638,7 +638,7 @@ lint:
   script:
     - npm run lint
 
-# Security stage
+## Security stage
 sast:
   stage: security
   allow_failure: true
@@ -647,7 +647,7 @@ dependency_scanning:
   stage: security
   allow_failure: true
 
-# Package stage
+## Package stage
 build_docker_images:
   stage: package
   image: docker:latest
@@ -666,7 +666,7 @@ build_docker_images:
     - main
     - develop
 
-# Deploy stage
+## Deploy stage
 deploy_staging:
   stage: deploy
   image: alpine:latest
@@ -708,13 +708,13 @@ include:
 ### ❌ Avoid: No Cache
 
 ```yaml
-# Bad - Reinstalling dependencies every time
+## Bad - Reinstalling dependencies every time
 test:
   script:
     - npm install
     - npm test
 
-# Good - Using cache
+## Good - Using cache
 test:
   cache:
     key: ${CI_COMMIT_REF_SLUG}
@@ -728,12 +728,12 @@ test:
 ### ❌ Avoid: Hardcoded Secrets
 
 ```yaml
-# Bad - Hardcoded credentials
+## Bad - Hardcoded credentials
 deploy:
   script:
     - ssh user@server "password123"
 
-# Good - Use CI/CD variables
+## Good - Use CI/CD variables
 deploy:
   script:
     - ssh $DEPLOY_USER@$DEPLOY_SERVER
@@ -742,13 +742,13 @@ deploy:
 ### ❌ Avoid: No Artifact Expiration
 
 ```yaml
-# Bad - Artifacts kept forever
+## Bad - Artifacts kept forever
 build:
   artifacts:
     paths:
       - dist/
 
-# Good - Set expiration
+## Good - Set expiration
 build:
   artifacts:
     paths:
@@ -759,7 +759,7 @@ build:
 ### ❌ Avoid: Not Using Rules Instead of only/except
 
 ```yaml
-# Bad - Using deprecated only/except
+## Bad - Using deprecated only/except
 deploy:
   only:
     - main
@@ -768,7 +768,7 @@ deploy:
   script:
     - ./deploy.sh
 
-# Good - Use rules
+## Good - Use rules
 deploy:
   rules:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE != "schedule"
@@ -779,7 +779,7 @@ deploy:
 ### ❌ Avoid: Running All Jobs on All Branches
 
 ```yaml
-# Bad - Expensive jobs run on every branch
+## Bad - Expensive jobs run on every branch
 build-docker:
   script:
     - docker build -t myapp .
@@ -789,7 +789,7 @@ deploy-prod:
   script:
     - ./deploy-production.sh  # ❌ Deploys from any branch!
 
-# Good - Restrict jobs to appropriate branches
+## Good - Restrict jobs to appropriate branches
 build-docker:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
@@ -810,7 +810,7 @@ deploy-prod:
 ### ❌ Avoid: Not Using extends for Shared Configuration
 
 ```yaml
-# Bad - Duplicated configuration
+## Bad - Duplicated configuration
 test-unit:
   image: node:18
   before_script:
@@ -825,7 +825,7 @@ test-integration:
   script:
     - npm run test:integration
 
-# Good - Use extends
+## Good - Use extends
 .node-base:
   image: node:18
   before_script:
@@ -845,12 +845,12 @@ test-integration:
 ### ❌ Avoid: Not Using Retry for Flaky Jobs
 
 ```yaml
-# Bad - Flaky job fails pipeline
+## Bad - Flaky job fails pipeline
 integration-tests:
   script:
     - npm run test:integration  # ❌ No retry on failure
 
-# Good - Retry flaky jobs
+## Good - Retry flaky jobs
 integration-tests:
   script:
     - npm run test:integration
@@ -870,36 +870,36 @@ integration-tests:
 Install and configure gitlab-ci-local for testing pipelines locally:
 
 ```bash
-# Install gitlab-ci-local (npm)
+## Install gitlab-ci-local (npm)
 npm install -g gitlab-ci-local
 
-# Install gitlab-ci-local (brew)
+## Install gitlab-ci-local (brew)
 brew install gitlab-ci-local
 
-# Run entire pipeline
+## Run entire pipeline
 gitlab-ci-local
 
-# Run specific job
+## Run specific job
 gitlab-ci-local build
 
-# List all jobs
+## List all jobs
 gitlab-ci-local --list
 
-# Run with specific file
+## Run with specific file
 gitlab-ci-local --file .gitlab-ci.custom.yml
 
-# Dry run
+## Dry run
 gitlab-ci-local --preview
 
-# Use specific variables
+## Use specific variables
 gitlab-ci-local --variable CI_COMMIT_REF_NAME=main
 ```
 
 ### .gitlab-ci-local-variables.yml
 
 ```yaml
-# .gitlab-ci-local-variables.yml
-# Local development variables
+## .gitlab-ci-local-variables.yml
+## Local development variables
 CI_PROJECT_NAME: my-project
 CI_COMMIT_BRANCH: main
 CI_COMMIT_REF_NAME: main
@@ -910,15 +910,15 @@ DEPLOY_ENV: development
 ### gitlab-ci-lint - Pipeline Validation
 
 ```bash
-# Validate .gitlab-ci.yml syntax (requires GitLab instance)
+## Validate .gitlab-ci.yml syntax (requires GitLab instance)
 gitlab-ci-lint .gitlab-ci.yml
 
-# Using GitLab API
+## Using GitLab API
 curl --header "PRIVATE-TOKEN: ${GITLAB_TOKEN}" \
   "https://gitlab.com/api/v4/projects/${PROJECT_ID}/ci/lint" \
   --form "content@.gitlab-ci.yml"
 
-# Using glab CLI
+## Using glab CLI
 glab ci lint
 ```
 
@@ -948,7 +948,7 @@ glab ci lint
 ### Pre-commit Hooks
 
 ```yaml
-# .pre-commit-config.yaml
+## .pre-commit-config.yaml
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
@@ -980,7 +980,7 @@ repos:
 ### yamllint Configuration
 
 ```yaml
-# .yamllint
+## .yamllint
 extends: default
 
 rules:
@@ -1001,7 +1001,7 @@ rules:
 ### EditorConfig
 
 ```ini
-# .editorconfig
+## .editorconfig
 [.gitlab-ci*.{yml,yaml}]
 indent_style = space
 indent_size = 2
@@ -1014,7 +1014,7 @@ insert_final_newline = true
 ### Makefile
 
 ```makefile
-# Makefile
+## Makefile
 .PHONY: ci-local ci-list ci-validate
 
 ci-local:
@@ -1031,7 +1031,7 @@ ci-validate:
 ci-job:
  gitlab-ci-local $(JOB)
 
-# Example: make ci-job JOB=build
+## Example: make ci-job JOB=build
 
 ci-debug:
  gitlab-ci-local --shell-isolation=false $(JOB)
@@ -1042,7 +1042,7 @@ ci-debug:
 Template for reusable CI configurations:
 
 ```yaml
-# .gitlab-ci/templates/docker.yml
+## .gitlab-ci/templates/docker.yml
 .docker_build:
   image: docker:24
   services:
@@ -1082,7 +1082,7 @@ validate:ci:
 ### glab CLI Configuration
 
 ```yaml
-# ~/.config/glab-cli/config.yml
+## ~/.config/glab-cli/config.yml
 hosts:
   gitlab.com:
     user: your-username
@@ -1102,7 +1102,7 @@ browser: firefox
 ### Docker Compose for Local GitLab Runner
 
 ```yaml
-# docker-compose.gitlab-runner.yml
+## docker-compose.gitlab-runner.yml
 version: '3.8'
 
 services:

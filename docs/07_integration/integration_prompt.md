@@ -9,7 +9,6 @@ status: "active"
 version: "0.1.0"
 ---
 
-
 Use this prompt to quickly integrate the coding style guide validator into any codebase.
 
 ---
@@ -56,7 +55,7 @@ jobs:
 Add these targets to the repository \`Makefile\` (or create one):
 
 \`\`\`makefile
-# Coding style validation targets
+## Coding style validation targets
 .PHONY: validate lint format validate-docs
 
 IMAGE ?= ghcr.io/tydukes/coding-style-guide:v1.0.0
@@ -80,7 +79,7 @@ Create \`scripts/validate.sh\`:
 
 \`\`\`bash
 #!/usr/bin/env bash
-# Validate coding standards using containerized validator
+## Validate coding standards using containerized validator
 
 set -euo pipefail
 

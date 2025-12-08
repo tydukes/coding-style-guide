@@ -57,8 +57,8 @@ best practices for creating secure, efficient, and maintainable container images
 ### Simple Dockerfile
 
 ```dockerfile
-# Syntax version (optional but recommended)
-# syntax=docker/dockerfile:1
+## Syntax version (optional but recommended)
+## syntax=docker/dockerfile:1
 
 FROM node:18-alpine
 
@@ -82,10 +82,10 @@ CMD ["node", "index.js"]
 ### Always Pin Base Image Versions
 
 ```dockerfile
-# Good - Pinned to specific version
+## Good - Pinned to specific version
 FROM node:18.19-alpine3.19
 
-# Avoid - Using latest or unpinned versions
+## Avoid - Using latest or unpinned versions
 FROM node:latest
 FROM node:18
 ```
@@ -93,7 +93,7 @@ FROM node:18
 ### Multi-Stage Builds
 
 ```dockerfile
-# Build stage
+## Build stage
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
@@ -101,7 +101,7 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Production stage
+## Production stage
 FROM node:18-alpine AS production
 WORKDIR /app
 COPY package*.json ./
@@ -118,11 +118,11 @@ CMD ["node", "dist/index.js"]
 Always use `WORKDIR` instead of `RUN cd`:
 
 ```dockerfile
-# Good - Using WORKDIR
+## Good - Using WORKDIR
 WORKDIR /app
 COPY . .
 
-# Bad - Using cd
+## Bad - Using cd
 RUN cd /app
 COPY . .
 ```
@@ -134,21 +134,21 @@ COPY . .
 ### Use COPY for Local Files
 
 ```dockerfile
-# Good - COPY for local files
+## Good - COPY for local files
 COPY package.json ./
 COPY src/ ./src/
 
-# Avoid - ADD has implicit extraction behavior
+## Avoid - ADD has implicit extraction behavior
 ADD package.json ./
 ```
 
 ### Use ADD Only for URLs or Tar Extraction
 
 ```dockerfile
-# ADD for remote URLs (but prefer RUN wget/curl for better control)
+## ADD for remote URLs (but prefer RUN wget/curl for better control)
 ADD https://example.com/file.tar.gz /tmp/
 
-# ADD for automatic tar extraction
+## ADD for automatic tar extraction
 ADD archive.tar.gz /opt/
 ```
 
@@ -159,7 +159,7 @@ ADD archive.tar.gz /opt/
 ### Combine Commands to Reduce Layers
 
 ```dockerfile
-# Good - Single layer
+## Good - Single layer
 RUN apt-get update && \
     apt-get install -y \
       curl \
@@ -168,7 +168,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Avoid - Multiple layers
+## Avoid - Multiple layers
 RUN apt-get update
 RUN apt-get install -y curl
 RUN apt-get install -y git
@@ -178,7 +178,7 @@ RUN apt-get install -y vim
 ### Clean Up in Same Layer
 
 ```dockerfile
-# Good - Clean up in same RUN instruction
+## Good - Clean up in same RUN instruction
 RUN apt-get update && \
     apt-get install -y build-essential && \
     make && \
@@ -186,7 +186,7 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-# Bad - Clean up in separate layer (doesn't reduce image size)
+## Bad - Clean up in separate layer (doesn't reduce image size)
 RUN apt-get update
 RUN apt-get install -y build-essential
 RUN make
@@ -198,12 +198,12 @@ RUN apt-get remove -y build-essential
 ## ENV Instruction
 
 ```dockerfile
-# Environment variables
+## Environment variables
 ENV NODE_ENV=production \
     PORT=3000 \
     LOG_LEVEL=info
 
-# Path variables
+## Path variables
 ENV PATH="/app/node_modules/.bin:${PATH}"
 ```
 
@@ -212,7 +212,7 @@ ENV PATH="/app/node_modules/.bin:${PATH}"
 ## EXPOSE Instruction
 
 ```dockerfile
-# Document exposed ports
+## Document exposed ports
 EXPOSE 3000
 EXPOSE 8080/tcp
 EXPOSE 8081/udp
@@ -225,14 +225,14 @@ EXPOSE 8081/udp
 ### Always Run as Non-Root User
 
 ```dockerfile
-# Good - Create and use non-root user
+## Good - Create and use non-root user
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
 USER nodejs
 
-# Bad - Running as root (default)
-# (no USER instruction)
+## Bad - Running as root (default)
+## (no USER instruction)
 ```
 
 ---
@@ -242,9 +242,9 @@ USER nodejs
 ### Node.js Application
 
 ```dockerfile
-# syntax=docker/dockerfile:1
+## syntax=docker/dockerfile:1
 
-# Build stage
+## Build stage
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
@@ -253,15 +253,15 @@ COPY . .
 RUN npm run build && \
     npm prune --production
 
-# Production stage
+## Production stage
 FROM node:18-alpine AS production
 WORKDIR /app
 
-# Create non-root user
+## Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
-# Copy files with correct ownership
+## Copy files with correct ownership
 COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --chown=nodejs:nodejs package.json ./
@@ -279,40 +279,40 @@ CMD ["node", "dist/index.js"]
 ### Python Application
 
 ```dockerfile
-# syntax=docker/dockerfile:1
+## syntax=docker/dockerfile:1
 
-# Build stage
+## Build stage
 FROM python:3.11-slim AS builder
 WORKDIR /app
 
-# Install build dependencies
+## Install build dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       build-essential \
       libpq-dev && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+## Install Python dependencies
 COPY requirements.txt .
 RUN pip install --user --no-cache-dir -r requirements.txt
 
-# Production stage
+## Production stage
 FROM python:3.11-slim AS production
 WORKDIR /app
 
-# Install runtime dependencies
+## Install runtime dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       libpq5 && \
     rm -rf /var/lib/apt/lists/*
 
-# Create non-root user
+## Create non-root user
 RUN useradd -m -u 1001 appuser
 
-# Copy Python packages from builder
+## Copy Python packages from builder
 COPY --from=builder /root/.local /home/appuser/.local
 
-# Copy application code
+## Copy application code
 COPY --chown=appuser:appuser . .
 
 USER appuser
@@ -331,37 +331,37 @@ CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000
 ### Go Application
 
 ```dockerfile
-# syntax=docker/dockerfile:1
+## syntax=docker/dockerfile:1
 
-# Build stage
+## Build stage
 FROM golang:1.21-alpine AS builder
 WORKDIR /app
 
-# Install build dependencies
+## Install build dependencies
 RUN apk add --no-cache git
 
-# Copy go mod files
+## Copy go mod files
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy source code
+## Copy source code
 COPY . .
 
-# Build binary
+## Build binary
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-# Production stage
+## Production stage
 FROM alpine:3.19 AS production
 WORKDIR /app
 
-# Install ca-certificates for HTTPS
+## Install ca-certificates for HTTPS
 RUN apk --no-cache add ca-certificates
 
-# Create non-root user
+## Create non-root user
 RUN addgroup -g 1001 -S appuser && \
     adduser -S appuser -u 1001 -G appuser
 
-# Copy binary from builder
+## Copy binary from builder
 COPY --from=builder --chown=appuser:appuser /app/main .
 
 USER appuser
@@ -381,15 +381,15 @@ CMD ["./main"]
 Always create a `.dockerignore` file:
 
 ```dockerignore
-# Git
+## Git
 .git
 .gitignore
 
-# Node.js
+## Node.js
 node_modules
 npm-debug.log
 
-# Python
+## Python
 __pycache__
 *.py[cod]
 *$py.class
@@ -397,32 +397,32 @@ __pycache__
 venv/
 .env
 
-# Build artifacts
+## Build artifacts
 dist
 build
 *.o
 *.so
 
-# IDE
+## IDE
 .vscode
 .idea
 *.swp
 *.swo
 
-# Documentation
+## Documentation
 *.md
 docs/
 
-# Tests
+## Tests
 tests/
 *.test.js
 
-# CI/CD
+## CI/CD
 .github
 .gitlab-ci.yml
 Jenkinsfile
 
-# Docker
+## Docker
 Dockerfile*
 docker-compose*.yml
 ```
@@ -434,26 +434,26 @@ docker-compose*.yml
 ### Scan for Vulnerabilities
 
 ```bash
-# Scan image with Trivy
+## Scan image with Trivy
 trivy image myapp:latest
 
-# Scan image with Grype
+## Scan image with Grype
 grype myapp:latest
 
-# Scan with Docker Scout
+## Scan with Docker Scout
 docker scout cves myapp:latest
 ```
 
 ### Use Minimal Base Images
 
 ```dockerfile
-# Good - Minimal alpine image
+## Good - Minimal alpine image
 FROM node:18-alpine
 
-# Good - Distroless image (even smaller, no shell)
+## Good - Distroless image (even smaller, no shell)
 FROM gcr.io/distroless/nodejs18-debian11
 
-# Avoid - Full Debian/Ubuntu images
+## Avoid - Full Debian/Ubuntu images
 FROM node:18
 FROM ubuntu:22.04
 ```
@@ -461,15 +461,15 @@ FROM ubuntu:22.04
 ### Don't Store Secrets in Images
 
 ```dockerfile
-# Bad - Secret in ENV
+## Bad - Secret in ENV
 ENV DB_PASSWORD=supersecret
 
-# Bad - Secret in file
+## Bad - Secret in file
 COPY .env .
 
-# Good - Use runtime secrets
-# Pass via environment variables at runtime
-# docker run -e DB_PASSWORD=$DB_PASSWORD myapp
+## Good - Use runtime secrets
+## Pass via environment variables at runtime
+## docker run -e DB_PASSWORD=$DB_PASSWORD myapp
 ```
 
 ---
@@ -477,15 +477,15 @@ COPY .env .
 ## HEALTHCHECK
 
 ```dockerfile
-# HTTP health check
+## HTTP health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/health || exit 1
 
-# TCP health check
+## TCP health check
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD nc -z localhost 3000 || exit 1
 
-# Custom script
+## Custom script
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD node healthcheck.js
 ```
@@ -511,12 +511,12 @@ LABEL org.opencontainers.image.title="My Application" \
 ### ❌ Avoid: Running as Root
 
 ```dockerfile
-# Bad - Running as root
+## Bad - Running as root
 FROM node:18-alpine
 COPY . /app
 CMD ["node", "index.js"]
 
-# Good - Non-root user
+## Good - Non-root user
 FROM node:18-alpine
 RUN adduser -D appuser
 USER appuser
@@ -527,17 +527,17 @@ CMD ["node", "index.js"]
 ### ❌ Avoid: Using latest Tag
 
 ```dockerfile
-# Bad - Unpredictable builds
+## Bad - Unpredictable builds
 FROM node:latest
 
-# Good - Pinned version
+## Good - Pinned version
 FROM node:18.19-alpine3.19
 ```
 
 ### ❌ Avoid: Installing Unnecessary Packages
 
 ```dockerfile
-# Bad - Installing unnecessary packages
+## Bad - Installing unnecessary packages
 RUN apt-get update && apt-get install -y \
     build-essential \
     python3 \
@@ -545,7 +545,7 @@ RUN apt-get update && apt-get install -y \
     vim \
     nano
 
-# Good - Only install what's needed
+## Good - Only install what's needed
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential && \
     rm -rf /var/lib/apt/lists/*
@@ -554,13 +554,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ### ❌ Avoid: Multiple RUN Commands for Package Install
 
 ```dockerfile
-# Bad - Creates multiple layers
+## Bad - Creates multiple layers
 RUN apt-get update
 RUN apt-get install -y curl
 RUN apt-get install -y git
 RUN apt-get clean
 
-# Good - Single layer with cleanup
+## Good - Single layer with cleanup
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         curl \
@@ -572,16 +572,16 @@ RUN apt-get update && \
 ### ❌ Avoid: Copying Entire Context
 
 ```dockerfile
-# Bad - Copies everything including .git, node_modules, etc.
+## Bad - Copies everything including .git, node_modules, etc.
 FROM node:18-alpine
 COPY . /app
 
-# Good - Use .dockerignore and copy selectively
-# .dockerignore:
-# node_modules
-# .git
-# .env
-# *.md
+## Good - Use .dockerignore and copy selectively
+## .dockerignore:
+## node_modules
+## .git
+## .env
+## *.md
 
 FROM node:18-alpine
 WORKDIR /app
@@ -594,7 +594,7 @@ COPY public/ ./public/
 ### ❌ Avoid: Not Using Multi-Stage Builds
 
 ```dockerfile
-# Bad - Build tools remain in final image
+## Bad - Build tools remain in final image
 FROM node:18
 WORKDIR /app
 COPY package*.json ./
@@ -603,7 +603,7 @@ COPY . .
 RUN npm run build
 CMD ["npm", "start"]
 
-# Good - Multi-stage build
+## Good - Multi-stage build
 FROM node:18 AS builder
 WORKDIR /app
 COPY package*.json ./
@@ -623,20 +623,20 @@ CMD ["node", "dist/index.js"]
 ### ❌ Avoid: Exposing Secrets in Build
 
 ```dockerfile
-# Bad - Secrets in image layers
+## Bad - Secrets in image layers
 FROM node:18-alpine
 WORKDIR /app
 COPY .env .env  # ❌ Secret file in image!
 RUN echo "API_KEY=secret123" > config.txt  # ❌ In layer history!
 
-# Good - Use build secrets (Docker BuildKit)
-# syntax=docker/dockerfile:1
+## Good - Use build secrets (Docker BuildKit)
+## syntax=docker/dockerfile:1
 FROM node:18-alpine
 WORKDIR /app
 RUN --mount=type=secret,id=npmrc,target=/root/.npmrc \
     npm install private-package
 
-# Or use build args (for non-sensitive config)
+## Or use build args (for non-sensitive config)
 ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 ```
@@ -646,19 +646,19 @@ ENV NODE_ENV=$NODE_ENV
 ## Building and Tagging
 
 ```bash
-# Build with tag
+## Build with tag
 docker build -t myapp:1.0.0 .
 
-# Build with multiple tags
+## Build with multiple tags
 docker build -t myapp:1.0.0 -t myapp:latest .
 
-# Build with build args
+## Build with build args
 docker build --build-arg NODE_ENV=production -t myapp:1.0.0 .
 
-# Build with target stage
+## Build with target stage
 docker build --target production -t myapp:1.0.0 .
 
-# Build with platform
+## Build with platform
 docker buildx build --platform linux/amd64,linux/arm64 -t myapp:1.0.0 .
 ```
 
@@ -684,13 +684,13 @@ trustedRegistries:
 ### Running hadolint
 
 ```bash
-# Lint Dockerfile
+## Lint Dockerfile
 hadolint Dockerfile
 
-# Lint with custom config
+## Lint with custom config
 hadolint --config .hadolint.yaml Dockerfile
 
-# Output as JSON
+## Output as JSON
 hadolint --format json Dockerfile
 ```
 

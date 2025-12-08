@@ -72,14 +72,14 @@ install, and upgrade applications.
 Use **kebab-case** for all Kubernetes resource names:
 
 ```yaml
-# Good
+## Good
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web-application
   namespace: production
 
-# Bad
+## Bad
 metadata:
   name: webApplication  # camelCase - avoid
   name: web_application  # snake_case - avoid
@@ -88,17 +88,17 @@ metadata:
 ### Namespace Conventions
 
 ```yaml
-# Environment-based namespaces
+## Environment-based namespaces
 production
 staging
 development
 
-# Team or project-based namespaces
+## Team or project-based namespaces
 team-platform
 team-backend
 project-analytics
 
-# System namespaces (reserved)
+## System namespaces (reserved)
 kube-system
 kube-public
 kube-node-lease
@@ -181,11 +181,11 @@ metadata:
 
 ```yaml
 ---
-# @module web-application-deployment
-# @description Production deployment for web application
-# @version 1.0.0
-# @author Tyler Dukes
-# @last_updated 2025-10-28
+## @module web-application-deployment
+## @description Production deployment for web application
+## @version 1.0.0
+## @author Tyler Dukes
+## @last_updated 2025-10-28
 
 apiVersion: apps/v1
 kind: Deployment
@@ -318,7 +318,7 @@ spec:
     app.kubernetes.io/instance: web-production
 
 ---
-# LoadBalancer service
+## LoadBalancer service
 apiVersion: v1
 kind: Service
 metadata:
@@ -386,7 +386,7 @@ stringData:
   api_key: "secret-api-key-12345"
   jwt_secret: "jwt-signing-secret"
 
-# Use external secret management
+## Use external secret management
 ---
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
@@ -414,7 +414,7 @@ spec:
 ### Guidelines
 
 ```yaml
-# Development
+## Development
 resources:
   requests:
     cpu: 50m       # 0.05 CPU cores
@@ -423,7 +423,7 @@ resources:
     cpu: 200m      # 0.2 CPU cores
     memory: 256Mi
 
-# Staging
+## Staging
 resources:
   requests:
     cpu: 100m      # 0.1 CPU cores
@@ -432,7 +432,7 @@ resources:
     cpu: 500m      # 0.5 CPU cores
     memory: 512Mi
 
-# Production
+## Production
 resources:
   requests:
     cpu: 250m      # 0.25 CPU cores
@@ -445,7 +445,7 @@ resources:
 ### Quality of Service (QoS) Classes
 
 ```yaml
-# Guaranteed QoS - requests == limits
+## Guaranteed QoS - requests == limits
 resources:
   requests:
     cpu: 500m
@@ -454,7 +454,7 @@ resources:
     cpu: 500m
     memory: 1Gi
 
-# Burstable QoS - requests < limits
+## Burstable QoS - requests < limits
 resources:
   requests:
     cpu: 100m
@@ -463,7 +463,7 @@ resources:
     cpu: 500m
     memory: 1Gi
 
-# BestEffort QoS - no requests or limits (avoid in production)
+## BestEffort QoS - no requests or limits (avoid in production)
 ```
 
 ---
@@ -524,17 +524,17 @@ startupProbe:
 ### Probe Types
 
 ```yaml
-# HTTP probe
+## HTTP probe
 httpGet:
   path: /health
   port: 8080
   scheme: HTTP
 
-# TCP probe
+## TCP probe
 tcpSocket:
   port: 5432
 
-# Command probe
+## Command probe
 exec:
   command:
     - /bin/sh
@@ -603,9 +603,9 @@ dependencies:
 ## values.yaml Patterns
 
 ```yaml
-# values.yaml
+## values.yaml
 ---
-# Application configuration
+## Application configuration
 replicaCount: 3
 
 image:
@@ -677,7 +677,7 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 
-# Application-specific configuration
+## Application-specific configuration
 config:
   environment: production
   logLevel: info
@@ -685,7 +685,7 @@ config:
     host: postgres.production.svc.cluster.local
     port: 5432
 
-# Secret management
+## Secret management
 secrets:
   databasePassword: ""
   apiKey: ""
@@ -763,7 +763,7 @@ Create the name of the service account to use
 ## Helm Template Example
 
 ```yaml
-# templates/deployment.yaml
+## templates/deployment.yaml
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -817,45 +817,45 @@ spec:
 ## Helm Commands
 
 ```bash
-# Install chart
+## Install chart
 helm install my-app ./my-application -n production
 
-# Install with custom values
+## Install with custom values
 helm install my-app ./my-application \
   -f values-prod.yaml \
   -n production \
   --create-namespace
 
-# Upgrade release
+## Upgrade release
 helm upgrade my-app ./my-application \
   -f values-prod.yaml \
   -n production
 
-# Upgrade with rollback on failure
+## Upgrade with rollback on failure
 helm upgrade my-app ./my-application \
   -f values-prod.yaml \
   --atomic \
   --timeout 5m
 
-# Dry run / template rendering
+## Dry run / template rendering
 helm install my-app ./my-application \
   --dry-run \
   --debug \
   -f values-prod.yaml
 
-# Lint chart
+## Lint chart
 helm lint ./my-application
 
-# Package chart
+## Package chart
 helm package ./my-application
 
-# List releases
+## List releases
 helm list -n production
 
-# Rollback
+## Rollback
 helm rollback my-app 5 -n production
 
-# Uninstall
+## Uninstall
 helm uninstall my-app -n production
 ```
 
@@ -866,10 +866,10 @@ helm uninstall my-app -n production
 ### ❌ Avoid: latest Tag
 
 ```yaml
-# Bad - Unpredictable deployments
+## Bad - Unpredictable deployments
 image: nginx:latest
 
-# Good - Pin specific versions
+## Good - Pin specific versions
 image: nginx:1.24.0
 image: nginx:1.24.0-alpine
 ```
@@ -877,12 +877,12 @@ image: nginx:1.24.0-alpine
 ### ❌ Avoid: No Resource Limits
 
 ```yaml
-# Bad - Can cause node resource exhaustion
+## Bad - Can cause node resource exhaustion
 containers:
   - name: app
     image: myapp:1.0.0
 
-# Good - Define limits
+## Good - Define limits
 containers:
   - name: app
     image: myapp:1.0.0
@@ -898,11 +898,11 @@ containers:
 ### ❌ Avoid: Running as Root
 
 ```yaml
-# Bad - Security risk
+## Bad - Security risk
 securityContext:
   runAsUser: 0
 
-# Good - Run as non-root
+## Good - Run as non-root
 securityContext:
   runAsNonRoot: true
   runAsUser: 1000
@@ -912,12 +912,12 @@ securityContext:
 ### ❌ Avoid: Missing Health Probes
 
 ```yaml
-# Bad - No health checks
+## Bad - No health checks
 containers:
   - name: app
     image: myapp:1.0.0
 
-# Good - Include probes
+## Good - Include probes
 containers:
   - name: app
     image: myapp:1.0.0
@@ -934,7 +934,7 @@ containers:
 ### ❌ Avoid: Storing Secrets in ConfigMaps
 
 ```yaml
-# Bad - Secrets in ConfigMap (visible in plain text)
+## Bad - Secrets in ConfigMap (visible in plain text)
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -943,7 +943,7 @@ data:
   database_password: "MySecretPassword"  # ❌ Plain text!
   api_key: "sk-1234567890"              # ❌ Plain text!
 
-# Good - Use Secrets with proper encryption
+## Good - Use Secrets with proper encryption
 apiVersion: v1
 kind: Secret
 metadata:
@@ -953,14 +953,14 @@ stringData:
   database_password: "MySecretPassword"  # ✅ Base64 encoded
   api_key: "sk-1234567890"              # ✅ Base64 encoded
 
-# Better - Use external secret management
-# Sealed Secrets, External Secrets Operator, or cloud provider KMS
+## Better - Use external secret management
+## Sealed Secrets, External Secrets Operator, or cloud provider KMS
 ```
 
 ### ❌ Avoid: No Pod Disruption Budgets
 
 ```yaml
-# Bad - No protection during cluster maintenance
+## Bad - No protection during cluster maintenance
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -969,7 +969,7 @@ spec:
   replicas: 3
   # No PodDisruptionBudget - all pods could be terminated at once
 
-# Good - Define disruption budget
+## Good - Define disruption budget
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
@@ -984,7 +984,7 @@ spec:
 ### ❌ Avoid: Missing Network Policies
 
 ```yaml
-# Bad - No network restrictions (pods can talk to anything)
+## Bad - No network restrictions (pods can talk to anything)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -992,7 +992,7 @@ metadata:
 spec:
   # No NetworkPolicy - unrestricted network access
 
-# Good - Restrict network traffic
+## Good - Restrict network traffic
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

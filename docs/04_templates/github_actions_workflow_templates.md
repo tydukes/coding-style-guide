@@ -8,6 +8,7 @@ category: "Templates"
 status: "active"
 version: "1.0.0"
 ---
+<!-- markdownlint-disable MD013 MD024 -->
 
 ## Overview
 
@@ -477,7 +478,7 @@ jobs:
 ## Reusable Workflow - Test
 
 ```yaml
-# .github/workflows/reusable-test.yml
+## .github/workflows/reusable-test.yml
 name: Reusable Test Workflow
 
 on:
@@ -531,7 +532,7 @@ jobs:
 ### Using Reusable Workflow
 
 ```yaml
-# .github/workflows/ci.yml
+## .github/workflows/ci.yml
 name: CI
 
 on:
@@ -801,7 +802,7 @@ jobs:
 ### Workflow Optimization
 
 ```yaml
-# Cache dependencies
+## Cache dependencies
 - uses: actions/cache@v3
   with:
     path: ~/.cache/pip
@@ -809,44 +810,44 @@ jobs:
     restore-keys: |
       ${{ runner.os }}-pip-
 
-# Use matrix strategy for multiple versions
+## Use matrix strategy for multiple versions
 strategy:
   matrix:
     python-version: ["3.10", "3.11", "3.12"]
   fail-fast: false  # Continue other jobs if one fails
 
-# Conditional job execution
+## Conditional job execution
 if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
-# Job dependencies
+## Job dependencies
 needs: [test, lint, security]
 ```
 
 ### Security Best Practices
 
 ```yaml
-# Use environment protection rules
+## Use environment protection rules
 environment:
   name: production
   url: https://example.com
 
-# Minimal permissions
+## Minimal permissions
 permissions:
   contents: read
   packages: write
 
-# Use secrets for sensitive data
+## Use secrets for sensitive data
 env:
   API_KEY: ${{ secrets.API_KEY }}
 
-# Pin action versions
+## Pin action versions
 uses: actions/checkout@v4  # Not @main
 ```
 
 ### Artifact Management
 
 ```yaml
-# Upload artifacts
+## Upload artifacts
 - uses: actions/upload-artifact@v4
   with:
     name: test-results
@@ -855,7 +856,7 @@ uses: actions/checkout@v4  # Not @main
       coverage/
     retention-days: 30
 
-# Download artifacts
+## Download artifacts
 - uses: actions/download-artifact@v4
   with:
     name: test-results
@@ -869,7 +870,7 @@ uses: actions/checkout@v4  # Not @main
 ### Custom Action Example
 
 ```yaml
-# .github/actions/setup-python-env/action.yml
+## .github/actions/setup-python-env/action.yml
 name: 'Setup Python Environment'
 description: 'Set up Python with caching and install dependencies'
 

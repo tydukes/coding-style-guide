@@ -9,7 +9,6 @@ status: "active"
 version: "0.1.0"
 ---
 
-
 The Coding Style Guide Validator is available as a containerized tool, making it easy to
 integrate validation into any repository without installing dependencies locally.
 
@@ -18,15 +17,15 @@ integrate validation into any repository without installing dependencies locally
 ### Basic Usage
 
 ```bash
-# Run full validation on current directory
+## Run full validation on current directory
 docker run --rm -v $(pwd):/workspace \
   ghcr.io/tydukes/coding-style-guide:latest validate
 
-# Run linters only
+## Run linters only
 docker run --rm -v $(pwd):/workspace \
   ghcr.io/tydukes/coding-style-guide:latest lint
 
-# Format code in-place
+## Format code in-place
 docker run --rm -v $(pwd):/workspace \
   ghcr.io/tydukes/coding-style-guide:latest format
 ```
@@ -100,10 +99,10 @@ services:
 Then run:
 
 ```bash
-# Full validation
+## Full validation
 docker-compose run --rm validate
 
-# Or specify command
+## Or specify command
 docker-compose run --rm validate lint
 ```
 
@@ -165,17 +164,17 @@ jobs:
 For easier local usage, use the wrapper script:
 
 ```bash
-# Download wrapper script
+## Download wrapper script
 curl -sSL https://raw.githubusercontent.com/tydukes/coding-style-guide/main/scripts/validate-container.sh \
   -o validate-style.sh && chmod +x validate-style.sh
 
-# Run validation
+## Run validation
 ./validate-style.sh validate
 
-# Run with custom workspace
+## Run with custom workspace
 ./validate-style.sh lint --workspace /path/to/repo
 
-# Use local image
+## Use local image
 ./validate-style.sh validate --image coding-style-guide:local
 ```
 
@@ -268,13 +267,13 @@ pipeline {
 To build and test locally:
 
 ```bash
-# Build image
+## Build image
 docker build -t coding-style-guide:local .
 
-# Test with docker-compose
+## Test with docker-compose
 docker-compose run --rm validator
 
-# Or run directly
+## Or run directly
 docker run --rm -v $(pwd):/workspace coding-style-guide:local validate
 ```
 
@@ -285,7 +284,7 @@ docker run --rm -v $(pwd):/workspace coding-style-guide:local validate
 If you encounter permission issues with mounted volumes:
 
 ```bash
-# Run as current user
+## Run as current user
 docker run --rm -v $(pwd):/workspace \
   --user $(id -u):$(id -g) \
   ghcr.io/tydukes/coding-style-guide:latest validate
@@ -296,7 +295,7 @@ docker run --rm -v $(pwd):/workspace \
 Ensure your repository is properly mounted:
 
 ```bash
-# Verify mount
+## Verify mount
 docker run --rm -v $(pwd):/workspace \
   ghcr.io/tydukes/coding-style-guide:latest ls -la /workspace
 ```

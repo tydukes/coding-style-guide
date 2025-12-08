@@ -54,7 +54,7 @@ Add metadata tags to your code files using language-appropriate comment syntax:
 import jwt
 from fastapi import APIRouter
 
-# Your code here...
+## Your code here...
 ```
 
 **Terraform Example**:
@@ -81,14 +81,14 @@ resource "aws_vpc" "main" {
 Use the validator to check your metadata:
 
 ```bash
-# Clone the repository
+## Clone the repository
 git clone https://github.com/tydukes/coding-style-guide.git
 cd coding-style-guide
 
-# Validate your files
+## Validate your files
 python3 scripts/validate_metadata.py /path/to/your/project
 
-# Or validate specific language files
+## Or validate specific language files
 python3 scripts/validate_metadata.py --language python /path/to/your/src
 ```
 
@@ -97,10 +97,10 @@ python3 scripts/validate_metadata.py --language python /path/to/your/src
 Add automated validation to your repository:
 
 ```bash
-# Install pre-commit
+## Install pre-commit
 pip install pre-commit
 
-# Add .pre-commit-config.yaml to your repo
+## Add .pre-commit-config.yaml to your repo
 cat > .pre-commit-config.yaml <<EOF
 repos:
   - repo: https://github.com/psf/black
@@ -125,7 +125,7 @@ repos:
         files: \.(py|tf|hcl|js|ts|sh|sql)$
 EOF
 
-# Install hooks
+## Install hooks
 pre-commit install
 ```
 
@@ -319,10 +319,10 @@ python3 scripts/validate_metadata.py --output validation_results.json /path/to/p
 #### Python
 
 ```bash
-# Install tools
+## Install tools
 pip install black flake8 mypy
 
-# Add to .pre-commit-config.yaml
+## Add to .pre-commit-config.yaml
 repos:
   - repo: https://github.com/psf/black
     rev: 24.10.0
@@ -337,10 +337,10 @@ repos:
 #### Terraform
 
 ```bash
-# Install terraform and tflint
+## Install terraform and tflint
 brew install terraform tflint
 
-# Add to .pre-commit-config.yaml
+## Add to .pre-commit-config.yaml
 repos:
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.96.1
@@ -353,10 +353,10 @@ repos:
 #### Bash
 
 ```bash
-# Install shellcheck
+## Install shellcheck
 brew install shellcheck
 
-# Add to .pre-commit-config.yaml
+## Add to .pre-commit-config.yaml
 repos:
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.10.0.1
@@ -367,10 +367,10 @@ repos:
 #### TypeScript
 
 ```bash
-# Install tools
+## Install tools
 npm install --save-dev prettier eslint @typescript-eslint/parser
 
-# Add to .pre-commit-config.yaml
+## Add to .pre-commit-config.yaml
 repos:
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v4.0.0-alpha.8
@@ -484,7 +484,7 @@ repos:
 **GitHub Actions**:
 
 ```yaml
-# .github/workflows/ci.yml
+## .github/workflows/ci.yml
 name: Code Quality
 
 on: [push, pull_request]
@@ -517,7 +517,7 @@ jobs:
 **GitLab CI**:
 
 ```yaml
-# .gitlab-ci.yml
+## .gitlab-ci.yml
 validate:
   image: ghcr.io/tydukes/coding-style-guide:latest
   script:
@@ -562,13 +562,13 @@ validate:
 **Solution**:
 
 ```bash
-# Run black to auto-format
+## Run black to auto-format
 black .
 
-# Check flake8 errors
+## Check flake8 errors
 flake8 .
 
-# Fix errors and try again
+## Fix errors and try again
 git add .
 git commit -m "fix: address linting issues"
 ```
@@ -580,13 +580,13 @@ git commit -m "fix: address linting issues"
 **Solution**:
 
 ```bash
-# Check which files are failing
+## Check which files are failing
 python3 scripts/validate_metadata.py . --output errors.json
 cat errors.json | jq '.errors'
 
-# Add missing tags
-# Fix version format (use MAJOR.MINOR.PATCH)
-# Fix date format (use YYYY-MM-DD)
+## Add missing tags
+## Fix version format (use MAJOR.MINOR.PATCH)
+## Fix date format (use YYYY-MM-DD)
 ```
 
 ### Issue: Duplicate Module Names
@@ -596,11 +596,11 @@ cat errors.json | jq '.errors'
 **Solution**:
 
 ```bash
-# Find duplicates
+## Find duplicates
 grep -r "@module your_module_name" .
 
-# Rename one of the modules to be unique
-# Module names should describe the specific purpose
+## Rename one of the modules to be unique
+## Module names should describe the specific purpose
 ```
 
 ### Issue: Container Permission Denied
@@ -610,7 +610,7 @@ grep -r "@module your_module_name" .
 **Solution**:
 
 ```bash
-# Run with user permissions
+## Run with user permissions
 docker run --rm -v $(pwd):/workspace \
   --user $(id -u):$(id -g) \
   ghcr.io/tydukes/coding-style-guide:latest \

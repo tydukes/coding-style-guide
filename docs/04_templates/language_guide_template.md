@@ -13,6 +13,8 @@ version: "1.0.0"
 <!-- Replace all [bracketed placeholders] with language-specific content. -->
 <!-- Delete this comment block when creating a new guide. -->
 
+## [Language Name] Style Guide
+
 ## Language Overview
 
 **[Language Name]** is a [compiled/interpreted] [programming/scripting/markup] language primarily used for
@@ -602,7 +604,7 @@ if (![user_has_permission]([required_permission])) {
 ### Pre-commit Configuration
 
 ```yaml
-# .pre-commit-config.yaml
+## .pre-commit-config.yaml
 repos:
   - repo: [formatter_repo_url]
     hooks:

@@ -479,37 +479,37 @@ describe('MyStack', () => {
 ### Common Commands
 
 ```bash
-# Initialize new CDK project
+## Initialize new CDK project
 cdk init app --language typescript
 
-# Install dependencies
+## Install dependencies
 npm install
 
-# Synthesize CloudFormation template
+## Synthesize CloudFormation template
 cdk synth
 
-# Diff against deployed stack
+## Diff against deployed stack
 cdk diff
 
-# Deploy stack
+## Deploy stack
 cdk deploy
 
-# Deploy all stacks
+## Deploy all stacks
 cdk deploy --all
 
-# Deploy with approval
+## Deploy with approval
 cdk deploy --require-approval never
 
-# Destroy stack
+## Destroy stack
 cdk destroy
 
-# List all stacks
+## List all stacks
 cdk list
 
-# View documentation
+## View documentation
 cdk doctor
 
-# Bootstrap environment (first time only)
+## Bootstrap environment (first time only)
 cdk bootstrap aws://ACCOUNT-NUMBER/REGION
 ```
 
@@ -891,7 +891,7 @@ module.exports = {
 ### Pre-commit Hooks
 
 ```yaml
-# .pre-commit-config.yaml
+## .pre-commit-config.yaml
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
@@ -940,7 +940,7 @@ repos:
 ### Makefile
 
 ```makefile
-# Makefile
+## Makefile
 .PHONY: install build test deploy clean
 
 install:

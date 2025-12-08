@@ -328,7 +328,7 @@ class DiscountTier:
         return (user.years_member >= self.min_years and
                 user.total_purchases >= self.min_purchases)
 
-# Define discount tiers (highest to lowest priority)
+## Define discount tiers (highest to lowest priority)
 PREMIUM_TIERS = [
     DiscountTier(min_years=5, min_purchases=10000, discount_rate=0.30),
     DiscountTier(min_years=5, min_purchases=0, discount_rate=0.20),
@@ -441,7 +441,7 @@ def process_orders(orders: List[Order]) -> List[Order]:
         if order.status == 'active' and calculate_order_total(order) > 1000
     ]
 
-# Alternative: If you need the totals separately
+## Alternative: If you need the totals separately
 def process_orders_with_totals(orders: List[Order]) -> List[tuple[Order, float]]:
     """Return high-value active orders with their totals.
 

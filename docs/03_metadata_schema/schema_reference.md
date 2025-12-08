@@ -126,9 +126,9 @@ from fastapi import APIRouter, HTTPException
 **Comment Format** (Alternative):
 
 ```python
-# @module user_authentication
-# @description Handles user authentication and session management
-# @version 1.2.0
+## @module user_authentication
+## @description Handles user authentication and session management
+## @version 1.2.0
 
 import jwt
 ```
@@ -161,9 +161,9 @@ resource "aws_vpc" "main" {
 **Inline Comment Format**:
 
 ```hcl
-# @module vpc
-# @description Creates VPC infrastructure
-# @version 2.1.0
+## @module vpc
+## @description Creates VPC infrastructure
+## @version 2.1.0
 
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
@@ -197,14 +197,14 @@ import { Router } from 'express';
 ```bash
 #!/usr/bin/env bash
 #
-# @module deploy_script
-# @description Automated deployment script for staging environment
-# @dependencies aws-cli, jq, docker
-# @version 1.3.0
-# @author Tyler Dukes
-# @last_updated 2025-10-27
-# @env staging
-# @status stable
+## @module deploy_script
+## @description Automated deployment script for staging environment
+## @dependencies aws-cli, jq, docker
+## @version 1.3.0
+## @author Tyler Dukes
+## @last_updated 2025-10-27
+## @env staging
+## @status stable
 #
 
 set -euo pipefail
@@ -214,13 +214,13 @@ set -euo pipefail
 
 ```yaml
 ---
-# @module user_provisioning
-# @description Ansible playbook for user account creation and permissions
-# @dependencies ansible >= 2.9
-# @version 1.1.0
-# @author Tyler Dukes
-# @last_updated 2025-10-27
-# @env prod, staging
+## @module user_provisioning
+## @description Ansible playbook for user account creation and permissions
+## @dependencies ansible >= 2.9
+## @version 1.1.0
+## @author Tyler Dukes
+## @last_updated 2025-10-27
+## @env prod, staging
 
 - name: Create user accounts
   hosts: all
@@ -470,13 +470,13 @@ Modules are validated for:
 Use the validation script to check metadata:
 
 ```bash
-# Validate all Python files
+## Validate all Python files
 python scripts/validate_metadata.py --language python src/
 
-# Validate specific file
+## Validate specific file
 python scripts/validate_metadata.py api/auth.py
 
-# Validate all Terraform modules
+## Validate all Terraform modules
 python scripts/validate_metadata.py --language terraform infrastructure/
 ```
 
@@ -500,7 +500,7 @@ repos:
 ### DO: Keep Metadata Up-to-Date
 
 ```python
-# Good - version and date updated together
+## Good - version and date updated together
 """
 @module user_service
 @version 2.1.0
@@ -511,7 +511,7 @@ repos:
 ### DON'T: Leave Stale Metadata
 
 ```python
-# Bad - version updated but date is old
+## Bad - version updated but date is old
 """
 @module user_service
 @version 2.1.0
@@ -522,7 +522,7 @@ repos:
 ### DO: Be Specific in Descriptions
 
 ```python
-# Good - specific about what it does
+## Good - specific about what it does
 """
 @description Validates user input for email format, length constraints, and prohibited characters
 """
@@ -531,7 +531,7 @@ repos:
 ### DON'T: Use Vague Descriptions
 
 ```python
-# Bad - too generic
+## Bad - too generic
 """
 @description Handles validation
 """
@@ -540,7 +540,7 @@ repos:
 ### DO: List All Dependencies
 
 ```python
-# Good - comprehensive dependency list
+## Good - comprehensive dependency list
 """
 @dependencies fastapi, pyjwt, passlib[bcrypt], python-dotenv, redis
 """
@@ -549,17 +549,17 @@ repos:
 ### DON'T: Omit Dependencies
 
 ```python
-# Bad - missing implicit dependencies
+## Bad - missing implicit dependencies
 """
 @dependencies fastapi
-# Missing: pyjwt (used in code)
+## Missing: pyjwt (used in code)
 """
 ```
 
 ### DO: Use Semantic Versioning Correctly
 
 ```hcl
-# Good - breaking change bumps major version
+## Good - breaking change bumps major version
 /**
  * @version 2.0.0
  * Breaking: Changed input variable names
@@ -569,7 +569,7 @@ repos:
 ### DON'T: Misuse Version Numbers
 
 ```hcl
-# Bad - breaking change but only bumped patch
+## Bad - breaking change but only bumped patch
 /**
  * @version 1.0.1
  * Changed input variable names (this is breaking!)
@@ -709,16 +709,16 @@ resource "aws_vpc" "main" {
 ```bash
 #!/usr/bin/env bash
 #
-# @module deploy_to_staging
-# @description Deploys application to staging environment with health checks and rollback capability
-# @dependencies aws-cli >= 2.0, jq, docker >= 20.10
-# @version 1.4.2
-# @author Tyler Dukes
-# @last_updated 2025-10-27
-# @status stable
-# @env staging
-# @security_classification internal
-# @depends_on ./scripts/health_check.sh, ./scripts/rollback.sh
+## @module deploy_to_staging
+## @description Deploys application to staging environment with health checks and rollback capability
+## @dependencies aws-cli >= 2.0, jq, docker >= 20.10
+## @version 1.4.2
+## @author Tyler Dukes
+## @last_updated 2025-10-27
+## @status stable
+## @env staging
+## @security_classification internal
+## @depends_on ./scripts/health_check.sh, ./scripts/rollback.sh
 #
 
 set -euo pipefail
@@ -735,7 +735,7 @@ readonly ENVIRONMENT="staging"
 **Step 1**: Identify all modules without metadata
 
 ```bash
-# Find Python files without @module tag
+## Find Python files without @module tag
 find . -name "*.py" -exec grep -L "@module" {} \;
 ```
 

@@ -39,10 +39,10 @@ Install pre-commit via your preferred package manager:
 **Python (pip/pipx)**:
 
 ```bash
-# Using pip
+## Using pip
 pip install pre-commit
 
-# Using pipx (recommended for global install)
+## Using pipx (recommended for global install)
 pipx install pre-commit
 ```
 
@@ -55,39 +55,39 @@ brew install pre-commit
 **System Package Managers**:
 
 ```bash
-# Ubuntu/Debian
+## Ubuntu/Debian
 sudo apt install pre-commit
 
-# Fedora
+## Fedora
 sudo dnf install pre-commit
 
-# Arch Linux
+## Arch Linux
 sudo pacman -S pre-commit
 ```
 
 ### Initialize in Repository
 
 ```bash
-# Navigate to your repository
+## Navigate to your repository
 cd /path/to/your/repo
 
-# Install pre-commit hooks
+## Install pre-commit hooks
 pre-commit install
 
-# Install commit-msg hooks (optional, for conventional commits)
+## Install commit-msg hooks (optional, for conventional commits)
 pre-commit install --hook-type commit-msg
 
-# Install pre-push hooks (optional, for expensive checks)
+## Install pre-push hooks (optional, for expensive checks)
 pre-commit install --hook-type pre-push
 ```
 
 ### Verify Installation
 
 ```bash
-# Run hooks on all files to verify setup
+## Run hooks on all files to verify setup
 pre-commit run --all-files
 
-# Check installed hooks
+## Check installed hooks
 pre-commit run --hook-stage manual
 ```
 
@@ -100,7 +100,7 @@ pre-commit run --hook-stage manual
 Create `.pre-commit-config.yaml` in your repository root:
 
 ```yaml
-# Basic pre-commit configuration
+## Basic pre-commit configuration
 repos:
   # General file checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -176,7 +176,7 @@ repos:
 For projects with multiple languages:
 
 ```yaml
-# .pre-commit-config.yaml - Full-stack example
+## .pre-commit-config.yaml - Full-stack example
 repos:
   # ===== General =====
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -394,7 +394,7 @@ For large projects, split configuration by environment:
 **.pre-commit-config.yaml** (main config):
 
 ```yaml
-# Main pre-commit configuration
+## Main pre-commit configuration
 default_install_hook_types: [pre-commit, commit-msg, pre-push]
 default_stages: [commit]
 
@@ -731,7 +731,7 @@ repos:
 **.ansible-lint**:
 
 ```yaml
-# .ansible-lint
+## .ansible-lint
 profile: production
 
 exclude_paths:
@@ -748,7 +748,7 @@ warn_list:
   - experimental
   - role-name
 
-# Enable specific rules
+## Enable specific rules
 enable_list:
   - args
   - empty-string-compare
@@ -811,7 +811,7 @@ repos:
 **.hadolint.yaml**:
 
 ```yaml
-# .hadolint.yaml
+## .hadolint.yaml
 ignored:
   - DL3008  # Pin versions in apt-get install
   - DL3009  # Delete apt-get lists after installing
@@ -852,13 +852,13 @@ repos:
 **Initialize baseline**:
 
 ```bash
-# Generate initial baseline
+## Generate initial baseline
 detect-secrets scan > .secrets.baseline
 
-# Audit findings
+## Audit findings
 detect-secrets audit .secrets.baseline
 
-# Update baseline after adding legitimate secrets
+## Update baseline after adding legitimate secrets
 detect-secrets scan --baseline .secrets.baseline
 ```
 
@@ -904,7 +904,7 @@ repos:
 **.trufflehog-exclude.txt**:
 
 ```text
-# Exclude common false positives
+## Exclude common false positives
 **/*.lock
 **/*.min.js
 **/*.svg
@@ -998,7 +998,6 @@ repos:
 import sys
 from pathlib import Path
 
-
 def check_imports(filepath: Path) -> bool:
     """Check import order and style."""
     content = filepath.read_text()
@@ -1024,7 +1023,6 @@ def check_imports(filepath: Path) -> bool:
 
     return True
 
-
 if __name__ == '__main__':
     files = [Path(f) for f in sys.argv[1:]]
     all_passed = all(check_imports(f) for f in files)
@@ -1035,7 +1033,7 @@ if __name__ == '__main__':
 
 ```bash
 #!/bin/bash
-# Check that all source files have license headers
+## Check that all source files have license headers
 
 EXIT_CODE=0
 
@@ -1058,9 +1056,8 @@ import re
 import sys
 from pathlib import Path
 
-# Required format: TODO(username): Description [TICKET-123]
+## Required format: TODO(username): Description [TICKET-123]
 TODO_PATTERN = re.compile(r'TODO\([a-z]+\):\s+.+\s+\[[A-Z]+-\d+\]')
-
 
 def check_todos(filepath: Path) -> bool:
     """Check TODO comments follow project convention."""
@@ -1082,7 +1079,6 @@ def check_todos(filepath: Path) -> bool:
         return False
 
     return True
-
 
 if __name__ == '__main__':
     files = [Path(f) for f in sys.argv[1:]]
@@ -1220,10 +1216,10 @@ repos:
 Use environment variables to skip expensive checks during development:
 
 ```bash
-# Skip expensive hooks locally
+## Skip expensive hooks locally
 SKIP=mypy,bandit,terraform_trivy git commit -m "WIP: feature development"
 
-# Skip all hooks (emergency only)
+## Skip all hooks (emergency only)
 git commit --no-verify -m "hotfix: critical bug"
 ```
 
@@ -1297,10 +1293,10 @@ repos:
 **Hook fails with "command not found"**:
 
 ```bash
-# Solution 1: Install the tool globally
+## Solution 1: Install the tool globally
 pip install black flake8 mypy
 
-# Solution 2: Use language_version to specify Python
+## Solution 2: Use language_version to specify Python
 repos:
   - repo: https://github.com/psf/black
     rev: 23.12.1
@@ -1312,37 +1308,37 @@ repos:
 **Hook modifies files, causing re-run**:
 
 ```yaml
-# This is expected behavior - hooks auto-fix and re-stage
-# Just run git commit again after hooks modify files
+## This is expected behavior - hooks auto-fix and re-stage
+## Just run git commit again after hooks modify files
 
-# If you want to see what changed:
+## If you want to see what changed:
 git diff
 ```
 
 **Hooks take too long**:
 
 ```bash
-# Run only on changed files (default)
+## Run only on changed files (default)
 pre-commit run
 
-# Skip specific hooks
+## Skip specific hooks
 SKIP=mypy,bandit git commit -m "message"
 
-# Move expensive hooks to pre-push
-# See "Staged Hooks" section above
+## Move expensive hooks to pre-push
+## See "Staged Hooks" section above
 ```
 
 **Hook cache issues**:
 
 ```bash
-# Clean pre-commit cache
+## Clean pre-commit cache
 pre-commit clean
 
-# Reinstall all hooks
+## Reinstall all hooks
 pre-commit uninstall
 pre-commit install
 
-# Clear specific hook cache
+## Clear specific hook cache
 rm -rf ~/.cache/pre-commit/repo*
 ```
 
@@ -1360,26 +1356,26 @@ repos:
 ### Debug Mode
 
 ```bash
-# Run with verbose output
+## Run with verbose output
 pre-commit run --verbose --all-files
 
-# Debug specific hook
+## Debug specific hook
 pre-commit run black --verbose
 
-# Show hook execution environment
+## Show hook execution environment
 pre-commit run --hook-stage manual --all-files -v
 ```
 
 ### Updating Hooks
 
 ```bash
-# Update all hooks to latest versions
+## Update all hooks to latest versions
 pre-commit autoupdate
 
-# Update specific hooks
+## Update specific hooks
 pre-commit autoupdate --repo https://github.com/psf/black
 
-# Freeze at current versions (for reproducibility)
+## Freeze at current versions (for reproducibility)
 pre-commit autoupdate --freeze
 ```
 

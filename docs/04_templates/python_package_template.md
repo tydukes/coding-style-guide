@@ -120,13 +120,13 @@ include = ["my_package*"]
 [tool.setuptools.package-data]
 my_package = ["py.typed"]
 
-# Black configuration
+## Black configuration
 [tool.black]
 line-length = 100
 target-version = ["py310", "py311", "py312"]
 include = '\.pyi?$'
 
-# Ruff configuration
+## Ruff configuration
 [tool.ruff]
 line-length = 100
 target-version = "py310"
@@ -144,7 +144,7 @@ ignore = []
 [tool.ruff.isort]
 known-first-party = ["my_package"]
 
-# MyPy configuration
+## MyPy configuration
 [tool.mypy]
 python_version = "3.10"
 warn_return_any = true
@@ -161,7 +161,7 @@ warn_no_return = true
 module = "tests.*"
 disallow_untyped_defs = false
 
-# Pytest configuration
+## Pytest configuration
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
@@ -175,7 +175,7 @@ addopts = [
     "--cov-report=xml",
 ]
 
-# Coverage configuration
+## Coverage configuration
 [tool.coverage.run]
 source = ["src"]
 omit = ["tests/*", "**/__main__.py"]
@@ -196,7 +196,7 @@ exclude_lines = [
 ## README.md Template
 
 ```markdown
-# My Package
+## My Package
 
 [![PyPI version](https://badge.fury.io/py/my-package.svg)](https://badge.fury.io/py/my-package)
 [![Python versions](https://img.shields.io/pypi/pyversions/my-package.svg)](https://pypi.org/project/my-package/)
@@ -230,7 +230,7 @@ pip install my-package[dev]
 \```python
 from my_package import MyClass
 
-# Basic usage
+## Basic usage
 obj = MyClass()
 result = obj.do_something()
 print(result)
@@ -243,7 +243,7 @@ print(result)
 \```python
 from my_package import core
 
-# Use the main functionality
+## Use the main functionality
 result = core.process_data(input_data)
 \```
 
@@ -252,7 +252,7 @@ result = core.process_data(input_data)
 \```python
 from my_package import core, utils
 
-# Advanced configuration
+## Advanced configuration
 config = utils.load_config("config.yaml")
 processor = core.DataProcessor(config)
 result = processor.run()
@@ -261,13 +261,13 @@ result = processor.run()
 ## CLI Usage
 
 \```bash
-# Run the CLI
+## Run the CLI
 my-package --help
 
-# Basic command
+## Basic command
 my-package process input.txt
 
-# With options
+## With options
 my-package process input.txt --output output.txt --verbose
 \```
 
@@ -280,55 +280,55 @@ Full documentation is available at [https://my-package.readthedocs.io](https://m
 ### Setup
 
 \```bash
-# Clone the repository
+## Clone the repository
 git clone https://github.com/yourusername/my-package.git
 cd my-package
 
-# Create virtual environment
+## Create virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install dependencies
+## Install dependencies
 pip install -e ".[dev]"
 
-# Install pre-commit hooks
+## Install pre-commit hooks
 pre-commit install
 \```
 
 ### Running Tests
 
 \```bash
-# Run tests
+## Run tests
 pytest
 
-# With coverage
+## With coverage
 pytest --cov
 
-# Run specific test
+## Run specific test
 pytest tests/test_core.py::test_specific_function
 \```
 
 ### Code Quality
 
 \```bash
-# Format code
+## Format code
 black src tests
 
-# Lint code
+## Lint code
 ruff check src tests
 
-# Type checking
+## Type checking
 mypy src
 \```
 
 ### Documentation
 
 \```bash
-# Build documentation
+## Build documentation
 cd docs
 mkdocs build
 
-# Serve documentation locally
+## Serve documentation locally
 mkdocs serve
 \```
 
@@ -395,7 +395,6 @@ from my_package import __version__
 from my_package.core import process_data
 from my_package.utils import setup_logging
 
-
 def parse_args(args: Optional[list[str]] = None) -> argparse.Namespace:
     """Parse command line arguments.
 
@@ -438,7 +437,6 @@ def parse_args(args: Optional[list[str]] = None) -> argparse.Namespace:
 
     return parser.parse_args(args)
 
-
 def main(args: Optional[list[str]] = None) -> int:
     """Main CLI entry point.
 
@@ -470,7 +468,6 @@ def main(args: Optional[list[str]] = None) -> int:
         print(f"Error: {e}", file=sys.stderr)
         return 1
 
-
 if __name__ == "__main__":
     sys.exit(main())
 ```
@@ -484,7 +481,6 @@ if __name__ == "__main__":
 
 from pathlib import Path
 from typing import Any
-
 
 class MyClass:
     """Main class for the package.
@@ -513,7 +509,6 @@ class MyClass:
             raise ValueError("Configuration is required")
 
         return "Result of doing something"
-
 
 def process_data(input_file: Path) -> str:
     """Process input data from a file.
@@ -555,7 +550,6 @@ from typing import Any
 
 import yaml
 
-
 def setup_logging(level: str = "INFO") -> None:
     """Setup logging configuration.
 
@@ -567,7 +561,6 @@ def setup_logging(level: str = "INFO") -> None:
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-
 
 def load_config(config_file: Path) -> dict[str, Any]:
     """Load configuration from YAML file.
@@ -592,7 +585,6 @@ def load_config(config_file: Path) -> dict[str, Any]:
         raise ValueError(f"Invalid YAML in config file: {e}")
 
     return config or {}
-
 
 def validate_input(data: Any) -> bool:
     """Validate input data.
@@ -624,7 +616,6 @@ from typing import Generator
 
 import pytest
 
-
 @pytest.fixture
 def sample_data() -> dict[str, str]:
     """Provide sample data for tests.
@@ -636,7 +627,6 @@ def sample_data() -> dict[str, str]:
         "key1": "value1",
         "key2": "value2",
     }
-
 
 @pytest.fixture
 def temp_file(tmp_path: Path) -> Generator[Path, None, None]:
@@ -669,7 +659,6 @@ import pytest
 
 from my_package.core import MyClass, process_data
 
-
 class TestMyClass:
     """Tests for MyClass."""
 
@@ -694,7 +683,6 @@ class TestMyClass:
         obj = MyClass()
         with pytest.raises(ValueError, match="Configuration is required"):
             obj.do_something()
-
 
 class TestProcessData:
     """Tests for process_data function."""
@@ -723,15 +711,15 @@ class TestProcessData:
 ## .gitignore Template
 
 ```gitignore
-# Byte-compiled / optimized / DLL files
+## Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
+## C extensions
 *.so
 
-# Distribution / packaging
+## Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -752,11 +740,11 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# PyInstaller
+## PyInstaller
 *.manifest
 *.spec
 
-# Unit test / coverage reports
+## Unit test / coverage reports
 htmlcov/
 .tox/
 .nox/
@@ -770,53 +758,53 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
-# Translations
+## Translations
 *.mo
 *.pot
 
-# Django
+## Django
 *.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
-# Flask
+## Flask
 instance/
 .webassets-cache
 
-# Scrapy
+## Scrapy
 .scrapy
 
-# Sphinx documentation
+## Sphinx documentation
 docs/_build/
 
-# PyBuilder
+## PyBuilder
 target/
 
-# Jupyter Notebook
+## Jupyter Notebook
 .ipynb_checkpoints
 
-# IPython
+## IPython
 profile_default/
 ipython_config.py
 
-# pyenv
+## pyenv
 .python-version
 
-# pipenv
+## pipenv
 Pipfile.lock
 
-# PEP 582
+## PEP 582
 __pypackages__/
 
-# Celery
+## Celery
 celerybeat-schedule
 celerybeat.pid
 
-# SageMath
+## SageMath
 *.sage.py
 
-# Environments
+## Environments
 .env
 .venv
 env/
@@ -825,32 +813,32 @@ ENV/
 env.bak/
 venv.bak/
 
-# Spyder
+## Spyder
 .spyderproject
 .spyproject
 
-# Rope
+## Rope
 .ropeproject
 
-# mkdocs
+## mkdocs
 /site
 
-# mypy
+## mypy
 .mypy_cache/
 .dmypy.json
 dmypy.json
 
-# Pyre
+## Pyre
 .pyre/
 
-# IDEs
+## IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# OS
+## OS
 .DS_Store
 Thumbs.db
 ```
@@ -900,46 +888,46 @@ repos:
 .PHONY: help install dev test lint format clean build publish
 
 help: ## Show this help message
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
-		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+ @grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
+  awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 install: ## Install package
-	pip install -e .
+ pip install -e .
 
 dev: ## Install package with development dependencies
-	pip install -e ".[dev,docs]"
+ pip install -e ".[dev,docs]"
 
 test: ## Run tests
-	pytest
+ pytest
 
 test-cov: ## Run tests with coverage report
-	pytest --cov --cov-report=html --cov-report=term
+ pytest --cov --cov-report=html --cov-report=term
 
 lint: ## Run linters
-	ruff check src tests
-	mypy src
+ ruff check src tests
+ mypy src
 
 format: ## Format code
-	black src tests
-	ruff check --fix src tests
+ black src tests
+ ruff check --fix src tests
 
 clean: ## Clean build artifacts
-	rm -rf build dist *.egg-info
-	rm -rf .pytest_cache .coverage htmlcov
-	find . -type d -name __pycache__ -exec rm -rf {} +
-	find . -type f -name "*.pyc" -delete
+ rm -rf build dist *.egg-info
+ rm -rf .pytest_cache .coverage htmlcov
+ find . -type d -name __pycache__ -exec rm -rf {} +
+ find . -type f -name "*.pyc" -delete
 
 build: clean ## Build distribution
-	python -m build
+ python -m build
 
 publish: build ## Publish to PyPI
-	python -m twine upload dist/*
+ python -m twine upload dist/*
 
 docs-serve: ## Serve documentation locally
-	mkdocs serve
+ mkdocs serve
 
 docs-build: ## Build documentation
-	mkdocs build
+ mkdocs build
 ```
 
 ---
@@ -997,6 +985,6 @@ docs-build: ## Build documentation
 
 ---
 
-**Version**: 1.0.0
-**Last Updated**: 2025-10-28
-**Status**: Active
+__Version__: 1.0.0
+__Last Updated__: 2025-10-28
+__Status__: Active

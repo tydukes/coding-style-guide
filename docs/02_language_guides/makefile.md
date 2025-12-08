@@ -86,9 +86,9 @@ clean:
 ### Basic Target
 
 ```makefile
-# Target: what to build
-# Prerequisites: dependencies
-# Recipe: commands to execute (MUST be indented with TAB)
+## Target: what to build
+## Prerequisites: dependencies
+## Recipe: commands to execute (MUST be indented with TAB)
 
 target: prerequisite1 prerequisite2
  command1
@@ -144,18 +144,18 @@ help:
 ### Define Variables
 
 ```makefile
-# Simple variable
+## Simple variable
 CC = gcc
 CFLAGS = -Wall -Wextra -O2
 
-# Recursive variable (evaluated when used)
+## Recursive variable (evaluated when used)
 SRC_DIR = src
 OBJ_DIR = $(SRC_DIR)/obj
 
-# Simply expanded variable (evaluated immediately)
+## Simply expanded variable (evaluated immediately)
 BUILD_TIME := $(shell date +%Y%m%d-%H%M%S)
 
-# Conditional variable
+## Conditional variable
 DEBUG ?= 0
 
 ifeq ($(DEBUG),1)
@@ -177,23 +177,23 @@ build:
 ### Common Variables
 
 ```makefile
-# Compiler and tools
+## Compiler and tools
 CC = gcc
 CXX = g++
 LD = ld
 AR = ar
 
-# Directories
+## Directories
 SRC_DIR = src
 BUILD_DIR = build
 BIN_DIR = bin
 
-# Flags
+## Flags
 CFLAGS = -Wall -Wextra -O2
 LDFLAGS = -L/usr/local/lib
 INCLUDES = -I/usr/local/include
 
-# Files
+## Files
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
 OBJECTS = $(SOURCES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 TARGET = $(BIN_DIR)/app
@@ -206,15 +206,15 @@ TARGET = $(BIN_DIR)/app
 ### Basic Pattern Rule
 
 ```makefile
-# Compile .c files to .o files
+## Compile .c files to .o files
 %.o: %.c
  $(CC) $(CFLAGS) -c $< -o $@
 
-# Automatic variables:
-# $@ - target name
-# $< - first prerequisite
-# $^ - all prerequisites
-# $* - stem (matched by %)
+## Automatic variables:
+## $@ - target name
+## $< - first prerequisite
+## $^ - all prerequisites
+## $* - stem (matched by %)
 ```
 
 ### Advanced Pattern Rules
@@ -223,12 +223,12 @@ TARGET = $(BIN_DIR)/app
 SRC_DIR = src
 BUILD_DIR = build
 
-# Pattern rule with directory paths
+## Pattern rule with directory paths
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
  @mkdir -p $(BUILD_DIR)
  $(CC) $(CFLAGS) -c $< -o $@
 
-# Multiple targets
+## Multiple targets
 %.o %.d: %.c
  $(CC) $(CFLAGS) -c $< -o $@
  $(CC) -MM $(CFLAGS) $< > $*.d
@@ -397,7 +397,7 @@ else
     CFLAGS += -O2
 endif
 
-# Check if variable is defined
+## Check if variable is defined
 ifdef VERBOSE
     Q =
 else
@@ -439,23 +439,23 @@ build:
 ### Built-in Functions
 
 ```makefile
-# wildcard - Match files
+## wildcard - Match files
 SOURCES = $(wildcard src/*.c)
 
-# patsubst - Pattern substitution
+## patsubst - Pattern substitution
 OBJECTS = $(patsubst src/%.c,build/%.o,$(SOURCES))
 
-# shell - Execute shell command
+## shell - Execute shell command
 BUILD_DATE = $(shell date +%Y%m%d)
 
-# foreach - Iterate over list
+## foreach - Iterate over list
 DIRS = src include lib
 CREATE_DIRS = $(foreach dir,$(DIRS),$(shell mkdir -p $(dir)))
 
-# filter - Filter list
+## filter - Filter list
 CFILES = $(filter %.c,$(SOURCES))
 
-# filter-out - Exclude from list
+## filter-out - Exclude from list
 NON_TEST = $(filter-out %_test.c,$(SOURCES))
 ```
 
@@ -493,16 +493,16 @@ deploy:
 ### Exit on Error
 
 ```makefile
-# Default: exit on error
+## Default: exit on error
 test:
  pytest tests/
 
-# Continue on error
+## Continue on error
 .IGNORE: test
 test:
  pytest tests/
 
-# Ignore errors for specific command
+## Ignore errors for specific command
 test:
  -pytest tests/
 ```
@@ -519,12 +519,12 @@ test:
 ## Silent Commands
 
 ```makefile
-# Prefix with @ to suppress output
+## Prefix with @ to suppress output
 build:
  @echo "Building..."
  @$(CC) -o app main.c
 
-# Make all commands silent
+## Make all commands silent
 .SILENT:
 build:
  echo "Building..."
@@ -545,10 +545,10 @@ SOURCES = $(wildcard $(SRC_DIR)/*.c)
 OBJECTS = $(SOURCES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 DEPS = $(OBJECTS:.o=.d)
 
-# Include dependency files
+## Include dependency files
 -include $(DEPS)
 
-# Compile with dependency generation
+## Compile with dependency generation
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
  @mkdir -p $(BUILD_DIR)
  $(CC) $(CFLAGS) -MMD -MP -c $< -o $@
@@ -567,11 +567,11 @@ clean:
 ### ❌ Avoid: Spaces Instead of Tabs
 
 ```makefile
-# Bad - Using spaces for indentation
+## Bad - Using spaces for indentation
 build:
     echo "Building..."  # This will fail!
 
-# Good - Using tabs
+## Good - Using tabs
 build:
  echo "Building..."
 ```
@@ -579,11 +579,11 @@ build:
 ### ❌ Avoid: Not Using .PHONY
 
 ```makefile
-# Bad - Without .PHONY, make won't run if 'clean' file exists
+## Bad - Without .PHONY, make won't run if 'clean' file exists
 clean:
  rm -rf build/
 
-# Good - Using .PHONY
+## Good - Using .PHONY
 .PHONY: clean
 clean:
  rm -rf build/
@@ -592,11 +592,11 @@ clean:
 ### ❌ Avoid: Hardcoded Paths
 
 ```makefile
-# Bad - Hardcoded paths
+## Bad - Hardcoded paths
 build:
  gcc -o /home/user/myapp main.c
 
-# Good - Use variables
+## Good - Use variables
 BIN_DIR = bin
 build:
  gcc -o $(BIN_DIR)/myapp main.c
@@ -605,11 +605,11 @@ build:
 ### ❌ Avoid: Not Declaring Dependencies
 
 ```makefile
-# Bad - No dependencies declared
+## Bad - No dependencies declared
 test:
  go test ./...
 
-# Good - Declare dependencies
+## Good - Declare dependencies
 test: build  # test depends on build
  go test ./...
 
@@ -620,11 +620,11 @@ build: $(wildcard *.go)  # build depends on Go files
 ### ❌ Avoid: Silent Failures
 
 ```makefile
-# Bad - Errors hidden
+## Bad - Errors hidden
 install:
  -cp config.yaml /etc/app/  # '-' prefix ignores errors
 
-# Good - Fail on errors
+## Good - Fail on errors
 install:
  cp config.yaml /etc/app/  # Will stop if copy fails
  chmod 644 /etc/app/config.yaml
@@ -633,13 +633,13 @@ install:
 ### ❌ Avoid: Not Using @ for Clean Output
 
 ```makefile
-# Bad - Shows all commands (noisy output)
+## Bad - Shows all commands (noisy output)
 build:
  echo "Building application..."
  go build -o app main.go
  echo "Build complete!"
 
-# Good - Use @ to hide commands
+## Good - Use @ to hide commands
 build:
  @echo "Building application..."
  @go build -o app main.go
@@ -649,11 +649,11 @@ build:
 ### ❌ Avoid: Recursive Make Without $(MAKE)
 
 ```makefile
-# Bad - Direct make call
+## Bad - Direct make call
 deploy:
  cd frontend && make build  # ❌ Won't pass flags correctly
 
-# Good - Use $(MAKE) variable
+## Good - Use $(MAKE) variable
 deploy:
  $(MAKE) -C frontend build  # ✅ Passes flags and parallel builds
 ```
@@ -708,26 +708,26 @@ clean: ## Clean build artifacts
 Install and use checkmake to lint Makefiles:
 
 ```bash
-# Install checkmake (Go)
+## Install checkmake (Go)
 go install github.com/mrtazz/checkmake/cmd/checkmake@latest
 
-# Install checkmake (brew)
+## Install checkmake (brew)
 brew install checkmake
 
-# Lint Makefile
+## Lint Makefile
 checkmake Makefile
 
-# Lint with specific rules
+## Lint with specific rules
 checkmake --config .checkmake Makefile
 
-# Output as JSON
+## Output as JSON
 checkmake --format=json Makefile
 ```
 
 ### .checkmake Configuration
 
 ```ini
-# .checkmake
+## .checkmake
 [minphony]
   # Minimum percentage of PHONY targets
   minPhonyTargets = 0.5
@@ -752,7 +752,7 @@ checkmake --format=json Makefile
 ### EditorConfig
 
 ```ini
-# .editorconfig
+## .editorconfig
 [Makefile]
 indent_style = tab
 indent_size = 4
@@ -797,7 +797,7 @@ insert_final_newline = true
 ### Pre-commit Hooks
 
 ```yaml
-# .pre-commit-config.yaml
+## .pre-commit-config.yaml
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
@@ -821,7 +821,7 @@ repos:
 Add help target to Makefile for self-documentation:
 
 ```makefile
-# Makefile with self-documentation
+## Makefile with self-documentation
 .DEFAULT_GOAL := help
 
 .PHONY: help
@@ -852,7 +852,7 @@ Test Makefile targets using BATS (Bash Automated Testing System):
 
 ```bash
 #!/usr/bin/env bats
-# test/makefile.bats
+## test/makefile.bats
 
 setup() {
   # Run before each test
@@ -891,22 +891,22 @@ teardown() {
 ### Makefile Debugging
 
 ```bash
-# Print all variables
+## Print all variables
 make -p
 
-# Dry run (show commands without executing)
+## Dry run (show commands without executing)
 make -n target
 
-# Print debugging information
+## Print debugging information
 make -d target
 
-# Trace target execution
+## Trace target execution
 make --trace target
 
-# Warn about undefined variables
+## Warn about undefined variables
 make --warn-undefined-variables target
 
-# Print database of rules
+## Print database of rules
 make -p -f /dev/null
 ```
 
@@ -915,10 +915,10 @@ make -p -f /dev/null
 Organize large Makefiles with includes:
 
 ```makefile
-# Makefile
+## Makefile
 .DEFAULT_GOAL := all
 
-# Include sub-makefiles
+## Include sub-makefiles
 include makefiles/build.mk
 include makefiles/test.mk
 include makefiles/deploy.mk
@@ -926,17 +926,17 @@ include makefiles/deploy.mk
 .PHONY: all
 all: build test
 
-# makefiles/build.mk
+## makefiles/build.mk
 .PHONY: build
 build:
  go build -o bin/app .
 
-# makefiles/test.mk
+## makefiles/test.mk
 .PHONY: test
 test:
  go test -v ./...
 
-# makefiles/deploy.mk
+## makefiles/deploy.mk
 .PHONY: deploy
 deploy:
  ./scripts/deploy.sh
@@ -946,32 +946,32 @@ deploy:
 
 ```bash
 #!/bin/bash
-# scripts/validate-makefile.sh
+## scripts/validate-makefile.sh
 
 set -euo pipefail
 
 echo "Validating Makefile..."
 
-# Check if Makefile exists
+## Check if Makefile exists
 if [ ! -f "Makefile" ]; then
   echo "ERROR: Makefile not found"
   exit 1
 fi
 
-# Check for tabs (Make requires tabs)
+## Check for tabs (Make requires tabs)
 if grep -P '^    [^\t]' Makefile > /dev/null; then
   echo "ERROR: Found spaces instead of tabs in Makefile"
   exit 1
 fi
 
-# Run checkmake if available
+## Run checkmake if available
 if command -v checkmake &> /dev/null; then
   checkmake Makefile
 else
   echo "WARNING: checkmake not installed, skipping lint"
 fi
 
-# Dry run to check syntax
+## Dry run to check syntax
 make -n --dry-run > /dev/null 2>&1 || {
   echo "ERROR: Makefile has syntax errors"
   exit 1

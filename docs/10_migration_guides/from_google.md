@@ -100,7 +100,7 @@ Consistency with the broader Python ecosystem improves code readability across p
 **Migration**:
 
 ```python
-# Google - 2 spaces
+## Google - 2 spaces
 def calculate_total(items):
   total = 0
   for item in items:
@@ -108,7 +108,7 @@ def calculate_total(items):
       total += item.price
   return total
 
-# Our Guide - 4 spaces
+## Our Guide - 4 spaces
 def calculate_total(items):
     total = 0
     for item in items:
@@ -140,12 +140,12 @@ reducing unnecessary line breaks while maintaining readability on modern display
 **Migration**:
 
 ```python
-# Google - 80 chars, requires breaking
+## Google - 80 chars, requires breaking
 result = database.query(User).filter(
     User.is_active == True
 ).order_by(User.created_at).all()
 
-# Our Guide - 88 chars, more natural
+## Our Guide - 88 chars, more natural
 result = database.query(User).filter(User.is_active == True).order_by(
     User.created_at
 ).all()
@@ -168,7 +168,7 @@ Type hints enable static analysis, prevent runtime errors, and serve as inline d
 **Migration**:
 
 ```python
-# Google - optional type hints
+## Google - optional type hints
 def get_user(user_id):
     """Retrieve user by ID.
 
@@ -180,7 +180,7 @@ def get_user(user_id):
     """
     return database.query(User).filter(User.id == user_id).first()
 
-# Our Guide - required type hints
+## Our Guide - required type hints
 from typing import Optional
 
 def get_user(user_id: int) -> Optional[User]:
@@ -214,13 +214,13 @@ version management, and AI-assisted code analysis for DevOps workflows.
 **Migration**:
 
 ```python
-# Google - basic module docstring
+## Google - basic module docstring
 """User authentication and session management."""
 
 import jwt
 from fastapi import HTTPException
 
-# Our Guide - enhanced module metadata
+## Our Guide - enhanced module metadata
 """
 @module user_authentication
 @description Handles user authentication, session management, and JWT token generation
@@ -256,7 +256,7 @@ type checking. Flake8 catches style and logical errors.
 **Google Tool Stack**:
 
 ```bash
-# Google typical setup
+## Google typical setup
 pip install pylint yapf
 pylint --rcfile=.pylintrc src/
 yapf -i -r src/
@@ -265,7 +265,7 @@ yapf -i -r src/
 **Our Tool Stack**:
 
 ```bash
-# Dukes Engineering setup
+## Dukes Engineering setup
 pip install black mypy flake8 isort
 black .
 isort .
@@ -292,12 +292,12 @@ coverage prevents production incidents.
 **Migration**:
 
 ```python
-# Google - flexible test naming and structure
+## Google - flexible test naming and structure
 def test_user_creation():
     user = create_user("john@example.com")
     assert user.email == "john@example.com"
 
-# Our Guide - structured naming and Arrange-Act-Assert
+## Our Guide - structured naming and Arrange-Act-Assert
 def test_should_create_user_when_valid_email_provided():
     """Test create_user creates user with valid email."""
     # Arrange
@@ -330,13 +330,13 @@ systems. Security must be enforced, not just recommended.
 **Migration - Input Validation**:
 
 ```python
-# Google - manual validation
+## Google - manual validation
 def get_user_by_email(email):
     if not email or '@' not in email:
         raise ValueError("Invalid email")
     return database.query(email)
 
-# Our Guide - schema validation with Pydantic
+## Our Guide - schema validation with Pydantic
 from pydantic import BaseModel, EmailStr
 
 class UserQuery(BaseModel):
@@ -352,10 +352,10 @@ def get_user_by_email(email: str) -> Optional[User]:
 **Migration - Secret Management**:
 
 ```python
-# Google - configuration flexibility
+## Google - configuration flexibility
 API_KEY = "sk_live_abc123"  # Not ideal but allowed
 
-# Our Guide - environment variables required
+## Our Guide - environment variables required
 import os
 
 API_KEY = os.getenv("API_KEY")
@@ -382,7 +382,7 @@ Custom exceptions improve error handling and debugging.
 **Migration**:
 
 ```python
-# Google - standard exceptions
+## Google - standard exceptions
 def fetch_data(url):
     try:
         response = requests.get(url)
@@ -391,7 +391,7 @@ def fetch_data(url):
         print(f"Error: {e}")
         return None
 
-# Our Guide - custom exceptions and proper logging
+## Our Guide - custom exceptions and proper logging
 class APIError(Exception):
     """Base exception for API-related errors."""
     pass
@@ -431,9 +431,9 @@ def fetch_data(url: str) -> Dict:
 Delete or comment out in `setup.cfg` or `.pylintrc`:
 
 ```ini
-# [pylint]
-# max-line-length = 80
-# disable = ...
+## [pylint]
+## max-line-length = 80
+## disable = ...
 ```
 
 #### Add Black Configuration
@@ -500,23 +500,23 @@ YAPF and Black both format code, but Black is non-configurable (opinionated).
 **Remove YAPF**:
 
 ```bash
-# Uninstall YAPF
+## Uninstall YAPF
 pip uninstall yapf
 
-# Remove .style.yapf or [yapf] sections in setup.cfg
+## Remove .style.yapf or [yapf] sections in setup.cfg
 rm .style.yapf
 ```
 
 **Install and Configure Black**:
 
 ```bash
-# Install Black
+## Install Black
 pip install black
 
-# Format entire codebase
+## Format entire codebase
 black .
 
-# Check formatting without changes
+## Check formatting without changes
 black --check .
 ```
 
@@ -525,7 +525,7 @@ black --check .
 Replace Google's pre-commit configuration with Dukes Engineering stack:
 
 ```yaml
-# .pre-commit-config.yaml
+## .pre-commit-config.yaml
 repos:
   - repo: https://github.com/psf/black
     rev: 24.10.0
@@ -831,7 +831,7 @@ pre-commit run --all-files
 **Solution**: Run Black on the entire codebase at once. Create a dedicated "Reformat with Black" commit.
 
 ```bash
-# Do this in one commit
+## Do this in one commit
 black .
 git add .
 git commit -m "refactor: convert to 4-space indentation with Black"
@@ -844,10 +844,10 @@ git commit -m "refactor: convert to 4-space indentation with Black"
 **Solution**: Migrate incrementally. Start with new code and recently modified modules.
 
 ```python
-# Acceptable during migration
+## Acceptable during migration
 result = legacy_function()  # type: ignore
 
-# Target state after refactoring
+## Target state after refactoring
 result: Dict[str, List[User]] = legacy_function()
 ```
 
@@ -858,10 +858,10 @@ result: Dict[str, List[User]] = legacy_function()
 **Solution**: Use specific ignores and track them. Create issues to fix them later.
 
 ```python
-# Avoid - too broad
+## Avoid - too broad
 result = complex_function()  # type: ignore
 
-# Better - specific and tracked
+## Better - specific and tracked
 result = complex_function()  # type: ignore[arg-type]  # TODO: Fix in #123
 ```
 
@@ -872,11 +872,11 @@ result = complex_function()  # type: ignore[arg-type]  # TODO: Fix in #123
 **Solution**: Update CI/CD configuration before reformatting code.
 
 ```yaml
-# Update this FIRST
+## Update this FIRST
 - name: Format check
   run: black --check .  # Changed from yapf
 
-# THEN run black on codebase
+## THEN run black on codebase
 ```
 
 ### 5. Test Naming Confusion
@@ -886,14 +886,14 @@ result = complex_function()  # type: ignore[arg-type]  # TODO: Fix in #123
 **Solution**: Follow pattern strictly: `test_should_<behavior>_when_<condition>`
 
 ```python
-# Inconsistent
+## Inconsistent
 def test_user_creation():
     pass
 
 def test_email_validation():
     pass
 
-# Consistent and clear
+## Consistent and clear
 def test_should_create_user_when_valid_data_provided():
     pass
 
@@ -908,15 +908,15 @@ def test_should_raise_error_when_invalid_email_provided():
 **Solution**: Add `.env` to `.gitignore` FIRST, then migrate secrets.
 
 ```bash
-# Do this FIRST
+## Do this FIRST
 echo ".env" >> .gitignore
 echo ".env.local" >> .gitignore
 git add .gitignore
 git commit -m "chore: ignore environment files"
 
-# THEN migrate secrets
-# Create .env.example (safe to commit)
-# Move actual secrets to .env (never commit)
+## THEN migrate secrets
+## Create .env.example (safe to commit)
+## Move actual secrets to .env (never commit)
 ```
 
 ## Gradual Adoption Strategy

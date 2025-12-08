@@ -136,7 +136,7 @@ to best practices.
 **After** (modular role-based structure):
 
 ```yaml
-# playbooks/configure_webservers.yml (now 20 lines)
+## playbooks/configure_webservers.yml (now 20 lines)
 ---
 - name: Configure web servers
   hosts: webservers
@@ -165,7 +165,7 @@ to best practices.
           - { port: 8080, proto: tcp }
       tags: firewall
 
-# roles/common/tasks/main.yml
+## roles/common/tasks/main.yml
 ---
 - name: Install system packages
   apt:
@@ -182,7 +182,7 @@ to best practices.
   hostname:
     name: "{{ inventory_hostname }}"
 
-# roles/common/defaults/main.yml
+## roles/common/defaults/main.yml
 ---
 common_packages:
   - curl
@@ -193,7 +193,7 @@ common_packages:
 
 system_timezone: "UTC"
 
-# roles/application/tasks/main.yml
+## roles/application/tasks/main.yml
 ---
 - name: Include user setup
   import_tasks: user.yml
@@ -207,7 +207,7 @@ system_timezone: "UTC"
 - name: Include service configuration
   import_tasks: service.yml
 
-# roles/application/tasks/user.yml
+## roles/application/tasks/user.yml
 ---
 - name: Create application user
   user:
@@ -217,7 +217,7 @@ system_timezone: "UTC"
     home: "{{ app_home }}"
     create_home: yes
 
-# roles/application/tasks/directories.yml
+## roles/application/tasks/directories.yml
 ---
 - name: Create application directories
   file:
@@ -228,7 +228,7 @@ system_timezone: "UTC"
     mode: '0755'
   loop: "{{ app_directories }}"
 
-# roles/application/tasks/deploy.yml
+## roles/application/tasks/deploy.yml
 ---
 - name: Clone application repository
   git:
@@ -253,7 +253,7 @@ system_timezone: "UTC"
     mode: '0640'
   notify: restart application
 
-# roles/application/tasks/service.yml
+## roles/application/tasks/service.yml
 ---
 - name: Create systemd service file
   template:
@@ -270,7 +270,7 @@ system_timezone: "UTC"
     enabled: yes
     state: started
 
-# roles/application/defaults/main.yml
+## roles/application/defaults/main.yml
 ---
 app_home: "/opt/{{ app_name }}"
 app_release_path: "{{ app_home }}/releases/{{ app_version }}"
@@ -283,7 +283,7 @@ app_directories:
   - "{{ app_home }}/shared"
   - "/var/log/{{ app_name }}"
 
-# roles/application/handlers/main.yml
+## roles/application/handlers/main.yml
 ---
 - name: reload systemd
   systemd:
@@ -294,7 +294,7 @@ app_directories:
     name: "{{ app_name }}"
     state: restarted
 
-# roles/nginx/tasks/main.yml
+## roles/nginx/tasks/main.yml
 ---
 - name: Install nginx
   apt:
@@ -321,7 +321,7 @@ app_directories:
     enabled: yes
     state: started
 
-# roles/firewall/tasks/main.yml
+## roles/firewall/tasks/main.yml
 ---
 - name: Configure firewall rules
   ufw:
@@ -786,7 +786,7 @@ app_directories:
 **After** (using includes and group_vars):
 
 ```yaml
-# group_vars/production.yml
+## group_vars/production.yml
 ---
 environment: production
 app_package: myapp-pro
@@ -794,7 +794,7 @@ db_config_template: db_config_prod.j2
 log_level: info
 enable_monitoring: true
 
-# group_vars/staging.yml
+## group_vars/staging.yml
 ---
 environment: staging
 app_package: myapp-staging
@@ -802,7 +802,7 @@ db_config_template: db_config_staging.j2
 log_level: debug
 enable_monitoring: false
 
-# playbook.yml
+## playbook.yml
 ---
 - name: Configure application
   hosts: all
@@ -819,7 +819,7 @@ enable_monitoring: false
     - name: Include OS-specific tasks
       include_tasks: "{{ ansible_os_family | lower }}.yml"
 
-# tasks/debian.yml (for Ubuntu/Debian)
+## tasks/debian.yml (for Ubuntu/Debian)
 ---
 - name: Install application package (Debian)
   apt:
@@ -834,7 +834,7 @@ enable_monitoring: false
     dest: /etc/myapp/database.yml
     mode: '0640'
 
-# tasks/redhat.yml (for CentOS/RHEL)
+## tasks/redhat.yml (for CentOS/RHEL)
 ---
 - name: Install application package (RedHat)
   yum:

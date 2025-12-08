@@ -474,7 +474,7 @@ jobs:
 ### Calling a Reusable Workflow
 
 ```yaml
-# .github/workflows/ci.yml
+## .github/workflows/ci.yml
 name: CI
 
 on: [push, pull_request]
@@ -490,7 +490,7 @@ jobs:
 ### Reusable Workflow Definition
 
 ```yaml
-# .github/workflows/test.yml
+## .github/workflows/test.yml
 name: Test
 
 on:
@@ -525,7 +525,7 @@ jobs:
 ### Creating a Composite Action
 
 ```yaml
-# .github/actions/setup-app/action.yml
+## .github/actions/setup-app/action.yml
 name: 'Setup Application'
 description: 'Install dependencies and build'
 
@@ -573,13 +573,13 @@ jobs:
 ### Pin Action Versions
 
 ```yaml
-# Good - Pinned to commit SHA
+## Good - Pinned to commit SHA
 - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 
-# Acceptable - Pinned to major version
+## Acceptable - Pinned to major version
 - uses: actions/checkout@v4
 
-# Avoid - Using mutable tags
+## Avoid - Using mutable tags
 - uses: actions/checkout@main
 ```
 
@@ -611,17 +611,17 @@ jobs:
 ### ❌ Avoid: Hardcoded Secrets
 
 ```yaml
-# Bad - Hardcoded secret
+## Bad - Hardcoded secret
 - run: echo "API_KEY=abc123" >> .env
 
-# Good - Use GitHub Secrets
+## Good - Use GitHub Secrets
 - run: echo "API_KEY=${{ secrets.API_KEY }}" >> .env
 ```
 
 ### ❌ Avoid: Running Untrusted Code
 
 ```yaml
-# Bad - Executing PR code without review
+## Bad - Executing PR code without review
 on:
   pull_request_target:
     types: [opened]
@@ -636,7 +636,7 @@ jobs:
       - run: npm install
       - run: npm test  # Dangerous!
 
-# Good - Use pull_request for external PRs
+## Good - Use pull_request for external PRs
 on:
   pull_request:
     types: [opened]
@@ -645,10 +645,10 @@ on:
 ### ❌ Avoid: No Caching
 
 ```yaml
-# Bad - No caching
+## Bad - No caching
 - run: npm ci
 
-# Good - With caching
+## Good - With caching
 - uses: actions/setup-node@v4
   with:
     node-version: '18'
@@ -659,22 +659,22 @@ on:
 ### ❌ Avoid: Using Mutable Action Tags
 
 ```yaml
-# Bad - Using mutable tags (can change unexpectedly)
+## Bad - Using mutable tags (can change unexpectedly)
 - uses: actions/checkout@main  # ❌ Can change anytime
 - uses: actions/setup-node@v4  # ❌ Major version can get updates
 
-# Good - Pin to specific SHA
+## Good - Pin to specific SHA
 - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8  # v4.0.2
 
-# Or use tags with SHA comment for clarity
+## Or use tags with SHA comment for clarity
 - uses: actions/checkout@v4.1.1  # SHA: b4ffde65f46336ab88eb53be808477a3936bae11
 ```
 
 ### ❌ Avoid: Overly Permissive Permissions
 
 ```yaml
-# Bad - Default permissions (read/write to everything)
+## Bad - Default permissions (read/write to everything)
 name: CI
 on: [push]
 jobs:
@@ -682,7 +682,7 @@ jobs:
     runs-on: ubuntu-latest
     # No permissions specified - gets all permissions!
 
-# Good - Minimal permissions
+## Good - Minimal permissions
 name: CI
 on: [push]
 permissions:
@@ -709,7 +709,7 @@ jobs:
 ### ❌ Avoid: Not Using Concurrency Controls
 
 ```yaml
-# Bad - Multiple workflow runs can conflict
+## Bad - Multiple workflow runs can conflict
 on:
   push:
     branches: [main]
@@ -720,7 +720,7 @@ jobs:
     steps:
       - run: ./deploy.sh  # ❌ Multiple deploys can run simultaneously!
 
-# Good - Prevent concurrent runs
+## Good - Prevent concurrent runs
 on:
   push:
     branches: [main]
@@ -739,14 +739,14 @@ jobs:
 ### ❌ Avoid: Not Setting Timeout Limits
 
 ```yaml
-# Bad - No timeout (can run forever)
+## Bad - No timeout (can run forever)
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - run: npm test  # ❌ Could hang indefinitely
 
-# Good - Set reasonable timeouts
+## Good - Set reasonable timeouts
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -765,35 +765,35 @@ jobs:
 Install and configure act for local workflow testing:
 
 ```bash
-# Install act (macOS)
+## Install act (macOS)
 brew install act
 
-# Install act (Linux)
+## Install act (Linux)
 curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
 
-# Run default event (push)
+## Run default event (push)
 act
 
-# Run specific event
+## Run specific event
 act pull_request
 
-# Run specific job
+## Run specific job
 act -j build
 
-# Run with secrets file
+## Run with secrets file
 act --secret-file .secrets
 
-# List workflows
+## List workflows
 act -l
 
-# Dry run
+## Dry run
 act -n
 ```
 
 ### .actrc Configuration
 
 ```ini
-# .actrc
+## .actrc
 -P ubuntu-latest=catthehacker/ubuntu:act-latest
 -P ubuntu-22.04=catthehacker/ubuntu:act-22.04
 -P ubuntu-20.04=catthehacker/ubuntu:act-20.04
@@ -803,26 +803,26 @@ act -n
 ### actionlint - Workflow Linter
 
 ```bash
-# Install actionlint
+## Install actionlint
 brew install actionlint
 
-# Lint all workflows
+## Lint all workflows
 actionlint
 
-# Lint specific workflow
+## Lint specific workflow
 actionlint .github/workflows/ci.yml
 
-# Show available checks
+## Show available checks
 actionlint -list
 
-# Output as JSON
+## Output as JSON
 actionlint -format '{{json .}}'
 ```
 
 ### .github/actionlint.yml
 
 ```yaml
-# .github/actionlint.yml
+## .github/actionlint.yml
 self-hosted-runner:
   labels:
     - self-hosted
@@ -870,7 +870,7 @@ pyflakes:
 ### Pre-commit Hooks
 
 ```yaml
-# .pre-commit-config.yaml
+## .pre-commit-config.yaml
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
@@ -925,7 +925,7 @@ jobs:
 ### Makefile
 
 ```makefile
-# Makefile
+## Makefile
 .PHONY: act-list act-push act-pr lint-workflows
 
 act-list:
@@ -950,14 +950,14 @@ validate-workflows:
 test-workflow:
  act -j $(JOB)
 
-# Example: make test-workflow JOB=build
+## Example: make test-workflow JOB=build
 ```
 
 ### .secrets File (for act)
 
 ```bash
-# .secrets
-# DO NOT commit this file - add to .gitignore
+## .secrets
+## DO NOT commit this file - add to .gitignore
 GITHUB_TOKEN=ghp_xxxxxxxxxxxxx
 AWS_ACCESS_KEY_ID=AKIAXXXXXXXXXXXXX
 AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxx
@@ -967,7 +967,7 @@ NPM_TOKEN=npm_xxxxxxxxxxxxx
 ### EditorConfig
 
 ```ini
-# .editorconfig
+## .editorconfig
 [.github/workflows/*.{yml,yaml}]
 indent_style = space
 indent_size = 2
@@ -980,7 +980,7 @@ insert_final_newline = true
 ### yamllint Configuration
 
 ```yaml
-# .yamllint
+## .yamllint
 extends: default
 
 rules:

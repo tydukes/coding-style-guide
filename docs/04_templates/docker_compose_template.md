@@ -8,6 +8,7 @@ category: "Templates"
 status: "active"
 version: "1.0.0"
 ---
+<!-- markdownlint-disable MD024 -->
 
 ## Overview
 
@@ -680,13 +681,13 @@ secrets:
 ### ❌ Avoid: Exposing All Ports
 
 ```yaml
-# Bad - Exposes database to host
+## Bad - Exposes database to host
 services:
   database:
     ports:
       - "5432:5432"  # Don't expose in production
 
-# Good - Use networks for internal communication
+## Good - Use networks for internal communication
 services:
   database:
     expose:
@@ -698,12 +699,12 @@ services:
 ### ❌ Avoid: Using :latest Tag
 
 ```yaml
-# Bad - Unpredictable versions
+## Bad - Unpredictable versions
 services:
   app:
     image: myapp:latest
 
-# Good - Pin specific versions
+## Good - Pin specific versions
 services:
   app:
     image: myapp:1.2.3
@@ -712,11 +713,11 @@ services:
 ### ❌ Avoid: Hardcoded Secrets
 
 ```yaml
-# Bad - Secrets in plain text
+## Bad - Secrets in plain text
 environment:
   - DB_PASSWORD=supersecret123
 
-# Good - Use environment variables or secrets
+## Good - Use environment variables or secrets
 environment:
   - DB_PASSWORD=${DB_PASSWORD}
 secrets:
@@ -726,12 +727,12 @@ secrets:
 ### ❌ Avoid: Missing Restart Policies
 
 ```yaml
-# Bad - Service won't restart on failure
+## Bad - Service won't restart on failure
 services:
   app:
     build: .
 
-# Good - Define restart policy
+## Good - Define restart policy
 services:
   app:
     build: .
@@ -743,37 +744,37 @@ services:
 ## Useful Commands
 
 ```bash
-# Start services
+## Start services
 docker-compose up -d
 
-# Start with specific file
+## Start with specific file
 docker-compose -f docker-compose.prod.yml up -d
 
-# View logs
+## View logs
 docker-compose logs -f app
 
-# Execute command in running container
+## Execute command in running container
 docker-compose exec app bash
 
-# Scale services
+## Scale services
 docker-compose up -d --scale worker=3
 
-# Rebuild and start
+## Rebuild and start
 docker-compose up -d --build
 
-# Stop and remove containers
+## Stop and remove containers
 docker-compose down
 
-# Stop and remove with volumes
+## Stop and remove with volumes
 docker-compose down -v
 
-# Validate compose file
+## Validate compose file
 docker-compose config
 
-# Check service status
+## Check service status
 docker-compose ps
 
-# View resource usage
+## View resource usage
 docker-compose top
 ```
 
@@ -782,28 +783,28 @@ docker-compose top
 ## .env Template
 
 ```bash
-# Application
+## Application
 APP_NAME=myapp
 ENVIRONMENT=production
 VERSION=1.0.0
 
-# Database
+## Database
 DB_PASSWORD=changeme
 DB_NAME=appdb
 DB_USER=postgres
 
-# Redis
+## Redis
 REDIS_PASSWORD=changeme
 
-# Secrets
+## Secrets
 SECRET_KEY=changeme
 API_KEY=changeme
 
-# Ports
+## Ports
 APP_PORT=3000
 DB_PORT=5432
 
-# Resource Limits
+## Resource Limits
 CPU_LIMIT=2.0
 MEMORY_LIMIT=2G
 ```
