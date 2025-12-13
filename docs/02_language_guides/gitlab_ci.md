@@ -703,6 +703,431 @@ include:
 
 ---
 
+## Testing
+
+### Testing Pipelines Locally
+
+Use GitLab Runner to test pipelines locally before committing:
+
+```bash
+## Install GitLab Runner
+# macOS
+brew install gitlab-runner
+
+# Linux
+curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
+sudo apt-get install gitlab-runner
+
+## Test pipeline locally
+gitlab-runner exec docker test
+
+## Test specific job
+gitlab-runner exec docker build
+
+## Test with specific Docker image
+gitlab-runner exec docker --docker-image node:18-alpine test
+```
+
+### Validating CI Configuration
+
+Validate `.gitlab-ci.yml` syntax:
+
+```bash
+## Using GitLab CI Lint API
+curl --header "PRIVATE-TOKEN: <your_access_token>" \
+     --header "Content-Type: application/json" \
+     --data @.gitlab-ci.yml \
+     "https://gitlab.com/api/v4/projects/<project_id>/ci/lint"
+
+## Using gitlab-ci-lint tool
+npm install -g gitlab-ci-lint
+gitlab-ci-lint .gitlab-ci.yml
+```
+
+### Pipeline Testing Job
+
+Add pipeline validation as a job:
+
+```yaml
+## .gitlab-ci.yml
+stages:
+  - validate
+  - test
+  - build
+  - deploy
+
+validate:pipeline:
+  stage: validate
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache yamllint
+  script:
+    - yamllint .gitlab-ci.yml
+    - echo "Pipeline configuration is valid"
+  only:
+    changes:
+      - .gitlab-ci.yml
+
+validate:dockerfile:
+  stage: validate
+  image: hadolint/hadolint:latest-alpine
+  script:
+    - hadolint Dockerfile
+  only:
+    changes:
+      - Dockerfile
+```
+
+### Unit Testing in CI
+
+```yaml
+test:unit:
+  stage: test
+  image: node:18-alpine
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  before_script:
+    - npm ci
+  script:
+    - npm run test:unit
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  artifacts:
+    when: always
+    reports:
+      junit: junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    paths:
+      - coverage/
+    expire_in: 30 days
+  only:
+    - merge_requests
+    - main
+```
+
+### Integration Testing
+
+```yaml
+test:integration:
+  stage: test
+  image: node:18-alpine
+  services:
+    - name: postgres:15-alpine
+      alias: postgres
+  variables:
+    POSTGRES_DB: test_db
+    POSTGRES_USER: test_user
+    POSTGRES_PASSWORD: test_pass
+    DATABASE_URL: postgresql://test_user:test_pass@postgres:5432/test_db
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  before_script:
+    - npm ci
+  script:
+    - npm run test:integration
+  artifacts:
+    when: always
+    reports:
+      junit: integration-test-results.xml
+    expire_in: 7 days
+```
+
+### End-to-End Testing
+
+```yaml
+test:e2e:
+  stage: test
+  image: mcr.microsoft.com/playwright:latest
+  services:
+    - name: selenium/standalone-chrome:latest
+      alias: chrome
+  variables:
+    SELENIUM_HOST: chrome
+    SELENIUM_PORT: 4444
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+      - playwright/.cache
+  before_script:
+    - npm ci
+    - npx playwright install
+  script:
+    - npm run test:e2e
+  artifacts:
+    when: always
+    paths:
+      - test-results/
+      - playwright-report/
+    expire_in: 7 days
+  only:
+    - merge_requests
+    - main
+```
+
+### Security Testing
+
+```yaml
+## SAST (Static Application Security Testing)
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
+## Container Scanning
+container_scanning:
+  stage: test
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE
+    CI_APPLICATION_TAG: $CI_COMMIT_SHA
+  script:
+    - docker build -t $CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG .
+    - |
+      docker run --rm \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        aquasec/trivy:latest \
+        image --exit-code 1 --severity HIGH,CRITICAL \
+        $CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG
+  only:
+    - merge_requests
+    - main
+```
+
+### Performance Testing
+
+```yaml
+test:performance:
+  stage: test
+  image: grafana/k6:latest
+  script:
+    - k6 run --vus 10 --duration 30s tests/load-test.js
+  artifacts:
+    reports:
+      load_performance: k6-results.json
+    paths:
+      - k6-results.json
+    expire_in: 7 days
+  only:
+    - schedules
+```
+
+### Parallel Testing
+
+Speed up tests with parallel execution:
+
+```yaml
+test:unit:parallel:
+  stage: test
+  image: node:18-alpine
+  parallel: 4
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  before_script:
+    - npm ci
+  script:
+    - npm run test:unit -- --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL
+  artifacts:
+    when: always
+    reports:
+      junit: junit-shard-${CI_NODE_INDEX}.xml
+    expire_in: 7 days
+```
+
+### Test Coverage Reporting
+
+```yaml
+test:coverage:
+  stage: test
+  image: node:18-alpine
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  before_script:
+    - npm ci
+  script:
+    - npm run test:coverage
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    paths:
+      - coverage/
+    expire_in: 30 days
+
+## Enforce coverage threshold
+check:coverage:
+  stage: test
+  image: node:18-alpine
+  needs: [test:coverage]
+  script:
+    - |
+      COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+      echo "Coverage: $COVERAGE%"
+      if (( $(echo "$COVERAGE < 80" | bc -l) )); then
+        echo "Coverage below 80% threshold"
+        exit 1
+      fi
+```
+
+### Review Apps Testing
+
+Test in ephemeral environments:
+
+```yaml
+review:deploy:
+  stage: deploy
+  image: alpine:latest
+  script:
+    - echo "Deploying review app..."
+    - echo "Review app URL: https://review-$CI_COMMIT_REF_SLUG.example.com"
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    url: https://review-$CI_COMMIT_REF_SLUG.example.com
+    on_stop: review:stop
+  only:
+    - merge_requests
+
+review:test:
+  stage: test
+  needs: [review:deploy]
+  image: curlimages/curl:latest
+  script:
+    - curl -f https://review-$CI_COMMIT_REF_SLUG.example.com/health
+    - echo "Review app health check passed"
+  only:
+    - merge_requests
+
+review:stop:
+  stage: deploy
+  image: alpine:latest
+  script:
+    - echo "Destroying review app..."
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    action: stop
+  when: manual
+  only:
+    - merge_requests
+```
+
+### Testing with Child Pipelines
+
+Organize tests using child pipelines:
+
+```yaml
+## .gitlab-ci.yml
+trigger:tests:
+  stage: test
+  trigger:
+    include: .gitlab/ci/tests.yml
+    strategy: depend
+
+## .gitlab/ci/tests.yml
+stages:
+  - unit
+  - integration
+  - e2e
+
+unit:tests:
+  stage: unit
+  image: node:18-alpine
+  script:
+    - npm ci
+    - npm run test:unit
+
+integration:tests:
+  stage: integration
+  image: node:18-alpine
+  services:
+    - postgres:15-alpine
+  script:
+    - npm ci
+    - npm run test:integration
+
+e2e:tests:
+  stage: e2e
+  image: mcr.microsoft.com/playwright:latest
+  script:
+    - npm ci
+    - npx playwright install
+    - npm run test:e2e
+```
+
+### Conditional Testing
+
+Run tests based on changes:
+
+```yaml
+test:backend:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - pip install -r requirements.txt
+    - pytest
+  only:
+    changes:
+      - backend/**/*
+      - requirements.txt
+
+test:frontend:
+  stage: test
+  image: node:18-alpine
+  script:
+    - npm ci
+    - npm test
+  only:
+    changes:
+      - frontend/**/*
+      - package.json
+      - package-lock.json
+
+test:infrastructure:
+  stage: test
+  image: hashicorp/terraform:latest
+  script:
+    - terraform init
+    - terraform validate
+    - terraform plan
+  only:
+    changes:
+      - terraform/**/*
+```
+
+### CI/CD Pipeline Test Metrics
+
+Monitor pipeline performance:
+
+```yaml
+metrics:pipeline:
+  stage: .post
+  image: alpine:latest
+  script:
+    - |
+      echo "Pipeline Duration: $CI_PIPELINE_DURATION seconds"
+      echo "Pipeline Status: $CI_PIPELINE_STATUS"
+      echo "Failed Jobs:"
+      # Log failed jobs for analysis
+  when: always
+  only:
+    - main
+```
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: No Cache

@@ -562,6 +562,248 @@ clean:
 
 ---
 
+## Testing
+
+### Testing Make Targets
+
+Validate Makefile syntax and targets:
+
+```bash
+## Check Makefile syntax
+make -n all  # Dry run
+
+## List all targets
+make -qp | awk -F':' '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {split($1,A,/ /);for(i in A)print A[i]}'
+
+## Test specific target without execution
+make -n build
+
+## Verbose output for debugging
+make -d build
+```
+
+### Makefile Linting
+
+```bash
+## Install checkmake
+go install github.com/mrtazz/checkmake/cmd/checkmake@latest
+
+## Lint Makefile
+checkmake Makefile
+
+## With custom config
+checkmake --config=.checkmake Makefile
+```
+
+### Unit Testing Makefile Targets
+
+```bash
+## tests/makefile_test.sh
+#!/bin/bash
+set -e
+
+echo "Testing Makefile targets..."
+
+## Test clean target
+make clean
+if [ -d "build/" ]; then
+  echo "FAIL: clean target did not remove build directory"
+  exit 1
+fi
+echo "PASS: clean target works"
+
+## Test build target creates output
+make build
+if [ ! -f "build/app" ]; then
+  echo "FAIL: build target did not create output"
+  exit 1
+fi
+echo "PASS: build target works"
+
+## Test test target runs successfully
+if ! make test; then
+  echo "FAIL: test target failed"
+  exit 1
+fi
+echo "PASS: test target works"
+
+echo "All Makefile tests passed!"
+```
+
+### Integration Testing
+
+Test Make targets in CI/CD:
+
+```yaml
+## .github/workflows/makefile-test.yml
+name: Test Makefile
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: make deps
+
+      - name: Lint Makefile
+        run: |
+          go install github.com/mrtazz/checkmake/cmd/checkmake@latest
+          checkmake Makefile
+
+      - name: Test clean target
+        run: |
+          make build
+          make clean
+          test ! -d build/
+
+      - name: Test build
+        run: make build
+
+      - name: Run tests
+        run: make test
+
+      - name: Test install
+        run: make install PREFIX=/tmp/install
+```
+
+### Testing with BATS
+
+```bash
+## tests/makefile.bats
+#!/usr/bin/env bats
+
+@test "make clean removes build artifacts" {
+  make build
+  make clean
+  run test -d build/
+  [ "$status" -ne 0 ]
+}
+
+@test "make build creates binary" {
+  make clean
+  run make build
+  [ "$status" -eq 0 ]
+  [ -f "build/app" ]
+}
+
+@test "make test runs successfully" {
+  run make test
+  [ "$status" -eq 0 ]
+}
+
+@test "make with no target runs default" {
+  run make
+  [ "$status" -eq 0 ]
+}
+
+@test "make help displays help text" {
+  run make help
+  [ "$status" -eq 0 ]
+  [[ "$output" =~ "Available targets:" ]]
+}
+```
+
+### Testing Phony Targets
+
+Ensure phony targets work correctly:
+
+```makefile
+## Makefile
+.PHONY: test-phony
+test-phony:
+        @echo "Testing phony targets..."
+        @$(MAKE) clean
+        @$(MAKE) build
+        @$(MAKE) test
+        @echo "All phony targets work correctly"
+```
+
+### Testing Variable Expansion
+
+```bash
+## Test variable substitution
+make print-vars
+
+## Test with overridden variables
+make VAR=value print-vars
+
+## Verify variable defaults
+make -p | grep "^VAR ="
+```
+
+### Performance Testing
+
+Test build performance:
+
+```makefile
+## Makefile
+.PHONY: benchmark
+benchmark:
+        @echo "Benchmarking build..."
+        @time $(MAKE) clean
+        @time $(MAKE) build
+        @time $(MAKE) test
+```
+
+### Parallel Execution Testing
+
+```bash
+## Test parallel builds
+make -j4 all
+
+## Verify parallel safety
+make clean
+make -j8 build test
+```
+
+### Dependency Testing
+
+Verify target dependencies:
+
+```makefile
+.PHONY: test-deps
+test-deps: build test
+        @echo "Dependencies resolved correctly"
+```
+
+### Testing Cross-Platform Compatibility
+
+```makefile
+.PHONY: test-platform
+test-platform:
+ifeq ($(OS),Windows_NT)
+        @echo "Testing on Windows"
+        @cmd /c echo Windows test
+else
+  ifeq ($(shell uname -s),Darwin)
+        @echo "Testing on macOS"
+        @echo "macOS test"
+  else
+        @echo "Testing on Linux"
+        @echo "Linux test"
+  endif
+endif
+```
+
+### Error Handling Tests
+
+```bash
+## Test error propagation
+if make failing-target; then
+  echo "ERROR: Failed target should have exited with error"
+  exit 1
+fi
+
+## Test ignore errors
+make -i potentially-failing-targets
+```
+
+---
+
 ## Security Best Practices
 
 ### Prevent Command Injection

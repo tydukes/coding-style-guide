@@ -438,6 +438,232 @@ Always use **2 spaces**:
 
 ---
 
+## Testing
+
+### Schema Validation
+
+Use [JSON Schema](https://json-schema.org/) to validate JSON files:
+
+```json
+## schema/config.schema.json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["name", "version", "environment"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "environment": {
+      "type": "string",
+      "enum": ["development", "staging", "production"]
+    },
+    "port": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 65535
+    }
+  }
+}
+```
+
+### Validating with ajv
+
+```bash
+## Install ajv-cli
+npm install -g ajv-cli
+
+## Validate JSON against schema
+ajv validate -s schema/config.schema.json -d config.json
+
+## Validate multiple files
+ajv validate -s schema/config.schema.json -d "configs/*.json"
+```
+
+### Automated Validation in CI/CD
+
+```yaml
+## .github/workflows/validate-json.yml
+name: Validate JSON
+
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ajv-cli
+        run: npm install -g ajv-cli
+
+      - name: Validate JSON files
+        run: |
+          for file in **/*.json; do
+            echo "Validating $file"
+            ajv validate -s schema/config.schema.json -d "$file"
+          done
+```
+
+### Linting JSON
+
+```bash
+## Install jsonlint
+npm install -g jsonlint
+
+## Lint JSON file
+jsonlint config.json
+
+## Lint with quiet mode
+jsonlint -q config.json
+
+## Lint multiple files
+find . -name "*.json" -exec jsonlint {} \;
+```
+
+### Testing with jq
+
+Validate JSON structure and content:
+
+```bash
+## Check if file is valid JSON
+jq empty config.json
+
+## Validate specific fields exist
+jq -e '.name' config.json
+jq -e '.version' config.json
+
+## Test field values
+if [ "$(jq -r '.environment' config.json)" != "production" ]; then
+  echo "Invalid environment"
+  exit 1
+fi
+
+## Validate array length
+if [ "$(jq '.servers | length' config.json)" -lt 2 ]; then
+  echo "Must have at least 2 servers"
+  exit 1
+fi
+```
+
+### Testing JSON API Responses
+
+```bash
+## Test API response structure
+response=$(curl -s https://api.example.com/users/1)
+
+## Validate response is valid JSON
+echo "$response" | jq empty
+
+## Validate required fields
+echo "$response" | jq -e '.id, .name, .email' > /dev/null
+
+## Test specific values
+user_id=$(echo "$response" | jq -r '.id')
+if [ "$user_id" != "1" ]; then
+  echo "Unexpected user ID"
+  exit 1
+fi
+```
+
+### JSON Diff Testing
+
+Compare JSON files:
+
+```bash
+## Install json-diff
+npm install -g json-diff
+
+## Compare two JSON files
+json-diff config-old.json config-new.json
+
+## Colorized output
+json-diff --color config-old.json config-new.json
+
+## Keys only
+json-diff --keys-only config-old.json config-new.json
+```
+
+### Testing in Scripts
+
+```javascript
+## test/json-validation.test.js
+const Ajv = require('ajv');
+const fs = require('fs');
+
+describe('JSON Configuration Tests', () => {
+  let ajv;
+  let schema;
+
+  beforeAll(() => {
+    ajv = new Ajv();
+    schema = JSON.parse(fs.readFileSync('schema/config.schema.json', 'utf8'));
+  });
+
+  test('config.json should be valid', () => {
+    const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+    const validate = ajv.compile(schema);
+    const valid = validate(config);
+
+    expect(valid).toBe(true);
+    if (!valid) {
+      console.error(validate.errors);
+    }
+  });
+
+  test('production config should have required security settings', () => {
+    const config = JSON.parse(fs.readFileSync('config.production.json', 'utf8'));
+
+    expect(config.ssl.enabled).toBe(true);
+    expect(config.auth.required).toBe(true);
+  });
+});
+```
+
+### Pre-commit Hook for JSON Validation
+
+```yaml
+## .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-json
+      - id: pretty-format-json
+        args: ['--autofix', '--indent=2', '--no-sort-keys']
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.27.0
+    hooks:
+      - id: check-jsonschema
+        name: Validate JSON configs
+        files: "config.*\\.json$"
+        args: ["--schemafile", "schema/config.schema.json"]
+```
+
+### Performance Testing JSON Processing
+
+```bash
+## Test JSON file size
+size=$(stat -f%z config.json 2>/dev/null || stat -c%s config.json)
+max_size=$((1024 * 1024))  # 1MB
+
+if [ "$size" -gt "$max_size" ]; then
+  echo "JSON file too large: $(($size / 1024))KB"
+  exit 1
+fi
+
+## Test parsing performance
+time jq '.' large-file.json > /dev/null
+```
+
+---
+
 ## Security Best Practices
 
 ### Never Store Secrets in JSON

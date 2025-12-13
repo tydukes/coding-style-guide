@@ -538,6 +538,235 @@ inputs = merge(
 
 ---
 
+## Testing
+
+### Validate Terragrunt Configuration
+
+```bash
+## Validate configuration syntax
+terragrunt validate-all
+
+## Check formatting
+terragrunt hclfmt --terragrunt-check
+
+## Format files
+terragrunt hclfmt
+
+## Validate specific module
+cd envs/production
+terragrunt validate
+```
+
+### Testing with terragrunt plan
+
+```bash
+## Plan all modules
+terragrunt run-all plan
+
+## Plan specific module
+cd envs/production/vpc
+terragrunt plan
+
+## Save plan for testing
+terragrunt plan -out=tfplan
+terraform show -json tfplan > tfplan.json
+```
+
+### Policy Testing with conftest
+
+Test Terragrunt-generated plans:
+
+```bash
+## Test plan with policies
+terragrunt plan -out=tfplan
+terraform show -json tfplan | conftest test -p policy/ -
+
+## Test all modules
+terragrunt run-all plan -out=tfplan
+for dir in envs/*/*; do
+  cd "$dir"
+  terraform show -json tfplan | conftest test -p ../../../policy/ -
+  cd -
+done
+```
+
+Example policy:
+
+```rego
+## policy/terragrunt.rego
+package terragrunt
+
+deny[msg] {
+  resource := input.planned_values.root_module.resources[_]
+  resource.type == "aws_s3_bucket"
+  not resource.values.versioning[_].enabled
+  msg := sprintf("S3 bucket %s must have versioning enabled", [resource.address])
+}
+
+deny[msg] {
+  resource := input.planned_values.root_module.resources[_]
+  resource.type == "aws_instance"
+  not startswith(resource.values.instance_type, "t3")
+  msg := sprintf("Instance %s must use t3 instance type", [resource.address])
+}
+```
+
+### Testing Dependencies
+
+Verify module dependencies resolve correctly:
+
+```bash
+## Test dependency graph
+terragrunt graph-dependencies | dot -Tpng > dependencies.png
+
+## Validate dependencies exist
+terragrunt run-all validate
+
+## Test dependency order
+terragrunt run-all plan --terragrunt-log-level debug
+```
+
+### Integration Testing
+
+Test full infrastructure deployment:
+
+```bash
+## tests/integration-test.sh
+#!/bin/bash
+set -e
+
+echo "Testing Terragrunt configuration..."
+
+## Validate all configurations
+terragrunt run-all validate
+
+## Plan all changes
+terragrunt run-all plan
+
+## Apply in test environment
+cd envs/test
+terragrunt run-all apply -auto-approve
+
+## Run smoke tests
+./tests/smoke-test.sh
+
+## Destroy test resources
+terragrunt run-all destroy -auto-approve
+
+echo "Integration tests passed!"
+```
+
+### Testing with Terratest
+
+```go
+## tests/terragrunt_test.go
+package test
+
+import (
+    "testing"
+    "github.com/gruntwork-io/terratest/modules/terraform"
+    "github.com/stretchr/testify/assert"
+)
+
+func TestTerragruntVPC(t *testing.T) {
+    t.Parallel()
+
+    terraformOptions := &terraform.Options{
+        TerraformDir: "../envs/test/vpc",
+        TerraformBinary: "terragrunt",
+    }
+
+    defer terraform.Destroy(t, terraformOptions)
+    terraform.InitAndApply(t, terraformOptions)
+
+    vpcID := terraform.Output(t, terraformOptions, "vpc_id")
+    assert.NotEmpty(t, vpcID)
+}
+```
+
+### CI/CD Testing
+
+```yaml
+## .github/workflows/terragrunt-test.yml
+name: Terragrunt Tests
+
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Setup Terragrunt
+        run: |
+          wget https://github.com/gruntwork-io/terragrunt/releases/latest/download/terragrunt_linux_amd64
+          chmod +x terragrunt_linux_amd64
+          sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
+
+      - name: Validate format
+        run: terragrunt hclfmt --terragrunt-check
+
+      - name: Validate all
+        run: terragrunt run-all validate
+
+      - name: Plan all
+        run: terragrunt run-all plan
+```
+
+### Testing State Management
+
+```bash
+## Verify remote state configuration
+terragrunt run-all init -backend=false
+
+## Test state isolation
+cd envs/production
+terragrunt state list
+
+cd ../staging
+terragrunt state list
+
+## Verify no shared state
+```
+
+### Mock Testing
+
+Test without actually deploying:
+
+```bash
+## Use -lock=false for testing
+terragrunt plan -lock=false
+
+## Test with mock data
+export TF_VAR_environment=test
+export TF_VAR_region=us-east-1
+terragrunt plan
+```
+
+### Performance Testing
+
+```bash
+## Measure plan time
+time terragrunt run-all plan
+
+## Test with parallelism
+terragrunt run-all plan --terragrunt-parallelism 10
+
+## Measure per-module performance
+for dir in envs/production/*; do
+  cd "$dir"
+  echo "Testing $dir"
+  time terragrunt plan
+  cd -
+done
+```
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Hardcoded Values Everywhere
