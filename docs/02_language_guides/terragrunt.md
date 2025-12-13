@@ -767,6 +767,261 @@ done
 
 ---
 
+## Common Pitfalls
+
+### Dependency Path Typos
+
+**Issue**: Incorrect dependency paths cause Terragrunt to fail silently or create resources in wrong order.
+
+**Example**:
+
+```hcl
+## Bad - Typo in dependency path
+dependency "network" {
+  config_path = "../networking"  # ❌ Typo! Should be ../network
+}
+
+inputs = {
+  vpc_id = dependency.network.outputs.vpc_id  # Fails at runtime
+}
+```
+
+**Solution**: Verify dependency paths and test with `terragrunt run-all plan`.
+
+```hcl
+## Good - Correct dependency path
+dependency "network" {
+  config_path = "../network"  # ✅ Correct path
+}
+
+inputs = {
+  vpc_id = dependency.network.outputs.vpc_id
+}
+
+## Good - Use relative paths from terragrunt.hcl location
+dependency "database" {
+  config_path = "${get_terragrunt_dir()}/../rds"  # ✅ Explicit relative path
+}
+```
+
+**Key Points**:
+
+- Dependency paths are relative to `terragrunt.hcl` location
+- Use `terragrunt graph-dependencies` to visualize dependencies
+- Test with `terragrunt run-all plan` before apply
+- Check for circular dependencies with dependency graph
+
+### Missing Mock Outputs in Dependencies
+
+**Issue**: Dependencies without `mock_outputs` cause failures during initial `plan` before dependencies exist.
+
+**Example**:
+
+```hcl
+## Bad - No mock outputs
+dependency "vpc" {
+  config_path = "../vpc"
+  # ❌ No mock_outputs! Fails on first plan
+}
+
+inputs = {
+  vpc_id = dependency.vpc.outputs.vpc_id  # Error: vpc module not yet applied
+}
+```
+
+**Solution**: Always provide mock outputs for dependencies.
+
+```hcl
+## Good - Mock outputs for planning
+dependency "vpc" {
+  config_path = "../vpc"
+
+  mock_outputs = {
+    vpc_id = "vpc-mock-12345"  # ✅ Used during initial plan
+    subnet_ids = ["subnet-mock-1", "subnet-mock-2"]
+  }
+
+  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
+}
+
+inputs = {
+  vpc_id = dependency.vpc.outputs.vpc_id
+  subnet_ids = dependency.vpc.outputs.subnet_ids
+}
+```
+
+**Key Points**:
+
+- Mock outputs allow planning before dependencies exist
+- Mock values should match expected output types
+- Use `mock_outputs_allowed_terraform_commands` to control when mocks apply
+- Real outputs override mocks when dependencies are applied
+
+### Include Block Order Matters
+
+**Issue**: Include blocks are processed in order; later includes can't reference earlier ones.
+
+**Example**:
+
+```hcl
+## Bad - Trying to reference included locals
+include "root" {
+  path = find_in_parent_folders()
+}
+
+include "region" {
+  path = find_in_parent_folders("region.hcl")
+}
+
+## ❌ Can't reference locals from included files here
+inputs = {
+  tags = merge(local.common_tags, local.region_tags)  # Error: locals not defined
+}
+```
+
+**Solution**: Define locals after includes or use input variables.
+
+```hcl
+## Good - Locals defined after includes
+include "root" {
+  path = find_in_parent_folders()
+}
+
+include "region" {
+  path = find_in_parent_folders("region.hcl")
+}
+
+locals {
+  common_tags = {
+    ManagedBy = "Terragrunt"
+    Environment = "production"
+  }
+}
+
+inputs = merge(
+  include.root.locals.tags,
+  include.region.locals.regional_tags,
+  local.common_tags
+)
+```
+
+**Key Points**:
+
+- Includes are processed top-to-bottom
+- Reference included locals with `include.<name>.locals.<var>`
+- Define module-specific locals after includes
+- Use `merge()` to combine configurations from multiple includes
+
+### Remote State Backend Configuration Duplication
+
+**Issue**: Repeating remote state configuration in every `terragrunt.hcl` file causes maintenance burden.
+
+**Example**:
+
+```hcl
+## Bad - Repeated in every module
+remote_state {
+  backend = "s3"
+  config = {
+    bucket = "my-terraform-state"  # ❌ Duplicated everywhere
+    key    = "${path_relative_to_include()}/terraform.tfstate"
+    region = "us-east-1"
+    encrypt = true
+    dynamodb_table = "terraform-locks"
+  }
+}
+```
+
+**Solution**: Define remote state in root `terragrunt.hcl` and include it.
+
+```hcl
+## Good - Root terragrunt.hcl
+## _root/terragrunt.hcl
+remote_state {
+  backend = "s3"
+  generate = {
+    path      = "backend.tf"
+    if_exists = "overwrite_terragrunt"
+  }
+  config = {
+    bucket = "my-terraform-state-${get_aws_account_id()}"
+    key    = "${path_relative_to_include()}/terraform.tfstate"
+    region = local.aws_region
+    encrypt = true
+    dynamodb_table = "terraform-locks-${get_aws_account_id()}"
+  }
+}
+
+## Good - Child module references root
+## modules/vpc/terragrunt.hcl
+include "root" {
+  path = find_in_parent_folders()  # ✅ Inherits remote_state config
+}
+```
+
+**Key Points**:
+
+- Define remote state once in root `terragrunt.hcl`
+- Use `include` to inherit configuration
+- Use `get_aws_account_id()` for multi-account setups
+- `path_relative_to_include()` ensures unique state keys
+
+### Path Functions Confusion
+
+**Issue**: Mixing up `get_terragrunt_dir()`, `get_parent_terragrunt_dir()`, and `path_relative_to_include()`.
+
+**Example**:
+
+```hcl
+## Bad - Wrong path function
+locals {
+  environment = basename(get_terragrunt_dir())  # ❌ Returns module name, not environment
+}
+
+## Bad - Incorrect relative path
+dependency "vpc" {
+  config_path = get_parent_terragrunt_dir()  # ❌ Points to parent dir, not sibling module
+}
+```
+
+**Solution**: Use correct path functions for each use case.
+
+```hcl
+## Good - Correct path functions
+locals {
+  # Get environment from parent directory structure
+  # /envs/production/vpc/terragrunt.hcl -> "production"
+  environment = basename(dirname(get_terragrunt_dir()))
+
+  # Get module name
+  # /envs/production/vpc/terragrunt.hcl -> "vpc"
+  module_name = basename(get_terragrunt_dir())
+
+  # Get path relative to root
+  # /envs/production/vpc/terragrunt.hcl -> "envs/production/vpc"
+  relative_path = path_relative_to_include()
+}
+
+## Good - Sibling module dependency
+dependency "vpc" {
+  config_path = "../vpc"  # ✅ Relative to current module
+}
+
+## Good - Find root terragrunt.hcl
+include "root" {
+  path = find_in_parent_folders()  # ✅ Searches up directory tree
+}
+```
+
+**Key Points**:
+
+- `get_terragrunt_dir()`: Absolute path to current module directory
+- `get_parent_terragrunt_dir()`: Absolute path to parent with terragrunt.hcl
+- `path_relative_to_include()`: Relative path from root to current module
+- `find_in_parent_folders()`: Searches up tree for file
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Hardcoded Values Everywhere

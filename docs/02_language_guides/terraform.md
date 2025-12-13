@@ -903,6 +903,352 @@ resource "aws_iam_policy" "app" {
 
 ---
 
+## Common Pitfalls
+
+### State File Locking Issues
+
+**Issue**: Multiple team members or CI/CD pipelines running Terraform concurrently can corrupt
+the state file or cause race conditions.
+
+**Example**:
+
+```bash
+## Bad - Local state without locking
+terraform apply  # Person A starts
+terraform apply  # Person B starts simultaneously - STATE CORRUPTED!
+```
+
+**Solution**: Use remote state with locking enabled (S3 + DynamoDB, Terraform Cloud).
+
+```hcl
+## Good - S3 backend with DynamoDB locking
+terraform {
+  backend "s3" {
+    bucket         = "my-terraform-state"
+    key            = "prod/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "terraform-locks"  # Enables locking
+  }
+}
+
+## Create DynamoDB table for locking
+resource "aws_dynamodb_table" "terraform_locks" {
+  name         = "terraform-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+}
+```
+
+**Key Points**:
+
+- Never use local state for team projects
+- Always enable state locking with remote backends
+- S3 backend requires DynamoDB table for locking
+- Terraform Cloud provides built-in locking
+- Force-unlock only as last resort: `terraform force-unlock`
+
+### Count vs For_Each Selection
+
+**Issue**: Using `count` creates positional dependencies; removing middle items causes
+destruction and recreation of all subsequent resources.
+
+**Example**:
+
+```hcl
+## Bad - Using count (positional indexing)
+variable "environments" {
+  default = ["dev", "staging", "prod"]
+}
+
+resource "aws_s3_bucket" "app" {
+  count  = length(var.environments)
+  bucket = "myapp-${var.environments[count.index]}"
+}
+
+## Removing "staging" destroys and recreates "prod"!
+## var.environments = ["dev", "prod"]
+## aws_s3_bucket.app[1] changes from "staging" to "prod" (destroy + create)
+```
+
+**Solution**: Use `for_each` for resource collections that may change.
+
+```hcl
+## Good - Using for_each (keyed by name)
+variable "environments" {
+  type    = set(string)
+  default = ["dev", "staging", "prod"]
+}
+
+resource "aws_s3_bucket" "app" {
+  for_each = var.environments
+  bucket   = "myapp-${each.value}"
+}
+
+## Removing "staging" only destroys that bucket
+## var.environments = ["dev", "prod"]
+## Only aws_s3_bucket.app["staging"] is destroyed
+```
+
+**Key Points**:
+
+- Use `for_each` when items have unique identifiers
+- Use `count` only for identical resources or simple multipliers
+- `for_each` uses map keys; removing items doesn't affect others
+- `count` uses positional index; removal shifts all subsequent items
+- Converting `count` to `for_each` requires state migration
+
+### Implicit Dependencies Missing
+
+**Issue**: Terraform can't detect dependencies that exist only at runtime, causing creation order failures.
+
+**Example**:
+
+```hcl
+## Bad - Implicit dependency not detected
+resource "aws_instance" "app" {
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.app.id]  # Explicit dependency
+
+  user_data = <<-EOF
+              #!/bin/bash
+              aws s3 cp s3://${aws_s3_bucket.config.bucket}/config.yml /etc/app/
+              EOF
+  # Terraform doesn't know EC2 needs S3 bucket to exist!
+}
+
+resource "aws_s3_bucket" "config" {
+  bucket = "app-config-bucket"
+}
+```
+
+**Solution**: Add explicit `depends_on` for runtime dependencies.
+
+```hcl
+## Good - Explicit dependency ensures creation order
+resource "aws_instance" "app" {
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.app.id]
+
+  user_data = <<-EOF
+              #!/bin/bash
+              aws s3 cp s3://${aws_s3_bucket.config.bucket}/config.yml /etc/app/
+              EOF
+
+  depends_on = [
+    aws_s3_bucket.config,  # Ensure bucket exists before EC2
+    aws_iam_role_policy_attachment.app_s3_access  # And permissions
+  ]
+}
+```
+
+**Key Points**:
+
+- Terraform detects dependencies from attribute references
+- Runtime dependencies (scripts, policies) need `depends_on`
+- Use `depends_on` sparingly; prefer attribute references
+- Common scenarios: IAM permissions, DNS records, initialization scripts
+- Over-use of `depends_on` makes plans less efficient
+
+### Sensitive Data in State
+
+**Issue**: Terraform state files contain all resource attributes in plaintext, exposing secrets.
+
+**Example**:
+
+```hcl
+## Bad - Database password stored in plaintext state
+resource "aws_db_instance" "main" {
+  identifier = "myapp-db"
+  engine     = "postgres"
+  username   = "admin"
+  password   = "SuperSecret123!"  # Stored in plaintext in state file!
+}
+
+## Bad - API keys in outputs
+output "api_key" {
+  value = aws_api_key.main.value  # Exposed in state and console output
+}
+```
+
+**Solution**: Use secret management services, mark outputs as sensitive, encrypt state.
+
+```hcl
+## Good - Use secrets manager
+resource "aws_secretsmanager_secret" "db_password" {
+  name = "myapp-db-password"
+}
+
+resource "aws_secretsmanager_secret_version" "db_password" {
+  secret_id     = aws_secretsmanager_secret.db_password.id
+  secret_string = random_password.db_password.result
+}
+
+resource "random_password" "db_password" {
+  length  = 32
+  special = true
+}
+
+resource "aws_db_instance" "main" {
+  identifier = "myapp-db"
+  engine     = "postgres"
+  username   = "admin"
+  password   = random_password.db_password.result
+}
+
+## Good - Mark sensitive outputs
+output "db_password_arn" {
+  value       = aws_secretsmanager_secret.db_password.arn
+  description = "ARN of database password in Secrets Manager"
+}
+
+output "api_key" {
+  value     = aws_api_key.main.value
+  sensitive = true  # Prevents display in console output
+}
+```
+
+**Key Points**:
+
+- All resource attributes are stored in state file
+- Encrypt state at rest (S3 encryption, Terraform Cloud encryption)
+- Use AWS Secrets Manager/Parameter Store for sensitive values
+- Mark outputs as `sensitive = true`
+- Never commit state files to version control
+- Rotate secrets regularly
+
+### Provider Version Constraints Missing
+
+**Issue**: Running `terraform init` without version constraints can pull incompatible provider
+versions, breaking existing configurations.
+
+**Example**:
+
+```hcl
+## Bad - No version constraints (uses latest)
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      # No version! Could pull breaking changes
+    }
+  }
+}
+
+## Provider releases breaking change in 5.0
+## Existing code breaks on next `terraform init`
+```
+
+**Solution**: Always specify provider version constraints.
+
+```hcl
+## Good - Explicit version constraints
+terraform {
+  required_version = ">= 1.5.0, < 2.0.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"  # Allow 5.x updates, but not 6.0
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.5"
+    }
+  }
+}
+
+## Better - Exact version for critical infrastructure
+terraform {
+  required_version = "= 1.7.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "= 5.31.0"  # Exact version for stability
+    }
+  }
+}
+```
+
+**Key Points**:
+
+- Always specify `required_version` for Terraform
+- Use `~>` for minor version flexibility: `~> 5.0` = `>= 5.0, < 6.0`
+- Use `=` for exact version in production
+- Lock file (`.terraform.lock.hcl`) pins exact versions
+- Commit lock file to version control
+- Test provider upgrades in non-prod first
+
+### Resource Timeouts Not Configured
+
+**Issue**: Default timeouts (varies by resource) may be too short for large deployments, causing spurious failures.
+
+**Example**:
+
+```hcl
+## Bad - Large RDS instance times out with default timeout
+resource "aws_db_instance" "large" {
+  identifier           = "large-db"
+  instance_class       = "db.r6g.16xlarge"
+  allocated_storage    = 10000
+  engine               = "postgres"
+  # Default timeout may be too short for large instance provisioning
+}
+
+## Error: timeout while waiting for state to become 'available'
+```
+
+**Solution**: Configure appropriate timeouts for long-running operations.
+
+```hcl
+## Good - Explicit timeouts for large resources
+resource "aws_db_instance" "large" {
+  identifier           = "large-db"
+  instance_class       = "db.r6g.16xlarge"
+  allocated_storage    = 10000
+  engine               = "postgres"
+
+  timeouts {
+    create = "60m"  # Allow 60 minutes for creation
+    update = "60m"
+    delete = "60m"
+  }
+}
+
+## Good - Cluster creation with extended timeout
+resource "aws_eks_cluster" "main" {
+  name     = "production-cluster"
+  role_arn = aws_iam_role.cluster.arn
+
+  vpc_config {
+    subnet_ids = aws_subnet.private[*].id
+  }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+```
+
+**Key Points**:
+
+- Default timeouts vary by resource type
+- Large databases, clusters need longer timeouts
+- Configure `create`, `update`, `delete` separately
+- Balance between avoiding premature failures and catching real issues
+- Monitor actual creation times to set appropriate values
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Hardcoded Values

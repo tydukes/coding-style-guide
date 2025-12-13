@@ -1187,6 +1187,326 @@ cp snapshot.yaml snapshot-previous.yaml
 
 ---
 
+## Common Pitfalls
+
+### Selector Label Mismatch
+
+**Issue**: Pod template labels don't match deployment selector, causing deployment to never become ready.
+
+**Example**:
+
+```yaml
+## Bad - Mismatched labels
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+spec:
+  selector:
+    matchLabels:
+      app: web-app  # Selector label
+  template:
+    metadata:
+      labels:
+        app: webapp  # ❌ Different label! Doesn't match selector
+    spec:
+      containers:
+      - name: app
+        image: myapp:1.0
+```
+
+**Solution**: Ensure selector labels exactly match template labels.
+
+```yaml
+## Good - Matching labels
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+spec:
+  selector:
+    matchLabels:
+      app: webapp  # ✅ Matches template
+  template:
+    metadata:
+      labels:
+        app: webapp  # ✅ Matches selector
+        version: "1.0"  # Additional labels are OK
+    spec:
+      containers:
+      - name: app
+        image: myapp:1.0
+```
+
+**Key Points**:
+
+- Selector labels must be subset of template labels
+- Template can have additional labels beyond selector
+- Changing selector requires deleting and recreating deployment
+- Use consistent label keys across all resources
+
+### Resource Limits Without Requests
+
+**Issue**: Setting `limits` without `requests` causes pods to get BestEffort QoS and be first to evict.
+
+**Example**:
+
+```yaml
+## Bad - Only limits, no requests
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  containers:
+  - name: app
+    image: myapp
+    resources:
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+      ## ❌ No requests! Gets BestEffort QoS
+```
+
+**Solution**: Always set both requests and limits.
+
+```yaml
+## Good - Both requests and limits
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  containers:
+  - name: app
+    image: myapp
+    resources:
+      requests:
+        memory: "256Mi"  # ✅ Guaranteed allocation
+        cpu: "250m"
+      limits:
+        memory: "512Mi"  # Maximum allowed
+        cpu: "500m"
+```
+
+**Key Points**:
+
+- Always set requests to get Burstable or Guaranteed QoS
+- Requests determine pod scheduling and eviction priority
+- `requests == limits` gives Guaranteed QoS (highest priority)
+- Missing requests results in BestEffort QoS (first to evict)
+
+### Readiness Probe Pointing to Wrong Port
+
+**Issue**: Readiness probe checks wrong port, causing traffic to be sent to pods that aren't actually ready.
+
+**Example**:
+
+```yaml
+## Bad - Wrong port in probe
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  containers:
+  - name: app
+    image: myapp
+    ports:
+    - containerPort: 8080
+      name: http
+    readinessProbe:
+      httpGet:
+        port: 80  # ❌ Wrong port! App runs on 8080
+        path: /health
+```
+
+**Solution**: Use named ports or verify port numbers.
+
+```yaml
+## Good - Correct port reference
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  containers:
+  - name: app
+    image: myapp
+    ports:
+    - containerPort: 8080
+      name: http  # Named port
+    readinessProbe:
+      httpGet:
+        port: http  # ✅ References named port
+        path: /health
+    livenessProbe:
+      httpGet:
+        port: 8080  # ✅ Or use exact port number
+        path: /health
+```
+
+**Key Points**:
+
+- Use named ports for better readability and maintainability
+- Verify probe port matches container port
+- Test probes with `kubectl exec` before deployment
+- Check probe logs with `kubectl describe pod`
+
+### ConfigMap Volume Mount Overwrites Directory
+
+**Issue**: Mounting ConfigMap to directory overwrites all existing files in that directory.
+
+**Example**:
+
+```yaml
+## Bad - Overwrites entire /etc/config directory
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  containers:
+  - name: app
+    image: myapp
+    volumeMounts:
+    - name: config
+      mountPath: /etc/config  # ❌ Overwrites everything in /etc/config
+  volumes:
+  - name: config
+    configMap:
+      name: app-config
+```
+
+**Solution**: Use `subPath` to mount specific files or mount to dedicated directory.
+
+```yaml
+## Good - Mount specific file with subPath
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  containers:
+  - name: app
+    image: myapp
+    volumeMounts:
+    - name: config
+      mountPath: /etc/config/app.conf  # ✅ Specific file
+      subPath: app.conf  # File from ConfigMap
+  volumes:
+  - name: config
+    configMap:
+      name: app-config
+
+## Good - Mount to dedicated directory
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  containers:
+  - name: app
+    image: myapp
+    volumeMounts:
+    - name: config
+      mountPath: /app/config  # ✅ Dedicated directory
+  volumes:
+  - name: config
+    configMap:
+      name: app-config
+```
+
+**Key Points**:
+
+- ConfigMap mount replaces all files in target directory
+- Use `subPath` to mount individual files
+- Mount to dedicated directories to avoid conflicts
+- Consider using environment variables for simple configs
+
+### Service Selector Doesn't Match Pods
+
+**Issue**: Service selector doesn't match pod labels, causing no endpoints and connection failures.
+
+**Example**:
+
+```yaml
+## Bad - Service selector doesn't match pods
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp
+spec:
+  selector:
+    app: web  # Selector
+  ports:
+  - port: 80
+    targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+spec:
+  selector:
+    matchLabels:
+      app: webapp  # ❌ Doesn't match service selector!
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: app
+        image: myapp
+```
+
+**Solution**: Ensure service selector matches pod labels.
+
+```yaml
+## Good - Service selector matches pods
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp
+spec:
+  selector:
+    app: webapp  # ✅ Matches deployment labels
+  ports:
+  - port: 80
+    targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+spec:
+  selector:
+    matchLabels:
+      app: webapp  # ✅ Matches service selector
+  template:
+    metadata:
+      labels:
+        app: webapp  # ✅ Matches service selector
+    spec:
+      containers:
+      - name: app
+        image: myapp
+        ports:
+        - containerPort: 8080
+```
+
+**Key Points**:
+
+- Service selector must match pod labels exactly
+- Check service endpoints: `kubectl get endpoints webapp`
+- Use consistent labeling across all resources
+- Service doesn't care about deployment selector, only pod labels
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: latest Tag

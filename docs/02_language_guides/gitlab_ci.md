@@ -1128,6 +1128,229 @@ metrics:pipeline:
 
 ---
 
+## Common Pitfalls
+
+### Cache Key Collisions Across Branches
+
+**Issue**: Using `${CI_COMMIT_REF_SLUG}` as cache key causes cache misses when switching branches even for identical dependencies.
+
+**Example**:
+
+```yaml
+## Bad - Branch-specific cache keys
+cache:
+  key: ${CI_COMMIT_REF_SLUG}  # Different key for each branch
+  paths:
+    - node_modules/
+
+build:
+  script:
+    - npm ci  # Reinstalls on every branch switch
+    - npm run build
+```
+
+**Solution**: Use lock file hash as cache key.
+
+```yaml
+## Good - Content-based cache keys
+cache:
+  key:
+    files:
+      - package-lock.json  # ✅ Changes only when dependencies change
+  paths:
+    - node_modules/
+    - .npm/
+
+build:
+  script:
+    - npm ci --cache .npm
+    - npm run build
+```
+
+**Key Points**:
+
+- Use lock file hashes for dependency caches
+- Include package manager cache directory (.npm, .yarn)
+- Consider `${CI_COMMIT_REF_SLUG}-${checksum}` for branch isolation
+- Use `policy: pull` in most jobs, `pull-push` only in one job
+
+### Missing Dependencies Specification
+
+**Issue**: Jobs fail because `dependencies` or `needs` is not specified, causing artifacts from previous jobs to be unavailable.
+
+**Example**:
+
+```yaml
+## Bad - Implicit dependencies
+build:
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+
+deploy:
+  stage: deploy
+  script:
+    - ls dist/  # ❌ dist/ not available!
+    - ./deploy.sh
+```
+
+**Solution**: Explicitly declare job dependencies.
+
+```yaml
+## Good - Explicit dependencies
+build:
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+
+deploy:
+  stage: deploy
+  dependencies:
+    - build  # ✅ Download artifacts from build job
+  script:
+    - ls dist/  # Now available
+    - ./deploy.sh
+```
+
+**Key Points**:
+
+- Use `dependencies: [job1, job2]` to download specific artifacts
+- Use `dependencies: []` to download no artifacts
+- `needs` creates both dependency and downloads artifacts
+- Missing `dependencies` downloads all artifacts from previous stages
+
+### Services Hostname Confusion
+
+**Issue**: Trying to connect to services using `localhost` instead of service name causes connection failures.
+
+**Example**:
+
+```yaml
+## Bad - Using localhost for services
+test:
+  services:
+    - postgres:15
+  variables:
+    DATABASE_URL: postgresql://user:pass@localhost:5432/db  # ❌ Wrong!
+  script:
+    - npm test  # Cannot connect to database
+```
+
+**Solution**: Use service name as hostname.
+
+```yaml
+## Good - Use service name as hostname
+test:
+  services:
+    - name: postgres:15
+      alias: database  # Optional custom alias
+  variables:
+    DATABASE_URL: postgresql://user:pass@database:5432/db  # ✅ Service alias
+  script:
+    - npm test
+```
+
+**Key Points**:
+
+- Services are accessible by image name (postgres, redis, mongo)
+- Use `alias` to customize service hostname
+- Service port is the container's internal port (not mapped)
+- Wait for service readiness before running tests
+
+### Rule Precedence Gotchas
+
+**Issue**: Multiple `rules` entries create unexpected behavior due to first-match-wins semantics.
+
+**Example**:
+
+```yaml
+## Bad - First rule always matches
+deploy:
+  rules:
+    - if: $CI_COMMIT_BRANCH  # ❌ Matches any branch!
+      when: always
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
+  script:
+    - ./deploy.sh  # Runs automatically on all branches, not just main
+```
+
+**Solution**: Order rules from most specific to least specific.
+
+```yaml
+## Good - Specific rules first
+deploy:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual  # ✅ Manual deploy on main
+    - if: $CI_COMMIT_BRANCH == "develop"
+      when: always  # Auto deploy on develop
+    - when: never  # Don't run on other branches
+  script:
+    - ./deploy.sh
+```
+
+**Key Points**:
+
+- Rules are evaluated top-to-bottom, first match wins
+- Always end with a default rule (`when: never` or `when: on_success`)
+- Use `&&` for multiple conditions in one rule
+- Test rule logic with `--dry-run`
+
+### Variable Expansion in Non-String Contexts
+
+**Issue**: Variables not expanding in certain YAML contexts like `only`, `except`, or numeric values.
+
+**Example**:
+
+```yaml
+## Bad - Variables don't expand in only/except
+deploy:
+  only:
+    - $CI_DEFAULT_BRANCH  # ❌ Treated as literal string!
+  script:
+    - ./deploy.sh
+
+## Bad - Variables in numeric contexts
+test:
+  parallel: $PARALLEL_COUNT  # ❌ Not expanded
+  script:
+    - npm test
+```
+
+**Solution**: Use `rules` for conditional execution and `.env` syntax for expansion.
+
+```yaml
+## Good - Use rules for branch matching
+deploy:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH  # ✅ Expands correctly
+  script:
+    - ./deploy.sh
+
+## Good - Expand variables in script
+test:
+  script:
+    - export COUNT=${PARALLEL_COUNT:-4}
+    - echo "Running $COUNT parallel tests"
+    - npm test -- --shard=$CI_NODE_INDEX/$COUNT
+```
+
+**Key Points**:
+
+- Use `rules` instead of `only/except` for variable-based conditions
+- Variables expand in scripts, not in YAML structure
+- Use `${VAR:-default}` for default values
+- Numeric YAML keys don't support variable expansion
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: No Cache

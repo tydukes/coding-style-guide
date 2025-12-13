@@ -744,6 +744,271 @@ scenario:
 
 ---
 
+## Common Pitfalls
+
+### Variable Precedence Confusion
+
+**Issue**: Ansible has 22 levels of variable precedence, and misunderstanding this order causes
+unexpected variable values at runtime.
+
+**Example**:
+
+```yaml
+## playbook.yml
+- name: Deploy application
+  hosts: webservers
+  vars:
+    app_port: 8080  # Play vars (precedence: 12)
+  roles:
+    - role: deploy_app
+      vars:
+        app_port: 9000  # Role params (precedence: 20)
+```
+
+```yaml
+## roles/deploy_app/defaults/main.yml
+app_port: 3000  # Role defaults (precedence: 2)
+```
+
+```yaml
+## group_vars/webservers.yml
+app_port: 5000  # Group vars (precedence: 7)
+```
+
+**Solution**: Use extra vars (highest precedence) for overrides, role defaults for fallbacks,
+and document which vars are meant to be overridden.
+
+```yaml
+## Good - Clear hierarchy
+## ansible-playbook site.yml -e "app_port=9000"  # Extra vars always win
+```
+
+**Key Points**:
+
+- Extra vars (`-e` or `--extra-vars`) always win (precedence 22)
+- Role vars override almost everything (precedence 15)
+- Use role defaults for sensible fallback values
+- Document expected override points in role README
+
+### Handler Notification Timing
+
+**Issue**: Handlers only run at the end of a play, not immediately when notified, causing race conditions.
+
+**Example**:
+
+```yaml
+## Bad - Config updated but service not reloaded yet
+- name: Update nginx config
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify: Reload nginx
+
+- name: Test nginx configuration  # Runs BEFORE reload!
+  uri:
+    url: http://localhost/health
+    status_code: 200
+```
+
+**Solution**: Use `meta: flush_handlers` to force handler execution at specific points.
+
+```yaml
+## Good - Force handler execution before testing
+- name: Update nginx config
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify: Reload nginx
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: Test nginx configuration  # Now runs AFTER reload
+  uri:
+    url: http://localhost/health
+    status_code: 200
+```
+
+**Key Points**:
+
+- Handlers run at play end by default
+- Use `meta: flush_handlers` to force immediate execution
+- Handlers run once even if notified multiple times
+- Failed tasks prevent handler execution unless `force_handlers: true`
+
+### Changed When Detection
+
+**Issue**: Shell/command tasks always report "changed" status, polluting change reports and
+triggering unnecessary handler notifications.
+
+**Example**:
+
+```yaml
+## Bad - Always shows as changed
+- name: Check if file exists
+  command: test -f /etc/myapp/config.yml
+  register: config_check
+  ignore_errors: true
+```
+
+**Solution**: Use `changed_when` to properly indicate actual changes.
+
+```yaml
+## Good - Only marks as changed when appropriate
+- name: Check if file exists
+  command: test -f /etc/myapp/config.yml
+  register: config_check
+  failed_when: false
+  changed_when: false  # This is just a check, not a change
+
+## Good - Detect actual changes
+- name: Add user to group
+  command: usermod -aG docker {{ username }}
+  register: usermod_result
+  changed_when: "'no changes' not in usermod_result.stderr"
+```
+
+**Key Points**:
+
+- Commands/shell tasks default to "changed" status
+- Use `changed_when: false` for read-only operations
+- Parse output to detect actual changes
+- Prevents unnecessary handler notifications
+
+### Loop Variable Shadowing
+
+**Issue**: Using `loop` creates an `item` variable that shadows outer loop variables, causing nested loop failures.
+
+**Example**:
+
+```yaml
+## Bad - Inner loop shadows outer 'item'
+- name: Create user directories
+  file:
+    path: "/home/{{ item.username }}/{{ item }}"  # Which 'item'?
+    state: directory
+  loop: "{{ users }}"
+  with_items:
+    - documents
+    - downloads
+```
+
+**Solution**: Use `loop_control` to rename loop variables.
+
+```yaml
+## Good - Explicit loop variable names
+- name: Create user directories
+  file:
+    path: "/home/{{ user.username }}/{{ folder }}"
+    state: directory
+  loop: "{{ users }}"
+  loop_control:
+    loop_var: user
+  with_nested:
+    - "{{ users }}"
+    - ['documents', 'downloads']
+  loop_control:
+    loop_var: folder
+```
+
+**Key Points**:
+
+- Default loop variable is `item`
+- Nested loops shadow outer `item` variables
+- Use `loop_control: { loop_var: custom_name }` for clarity
+- Name loop variables descriptively
+
+### Template Rendering Errors
+
+**Issue**: Jinja2 template errors only appear at runtime on target hosts, making debugging difficult.
+
+**Example**:
+
+```jinja2
+{# templates/config.j2 - Runtime error! #}
+server_url = {{ api_url }}  # Missing quotes for string value
+database_host = {{ db_host | default(localhost) }}  # Undefined variable 'localhost'
+workers = {{ worker_count + 10 }}  # TypeError if worker_count is string
+```
+
+**Solution**: Use proper Jinja2 syntax, test templates locally, and use `template` module's `validate` parameter.
+
+```jinja2
+## Good - Proper Jinja2 syntax
+server_url = "{{ api_url }}"
+database_host = "{{ db_host | default('localhost') }}"
+workers = {{ worker_count | int + 10 }}
+
+{# Use filters for type conversion #}
+enabled = {{ feature_enabled | bool }}
+timeout = {{ timeout_seconds | int }}
+```
+
+```yaml
+## Good - Validate template after deployment
+- name: Deploy nginx config
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    validate: 'nginx -t -c %s'  # Test config before replacing
+```
+
+**Key Points**:
+
+- Quote string values in templates
+- Use `| default('value')` with quotes for string defaults
+- Use type filters: `| int`, `| bool`, `| string`
+- Use `validate` parameter to test rendered configs
+- Test templates with `--check --diff` mode
+
+### Fact Gathering Performance
+
+**Issue**: Fact gathering runs on every play by default, adding 2-5 seconds per host even when facts aren't needed.
+
+**Example**:
+
+```yaml
+## Bad - Gathers facts unnecessarily
+- name: Simple file copy
+  hosts: all
+  tasks:  # Waits 3 seconds gathering facts we don't use
+    - name: Copy file
+      copy:
+        src: app.jar
+        dest: /opt/app/
+```
+
+**Solution**: Disable fact gathering when not needed, use smart gathering, or cache facts.
+
+```yaml
+## Good - Disable when not needed
+- name: Simple file copy
+  hosts: all
+  gather_facts: false  # Skip fact gathering
+  tasks:
+    - name: Copy file
+      copy:
+        src: app.jar
+        dest: /opt/app/
+
+## Good - Use smart gathering (ansible.cfg)
+## [defaults]
+## gathering = smart
+## fact_caching = jsonfile
+## fact_caching_connection = /tmp/ansible_facts
+## fact_caching_timeout = 3600
+```
+
+**Key Points**:
+
+- Default gathering adds 2-5s per host per play
+- Set `gather_facts: false` when facts aren't needed
+- Use `gathering = smart` to cache facts
+- Manually gather facts with `setup` module when needed
+- Use `gather_subset` to collect only required facts
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Shell/Command for Everything
