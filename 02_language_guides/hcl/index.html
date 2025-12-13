@@ -1567,6 +1567,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#never-hardcode-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Never Hardcode Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secure-state-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure State Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prevent-resource-deletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prevent Resource Deletion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secure-default-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure Default Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-and-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit and Compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4707,6 +4790,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#never-hardcode-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Never Hardcode Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secure-state-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure State Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prevent-resource-deletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prevent Resource Deletion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secure-default-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure Default Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-and-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit and Compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5623,6 +5789,314 @@ machine-friendly, combining declarative resource definitions with imperative pro
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<hr />
+<h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="never-hardcode-secrets">Never Hardcode Secrets<a class="headerlink" href="#never-hardcode-secrets" title="Permanent link">&para;</a></h3>
+<p>Avoid storing sensitive data in HCL files:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Hardcoded secrets in HCL</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MySecretPassword123&quot;</span><span class="c1">  # ❌ Exposed in version control!</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hardcoded_password&quot;</span><span class="c1">  # ❌ Never do this!</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Use variables without defaults for secrets</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="na">sensitive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="c1">  # No default - must be provided at runtime</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Use environment variables</span>
+<span class="c1"># Set via: export TF_VAR_db_password=&quot;...&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="na">sensitive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Use secret management systems</span>
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_secretsmanager_secret_version&quot;</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">secret_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production/db/password&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_secretsmanager_secret_version.db_password.secret_string</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Use Vault provider</span>
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;vault_generic_secret&quot;</span><span class="w"> </span><span class="nv">&quot;db_creds&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;secret/database&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.vault_generic_secret.db_creds.data</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Never commit secrets to <code>.tf</code> files</li>
+<li>Use <code>sensitive = true</code> for secret variables</li>
+<li>Read secrets from external systems (Vault, AWS Secrets Manager)</li>
+<li>Use environment variables (<code>TF_VAR_*</code>)</li>
+<li>Scan repositories for accidentally committed secrets</li>
+<li>Use <code>.tfvars</code> files (gitignored) for local development</li>
+</ul>
+<h3 id="secure-state-management">Secure State Management<a class="headerlink" href="#secure-state-management" title="Permanent link">&para;</a></h3>
+<p>Protect Terraform state files containing sensitive data:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - S3 backend with encryption</span>
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mycompany-terraform-state&quot;</span>
+<span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod/terraform.tfstate&quot;</span>
+<span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">    </span><span class="na">encrypt</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">  # Server-side encryption</span>
+<span class="w">    </span><span class="na">kms_key_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;arn:aws:kms:us-east-1:123456789012:key/...&quot;</span>
+<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-locks&quot;</span>
+
+<span class="c1">    # Access control</span>
+<span class="w">    </span><span class="na">acl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;private&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Remote backend with access control</span>
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;remote&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">organization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-company&quot;</span>
+
+<span class="w">    </span><span class="nb">workspaces</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Limit state file access</span>
+<span class="c1"># Set strict IAM policy for S3 state bucket</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket_policy&quot;</span><span class="w"> </span><span class="nv">&quot;state&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_s3_bucket.terraform_state.id</span>
+
+<span class="w">  </span><span class="na">policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">jsonencode</span><span class="p">({</span>
+<span class="w">    </span><span class="na">Statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">      </span><span class="na">Effect</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span>
+<span class="w">      </span><span class="na">Principal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<span class="w">      </span><span class="na">Action</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;s3:*&quot;</span>
+<span class="w">      </span><span class="na">Resource</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${aws_s3_bucket.terraform_state.arn}/*&quot;</span>
+<span class="w">      </span><span class="nb">Condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">Bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;aws:SecureTransport&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;false&quot;</span><span class="c1">  # Require HTTPS</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}]</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always encrypt state files</li>
+<li>Use remote backends (S3, Terraform Cloud)</li>
+<li>Enable state locking (DynamoDB, etc.)</li>
+<li>Restrict state file access</li>
+<li>Never commit state files to version control</li>
+<li>Enable versioning on state storage</li>
+</ul>
+<h3 id="input-validation">Input Validation<a class="headerlink" href="#input-validation" title="Permanent link">&para;</a></h3>
+<p>Validate all variable inputs:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Validate variable inputs</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environment&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">([</span><span class="s2">&quot;dev&quot;, &quot;staging&quot;, &quot;prod&quot;</span><span class="p">],</span><span class="w"> </span><span class="nv">var.environment</span><span class="p">)</span>
+<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Environment must be dev, staging, or prod.&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;instance_type&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">can</span><span class="p">(</span><span class="nf">regex</span><span class="p">(</span><span class="s2">&quot;^t3\\.(micro|small|medium)$&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">var.instance_type</span><span class="p">))</span>
+<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Instance type must be t3.micro, t3.small, or t3.medium.&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;cidr_block&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">can</span><span class="p">(</span><span class="nf">cidrhost</span><span class="p">(</span><span class="nv">var.cidr_block</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">))</span>
+<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CIDR block must be valid.&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;port&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">number</span>
+<span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.port</span><span class="w"> </span><span class="err">&gt;</span><span class="p">=</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="err">&amp;&amp;</span><span class="w"> </span><span class="nv">var.port</span><span class="w"> </span><span class="err">&lt;</span><span class="p">=</span><span class="w"> </span><span class="m">65535</span>
+<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Port must be between 1 and 65535.&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Add validation blocks to all variables</li>
+<li>Use allow-lists for enums</li>
+<li>Validate formats (CIDR, email, etc.)</li>
+<li>Validate ranges for numbers</li>
+<li>Fail early on invalid inputs</li>
+<li>Document validation requirements</li>
+</ul>
+<h3 id="prevent-resource-deletion">Prevent Resource Deletion<a class="headerlink" href="#prevent-resource-deletion" title="Permanent link">&para;</a></h3>
+<p>Protect critical resources from accidental deletion:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Lifecycle prevent_destroy</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;production&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">identifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-db&quot;</span>
+<span class="c1">  # ... other configuration ...</span>
+
+<span class="w">  </span><span class="nb">lifecycle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">prevent_destroy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">  # ✅ Cannot be destroyed via Terraform</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Deletion protection at resource level</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;production&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">identifier</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-db&quot;</span>
+<span class="w">  </span><span class="na">deletion_protection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">  # ✅ AWS-level protection</span>
+
+<span class="w">  </span><span class="nb">lifecycle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">prevent_destroy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Create before destroy for zero downtime</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.ami_id</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.micro&quot;</span>
+
+<span class="w">  </span><span class="nb">lifecycle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">create_before_destroy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">  # ✅ New resource before destroying old</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use <code>prevent_destroy</code> for critical resources</li>
+<li>Enable resource-level deletion protection</li>
+<li>Use <code>create_before_destroy</code> for zero downtime</li>
+<li>Require manual intervention for dangerous changes</li>
+<li>Use separate workspaces for different environments</li>
+<li>Implement approval workflows</li>
+</ul>
+<h3 id="secure-default-values">Secure Default Values<a class="headerlink" href="#secure-default-values" title="Permanent link">&para;</a></h3>
+<p>Avoid insecure defaults:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Insecure defaults</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket&quot;</span><span class="w"> </span><span class="nv">&quot;data&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-data-bucket&quot;</span>
+<span class="w">  </span><span class="na">acl</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;public-read&quot;</span><span class="c1">  # ❌ Publicly accessible!</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">ingress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">65535</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">    </span><span class="na">cidr_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">]</span><span class="c1">  # ❌ Open to the internet!</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Secure defaults</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket&quot;</span><span class="w"> </span><span class="nv">&quot;data&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-data-bucket&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket_acl&quot;</span><span class="w"> </span><span class="nv">&quot;data&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_s3_bucket.data.id</span>
+<span class="w">  </span><span class="na">acl</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;private&quot;</span><span class="c1">  # ✅ Private by default</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket_public_access_block&quot;</span><span class="w"> </span><span class="nv">&quot;data&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_s3_bucket.data.id</span>
+
+<span class="w">  </span><span class="na">block_public_acls</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">block_public_policy</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">ignore_public_acls</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">restrict_public_buckets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;web-sg&quot;</span>
+
+<span class="w">  </span><span class="nb">ingress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">443</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">443</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">    </span><span class="na">cidr_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.0.0/8&quot;</span><span class="p">]</span><span class="c1">  # ✅ Restricted to private network</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">egress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;-1&quot;</span>
+<span class="w">    </span><span class="na">cidr_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Default to most restrictive settings</li>
+<li>Explicitly define security configurations</li>
+<li>Block public access by default</li>
+<li>Use least privilege for security groups</li>
+<li>Enable encryption by default</li>
+<li>Audit for overly permissive rules</li>
+</ul>
+<h3 id="audit-and-compliance">Audit and Compliance<a class="headerlink" href="#audit-and-compliance" title="Permanent link">&para;</a></h3>
+<p>Implement audit logging and compliance checks:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Enable CloudTrail for audit logging</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_cloudtrail&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;main-trail&quot;</span>
+<span class="w">  </span><span class="na">s3_bucket_name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_s3_bucket.cloudtrail.id</span>
+<span class="w">  </span><span class="na">include_global_service_events</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">is_multi_region_trail</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">enable_logging</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+
+<span class="w">  </span><span class="nb">event_selector</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">read_write_type</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;All&quot;</span>
+<span class="w">    </span><span class="na">include_management_events</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Tag resources for compliance</span>
+<span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
+<span class="w">    </span><span class="na">Owner</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Platform Team&quot;</span>
+<span class="w">    </span><span class="na">CostCenter</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Engineering&quot;</span>
+<span class="w">    </span><span class="na">Compliance</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SOC2&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.ami_id</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.micro&quot;</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Use terraform-compliance for policy checks</span>
+<span class="c1"># terraform-compliance.yml</span>
+<span class="c1"># - name: Ensure S3 buckets are encrypted</span>
+<span class="c1">#   when: resource.aws_s3_bucket</span>
+<span class="c1">#   then: it must have encryption</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Enable audit logging (CloudTrail, etc.)</li>
+<li>Tag all resources for tracking</li>
+<li>Use compliance frameworks (CIS, SOC2)</li>
+<li>Implement policy-as-code (Sentinel, OPA)</li>
+<li>Monitor for drift</li>
+<li>Regular security audits</li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-hardcoded-values">❌ Avoid: Hardcoded Values<a class="headerlink" href="#avoid-hardcoded-values" title="Permanent link">&para;</a></h3>

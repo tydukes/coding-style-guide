@@ -2125,6 +2125,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#never-store-secrets-in-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Never Store Secrets in YAML
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prevent-yaml-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prevent YAML Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate-yaml-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validate YAML Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yaml-bombs-billion-laughs-attack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        YAML Bombs (Billion Laughs Attack)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4531,6 +4614,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#never-store-secrets-in-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Never Store Secrets in YAML
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prevent-yaml-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prevent YAML Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate-yaml-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validate YAML Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yaml-bombs-billion-laughs-attack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        YAML Bombs (Billion Laughs Attack)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5342,6 +5508,213 @@ configuration.</p>
 <span class="nt">service_b</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">env</span><span class="p">:</span><span class="w"> </span><span class="nv">*common_env</span>
 </code></pre></div>
+<hr />
+<h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="never-store-secrets-in-yaml">Never Store Secrets in YAML<a class="headerlink" href="#never-store-secrets-in-yaml" title="Permanent link">&para;</a></h3>
+<p>YAML files are often committed to version control:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Secrets in YAML</span>
+<span class="nt">database</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db.example.com</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MySecretPassword123</span><span class="w">  </span><span class="c1"># ❌ Exposed in version control!</span>
+<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sk-1234567890abcdef</span><span class="w">   </span><span class="c1"># ❌ Hardcoded secret!</span>
+
+<span class="c1">## Good - Environment variable references</span>
+<span class="nt">database</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_HOST}</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_PASSWORD}</span><span class="w">  </span><span class="c1"># ✅ From environment</span>
+<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${API_KEY}</span>
+
+<span class="c1">## Good - External secret references</span>
+<span class="nt">database</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db.example.com</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="kt">!vault</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">$ANSIBLE_VAULT;1.1;AES256</span>
+<span class="w">    </span><span class="no">...encrypted...</span>
+<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssm:///myapp/api-key</span><span class="w">  </span><span class="c1"># AWS Systems Manager Parameter Store</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Never commit secrets to YAML files in version control</li>
+<li>Use environment variables for sensitive data</li>
+<li>Use secret management (Ansible Vault, Sealed Secrets, SOPS)</li>
+<li>Scan repositories for accidentally committed secrets</li>
+<li>Encrypt sensitive YAML files at rest</li>
+</ul>
+<h3 id="prevent-yaml-injection">Prevent YAML Injection<a class="headerlink" href="#prevent-yaml-injection" title="Permanent link">&para;</a></h3>
+<p>Untrusted YAML can execute arbitrary code in some parsers:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Unsafe YAML loading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+<span class="n">user_input</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">!!python/object/apply:os.system</span>
+<span class="s2">args: [&#39;rm -rf /&#39;]</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>  <span class="c1"># ❌ Code execution vulnerability!</span>
+
+<span class="c1">## Good - Safe YAML loading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+<span class="n">user_input</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">name: John</span>
+<span class="s2">age: 30</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>  <span class="c1"># ✅ Safe - no code execution</span>
+
+<span class="c1">## Good - Validate with schema</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">yamale</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_schema</span><span class="p">,</span> <span class="n">make_data</span><span class="p">,</span> <span class="n">validate</span>
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">make_schema</span><span class="p">(</span><span class="s1">&#39;schema.yaml&#39;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">make_data</span><span class="p">(</span><span class="s1">&#39;config.yaml&#39;</span><span class="p">)</span>
+<span class="n">validate</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>  <span class="c1"># ✅ Validated against schema</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always use <code>safe_load()</code> instead of <code>load()</code></li>
+<li>Never parse untrusted YAML with <code>yaml.load()</code></li>
+<li>Validate YAML against schemas</li>
+<li>Sanitize user inputs before YAML encoding</li>
+<li>Use YAML parsers with security in mind</li>
+</ul>
+<h3 id="validate-yaml-schema">Validate YAML Schema<a class="headerlink" href="#validate-yaml-schema" title="Permanent link">&para;</a></h3>
+<p>Define and enforce schemas for all YAML configurations:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## schema.yaml (using JSON Schema)</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;^[a-zA-Z0-9_-]+$&#39;</span>
+<span class="w">  </span><span class="nt">email</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">email</span>
+<span class="w">  </span><span class="nt">age</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">    </span><span class="nt">minimum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">maximum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span>
+<span class="nt">required</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">email</span>
+<span class="nt">additionalProperties</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># Prevent unexpected properties</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Validate YAML</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jsonschema</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;schema.yaml&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;config.yaml&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="n">jsonschema</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>  <span class="c1"># ✅ Validated</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Define schemas for all YAML files</li>
+<li>Validate on load</li>
+<li>Use <code>additionalProperties: false</code> to prevent injection</li>
+<li>Enforce type and format constraints</li>
+<li>Fail fast on invalid YAML</li>
+</ul>
+<h3 id="file-permissions">File Permissions<a class="headerlink" href="#file-permissions" title="Permanent link">&para;</a></h3>
+<p>Protect YAML configuration files:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Restrictive permissions</span>
+<span class="c1"># Application configuration</span>
+chmod<span class="w"> </span><span class="m">640</span><span class="w"> </span>config.yaml
+chown<span class="w"> </span>app:app<span class="w"> </span>config.yaml
+
+<span class="c1"># Secrets (Kubernetes secrets, etc.)</span>
+chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>secrets.yaml
+chown<span class="w"> </span>app:app<span class="w"> </span>secrets.yaml
+
+<span class="c1"># Public configuration</span>
+chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>public-config.yaml
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Set restrictive file permissions (600-644)</li>
+<li>Use appropriate ownership</li>
+<li>Never make secrets world-readable</li>
+<li>Audit file access regularly</li>
+<li>Encrypt sensitive YAML at rest</li>
+</ul>
+<h3 id="kubernetes-secrets">Kubernetes Secrets<a class="headerlink" href="#kubernetes-secrets" title="Permanent link">&para;</a></h3>
+<p>Properly handle secrets in Kubernetes YAML:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Base64 is NOT encryption!</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db-password</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Opaque</span>
+<span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TXlTZWNyZXRQYXNzd29yZDEyMw==</span><span class="w">  </span><span class="c1"># ❌ Easily decoded!</span>
+
+<span class="c1">## Good - Use Sealed Secrets or external secrets</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bitnami.com/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SealedSecret</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db-password</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">encryptedData</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AgB...encrypted...</span><span class="w">  </span><span class="c1"># ✅ Encrypted with public key</span>
+
+<span class="c1">## Good - External Secrets Operator</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExternalSecret</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db-password</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">secretStoreRef</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vault-backend</span>
+<span class="w">  </span><span class="nt">target</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db-password</span>
+<span class="w">  </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">password</span>
+<span class="w">      </span><span class="nt">remoteRef</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret/data/database</span>
+<span class="w">        </span><span class="nt">property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">password</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Don't commit Kubernetes Secrets to Git</li>
+<li>Use Sealed Secrets or External Secrets Operator</li>
+<li>Reference external secret stores (Vault, AWS Secrets Manager)</li>
+<li>Enable encryption at rest in etcd</li>
+<li>Use RBAC to restrict secret access</li>
+</ul>
+<h3 id="yaml-bombs-billion-laughs-attack">YAML Bombs (Billion Laughs Attack)<a class="headerlink" href="#yaml-bombs-billion-laughs-attack" title="Permanent link">&para;</a></h3>
+<p>Prevent denial of service from malicious YAML:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - YAML bomb (exponential expansion)</span>
+<span class="nt">a</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;a</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;lol&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;lol&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;lol&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;lol&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;lol&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;lol&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;lol&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;lol&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;lol&quot;</span><span class="p p-Indicator">]</span>
+<span class="nt">b</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;b</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">*a</span><span class="p p-Indicator">,</span><span class="nv">*a</span><span class="p p-Indicator">,</span><span class="nv">*a</span><span class="p p-Indicator">,</span><span class="nv">*a</span><span class="p p-Indicator">,</span><span class="nv">*a</span><span class="p p-Indicator">,</span><span class="nv">*a</span><span class="p p-Indicator">,</span><span class="nv">*a</span><span class="p p-Indicator">,</span><span class="nv">*a</span><span class="p p-Indicator">,</span><span class="nv">*a</span><span class="p p-Indicator">]</span>
+<span class="nt">c</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;c</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">*b</span><span class="p p-Indicator">,</span><span class="nv">*b</span><span class="p p-Indicator">,</span><span class="nv">*b</span><span class="p p-Indicator">,</span><span class="nv">*b</span><span class="p p-Indicator">,</span><span class="nv">*b</span><span class="p p-Indicator">,</span><span class="nv">*b</span><span class="p p-Indicator">,</span><span class="nv">*b</span><span class="p p-Indicator">,</span><span class="nv">*b</span><span class="p p-Indicator">,</span><span class="nv">*b</span><span class="p p-Indicator">]</span>
+<span class="c1"># ... continues to expand exponentially (billions of elements)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Limit YAML complexity</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SafeLoader</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">SafeLoader</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_depth</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">construct_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_depth</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_depth</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>  <span class="c1"># ✅ Limit recursion depth</span>
+            <span class="k">raise</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span><span class="p">(</span><span class="s1">&#39;Maximum recursion depth exceeded&#39;</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">construct_object</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">deep</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_depth</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yaml_content</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">SafeLoader</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Set maximum recursion/nesting depth</li>
+<li>Limit file size for YAML parsing</li>
+<li>Implement timeouts for parsing</li>
+<li>Monitor memory usage during parsing</li>
+<li>Reject malformed YAML early</li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-tabs-for-indentation">❌ Avoid: Tabs for Indentation<a class="headerlink" href="#avoid-tabs-for-indentation" title="Permanent link">&para;</a></h3>

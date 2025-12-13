@@ -2260,6 +2260,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#never-store-secrets-in-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Never Store Secrets in JSON
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate-json-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validate JSON Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prevent-json-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prevent JSON Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limit-json-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limit JSON Size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sanitize-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sanitize Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Access Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4725,6 +4808,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#never-store-secrets-in-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Never Store Secrets in JSON
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate-json-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validate JSON Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prevent-json-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prevent JSON Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limit-json-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limit JSON Size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sanitize-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sanitize Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Access Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5452,6 +5618,190 @@ responses, and data exchange.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<hr />
+<h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="never-store-secrets-in-json">Never Store Secrets in JSON<a class="headerlink" href="#never-store-secrets-in-json" title="Permanent link">&para;</a></h3>
+<p>JSON files are often committed to version control - never store sensitive data:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Secrets in JSON (especially in version control)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;db.example.com&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MySecretPassword123&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// ❌ Exposed!</span>
+<span class="w">    </span><span class="nt">&quot;apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sk-1234567890abcdef&quot;</span><span class="w">     </span><span class="c1">// ❌ Hardcoded!</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Good - Use placeholders for environment variables</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${DB_HOST}&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${DB_PASSWORD}&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ From environment</span>
+<span class="w">    </span><span class="nt">&quot;apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${API_KEY}&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Good - Reference external secure storage</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;db.example.com&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vault://secrets/db/password&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ssm:///myapp/api-key&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Never commit secrets to version control</li>
+<li>Use environment variables for sensitive data</li>
+<li>Reference secret management systems (Vault, AWS Secrets Manager)</li>
+<li>Use <code>.env</code> files (gitignored) for local development</li>
+<li>Scan repositories for accidentally committed secrets</li>
+</ul>
+<h3 id="validate-json-schema">Validate JSON Schema<a class="headerlink" href="#validate-json-schema" title="Permanent link">&para;</a></h3>
+<p>Always validate JSON against a schema to prevent injection and data corruption:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Good - Validate with JSON Schema</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">Ajv</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;ajv&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">properties</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">username</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;string&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">pattern</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;^[a-zA-Z0-9_-]+$&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;string&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">format</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;email&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">age</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;integer&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">minimum</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span><span class="w"> </span><span class="nx">maximum</span><span class="o">:</span><span class="w"> </span><span class="kt">150</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">required</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;email&#39;</span><span class="p">],</span>
+<span class="w">  </span><span class="nx">additionalProperties</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="w">  </span><span class="c1">// ✅ Prevent unexpected properties</span>
+<span class="p">};</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">ajv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Ajv</span><span class="p">();</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">validate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ajv</span><span class="p">.</span><span class="nx">compile</span><span class="p">(</span><span class="nx">schema</span><span class="p">);</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">processUserData</span><span class="p">(</span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">validate</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`Invalid data: </span><span class="si">${</span><span class="nx">ajv</span><span class="p">.</span><span class="nx">errorsText</span><span class="p">(</span><span class="nx">validate</span><span class="p">.</span><span class="nx">errors</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1">// Safe to use validated data</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">data</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Define JSON schemas for all data structures</li>
+<li>Validate all external JSON input</li>
+<li>Use <code>additionalProperties: false</code> to prevent unexpected fields</li>
+<li>Enforce format constraints (email, URL, date)</li>
+<li>Fail fast on invalid data</li>
+</ul>
+<h3 id="prevent-json-injection">Prevent JSON Injection<a class="headerlink" href="#prevent-json-injection" title="Permanent link">&para;</a></h3>
+<p>Sanitize data before embedding in JSON:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - String concatenation (injection risk)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">userInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&quot;, &quot;isAdmin&quot;: true, &quot;fake&quot;: &quot;&#39;</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`{&quot;username&quot;: &quot;</span><span class="si">${</span><span class="nx">userInput</span><span class="si">}</span><span class="sb">&quot;}`</span><span class="p">;</span><span class="w">  </span><span class="c1">// ❌ Injected admin field!</span>
+<span class="c1">// Result: {&quot;username&quot;: &quot;&quot;, &quot;isAdmin&quot;: true, &quot;fake&quot;: &quot;&quot;}</span>
+
+<span class="c1">// Good - Use JSON.stringify (automatic escaping)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">userInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&quot;; DROP TABLE users; --&#39;</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">safeJson</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span><span class="w"> </span><span class="nx">username</span><span class="o">:</span><span class="w"> </span><span class="nx">userInput</span><span class="w"> </span><span class="p">});</span><span class="w">  </span><span class="c1">// ✅ Properly escaped</span>
+
+<span class="c1">// Good - Validate before parsing</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">safeJSONParse</span><span class="p">(</span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="nx">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">unknown</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">parsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// Validate against schema here</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">parsed</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Invalid JSON&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always use <code>JSON.stringify()</code> and <code>JSON.parse()</code></li>
+<li>Never build JSON with string concatenation</li>
+<li>Validate after parsing</li>
+<li>Sanitize user inputs before JSON encoding</li>
+<li>Use TypeScript for type safety</li>
+</ul>
+<h3 id="limit-json-size">Limit JSON Size<a class="headerlink" href="#limit-json-size" title="Permanent link">&para;</a></h3>
+<p>Prevent denial of service from large JSON payloads:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Good - Limit JSON payload size</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">();</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">limit</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;100kb&#39;</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ Limit payload size</span>
+<span class="w">  </span><span class="nx">strict</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">    </span><span class="c1">// Only accept objects and arrays</span>
+<span class="p">}));</span>
+
+<span class="c1">// Good - Streaming parser for large files</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">parser</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;stream-json&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">streamArray</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;stream-json/streamers/StreamArray&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">pipeline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span><span class="s1">&#39;large-file.json&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">parser</span><span class="p">())</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">streamArray</span><span class="p">())</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">value</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Process each item individually</span>
+<span class="w">    </span><span class="nx">processItem</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Set maximum payload size limits</li>
+<li>Use streaming parsers for large files</li>
+<li>Implement timeouts for JSON parsing</li>
+<li>Monitor memory usage</li>
+<li>Reject deeply nested structures</li>
+</ul>
+<h3 id="sanitize-output">Sanitize Output<a class="headerlink" href="#sanitize-output" title="Permanent link">&para;</a></h3>
+<p>Prevent Cross-Site Scripting (XSS) when displaying JSON in HTML:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Directly embedding JSON in HTML</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;&#39;</span><span class="w"> </span><span class="p">};</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">html</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`&lt;div&gt;</span><span class="si">${</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="si">}</span><span class="sb">&lt;/div&gt;`</span><span class="p">;</span><span class="w">  </span><span class="c1">// ❌ XSS vulnerability!</span>
+
+<span class="c1">// Good - Properly escape for HTML context</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">escapeHTML</span><span class="p">(</span><span class="nx">str</span><span class="o">:</span><span class="w"> </span><span class="nx">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">string</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">str</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/&amp;/g</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&amp;amp;&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/&lt;/g</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&amp;lt;&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/&gt;/g</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&amp;gt;&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/&quot;/g</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&amp;quot;&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/&#39;/g</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&amp;#x27;&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">safeHTML</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`&lt;div&gt;</span><span class="si">${</span><span class="nx">escapeHTML</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span><span class="si">}</span><span class="sb">&lt;/div&gt;`</span><span class="p">;</span><span class="w">  </span><span class="c1">// ✅ Safe</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Escape JSON before embedding in HTML</li>
+<li>Use Content Security Policy (CSP) headers</li>
+<li>Avoid <code>innerHTML</code> with user-controlled JSON</li>
+<li>Use safe templating libraries</li>
+<li>Sanitize before display</li>
+</ul>
+<h3 id="file-access-control">File Access Control<a class="headerlink" href="#file-access-control" title="Permanent link">&para;</a></h3>
+<p>Protect JSON configuration files with appropriate permissions:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Restrictive file permissions</span>
+<span class="c1"># Configuration files (readable by application)</span>
+chmod<span class="w"> </span><span class="m">640</span><span class="w"> </span>config.json
+chown<span class="w"> </span>app:app<span class="w"> </span>config.json
+
+<span class="c1"># Secrets files (readable only by application)</span>
+chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>secrets.json
+chown<span class="w"> </span>app:app<span class="w"> </span>secrets.json
+
+<span class="c1"># Public configuration</span>
+chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>public-config.json
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Set restrictive file permissions (600 or 640)</li>
+<li>Use appropriate file ownership</li>
+<li>Never make secrets world-readable</li>
+<li>Audit file access regularly</li>
+<li>Encrypt sensitive JSON files at rest</li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-trailing-commas">❌ Avoid: Trailing Commas<a class="headerlink" href="#avoid-trailing-commas" title="Permanent link">&para;</a></h3>

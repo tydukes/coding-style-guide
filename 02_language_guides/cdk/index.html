@@ -1559,6 +1559,100 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#never-hardcode-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Never Hardcode Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encryption-at-rest-and-in-transit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption at Rest and in Transit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iam-least-privilege" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Least Privilege
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-deletion-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Deletion Protection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging-and-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging and Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-scanning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Scanning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4643,6 +4737,100 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#never-hardcode-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Never Hardcode Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encryption-at-rest-and-in-transit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption at Rest and in Transit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iam-least-privilege" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Least Privilege
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-deletion-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Deletion Protection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging-and-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging and Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-scanning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Scanning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5528,6 +5716,288 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <span class="w">  </span><span class="nx">removalPolicy</span><span class="o">:</span><span class="w"> </span><span class="kt">cdk.RemovalPolicy.SNAPSHOT</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
+<hr />
+<h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="never-hardcode-secrets">Never Hardcode Secrets<a class="headerlink" href="#never-hardcode-secrets" title="Permanent link">&para;</a></h3>
+<p>Avoid storing sensitive data in CDK code:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Hardcoded secrets</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">rds</span><span class="p">.</span><span class="nx">DatabaseInstance</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Database&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">masterUsername</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">masterPassword</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;MySecretPassword123&#39;</span><span class="p">,</span><span class="w">  </span><span class="c1">// ❌ Exposed in code!</span>
+<span class="p">});</span>
+
+<span class="c1">// Good - Use Secrets Manager</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">dbSecret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">secretsmanager</span><span class="p">.</span><span class="nx">Secret</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DBSecret&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">generateSecretString</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">secretStringTemplate</span><span class="o">:</span><span class="w"> </span><span class="kt">JSON.stringify</span><span class="p">({</span><span class="w"> </span><span class="nx">username</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="w"> </span><span class="p">}),</span>
+<span class="w">    </span><span class="nx">generateStringKey</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;password&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">excludePunctuation</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">rds</span><span class="p">.</span><span class="nx">DatabaseInstance</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Database&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">credentials</span><span class="o">:</span><span class="w"> </span><span class="kt">rds.Credentials.fromSecret</span><span class="p">(</span><span class="nx">dbSecret</span><span class="p">),</span><span class="w">  </span><span class="c1">// ✅ From Secrets Manager</span>
+<span class="p">});</span>
+
+<span class="c1">// Good - Reference existing secrets</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">apiKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">secretsmanager</span><span class="p">.</span><span class="nx">Secret</span><span class="p">.</span><span class="nx">fromSecretNameV2</span><span class="p">(</span>
+<span class="w">  </span><span class="k">this</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">&#39;ApiKey&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="s1">&#39;prod/api-key&#39;</span>
+<span class="p">);</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Never hardcode credentials in CDK code</li>
+<li>Use AWS Secrets Manager for secrets</li>
+<li>Reference secrets, don't embed them</li>
+<li>Rotate secrets automatically</li>
+<li>Use IAM roles instead of access keys</li>
+<li>Audit secret access</li>
+</ul>
+<h3 id="encryption-at-rest-and-in-transit">Encryption at Rest and in Transit<a class="headerlink" href="#encryption-at-rest-and-in-transit" title="Permanent link">&para;</a></h3>
+<p>Enable encryption for all data:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Good - S3 encryption</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Bucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">encryption</span><span class="o">:</span><span class="w"> </span><span class="kt">s3.BucketEncryption.S3_MANAGED</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ Server-side encryption</span>
+<span class="w">  </span><span class="c1">// Or use KMS for more control:</span>
+<span class="w">  </span><span class="c1">// encryption: s3.BucketEncryption.KMS,</span>
+<span class="w">  </span><span class="c1">// encryptionKey: myKmsKey,</span>
+<span class="w">  </span><span class="nx">enforceSSL</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ Require HTTPS</span>
+<span class="p">});</span>
+
+<span class="c1">// Good - RDS encryption</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">rds</span><span class="p">.</span><span class="nx">DatabaseInstance</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Database&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">storageEncrypted</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ Encrypt at rest</span>
+<span class="w">  </span><span class="nx">storageEncryptionKey</span><span class="o">:</span><span class="w"> </span><span class="kt">myKmsKey</span><span class="p">,</span><span class="w">  </span><span class="c1">// Use customer-managed key</span>
+<span class="p">});</span>
+
+<span class="c1">// Good - EBS encryption</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">instance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ec2</span><span class="p">.</span><span class="nx">Instance</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Instance&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">blockDevices</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">    </span><span class="nx">deviceName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/dev/xvda&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">volume</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.BlockDeviceVolume.ebs</span><span class="p">(</span><span class="mf">30</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">encrypted</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ Encrypted EBS</span>
+<span class="w">      </span><span class="nx">kmsKey</span><span class="o">:</span><span class="w"> </span><span class="kt">myKmsKey</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}),</span>
+<span class="w">  </span><span class="p">}],</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Enable encryption for all storage (S3, EBS, RDS)</li>
+<li>Use KMS for key management</li>
+<li>Enforce SSL/TLS for data in transit</li>
+<li>Enable encryption by default</li>
+<li>Use customer-managed keys for sensitive data</li>
+<li>Implement key rotation</li>
+</ul>
+<h3 id="iam-least-privilege">IAM Least Privilege<a class="headerlink" href="#iam-least-privilege" title="Permanent link">&para;</a></h3>
+<p>Grant minimum required permissions:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Overly permissive IAM</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">iam</span><span class="p">.</span><span class="nx">Role</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Role&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">assumedBy</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nx">iam</span><span class="p">.</span><span class="nx">ServicePrincipal</span><span class="p">(</span><span class="s1">&#39;lambda.amazonaws.com&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">managedPolicies</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="nx">iam</span><span class="p">.</span><span class="nx">ManagedPolicy</span><span class="p">.</span><span class="nx">fromAwsManagedPolicyName</span><span class="p">(</span><span class="s1">&#39;AdministratorAccess&#39;</span><span class="p">),</span><span class="w">  </span><span class="c1">// ❌ Too permissive!</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">});</span>
+
+<span class="c1">// Good - Least privilege</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">iam</span><span class="p">.</span><span class="nx">Role</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Role&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">assumedBy</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nx">iam</span><span class="p">.</span><span class="nx">ServicePrincipal</span><span class="p">(</span><span class="s1">&#39;lambda.amazonaws.com&#39;</span><span class="p">),</span>
+<span class="p">});</span>
+
+<span class="c1">// Grant specific permissions only</span>
+<span class="nx">bucket</span><span class="p">.</span><span class="nx">grantRead</span><span class="p">(</span><span class="nx">role</span><span class="p">);</span><span class="w">  </span><span class="c1">// ✅ Only read access to specific bucket</span>
+
+<span class="c1">// Or create custom policy</span>
+<span class="nx">role</span><span class="p">.</span><span class="nx">addToPolicy</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">iam</span><span class="p">.</span><span class="nx">PolicyStatement</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">actions</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;s3:GetObject&#39;</span><span class="p">],</span>
+<span class="w">  </span><span class="nx">resources</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="sb">`</span><span class="si">${</span><span class="nx">bucket</span><span class="p">.</span><span class="nx">bucketArn</span><span class="si">}</span><span class="sb">/public/*`</span><span class="p">],</span><span class="w">  </span><span class="c1">// ✅ Specific resources only</span>
+<span class="p">}));</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Never use <code>AdministratorAccess</code> or <code>*</code> permissions</li>
+<li>Use high-level grant methods (<code>grantRead</code>, <code>grantWrite</code>)</li>
+<li>Specify exact resources in policies</li>
+<li>Use condition keys to further restrict access</li>
+<li>Regular IAM access review</li>
+<li>Implement permission boundaries</li>
+</ul>
+<h3 id="network-security">Network Security<a class="headerlink" href="#network-security" title="Permanent link">&para;</a></h3>
+<p>Implement proper network isolation:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Good - VPC with proper segmentation</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">vpc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ec2</span><span class="p">.</span><span class="nx">Vpc</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;VPC&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">maxAzs</span><span class="o">:</span><span class="w"> </span><span class="kt">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">subnetConfiguration</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">cidrMask</span><span class="o">:</span><span class="w"> </span><span class="kt">24</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Public&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">subnetType</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.SubnetType.PUBLIC</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">cidrMask</span><span class="o">:</span><span class="w"> </span><span class="kt">24</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Private&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">subnetType</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.SubnetType.PRIVATE_WITH_EGRESS</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">cidrMask</span><span class="o">:</span><span class="w"> </span><span class="kt">28</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Isolated&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">subnetType</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.SubnetType.PRIVATE_ISOLATED</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ No internet access</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">});</span>
+
+<span class="c1">// Good - Restrictive security groups</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">dbSecurityGroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ec2</span><span class="p">.</span><span class="nx">SecurityGroup</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DatabaseSG&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">vpc</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Security group for RDS database&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">allowAllOutbound</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ Explicit egress rules</span>
+<span class="p">});</span>
+
+<span class="c1">// Only allow from application security group</span>
+<span class="nx">dbSecurityGroup</span><span class="p">.</span><span class="nx">addIngressRule</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">appSecurityGroup</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">ec2</span><span class="p">.</span><span class="nx">Port</span><span class="p">.</span><span class="nx">tcp</span><span class="p">(</span><span class="mf">5432</span><span class="p">),</span>
+<span class="w">  </span><span class="s1">&#39;Allow PostgreSQL from app&#39;</span>
+<span class="p">);</span>
+
+<span class="c1">// Good - NACLs for additional security</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">nacl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ec2</span><span class="p">.</span><span class="nx">NetworkAcl</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;NACL&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">vpc</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">subnetSelection</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">subnetType</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.SubnetType.PRIVATE_ISOLATED</span><span class="w"> </span><span class="p">},</span>
+<span class="p">});</span>
+
+<span class="nx">nacl</span><span class="p">.</span><span class="nx">addEntry</span><span class="p">(</span><span class="s1">&#39;DenySSH&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">cidr</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.AclCidr.anyIpv4</span><span class="p">(),</span>
+<span class="w">  </span><span class="nx">ruleNumber</span><span class="o">:</span><span class="w"> </span><span class="kt">100</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">traffic</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.AclTraffic.tcpPort</span><span class="p">(</span><span class="mf">22</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">direction</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.TrafficDirection.INGRESS</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">ruleAction</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.Action.DENY</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ Deny SSH</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use private subnets for sensitive resources</li>
+<li>Create isolated subnets for databases</li>
+<li>Implement restrictive security groups</li>
+<li>Use NACLs for additional layer</li>
+<li>Enable VPC Flow Logs</li>
+<li>Implement AWS PrivateLink for AWS services</li>
+</ul>
+<h3 id="resource-deletion-protection">Resource Deletion Protection<a class="headerlink" href="#resource-deletion-protection" title="Permanent link">&para;</a></h3>
+<p>Protect critical resources from accidental deletion:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Good - Deletion protection for databases</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">rds</span><span class="p">.</span><span class="nx">DatabaseInstance</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Database&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">deletionProtection</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ Cannot be deleted</span>
+<span class="w">  </span><span class="nx">removalPolicy</span><span class="o">:</span><span class="w"> </span><span class="kt">cdk.RemovalPolicy.RETAIN</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ Keep on stack deletion</span>
+<span class="w">  </span><span class="nx">backupRetention</span><span class="o">:</span><span class="w"> </span><span class="kt">cdk.Duration.days</span><span class="p">(</span><span class="mf">30</span><span class="p">),</span>
+<span class="p">});</span>
+
+<span class="c1">// Good - S3 bucket protection</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DataBucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">removalPolicy</span><span class="o">:</span><span class="w"> </span><span class="kt">cdk.RemovalPolicy.RETAIN</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ Keep bucket</span>
+<span class="w">  </span><span class="nx">versioned</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w">  </span><span class="c1">// Enable versioning</span>
+<span class="w">  </span><span class="nx">lifecycleRules</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">    </span><span class="nx">noncurrentVersionExpiration</span><span class="o">:</span><span class="w"> </span><span class="kt">cdk.Duration.days</span><span class="p">(</span><span class="mf">90</span><span class="p">),</span>
+<span class="w">  </span><span class="p">}],</span>
+<span class="p">});</span>
+
+<span class="c1">// Good - Prevent accidental destruction</span>
+<span class="nx">cdk</span><span class="p">.</span><span class="nx">Aspects</span><span class="p">.</span><span class="k">of</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">Tag</span><span class="p">(</span><span class="s1">&#39;Environment&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;production&#39;</span><span class="p">));</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use <code>RemovalPolicy.RETAIN</code> for production resources</li>
+<li>Enable deletion protection on databases</li>
+<li>Enable versioning on S3 buckets</li>
+<li>Require manual approval for destructive changes</li>
+<li>Use stack policies to prevent updates</li>
+<li>Implement backup and recovery procedures</li>
+</ul>
+<h3 id="logging-and-monitoring">Logging and Monitoring<a class="headerlink" href="#logging-and-monitoring" title="Permanent link">&para;</a></h3>
+<p>Enable comprehensive logging:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Good - CloudTrail for audit logging</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">cloudtrail</span><span class="p">.</span><span class="nx">Trail</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Trail&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">isMultiRegionTrail</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">includeGlobalServiceEvents</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">managementEvents</span><span class="o">:</span><span class="w"> </span><span class="kt">cloudtrail.ReadWriteType.ALL</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="c1">// Good - VPC Flow Logs</span>
+<span class="nx">vpc</span><span class="p">.</span><span class="nx">addFlowLog</span><span class="p">(</span><span class="s1">&#39;FlowLog&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">destination</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.FlowLogDestination.toCloudWatchLogs</span><span class="p">(),</span>
+<span class="w">  </span><span class="nx">trafficType</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.FlowLogTrafficType.ALL</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="c1">// Good - S3 bucket logging</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">logBucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;LogBucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">encryption</span><span class="o">:</span><span class="w"> </span><span class="kt">s3.BucketEncryption.S3_MANAGED</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">blockPublicAccess</span><span class="o">:</span><span class="w"> </span><span class="kt">s3.BlockPublicAccess.BLOCK_ALL</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="nx">bucket</span><span class="p">.</span><span class="nx">enableEventBridgeNotification</span><span class="p">();</span>
+<span class="nx">bucket</span><span class="p">.</span><span class="nx">addEventNotification</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">s3</span><span class="p">.</span><span class="nx">EventType</span><span class="p">.</span><span class="nx">OBJECT_CREATED</span><span class="p">,</span>
+<span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">s3n</span><span class="p">.</span><span class="nx">SnsDestination</span><span class="p">(</span><span class="nx">topic</span><span class="p">),</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">prefix</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;sensitive/&#39;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">);</span>
+
+<span class="c1">// Good - Lambda function logging</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">lambda</span><span class="p">.</span><span class="nb">Function</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Function&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">runtime</span><span class="o">:</span><span class="w"> </span><span class="kt">lambda.Runtime.NODEJS_18_X</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">handler</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;index.handler&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">code</span><span class="o">:</span><span class="w"> </span><span class="kt">lambda.Code.fromAsset</span><span class="p">(</span><span class="s1">&#39;lambda&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">logRetention</span><span class="o">:</span><span class="w"> </span><span class="kt">logs.RetentionDays.ONE_MONTH</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">insightsVersion</span><span class="o">:</span><span class="w"> </span><span class="kt">lambda.LambdaInsightsVersion.VERSION_1_0_229_0</span><span class="p">,</span><span class="w">  </span><span class="c1">// ✅ CloudWatch Insights</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Enable CloudTrail for all accounts</li>
+<li>Configure VPC Flow Logs</li>
+<li>Enable S3 bucket logging and access logs</li>
+<li>Use CloudWatch Logs for application logs</li>
+<li>Set appropriate log retention</li>
+<li>Monitor and alert on suspicious activity</li>
+</ul>
+<h3 id="security-scanning">Security Scanning<a class="headerlink" href="#security-scanning" title="Permanent link">&para;</a></h3>
+<p>Implement security scanning in CI/CD:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// package.json - Add security scanning</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;scripts&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;test&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;jest&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;cdk&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;cdk&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;security&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;npm audit &amp;&amp; cdk-nag&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;synth&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;cdk synth&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;deploy&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;npm run security &amp;&amp; cdk deploy&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="s2">&quot;devDependencies&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;cdk-nag&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;^2.0.0&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// bin/app.ts - Add CDK Nag for compliance</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">AwsSolutionsChecks</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;cdk-nag&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Aspects</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;aws-cdk-lib&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">App</span><span class="p">();</span>
+
+<span class="c1">// Add security checks</span>
+<span class="nx">Aspects</span><span class="p">.</span><span class="k">of</span><span class="p">(</span><span class="nx">app</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">AwsSolutionsChecks</span><span class="p">({</span><span class="w"> </span><span class="nx">verbose</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}));</span>
+
+<span class="ow">new</span><span class="w"> </span><span class="nx">MyStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;MyStack&#39;</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use cdk-nag for security scanning</li>
+<li>Run security checks in CI/CD pipeline</li>
+<li>Scan for common misconfigurations</li>
+<li>Implement compliance frameworks (CIS, PCI-DSS)</li>
+<li>Regular dependency audits (<code>npm audit</code>)</li>
+<li>Update CDK and dependencies regularly</li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-hardcoded-values">❌ Avoid: Hardcoded Values<a class="headerlink" href="#avoid-hardcoded-values" title="Permanent link">&para;</a></h3>

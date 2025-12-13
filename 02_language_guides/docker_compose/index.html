@@ -2367,6 +2367,111 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#never-hardcode-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Never Hardcode Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-minimal-trusted-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Minimal, Trusted Images
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-as-non-root-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run as Non-Root User
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limit-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limit Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-segmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Segmentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-only-filesystems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read-Only Filesystems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-health-and-availability-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container Health and Availability Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4749,6 +4854,111 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#never-hardcode-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Never Hardcode Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-minimal-trusted-images" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Minimal, Trusted Images
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-as-non-root-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run as Non-Root User
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limit-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limit Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-segmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Segmentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-only-filesystems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read-Only Filesystems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-health-and-availability-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container Health and Availability Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5695,6 +5905,296 @@ docker-compose<span class="w"> </span>ps
 <span class="c1">## View running processes</span>
 docker-compose<span class="w"> </span>top
 </code></pre></div>
+<hr />
+<h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="never-hardcode-secrets">Never Hardcode Secrets<a class="headerlink" href="#never-hardcode-secrets" title="Permanent link">&para;</a></h3>
+<p>Avoid storing sensitive data in docker-compose.yml:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Hardcoded secrets</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MySecretPassword123</span><span class="w">  </span><span class="c1"># ❌ Exposed in version control!</span>
+<span class="w">      </span><span class="nt">API_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sk-1234567890abcdef</span><span class="w">  </span><span class="c1"># ❌ Hardcoded!</span>
+
+<span class="c1">## Good - Use environment files</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.env</span><span class="w">  </span><span class="c1"># ✅ Gitignored file with secrets</span>
+
+<span class="c1">## Good - Use Docker secrets (Swarm mode)</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15</span>
+<span class="w">    </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db_password</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">POSTGRES_PASSWORD_FILE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/run/secrets/db_password</span>
+
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">db_password</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./secrets/db_password.txt</span>
+
+<span class="c1">## Good - Use external secret references</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:latest</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">DB_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_PASSWORD}</span><span class="w">  </span><span class="c1"># ✅ From environment</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Never commit secrets to docker-compose.yml</li>
+<li>Use <code>.env</code> files (add to <code>.gitignore</code>)</li>
+<li>Use Docker secrets for Swarm mode</li>
+<li>Use environment variables for 12-factor apps</li>
+<li>Reference external secret managers (Vault, AWS Secrets Manager)</li>
+<li>Rotate secrets regularly</li>
+</ul>
+<h3 id="use-minimal-trusted-images">Use Minimal, Trusted Images<a class="headerlink" href="#use-minimal-trusted-images" title="Permanent link">&para;</a></h3>
+<p>Only use official, verified, and minimal base images:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Unknown or outdated images</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">randomuser/myapp:latest</span><span class="w">  </span><span class="c1"># ❌ Untrusted source!</span>
+<span class="w">    </span><span class="c1"># Using &#39;latest&#39; tag - unpredictable</span>
+
+<span class="c1">## Good - Official, version-pinned, minimal images</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:20.10.0-alpine</span><span class="w">  </span><span class="c1"># ✅ Official, specific version, minimal</span>
+<span class="w">    </span><span class="c1"># alpine variant is smaller and has fewer vulnerabilities</span>
+
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15.5-alpine</span><span class="w">  </span><span class="c1"># ✅ Official PostgreSQL with specific version</span>
+
+<span class="c1">## Good - Use digest pinning for immutability</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node@sha256:abcd1234...</span><span class="w">  </span><span class="c1"># ✅ Immutable digest</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use official images from Docker Hub</li>
+<li>Pin specific versions (never use <code>latest</code>)</li>
+<li>Use minimal variants (<code>alpine</code>, <code>distroless</code>)</li>
+<li>Verify image signatures</li>
+<li>Use digest pinning for critical services</li>
+<li>Regularly update base images</li>
+</ul>
+<h3 id="run-as-non-root-user">Run as Non-Root User<a class="headerlink" href="#run-as-non-root-user" title="Permanent link">&para;</a></h3>
+<p>Never run containers as root:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Running as root (default)</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:20-alpine</span>
+<span class="w">    </span><span class="c1"># No user specified - runs as root ❌</span>
+
+<span class="c1">## Good - Run as non-root user</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:20-alpine</span>
+<span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1000:1000&quot;</span><span class="w">  </span><span class="c1"># ✅ Non-root user</span>
+<span class="w">    </span><span class="c1"># Or use &#39;node&#39; user built into Node image</span>
+<span class="w">    </span><span class="c1"># user: node</span>
+
+<span class="c1">## Good - Define non-root user in Dockerfile</span>
+<span class="c1"># Dockerfile</span>
+<span class="l l-Scalar l-Scalar-Plain">FROM node:20-alpine</span>
+<span class="l l-Scalar l-Scalar-Plain">RUN addgroup -g 1001 -S nodejs &amp;&amp; \</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">adduser -S nodejs -u 1001</span>
+<span class="l l-Scalar l-Scalar-Plain">USER nodejs</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always specify a non-root user</li>
+<li>Use UID:GID format for clarity</li>
+<li>Create users in Dockerfile</li>
+<li>Never use UID 0 (root)</li>
+<li>Test that application works as non-root</li>
+<li>Use <code>read_only</code> filesystems where possible</li>
+</ul>
+<h3 id="limit-resources">Limit Resources<a class="headerlink" href="#limit-resources" title="Permanent link">&para;</a></h3>
+<p>Prevent resource exhaustion:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - No resource limits</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:latest</span>
+<span class="w">    </span><span class="c1"># No limits - can consume all host resources ❌</span>
+
+<span class="c1">## Good - Set resource limits</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:latest</span>
+<span class="w">    </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cpus</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0.5&#39;</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512M</span>
+<span class="w">        </span><span class="nt">reservations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cpus</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0.25&#39;</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256M</span>
+<span class="w">    </span><span class="c1"># Prevent fork bombs</span>
+<span class="w">    </span><span class="nt">pids_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15-alpine</span>
+<span class="w">    </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cpus</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1.0&#39;</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1G</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Set CPU and memory limits</li>
+<li>Set PID limits to prevent fork bombs</li>
+<li>Use reservations for guaranteed resources</li>
+<li>Monitor resource usage</li>
+<li>Adjust limits based on actual usage</li>
+<li>Prevent denial of service</li>
+</ul>
+<h3 id="network-segmentation">Network Segmentation<a class="headerlink" href="#network-segmentation" title="Permanent link">&para;</a></h3>
+<p>Isolate services with network boundaries:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - All services on default bridge</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx:alpine</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:80&quot;</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:latest</span>
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15</span>
+<span class="w">    </span><span class="c1"># All on same network - no isolation ❌</span>
+
+<span class="c1">## Good - Separate networks for isolation</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx:alpine</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:80&quot;</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span><span class="w">  </span><span class="c1"># Only frontend network</span>
+
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:latest</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span><span class="w">  </span><span class="c1"># Connect to both</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span><span class="w">  </span><span class="c1"># Only backend network - isolated from web</span>
+
+<span class="nt">networks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">frontend</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+<span class="w">  </span><span class="nt">backend</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+<span class="w">    </span><span class="nt">internal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">  </span><span class="c1"># ✅ No external access</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Create separate networks for tiers</li>
+<li>Use <code>internal: true</code> for backend networks</li>
+<li>Limit exposed ports</li>
+<li>Use service names for internal DNS</li>
+<li>Implement zero-trust networking</li>
+<li>Monitor network traffic</li>
+</ul>
+<h3 id="read-only-filesystems">Read-Only Filesystems<a class="headerlink" href="#read-only-filesystems" title="Permanent link">&para;</a></h3>
+<p>Use read-only root filesystems:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Read-only filesystem</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:latest</span>
+<span class="w">    </span><span class="nt">read_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">  </span><span class="c1"># ✅ Immutable root filesystem</span>
+<span class="w">    </span><span class="nt">tmpfs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp</span><span class="w">  </span><span class="c1"># Writable tmpfs for temporary files</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/run</span>
+
+<span class="w">  </span><span class="nt">nginx</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx:alpine</span>
+<span class="w">    </span><span class="nt">read_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./nginx.conf:/etc/nginx/nginx.conf:ro</span><span class="w">  </span><span class="c1"># ✅ Read-only config</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx-cache:/var/cache/nginx</span><span class="w">  </span><span class="c1"># Writable volume for cache</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx-run:/var/run</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nginx-cache</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nginx-run</span><span class="p">:</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use <code>read_only: true</code> for immutable containers</li>
+<li>Mount tmpfs for temporary writable space</li>
+<li>Mount configs as read-only (<code>:ro</code>)</li>
+<li>Use volumes for persistent writable data</li>
+<li>Prevents malware persistence</li>
+<li>Enhances security posture</li>
+</ul>
+<h3 id="security-options">Security Options<a class="headerlink" href="#security-options" title="Permanent link">&para;</a></h3>
+<p>Enable security features:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Security options enabled</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:latest</span>
+<span class="w">    </span><span class="nt">security_opt</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no-new-privileges:true</span><span class="w">  </span><span class="c1"># ✅ Prevent privilege escalation</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apparmor=docker-default</span><span class="w">  </span><span class="c1"># Enable AppArmor</span>
+<span class="w">      </span><span class="c1"># - seccomp=seccomp-profile.json  # Custom seccomp profile</span>
+
+<span class="w">    </span><span class="nt">cap_drop</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALL</span><span class="w">  </span><span class="c1"># ✅ Drop all capabilities</span>
+<span class="w">    </span><span class="nt">cap_add</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NET_BIND_SERVICE</span><span class="w">  </span><span class="c1"># Only add required capabilities</span>
+
+<span class="w">    </span><span class="nt">privileged</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># ✅ Never use privileged mode</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always set <code>no-new-privileges:true</code></li>
+<li>Drop all capabilities, add only required ones</li>
+<li>Never use <code>privileged: true</code></li>
+<li>Enable AppArmor or SELinux</li>
+<li>Use custom seccomp profiles</li>
+<li>Minimize attack surface</li>
+</ul>
+<h3 id="container-health-and-availability-checks">Container Health and Availability Checks<a class="headerlink" href="#container-health-and-availability-checks" title="Permanent link">&para;</a></h3>
+<p>Implement health checks for availability and security:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Health checks configured</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:latest</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;curl&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-f&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;http://localhost:3000/health&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">      </span><span class="nt">start_period</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40s</span>
+
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15-alpine</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">postgres&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Define health checks for all services</li>
+<li>Use appropriate intervals and timeouts</li>
+<li>Monitor health check status</li>
+<li>Restart unhealthy containers</li>
+<li>Use health checks for rolling updates</li>
+<li>Prevent zombie containers</li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-hardcoded-secrets">❌ Avoid: Hardcoded Secrets<a class="headerlink" href="#avoid-hardcoded-secrets" title="Permanent link">&para;</a></h3>
