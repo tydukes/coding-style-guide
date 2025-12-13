@@ -589,6 +589,313 @@ HAVING COUNT(o.order_id) > 5;
 
 ---
 
+## Testing
+
+### SQL Linting
+
+Use [sqlfluff](https://www.sqlfluff.com/) to lint SQL files:
+
+```bash
+## Install sqlfluff
+pip install sqlfluff
+
+## Lint SQL files
+sqlfluff lint queries/*.sql
+
+## Auto-fix issues
+sqlfluff fix queries/*.sql
+
+## Lint with specific dialect
+sqlfluff lint --dialect postgres queries/*.sql
+```
+
+### Unit Testing with pgTAP
+
+Test PostgreSQL schemas and functions:
+
+```sql
+## tests/schema_test.sql
+BEGIN;
+
+SELECT plan(5);
+
+-- Test table exists
+SELECT has_table('users', 'users table should exist');
+
+-- Test columns
+SELECT has_column('users', 'id', 'users should have id column');
+SELECT has_column('users', 'email', 'users should have email column');
+
+-- Test constraints
+SELECT has_pk('users', 'users should have primary key');
+
+-- Test index
+SELECT has_index('users', 'idx_users_email', 'email index should exist');
+
+SELECT * FROM finish();
+ROLLBACK;
+```
+
+Run with:
+
+```bash
+pg_prove -d testdb tests/*.sql
+```
+
+### Testing with SQLite
+
+Simple SQL tests:
+
+```bash
+## tests/test_queries.sh
+#!/bin/bash
+
+## Create test database
+sqlite3 test.db < schema.sql
+
+## Test query results
+result=$(sqlite3 test.db "SELECT COUNT(*) FROM users;")
+if [ "$result" != "0" ]; then
+  echo "FAIL: Expected 0 users"
+  exit 1
+fi
+
+## Insert test data
+sqlite3 test.db "INSERT INTO users (name, email) VALUES ('Test', 'test@example.com');"
+
+## Verify insertion
+result=$(sqlite3 test.db "SELECT COUNT(*) FROM users WHERE email='test@example.com';")
+if [ "$result" != "1" ]; then
+  echo "FAIL: User not inserted correctly"
+  exit 1
+fi
+
+echo "All SQL tests passed"
+rm test.db
+```
+
+### Integration Testing
+
+Test SQL in application context:
+
+```python
+## tests/test_database.py
+import pytest
+import psycopg2
+
+@pytest.fixture
+def db_connection():
+    conn = psycopg2.connect(
+        host='localhost',
+        database='test_db',
+        user='test_user',
+        password='test_pass'
+    )
+    yield conn
+    conn.close()
+
+def test_user_creation(db_connection):
+    cursor = db_connection.cursor()
+
+    # Execute SQL
+    cursor.execute("""
+        INSERT INTO users (name, email)
+        VALUES ('Test User', 'test@example.com')
+        RETURNING id;
+    """)
+
+    user_id = cursor.fetchone()[0]
+    assert user_id is not None
+
+    # Verify
+    cursor.execute("SELECT email FROM users WHERE id = %s", (user_id,))
+    email = cursor.fetchone()[0]
+    assert email == 'test@example.com'
+
+    db_connection.rollback()
+
+def test_query_performance(db_connection):
+    import time
+
+    cursor = db_connection.cursor()
+
+    start = time.time()
+    cursor.execute("SELECT * FROM large_table WHERE indexed_column = 'value'")
+    duration = time.time() - start
+
+    assert duration < 1.0, f"Query too slow: {duration}s"
+```
+
+### Testing Migrations
+
+Test database migrations:
+
+```bash
+## tests/test_migrations.sh
+#!/bin/bash
+set -e
+
+## Apply migrations
+psql -d test_db -f migrations/001_create_users.sql
+psql -d test_db -f migrations/002_add_users_email_index.sql
+
+## Verify schema
+result=$(psql -d test_db -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_name='users';")
+if [ "$result" != "1" ]; then
+  echo "FAIL: users table not created"
+  exit 1
+fi
+
+## Verify index
+result=$(psql -d test_db -t -c "SELECT COUNT(*) FROM pg_indexes WHERE indexname='idx_users_email';")
+if [ "$result" != "1" ]; then
+  echo "FAIL: email index not created"
+  exit 1
+fi
+
+echo "Migration tests passed"
+```
+
+### Testing with Docker
+
+Test SQL in isolated environment:
+
+```yaml
+## docker-compose.test.yml
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_pass
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  test:
+    image: postgres:15-alpine
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./tests:/tests
+      - ./sql:/sql
+    environment:
+      PGHOST: postgres
+      PGDATABASE: test_db
+      PGUSER: test_user
+      PGPASSWORD: test_pass
+    command: >
+      sh -c "
+        psql -f /sql/schema.sql &&
+        psql -f /sql/seed.sql &&
+        pg_prove /tests/*.sql
+      "
+```
+
+Run tests:
+
+```bash
+docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+```
+
+### Query Plan Testing
+
+Test query performance:
+
+```sql
+-- Explain query plan
+EXPLAIN ANALYZE
+SELECT u.name, o.total
+FROM users u
+JOIN orders o ON u.id = o.user_id
+WHERE u.created_at > '2024-01-01';
+
+-- Test index usage
+EXPLAIN (FORMAT JSON)
+SELECT * FROM users WHERE email = 'test@example.com';
+```
+
+### CI/CD Integration
+
+```yaml
+## .github/workflows/sql-test.yml
+name: SQL Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pass
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install sqlfluff
+        run: pip install sqlfluff
+
+      - name: Lint SQL
+        run: sqlfluff lint --dialect postgres sql/*.sql
+
+      - name: Run migrations
+        env:
+          PGHOST: localhost
+          PGDATABASE: test_db
+          PGUSER: test_user
+          PGPASSWORD: test_pass
+        run: |
+          for file in migrations/*.sql; do
+            psql -f "$file"
+          done
+
+      - name: Run tests
+        env:
+          PGHOST: localhost
+          PGDATABASE: test_db
+          PGUSER: test_user
+          PGPASSWORD: test_pass
+        run: |
+          psql -c "SELECT version();"
+          psql -f tests/test_schema.sql
+```
+
+### Coverage Testing
+
+Test query coverage:
+
+```sql
+-- Record queries executed
+CREATE TABLE IF NOT EXISTS query_log (
+    id SERIAL PRIMARY KEY,
+    query_text TEXT,
+    executed_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Enable query logging (PostgreSQL)
+ALTER SYSTEM SET log_statement = 'all';
+SELECT pg_reload_conf();
+```
+
+---
+
 ## Security Best Practices
 
 ### SQL Injection Prevention

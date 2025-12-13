@@ -861,6 +861,332 @@ helm uninstall my-app -n production
 
 ---
 
+## Testing
+
+### Testing with kubeval
+
+Validate Kubernetes YAML manifests:
+
+```bash
+## Install kubeval
+brew install kubeval
+
+## Validate manifest
+kubeval deployment.yaml
+
+## Validate multiple files
+kubeval manifests/*.yaml
+
+## Validate against specific Kubernetes version
+kubeval --kubernetes-version 1.28.0 deployment.yaml
+
+## Strict mode (fail on warnings)
+kubeval --strict deployment.yaml
+```
+
+### Testing with kubeconform
+
+More comprehensive validation:
+
+```bash
+## Install kubeconform
+brew install kubeconform
+
+## Validate manifests
+kubeconform manifests/
+
+## Validate with CRDs
+kubeconform -schema-location default \
+  -schema-location 'crds/{{.ResourceKind}}.json' \
+  manifests/
+
+## Output in JSON
+kubeconform -output json manifests/
+```
+
+### Testing with kube-score
+
+Analyze manifests for best practices:
+
+```bash
+## Install kube-score
+brew install kube-score
+
+## Analyze deployment
+kube-score score deployment.yaml
+
+## Check all manifests
+kube-score score manifests/*.yaml
+
+## Ignore specific checks
+kube-score score --ignore-test pod-networkpolicy deployment.yaml
+```
+
+### Unit Testing with conftest
+
+Policy-based testing for Kubernetes:
+
+```bash
+## Install conftest
+brew install conftest
+
+## Test Kubernetes manifests
+conftest test deployment.yaml
+
+## Custom policy
+conftest test -p policy/ deployment.yaml
+```
+
+Example policy:
+
+```rego
+## policy/kubernetes.rego
+package main
+
+deny[msg] {
+  input.kind == "Deployment"
+  not input.spec.template.spec.securityContext.runAsNonRoot
+  msg := "Containers must not run as root"
+}
+
+deny[msg] {
+  input.kind == "Deployment"
+  container := input.spec.template.spec.containers[_]
+  not container.resources.limits
+  msg := sprintf("Container %s must have resource limits", [container.name])
+}
+
+warn[msg] {
+  input.kind == "Service"
+  input.spec.type == "LoadBalancer"
+  msg := "Consider using Ingress instead of LoadBalancer"
+}
+```
+
+### Integration Testing with kind
+
+Test on local Kubernetes cluster:
+
+```bash
+## Create kind cluster
+kind create cluster --name test-cluster
+
+## Apply manifests
+kubectl apply -f manifests/
+
+## Run tests
+kubectl wait --for=condition=available --timeout=60s \
+  deployment/myapp
+
+## Test service endpoints
+kubectl run test-pod --image=curlimages/curl --rm -it -- \
+  curl http://myapp-service:80/health
+
+## Cleanup
+kind delete cluster --name test-cluster
+```
+
+### E2E Testing Script
+
+```bash
+## tests/e2e-test.sh
+#!/bin/bash
+set -e
+
+# Create kind cluster
+echo "Creating test cluster..."
+kind create cluster --name e2e-test --wait 60s
+
+# Apply manifests
+echo "Applying manifests..."
+kubectl apply -f manifests/
+
+# Wait for deployment
+echo "Waiting for deployment..."
+kubectl wait --for=condition=available --timeout=300s \
+  deployment/myapp -n default
+
+# Test application
+echo "Testing application..."
+kubectl port-forward svc/myapp-service 8080:80 &
+PF_PID=$!
+sleep 5
+
+response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/health)
+if [ "$response" != "200" ]; then
+  echo "Health check failed: $response"
+  kill $PF_PID
+  kind delete cluster --name e2e-test
+  exit 1
+fi
+
+echo "Tests passed!"
+kill $PF_PID
+kind delete cluster --name e2e-test
+```
+
+### Testing with Helm
+
+Test Helm charts:
+
+```bash
+## Lint Helm chart
+helm lint ./mychart
+
+## Dry run install
+helm install myapp ./mychart --dry-run --debug
+
+## Template and validate
+helm template myapp ./mychart | kubeval -
+
+## Test with specific values
+helm install myapp ./mychart --dry-run \
+  --values test-values.yaml
+```
+
+### Chart Testing
+
+```yaml
+## ct.yaml (Chart Testing config)
+chart-dirs:
+  - charts
+chart-repos:
+  - bitnami=https://charts.bitnami.com/bitnami
+helm-extra-args: --timeout 600s
+```
+
+```bash
+## Install ct
+brew install chart-testing
+
+## Lint charts
+ct lint --config ct.yaml
+
+## Test charts in kind
+ct install --config ct.yaml
+```
+
+### CI/CD Integration
+
+```yaml
+## .github/workflows/k8s-test.yml
+name: Kubernetes Tests
+
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          curl -L https://github.com/kubeval/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz | tar xz
+          sudo mv kubeval /usr/local/bin
+
+      - name: Validate manifests
+        run: kubeval manifests/*.yaml
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create kind cluster
+        uses: helm/kind-action@v1
+
+      - name: Deploy and test
+        run: |
+          kubectl apply -f manifests/
+          kubectl wait --for=condition=available --timeout=60s deployment/myapp
+          kubectl get pods
+```
+
+### Testing RBAC
+
+Test Role-Based Access Control:
+
+```bash
+## Test if service account can perform action
+kubectl auth can-i create pods \
+  --as=system:serviceaccount:default:myapp
+
+## Test with specific permissions
+kubectl auth can-i delete deployments \
+  --as=system:serviceaccount:default:myapp \
+  -n production
+```
+
+### Resource Quota Testing
+
+```bash
+## Apply resource quota
+kubectl apply -f resourcequota.yaml
+
+## Try to create pod that exceeds quota
+kubectl apply -f test-pod.yaml
+
+## Verify quota enforcement
+kubectl describe resourcequota -n test-namespace
+```
+
+### Network Policy Testing
+
+Test network isolation:
+
+```bash
+## Apply network policy
+kubectl apply -f networkpolicy.yaml
+
+## Test connectivity (should fail)
+kubectl run test-pod --image=curlimages/curl --rm -it -- \
+  curl --max-time 5 http://restricted-service
+
+## Test from allowed pod (should succeed)
+kubectl run allowed-pod -l app=allowed --image=curlimages/curl --rm -it -- \
+  curl http://restricted-service
+```
+
+### Performance Testing
+
+```bash
+## Load test with k6
+cat <<EOF | k6 run -
+import http from 'k6/http';
+import { check } from 'k6';
+
+export let options = {
+  vus: 10,
+  duration: '30s',
+};
+
+export default function() {
+  let res = http.get('http://myapp-service');
+  check(res, {
+    'status is 200': (r) => r.status === 200,
+  });
+}
+EOF
+```
+
+### Snapshot Testing
+
+Test manifest rendering:
+
+```bash
+## Generate manifests
+kustomize build overlays/production > snapshot.yaml
+
+## Compare with previous snapshot
+diff snapshot-previous.yaml snapshot.yaml
+
+## Update snapshot if changes are expected
+cp snapshot.yaml snapshot-previous.yaml
+```
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: latest Tag

@@ -959,6 +959,344 @@ main "$@"
 
 ---
 
+## Testing
+
+### Testing Framework: BATS
+
+Use [BATS (Bash Automated Testing System)](https://github.com/bats-core/bats-core) for testing shell scripts:
+
+```bash
+## Install BATS
+git clone https://github.com/bats-core/bats-core.git
+cd bats-core
+./install.sh /usr/local
+
+## Or via package manager
+brew install bats-core  # macOS
+apt-get install bats    # Debian/Ubuntu
+```
+
+### Test Structure
+
+Organize tests in a `tests/` directory:
+
+```text
+project/
+├── scripts/
+│   └── deploy.sh
+├── tests/
+│   ├── test_helper.bash
+│   ├── deploy.bats
+│   └── fixtures/
+│       └── sample_config.yaml
+└── .bats-version
+```
+
+### BATS Test Example
+
+```bash
+## tests/deploy.bats
+#!/usr/bin/env bats
+
+# Load test helpers
+load test_helper
+
+setup() {
+  # Run before each test
+  export TEST_DIR="$(mktemp -d)"
+  export PATH="$BATS_TEST_DIRNAME/../scripts:$PATH"
+}
+
+teardown() {
+  # Run after each test
+  rm -rf "$TEST_DIR"
+}
+
+@test "deploy script exists and is executable" {
+  run which deploy.sh
+  [ "$status" -eq 0 ]
+  [ -x "$(which deploy.sh)" ]
+}
+
+@test "deploy fails without required environment variable" {
+  run deploy.sh staging
+  [ "$status" -eq 1 ]
+  [[ "$output" =~ "DB_HOST not set" ]]
+}
+
+@test "deploy succeeds with valid configuration" {
+  export DB_HOST="localhost"
+  export DB_PORT="5432"
+
+  run deploy.sh staging
+  [ "$status" -eq 0 ]
+  [[ "$output" =~ "Deployment successful" ]]
+}
+
+@test "validate_path rejects path traversal" {
+  source ../scripts/deploy.sh
+
+  run validate_path "../../../etc/passwd"
+  [ "$status" -eq 1 ]
+  [[ "$output" =~ "Path traversal detected" ]]
+}
+
+@test "log functions write to stderr" {
+  source ../scripts/deploy.sh
+
+  run log_info "test message"
+  [ "$status" -eq 0 ]
+  # BATS captures stderr in $output when using run
+  [[ "$output" =~ "test message" ]]
+}
+```
+
+### Test Helper Functions
+
+```bash
+## tests/test_helper.bash
+
+# Common test setup
+export FIXTURES="$BATS_TEST_DIRNAME/fixtures"
+
+# Helper to check command exists
+assert_command_exists() {
+  local cmd="$1"
+  command -v "$cmd" >/dev/null 2>&1 || {
+    echo "Required command not found: $cmd"
+    return 1
+  }
+}
+
+# Helper to assert file contains string
+assert_file_contains() {
+  local file="$1"
+  local pattern="$2"
+
+  grep -q "$pattern" "$file" || {
+    echo "File $file does not contain: $pattern"
+    return 1
+  }
+}
+
+# Helper to mock external commands
+mock_command() {
+  local cmd_name="$1"
+  local mock_script="$2"
+
+  # Create mock in temporary bin directory
+  mkdir -p "$TEST_DIR/bin"
+  cat > "$TEST_DIR/bin/$cmd_name" << EOF
+#!/bin/sh
+$mock_script
+EOF
+  chmod +x "$TEST_DIR/bin/$cmd_name"
+  export PATH="$TEST_DIR/bin:$PATH"
+}
+```
+
+### Testing Script Functions
+
+```bash
+## Example: Testing individual functions
+## tests/functions.bats
+#!/usr/bin/env bats
+
+load test_helper
+
+setup() {
+  # Source the script to test individual functions
+  source "$BATS_TEST_DIRNAME/../scripts/backup.sh"
+}
+
+@test "check_prerequisites detects missing commands" {
+  # Mock command to return failure
+  mock_command "pg_dump" "exit 1"
+
+  run check_prerequisites
+  [ "$status" -eq 1 ]
+  [[ "$output" =~ "Missing dependencies" ]]
+}
+
+@test "create_backup generates valid filename" {
+  export BACKUP_DIR="$TEST_DIR/backups"
+
+  run create_backup "testdb"
+  [ "$status" -eq 0 ]
+
+  # Check filename format: database_YYYYMMDD_HHMMSS.sql.gz
+  [[ "$output" =~ testdb_[0-9]{8}_[0-9]{6}.sql.gz ]]
+}
+
+@test "rotate_backups removes old files" {
+  export BACKUP_DIR="$TEST_DIR/backups"
+  mkdir -p "$BACKUP_DIR"
+
+  # Create old backup file (8 days old)
+  old_backup="$BACKUP_DIR/old_backup.sql.gz"
+  touch "$old_backup"
+  touch -t "$(date -d '8 days ago' +%Y%m%d%H%M)" "$old_backup"
+
+  # Create recent backup
+  recent_backup="$BACKUP_DIR/recent_backup.sql.gz"
+  touch "$recent_backup"
+
+  run rotate_backups
+  [ "$status" -eq 0 ]
+
+  # Old backup should be deleted
+  [ ! -f "$old_backup" ]
+  # Recent backup should remain
+  [ -f "$recent_backup" ]
+}
+```
+
+### Integration Testing
+
+```bash
+## tests/integration.bats
+#!/usr/bin/env bats
+
+load test_helper
+
+setup() {
+  export TEST_DIR="$(mktemp -d)"
+  export PATH="$BATS_TEST_DIRNAME/../scripts:$PATH"
+
+  # Setup test environment
+  export DB_HOST="localhost"
+  export DB_PORT="5432"
+  export ENVIRONMENT="test"
+}
+
+teardown() {
+  rm -rf "$TEST_DIR"
+}
+
+@test "full deployment workflow" {
+  # Mock external dependencies
+  mock_command "docker" "echo 'Image pulled successfully'"
+  mock_command "kubectl" "echo 'Deployment updated'"
+
+  run deploy.sh test
+  [ "$status" -eq 0 ]
+
+  # Verify deployment steps occurred
+  [[ "$output" =~ "Checking prerequisites" ]]
+  [[ "$output" =~ "Pulling Docker image" ]]
+  [[ "$output" =~ "Updating Kubernetes deployment" ]]
+  [[ "$output" =~ "Deployment successful" ]]
+}
+```
+
+### Running Tests
+
+```bash
+## Run all tests
+bats tests/
+
+## Run specific test file
+bats tests/deploy.bats
+
+## Run tests with verbose output
+bats --verbose tests/
+
+## Run tests with tap output (for CI/CD)
+bats --tap tests/
+
+## Run tests recursively
+bats --recursive tests/
+
+## Run tests with timing
+bats --timing tests/
+```
+
+### ShellCheck Integration
+
+Combine BATS with ShellCheck for comprehensive testing:
+
+```bash
+## tests/shellcheck.bats
+#!/usr/bin/env bats
+
+@test "all scripts pass shellcheck" {
+  for script in scripts/*.sh; do
+    run shellcheck "$script"
+    [ "$status" -eq 0 ]
+  done
+}
+
+@test "scripts follow POSIX standards" {
+  for script in scripts/*.sh; do
+    run shellcheck --shell=sh "$script"
+    [ "$status" -eq 0 ]
+  done
+}
+```
+
+### CI/CD Integration
+
+```yaml
+## .github/workflows/test.yml
+name: Test Scripts
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install BATS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bats
+
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Run BATS tests
+        run: bats --recursive --tap tests/
+
+      - name: Run ShellCheck
+        run: |
+          find scripts -name "*.sh" -exec shellcheck {} +
+
+      - name: Check script formatting
+        run: |
+          shfmt -d -i 2 -s scripts/
+```
+
+### Coverage and Quality Metrics
+
+While Bash doesn't have native coverage tools, you can track test quality:
+
+```bash
+## tests/coverage.sh
+#!/bin/sh
+
+# Count functions in scripts
+total_functions=$(grep -r "^[a-z_]*() {" scripts/ | wc -l)
+
+# Count tested functions
+tested_functions=$(grep -r "@test.*function" tests/ | wc -l)
+
+# Calculate coverage percentage
+coverage=$((tested_functions * 100 / total_functions))
+
+echo "Function Test Coverage: ${coverage}%"
+echo "Total Functions: $total_functions"
+echo "Tested Functions: $tested_functions"
+
+if [ "$coverage" -lt 80 ]; then
+  echo "ERROR: Coverage below 80% threshold"
+  exit 1
+fi
+```
+
+---
+
 ## Security Best Practices
 
 ### Command Injection Prevention

@@ -429,6 +429,411 @@ docker-compose*.yml
 
 ---
 
+## Testing
+
+### Testing with Container Structure Test
+
+Use [Container Structure Test](https://github.com/GoogleContainerTools/container-structure-test) to validate Docker images:
+
+```bash
+## Install Container Structure Test
+curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64
+chmod +x container-structure-test-linux-amd64
+sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+```
+
+### Test Configuration
+
+Create `container-structure-test.yaml`:
+
+```yaml
+schemaVersion: 2.0.0
+
+## Command tests - verify installed packages
+commandTests:
+  - name: "node version"
+    command: "node"
+    args: ["--version"]
+    expectedOutput: ["v18.*"]
+
+  - name: "npm is installed"
+    command: "which"
+    args: ["npm"]
+    exitCode: 0
+
+  - name: "application exists"
+    command: "test"
+    args: ["-f", "/app/dist/index.js"]
+    exitCode: 0
+
+## File existence tests
+fileExistenceTests:
+  - name: "application directory"
+    path: "/app"
+    shouldExist: true
+    permissions: "drwxr-xr-x"
+
+  - name: "package.json exists"
+    path: "/app/package.json"
+    shouldExist: true
+
+  - name: "no secrets in image"
+    path: "/app/.env"
+    shouldExist: false
+
+## File content tests
+fileContentTests:
+  - name: "package.json has correct version"
+    path: "/app/package.json"
+    expectedContents: ['"version": "1.0.0"']
+
+## Metadata tests
+metadataTest:
+  env:
+    - key: "NODE_ENV"
+      value: "production"
+    - key: "PORT"
+      value: "3000"
+
+  exposedPorts: ["3000"]
+
+  workdir: "/app"
+
+  ## Verify non-root user
+  user: "nodejs"
+
+  labels:
+    - key: "org.opencontainers.image.title"
+      value: "My Application"
+```
+
+### Running Structure Tests
+
+```bash
+## Test a locally built image
+container-structure-test test \
+  --image myapp:latest \
+  --config container-structure-test.yaml
+
+## Test with verbose output
+container-structure-test test \
+  --image myapp:latest \
+  --config container-structure-test.yaml \
+  --verbosity debug
+
+## Test multiple config files
+container-structure-test test \
+  --image myapp:latest \
+  --config test-base.yaml \
+  --config test-security.yaml
+```
+
+### Testing with Trivy
+
+Test for vulnerabilities and misconfigurations:
+
+```bash
+## Scan for vulnerabilities
+trivy image myapp:latest
+
+## Scan with specific severity
+trivy image --severity HIGH,CRITICAL myapp:latest
+
+## Scan Dockerfile for misconfigurations
+trivy config Dockerfile
+
+## Generate JSON report
+trivy image --format json --output results.json myapp:latest
+
+## Fail build on high/critical vulnerabilities
+trivy image --exit-code 1 --severity HIGH,CRITICAL myapp:latest
+```
+
+### Testing with hadolint
+
+Lint Dockerfiles for best practices:
+
+```bash
+## Basic linting
+hadolint Dockerfile
+
+## Lint with specific format
+hadolint --format json Dockerfile
+
+## Lint in CI/CD
+hadolint Dockerfile || exit 1
+```
+
+### Integration Testing with Docker Compose
+
+Test multi-container applications:
+
+```yaml
+## docker-compose.test.yml
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      target: production
+    environment:
+      - NODE_ENV=test
+      - DATABASE_URL=postgresql://test:test@db:5432/test
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  test:
+    build:
+      context: .
+      target: builder
+    command: npm test
+    environment:
+      - DATABASE_URL=postgresql://test:test@db:5432/test
+    depends_on:
+      db:
+        condition: service_healthy
+```
+
+Run integration tests:
+
+```bash
+## Run tests with docker-compose
+docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+
+## Clean up after tests
+docker-compose -f docker-compose.test.yml down -v
+```
+
+### Runtime Testing with BATS
+
+Test container behavior at runtime:
+
+```bash
+## tests/docker-runtime.bats
+#!/usr/bin/env bats
+
+setup() {
+  # Start container for testing
+  docker run -d --name test-app -p 3000:3000 myapp:latest
+  sleep 5  # Wait for startup
+}
+
+teardown() {
+  # Clean up
+  docker stop test-app
+  docker rm test-app
+}
+
+@test "container starts successfully" {
+  run docker ps --filter "name=test-app" --format "{{.Status}}"
+  [[ "$output" =~ "Up" ]]
+}
+
+@test "application responds to HTTP requests" {
+  run curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/health
+  [ "$output" = "200" ]
+}
+
+@test "container runs as non-root user" {
+  run docker exec test-app whoami
+  [ "$output" = "nodejs" ]
+}
+
+@test "container has minimal attack surface" {
+  # Verify no shell in distroless images
+  run docker exec test-app sh -c "exit 0"
+  [ "$status" -ne 0 ]
+}
+
+@test "application logs are accessible" {
+  run docker logs test-app
+  [[ "$output" =~ "Server started on port 3000" ]]
+}
+```
+
+### CI/CD Integration
+
+```yaml
+## .github/workflows/docker-test.yml
+name: Docker Build and Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+
+      - name: Build image
+        run: docker build -t myapp:test .
+
+      - name: Run Trivy vulnerability scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: myapp:test
+          format: sarif
+          output: trivy-results.sarif
+
+      - name: Install Container Structure Test
+        run: |
+          curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64
+          chmod +x container-structure-test-linux-amd64
+          sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+
+      - name: Run structure tests
+        run: |
+          container-structure-test test \
+            --image myapp:test \
+            --config container-structure-test.yaml
+
+      - name: Test image size
+        run: |
+          size=$(docker image inspect myapp:test --format='{{.Size}}')
+          max_size=$((500 * 1024 * 1024))  # 500MB
+          if [ "$size" -gt "$max_size" ]; then
+            echo "Image too large: $(($size / 1024 / 1024))MB"
+            exit 1
+          fi
+
+      - name: Test container startup
+        run: |
+          docker run -d --name test-container -p 3000:3000 myapp:test
+          sleep 5
+          curl -f http://localhost:3000/health || exit 1
+          docker stop test-container
+```
+
+### Security Testing
+
+Test for security best practices:
+
+```yaml
+## tests/security-tests.yaml
+schemaVersion: 2.0.0
+
+commandTests:
+  - name: "runs as non-root"
+    command: "whoami"
+    expectedOutput: ["nodejs|appuser|node"]
+    excludedOutput: ["root"]
+
+  - name: "no write permissions on system directories"
+    command: "test"
+    args: ["-w", "/usr"]
+    exitCode: 1
+
+  - name: "no unnecessary tools installed"
+    command: "which"
+    args: ["wget"]
+    exitCode: 1
+
+fileExistenceTests:
+  - name: "no .git directory"
+    path: "/app/.git"
+    shouldExist: false
+
+  - name: "no environment files"
+    path: "/app/.env"
+    shouldExist: false
+
+  - name: "no node_modules in final image"
+    path: "/app/node_modules"
+    shouldExist: false  # For compiled apps
+
+metadataTest:
+  ## Ensure running as non-root
+  user: "nodejs"
+
+  ## No hardcoded secrets in env
+  envVars:
+    - key: "API_KEY"
+      isSet: false
+    - key: "DB_PASSWORD"
+      isSet: false
+```
+
+### Image Layer Analysis
+
+Use Dive to analyze image layers:
+
+```bash
+## Install dive
+wget https://github.com/wagoodman/dive/releases/download/v0.11.0/dive_0.11.0_linux_amd64.deb
+sudo apt install ./dive_0.11.0_linux_amd64.deb
+
+## Analyze image layers
+dive myapp:latest
+
+## CI mode with efficiency threshold
+dive myapp:latest --ci --lowestEfficiency=0.95
+```
+
+### Performance Testing
+
+Test build and runtime performance:
+
+```bash
+## tests/performance.sh
+#!/bin/bash
+
+## Build time test
+start_time=$(date +%s)
+docker build -t myapp:test .
+end_time=$(date +%s)
+build_time=$((end_time - start_time))
+
+echo "Build time: ${build_time}s"
+if [ "$build_time" -gt 300 ]; then
+  echo "Build taking too long (>5 minutes)"
+  exit 1
+fi
+
+## Image size test
+size=$(docker image inspect myapp:test --format='{{.Size}}' | numfmt --to=iec)
+echo "Image size: $size"
+
+## Startup time test
+start_time=$(date +%s)
+docker run -d --name perf-test myapp:test
+while ! docker exec perf-test curl -s http://localhost:3000/health > /dev/null 2>&1; do
+  sleep 1
+done
+end_time=$(date +%s)
+startup_time=$((end_time - start_time))
+
+echo "Startup time: ${startup_time}s"
+
+docker stop perf-test
+docker rm perf-test
+
+if [ "$startup_time" -gt 30 ]; then
+  echo "Startup too slow (>30 seconds)"
+  exit 1
+fi
+```
+
+---
+
 ## Security Best Practices
 
 ### Scan for Vulnerabilities

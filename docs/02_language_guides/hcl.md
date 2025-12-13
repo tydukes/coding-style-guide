@@ -626,6 +626,372 @@ locals {
 
 ---
 
+## Testing
+
+### Testing HCL Configuration
+
+Use `terraform validate` and `terraform fmt` for basic testing:
+
+```bash
+## Validate syntax and configuration
+terraform validate
+
+## Check formatting
+terraform fmt -check -recursive
+
+## Format files
+terraform fmt -recursive
+```
+
+### Testing with Conftest
+
+Use [Conftest](https://www.conftest.dev/) with Open Policy Agent (OPA) to test HCL:
+
+```bash
+## Install conftest
+brew install conftest
+
+## Test Terraform configurations
+conftest test main.tf
+
+## Test with specific policy
+conftest test main.tf -p policy/
+
+## Test all .tf files
+conftest test *.tf
+```
+
+### Conftest Policy Example
+
+Create policies in Rego:
+
+```rego
+## policy/terraform.rego
+package main
+
+deny[msg] {
+  resource := input.resource.aws_instance[name]
+  not resource.instance_type
+  msg := sprintf("AWS instance '%s' missing instance_type", [name])
+}
+
+deny[msg] {
+  resource := input.resource.aws_s3_bucket[name]
+  not resource.versioning
+  msg := sprintf("S3 bucket '%s' must have versioning enabled", [name])
+}
+
+deny[msg] {
+  resource := input.resource.aws_security_group[name]
+  rule := resource.ingress[_]
+  rule.cidr_blocks[_] == "0.0.0.0/0"
+  rule.from_port == 22
+  msg := sprintf("Security group '%s' allows SSH from anywhere", [name])
+}
+
+warn[msg] {
+  resource := input.resource.aws_instance[name]
+  resource.instance_type == "t2.micro"
+  msg := sprintf("Instance '%s' using t2.micro (consider burstable alternatives)", [name])
+}
+```
+
+### Running Conftest Tests
+
+```bash
+## Test with custom namespace
+conftest test -p policy/ --namespace terraform main.tf
+
+## Output in different formats
+conftest test main.tf -o json
+conftest test main.tf -o tap
+
+## Fail on warnings
+conftest test main.tf --fail-on-warn
+```
+
+### Testing with Terraform Plan
+
+Test planned changes:
+
+```bash
+## Generate plan
+terraform plan -out=tfplan
+
+## Convert plan to JSON
+terraform show -json tfplan > tfplan.json
+
+## Test plan with conftest
+conftest test tfplan.json
+```
+
+### Policy for Terraform Plans
+
+```rego
+## policy/plan.rego
+package terraform.analysis
+
+deny[reason] {
+  resource_changes := input.resource_changes[_]
+  resource_changes.type == "aws_s3_bucket"
+  resource_changes.change.actions[_] == "delete"
+  reason := sprintf("Attempting to delete S3 bucket: %s", [resource_changes.address])
+}
+
+deny[reason] {
+  resource_changes := input.resource_changes[_]
+  resource_changes.type == "aws_instance"
+  instance_type := resource_changes.change.after.instance_type
+  not contains(instance_type, "t3")
+  not contains(instance_type, "t4g")
+  reason := sprintf("Instance %s uses non-approved instance type: %s",
+    [resource_changes.address, instance_type])
+}
+
+warn[reason] {
+  resource_changes := input.resource_changes[_]
+  resource_changes.change.actions[_] == "delete"
+  reason := sprintf("Resource will be deleted: %s", [resource_changes.address])
+}
+
+contains(str, substr) {
+  indexof(str, substr) != -1
+}
+```
+
+### Testing with tflint
+
+Use [tflint](https://github.com/terraform-linters/tflint) for Terraform-specific linting:
+
+```bash
+## Install tflint
+brew install tflint
+
+## Initialize tflint (downloads plugins)
+tflint --init
+
+## Run tflint
+tflint
+
+## Run with specific config
+tflint --config=.tflint.hcl
+
+## Format output
+tflint --format=json
+tflint --format=checkstyle
+```
+
+### tflint Configuration
+
+```hcl
+## .tflint.hcl
+config {
+  module = true
+  force = false
+}
+
+plugin "aws" {
+  enabled = true
+  version = "0.27.0"
+  source  = "github.com/terraform-linters/tflint-ruleset-aws"
+}
+
+rule "terraform_naming_convention" {
+  enabled = true
+}
+
+rule "terraform_deprecated_interpolation" {
+  enabled = true
+}
+
+rule "terraform_unused_declarations" {
+  enabled = true
+}
+
+rule "terraform_typed_variables" {
+  enabled = true
+}
+
+rule "aws_instance_invalid_type" {
+  enabled = true
+}
+
+rule "aws_s3_bucket_versioning_enabled" {
+  enabled = true
+}
+```
+
+### Integration Testing
+
+Test HCL configurations in CI/CD:
+
+```yaml
+## .github/workflows/terraform-test.yml
+name: Terraform Tests
+
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        run: terraform init -backend=false
+
+      - name: Terraform Validate
+        run: terraform validate
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+
+      - name: Init TFLint
+        run: tflint --init
+
+      - name: Run TFLint
+        run: tflint --recursive
+
+  policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Conftest
+        run: |
+          wget https://github.com/open-policy-agent/conftest/releases/latest/download/conftest_Linux_x86_64.tar.gz
+          tar xzf conftest_Linux_x86_64.tar.gz
+          sudo mv conftest /usr/local/bin
+
+      - name: Test Policies
+        run: conftest test *.tf -p policy/
+```
+
+### Unit Testing HCL Modules
+
+Test individual modules:
+
+```bash
+## tests/module_test.sh
+#!/bin/bash
+
+set -e
+
+echo "Testing VPC module..."
+
+cd examples/vpc
+
+## Initialize
+terraform init
+
+## Validate
+terraform validate
+
+## Plan
+terraform plan -out=tfplan
+
+## Convert to JSON and test
+terraform show -json tfplan > tfplan.json
+conftest test tfplan.json -p ../../policy/
+
+echo "VPC module tests passed!"
+```
+
+### Compliance Testing
+
+Test for compliance requirements:
+
+```rego
+## policy/compliance.rego
+package compliance
+
+# Ensure all resources have required tags
+deny[msg] {
+  resource := input.resource[resource_type][name]
+  resource_type != "terraform_data"
+  not resource.tags.Environment
+  msg := sprintf("%s.%s missing required tag: Environment", [resource_type, name])
+}
+
+deny[msg] {
+  resource := input.resource[resource_type][name]
+  resource_type != "terraform_data"
+  not resource.tags.Owner
+  msg := sprintf("%s.%s missing required tag: Owner", [resource_type, name])
+}
+
+# Ensure encryption at rest
+deny[msg] {
+  bucket := input.resource.aws_s3_bucket[name]
+  not bucket.server_side_encryption_configuration
+  msg := sprintf("S3 bucket %s must have encryption enabled", [name])
+}
+
+deny[msg] {
+  db := input.resource.aws_db_instance[name]
+  not db.storage_encrypted
+  msg := sprintf("RDS instance %s must have storage encryption enabled", [name])
+}
+
+# Ensure resources are in approved regions
+approved_regions := ["us-east-1", "us-west-2", "eu-west-1"]
+
+deny[msg] {
+  resource := input.resource.aws_instance[name]
+  region := resource.provider.aws.region
+  not region_approved(region)
+  msg := sprintf("Instance %s in unapproved region: %s", [name, region])
+}
+
+region_approved(region) {
+  approved_regions[_] == region
+}
+```
+
+### Testing Outputs
+
+Verify module outputs:
+
+```bash
+## Test outputs after apply
+terraform output -json > outputs.json
+
+## Validate outputs with jq
+jq -e '.vpc_id.value != null' outputs.json
+jq -e '.subnet_ids.value | length > 0' outputs.json
+```
+
+### Documentation Testing
+
+Ensure HCL is properly documented:
+
+```bash
+## Install terraform-docs
+brew install terraform-docs
+
+## Generate documentation
+terraform-docs markdown table . > README.md
+
+## Validate documentation exists
+if ! grep -q "## Requirements" README.md; then
+  echo "Missing Requirements section in documentation"
+  exit 1
+fi
+```
+
+---
+
 ## Security Best Practices
 
 ### Never Hardcode Secrets
@@ -1158,7 +1524,7 @@ credentials "app.terraform.io" {
 }
 ```
 
-### tflint Configuration
+### Project tflint Configuration
 
 ```hcl
 ## .tflint.hcl

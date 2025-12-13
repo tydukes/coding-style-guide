@@ -502,6 +502,331 @@ service_b:
 
 ---
 
+## Testing
+
+### YAML Linting
+
+Use [yamllint](https://yamllint.readthedocs.io/) to validate YAML files:
+
+```bash
+## Install yamllint
+pip install yamllint
+
+## Lint single file
+yamllint config.yaml
+
+## Lint all YAML files
+yamllint .
+
+## Lint with custom config
+yamllint -c .yamllint.yaml config.yaml
+```
+
+### yamllint Configuration
+
+```yaml
+## .yamllint.yaml
+extends: default
+
+rules:
+  line-length:
+    max: 120
+    level: warning
+  indentation:
+    spaces: 2
+    indent-sequences: true
+  comments:
+    min-spaces-from-content: 2
+  document-start:
+    present: true
+  truthy:
+    allowed-values: ['true', 'false']
+```
+
+### Schema Validation
+
+Validate YAML against JSON Schema:
+
+```bash
+## Install check-jsonschema
+pip install check-jsonschema
+
+## Validate against schema
+check-jsonschema --schemafile schema.json config.yaml
+
+## Validate multiple files
+check-jsonschema --schemafile schema.json configs/*.yaml
+```
+
+Example schema:
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["version", "services"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "services": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z][a-z0-9-]*$": {
+          "type": "object",
+          "required": ["image"],
+          "properties": {
+            "image": {
+              "type": "string"
+            },
+            "ports": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[0-9]+:[0-9]+$"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### Testing with yq
+
+Validate and test YAML structure:
+
+```bash
+## Check if file is valid YAML
+yq eval '.' config.yaml > /dev/null
+
+## Test specific values
+version=$(yq eval '.version' config.yaml)
+if [ "$version" != "1.0" ]; then
+  echo "Invalid version: $version"
+  exit 1
+fi
+
+## Test array length
+count=$(yq eval '.services | length' config.yaml)
+if [ "$count" -lt 1 ]; then
+  echo "Must have at least one service"
+  exit 1
+fi
+
+## Test nested values
+image=$(yq eval '.services.web.image' config.yaml)
+if [ -z "$image" ]; then
+  echo "Web service must have image"
+  exit 1
+fi
+```
+
+### Unit Testing YAML
+
+```python
+## tests/test_yaml_config.py
+import yaml
+import pytest
+
+def load_yaml(filename):
+    with open(filename, 'r') as f:
+        return yaml.safe_load(f)
+
+def test_config_structure():
+    config = load_yaml('config.yaml')
+
+    assert 'version' in config
+    assert 'services' in config
+    assert isinstance(config['services'], dict)
+
+def test_service_configuration():
+    config = load_yaml('config.yaml')
+
+    for name, service in config['services'].items():
+        assert 'image' in service, f"Service {name} missing image"
+        assert isinstance(service.get('environment', {}), dict)
+
+def test_environment_specific_config():
+    prod_config = load_yaml('config.production.yaml')
+
+    assert prod_config['environment'] == 'production'
+    assert prod_config['debug'] is False
+    assert 'ssl' in prod_config
+    assert prod_config['ssl']['enabled'] is True
+
+@pytest.mark.parametrize("env", ["development", "staging", "production"])
+def test_all_environments(env):
+    config = load_yaml(f'config.{env}.yaml')
+
+    assert config['environment'] == env
+    assert 'database' in config
+    assert 'host' in config['database']
+```
+
+### CI/CD Integration
+
+```yaml
+## .github/workflows/yaml-test.yml
+name: YAML Validation
+
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Lint YAML files
+        run: yamllint .
+
+      - name: Install yq
+        run: |
+          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          chmod +x yq_linux_amd64
+          sudo mv yq_linux_amd64 /usr/local/bin/yq
+
+      - name: Validate structure
+        run: |
+          for file in config*.yaml; do
+            echo "Validating $file"
+            yq eval '.' "$file" > /dev/null
+          done
+
+  schema-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install check-jsonschema
+        run: pip install check-jsonschema
+
+      - name: Validate against schema
+        run: |
+          check-jsonschema --schemafile schema.json config.yaml
+```
+
+### Testing with Docker Compose
+
+Test YAML in context:
+
+```bash
+## tests/test-compose.sh
+#!/bin/bash
+set -e
+
+echo "Testing docker-compose.yaml..."
+
+## Validate syntax
+docker-compose -f docker-compose.yaml config > /dev/null
+
+## Test in dry-run mode
+docker-compose -f docker-compose.yaml up --dry-run
+
+## Validate services defined
+services=$(docker-compose -f docker-compose.yaml config --services)
+expected_services="web db redis"
+
+for service in $expected_services; do
+  if ! echo "$services" | grep -q "^${service}$"; then
+    echo "ERROR: Service $service not found"
+    exit 1
+  fi
+done
+
+echo "docker-compose.yaml is valid"
+```
+
+### Pre-commit Hooks
+
+```yaml
+## .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-yaml
+        args: ['--safe']
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.33.0
+    hooks:
+      - id: yamllint
+        args: ['-c', '.yamllint.yaml']
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.27.0
+    hooks:
+      - id: check-jsonschema
+        name: Validate configs
+        files: ^config.*\.yaml$
+        args: ['--schemafile', 'schema.json']
+```
+
+### Diff Testing
+
+Compare YAML configurations:
+
+```bash
+## Install dyff
+brew install homeport/tap/dyff
+
+## Compare configurations
+dyff between config.staging.yaml config.production.yaml
+
+## Output in different formats
+dyff between --output human config.staging.yaml config.production.yaml
+dyff between --output yaml config.staging.yaml config.production.yaml
+```
+
+### Security Scanning
+
+Scan for secrets in YAML:
+
+```bash
+## Install detect-secrets
+pip install detect-secrets
+
+## Scan YAML files
+detect-secrets scan config*.yaml
+
+## Create baseline
+detect-secrets scan --baseline .secrets.baseline config*.yaml
+
+## Audit findings
+detect-secrets audit .secrets.baseline
+```
+
+### Performance Testing
+
+Test YAML parsing performance:
+
+```python
+## tests/test_yaml_performance.py
+import yaml
+import time
+
+def test_large_yaml_performance():
+    start = time.time()
+
+    with open('large-config.yaml', 'r') as f:
+        config = yaml.safe_load(f)
+
+    duration = time.time() - start
+
+    assert duration < 1.0, f"YAML parsing too slow: {duration}s"
+    assert config is not None
+```
+
+---
+
 ## Security Best Practices
 
 ### Never Store Secrets in YAML
@@ -886,9 +1211,9 @@ description_folded: >
 
 ---
 
-## YAML Linting
+## Advanced YAML Linting
 
-### yamllint Configuration
+### Advanced yamllint Configuration
 
 `.yamllint`:
 
@@ -934,9 +1259,9 @@ yamllint -f parsable .
 
 ---
 
-## Schema Validation
+## Advanced Schema Validation
 
-### Using JSON Schema
+### Using JSON Schema for Complex Validation
 
 ```yaml
 ## config.yaml
