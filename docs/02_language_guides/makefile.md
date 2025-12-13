@@ -562,6 +562,390 @@ clean:
 
 ---
 
+## Security Best Practices
+
+### Prevent Command Injection
+
+Avoid using unsanitized variables in shell commands:
+
+```makefile
+## Bad - Vulnerable to command injection
+USER_INPUT ?= ; rm -rf /
+deploy:
+ ssh server "cd /app && deploy $(USER_INPUT)"  # ❌ Injection risk!
+
+## Good - Validate and quote variables
+USER_INPUT ?= production
+VALID_ENVS := development staging production
+
+deploy:
+ @if ! echo "$(VALID_ENVS)" | grep -wq "$(USER_INPUT)"; then \
+  echo "Error: Invalid environment '$(USER_INPUT)'"; \
+  exit 1; \
+ fi
+ ssh server "cd /app && deploy '$(USER_INPUT)'"  # ✅ Quoted and validated
+
+## Good - Use allow-lists
+DEPLOY_ENV ?= staging
+ALLOWED_ENVS := dev staging production
+
+deploy:
+ $(if $(filter $(DEPLOY_ENV),$(ALLOWED_ENVS)),,$(error Invalid environment: $(DEPLOY_ENV)))
+ @echo "Deploying to $(DEPLOY_ENV)"
+ ./deploy.sh "$(DEPLOY_ENV)"
+```
+
+**Key Points**:
+
+- Always validate external inputs
+- Use allow-lists for dynamic values
+- Quote all variables in shell commands
+- Avoid using `eval` with user input
+- Use `$(if)` or `$(filter)` for validation
+- Never trust environment variables directly
+
+### Secure Credentials Management
+
+Never hardcode credentials in Makefiles:
+
+```makefile
+## Bad - Hardcoded credentials
+deploy:
+ aws configure set aws_access_key_id AKIAIOSFODNN7EXAMPLE  # ❌ Exposed!
+ docker login -u myuser -p mypassword  # ❌ Hardcoded!
+
+## Good - Use environment variables
+deploy:
+ @if [ -z "$$AWS_ACCESS_KEY_ID" ]; then \
+  echo "Error: AWS_ACCESS_KEY_ID not set"; \
+  exit 1; \
+ fi
+ aws s3 sync ./dist s3://my-bucket
+
+## Good - Read from secure credential stores
+deploy:
+ @echo "Retrieving credentials from vault..."
+ @$(eval TOKEN := $(shell vault kv get -field=token secret/deploy))
+ @curl -H "Authorization: Bearer $(TOKEN)" https://api.example.com/deploy
+
+## Good - Use credential files
+docker-login:
+ @if [ ! -f ~/.docker/config.json ]; then \
+  echo "Error: Docker credentials not configured"; \
+  exit 1; \
+ fi
+ docker pull private-registry.com/myapp:latest
+
+## Good - Never log secrets
+DB_PASSWORD := $(shell vault kv get -field=password secret/database)
+
+.SILENT: db-connect
+db-connect:
+ psql -h db.example.com -U admin  # Password from PGPASSWORD env var
+```
+
+**Key Points**:
+
+- Store secrets in environment variables or vaults
+- Use `.SILENT` to prevent echoing sensitive commands
+- Read credentials from secure stores (Vault, AWS Secrets Manager)
+- Never commit secrets to version control
+- Use `.env` files (gitignored) for local development
+- Rotate credentials regularly
+
+### Safe File Operations
+
+Prevent accidental data loss and security issues:
+
+```makefile
+## Bad - Dangerous file operations
+clean:
+ rm -rf $(BUILD_DIR)/*  # ❌ What if BUILD_DIR is empty or /
+
+## Good - Validate before destructive operations
+BUILD_DIR ?= ./build
+
+clean:
+ @if [ -z "$(BUILD_DIR)" ] || [ "$(BUILD_DIR)" = "/" ]; then \
+  echo "Error: Invalid BUILD_DIR"; \
+  exit 1; \
+ fi
+ @if [ -d "$(BUILD_DIR)" ]; then \
+  echo "Cleaning $(BUILD_DIR)..."; \
+  rm -rf "$(BUILD_DIR)"/*; \
+ fi
+
+## Good - Use temporary directories safely
+TMP_DIR := $(shell mktemp -d)
+
+build-temp:
+ @echo "Using temporary directory: $(TMP_DIR)"
+ cd "$(TMP_DIR)" && build.sh
+ cp "$(TMP_DIR)"/output ./
+ rm -rf "$(TMP_DIR)"
+
+## Good - Set safe permissions
+install:
+ install -m 755 -o root -g root bin/myapp /usr/local/bin/myapp
+ install -m 644 -o root -g root config/app.conf /etc/myapp/app.conf
+ install -m 600 -o root -g root secrets/api.key /etc/myapp/api.key  # Restrictive
+
+## Good - Verify file integrity
+download-verify:
+ wget https://example.com/tool.tar.gz
+ @echo "$(EXPECTED_CHECKSUM)  tool.tar.gz" | sha256sum -c || \
+  (echo "Checksum verification failed!"; rm tool.tar.gz; exit 1)
+ tar -xzf tool.tar.gz
+```
+
+**Key Points**:
+
+- Always validate paths before destructive operations
+- Use `mktemp` for temporary files/directories
+- Set appropriate file permissions (least privilege)
+- Verify checksums for downloaded files
+- Never use wildcards with `rm -rf`
+- Clean up temporary files in error conditions
+
+### Input Validation and Sanitization
+
+Validate all external inputs:
+
+```makefile
+## Bad - No validation
+VERSION ?= $(shell git describe --tags)
+deploy:
+ docker push myapp:$(VERSION)  # ❌ What if VERSION contains malicious content?
+
+## Good - Validate version format
+VERSION ?= $(shell git describe --tags 2>/dev/null)
+VERSION_REGEX := ^v[0-9]+\.[0-9]+\.[0-9]+$$
+
+deploy:
+ @if [ -z "$(VERSION)" ]; then \
+  echo "Error: VERSION not set"; \
+  exit 1; \
+ fi
+ @if ! echo "$(VERSION)" | grep -Eq "$(VERSION_REGEX)"; then \
+  echo "Error: Invalid version format '$(VERSION)'"; \
+  exit 1; \
+ fi
+ docker push myapp:$(VERSION)
+
+## Good - Sanitize user inputs
+sanitize = $(subst ;,,$(subst &,,$(subst |,,$(1))))
+
+USER_BRANCH ?= main
+safe-checkout:
+ @$(eval SAFE_BRANCH := $(call sanitize,$(USER_BRANCH)))
+ @if ! git branch -r | grep -q "origin/$(SAFE_BRANCH)"; then \
+  echo "Error: Branch '$(SAFE_BRANCH)' does not exist"; \
+  exit 1; \
+ fi
+ git checkout "$(SAFE_BRANCH)"
+```
+
+**Key Points**:
+
+- Validate all external inputs (environment variables, user args)
+- Use regex patterns for format validation
+- Sanitize inputs to remove dangerous characters
+- Check for empty or undefined variables
+- Verify resources exist before using them
+- Use `$(error)` for critical validation failures
+
+### Dependency Security
+
+Secure external dependencies:
+
+```makefile
+## Good - Pin dependency versions
+NODEJS_VERSION := 20.10.0
+TERRAFORM_VERSION := 1.6.5
+
+install-node:
+ wget https://nodejs.org/dist/v$(NODEJS_VERSION)/node-v$(NODEJS_VERSION)-linux-x64.tar.gz
+ @echo "$(NODE_CHECKSUM)  node-v$(NODEJS_VERSION)-linux-x64.tar.gz" | sha256sum -c
+ tar -xzf node-v$(NODEJS_VERSION)-linux-x64.tar.gz
+
+## Good - Verify package integrity
+NPM_PACKAGES := express@4.18.2 dotenv@16.3.1
+
+install-deps:
+ npm ci  # Uses package-lock.json for reproducible installs
+ npm audit --audit-level=high
+ @if [ $$? -ne 0 ]; then \
+  echo "Security vulnerabilities found!"; \
+  exit 1; \
+ fi
+
+## Good - Use lock files
+bundle-install:
+ @if [ ! -f Gemfile.lock ]; then \
+  echo "Error: Gemfile.lock not found"; \
+  exit 1; \
+ fi
+ bundle install --frozen  # Fail if Gemfile.lock is out of date
+```
+
+**Key Points**:
+
+- Pin all dependency versions
+- Verify checksums for downloaded packages
+- Use lock files for reproducible builds
+- Run security audits (npm audit, bundle audit)
+- Fail builds on high-severity vulnerabilities
+- Keep dependencies updated
+
+### Least Privilege Execution
+
+Run commands with minimal required privileges:
+
+```makefile
+## Bad - Running as root unnecessarily
+install:
+ sudo cp bin/myapp /usr/local/bin/  # ❌ Entire make runs as root
+
+## Good - Use sudo only when necessary
+install:
+ @echo "Installing binary (requires sudo)..."
+ @install -m 755 bin/myapp /tmp/myapp
+ @sudo mv /tmp/myapp /usr/local/bin/myapp
+ @echo "Installation complete"
+
+## Good - Check for required permissions
+docker-build:
+ @if ! docker ps > /dev/null 2>&1; then \
+  echo "Error: Docker daemon not accessible"; \
+  echo "Run: sudo usermod -aG docker $$USER"; \
+  exit 1; \
+ fi
+ docker build -t myapp:latest .
+
+## Good - Run tests as non-root user
+test:
+ @if [ "$$(id -u)" = "0" ]; then \
+  echo "Warning: Running tests as root is not recommended"; \
+ fi
+ npm test
+```
+
+**Key Points**:
+
+- Never run make as root unless absolutely necessary
+- Use `sudo` only for specific commands that require it
+- Check for required permissions before executing
+- Warn when running as root
+- Use service accounts with minimal permissions
+- Document why elevated privileges are needed
+
+### Secure Build Artifacts
+
+Protect build outputs:
+
+```makefile
+## Good - Set restrictive permissions
+ARTIFACT_DIR := ./dist
+SECRETS_DIR := ./secrets
+
+build:
+ mkdir -p "$(ARTIFACT_DIR)"
+ go build -o "$(ARTIFACT_DIR)/myapp"
+ chmod 755 "$(ARTIFACT_DIR)/myapp"
+
+## Good - Generate checksums
+release:
+ @cd "$(ARTIFACT_DIR)" && sha256sum * > SHA256SUMS
+ @gpg --armor --detach-sign "$(ARTIFACT_DIR)/SHA256SUMS"
+
+## Good - Don't include secrets in artifacts
+package:
+ @echo "Packaging application..."
+ @if find "$(ARTIFACT_DIR)" -name "*.key" -o -name "*.pem" | grep -q .; then \
+  echo "Error: Secrets found in artifact directory!"; \
+  exit 1; \
+ fi
+ tar -czf release.tar.gz -C "$(ARTIFACT_DIR)" .
+```
+
+**Key Points**:
+
+- Set appropriate file permissions for artifacts
+- Generate checksums for verification
+- Sign critical artifacts with GPG
+- Scan artifacts for accidentally included secrets
+- Never commit build artifacts to version control
+- Clean up temporary build files
+
+### Audit Logging
+
+Log security-relevant operations:
+
+```makefile
+## Good - Log deployments
+deploy:
+ @echo "AUDIT: Deployment started at $$(date)" | tee -a deploy.log
+ @echo "AUDIT: User: $$USER" | tee -a deploy.log
+ @echo "AUDIT: Environment: $(DEPLOY_ENV)" | tee -a deploy.log
+ ./deploy.sh "$(DEPLOY_ENV)"
+ @echo "AUDIT: Deployment completed at $$(date)" | tee -a deploy.log
+
+## Good - Log errors
+.ONESHELL:
+.SHELLFLAGS = -ec
+critical-operation:
+ @echo "Starting critical operation at $$(date)" >> audit.log
+ @trap 'echo "ERROR at $$(date): $$?" >> audit.log' ERR
+ ./risky-operation.sh
+```
+
+**Key Points**:
+
+- Log all deployments and critical operations
+- Include timestamps, user, and environment
+- Use `tee` to log to both console and file
+- Log errors and failures
+- Retain logs for compliance requirements
+- Monitor logs for suspicious activity
+
+### Network Security
+
+Secure network operations:
+
+```makefile
+## Good - Use HTTPS for downloads
+download-tools:
+ @echo "Downloading from trusted source..."
+ curl -sSL https://trusted-site.com/tool.sh | bash  # ❌ Still risky!
+
+## Better - Download and verify before executing
+download-tools-safe:
+ curl -sSL -o tool.sh https://trusted-site.com/tool.sh
+ @echo "$(EXPECTED_CHECKSUM)  tool.sh" | sha256sum -c
+ chmod +x tool.sh
+ ./tool.sh
+ rm tool.sh
+
+## Good - Use VPN for sensitive operations
+deploy-prod:
+ @if ! ping -c 1 vpn.internal > /dev/null 2>&1; then \
+  echo "Error: VPN connection required for production deployment"; \
+  exit 1; \
+ fi
+ ssh -o StrictHostKeyChecking=yes prod-server "deploy.sh"
+```
+
+**Key Points**:
+
+- Always use HTTPS for downloads
+- Never pipe downloads directly to shell
+- Verify checksums before execution
+- Use VPN for production deployments
+- Verify SSH host keys
+- Restrict network access where possible
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Spaces Instead of Tabs

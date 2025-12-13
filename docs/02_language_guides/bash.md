@@ -959,6 +959,269 @@ main "$@"
 
 ---
 
+## Security Best Practices
+
+### Command Injection Prevention
+
+Always quote variables and validate input to prevent command injection attacks.
+
+```bash
+## Bad - Vulnerable to command injection
+user_input="$1"
+eval "ls $user_input"  # NEVER use eval with user input!
+files=$(find . -name $user_input)  # Unquoted variable vulnerable
+
+## Good - Properly quoted and validated
+user_input="$1"
+
+# Validate input matches expected pattern
+if ! printf '%s\n' "$user_input" | grep -Eq '^[a-zA-Z0-9_-]+$'; then
+  echo "Error: Invalid input format" >&2
+  exit 1
+fi
+
+# Always quote variables
+files=$(find . -name "$user_input")
+
+## Better - Use arrays for complex commands
+search_paths=("/var/log" "/var/tmp")
+find "${search_paths[@]}" -name "*.log"
+```
+
+### Input Validation and Sanitization
+
+```bash
+## Validate file paths
+validate_path() {
+  local path="$1"
+
+  # Check for path traversal attempts
+  case "$path" in
+    *..*)
+      echo "Error: Path traversal detected" >&2
+      return 1
+      ;;
+    /*)
+      echo "Error: Absolute paths not allowed" >&2
+      return 1
+      ;;
+  esac
+
+  # Check path exists and is within allowed directory
+  if [ ! -e "$path" ]; then
+    echo "Error: Path does not exist" >&2
+    return 1
+  fi
+
+  return 0
+}
+
+## Validate numeric input
+validate_number() {
+  local input="$1"
+
+  case "$input" in
+    ''|*[!0-9]*)
+      echo "Error: Not a valid number" >&2
+      return 1
+      ;;
+  esac
+
+  return 0
+}
+
+## Example usage
+user_file="$1"
+if validate_path "$user_file"; then
+  cat "$user_file"
+fi
+```
+
+### Secure Credential Management
+
+```bash
+## Bad - Hardcoded credentials (NEVER DO THIS)
+DB_PASSWORD="supersecret123"
+API_KEY="sk_live_abc123"
+aws_access_key="AKIAIOSFODNN7EXAMPLE"
+
+## Good - Use environment variables
+DB_PASSWORD="${DB_PASSWORD:?Database password not set}"
+API_KEY="${API_KEY:?API key not set}"
+
+## Good - Read from secure file with restricted permissions
+read_secret() {
+  local secret_file="$1"
+
+  # Verify file permissions (should be 600 or 400)
+  if [ -f "$secret_file" ]; then
+    perms=$(stat -c '%a' "$secret_file" 2>/dev/null || stat -f '%A' "$secret_file" 2>/dev/null)
+    if [ "$perms" != "600" ] && [ "$perms" != "400" ]; then
+      echo "Error: Secret file has insecure permissions: $perms" >&2
+      return 1
+    fi
+    cat "$secret_file"
+  else
+    echo "Error: Secret file not found" >&2
+    return 1
+  fi
+}
+
+## Use secrets
+db_password=$(read_secret "/run/secrets/db_password")
+```
+
+### Secure Temporary File Handling
+
+```bash
+## Bad - Predictable temp file names (race condition vulnerability)
+tmp_file="/tmp/myapp.txt"
+echo "data" > "$tmp_file"  # Attacker can predict this!
+
+## Good - Use mktemp for secure temporary files
+tmp_file=$(mktemp) || exit 1
+trap 'rm -f "$tmp_file"' EXIT INT TERM
+
+echo "sensitive data" > "$tmp_file"
+chmod 600 "$tmp_file"  # Restrict permissions
+
+## Process temp file
+# ...
+
+## Cleanup handled by trap
+
+## Good - Temporary directory
+tmp_dir=$(mktemp -d) || exit 1
+trap 'rm -rf "$tmp_dir"' EXIT INT TERM
+
+# Work in temporary directory
+cd "$tmp_dir" || exit 1
+```
+
+### Safe File Operations
+
+```bash
+## Prevent symlink attacks
+safe_write() {
+  local target_file="$1"
+  local content="$2"
+
+  # Check if file is a symlink
+  if [ -L "$target_file" ]; then
+    echo "Error: Will not write to symlink" >&2
+    return 1
+  fi
+
+  # Create file with restrictive permissions
+  (umask 077 && printf '%s\n' "$content" > "$target_file")
+}
+
+## Safely delete files
+safe_delete() {
+  local file="$1"
+
+  # Verify file exists and is a regular file
+  if [ ! -f "$file" ]; then
+    echo "Error: Not a regular file" >&2
+    return 1
+  fi
+
+  # Check we're not deleting system files
+  case "$file" in
+    /bin/*|/sbin/*|/usr/bin/*|/usr/sbin/*|/etc/*)
+      echo "Error: Refusing to delete system file" >&2
+      return 1
+      ;;
+  esac
+
+  rm -f "$file"
+}
+```
+
+### Secure Downloads
+
+```bash
+## Download files securely with verification
+secure_download() {
+  local url="$1"
+  local output="$2"
+  local expected_checksum="$3"
+
+  # Download with timeout and fail on error
+  if ! curl --fail --silent --show-error --max-time 300 \
+            --location "$url" --output "$output"; then
+    echo "Error: Download failed" >&2
+    return 1
+  fi
+
+  # Verify checksum if provided
+  if [ -n "$expected_checksum" ]; then
+    actual_checksum=$(sha256sum "$output" | cut -d' ' -f1)
+    if [ "$actual_checksum" != "$expected_checksum" ]; then
+      echo "Error: Checksum mismatch" >&2
+      echo "Expected: $expected_checksum" >&2
+      echo "Got: $actual_checksum" >&2
+      rm -f "$output"
+      return 1
+    fi
+  fi
+
+  return 0
+}
+
+## Example usage
+url="https://example.com/package.tar.gz"
+checksum="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+secure_download "$url" "package.tar.gz" "$checksum"
+```
+
+### Logging Sensitive Data
+
+```bash
+## Bad - Logging passwords and secrets
+echo "Connecting to database with password: $DB_PASSWORD"  # NEVER!
+curl -v "https://api.example.com?api_key=$API_KEY"  # Logged in curl output!
+
+## Good - Redact sensitive information
+log_safe() {
+  local message="$1"
+  # Redact potential secrets (credit cards, API keys, tokens)
+  echo "$message" | sed -E \
+    -e 's/password[=:][^ ]*/password=***REDACTED***/gi' \
+    -e 's/api[_-]?key[=:][^ ]*/api_key=***REDACTED***/gi' \
+    -e 's/token[=:][^ ]*/token=***REDACTED***/gi' \
+    -e 's/[0-9]{13,19}/****-****-****-****/g'  # Credit card numbers
+}
+
+## Use for logging
+message="Connecting to API with api_key=sk_live_abc123"
+log_safe "$message"  # Outputs: Connecting to API with api_key=***REDACTED***
+```
+
+### Process Isolation
+
+```bash
+## Run untrusted commands with limited permissions
+run_sandboxed() {
+  local command="$1"
+
+  # Create restricted user if needed
+  if ! id sandbox-user >/dev/null 2>&1; then
+    useradd -r -s /bin/false sandbox-user
+  fi
+
+  # Run command as limited user with timeout
+  sudo -u sandbox-user timeout 30s sh -c "$command"
+}
+
+## Limit resource usage
+ulimit -t 30      # CPU time limit (seconds)
+ulimit -v 1000000 # Virtual memory limit (KB)
+ulimit -f 10000   # File size limit (blocks)
+```
+
+---
+
 ## When to Use Higher-Level Languages
 
 Replace Bash with Python, Go, or TypeScript when you need:

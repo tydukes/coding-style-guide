@@ -863,6 +863,340 @@ integration-tests:
 
 ---
 
+## Security Best Practices
+
+### Secrets Management
+
+Protect sensitive data in CI/CD pipelines:
+
+```yaml
+## Bad - Hardcoded secrets in pipeline
+deploy:
+  script:
+    - echo "API_KEY=sk-1234567890abcdef" >> .env
+    - aws configure set aws_access_key_id AKIAIOSFODNN7EXAMPLE  # ❌ Exposed!
+
+## Good - Use protected CI/CD variables
+deploy:
+  script:
+    - echo "API_KEY=$API_KEY" >> .env  # API_KEY from protected variable
+    - aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"  # ✅ From variables
+  only:
+    - main  # Protected branch only
+
+## Good - Use masked variables
+variables:
+  DATABASE_URL: ${DB_URL}  # Masked in GitLab UI and logs
+
+## Good - Use file-type variables for certificates
+deploy:
+  before_script:
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+```
+
+**Key Points**:
+
+- Store secrets in GitLab CI/CD Variables (Settings > CI/CD > Variables)
+- Enable "Masked" to hide values in job logs
+- Enable "Protected" to restrict to protected branches only
+- Use "File" type for certificates and large secrets
+- Never commit secrets to `.gitlab-ci.yml`
+- Rotate secrets regularly
+
+### Protected Branches and Runners
+
+Restrict pipeline execution to authorized users and branches:
+
+```yaml
+## Good - Protected branch deployment
+deploy_production:
+  stage: deploy
+  script:
+    - ./deploy-prod.sh
+  environment:
+    name: production
+  only:
+    - main  # Protected branch
+  when: manual  # Require manual approval
+
+## Good - Use protected runners for sensitive jobs
+deploy_production:
+  stage: deploy
+  tags:
+    - protected-runner  # Runner tagged as protected in GitLab
+  script:
+    - ./deploy-prod.sh
+  only:
+    - main
+```
+
+**Key Points**:
+
+- Configure protected branches (Settings > Repository > Protected branches)
+- Restrict who can merge to protected branches
+- Use protected runners for production deployments
+- Require manual approval for critical deployments
+- Implement approval rules for merge requests
+
+### Docker Image Security
+
+Use secure, trusted container images:
+
+```yaml
+## Bad - Using latest tag
+test:
+  image: node:latest  # ❌ Unpredictable, potential security issues
+  script:
+    - npm test
+
+## Good - Pin specific versions
+test:
+  image: node:20.10.0-alpine  # ✅ Specific, minimal image
+  script:
+    - npm test
+
+## Good - Use internal registry with scanned images
+test:
+  image: registry.gitlab.com/myorg/secure-node:20.10.0-alpine
+  script:
+    - npm test
+
+## Good - Scan images for vulnerabilities
+build_image:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+    - docker scan $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA  # Scan for vulnerabilities
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+```
+
+**Key Points**:
+
+- Always pin specific image versions (avoid `latest`)
+- Use minimal base images (alpine, distroless)
+- Scan images for vulnerabilities (Trivy, Clair, Snyk)
+- Use trusted registries only
+- Regularly update base images
+- Verify image signatures
+
+### Code Injection Prevention
+
+Prevent command injection in pipeline scripts:
+
+```yaml
+## Bad - Unvalidated user input
+deploy:
+  script:
+    - ssh user@$DEPLOY_SERVER "$CI_COMMIT_MESSAGE"  # ❌ Injection risk!
+    - eval $USER_COMMAND  # ❌ Never use eval!
+
+## Good - Validate and sanitize inputs
+deploy:
+  script:
+    - |
+      if [[ ! "$DEPLOY_ENV" =~ ^(dev|staging|prod)$ ]]; then
+        echo "Invalid environment"
+        exit 1
+      fi
+    - ./deploy.sh "$DEPLOY_ENV"  # Quoted, validated variable
+
+## Good - Use predefined commands
+deploy:
+  variables:
+    ALLOWED_COMMANDS: "deploy.sh status.sh rollback.sh"
+  script:
+    - |
+      if [[ " $ALLOWED_COMMANDS " =~ " $COMMAND " ]]; then
+        ./"$COMMAND"
+      else
+        echo "Unauthorized command"
+        exit 1
+      fi
+```
+
+**Key Points**:
+
+- Never use `eval` with user-controlled input
+- Validate all variables before use
+- Use allow-lists for dynamic values
+- Quote all variables in scripts
+- Sanitize commit messages and user inputs
+- Use parameterized commands
+
+### Dependency Security
+
+Secure third-party dependencies:
+
+```yaml
+## Good - Pin dependency versions
+build:
+  image: node:20.10.0-alpine
+  script:
+    - npm ci  # Use package-lock.json (deterministic installs)
+    - npm audit  # Check for vulnerabilities
+
+## Good - Verify checksums
+build:
+  script:
+    - wget https://example.com/tool.tar.gz
+    - echo "$EXPECTED_CHECKSUM  tool.tar.gz" | sha256sum -c  # Verify checksum
+    - tar -xzf tool.tar.gz
+
+## Good - Use dependency scanning
+include:
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+
+dependency_scan:
+  stage: test
+  allow_failure: false  # Fail on vulnerabilities
+```
+
+**Key Points**:
+
+- Pin all dependency versions (`package-lock.json`, `Gemfile.lock`, etc.)
+- Use `npm ci` instead of `npm install`
+- Run dependency audits (`npm audit`, `bundle audit`, etc.)
+- Verify package checksums
+- Use GitLab Dependency Scanning
+- Monitor for supply chain attacks
+
+### Access Control and Least Privilege
+
+Implement least privilege for pipeline execution:
+
+```yaml
+## Good - Use service accounts with minimal permissions
+deploy_aws:
+  script:
+    - aws s3 sync ./dist s3://my-bucket --delete
+  variables:
+    AWS_ACCESS_KEY_ID: $AWS_DEPLOY_KEY_ID  # Service account with S3-only access
+    AWS_SECRET_ACCESS_KEY: $AWS_DEPLOY_SECRET
+
+## Good - Restrict runner access
+deploy_production:
+  tags:
+    - production-runner  # Dedicated runner with limited network access
+  only:
+    - main
+  script:
+    - ./deploy.sh
+```
+
+**Key Points**:
+
+- Use service accounts with minimum required permissions
+- Separate runners by environment (dev, staging, prod)
+- Restrict runner network access
+- Use RBAC for pipeline access control
+- Audit who can trigger pipelines
+- Limit access to protected variables
+
+### Artifact Security
+
+Secure build artifacts:
+
+```yaml
+## Good - Set appropriate artifact expiration
+build:
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week  # Auto-cleanup
+    reports:
+      coverage: coverage/cobertura-coverage.xml
+
+## Good - Protect sensitive artifacts
+deploy:
+  dependencies:
+    - build
+  script:
+    - |
+      # Encrypt sensitive artifacts before storage
+      tar -czf dist.tar.gz dist/
+      openssl enc -aes-256-cbc -salt -in dist.tar.gz -out dist.tar.gz.enc -k "$ENCRYPTION_KEY"
+    - ./deploy.sh dist.tar.gz.enc
+```
+
+**Key Points**:
+
+- Set appropriate artifact expiration times
+- Don't store secrets in artifacts
+- Encrypt sensitive artifacts
+- Use access controls for artifact download
+- Validate artifact integrity (checksums)
+- Clean up old artifacts regularly
+
+### Audit Logging and Monitoring
+
+Monitor pipeline activity:
+
+```yaml
+## Good - Log security events
+deploy:
+  before_script:
+    - echo "Deployment initiated by $GITLAB_USER_LOGIN at $(date)"
+    - echo "Target environment: $CI_ENVIRONMENT_NAME"
+  script:
+    - ./deploy.sh
+  after_script:
+    - |
+      if [ $CI_JOB_STATUS == "success" ]; then
+        ./send-audit-log.sh "Deployment successful"
+      else
+        ./send-alert.sh "Deployment failed - investigation required"
+      fi
+```
+
+**Key Points**:
+
+- Enable audit logging for all environments
+- Monitor failed pipeline runs
+- Track who triggered deployments
+- Alert on security policy violations
+- Review access logs regularly
+- Maintain pipeline execution history
+
+### Network Security
+
+Secure pipeline network access:
+
+```yaml
+## Good - Use VPN or private networks for sensitive operations
+deploy_database:
+  before_script:
+    - openvpn --config production-vpn.conf  # Connect to private network
+  script:
+    - psql -h $DB_HOST -U $DB_USER -d $DB_NAME < migration.sql
+  after_script:
+    - killall openvpn  # Disconnect VPN
+
+## Good - Restrict outbound connections
+test:
+  script:
+    - npm test
+  variables:
+    HTTP_PROXY: "http://proxy.internal:8080"  # Route through approved proxy
+    HTTPS_PROXY: "http://proxy.internal:8080"
+```
+
+**Key Points**:
+
+- Use VPNs or private networks for database access
+- Restrict outbound internet access from runners
+- Use approved proxies for external connections
+- Implement network segmentation
+- Monitor network traffic from runners
+- Use firewall rules to limit access
+
+---
+
 ## Tool Configuration
 
 ### gitlab-ci-local - Local Pipeline Testing

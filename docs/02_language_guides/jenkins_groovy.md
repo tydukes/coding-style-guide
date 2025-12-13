@@ -697,6 +697,558 @@ pipeline {
 
 ---
 
+## Security Best Practices
+
+### Secure Credentials Management
+
+Never hardcode credentials in Jenkinsfiles:
+
+```groovy
+// Bad - Hardcoded credentials
+pipeline {
+    agent any
+    stages {
+        stage('Deploy') {
+            steps {
+                sh 'docker login -u myuser -p mypassword'  // ❌ Exposed!
+                sh 'aws configure set aws_access_key_id AKIAIOSFODNN7EXAMPLE'  // ❌ Hardcoded!
+            }
+        }
+    }
+}
+
+// Good - Use Jenkins credentials
+pipeline {
+    agent any
+    environment {
+        DOCKER_CREDS = credentials('docker-hub-credentials')
+    }
+    stages {
+        stage('Deploy') {
+            steps {
+                sh 'echo $DOCKER_CREDS_PSW | docker login -u $DOCKER_CREDS_USR --password-stdin'
+            }
+        }
+    }
+}
+
+// Good - Use withCredentials for temporary access
+pipeline {
+    agent any
+    stages {
+        stage('Deploy') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'aws-credentials',
+                    usernameVariable: 'AWS_ACCESS_KEY_ID',
+                    passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                )]) {
+                    sh 'aws s3 sync ./dist s3://my-bucket'
+                }
+            }
+        }
+    }
+}
+
+// Good - SSH private key
+pipeline {
+    agent any
+    stages {
+        stage('Deploy') {
+            steps {
+                withCredentials([sshUserPrivateKey(
+                    credentialsId: 'ssh-deploy-key',
+                    keyFileVariable: 'SSH_KEY',
+                    usernameVariable: 'SSH_USER'
+                )]) {
+                    sh 'ssh -i $SSH_KEY $SSH_USER@server.example.com "deploy.sh"'
+                }
+            }
+        }
+    }
+}
+```
+
+**Key Points**:
+
+- Store credentials in Jenkins Credentials Manager
+- Use `credentials()` helper or `withCredentials` block
+- Never commit credentials to version control
+- Rotate credentials regularly
+- Use least-privilege service accounts
+- Mask credentials in console output
+
+### Code Injection Prevention
+
+Prevent command injection in pipeline scripts:
+
+```groovy
+// Bad - Unvalidated user input
+pipeline {
+    agent any
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'main')
+    }
+    stages {
+        stage('Build') {
+            steps {
+                // ❌ Command injection vulnerability!
+                sh "git checkout ${params.BRANCH_NAME}"
+            }
+        }
+    }
+}
+
+// Good - Validate and sanitize inputs
+pipeline {
+    agent any
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'main')
+    }
+    stages {
+        stage('Validate Input') {
+            steps {
+                script {
+                    // Validate branch name format
+                    if (!params.BRANCH_NAME.matches('^[a-zA-Z0-9/_-]+$')) {
+                        error("Invalid branch name format")
+                    }
+                    // Verify branch exists
+                    def branches = sh(
+                        script: 'git branch -r',
+                        returnStdout: true
+                    ).trim()
+                    if (!branches.contains(params.BRANCH_NAME)) {
+                        error("Branch does not exist")
+                    }
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                sh "git checkout ${params.BRANCH_NAME}"
+            }
+        }
+    }
+}
+
+// Good - Use allow-lists for dynamic values
+pipeline {
+    agent any
+    parameters {
+        choice(
+            name: 'ENVIRONMENT',
+            choices: ['dev', 'staging', 'production'],  // ✅ Restricted choices
+            description: 'Deployment environment'
+        )
+    }
+    stages {
+        stage('Deploy') {
+            steps {
+                sh "./deploy.sh ${params.ENVIRONMENT}"
+            }
+        }
+    }
+}
+```
+
+**Key Points**:
+
+- Always validate user inputs
+- Use `choice` parameters instead of `string` when possible
+- Sanitize all external inputs
+- Use allow-lists for dynamic values
+- Avoid string interpolation with untrusted data
+- Never use Groovy `evaluate()` with user input
+
+### Script Security Plugin
+
+Enable and configure Script Security:
+
+```groovy
+// Good - Use approved script methods
+@Library('my-shared-library') _
+
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    // Approved methods only
+                    def result = readFile('config.json')
+                    def config = readJSON text: result
+
+                    // Use shared library functions (pre-approved)
+                    buildDockerImage(
+                        imageName: config.imageName,
+                        tag: env.BUILD_NUMBER
+                    )
+                }
+            }
+        }
+    }
+}
+
+// Bad - Unapproved methods can be security risks
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    // ❌ May require admin approval
+                    def proc = "ls -la".execute()
+                    proc.waitFor()
+                }
+            }
+        }
+    }
+}
+```
+
+**Key Points**:
+
+- Enable Script Security plugin
+- Review and approve script methods carefully
+- Use declarative pipelines over scripted when possible
+- Limit who can approve script methods
+- Audit approved methods regularly
+- Use shared libraries for complex logic
+
+### Access Control and Authorization
+
+Implement proper access controls:
+
+```groovy
+// Good - Restrict who can trigger builds
+pipeline {
+    agent any
+
+    // Require specific user permissions
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+    }
+
+    parameters {
+        string(name: 'DEPLOY_ENV', defaultValue: 'staging')
+    }
+
+    stages {
+        stage('Authorization Check') {
+            steps {
+                script {
+                    // Check if user is authorized for production deployments
+                    if (params.DEPLOY_ENV == 'production') {
+                        def user = currentBuild.getBuildCauses()[0]?.userId
+                        def authorizedUsers = ['admin', 'ops-team']
+
+                        if (!authorizedUsers.contains(user)) {
+                            error("User ${user} not authorized for production deployments")
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh "./deploy.sh ${params.DEPLOY_ENV}"
+            }
+        }
+    }
+}
+
+// Good - Use manual approval for critical stages
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'make build'
+            }
+        }
+
+        stage('Deploy to Production') {
+            when {
+                branch 'main'
+            }
+            steps {
+                input message: 'Deploy to production?',
+                      ok: 'Deploy',
+                      submitter: 'admin,ops-team'  // Only specific users can approve
+
+                sh './deploy-production.sh'
+            }
+        }
+    }
+}
+```
+
+**Key Points**:
+
+- Configure matrix-based security
+- Use folder-level permissions
+- Restrict who can trigger sensitive jobs
+- Implement approval gates for critical deployments
+- Use role-based access control (RBAC)
+- Audit user permissions regularly
+
+### Agent and Node Security
+
+Secure Jenkins agents and build nodes:
+
+```groovy
+// Good - Use specific agent labels
+pipeline {
+    agent {
+        label 'docker-trusted'  // Only run on trusted agents
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'docker build -t myapp .'
+            }
+        }
+    }
+}
+
+// Good - Use Docker agents with security constraints
+pipeline {
+    agent {
+        docker {
+            image 'node:18-alpine'
+            args '-u root:root --read-only --tmpfs /tmp'  // Security constraints
+        }
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'npm ci && npm run build'
+            }
+        }
+    }
+}
+
+// Good - Separate agents by environment
+pipeline {
+    agent none
+    stages {
+        stage('Build') {
+            agent { label 'build-agents' }
+            steps {
+                sh 'make build'
+            }
+        }
+
+        stage('Deploy Production') {
+            agent { label 'production-agents' }  // Dedicated production agents
+            when {
+                branch 'main'
+            }
+            steps {
+                sh './deploy.sh'
+            }
+        }
+    }
+}
+```
+
+**Key Points**:
+
+- Use dedicated agents for different environments
+- Restrict agent access to sensitive resources
+- Use Docker agents for isolation
+- Implement agent authentication
+- Monitor agent activity
+- Keep agents updated and patched
+
+### Artifact Security
+
+Secure build artifacts:
+
+```groovy
+// Good - Archive artifacts securely
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'make build'
+            }
+            post {
+                success {
+                    // Archive with fingerprinting for integrity
+                    archiveArtifacts artifacts: 'dist/**/*',
+                                   fingerprint: true,
+                                   allowEmptyArchive: false
+
+                    // Calculate and store checksums
+                    sh '''
+                        cd dist
+                        sha256sum * > SHA256SUMS
+                    '''
+                    archiveArtifacts artifacts: 'dist/SHA256SUMS'
+                }
+            }
+        }
+    }
+}
+
+// Good - Sign artifacts
+pipeline {
+    agent any
+    stages {
+        stage('Build and Sign') {
+            steps {
+                sh 'make build'
+
+                withCredentials([file(credentialsId: 'gpg-key', variable: 'GPG_KEY')]) {
+                    sh '''
+                        gpg --import $GPG_KEY
+                        gpg --armor --detach-sign dist/myapp.jar
+                    '''
+                }
+
+                archiveArtifacts artifacts: 'dist/myapp.jar*', fingerprint: true
+            }
+        }
+    }
+}
+```
+
+**Key Points**:
+
+- Enable artifact fingerprinting
+- Sign critical artifacts
+- Generate checksums for verification
+- Limit artifact retention time
+- Control artifact access permissions
+- Scan artifacts for vulnerabilities
+
+### Dependency and Plugin Security
+
+Manage dependencies and plugins securely:
+
+```groovy
+// Good - Pin dependency versions
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                // Use lock files for reproducible builds
+                sh 'npm ci'  // Uses package-lock.json
+
+                // Audit dependencies
+                sh 'npm audit --audit-level=high'
+            }
+        }
+    }
+}
+
+// Good - Verify plugin signatures
+// Configure in Jenkins > Manage Jenkins > Configure System
+// Enable "Check plugin signatures" option
+```
+
+**Key Points**:
+
+- Keep Jenkins and plugins updated
+- Enable plugin signature verification
+- Use dependency lock files
+- Run dependency audits in pipelines
+- Review plugin permissions
+- Remove unused plugins
+
+### Audit Logging
+
+Enable comprehensive audit logging:
+
+```groovy
+// Good - Log security-relevant events
+pipeline {
+    agent any
+    stages {
+        stage('Deploy') {
+            steps {
+                script {
+                    def user = currentBuild.getBuildCauses()[0]?.userId ?: 'UNKNOWN'
+                    def timestamp = new Date().format('yyyy-MM-dd HH:mm:ss')
+
+                    echo "AUDIT: Deployment initiated by ${user} at ${timestamp}"
+                    echo "AUDIT: Target environment: ${params.DEPLOY_ENV}"
+                    echo "AUDIT: Build number: ${env.BUILD_NUMBER}"
+                }
+
+                sh './deploy.sh'
+            }
+            post {
+                always {
+                    script {
+                        def status = currentBuild.currentResult
+                        echo "AUDIT: Deployment ${status} at ${new Date().format('yyyy-MM-dd HH:mm:ss')}"
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+**Key Points**:
+
+- Enable audit trail plugin
+- Log all credential access
+- Track who triggered builds
+- Monitor failed login attempts
+- Review audit logs regularly
+- Retain logs for compliance
+
+### Network Security
+
+Secure network communications:
+
+```groovy
+// Good - Use HTTPS for external calls
+pipeline {
+    agent any
+    stages {
+        stage('API Call') {
+            steps {
+                script {
+                    // Always use HTTPS
+                    def response = httpRequest(
+                        url: 'https://api.example.com/data',
+                        authentication: 'api-token-credential',
+                        validResponseCodes: '200',
+                        timeout: 30
+                    )
+                }
+            }
+        }
+    }
+}
+
+// Good - Restrict outbound connections
+// Configure in Jenkins security settings:
+// - Use proxy for external connections
+// - Whitelist allowed domains
+// - Block access to internal networks from build agents
+```
+
+**Key Points**:
+
+- Always use HTTPS for external communications
+- Verify SSL/TLS certificates
+- Use proxies for outbound connections
+- Implement network segmentation
+- Restrict agent network access
+- Monitor network traffic
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Hardcoded Credentials

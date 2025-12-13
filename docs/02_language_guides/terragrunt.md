@@ -666,6 +666,368 @@ include "root" {
 
 ---
 
+## Security Best Practices
+
+### Secure State Backend Configuration
+
+Always use encrypted remote state backends with proper access controls.
+
+```hcl
+## Bad - Local state (not secure for teams)
+## terragrunt.hcl
+terraform {
+  source = "git::https://github.com/org/modules//vpc"
+}
+## State stored locally - no encryption, no locking!
+
+## Good - S3 backend with encryption
+remote_state {
+  backend = "s3"
+  config = {
+    bucket         = "mycompany-terraform-state"
+    key            = "${path_relative_to_include()}/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true  # Server-side encryption
+    kms_key_id     = "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012"
+    dynamodb_table = "terraform-locks"  # State locking
+
+    ## Restrict access
+    acl            = "private"
+
+    ## Enable versioning for recovery
+    versioning     = true
+  }
+  generate = {
+    path      = "backend.tf"
+    if_exists = "overwrite_terragrunt"
+  }
+}
+```
+
+### Secrets Management
+
+Never commit secrets to terragrunt.hcl files.
+
+```hcl
+## Bad - Hardcoded secrets
+## terragrunt.hcl
+inputs = {
+  database_password = "SuperSecret123"  # NEVER!
+  api_key          = "sk_live_abc123"   # Exposed in version control!
+}
+
+## Good - Use environment variables
+inputs = {
+  database_password = get_env("TF_VAR_database_password", "")
+  api_key          = get_env("TF_VAR_api_key", "")
+}
+
+## Better - Use AWS Secrets Manager/Parameter Store
+locals {
+  secrets = yamldecode(sops_decrypt_file("${get_terragrunt_dir()}/secrets.enc.yaml"))
+}
+
+inputs = {
+  database_password = local.secrets.database_password
+  api_key          = local.secrets.api_key
+}
+
+## Best - Use SOPS for encrypted files
+## Encrypt secrets file
+## sops --encrypt secrets.yaml > secrets.enc.yaml
+```
+
+### Input Validation
+
+Validate inputs to prevent misconfigurations.
+
+```hcl
+## Good - Validate environment names
+locals {
+  environment = get_env("ENVIRONMENT", "dev")
+
+  ## Validate environment
+  valid_environments = ["dev", "staging", "prod"]
+  is_valid_env      = contains(local.valid_environments, local.environment)
+}
+
+inputs = {
+  environment = local.is_valid_env ? local.environment : run_cmd(
+    "--terragrunt-quiet", "echo",
+    "Error: Invalid environment ${local.environment}", "&&", "exit", "1"
+  )
+
+  ## Validate CIDR blocks
+  vpc_cidr = get_env("VPC_CIDR")
+
+  ## Validation in module will check format
+}
+
+## Good - Validate AWS region
+locals {
+  aws_region = get_env("AWS_REGION", "us-east-1")
+
+  valid_regions = [
+    "us-east-1", "us-east-2", "us-west-1", "us-west-2",
+    "eu-west-1", "eu-central-1", "ap-southeast-1"
+  ]
+}
+
+inputs = {
+  aws_region = contains(local.valid_regions, local.aws_region) ? local.aws_region : "us-east-1"
+}
+```
+
+### Dependency Security
+
+Trust but verify module sources and dependencies.
+
+```hcl
+## Bad - Unverified module source
+terraform {
+  source = "github.com/random-user/terraform-modules//vpc"  # Untrusted!
+}
+
+## Bad - Using latest/master (no version pinning)
+terraform {
+  source = "git::https://github.com/org/modules.git//vpc?ref=master"  # Unpredictable!
+}
+
+## Good - Pin to specific verified version
+terraform {
+  source = "git::https://github.com/your-org/terraform-modules.git//vpc?ref=v1.2.3"
+}
+
+## Good - Use release tags with verification
+terraform {
+  source = "git::ssh://git@github.com/your-org/modules.git//vpc?ref=v1.2.3"
+}
+
+dependency "vpc" {
+  config_path = "../vpc"
+
+  ## Skip outputs if VPC doesn't exist (safe default)
+  skip_outputs = true
+
+  ## Mock outputs for plan operations
+  mock_outputs = {
+    vpc_id     = "vpc-mock-id"
+    subnet_ids = ["subnet-mock-1", "subnet-mock-2"]
+  }
+  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
+}
+```
+
+### IAM Role Security
+
+Use assume_role with proper constraints.
+
+```hcl
+## Bad - Over-privileged role
+generate "provider" {
+  path      = "provider.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = <<EOF
+provider "aws" {
+  region = "${local.aws_region}"
+
+  assume_role {
+    role_arn = "arn:aws:iam::123456789012:role/TerraformAdmin"  # Too broad!
+  }
+}
+EOF
+}
+
+## Good - Environment-specific roles with external ID
+locals {
+  account_id  = get_env("AWS_ACCOUNT_ID")
+  environment = get_env("ENVIRONMENT")
+  external_id = get_env("TERRAFORM_EXTERNAL_ID")  # Additional security
+}
+
+generate "provider" {
+  path      = "provider.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = <<EOF
+provider "aws" {
+  region = "${local.aws_region}"
+
+  assume_role {
+    role_arn    = "arn:aws:iam::${local.account_id}:role/Terraform-${local.environment}"
+    external_id = "${local.external_id}"
+    session_name = "terragrunt-${local.environment}-$${USER}"
+  }
+
+  default_tags {
+    tags = {
+      ManagedBy   = "Terragrunt"
+      Environment = "${local.environment}"
+      Owner       = "$${USER}"
+    }
+  }
+}
+EOF
+}
+```
+
+### Sensitive Output Protection
+
+Mark sensitive outputs appropriately.
+
+```hcl
+## Bad - Exposing sensitive data
+dependency "rds" {
+  config_path = "../rds"
+}
+
+inputs = {
+  db_host     = dependency.rds.outputs.endpoint
+  db_password = dependency.rds.outputs.password  # Logged in plan output!
+}
+
+## Good - Use sensitive flag in module outputs
+## In RDS module outputs.tf:
+output "password" {
+  value     = random_password.db_password.result
+  sensitive = true  # Prevents logging in Terraform output
+}
+
+## In terragrunt.hcl - outputs remain sensitive
+dependency "rds" {
+  config_path = "../rds"
+}
+
+inputs = {
+  db_host     = dependency.rds.outputs.endpoint
+  db_password = dependency.rds.outputs.password  # Still sensitive
+}
+```
+
+### Lock File Integrity
+
+Use and verify lock files.
+
+```hcl
+## Bad - Ignoring lock files
+## .gitignore
+.terraform.lock.hcl  # DON'T IGNORE!
+
+## Good - Commit lock files
+## .gitignore should NOT include:
+## .terraform.lock.hcl (commit this!)
+
+## In CI/CD pipeline
+## terraform.yml
+steps:
+  - name: Verify lock file
+    run: |
+      if ! git diff --exit-code .terraform.lock.hcl; then
+        echo "Error: Lock file has uncommitted changes"
+        exit 1
+      fi
+
+  - name: Run terragrunt
+    run: |
+      terragrunt run-all plan
+```
+
+### Prevent Accidental Destruction
+
+Use prevent_destroy and require confirmations.
+
+```hcl
+## Good - Require confirmation for prod
+locals {
+  environment = get_env("ENVIRONMENT")
+}
+
+## Prevent accidental destroy in production
+terraform {
+  before_hook "prevent_destroy" {
+    commands = ["destroy"]
+    execute  = local.environment == "prod" ? [
+      "bash", "-c",
+      "echo 'ERROR: Cannot destroy production environment!' && exit 1"
+    ] : ["echo", "Destroy allowed in ${local.environment}"]
+  }
+}
+
+## Require manual approval
+terraform {
+  before_hook "require_approval" {
+    commands = ["apply"]
+    execute  = local.environment == "prod" ? [
+      "bash", "-c",
+      "read -p 'Apply to PRODUCTION? (yes/no): ' confirm && " +
+      "[ \"$confirm\" = \"yes\" ] || exit 1"
+    ] : ["echo", "Proceeding with apply"]
+  }
+}
+```
+
+### Secure Hooks
+
+Validate hook scripts and limit execution.
+
+```hcl
+## Bad - Arbitrary command execution
+terraform {
+  after_hook "notify" {
+    commands = ["apply"]
+    execute  = ["sh", "-c", get_env("NOTIFY_COMMAND")]  # Dangerous!
+  }
+}
+
+## Good - Controlled hook execution
+terraform {
+  after_hook "notify_success" {
+    commands     = ["apply"]
+    execute      = ["bash", "${get_terragrunt_dir()}/scripts/notify.sh", "success", "${path_relative_to_include()}"]
+    run_on_error = false
+  }
+
+  after_hook "notify_failure" {
+    commands     = ["apply"]
+    execute      = ["bash", "${get_terragrunt_dir()}/scripts/notify.sh", "failure", "${path_relative_to_include()}"]
+    run_on_error = true
+  }
+}
+
+## Ensure hook scripts have proper permissions
+## chmod 755 scripts/notify.sh
+## Never chmod 777!
+```
+
+### Audit and Compliance Logging
+
+Enable comprehensive logging for audit trails.
+
+```hcl
+## Good - Log all Terragrunt operations
+terraform {
+  extra_arguments "common_vars" {
+    commands = get_terraform_commands_that_need_vars()
+
+    env_vars = {
+      TF_LOG       = "INFO"
+      TF_LOG_PATH  = "${get_terragrunt_dir()}/terraform.log"
+    }
+  }
+
+  before_hook "log_start" {
+    commands = ["apply", "destroy"]
+    execute  = [
+      "bash", "-c",
+      "echo \"[$(date -u +%Y-%m-%dT%H:%M:%SZ)] User: $USER, " +
+      "Action: ${command}, Path: ${path_relative_to_include()}\" >> " +
+      "/var/log/terragrunt-audit.log"
+    ]
+  }
+}
+```
+
+---
+
 ## Tool Configurations
 
 ### .terragrunt-cache

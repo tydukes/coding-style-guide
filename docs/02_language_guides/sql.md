@@ -589,6 +589,301 @@ HAVING COUNT(o.order_id) > 5;
 
 ---
 
+## Security Best Practices
+
+### SQL Injection Prevention
+
+Always use parameterized queries; never concatenate user input into SQL.
+
+```sql
+-- NEVER DO THIS - Vulnerable to SQL injection
+-- Python example showing the vulnerability
+query = f"SELECT * FROM users WHERE email = '{user_email}'"  -- DANGEROUS!
+-- Attacker input: "' OR '1'='1" exposes all data
+
+-- ALWAYS USE - Parameterized queries (Python example)
+query = "SELECT * FROM users WHERE email = %s"
+cursor.execute(query, (user_email,))  -- Safe - parameters are escaped
+
+-- ALWAYS USE - Prepared statements (Node.js example)
+const query = 'SELECT * FROM users WHERE email = $1';
+await client.query(query, [userEmail]);  -- Safe
+```
+
+### Access Control and Least Privilege
+
+Grant minimum necessary permissions to database users.
+
+```sql
+-- Bad - Granting excessive permissions
+GRANT ALL PRIVILEGES ON DATABASE myapp TO app_user;  -- Too broad!
+GRANT SUPER ON *.* TO app_user@'%';  -- NEVER grant SUPER!
+
+-- Good - Minimal permissions for application user
+CREATE USER 'app_user'@'localhost' IDENTIFIED BY 'SecurePassword123!';
+
+GRANT SELECT, INSERT, UPDATE ON myapp.users TO 'app_user'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON myapp.orders TO 'app_user'@'localhost';
+GRANT EXECUTE ON PROCEDURE myapp.process_order TO 'app_user'@'localhost';
+
+-- Good - Read-only user for reporting
+CREATE USER 'report_user'@'localhost' IDENTIFIED BY 'SecurePassword456!';
+GRANT SELECT ON myapp.* TO 'report_user'@'localhost';
+
+-- Good - Revoke dangerous permissions
+REVOKE FILE, SUPER, PROCESS ON *.* FROM 'app_user'@'localhost';
+```
+
+### Data Encryption
+
+Encrypt sensitive data at rest and in transit.
+
+```sql
+-- Bad - Storing passwords in plain text
+CREATE TABLE users (
+    user_id INT PRIMARY KEY,
+    email VARCHAR(255),
+    password VARCHAR(255)  -- NEVER store passwords in plain text!
+);
+
+INSERT INTO users (user_id, email, password)
+VALUES (1, 'user@example.com', 'Password123');  -- Exposed!
+
+-- Good - Use application-level hashing (bcrypt, argon2)
+-- Store only hashed passwords
+CREATE TABLE users (
+    user_id INT PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,  -- Hashed password
+    password_salt VARCHAR(255) NOT NULL,  -- Unique salt
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Good - Encrypt sensitive columns (PostgreSQL example)
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+CREATE TABLE sensitive_data (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    ssn_encrypted BYTEA,  -- Encrypted column
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Insert encrypted data
+INSERT INTO sensitive_data (user_id, ssn_encrypted)
+VALUES (1, pgp_sym_encrypt('123-45-6789', 'encryption_key'));
+
+-- Query encrypted data
+SELECT user_id, pgp_sym_decrypt(ssn_encrypted, 'encryption_key') AS ssn
+FROM sensitive_data
+WHERE user_id = 1;
+
+-- Good - Enable SSL/TLS for connections
+-- In postgresql.conf:
+-- ssl = on
+-- ssl_cert_file = 'server.crt'
+-- ssl_key_file = 'server.key'
+```
+
+### Sensitive Data Handling
+
+Protect PII and implement data masking.
+
+```sql
+-- Good - Data masking for non-production environments
+CREATE VIEW users_masked AS
+SELECT
+    user_id,
+    CONCAT(LEFT(email, 3), '***@***.com') AS email_masked,
+    CONCAT(LEFT(phone, 3), '-***-****') AS phone_masked,
+    first_name,
+    'REDACTED' AS last_name_masked
+FROM users;
+
+-- Good - Row-level security (PostgreSQL)
+ALTER TABLE sensitive_documents ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY user_documents_policy ON sensitive_documents
+    FOR SELECT
+    USING (owner_id = current_user_id());
+
+-- Good - Column-level permissions
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    salary DECIMAL(10,2),  -- Sensitive
+    ssn VARCHAR(11)        -- Highly sensitive
+);
+
+-- Grant access but hide sensitive columns
+GRANT SELECT (employee_id, first_name, last_name) ON employees TO hr_viewer;
+
+-- Only specific roles can see salary
+GRANT SELECT (employee_id, first_name, last_name, salary) ON employees TO hr_manager;
+```
+
+### Audit Logging
+
+Enable comprehensive audit trails for security monitoring.
+
+```sql
+-- Good - Create audit log table
+CREATE TABLE audit_log (
+    audit_id BIGSERIAL PRIMARY KEY,
+    table_name VARCHAR(100) NOT NULL,
+    operation VARCHAR(10) NOT NULL,  -- INSERT, UPDATE, DELETE
+    user_name VARCHAR(100) NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    old_values JSONB,
+    new_values JSONB,
+    ip_address INET
+);
+
+-- Good - Audit trigger for sensitive tables
+CREATE OR REPLACE FUNCTION audit_trigger_func()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (TG_OP = 'DELETE') THEN
+        INSERT INTO audit_log (table_name, operation, user_name, old_values, ip_address)
+        VALUES (TG_TABLE_NAME, TG_OP, current_user, row_to_json(OLD), inet_client_addr());
+        RETURN OLD;
+    ELSIF (TG_OP = 'UPDATE') THEN
+        INSERT INTO audit_log (table_name, operation, user_name, old_values, new_values, ip_address)
+        VALUES (TG_TABLE_NAME, TG_OP, current_user, row_to_json(OLD), row_to_json(NEW), inet_client_addr());
+        RETURN NEW;
+    ELSIF (TG_OP = 'INSERT') THEN
+        INSERT INTO audit_log (table_name, operation, user_name, new_values, ip_address)
+        VALUES (TG_TABLE_NAME, TG_OP, current_user, row_to_json(NEW), inet_client_addr());
+        RETURN NEW;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Apply audit trigger to sensitive tables
+CREATE TRIGGER users_audit_trigger
+    AFTER INSERT OR UPDATE OR DELETE ON users
+    FOR EACH ROW EXECUTE FUNCTION audit_trigger_func();
+
+CREATE TRIGGER financial_transactions_audit
+    AFTER INSERT OR UPDATE OR DELETE ON financial_transactions
+    FOR EACH ROW EXECUTE FUNCTION audit_trigger_func();
+```
+
+### Backup Security
+
+Protect database backups with encryption.
+
+```bash
+## Bad - Unencrypted backup
+pg_dump myapp > backup.sql  # Plain text backup!
+mysqldump -u root -p myapp > backup.sql  # No encryption!
+
+## Good - Encrypted backup (PostgreSQL)
+pg_dump myapp | gpg --encrypt --recipient admin@example.com > backup.sql.gpg
+
+## Good - Encrypted backup with compression
+pg_dump myapp | gzip | gpg --encrypt --recipient admin@example.com > backup.sql.gz.gpg
+
+## Good - Secure backup permissions
+chmod 600 backup.sql.gpg  # Only owner can read/write
+
+## Good - Store backups securely
+aws s3 cp backup.sql.gpg s3://secure-backups/ --sse aws:kms --sse-kms-key-id alias/backup-key
+```
+
+### Connection Security
+
+Enforce secure database connections.
+
+```sql
+-- Good - Require SSL for specific users
+ALTER USER app_user REQUIRE SSL;
+
+-- Good - Restrict connections by IP (MySQL)
+CREATE USER 'app_user'@'10.0.1.%' IDENTIFIED BY 'SecurePassword123!';  -- Specific subnet only
+
+-- Good - Disable remote root access
+DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+FLUSH PRIVILEGES;
+
+-- Good - Connection limits
+ALTER USER app_user WITH CONNECTION LIMIT 50;  -- Prevent connection exhaustion
+```
+
+### Secure Stored Procedures
+
+Validate inputs and use security definer carefully.
+
+```sql
+-- Bad - Stored procedure vulnerable to injection
+CREATE PROCEDURE get_user_by_email(IN email_input VARCHAR(255))
+BEGIN
+    SET @query = CONCAT('SELECT * FROM users WHERE email = "', email_input, '"');  -- VULNERABLE!
+    PREPARE stmt FROM @query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END;
+
+-- Good - Use parameterized queries in procedures
+CREATE PROCEDURE get_user_by_email(IN email_input VARCHAR(255))
+BEGIN
+    SELECT user_id, email, first_name, last_name
+    FROM users
+    WHERE email = email_input;  -- Safe - parameterized
+END;
+
+-- Good - Input validation in stored procedures
+CREATE PROCEDURE create_user(
+    IN email_input VARCHAR(255),
+    IN first_name_input VARCHAR(100)
+)
+BEGIN
+    -- Validate email format
+    IF email_input NOT REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Invalid email format';
+    END IF;
+
+    -- Validate name length
+    IF LENGTH(first_name_input) < 2 OR LENGTH(first_name_input) > 100 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Invalid name length';
+    END IF;
+
+    INSERT INTO users (email, first_name) VALUES (email_input, first_name_input);
+END;
+```
+
+### Prevent Information Disclosure
+
+Avoid exposing sensitive information in error messages.
+
+```sql
+-- Bad - Exposing table structure in errors
+SELECT * FROM users WHERE user_id = 'invalid';  -- Error reveals table schema!
+
+-- Good - Handle errors gracefully (application level)
+-- Python example
+try:
+    cursor.execute("SELECT * FROM users WHERE user_id = %s", (user_id,))
+except DatabaseError as e:
+    # Log detailed error server-side
+    logger.error(f"Database error: {str(e)}")
+    # Return generic error to client
+    return {"error": "An error occurred processing your request"}
+
+-- Good - Use views to hide sensitive columns
+CREATE VIEW public_user_profile AS
+SELECT user_id, username, avatar_url, created_at
+FROM users;  -- Hides email, password_hash, etc.
+
+GRANT SELECT ON public_user_profile TO app_user;
+REVOKE SELECT ON users FROM app_user;  -- Deny access to full table
+```
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: SELECT * in Production

@@ -898,6 +898,296 @@ scenario:
 
 ---
 
+## Security Best Practices
+
+### Ansible Vault for Secrets
+
+Always encrypt sensitive data using Ansible Vault.
+
+```yaml
+## Bad - Plain text secrets in vars file
+## vars/database.yml
+db_host: "prod-db.example.com"
+db_user: "app_user"
+db_password: "SuperSecret123"  # NEVER store plain text passwords!
+api_key: "sk_live_abc123xyz"   # Exposed in version control!
+
+## Good - Use Ansible Vault for secrets
+## vars/vault.yml (encrypted with ansible-vault)
+vault_db_password: "SuperSecret123"
+vault_api_key: "sk_live_abc123xyz"
+
+## vars/database.yml (references vault variables)
+db_host: "prod-db.example.com"
+db_user: "app_user"
+db_password: "{{ vault_db_password }}"
+api_key: "{{ vault_api_key }}"
+```
+
+```bash
+## Encrypt entire file
+ansible-vault encrypt vars/vault.yml
+
+## Encrypt specific string
+ansible-vault encrypt_string 'SuperSecret123' --name 'vault_db_password'
+
+## Run playbook with vault password
+ansible-playbook site.yml --ask-vault-pass
+
+## Use password file (ensure file has restricted permissions)
+ansible-playbook site.yml --vault-password-file ~/.vault_pass
+```
+
+### Privilege Escalation Security
+
+Use `become` safely and only when necessary.
+
+```yaml
+## Bad - Running everything as root
+- name: Deploy application
+  hosts: webservers
+  become: yes  # Don't use become for entire play!
+  tasks:
+    - name: Copy config file
+      copy:
+        src: config.yml
+        dest: /home/appuser/config.yml  # Doesn't need root!
+
+## Good - Use become only for tasks that require it
+- name: Deploy application
+  hosts: webservers
+  tasks:
+    - name: Install system package
+      become: yes  # Only escalate when needed
+      apt:
+        name: nginx
+        state: present
+
+    - name: Copy config file
+      copy:
+        src: config.yml
+        dest: /home/appuser/config.yml
+        owner: appuser
+        group: appuser
+        mode: '0644'
+
+    - name: Start service
+      become: yes
+      systemd:
+        name: nginx
+        state: started
+```
+
+### Safe Command Execution
+
+Prevent command injection when using shell/command modules.
+
+```yaml
+## Bad - Vulnerable to injection
+- name: Process user input
+  shell: "grep {{ user_search }} /var/log/app.log"  # Injection risk!
+  vars:
+    user_search: "{{ lookup('env', 'USER_INPUT') }}"
+
+## Good - Use command module with arguments
+- name: Process user input safely
+  command:
+    cmd: grep
+    argv:
+      - "{{ user_search | quote }}"
+      - /var/log/app.log
+
+## Good - Validate input with assertions
+- name: Validate input
+  assert:
+    that:
+      - user_search is regex('^[a-zA-Z0-9_-]+$')
+    fail_msg: "Invalid search input format"
+
+- name: Process validated input
+  shell: "grep {{ user_search | quote }} /var/log/app.log"
+```
+
+### SSH Key Management
+
+```yaml
+## Bad - Disabling host key checking globally
+## ansible.cfg
+[defaults]
+host_key_checking = False  # SECURITY RISK!
+
+## Good - Manage SSH known hosts properly
+- name: Add SSH host key to known_hosts
+  known_hosts:
+    name: "{{ inventory_hostname }}"
+    key: "{{ lookup('pipe', 'ssh-keyscan -H ' + inventory_hostname) }}"
+    state: present
+
+## Good - Use SSH key with passphrase
+## ansible.cfg
+[defaults]
+private_key_file = ~/.ssh/ansible_deploy_key
+host_key_checking = True  # Keep enabled!
+
+## Ensure SSH key has proper permissions
+- name: Set SSH key permissions
+  file:
+    path: ~/.ssh/ansible_deploy_key
+    mode: '0600'
+  delegate_to: localhost
+```
+
+### Secure File Permissions
+
+Always set appropriate file permissions.
+
+```yaml
+## Bad - World-readable sensitive files
+- name: Deploy database config
+  copy:
+    src: database.conf
+    dest: /etc/app/database.conf  # Default permissions too open!
+
+## Good - Restrict sensitive file permissions
+- name: Deploy database config
+  copy:
+    src: database.conf
+    dest: /etc/app/database.conf
+    owner: appuser
+    group: appuser
+    mode: '0600'  # Only owner can read/write
+
+## Good - Secure directory permissions
+- name: Create config directory
+  file:
+    path: /etc/app/secrets
+    state: directory
+    owner: appuser
+    group: appuser
+    mode: '0750'  # Owner: rwx, Group: rx, Other: none
+```
+
+### Inventory Security
+
+Protect inventory files and limit exposure.
+
+```yaml
+## Bad - Sensitive data in inventory
+## inventory/production.ini
+[webservers]
+web1.example.com ansible_ssh_pass=MyPassword123  # NEVER!
+web2.example.com ansible_become_pass=RootPass456  # EXPOSED!
+
+## Good - Use vault for inventory variables
+## inventory/production.yml
+all:
+  children:
+    webservers:
+      hosts:
+        web1.example.com:
+        web2.example.com:
+      vars:
+        ansible_ssh_pass: "{{ vault_ssh_password }}"
+        ansible_become_pass: "{{ vault_become_password }}"
+
+## Better - Use SSH keys instead of passwords
+[webservers]
+web1.example.com ansible_ssh_private_key_file=~/.ssh/deploy_key
+web2.example.com ansible_ssh_private_key_file=~/.ssh/deploy_key
+```
+
+### Secure Downloads and Package Installation
+
+Verify checksums and signatures when downloading files.
+
+```yaml
+## Bad - Download without verification
+- name: Download binary
+  get_url:
+    url: https://example.com/app.tar.gz
+    dest: /tmp/app.tar.gz  # No verification!
+
+## Good - Verify checksum
+- name: Download and verify binary
+  get_url:
+    url: https://releases.example.com/app-v1.2.3.tar.gz
+    dest: /tmp/app.tar.gz
+    checksum: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+
+## Good - Use official package repositories
+- name: Install from trusted repository
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+  become: yes
+```
+
+### Audit Logging
+
+Enable logging for security auditing.
+
+```yaml
+## ansible.cfg
+[defaults]
+log_path = /var/log/ansible/ansible.log
+callback_whitelist = profile_tasks, timer
+
+## Playbook example with logging
+- name: Security-sensitive operations
+  hosts: all
+  tasks:
+    - name: Log security action
+      debug:
+        msg: "User {{ ansible_user }} performed security action at {{ ansible_date_time.iso8601 }}"
+
+    - name: Perform sensitive operation
+      # ...
+      register: result
+
+    - name: Log operation result
+      lineinfile:
+        path: /var/log/app_security.log
+        line: "{{ ansible_date_time.iso8601 }} - {{ ansible_user }} - {{ result.changed }}"
+        create: yes
+        mode: '0640'
+```
+
+### No Log for Sensitive Output
+
+Prevent sensitive data from appearing in logs.
+
+```yaml
+## Bad - Passwords logged in output
+- name: Set database password
+  mysql_user:
+    name: appuser
+    password: "{{ db_password }}"
+    state: present
+  # Password will appear in Ansible logs!
+
+## Good - Suppress logging of sensitive tasks
+- name: Set database password
+  mysql_user:
+    name: appuser
+    password: "{{ db_password }}"
+    state: present
+  no_log: true  # Prevents password from appearing in output
+
+## Good - Selectively show safe data
+- name: Deploy application
+  copy:
+    src: app.jar
+    dest: /opt/app/app.jar
+  register: deploy_result
+
+- name: Show deployment status (safe)
+  debug:
+    msg: "Deployment changed: {{ deploy_result.changed }}"
+```
+
+---
+
 ## Tool Configuration
 
 ### ansible.cfg

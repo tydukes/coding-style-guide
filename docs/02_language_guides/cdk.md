@@ -557,6 +557,318 @@ new rds.DatabaseInstance(this, 'Database', {
 
 ---
 
+## Security Best Practices
+
+### Never Hardcode Secrets
+
+Avoid storing sensitive data in CDK code:
+
+```typescript
+// Bad - Hardcoded secrets
+const database = new rds.DatabaseInstance(this, 'Database', {
+  masterUsername: 'admin',
+  masterPassword: 'MySecretPassword123',  // ❌ Exposed in code!
+});
+
+// Good - Use Secrets Manager
+const dbSecret = new secretsmanager.Secret(this, 'DBSecret', {
+  generateSecretString: {
+    secretStringTemplate: JSON.stringify({ username: 'admin' }),
+    generateStringKey: 'password',
+    excludePunctuation: true,
+  },
+});
+
+const database = new rds.DatabaseInstance(this, 'Database', {
+  credentials: rds.Credentials.fromSecret(dbSecret),  // ✅ From Secrets Manager
+});
+
+// Good - Reference existing secrets
+const apiKey = secretsmanager.Secret.fromSecretNameV2(
+  this,
+  'ApiKey',
+  'prod/api-key'
+);
+```
+
+**Key Points**:
+
+- Never hardcode credentials in CDK code
+- Use AWS Secrets Manager for secrets
+- Reference secrets, don't embed them
+- Rotate secrets automatically
+- Use IAM roles instead of access keys
+- Audit secret access
+
+### Encryption at Rest and in Transit
+
+Enable encryption for all data:
+
+```typescript
+// Good - S3 encryption
+const bucket = new s3.Bucket(this, 'Bucket', {
+  encryption: s3.BucketEncryption.S3_MANAGED,  // ✅ Server-side encryption
+  // Or use KMS for more control:
+  // encryption: s3.BucketEncryption.KMS,
+  // encryptionKey: myKmsKey,
+  enforceSSL: true,  // ✅ Require HTTPS
+});
+
+// Good - RDS encryption
+const database = new rds.DatabaseInstance(this, 'Database', {
+  storageEncrypted: true,  // ✅ Encrypt at rest
+  storageEncryptionKey: myKmsKey,  // Use customer-managed key
+});
+
+// Good - EBS encryption
+const instance = new ec2.Instance(this, 'Instance', {
+  blockDevices: [{
+    deviceName: '/dev/xvda',
+    volume: ec2.BlockDeviceVolume.ebs(30, {
+      encrypted: true,  // ✅ Encrypted EBS
+      kmsKey: myKmsKey,
+    }),
+  }],
+});
+```
+
+**Key Points**:
+
+- Enable encryption for all storage (S3, EBS, RDS)
+- Use KMS for key management
+- Enforce SSL/TLS for data in transit
+- Enable encryption by default
+- Use customer-managed keys for sensitive data
+- Implement key rotation
+
+### IAM Least Privilege
+
+Grant minimum required permissions:
+
+```typescript
+// Bad - Overly permissive IAM
+const role = new iam.Role(this, 'Role', {
+  assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+  managedPolicies: [
+    iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'),  // ❌ Too permissive!
+  ],
+});
+
+// Good - Least privilege
+const role = new iam.Role(this, 'Role', {
+  assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+});
+
+// Grant specific permissions only
+bucket.grantRead(role);  // ✅ Only read access to specific bucket
+
+// Or create custom policy
+role.addToPolicy(new iam.PolicyStatement({
+  actions: ['s3:GetObject'],
+  resources: [`${bucket.bucketArn}/public/*`],  // ✅ Specific resources only
+}));
+```
+
+**Key Points**:
+
+- Never use `AdministratorAccess` or `*` permissions
+- Use high-level grant methods (`grantRead`, `grantWrite`)
+- Specify exact resources in policies
+- Use condition keys to further restrict access
+- Regular IAM access review
+- Implement permission boundaries
+
+### Network Security
+
+Implement proper network isolation:
+
+```typescript
+// Good - VPC with proper segmentation
+const vpc = new ec2.Vpc(this, 'VPC', {
+  maxAzs: 3,
+  subnetConfiguration: [
+    {
+      cidrMask: 24,
+      name: 'Public',
+      subnetType: ec2.SubnetType.PUBLIC,
+    },
+    {
+      cidrMask: 24,
+      name: 'Private',
+      subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
+    },
+    {
+      cidrMask: 28,
+      name: 'Isolated',
+      subnetType: ec2.SubnetType.PRIVATE_ISOLATED,  // ✅ No internet access
+    },
+  ],
+});
+
+// Good - Restrictive security groups
+const dbSecurityGroup = new ec2.SecurityGroup(this, 'DatabaseSG', {
+  vpc,
+  description: 'Security group for RDS database',
+  allowAllOutbound: false,  // ✅ Explicit egress rules
+});
+
+// Only allow from application security group
+dbSecurityGroup.addIngressRule(
+  appSecurityGroup,
+  ec2.Port.tcp(5432),
+  'Allow PostgreSQL from app'
+);
+
+// Good - NACLs for additional security
+const nacl = new ec2.NetworkAcl(this, 'NACL', {
+  vpc,
+  subnetSelection: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
+});
+
+nacl.addEntry('DenySSH', {
+  cidr: ec2.AclCidr.anyIpv4(),
+  ruleNumber: 100,
+  traffic: ec2.AclTraffic.tcpPort(22),
+  direction: ec2.TrafficDirection.INGRESS,
+  ruleAction: ec2.Action.DENY,  // ✅ Deny SSH
+});
+```
+
+**Key Points**:
+
+- Use private subnets for sensitive resources
+- Create isolated subnets for databases
+- Implement restrictive security groups
+- Use NACLs for additional layer
+- Enable VPC Flow Logs
+- Implement AWS PrivateLink for AWS services
+
+### Resource Deletion Protection
+
+Protect critical resources from accidental deletion:
+
+```typescript
+// Good - Deletion protection for databases
+const database = new rds.DatabaseInstance(this, 'Database', {
+  deletionProtection: true,  // ✅ Cannot be deleted
+  removalPolicy: cdk.RemovalPolicy.RETAIN,  // ✅ Keep on stack deletion
+  backupRetention: cdk.Duration.days(30),
+});
+
+// Good - S3 bucket protection
+const bucket = new s3.Bucket(this, 'DataBucket', {
+  removalPolicy: cdk.RemovalPolicy.RETAIN,  // ✅ Keep bucket
+  versioned: true,  // Enable versioning
+  lifecycleRules: [{
+    noncurrentVersionExpiration: cdk.Duration.days(90),
+  }],
+});
+
+// Good - Prevent accidental destruction
+cdk.Aspects.of(this).add(new cdk.Tag('Environment', 'production'));
+```
+
+**Key Points**:
+
+- Use `RemovalPolicy.RETAIN` for production resources
+- Enable deletion protection on databases
+- Enable versioning on S3 buckets
+- Require manual approval for destructive changes
+- Use stack policies to prevent updates
+- Implement backup and recovery procedures
+
+### Logging and Monitoring
+
+Enable comprehensive logging:
+
+```typescript
+// Good - CloudTrail for audit logging
+new cloudtrail.Trail(this, 'Trail', {
+  isMultiRegionTrail: true,
+  includeGlobalServiceEvents: true,
+  managementEvents: cloudtrail.ReadWriteType.ALL,
+});
+
+// Good - VPC Flow Logs
+vpc.addFlowLog('FlowLog', {
+  destination: ec2.FlowLogDestination.toCloudWatchLogs(),
+  trafficType: ec2.FlowLogTrafficType.ALL,
+});
+
+// Good - S3 bucket logging
+const logBucket = new s3.Bucket(this, 'LogBucket', {
+  encryption: s3.BucketEncryption.S3_MANAGED,
+  blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+});
+
+bucket.enableEventBridgeNotification();
+bucket.addEventNotification(
+  s3.EventType.OBJECT_CREATED,
+  new s3n.SnsDestination(topic),
+  { prefix: 'sensitive/' }
+);
+
+// Good - Lambda function logging
+const fn = new lambda.Function(this, 'Function', {
+  runtime: lambda.Runtime.NODEJS_18_X,
+  handler: 'index.handler',
+  code: lambda.Code.fromAsset('lambda'),
+  logRetention: logs.RetentionDays.ONE_MONTH,
+  insightsVersion: lambda.LambdaInsightsVersion.VERSION_1_0_229_0,  // ✅ CloudWatch Insights
+});
+```
+
+**Key Points**:
+
+- Enable CloudTrail for all accounts
+- Configure VPC Flow Logs
+- Enable S3 bucket logging and access logs
+- Use CloudWatch Logs for application logs
+- Set appropriate log retention
+- Monitor and alert on suspicious activity
+
+### Security Scanning
+
+Implement security scanning in CI/CD:
+
+```typescript
+// package.json - Add security scanning
+{
+  "scripts": {
+    "test": "jest",
+    "cdk": "cdk",
+    "security": "npm audit && cdk-nag",
+    "synth": "cdk synth",
+    "deploy": "npm run security && cdk deploy"
+  },
+  "devDependencies": {
+    "cdk-nag": "^2.0.0"
+  }
+}
+
+// bin/app.ts - Add CDK Nag for compliance
+import { AwsSolutionsChecks } from 'cdk-nag';
+import { Aspects } from 'aws-cdk-lib';
+
+const app = new cdk.App();
+
+// Add security checks
+Aspects.of(app).add(new AwsSolutionsChecks({ verbose: true }));
+
+new MyStack(app, 'MyStack');
+```
+
+**Key Points**:
+
+- Use cdk-nag for security scanning
+- Run security checks in CI/CD pipeline
+- Scan for common misconfigurations
+- Implement compliance frameworks (CIS, PCI-DSS)
+- Regular dependency audits (`npm audit`)
+- Update CDK and dependencies regularly
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Hardcoded Values

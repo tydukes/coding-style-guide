@@ -626,6 +626,340 @@ locals {
 
 ---
 
+## Security Best Practices
+
+### Never Hardcode Secrets
+
+Avoid storing sensitive data in HCL files:
+
+```hcl
+## Bad - Hardcoded secrets in HCL
+variable "db_password" {
+  default = "MySecretPassword123"  # ❌ Exposed in version control!
+}
+
+resource "aws_db_instance" "main" {
+  password = "hardcoded_password"  # ❌ Never do this!
+}
+
+## Good - Use variables without defaults for secrets
+variable "db_password" {
+  type      = string
+  sensitive = true
+  # No default - must be provided at runtime
+}
+
+## Good - Use environment variables
+# Set via: export TF_VAR_db_password="..."
+variable "db_password" {
+  type      = string
+  sensitive = true
+}
+
+## Good - Use secret management systems
+data "aws_secretsmanager_secret_version" "db_password" {
+  secret_id = "production/db/password"
+}
+
+resource "aws_db_instance" "main" {
+  password = data.aws_secretsmanager_secret_version.db_password.secret_string
+}
+
+## Good - Use Vault provider
+data "vault_generic_secret" "db_creds" {
+  path = "secret/database"
+}
+
+resource "aws_db_instance" "main" {
+  password = data.vault_generic_secret.db_creds.data["password"]
+}
+```
+
+**Key Points**:
+
+- Never commit secrets to `.tf` files
+- Use `sensitive = true` for secret variables
+- Read secrets from external systems (Vault, AWS Secrets Manager)
+- Use environment variables (`TF_VAR_*`)
+- Scan repositories for accidentally committed secrets
+- Use `.tfvars` files (gitignored) for local development
+
+### Secure State Management
+
+Protect Terraform state files containing sensitive data:
+
+```hcl
+## Good - S3 backend with encryption
+terraform {
+  backend "s3" {
+    bucket         = "mycompany-terraform-state"
+    key            = "prod/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true  # Server-side encryption
+    kms_key_id     = "arn:aws:kms:us-east-1:123456789012:key/..."
+    dynamodb_table = "terraform-locks"
+
+    # Access control
+    acl = "private"
+  }
+}
+
+## Good - Remote backend with access control
+terraform {
+  backend "remote" {
+    organization = "my-company"
+
+    workspaces {
+      name = "production"
+    }
+  }
+}
+
+## Good - Limit state file access
+# Set strict IAM policy for S3 state bucket
+resource "aws_s3_bucket_policy" "state" {
+  bucket = aws_s3_bucket.terraform_state.id
+
+  policy = jsonencode({
+    Statement = [{
+      Effect    = "Deny"
+      Principal = "*"
+      Action    = "s3:*"
+      Resource  = "${aws_s3_bucket.terraform_state.arn}/*"
+      Condition = {
+        Bool = {
+          "aws:SecureTransport" = "false"  # Require HTTPS
+        }
+      }
+    }]
+  })
+}
+```
+
+**Key Points**:
+
+- Always encrypt state files
+- Use remote backends (S3, Terraform Cloud)
+- Enable state locking (DynamoDB, etc.)
+- Restrict state file access
+- Never commit state files to version control
+- Enable versioning on state storage
+
+### Input Validation
+
+Validate all variable inputs:
+
+```hcl
+## Good - Validate variable inputs
+variable "environment" {
+  type = string
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "Environment must be dev, staging, or prod."
+  }
+}
+
+variable "instance_type" {
+  type = string
+  validation {
+    condition     = can(regex("^t3\\.(micro|small|medium)$", var.instance_type))
+    error_message = "Instance type must be t3.micro, t3.small, or t3.medium."
+  }
+}
+
+variable "cidr_block" {
+  type = string
+  validation {
+    condition     = can(cidrhost(var.cidr_block, 0))
+    error_message = "CIDR block must be valid."
+  }
+}
+
+variable "port" {
+  type = number
+  validation {
+    condition     = var.port >= 1 && var.port <= 65535
+    error_message = "Port must be between 1 and 65535."
+  }
+}
+```
+
+**Key Points**:
+
+- Add validation blocks to all variables
+- Use allow-lists for enums
+- Validate formats (CIDR, email, etc.)
+- Validate ranges for numbers
+- Fail early on invalid inputs
+- Document validation requirements
+
+### Prevent Resource Deletion
+
+Protect critical resources from accidental deletion:
+
+```hcl
+## Good - Lifecycle prevent_destroy
+resource "aws_db_instance" "production" {
+  identifier = "prod-db"
+  # ... other configuration ...
+
+  lifecycle {
+    prevent_destroy = true  # ✅ Cannot be destroyed via Terraform
+  }
+}
+
+## Good - Deletion protection at resource level
+resource "aws_db_instance" "production" {
+  identifier          = "prod-db"
+  deletion_protection = true  # ✅ AWS-level protection
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+## Good - Create before destroy for zero downtime
+resource "aws_instance" "web" {
+  ami           = var.ami_id
+  instance_type = "t3.micro"
+
+  lifecycle {
+    create_before_destroy = true  # ✅ New resource before destroying old
+  }
+}
+```
+
+**Key Points**:
+
+- Use `prevent_destroy` for critical resources
+- Enable resource-level deletion protection
+- Use `create_before_destroy` for zero downtime
+- Require manual intervention for dangerous changes
+- Use separate workspaces for different environments
+- Implement approval workflows
+
+### Secure Default Values
+
+Avoid insecure defaults:
+
+```hcl
+## Bad - Insecure defaults
+resource "aws_s3_bucket" "data" {
+  bucket = "my-data-bucket"
+  acl    = "public-read"  # ❌ Publicly accessible!
+}
+
+resource "aws_security_group" "web" {
+  ingress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # ❌ Open to the internet!
+  }
+}
+
+## Good - Secure defaults
+resource "aws_s3_bucket" "data" {
+  bucket = "my-data-bucket"
+}
+
+resource "aws_s3_bucket_acl" "data" {
+  bucket = aws_s3_bucket.data.id
+  acl    = "private"  # ✅ Private by default
+}
+
+resource "aws_s3_bucket_public_access_block" "data" {
+  bucket = aws_s3_bucket.data.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_security_group" "web" {
+  name = "web-sg"
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/8"]  # ✅ Restricted to private network
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+```
+
+**Key Points**:
+
+- Default to most restrictive settings
+- Explicitly define security configurations
+- Block public access by default
+- Use least privilege for security groups
+- Enable encryption by default
+- Audit for overly permissive rules
+
+### Audit and Compliance
+
+Implement audit logging and compliance checks:
+
+```hcl
+## Good - Enable CloudTrail for audit logging
+resource "aws_cloudtrail" "main" {
+  name                          = "main-trail"
+  s3_bucket_name                = aws_s3_bucket.cloudtrail.id
+  include_global_service_events = true
+  is_multi_region_trail         = true
+  enable_logging                = true
+
+  event_selector {
+    read_write_type           = "All"
+    include_management_events = true
+  }
+}
+
+## Good - Tag resources for compliance
+locals {
+  common_tags = {
+    Environment = var.environment
+    ManagedBy   = "Terraform"
+    Owner       = "Platform Team"
+    CostCenter  = "Engineering"
+    Compliance  = "SOC2"
+  }
+}
+
+resource "aws_instance" "web" {
+  ami           = var.ami_id
+  instance_type = "t3.micro"
+
+  tags = local.common_tags
+}
+
+## Good - Use terraform-compliance for policy checks
+# terraform-compliance.yml
+# - name: Ensure S3 buckets are encrypted
+#   when: resource.aws_s3_bucket
+#   then: it must have encryption
+```
+
+**Key Points**:
+
+- Enable audit logging (CloudTrail, etc.)
+- Tag all resources for tracking
+- Use compliance frameworks (CIS, SOC2)
+- Implement policy-as-code (Sentinel, OPA)
+- Monitor for drift
+- Regular security audits
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Hardcoded Values
