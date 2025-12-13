@@ -869,6 +869,249 @@ new MyStack(app, 'MyStack');
 
 ---
 
+## Common Pitfalls
+
+### Circular Stack Dependencies
+
+**Issue**: Creating circular dependencies between stacks causes CDK synthesis to fail.
+
+**Example**:
+
+```typescript
+## Bad - Circular dependency
+export class VpcStack extends cdk.Stack {
+  public readonly vpcId: string;
+
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
+
+    const vpc = new ec2.Vpc(this, 'VPC');
+    this.vpcId = vpc.vpcId;
+
+    // ❌ Referencing AppStack creates circular dependency!
+    const appStack = new AppStack(this, 'App', { vpcId: this.vpcId });
+  }
+}
+
+export class AppStack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props: { vpcId: string }) {
+    super(scope, id);
+    // Uses VPC from VpcStack
+  }
+}
+```
+
+**Solution**: Pass values between stacks or use cross-stack references properly.
+
+```typescript
+## Good - Pass values between stacks
+const vpcStack = new VpcStack(app, 'VpcStack');
+const appStack = new AppStack(app, 'AppStack', {
+  vpcId: vpcStack.vpcId  // ✅ One-way dependency
+});
+
+## Good - Export and import values
+export class VpcStack extends cdk.Stack {
+  public readonly vpc: ec2.IVpc;
+
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
+    this.vpc = new ec2.Vpc(this, 'VPC');
+  }
+}
+
+export class AppStack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props: { vpc: ec2.IVpc }) {
+    super(scope, id);
+    // ✅ Uses passed VPC interface
+  }
+}
+```
+
+**Key Points**:
+
+- Stacks should have unidirectional dependencies
+- Pass resources as props between stacks
+- Use CloudFormation exports for cross-stack references
+- Check `cdk synth` output for dependency issues
+
+### Missing Removal Policy
+
+**Issue**: Stateful resources without removal policy prevent stack deletion.
+
+**Example**:
+
+```typescript
+## Bad - No removal policy
+new s3.Bucket(this, 'DataBucket', {
+  versioned: true
+  // ❌ No removalPolicy! Stack deletion will fail if bucket has objects
+});
+
+new dynamodb.Table(this, 'Users', {
+  partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING }
+  // ❌ Default is RETAIN, stack won't delete table
+});
+```
+
+**Solution**: Explicitly set removal policies for stateful resources.
+
+```typescript
+## Good - Explicit removal policies
+new s3.Bucket(this, 'DataBucket', {
+  versioned: true,
+  removalPolicy: cdk.RemovalPolicy.RETAIN,  # ✅ Explicit: keep on stack delete
+  autoDeleteObjects: false  // Don't auto-delete in production
+});
+
+new s3.Bucket(this, 'TempBucket', {
+  removalPolicy: cdk.RemovalPolicy.DESTROY,  # ✅ Delete with stack (dev/test)
+  autoDeleteObjects: true
+});
+
+new dynamodb.Table(this, 'Users', {
+  partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+  removalPolicy: cdk.RemovalPolicy.SNAPSHOT  # ✅ Create snapshot before delete
+});
+```
+
+**Key Points**:
+
+- `RETAIN`: Keep resource on stack deletion (production default)
+- `DESTROY`: Delete resource with stack (dev/test)
+- `SNAPSHOT`: Create snapshot before deletion (databases)
+- Set `autoDeleteObjects: true` for S3 DESTROY
+
+### Physical Name Hardcoding
+
+**Issue**: Hardcoded physical names prevent multiple stack instances and updates.
+
+**Example**:
+
+```typescript
+## Bad - Hardcoded physical names
+new s3.Bucket(this, 'Bucket', {
+  bucketName: 'my-app-bucket'  // ❌ Can't create multiple instances!
+});
+
+new dynamodb.Table(this, 'Table', {
+  tableName: 'users',  // ❌ Prevents parallel deployments
+  partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING }
+});
+```
+
+**Solution**: Let CDK generate names or use tokens.
+
+```typescript
+## Good - Generated names
+new s3.Bucket(this, 'Bucket', {
+  // ✅ CDK generates unique name
+});
+
+## Good - Name with stack and environment
+new s3.Bucket(this, 'Bucket', {
+  bucketName: `my-app-${this.stackName}-${this.account}`.toLowerCase()  # ✅ Unique
+});
+
+## Good - Use physical name only when required
+const table = new dynamodb.Table(this, 'Table', {
+  partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING }
+  // ✅ No hardcoded name - allows multiple environments
+});
+
+// Reference generated name
+new cdk.CfnOutput(this, 'TableName', {
+  value: table.tableName  // ✅ Output the generated name
+});
+```
+
+**Key Points**:
+
+- Avoid hardcoded physical names when possible
+- Let CDK generate unique names
+- Use stack name, account, region for uniqueness
+- Only hardcode when required by external systems
+
+### Environment-Agnostic Stack Anti-Pattern
+
+**Issue**: Not specifying env makes stack environment-agnostic, limiting CDK features.
+
+**Example**:
+
+```typescript
+## Bad - Environment-agnostic stack
+const stack = new MyStack(app, 'MyStack');  // ❌ No env specified
+
+// ❌ Can't use environment-specific features:
+// - ec2.Vpc.fromLookup() fails
+// - Hosted zones lookup fails
+// - Cross-region/account references don't work
+```
+
+**Solution**: Explicitly specify environment.
+
+```typescript
+## Good - Explicit environment
+const stack = new MyStack(app, 'MyStack', {
+  env: {
+    account: process.env.CDK_DEFAULT_ACCOUNT,  # ✅ From AWS CLI config
+    region: process.env.CDK_DEFAULT_REGION
+  }
+});
+
+## Good - Multiple environments
+const devStack = new MyStack(app, 'DevStack', {
+  env: { account: '123456789012', region: 'us-east-1' }  # ✅ Explicit dev
+});
+
+const prodStack = new MyStack(app, 'ProdStack', {
+  env: { account: '987654321098', region: 'us-west-2' }  # ✅ Explicit prod
+});
+```
+
+**Key Points**:
+
+- Always specify `env` for production stacks
+- Use environment variables for flexibility
+- Environment-agnostic stacks can't use lookups
+- Required for cross-account/region references
+
+### Construct ID Conflicts
+
+**Issue**: Duplicate construct IDs within same scope cause synthesis errors.
+
+**Example**:
+
+```typescript
+## Bad - Duplicate IDs
+new s3.Bucket(this, 'Bucket');  // First bucket
+new s3.Bucket(this, 'Bucket');  // ❌ Same ID! Error
+
+const vpc = new ec2.Vpc(this, 'VPC');
+const sg = new ec2.SecurityGroup(this, 'VPC', { vpc });  // ❌ Conflicts with VPC ID!
+```
+
+**Solution**: Use unique, descriptive construct IDs.
+
+```typescript
+## Good - Unique IDs
+new s3.Bucket(this, 'DataBucket');     # ✅ Descriptive
+new s3.Bucket(this, 'LogsBucket');     # ✅ Unique
+new s3.Bucket(this, 'AssetsBucket');   # ✅ Clear purpose
+
+const vpc = new ec2.Vpc(this, 'ApplicationVPC');
+const sg = new ec2.SecurityGroup(this, 'WebSecurityGroup', { vpc });  # ✅ Different IDs
+```
+
+**Key Points**:
+
+- Construct IDs must be unique within parent scope
+- Use descriptive IDs (not generic names like 'Resource')
+- IDs form part of CloudFormation logical IDs
+- Changing IDs causes resource replacement
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Hardcoded Values

@@ -1064,6 +1064,214 @@ data = yaml.load(yaml_content, Loader=SafeLoader)
 
 ---
 
+## Common Pitfalls
+
+### Boolean Value Confusion
+
+**Issue**: Unquoted `yes`, `no`, `on`, `off`, `true`, `false` are interpreted as booleans, not strings.
+
+**Example**:
+
+```yaml
+## Bad - Unintended boolean conversion
+country_codes:
+  norway: no  # ❌ Parsed as boolean false, not string "no"
+  yemen: yes  # ❌ Parsed as boolean true, not string "yes"
+  india: off  # ❌ Parsed as boolean false
+
+switches:
+  power: on  # ❌ Parsed as boolean true
+```
+
+**Solution**: Quote string values that look like booleans.
+
+```yaml
+## Good - Explicit strings
+country_codes:
+  norway: "no"  # ✅ String "no"
+  yemen: "yes"  # ✅ String "yes"
+  india: "off"  # ✅ String "off"
+
+switches:
+  power: "on"  # ✅ String "on"
+
+## Good - Actual booleans
+flags:
+  enabled: true  # Boolean
+  debug: false   # Boolean
+```
+
+**Key Points**:
+
+- YAML boolean values: `true`, `false`, `yes`, `no`, `on`, `off`
+- Always quote values if you want literal strings
+- Use explicit `true`/`false` for clarity
+- Check parser output to verify interpretation
+
+### Indentation Errors
+
+**Issue**: Mixing spaces and tabs or incorrect indentation breaks YAML structure.
+
+**Example**:
+
+```yaml
+## Bad - Inconsistent indentation
+server:
+  host: localhost
+   port: 8080  # ❌ 3 spaces instead of 2
+  database:
+ name: mydb  # ❌ Tab character!
+ user: admin
+```
+
+**Solution**: Use consistent spaces (2 or 4) throughout.
+
+```yaml
+## Good - Consistent 2-space indentation
+server:
+  host: localhost
+  port: 8080
+  database:
+    name: mydb
+    user: admin
+```
+
+**Key Points**:
+
+- YAML forbids tabs for indentation
+- Use 2 or 4 spaces consistently
+- Configure editor to convert tabs to spaces
+- Use YAML linter to catch indentation errors
+
+### Anchor and Alias Typos
+
+**Issue**: Referencing non-existent anchors or typos in anchor names causes parsing errors.
+
+**Example**:
+
+```yaml
+## Bad - Anchor/alias mismatch
+defaults: &defaults
+  timeout: 30
+  retries: 3
+
+production:
+  <<: *default  # ❌ Typo! Should be *defaults
+  host: prod.example.com
+```
+
+**Solution**: Verify anchor names match alias references.
+
+```yaml
+## Good - Matching anchor and alias
+defaults: &defaults
+  timeout: 30
+  retries: 3
+
+production:
+  <<: *defaults  # ✅ Correct reference
+  host: prod.example.com
+
+development:
+  <<: *defaults  # ✅ Reusing anchor
+  host: dev.example.com
+```
+
+**Key Points**:
+
+- Anchors: `&anchor_name`
+- Aliases: `*anchor_name`
+- Merge: `<<: *anchor_name`
+- Anchor must be defined before use
+
+### Multiline String Confusion
+
+**Issue**: Choosing wrong multiline string style (`|`, `>`, `|-`, `>-`) for the use case.
+
+**Example**:
+
+```yaml
+## Bad - Using | when > is better
+description: |
+  This is a long description that should be on one line
+  but was split across multiple lines using the literal
+  style which preserves newlines.
+
+## Bad - Using > when | is needed
+script: >
+  #!/bin/bash
+  set -e
+  echo "Line 1"
+  echo "Line 2"
+```
+
+**Solution**: Use `|` for literals (preserve newlines), `>` for folding (join lines).
+
+```yaml
+## Good - Folded for paragraphs
+description: >
+  This is a long description that will be folded
+  into a single line with spaces replacing the
+  newlines. Perfect for prose.
+
+## Good - Literal for scripts
+script: |
+  #!/bin/bash
+  set -e
+  echo "Line 1"
+  echo "Line 2"
+
+## Good - Strip trailing newlines with -
+command: |-
+  docker run \
+    --name myapp \
+    myimage:latest
+```
+
+**Key Points**:
+
+- `|` (literal): Preserves newlines and indentation
+- `>` (folded): Joins lines with spaces
+- `|-` and `>-`: Strip final newline
+- `|+` and `>+`: Keep final newlines
+
+### Duplicate Keys Silently Overwriting
+
+**Issue**: YAML allows duplicate keys; last value wins without warning.
+
+**Example**:
+
+```yaml
+## Bad - Duplicate keys
+server:
+  port: 8080  # First definition
+  host: localhost
+  port: 9000  # ❌ Silently overwrites first value!
+
+## Result: port = 9000
+```
+
+**Solution**: Use unique keys or YAML linter to detect duplicates.
+
+```yaml
+## Good - Unique keys
+server:
+  http_port: 8080
+  grpc_port: 9000
+  host: localhost
+
+## Or use linter to catch duplicates
+```
+
+**Key Points**:
+
+- YAML allows duplicate keys (last wins)
+- Use YAML linter with `key-duplicates: enable`
+- Duplicate keys often indicate copy-paste errors
+- Some parsers can be configured to error on duplicates
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Tabs for Indentation

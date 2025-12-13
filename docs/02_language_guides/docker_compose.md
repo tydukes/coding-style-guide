@@ -897,6 +897,244 @@ services:
 
 ---
 
+## Common Pitfalls
+
+### Port Conflict with Host
+
+**Issue**: Mapping container ports to already-used host ports causes container startup failure.
+
+**Example**:
+
+```yaml
+## Bad - Port 80 likely in use on host
+services:
+  web:
+    image: nginx
+    ports:
+      - "80:80"  # ❌ Conflicts if host already has service on port 80
+
+  api:
+    image: myapi
+    ports:
+      - "80:8080"  # ❌ Also tries to bind host port 80!
+```
+
+**Solution**: Use unique host ports or let Docker assign random ports.
+
+```yaml
+## Good - Unique host ports
+services:
+  web:
+    image: nginx
+    ports:
+      - "8080:80"  # ✅ Web on host port 8080
+
+  api:
+    image: myapi
+    ports:
+      - "8081:8080"  # ✅ API on host port 8081
+
+## Good - Random host ports
+services:
+  web:
+    image: nginx
+    ports:
+      - "80"  # ✅ Docker assigns random host port
+```
+
+**Key Points**:
+
+- Check for port conflicts with `docker ps` and `netstat`
+- Use high ports (>1024) to avoid conflicts
+- Omit host port to let Docker assign random port
+- Use `docker-compose port` to find assigned ports
+
+### Missing Depends_On for Service Dependencies
+
+**Issue**: Services starting before dependencies are ready causes connection failures.
+
+**Example**:
+
+```yaml
+## Bad - No dependency specification
+services:
+  api:
+    image: myapi
+    environment:
+      - DB_HOST=db
+    # ❌ May start before database is ready!
+
+  db:
+    image: postgres:15
+```
+
+**Solution**: Use `depends_on` with health checks.
+
+```yaml
+## Good - Explicit dependencies with health checks
+services:
+  api:
+    image: myapi
+    depends_on:
+      db:
+        condition: service_healthy  # ✅ Wait for healthy state
+    environment:
+      - DB_HOST=db
+
+  db:
+    image: postgres:15
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+```
+
+**Key Points**:
+
+- `depends_on` controls startup order
+- Use `condition: service_healthy` with healthchecks
+- Healthchecks ensure service is actually ready
+- Without healthcheck, `depends_on` only waits for container start
+
+### Volume Mount Path Typos
+
+**Issue**: Typos in volume mount paths cause data to be written to wrong locations or errors.
+
+**Example**:
+
+```yaml
+## Bad - Typo in container path
+services:
+  app:
+    image: myapp
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/cofig  # ❌ Typo! Should be /app/config
+```
+
+**Solution**: Double-check all paths and test volume mounts.
+
+```yaml
+## Good - Correct paths
+services:
+  app:
+    image: myapp
+    volumes:
+      - ./data:/app/data     # ✅ Correct
+      - ./config:/app/config # ✅ Correct
+      - ./logs:/app/logs:rw  # Specify read-write explicitly
+
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # ✅ Named volume
+
+volumes:
+  postgres_data:
+```
+
+**Key Points**:
+
+- Verify container paths match application expectations
+- Use absolute paths or `./` for relative paths
+- Named volumes persist independently of containers
+- Use `:ro` for read-only, `:rw` for read-write
+
+### Network Name Collision
+
+**Issue**: Not specifying network names causes Docker to generate unpredictable names.
+
+**Example**:
+
+```yaml
+## Bad - Auto-generated network names
+services:
+  web:
+    image: nginx
+    networks:
+      - frontend  # ❌ Network name will be prefixed with directory name
+
+networks:
+  frontend:  # Becomes "myproject_frontend" (unpredictable)
+```
+
+**Solution**: Use explicit network names or accept generated names consistently.
+
+```yaml
+## Good - Explicit network names
+services:
+  web:
+    image: nginx
+    networks:
+      - frontend
+
+networks:
+  frontend:
+    name: app_frontend  # ✅ Explicit name
+    driver: bridge
+
+## Good - Accept generated names but document
+# Networks will be prefixed with project name
+# Project name from directory or -p flag
+services:
+  web:
+    networks:
+      - frontend  # ✅ Consistent within project
+
+networks:
+  frontend:  # Will be ${PROJECT}_frontend
+```
+
+**Key Points**:
+
+- Docker Compose prefixes network names with project name
+- Set project name with `-p` flag or `name` in compose file
+- Use `name:` in network definition for explicit naming
+- External networks use `external: true`
+
+### Environment File Path Errors
+
+**Issue**: Wrong paths to `.env` files cause variables to not load.
+
+**Example**:
+
+```yaml
+## Bad - Incorrect env_file path
+services:
+  api:
+    image: myapi
+    env_file:
+      - .env  # ❌ Relative to current directory, not compose file location!
+      - ../config.env  # ❌ May not exist
+```
+
+**Solution**: Use correct relative paths from compose file location.
+
+```yaml
+## Good - Correct paths
+services:
+  api:
+    image: myapi
+    env_file:
+      - ./.env           # ✅ Same directory as compose file
+      - ./config/.env    # ✅ Subdirectory
+    environment:
+      - NODE_ENV=production  # Explicit override
+
+## Good - Check file existence
+## Before running: test -f .env || cp .env.example .env
+```
+
+**Key Points**:
+
+- `env_file` paths are relative to compose file location
+- Use `environment:` for explicit values
+- `environment:` overrides `env_file` values
+- Commit `.env.example`, not `.env`
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Hardcoded Secrets

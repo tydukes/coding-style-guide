@@ -617,6 +617,293 @@ count=${#servers[@]}
 
 ---
 
+## Common Pitfalls
+
+### Unquoted Variable Expansion
+
+**Issue**: Unquoted variables undergo word splitting and glob expansion, causing failures with
+filenames containing spaces or special characters.
+
+**Example**:
+
+```bash
+## Bad - Breaks with spaces in filename
+file="my document.txt"
+if [ -f $file ]; then  # Expands to: [ -f my document.txt ]
+  cat $file  # Error: cat: my: No such file or directory
+fi
+```
+
+**Solution**: Always quote variable expansions unless you explicitly need word splitting.
+
+```bash
+## Good - Properly quoted
+file="my document.txt"
+if [ -f "$file" ]; then  # Correctly: [ -f "my document.txt" ]
+  cat "$file"
+fi
+
+## Good - Array handling
+files=("file1.txt" "file 2.txt" "file 3.txt")
+for file in "${files[@]}"; do  # Preserves each element
+  process "$file"
+done
+```
+
+**Key Points**:
+
+- Always quote variables: `"$var"` not `$var`
+- Quote array expansions: `"${array[@]}"`
+- Exceptions: When word splitting is intended (rare)
+- Use ShellCheck to catch unquoted variables
+
+### Subshell Variable Scope
+
+**Issue**: Variables set in subshells (pipes, command substitution) don't persist in the parent shell.
+
+**Example**:
+
+```bash
+## Bad - count remains 0
+count=0
+echo "line1\nline2\nline3" | while read line; do
+  count=$((count + 1))  # Executes in subshell
+done
+echo "Lines: $count"  # Prints: Lines: 0 (subshell variable lost)
+```
+
+**Solution**: Use process substitution, here-strings, or avoid pipes for variable assignment.
+
+```bash
+## Good - Process substitution (no subshell)
+count=0
+while read line; do
+  count=$((count + 1))
+done < <(echo -e "line1\nline2\nline3")
+echo "Lines: $count"  # Prints: Lines: 3
+
+## Good - Here-string
+count=0
+while read line; do
+  count=$((count + 1))
+done <<< "$(cat file.txt)"
+echo "Lines: $count"
+
+## Good - Read from file directly
+count=0
+while IFS= read -r line; do
+  count=$((count + 1))
+done < file.txt
+echo "Lines: $count"
+```
+
+**Key Points**:
+
+- Pipes create subshells; variables set inside don't persist
+- Use `while ... done < <(command)` to avoid subshells
+- Command substitution `$(...)` runs in subshell
+- Export doesn't help with pipe subshells
+
+### Test Command Bracket Confusion
+
+**Issue**: Mixing `[ ]` (POSIX test) and `[[ ]]` (Bash extension) causes portability issues and subtle bugs.
+
+**Example**:
+
+```bash
+## Bad - Using == in POSIX test
+if [ "$var" == "value" ]; then  # Not POSIX compliant!
+  echo "match"
+fi
+
+## Bad - Pattern matching in [ ]
+if [ "$file" == *.txt ]; then  # Doesn't work as expected
+  echo "text file"
+fi
+```
+
+**Solution**: Use `[ ]` with `=` for POSIX compliance, or use `[[ ]]` for Bash-specific features.
+
+```bash
+## Good - POSIX compliant
+if [ "$var" = "value" ]; then  # Single = for POSIX
+  echo "match"
+fi
+
+## Good - Bash pattern matching (requires [[ ]])
+if [[ "$file" == *.txt ]]; then  # Works with [[ ]]
+  echo "text file"
+fi
+
+## Good - Bash regex matching
+if [[ "$email" =~ ^[a-z]+@[a-z]+\.[a-z]+$ ]]; then
+  echo "valid email"
+fi
+```
+
+**Key Points**:
+
+- Use `=` not `==` in `[ ]` for portability
+- Pattern matching requires `[[ ]]` (Bash-only)
+- Regex matching only works with `[[ ]]`
+- `[ ]` is POSIX, `[[ ]]` is Bash-specific
+- Choose based on portability needs
+
+### Exit Code Confusion
+
+**Issue**: Misunderstanding that 0 means success and non-zero means failure leads to inverted logic.
+
+**Example**:
+
+```bash
+## Bad - Inverted logic
+check_status() {
+  if systemctl is-active myapp; then
+    return 1  # Wrong! Returns failure on success
+  else
+    return 0  # Wrong! Returns success on failure
+  fi
+}
+
+if check_status; then  # Triggers on 0 (wrong condition)
+  echo "Service is down"
+fi
+```
+
+**Solution**: Return 0 for success, non-zero for failure. Test exit codes correctly.
+
+```bash
+## Good - Correct exit codes
+check_status() {
+  if systemctl is-active myapp >/dev/null 2>&1; then
+    return 0  # Success
+  else
+    return 1  # Failure
+  fi
+}
+
+if check_status; then  # if command succeeds (returns 0)
+  echo "Service is running"
+else
+  echo "Service is down"
+fi
+
+## Good - Direct command testing
+if systemctl is-active myapp >/dev/null 2>&1; then
+  echo "Running"
+fi
+```
+
+**Key Points**:
+
+- Exit code 0 = success, non-zero = failure
+- `if command` succeeds when command returns 0
+- Use `$?` to capture last exit code
+- Functions return values via exit codes, not stdout
+- Test exit codes: `if [ $? -eq 0 ]`
+
+### Arithmetic Expansion Gotchas
+
+**Issue**: Shell arithmetic doesn't support floating point, and leading zeros cause octal interpretation.
+
+**Example**:
+
+```bash
+## Bad - Floating point (not supported)
+result=$((10 / 3))  # Result: 3 (not 3.333...)
+ratio=$((5.5 * 2))  # Error: invalid arithmetic operator
+
+## Bad - Octal interpretation
+number=08
+result=$((number + 1))  # Error: invalid octal number
+
+## Bad - Unquoted variables
+value="10 + 5"
+result=$((value))  # Evaluates to 15 (code injection risk!)
+```
+
+**Solution**: Use `bc` for floating point, strip leading zeros, validate input.
+
+```bash
+## Good - Use bc for floating point
+result=$(echo "scale=2; 10 / 3" | bc)  # 3.33
+ratio=$(echo "scale=2; 5.5 * 2" | bc)  # 11.0
+
+## Good - Strip leading zeros
+number=08
+number=$((10#$number))  # Force base-10: 8
+result=$((number + 1))  # 9
+
+## Good - Validate numeric input
+if [[ "$value" =~ ^[0-9]+$ ]]; then
+  result=$((value + 10))
+else
+  echo "Error: Not a number"
+fi
+```
+
+**Key Points**:
+
+- Shell arithmetic is integer-only
+- Use `bc` for floating point calculations
+- Leading zeros trigger octal (base-8) interpretation
+- Use `10#$var` to force base-10
+- Validate numeric input before arithmetic
+
+### Set -e Trap Pitfalls
+
+**Issue**: `set -e` doesn't exit on all errors, particularly in conditionals and pipes, creating false sense of safety.
+
+**Example**:
+
+```bash
+#!/bin/bash
+set -e  # Exit on error
+
+## Bad - These don't trigger exit despite errors
+if false; then  # Condition checked, no exit
+  echo "won't print"
+fi
+
+result=$(false)  # Command substitution checked, no exit
+echo "Still running: $result"
+
+false && echo "won't print"  # Left side of && doesn't exit
+false || echo "will print"   # Left side of || doesn't exit
+```
+
+**Solution**: Combine `set -e` with explicit error checking, use `set -o pipefail`, and understand its limitations.
+
+```bash
+#!/bin/bash
+set -euo pipefail  # Exit on error, undefined vars, pipe failures
+
+## Good - Explicit error handling
+if ! command1; then
+  echo "command1 failed" >&2
+  exit 1
+fi
+
+## Good - Check command substitution
+if ! result=$(complex_command); then
+  echo "complex_command failed" >&2
+  exit 1
+fi
+
+## Good - Trap for cleanup
+trap 'echo "Error on line $LINENO" >&2' ERR
+```
+
+**Key Points**:
+
+- `set -e` doesn't exit in: `if`, `while`, `&&`, `||`, `!`
+- Add `set -o pipefail` to catch pipe failures
+- Use `set -u` to catch undefined variables
+- Add traps for cleanup on error
+- Don't rely solely on `set -e`
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Unquoted Variables

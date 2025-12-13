@@ -1188,6 +1188,196 @@ deploy-prod:
 
 ---
 
+## Common Pitfalls
+
+### Spaces Instead of Tabs
+
+**Issue**: Make requires tabs for recipe indentation; spaces cause "missing separator" errors.
+
+**Example**:
+
+```makefile
+## Bad - Spaces instead of tabs
+build:
+    gcc -o app main.c  # ❌ Indented with spaces! Error: missing separator
+```
+
+**Solution**: Use tabs for recipe indentation.
+
+```makefile
+## Good - Tab indentation
+build:
+ gcc -o app main.c  # ✅ Indented with tab
+```
+
+**Key Points**:
+
+- Recipes MUST be indented with tabs
+- Configure editor to show tabs vs spaces
+- Variable assignments and comments can use spaces
+- Use `.RECIPEPREFIX = >` to change tab requirement (GNU Make 3.82+)
+
+### Forgetting .PHONY for Non-File Targets
+
+**Issue**: Without `.PHONY`, Make won't run targets if files with same names exist.
+
+**Example**:
+
+```makefile
+## Bad - No .PHONY declaration
+clean:
+ rm -rf *.o build/
+
+## If a file named "clean" exists, this target won't run!
+```
+
+**Solution**: Declare non-file targets as `.PHONY`.
+
+```makefile
+## Good - PHONY targets declared
+.PHONY: clean test build all
+
+clean:
+ rm -rf *.o build/
+
+test:
+ go test ./...
+
+build:
+ go build -o app
+
+all: clean build test
+```
+
+**Key Points**:
+
+- Always declare `.PHONY` for targets that don't create files
+- Common PHONY targets: `clean`, `test`, `install`, `run`, `all`
+- PHONY targets run every time, regardless of files
+- Place `.PHONY` declarations at top of Makefile
+
+### Variable Expansion Timing Confusion
+
+**Issue**: Mixing `=` (lazy) and `:=` (immediate) assignment causes unexpected behavior.
+
+**Example**:
+
+```makefile
+## Bad - Unintended recursion
+FLAGS = $(FLAGS) -Wall  # ❌ Recursive! FLAGS refers to itself
+
+build:
+ gcc $(FLAGS) main.c  # Infinite expansion error
+```
+
+**Solution**: Use `:=` for immediate expansion or `+=` for appending.
+
+```makefile
+## Good - Immediate assignment
+FLAGS := -O2
+FLAGS += -Wall  # ✅ Appends to existing value
+
+## Good - Conditional assignment
+FLAGS ?= -O2  # Only set if not already defined
+
+build:
+ gcc $(FLAGS) main.c
+```
+
+**Key Points**:
+
+- `=`: Lazy (recursive) expansion - expanded when used
+- `:=`: Immediate (simple) expansion - expanded at assignment
+- `?=`: Conditional assignment - only if not set
+- `+=`: Append to existing value
+
+### Missing Dependencies
+
+**Issue**: Targets don't rebuild when dependencies change, causing stale builds.
+
+**Example**:
+
+```makefile
+## Bad - No source file dependencies
+app: main.o utils.o
+ gcc -o app main.o utils.o
+
+main.o:
+ gcc -c main.c  # ❌ Won't rebuild if main.c or header changes!
+
+utils.o:
+ gcc -c utils.c
+```
+
+**Solution**: Specify all dependencies including headers.
+
+```makefile
+## Good - Complete dependencies
+HEADERS = main.h utils.h config.h
+
+app: main.o utils.o
+ gcc -o app main.o utils.o
+
+main.o: main.c $(HEADERS)  # ✅ Rebuilds when source or headers change
+ gcc -c main.c
+
+utils.o: utils.c utils.h  # ✅ Specific dependencies
+ gcc -c utils.c
+
+## Better - Auto-generate dependencies
+-include $(SOURCES:.c=.d)
+
+%.o: %.c
+ gcc -MMD -c $< -o $@
+```
+
+**Key Points**:
+
+- List all files that affect the target
+- Include header files in dependencies
+- Use `-MMD` flag to auto-generate `.d` dependency files
+- Missing dependencies cause inconsistent builds
+
+### Special Variables Misuse
+
+**Issue**: Confusing `$@`, `$<`, `$^`, and `$?` leads to incorrect recipes.
+
+**Example**:
+
+```makefile
+## Bad - Wrong automatic variable
+%.o: %.c
+ gcc -c $^ -o $<  # ❌ Swapped! $^ is all prereqs, $< is first prereq
+```
+
+**Solution**: Use correct automatic variables.
+
+```makefile
+## Good - Correct automatic variables
+%.o: %.c
+ gcc -c $< -o $@  # ✅ $< = first prerequisite, $@ = target
+
+## Common automatic variables:
+## $@ = target name
+## $< = first prerequisite
+## $^ = all prerequisites
+## $? = prerequisites newer than target
+## $* = stem of pattern match
+
+app: main.o utils.o config.o
+ gcc -o $@ $^  # ✅ $@ = app, $^ = all .o files
+```
+
+**Key Points**:
+
+- `$@`: Target filename
+- `$<`: First prerequisite filename
+- `$^`: All prerequisite filenames (space-separated)
+- `$?`: Prerequisites newer than target
+- `$*`: The stem (matched by `%` in pattern rules)
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Spaces Instead of Tabs

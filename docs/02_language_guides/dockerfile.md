@@ -911,6 +911,203 @@ LABEL org.opencontainers.image.title="My Application" \
 
 ---
 
+## Common Pitfalls
+
+### Layer Caching Invalidation
+
+**Issue**: Placing frequently changing files (source code) before rarely changing files
+(dependencies) invalidates cache on every build, dramatically increasing build times.
+
+**Example**:
+
+```dockerfile
+## Bad - Source code copied before dependencies
+FROM node:20-alpine
+WORKDIR /app
+COPY . .  # Invalidates cache every time code changes!
+RUN npm install  # Re-downloads all dependencies every build
+```
+
+**Solution**: Copy dependency files first, install, then copy source code.
+
+```dockerfile
+## Good - Dependencies cached separately from source
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./  # Copy dependency manifest first
+RUN npm ci --only=production  # Install dependencies (cached)
+COPY . .  # Copy source code last
+```
+
+**Key Points**:
+
+- Order instructions from least to most frequently changing
+- Dependencies (package.json) change less than source code
+- Each changed layer invalidates all subsequent layers
+- Use `.dockerignore` to exclude unnecessary files
+
+### Multi-Stage Build ARG Scope
+
+**Issue**: ARG variables don't persist across build stages unless redeclared, causing build failures.
+
+**Example**:
+
+```dockerfile
+## Bad - ARG not available in second stage
+ARG NODE_VERSION=20
+FROM node:${NODE_VERSION}-alpine AS builder
+RUN node --version
+
+FROM node:${NODE_VERSION}-alpine  # Error: NODE_VERSION undefined!
+```
+
+**Solution**: Redeclare ARG in each stage that needs it.
+
+```dockerfile
+## Good - ARG redeclared per stage
+ARG NODE_VERSION=20
+
+FROM node:${NODE_VERSION}-alpine AS builder
+RUN node --version
+
+FROM node:${NODE_VERSION}-alpine  # Works! ARG redeclared above
+ARG NODE_VERSION  # Can reuse without value (uses global)
+RUN node --version
+```
+
+**Key Points**:
+
+- ARG scope is per-stage in multi-stage builds
+- Redeclare ARG in each stage that needs it
+- Global ARGs (before first FROM) can be referenced without value
+- ENV persists across stages, ARG does not
+
+### COPY vs ADD Confusion
+
+**Issue**: Using ADD when COPY is sufficient adds unnecessary magic behavior and security risks.
+
+**Example**:
+
+```dockerfile
+## Bad - ADD auto-extracts, can fetch URLs
+ADD https://example.com/file.tar.gz /app/  # Security risk: executes remote code!
+ADD local-archive.tar.gz /app/  # Auto-extracts (implicit behavior)
+```
+
+**Solution**: Use COPY for local files, explicit RUN for extraction/downloads.
+
+```dockerfile
+## Good - Explicit and secure
+COPY local-archive.tar.gz /tmp/
+RUN tar -xzf /tmp/local-archive.tar.gz -C /app/ && rm /tmp/local-archive.tar.gz
+
+## Good - Explicit download with verification
+RUN curl -fsSL https://example.com/file.tar.gz -o /tmp/file.tar.gz \
+ && echo "expected-sha256  /tmp/file.tar.gz" | sha256sum -c - \
+ && tar -xzf /tmp/file.tar.gz -C /app/ \
+ && rm /tmp/file.tar.gz
+```
+
+**Key Points**:
+
+- Use COPY for all local files
+- ADD auto-extracts tar/gz files (implicit behavior)
+- ADD can fetch remote URLs (security risk)
+- Only use ADD when auto-extraction is explicitly desired
+
+### Health Check Missing
+
+**Issue**: Containers report as "running" even when application is crashed or hung, causing failed requests.
+
+**Example**:
+
+```dockerfile
+## Bad - No health check
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+CMD ["node", "server.js"]
+# Container shows "Up" even if server crashes!
+```
+
+**Solution**: Add HEALTHCHECK to verify application is responding.
+
+```dockerfile
+## Good - Health check validates application
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+  CMD node healthcheck.js
+
+CMD ["node", "server.js"]
+```
+
+```javascript
+// healthcheck.js
+const http = require('http');
+const options = { host: 'localhost', port: 3000, path: '/health', timeout: 2000 };
+const req = http.request(options, (res) => {
+  process.exit(res.statusCode === 200 ? 0 : 1);
+});
+req.on('error', () => process.exit(1));
+req.end();
+```
+
+**Key Points**:
+
+- HEALTHCHECK verifies application is responding
+- Container status reflects health, not just process existence
+- Configure appropriate interval, timeout, retries
+- Kubernetes uses liveness/readiness probes instead
+- Health endpoint should check dependencies (database, cache)
+
+### Build-Time Secrets Leakage
+
+**Issue**: ARG and ENV values are baked into image layers, exposing secrets in image history.
+
+**Example**:
+
+```dockerfile
+## Bad - Secret stored in image layer!
+FROM node:20-alpine
+ARG NPM_TOKEN  # Secret visible in docker history!
+RUN echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc \
+ && npm install \
+ && rm .npmrc  # Too late! Token already in image layer
+```
+
+**Solution**: Use build secrets with BuildKit (--secret flag).
+
+```dockerfile
+## Good - Secret not stored in image
+## syntax=docker/dockerfile:1
+FROM node:20-alpine
+RUN --mount=type=secret,id=npmrc,target=/root/.npmrc \
+    npm install --only=production
+# Secret mounted at build time, not stored in layer
+```
+
+```bash
+## Build with secret
+docker buildx build --secret id=npmrc,src=.npmrc -t myapp .
+```
+
+**Key Points**:
+
+- ARG and ENV values are stored in image layers
+- Removing secrets in same/later RUN doesn't remove from history
+- Use BuildKit `--mount=type=secret` for build-time secrets
+- Multi-stage builds: copy artifacts, not secrets
+- Never commit secrets to Dockerfile or repository
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Running as Root

@@ -874,6 +874,179 @@ chmod 644 public-config.json
 
 ---
 
+## Common Pitfalls
+
+### Trailing Commas Breaking Parsers
+
+**Issue**: Adding trailing commas (common in JavaScript) causes JSON parsers to fail.
+
+**Example**:
+
+```json
+{
+  "name": "John",
+  "age": 30,
+  "email": "john@example.com",
+}
+```
+
+**Solution**: Remove all trailing commas.
+
+```json
+{
+  "name": "John",
+  "age": 30,
+  "email": "john@example.com"
+}
+```
+
+**Key Points**:
+
+- JSON specification forbids trailing commas
+- Most JSON parsers will reject trailing commas
+- Use JSON linter to catch trailing commas
+- JavaScript allows trailing commas, JSON does not
+
+### Number Precision Loss
+
+**Issue**: Large integers lose precision when parsed as JavaScript numbers due to IEEE 754 limits.
+
+**Example**:
+
+```json
+{
+  "user_id": 9007199254740993,
+  "transaction_id": 12345678901234567890
+}
+```
+
+**Solution**: Use strings for large integers or IDs.
+
+```json
+{
+  "user_id": "9007199254740993",
+  "transaction_id": "12345678901234567890",
+  "amount_cents": 1299,
+  "precision_decimal": "123.456789012345"
+}
+```
+
+**Key Points**:
+
+- JavaScript max safe integer: 2^53 - 1 (9,007,199,254,740,991)
+- Database IDs often exceed this limit
+- Use strings for IDs, UUIDs, and high-precision numbers
+- Keep numeric types only for actual calculations
+
+### Comment Attempts
+
+**Issue**: Trying to add comments using `//` or `/* */` breaks JSON parsing.
+
+**Example**:
+
+```json
+{
+  // This is a comment
+  "name": "John",
+  /* Multi-line
+     comment */
+  "age": 30
+}
+```
+
+**Solution**: Use a designated key for comments or switch to JSON5/JSONC if comments are needed.
+
+```json
+{
+  "_comment": "User configuration",
+  "name": "John",
+  "age": 30,
+  "_note_age": "Age is optional for legacy users"
+}
+```
+
+**Key Points**:
+
+- Standard JSON does not support comments
+- Use `_comment`, `_note`, or similar keys for documentation
+- Consider JSON5 or JSONC for config files needing comments
+- Remove comment keys before production if needed
+
+### String Escaping Confusion
+
+**Issue**: Incorrectly escaping special characters or forgetting to escape quotes.
+
+**Example**:
+
+```json
+{
+  "path": "C:\Users\John\Documents",
+  "message": "She said "hello"",
+  "regex": "\d+"
+}
+```
+
+**Solution**: Properly escape backslashes and quotes.
+
+```json
+{
+  "path": "C:\\Users\\John\\Documents",
+  "message": "She said \"hello\"",
+  "regex": "\\d+",
+  "newline": "Line 1\\nLine 2"
+}
+```
+
+**Key Points**:
+
+- Always escape backslashes: `\` becomes `\\`
+- Escape double quotes inside strings: `"` becomes `\"`
+- Common escapes: `\n` (newline), `\t` (tab), `\r` (carriage return)
+- JSON does not support single-quoted strings
+
+### Type Inconsistency
+
+**Issue**: Mixing data types for the same field causes parsing and validation issues.
+
+**Example**:
+
+```json
+[
+  {
+    "user_id": 123,
+    "active": true
+  },
+  {
+    "user_id": "456",
+    "active": "yes"
+  }
+]
+```
+
+**Solution**: Maintain consistent types across all instances.
+
+```json
+[
+  {
+    "user_id": 123,
+    "active": true
+  },
+  {
+    "user_id": 456,
+    "active": true
+  }
+]
+```
+
+**Key Points**:
+
+- Keep field types consistent across all objects
+- Define and enforce a schema
+- Boolean values: `true` or `false`, not `"true"` or `1`
+- Numbers: `123`, not `"123"` (unless it's an ID)
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Trailing Commas

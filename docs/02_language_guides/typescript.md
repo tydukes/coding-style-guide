@@ -855,6 +855,273 @@ describe('UserCard', () => {
 
 ---
 
+## Common Pitfalls
+
+### Type Assertions vs Type Guards
+
+**Issue**: Using type assertions (`as`) bypasses type checking and can cause runtime errors if the assertion is incorrect.
+
+**Example**:
+
+```typescript
+// Bad - Type assertion with no runtime check
+function processUser(data: unknown) {
+  const user = data as User;  // No runtime validation!
+  console.log(user.email.toLowerCase());  // Runtime error if data isn't a User
+}
+```
+
+**Solution**: Use type guards for runtime type checking.
+
+```typescript
+// Good - Type guard with runtime check
+function isUser(data: unknown): data is User {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'email' in data &&
+    typeof (data as User).email === 'string'
+  );
+}
+
+function processUser(data: unknown) {
+  if (!isUser(data)) {
+    throw new Error('Invalid user data');
+  }
+  console.log(data.email.toLowerCase());  // Type-safe
+}
+```
+
+**Key Points**:
+
+- Type assertions don't perform runtime checks
+- Use type guards (`is` operator) for validation
+- Prefer `unknown` over `any` for better type safety
+- Validate external data (APIs, user input) at runtime
+
+### Optional Chaining with Nullish Coalescing
+
+**Issue**: Confusing `?.` (optional chaining) with `||` for defaults causes bugs with falsy values.
+
+**Example**:
+
+```typescript
+// Bad - || treats 0 and "" as missing
+interface Config {
+  timeout?: number;
+  retries?: number;
+}
+
+const config: Config = { timeout: 0, retries: 0 };
+const timeout = config.timeout || 30;  // Returns 30, not 0!
+const retries = config.retries || 3;   // Returns 3, not 0!
+```
+
+**Solution**: Use `??` (nullish coalescing) for defaults.
+
+```typescript
+// Good - ?? only checks for null/undefined
+const config: Config = { timeout: 0, retries: 0 };
+const timeout = config.timeout ?? 30;  // Returns 0 ✅
+const retries = config.retries ?? 3;   // Returns 0 ✅
+```
+
+**Key Points**:
+
+- `||` treats `0`, `""`, `false` as missing
+- `??` only checks for `null` and `undefined`
+- Use `?.` for safe property access
+- Combine: `obj?.prop ?? defaultValue`
+
+### Promise Error Handling
+
+**Issue**: Unhandled promise rejections cause silent failures in production.
+
+**Example**:
+
+```typescript
+// Bad - Unhandled promise rejection
+async function fetchUserData(id: string) {
+  const response = await fetch(`/api/users/${id}`);  // No error handling
+  return response.json();  // Can throw
+}
+
+// Fires off request and forgets about errors
+fetchUserData('123');  // Unhandled rejection!
+```
+
+**Solution**: Always handle promise rejections with try/catch or .catch().
+
+```typescript
+// Good - Proper error handling
+async function fetchUserData(id: string): Promise<User> {
+  try {
+    const response = await fetch(`/api/users/${id}`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    const data = await response.json();
+    if (!isUser(data)) {
+      throw new Error('Invalid user data');
+    }
+    return data;
+  } catch (error) {
+    logger.error('Failed to fetch user', { id, error });
+    throw error;  // Re-throw or return fallback
+  }
+}
+
+// Usage with error handling
+fetchUserData('123')
+  .then(user => console.log(user))
+  .catch(error => console.error('Error:', error));
+```
+
+**Key Points**:
+
+- Always use try/catch with async/await
+- Add `.catch()` to promise chains
+- Check `response.ok` for HTTP errors
+- Validate response data structure
+- Log errors before re-throwing
+
+### Enum vs Union Types
+
+**Issue**: Enums compile to runtime objects, increasing bundle size and creating reverse mapping confusion.
+
+**Example**:
+
+```typescript
+// Bad - Enum creates runtime object
+enum UserRole {
+  Admin = 'ADMIN',
+  User = 'USER',
+  Guest = 'GUEST'
+}
+
+// Compiled output (adds ~100 bytes):
+// var UserRole;
+// (function (UserRole) {
+//   UserRole["Admin"] = "ADMIN";
+//   UserRole["User"] = "USER";
+//   UserRole["Guest"] = "GUEST";
+// })(UserRole || (UserRole = {}));
+```
+
+**Solution**: Use const enums or union types for zero runtime cost.
+
+```typescript
+// Good - Union type (no runtime code)
+type UserRole = 'ADMIN' | 'USER' | 'GUEST';
+
+// Good - Const enum (inlined at compile time)
+const enum UserRole {
+  Admin = 'ADMIN',
+  User = 'USER',
+  Guest = 'GUEST'
+}
+
+// Usage remains the same
+function checkRole(role: UserRole) {
+  if (role === 'ADMIN') {
+    // ...
+  }
+}
+```
+
+**Key Points**:
+
+- Regular enums create runtime objects
+- Union types have zero runtime cost
+- Const enums are inlined (no runtime object)
+- Use union types for API types
+- Prefer const enums if you need enum features
+
+### Type Widening in Let
+
+**Issue**: TypeScript infers wider types for `let` variables, losing literal type information.
+
+**Example**:
+
+```typescript
+// Bad - Type widened to string
+let status = 'pending';  // Type: string (not 'pending')
+type Status = 'pending' | 'completed' | 'failed';
+
+function updateStatus(s: Status) { /* ... */ }
+updateStatus(status);  // Error: string not assignable to Status!
+```
+
+**Solution**: Use `const` or explicit type annotations.
+
+```typescript
+// Good - Use const for literals
+const status = 'pending';  // Type: 'pending' ✅
+updateStatus(status);  // Works!
+
+// Good - Explicit type annotation
+let status: Status = 'pending';  // Type: Status ✅
+updateStatus(status);  // Works!
+
+// Good - as const assertion
+let config = {
+  timeout: 30,
+  retries: 3
+} as const;  // Type: { readonly timeout: 30; readonly retries: 3 }
+```
+
+**Key Points**:
+
+- `let` infers wider types (string not 'hello')
+- `const` preserves literal types
+- Use `as const` for readonly literal types
+- Add explicit type annotations when needed
+
+### Array Mutation Type Issues
+
+**Issue**: Array methods like `.push()` mutate arrays, causing type errors with readonly arrays.
+
+**Example**:
+
+```typescript
+// Bad - Mutating readonly array
+interface Props {
+  readonly items: ReadonlyArray<string>;
+}
+
+function addItem(props: Props, item: string) {
+  props.items.push(item);  // Error: push doesn't exist on ReadonlyArray!
+}
+```
+
+**Solution**: Use immutable array operations.
+
+```typescript
+// Good - Create new array instead of mutating
+interface Props {
+  readonly items: ReadonlyArray<string>;
+}
+
+function addItem(props: Props, item: string): ReadonlyArray<string> {
+  return [...props.items, item];  // Creates new array
+}
+
+// Good - Immutable operations
+const filtered = items.filter(x => x !== 'remove');  // New array
+const mapped = items.map(x => x.toUpperCase());      // New array
+const sorted = [...items].sort();                    // Copy then sort
+```
+
+**Key Points**:
+
+- `ReadonlyArray<T>` prevents mutation
+- Use spread operator to create copies
+- Array methods (map, filter) return new arrays
+- Sort/reverse mutate; copy first: `[...arr].sort()`
+- Prefer immutable operations in React/Redux
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: any Type

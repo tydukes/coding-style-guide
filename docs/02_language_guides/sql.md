@@ -1191,6 +1191,241 @@ REVOKE SELECT ON users FROM app_user;  -- Deny access to full table
 
 ---
 
+## Common Pitfalls
+
+### NULL Comparison Confusion
+
+**Issue**: Using `= NULL` or `!= NULL` instead of `IS NULL` or `IS NOT NULL` returns unexpected results.
+
+**Example**:
+
+```sql
+## Bad - NULL comparisons don't work with = or !=
+SELECT * FROM users WHERE email = NULL;  -- ❌ Returns 0 rows (not NULL rows)
+SELECT * FROM users WHERE email != NULL;  -- ❌ Also returns 0 rows!
+
+UPDATE users SET status = 'inactive' WHERE last_login = NULL;  -- ❌ Updates 0 rows
+```
+
+**Solution**: Use `IS NULL` and `IS NOT NULL` operators.
+
+```sql
+## Good - Correct NULL handling
+SELECT * FROM users WHERE email IS NULL;  -- ✅ Finds rows where email is NULL
+
+SELECT * FROM users WHERE email IS NOT NULL;  -- ✅ Finds rows with non-NULL email
+
+UPDATE users
+SET status = 'inactive'
+WHERE last_login IS NULL;  -- ✅ Updates rows with NULL last_login
+```
+
+**Key Points**:
+
+- NULL is not equal to anything, including NULL (`NULL = NULL` is false)
+- Always use `IS NULL` and `IS NOT NULL` for NULL checks
+- `COALESCE(column, 'default')` provides default values for NULLs
+- `NULLIF(value1, value2)` returns NULL if values are equal
+
+### Implicit Type Conversion Performance Issues
+
+**Issue**: Comparing different data types forces type conversion, preventing index usage and slowing queries.
+
+**Example**:
+
+```sql
+## Bad - String comparison on integer column
+SELECT * FROM orders WHERE order_id = '12345';  -- ❌ Forces type conversion, no index
+
+## Bad - Integer comparison on string column
+SELECT * FROM users WHERE user_code = 123;  -- ❌ Table scan, not index seek
+```
+
+**Solution**: Match data types in comparisons.
+
+```sql
+## Good - Correct data types
+SELECT * FROM orders WHERE order_id = 12345;  -- ✅ Integer comparison, uses index
+
+SELECT * FROM users WHERE user_code = '123';  -- ✅ String comparison, uses index
+
+## Good - Explicit casting when needed
+SELECT *
+FROM orders o
+JOIN order_items oi ON o.order_id = CAST(oi.order_id_string AS INTEGER);
+```
+
+**Key Points**:
+
+- Match column data types in WHERE clauses and JOINs
+- Implicit conversion prevents index usage
+- Check execution plans for type conversion warnings
+- Use explicit `CAST()` or `CONVERT()` when conversion is necessary
+
+### NOT IN with NULL Values
+
+**Issue**: `NOT IN` with a subquery containing NULL values returns no rows unexpectedly.
+
+**Example**:
+
+```sql
+## Bad - NOT IN with possible NULLs
+SELECT * FROM products
+WHERE product_id NOT IN (
+    SELECT product_id FROM discontinued_products  -- ❌ If any NULL, returns 0 rows!
+);
+
+## This happens because:
+## product_id NOT IN (1, 2, NULL)
+## is equivalent to:
+## product_id != 1 AND product_id != 2 AND product_id != NULL
+## The last comparison is always UNKNOWN, so entire condition fails
+```
+
+**Solution**: Use `NOT EXISTS` or filter out NULLs.
+
+```sql
+## Good - Use NOT EXISTS
+SELECT * FROM products p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM discontinued_products dp
+    WHERE dp.product_id = p.product_id  -- ✅ Handles NULLs correctly
+);
+
+## Good - Filter NULLs in subquery
+SELECT * FROM products
+WHERE product_id NOT IN (
+    SELECT product_id
+    FROM discontinued_products
+    WHERE product_id IS NOT NULL  -- ✅ Exclude NULLs
+);
+```
+
+**Key Points**:
+
+- `NOT IN` fails with NULL values in subquery
+- Prefer `NOT EXISTS` over `NOT IN` for subqueries
+- `IN` works fine with NULLs, `NOT IN` does not
+- Always check for NULL handling in subqueries
+
+### DISTINCT Hiding Performance Issues
+
+**Issue**: Using DISTINCT to fix duplicate rows masks underlying join or query logic problems.
+
+**Example**:
+
+```sql
+## Bad - DISTINCT hiding incorrect join
+SELECT DISTINCT
+    u.username,
+    u.email,
+    o.order_date  -- ❌ Why duplicates? Probably wrong join!
+FROM users u
+JOIN orders o ON u.user_id = o.user_id
+JOIN order_items oi ON o.order_id = oi.order_id;  -- Cartesian product hidden by DISTINCT
+```
+
+**Solution**: Fix the join logic or use appropriate aggregation.
+
+```sql
+## Good - Correct join or aggregation
+SELECT
+    u.username,
+    u.email,
+    COUNT(DISTINCT o.order_id) AS order_count,
+    MAX(o.order_date) AS latest_order
+FROM users u
+LEFT JOIN orders o ON u.user_id = o.user_id
+GROUP BY u.user_id, u.username, u.email;  -- ✅ Proper aggregation
+
+## Or if you really need one row per user with latest order
+SELECT
+    u.username,
+    u.email,
+    o.order_date
+FROM users u
+JOIN LATERAL (
+    SELECT order_date
+    FROM orders
+    WHERE user_id = u.user_id
+    ORDER BY order_date DESC
+    LIMIT 1
+) o ON true;  -- ✅ Explicitly get one order per user
+```
+
+**Key Points**:
+
+- DISTINCT is expensive (sorting or hashing)
+- DISTINCT often indicates incorrect joins
+- Fix the root cause instead of masking with DISTINCT
+- Use GROUP BY with aggregation for proper deduplication
+
+### Transaction Isolation Level Misunderstanding
+
+**Issue**: Wrong isolation level causes phantom reads, dirty reads, or unnecessary blocking.
+
+**Example**:
+
+```sql
+## Bad - Default isolation may allow dirty reads
+BEGIN TRANSACTION;  -- ❌ Default isolation (often READ COMMITTED)
+
+SELECT SUM(balance) FROM accounts WHERE user_id = 123;
+-- Another transaction updates balance here
+UPDATE accounts SET balance = balance - 100 WHERE user_id = 123;
+
+COMMIT;  -- ❌ Sum may be inconsistent due to concurrent updates
+
+## Bad - SERIALIZABLE causing deadlocks
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN TRANSACTION;
+
+SELECT * FROM inventory WHERE product_id = 1;
+-- Locks entire result set, causes deadlocks with concurrent transactions
+UPDATE inventory SET quantity = quantity - 1 WHERE product_id = 1;
+
+COMMIT;
+```
+
+**Solution**: Choose appropriate isolation level for use case.
+
+```sql
+## Good - REPEATABLE READ for consistent reads
+BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+SELECT SUM(balance) FROM accounts WHERE user_id = 123;
+-- Other transactions can't modify these rows until commit
+UPDATE accounts SET balance = balance - 100 WHERE user_id = 123;
+
+COMMIT;
+
+## Good - READ COMMITTED with explicit locking when needed
+BEGIN TRANSACTION;
+
+SELECT * FROM inventory
+WHERE product_id = 1
+FOR UPDATE;  -- ✅ Explicit row lock
+
+UPDATE inventory SET quantity = quantity - 1 WHERE product_id = 1;
+
+COMMIT;
+
+## Good - READ UNCOMMITTED for reports (accept dirty reads)
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+
+SELECT COUNT(*) FROM large_table;  -- ✅ Fast, no locking, dirty reads OK for reports
+```
+
+**Key Points**:
+
+- READ UNCOMMITTED: Fastest, allows dirty reads (use for reports)
+- READ COMMITTED: Default, prevents dirty reads
+- REPEATABLE READ: Prevents non-repeatable reads, may have phantom reads
+- SERIALIZABLE: Strictest, prevents phantom reads, highest locking
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: SELECT * in Production
