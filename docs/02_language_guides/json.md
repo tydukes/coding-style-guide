@@ -438,6 +438,216 @@ Always use **2 spaces**:
 
 ---
 
+## Security Best Practices
+
+### Never Store Secrets in JSON
+
+JSON files are often committed to version control - never store sensitive data:
+
+```json
+// Bad - Secrets in JSON (especially in version control)
+{
+  "database": {
+    "host": "db.example.com",
+    "password": "MySecretPassword123",  // ❌ Exposed!
+    "apiKey": "sk-1234567890abcdef"     // ❌ Hardcoded!
+  }
+}
+
+// Good - Use placeholders for environment variables
+{
+  "database": {
+    "host": "${DB_HOST}",
+    "password": "${DB_PASSWORD}",  // ✅ From environment
+    "apiKey": "${API_KEY}"
+  }
+}
+
+// Good - Reference external secure storage
+{
+  "database": {
+    "host": "db.example.com",
+    "password": "vault://secrets/db/password",
+    "apiKey": "ssm:///myapp/api-key"
+  }
+}
+```
+
+**Key Points**:
+
+- Never commit secrets to version control
+- Use environment variables for sensitive data
+- Reference secret management systems (Vault, AWS Secrets Manager)
+- Use `.env` files (gitignored) for local development
+- Scan repositories for accidentally committed secrets
+
+### Validate JSON Schema
+
+Always validate JSON against a schema to prevent injection and data corruption:
+
+```typescript
+// Good - Validate with JSON Schema
+import Ajv from 'ajv';
+
+const schema = {
+  type: 'object',
+  properties: {
+    username: { type: 'string', pattern: '^[a-zA-Z0-9_-]+$' },
+    email: { type: 'string', format: 'email' },
+    age: { type: 'integer', minimum: 0, maximum: 150 }
+  },
+  required: ['username', 'email'],
+  additionalProperties: false  // ✅ Prevent unexpected properties
+};
+
+const ajv = new Ajv();
+const validate = ajv.compile(schema);
+
+function processUserData(data: unknown) {
+  if (!validate(data)) {
+    throw new Error(`Invalid data: ${ajv.errorsText(validate.errors)}`);
+  }
+  // Safe to use validated data
+  return data;
+}
+```
+
+**Key Points**:
+
+- Define JSON schemas for all data structures
+- Validate all external JSON input
+- Use `additionalProperties: false` to prevent unexpected fields
+- Enforce format constraints (email, URL, date)
+- Fail fast on invalid data
+
+### Prevent JSON Injection
+
+Sanitize data before embedding in JSON:
+
+```javascript
+// Bad - String concatenation (injection risk)
+const userInput = '", "isAdmin": true, "fake": "';
+const json = `{"username": "${userInput}"}`;  // ❌ Injected admin field!
+// Result: {"username": "", "isAdmin": true, "fake": ""}
+
+// Good - Use JSON.stringify (automatic escaping)
+const userInput = '"; DROP TABLE users; --';
+const safeJson = JSON.stringify({ username: userInput });  // ✅ Properly escaped
+
+// Good - Validate before parsing
+function safeJSONParse(text: string): unknown {
+  try {
+    const parsed = JSON.parse(text);
+    // Validate against schema here
+    return parsed;
+  } catch (error) {
+    throw new Error('Invalid JSON');
+  }
+}
+```
+
+**Key Points**:
+
+- Always use `JSON.stringify()` and `JSON.parse()`
+- Never build JSON with string concatenation
+- Validate after parsing
+- Sanitize user inputs before JSON encoding
+- Use TypeScript for type safety
+
+### Limit JSON Size
+
+Prevent denial of service from large JSON payloads:
+
+```javascript
+// Good - Limit JSON payload size
+import express from 'express';
+
+const app = express();
+
+app.use(express.json({
+  limit: '100kb',  // ✅ Limit payload size
+  strict: true,    // Only accept objects and arrays
+}));
+
+// Good - Streaming parser for large files
+import { parser } from 'stream-json';
+import { streamArray } from 'stream-json/streamers/StreamArray';
+
+const pipeline = fs.createReadStream('large-file.json')
+  .pipe(parser())
+  .pipe(streamArray())
+  .on('data', ({ value }) => {
+    // Process each item individually
+    processItem(value);
+  });
+```
+
+**Key Points**:
+
+- Set maximum payload size limits
+- Use streaming parsers for large files
+- Implement timeouts for JSON parsing
+- Monitor memory usage
+- Reject deeply nested structures
+
+### Sanitize Output
+
+Prevent Cross-Site Scripting (XSS) when displaying JSON in HTML:
+
+```javascript
+// Bad - Directly embedding JSON in HTML
+const data = { name: '<script>alert("XSS")</script>' };
+const html = `<div>${JSON.stringify(data)}</div>`;  // ❌ XSS vulnerability!
+
+// Good - Properly escape for HTML context
+function escapeHTML(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
+const safeHTML = `<div>${escapeHTML(JSON.stringify(data))}</div>`;  // ✅ Safe
+```
+
+**Key Points**:
+
+- Escape JSON before embedding in HTML
+- Use Content Security Policy (CSP) headers
+- Avoid `innerHTML` with user-controlled JSON
+- Use safe templating libraries
+- Sanitize before display
+
+### File Access Control
+
+Protect JSON configuration files with appropriate permissions:
+
+```bash
+## Good - Restrictive file permissions
+# Configuration files (readable by application)
+chmod 640 config.json
+chown app:app config.json
+
+# Secrets files (readable only by application)
+chmod 600 secrets.json
+chown app:app secrets.json
+
+# Public configuration
+chmod 644 public-config.json
+```
+
+**Key Points**:
+
+- Set restrictive file permissions (600 or 640)
+- Use appropriate file ownership
+- Never make secrets world-readable
+- Audit file access regularly
+- Encrypt sensitive JSON files at rest
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Trailing Commas

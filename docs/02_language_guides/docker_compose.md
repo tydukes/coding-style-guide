@@ -573,6 +573,330 @@ docker-compose top
 
 ---
 
+## Security Best Practices
+
+### Never Hardcode Secrets
+
+Avoid storing sensitive data in docker-compose.yml:
+
+```yaml
+## Bad - Hardcoded secrets
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: MySecretPassword123  # ❌ Exposed in version control!
+      API_KEY: sk-1234567890abcdef  # ❌ Hardcoded!
+
+## Good - Use environment files
+services:
+  db:
+    image: postgres:15
+    env_file:
+      - .env  # ✅ Gitignored file with secrets
+
+## Good - Use Docker secrets (Swarm mode)
+services:
+  db:
+    image: postgres:15
+    secrets:
+      - db_password
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+
+## Good - Use external secret references
+services:
+  app:
+    image: myapp:latest
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}  # ✅ From environment
+```
+
+**Key Points**:
+
+- Never commit secrets to docker-compose.yml
+- Use `.env` files (add to `.gitignore`)
+- Use Docker secrets for Swarm mode
+- Use environment variables for 12-factor apps
+- Reference external secret managers (Vault, AWS Secrets Manager)
+- Rotate secrets regularly
+
+### Use Minimal, Trusted Images
+
+Only use official, verified, and minimal base images:
+
+```yaml
+## Bad - Unknown or outdated images
+services:
+  app:
+    image: randomuser/myapp:latest  # ❌ Untrusted source!
+    # Using 'latest' tag - unpredictable
+
+## Good - Official, version-pinned, minimal images
+services:
+  app:
+    image: node:20.10.0-alpine  # ✅ Official, specific version, minimal
+    # alpine variant is smaller and has fewer vulnerabilities
+
+  db:
+    image: postgres:15.5-alpine  # ✅ Official PostgreSQL with specific version
+
+## Good - Use digest pinning for immutability
+services:
+  app:
+    image: node@sha256:abcd1234...  # ✅ Immutable digest
+```
+
+**Key Points**:
+
+- Use official images from Docker Hub
+- Pin specific versions (never use `latest`)
+- Use minimal variants (`alpine`, `distroless`)
+- Verify image signatures
+- Use digest pinning for critical services
+- Regularly update base images
+
+### Run as Non-Root User
+
+Never run containers as root:
+
+```yaml
+## Bad - Running as root (default)
+services:
+  app:
+    image: node:20-alpine
+    # No user specified - runs as root ❌
+
+## Good - Run as non-root user
+services:
+  app:
+    image: node:20-alpine
+    user: "1000:1000"  # ✅ Non-root user
+    # Or use 'node' user built into Node image
+    # user: node
+
+## Good - Define non-root user in Dockerfile
+# Dockerfile
+FROM node:20-alpine
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
+USER nodejs
+```
+
+**Key Points**:
+
+- Always specify a non-root user
+- Use UID:GID format for clarity
+- Create users in Dockerfile
+- Never use UID 0 (root)
+- Test that application works as non-root
+- Use `read_only` filesystems where possible
+
+### Limit Resources
+
+Prevent resource exhaustion:
+
+```yaml
+## Bad - No resource limits
+services:
+  app:
+    image: myapp:latest
+    # No limits - can consume all host resources ❌
+
+## Good - Set resource limits
+services:
+  app:
+    image: myapp:latest
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    # Prevent fork bombs
+    pids_limit: 100
+
+  db:
+    image: postgres:15-alpine
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+```
+
+**Key Points**:
+
+- Set CPU and memory limits
+- Set PID limits to prevent fork bombs
+- Use reservations for guaranteed resources
+- Monitor resource usage
+- Adjust limits based on actual usage
+- Prevent denial of service
+
+### Network Segmentation
+
+Isolate services with network boundaries:
+
+```yaml
+## Bad - All services on default bridge
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+  app:
+    image: myapp:latest
+  db:
+    image: postgres:15
+    # All on same network - no isolation ❌
+
+## Good - Separate networks for isolation
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    networks:
+      - frontend  # Only frontend network
+
+  app:
+    image: myapp:latest
+    networks:
+      - frontend  # Connect to both
+      - backend
+
+  db:
+    image: postgres:15
+    networks:
+      - backend  # Only backend network - isolated from web
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: true  # ✅ No external access
+```
+
+**Key Points**:
+
+- Create separate networks for tiers
+- Use `internal: true` for backend networks
+- Limit exposed ports
+- Use service names for internal DNS
+- Implement zero-trust networking
+- Monitor network traffic
+
+### Read-Only Filesystems
+
+Use read-only root filesystems:
+
+```yaml
+## Good - Read-only filesystem
+services:
+  app:
+    image: myapp:latest
+    read_only: true  # ✅ Immutable root filesystem
+    tmpfs:
+      - /tmp  # Writable tmpfs for temporary files
+      - /var/run
+
+  nginx:
+    image: nginx:alpine
+    read_only: true
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # ✅ Read-only config
+      - nginx-cache:/var/cache/nginx  # Writable volume for cache
+      - nginx-run:/var/run
+
+volumes:
+  nginx-cache:
+  nginx-run:
+```
+
+**Key Points**:
+
+- Use `read_only: true` for immutable containers
+- Mount tmpfs for temporary writable space
+- Mount configs as read-only (`:ro`)
+- Use volumes for persistent writable data
+- Prevents malware persistence
+- Enhances security posture
+
+### Security Options
+
+Enable security features:
+
+```yaml
+## Good - Security options enabled
+services:
+  app:
+    image: myapp:latest
+    security_opt:
+      - no-new-privileges:true  # ✅ Prevent privilege escalation
+      - apparmor=docker-default  # Enable AppArmor
+      # - seccomp=seccomp-profile.json  # Custom seccomp profile
+
+    cap_drop:
+      - ALL  # ✅ Drop all capabilities
+    cap_add:
+      - NET_BIND_SERVICE  # Only add required capabilities
+
+    privileged: false  # ✅ Never use privileged mode
+```
+
+**Key Points**:
+
+- Always set `no-new-privileges:true`
+- Drop all capabilities, add only required ones
+- Never use `privileged: true`
+- Enable AppArmor or SELinux
+- Use custom seccomp profiles
+- Minimize attack surface
+
+### Container Health and Availability Checks
+
+Implement health checks for availability and security:
+
+```yaml
+## Good - Health checks configured
+services:
+  app:
+    image: myapp:latest
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  db:
+    image: postgres:15-alpine
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+```
+
+**Key Points**:
+
+- Define health checks for all services
+- Use appropriate intervals and timeouts
+- Monitor health check status
+- Restart unhealthy containers
+- Use health checks for rolling updates
+- Prevent zombie containers
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Hardcoded Secrets

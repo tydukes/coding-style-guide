@@ -502,6 +502,243 @@ service_b:
 
 ---
 
+## Security Best Practices
+
+### Never Store Secrets in YAML
+
+YAML files are often committed to version control:
+
+```yaml
+## Bad - Secrets in YAML
+database:
+  host: db.example.com
+  password: MySecretPassword123  # ❌ Exposed in version control!
+  api_key: sk-1234567890abcdef   # ❌ Hardcoded secret!
+
+## Good - Environment variable references
+database:
+  host: ${DB_HOST}
+  password: ${DB_PASSWORD}  # ✅ From environment
+  api_key: ${API_KEY}
+
+## Good - External secret references
+database:
+  host: db.example.com
+  password: !vault |
+    $ANSIBLE_VAULT;1.1;AES256
+    ...encrypted...
+  api_key: ssm:///myapp/api-key  # AWS Systems Manager Parameter Store
+```
+
+**Key Points**:
+
+- Never commit secrets to YAML files in version control
+- Use environment variables for sensitive data
+- Use secret management (Ansible Vault, Sealed Secrets, SOPS)
+- Scan repositories for accidentally committed secrets
+- Encrypt sensitive YAML files at rest
+
+### Prevent YAML Injection
+
+Untrusted YAML can execute arbitrary code in some parsers:
+
+```python
+## Bad - Unsafe YAML loading
+import yaml
+
+user_input = """
+!!python/object/apply:os.system
+args: ['rm -rf /']
+"""
+data = yaml.load(user_input)  # ❌ Code execution vulnerability!
+
+## Good - Safe YAML loading
+import yaml
+
+user_input = """
+name: John
+age: 30
+"""
+data = yaml.safe_load(user_input)  # ✅ Safe - no code execution
+
+## Good - Validate with schema
+from yamale import make_schema, make_data, validate
+
+schema = make_schema('schema.yaml')
+data = make_data('config.yaml')
+validate(schema, data)  # ✅ Validated against schema
+```
+
+**Key Points**:
+
+- Always use `safe_load()` instead of `load()`
+- Never parse untrusted YAML with `yaml.load()`
+- Validate YAML against schemas
+- Sanitize user inputs before YAML encoding
+- Use YAML parsers with security in mind
+
+### Validate YAML Schema
+
+Define and enforce schemas for all YAML configurations:
+
+```yaml
+## schema.yaml (using JSON Schema)
+type: object
+properties:
+  name:
+    type: string
+    pattern: '^[a-zA-Z0-9_-]+$'
+  email:
+    type: string
+    format: email
+  age:
+    type: integer
+    minimum: 0
+    maximum: 150
+required:
+  - name
+  - email
+additionalProperties: false  # Prevent unexpected properties
+```
+
+```python
+## Good - Validate YAML
+import yaml
+import jsonschema
+
+with open('schema.yaml') as f:
+    schema = yaml.safe_load(f)
+
+with open('config.yaml') as f:
+    config = yaml.safe_load(f)
+
+jsonschema.validate(config, schema)  # ✅ Validated
+```
+
+**Key Points**:
+
+- Define schemas for all YAML files
+- Validate on load
+- Use `additionalProperties: false` to prevent injection
+- Enforce type and format constraints
+- Fail fast on invalid YAML
+
+### File Permissions
+
+Protect YAML configuration files:
+
+```bash
+## Good - Restrictive permissions
+# Application configuration
+chmod 640 config.yaml
+chown app:app config.yaml
+
+# Secrets (Kubernetes secrets, etc.)
+chmod 600 secrets.yaml
+chown app:app secrets.yaml
+
+# Public configuration
+chmod 644 public-config.yaml
+```
+
+**Key Points**:
+
+- Set restrictive file permissions (600-644)
+- Use appropriate ownership
+- Never make secrets world-readable
+- Audit file access regularly
+- Encrypt sensitive YAML at rest
+
+### Kubernetes Secrets
+
+Properly handle secrets in Kubernetes YAML:
+
+```yaml
+## Bad - Base64 is NOT encryption!
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-password
+type: Opaque
+data:
+  password: TXlTZWNyZXRQYXNzd29yZDEyMw==  # ❌ Easily decoded!
+
+## Good - Use Sealed Secrets or external secrets
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: db-password
+spec:
+  encryptedData:
+    password: AgB...encrypted...  # ✅ Encrypted with public key
+
+## Good - External Secrets Operator
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: db-password
+spec:
+  secretStoreRef:
+    name: vault-backend
+  target:
+    name: db-password
+  data:
+    - secretKey: password
+      remoteRef:
+        key: secret/data/database
+        property: password
+```
+
+**Key Points**:
+
+- Don't commit Kubernetes Secrets to Git
+- Use Sealed Secrets or External Secrets Operator
+- Reference external secret stores (Vault, AWS Secrets Manager)
+- Enable encryption at rest in etcd
+- Use RBAC to restrict secret access
+
+### YAML Bombs (Billion Laughs Attack)
+
+Prevent denial of service from malicious YAML:
+
+```yaml
+## Bad - YAML bomb (exponential expansion)
+a: &a ["lol","lol","lol","lol","lol","lol","lol","lol","lol"]
+b: &b [*a,*a,*a,*a,*a,*a,*a,*a,*a]
+c: &c [*b,*b,*b,*b,*b,*b,*b,*b,*b]
+# ... continues to expand exponentially (billions of elements)
+```
+
+```python
+## Good - Limit YAML complexity
+import yaml
+
+class SafeLoader(yaml.SafeLoader):
+    def __init__(self, stream):
+        self._depth = 0
+        super().__init__(stream)
+
+    def construct_object(self, node, deep=False):
+        self._depth += 1
+        if self._depth > 50:  # ✅ Limit recursion depth
+            raise yaml.YAMLError('Maximum recursion depth exceeded')
+        obj = super().construct_object(node, deep)
+        self._depth -= 1
+        return obj
+
+data = yaml.load(yaml_content, Loader=SafeLoader)
+```
+
+**Key Points**:
+
+- Set maximum recursion/nesting depth
+- Limit file size for YAML parsing
+- Implement timeouts for parsing
+- Monitor memory usage during parsing
+- Reject malformed YAML early
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Tabs for Indentation

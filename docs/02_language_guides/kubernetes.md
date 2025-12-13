@@ -1024,6 +1024,450 @@ spec:
 
 ---
 
+## Security Best Practices
+
+### Pod Security Standards
+
+Use Pod Security Standards to enforce security policies.
+
+```yaml
+## Bad - Running as root with privileges
+apiVersion: v1
+kind: Pod
+metadata:
+  name: insecure-pod
+spec:
+  containers:
+  - name: app
+    image: myapp:latest
+    securityContext:
+      privileged: true  # NEVER in production!
+      runAsUser: 0      # Running as root!
+
+## Good - Non-root with security contexts
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-pod
+spec:
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 2000
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+  - name: app
+    image: myapp:latest
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+        - ALL
+    volumeMounts:
+    - name: tmp
+      mountPath: /tmp
+  volumes:
+  - name: tmp
+    emptyDir: {}
+```
+
+### Secrets Management
+
+Never hardcode sensitive data in manifests.
+
+```yaml
+## Bad - Secrets in plain text
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  containers:
+  - name: app
+    env:
+    - name: DB_PASSWORD
+      value: "SuperSecret123"  # EXPOSED!
+    - name: API_KEY
+      value: "sk_live_abc123"   # In version control!
+
+## Good - Use Kubernetes Secrets
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secrets
+type: Opaque
+data:
+  db-password: U3VwZXJTZWNyZXQxMjM=  # base64 encoded
+  api-key: c2tfbGl2ZV9hYmMxMjM=      # base64 encoded
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  containers:
+  - name: app
+    envFrom:
+    - secretRef:
+        name: app-secrets
+
+## Better - Use external secrets management
+## External Secrets Operator with AWS Secrets Manager
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: app-secrets
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: aws-secrets-manager
+    kind: SecretStore
+  target:
+    name: app-secrets
+  data:
+  - secretKey: db-password
+    remoteRef:
+      key: prod/db/password
+  - secretKey: api-key
+    remoteRef:
+      key: prod/api/key
+```
+
+### Network Policies
+
+Restrict pod-to-pod communication.
+
+```yaml
+## Bad - No network policies (pods can access anything)
+## Default allow-all is insecure!
+
+## Good - Deny all, then allow specific traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: production
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-app-to-db
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      app: web-app
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgresql
+    ports:
+    - protocol: TCP
+      port: 5432
+  - to:  # Allow DNS
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+```
+
+### RBAC (Role-Based Access Control)
+
+Follow principle of least privilege.
+
+```yaml
+## Bad - Cluster-admin for all service accounts
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: all-cluster-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin  # TOO PERMISSIVE!
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: default
+
+## Good - Scoped permissions
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-sa
+  namespace: production
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: app-role
+  namespace: production
+rules:
+- apiGroups: [""]
+  resources: ["pods", "configmaps"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  resourceNames: ["app-secrets"]  # Specific secret only
+  verbs: ["get"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: app-role-binding
+  namespace: production
+subjects:
+- kind: ServiceAccount
+  name: app-sa
+  namespace: production
+roleRef:
+  kind: Role
+  name: app-role
+  apiGroup: rbac.authorization.k8s.io
+```
+
+### Resource Limits and Quotas
+
+Prevent resource exhaustion attacks.
+
+```yaml
+## Bad - No resource limits
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  containers:
+  - name: app
+    image: myapp
+    ## No limits - can consume all node resources!
+
+## Good - Set resource requests and limits
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  containers:
+  - name: app
+    image: myapp
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
+
+## Good - Enforce with ResourceQuota
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: production-quota
+  namespace: production
+spec:
+  hard:
+    requests.cpu: "10"
+    requests.memory: 20Gi
+    limits.cpu: "20"
+    limits.memory: 40Gi
+    persistentvolumeclaims: "10"
+
+## Good - Set default limits
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: default-limits
+  namespace: production
+spec:
+  limits:
+  - default:
+      memory: 512Mi
+      cpu: 500m
+    defaultRequest:
+      memory: 256Mi
+      cpu: 250m
+    type: Container
+```
+
+### Image Security
+
+Use trusted images and scan for vulnerabilities.
+
+```yaml
+## Bad - Using latest tag from untrusted registry
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  containers:
+  - name: app
+    image: randomuser/myapp:latest  # Untrusted! Unpredictable!
+
+## Good - Pin specific versions from trusted registry
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  containers:
+  - name: app
+    image: gcr.io/mycompany/myapp:v1.2.3@sha256:abc123...  # SHA256 digest
+    imagePullPolicy: Always
+
+## Good - Use private registry with imagePullSecrets
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+spec:
+  imagePullSecrets:
+  - name: regcred
+  containers:
+  - name: app
+    image: myregistry.azurecr.io/myapp:v1.2.3
+
+## Enforce with admission controller
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sAllowedRepos
+metadata:
+  name: allowed-repositories
+spec:
+  match:
+    kinds:
+    - apiGroups: [""]
+      kinds: ["Pod"]
+  parameters:
+    repos:
+    - "gcr.io/mycompany/"
+    - "myregistry.azurecr.io/"
+```
+
+### Admission Control
+
+Use admission controllers to enforce policies.
+
+```yaml
+## OPA Gatekeeper policy - Block privileged containers
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPPrivilegedContainer
+metadata:
+  name: deny-privileged-containers
+spec:
+  match:
+    kinds:
+    - apiGroups: [""]
+      kinds: ["Pod"]
+  parameters:
+    excludedNamespaces:
+    - kube-system
+
+## Block images without digest
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sImageDigests
+metadata:
+  name: require-image-digest
+spec:
+  match:
+    kinds:
+    - apiGroups: [""]
+      kinds: ["Pod"]
+
+## Require labels
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: require-owner-label
+spec:
+  match:
+    kinds:
+    - apiGroups: [""]
+      kinds: ["Pod"]
+  parameters:
+    labels:
+    - key: "owner"
+    - key: "environment"
+```
+
+### Audit Logging
+
+Enable comprehensive audit logging.
+
+```yaml
+## kube-apiserver audit policy
+apiVersion: audit.k8s.io/v1
+kind: Policy
+rules:
+## Log all requests to Secrets
+- level: RequestResponse
+  resources:
+  - group: ""
+    resources: ["secrets"]
+
+## Log all authentication and authorization failures
+- level: Metadata
+  omitStages:
+  - "RequestReceived"
+  userGroups:
+  - "system:unauthenticated"
+
+## Log pod exec and port-forward
+- level: Request
+  verbs: ["create"]
+  resources:
+  - group: ""
+    resources: ["pods/exec", "pods/portforward"]
+```
+
+### Pod Disruption Budgets
+
+Protect against accidental disruption.
+
+```yaml
+## Good - Ensure minimum availability during maintenance
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: app-pdb
+  namespace: production
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: critical-app
+
+## Or use percentage
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: app-pdb-percent
+  namespace: production
+spec:
+  maxUnavailable: "25%"
+  selector:
+    matchLabels:
+      app: web-app
+```
+
+---
+
 ## References
 
 ### Official Documentation
