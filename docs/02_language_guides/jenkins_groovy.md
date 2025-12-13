@@ -697,6 +697,329 @@ pipeline {
 
 ---
 
+## Testing
+
+### Testing Pipelines with Jenkins Pipeline Unit
+
+Use [Jenkins Pipeline Unit](https://github.com/jenkinsci/JenkinsPipelineUnit) to test Groovy pipelines:
+
+```groovy
+## build.gradle
+dependencies {
+    testImplementation 'com.lesfurets:jenkins-pipeline-unit:1.19'
+    testImplementation 'junit:junit:4.13.2'
+}
+```
+
+### Unit Test Example
+
+```groovy
+## test/groovy/TestJenkinsfile.groovy
+import com.lesfurets.jenkins.unit.BasePipelineTest
+import org.junit.Before
+import org.junit.Test
+
+class TestJenkinsfile extends BasePipelineTest {
+
+    @Override
+    @Before
+    void setUp() {
+        super.setUp()
+
+        // Mock pipeline steps
+        helper.registerAllowedMethod('sh', [String.class], { String cmd ->
+            return "mocked output"
+        })
+
+        helper.registerAllowedMethod('checkout', [Map.class], null)
+        helper.registerAllowedMethod('junit', [String.class], null)
+    }
+
+    @Test
+    void testPipelineSuccess() {
+        def script = loadScript('Jenkinsfile')
+        script.execute()
+
+        printCallStack()
+
+        // Verify expected steps were called
+        assertJobStatusSuccess()
+    }
+
+    @Test
+    void testBuildStage() {
+        def script = loadScript('Jenkinsfile')
+
+        binding.setVariable('env', [BRANCH_NAME: 'main'])
+
+        script.execute()
+
+        // Verify build commands
+        assertTrue(helper.callStack.findAll {
+            it.methodName == 'sh'
+        }.any {
+            it.args[0].toString().contains('npm run build')
+        })
+    }
+}
+```
+
+### Testing Shared Libraries
+
+```groovy
+## vars/deployApp.groovy
+def call(Map config) {
+    pipeline {
+        agent any
+        stages {
+            stage('Deploy') {
+                steps {
+                    script {
+                        sh "kubectl apply -f ${config.manifestPath}"
+                    }
+                }
+            }
+        }
+    }
+}
+
+## test/groovy/DeployAppTest.groovy
+import com.lesfurets.jenkins.unit.BasePipelineTest
+import org.junit.Test
+
+class DeployAppTest extends BasePipelineTest {
+
+    @Test
+    void testDeployAppCall() {
+        def script = loadScript('vars/deployApp.groovy')
+
+        helper.registerAllowedMethod('sh', [String.class], { cmd ->
+            assert cmd.contains('kubectl apply')
+        })
+
+        script.call([manifestPath: '/path/to/manifest.yaml'])
+    }
+}
+```
+
+### Linting with npm-groovy-lint
+
+```bash
+## Install npm-groovy-lint
+npm install -g npm-groovy-lint
+
+## Lint Jenkinsfile
+npm-groovy-lint Jenkinsfile
+
+## Lint with auto-fix
+npm-groovy-lint --fix Jenkinsfile
+
+## Lint all Groovy files
+npm-groovy-lint "**/*.groovy"
+```
+
+### Configuration for npm-groovy-lint
+
+```json
+## .groovylintrc.json
+{
+  "extends": "recommended",
+  "rules": {
+    "CompileStatic": "off",
+    "DuplicateStringLiteral": "warning",
+    "LineLength": {
+      "length": 120
+    },
+    "MethodSize": {
+      "maxLines": 50
+    }
+  }
+}
+```
+
+### Validating Jenkinsfile Syntax
+
+```bash
+## Using Jenkins CLI
+java -jar jenkins-cli.jar -s http://jenkins:8080/ \
+    declarative-linter < Jenkinsfile
+
+## Using curl with Jenkins API
+curl -X POST -F "jenkinsfile=<Jenkinsfile" \
+    http://jenkins:8080/pipeline-model-converter/validate
+```
+
+### Integration Testing
+
+Test pipeline integration in actual Jenkins:
+
+```groovy
+## tests/integration/Jenkinsfile.test
+@Library('shared-library@main') _
+
+pipeline {
+    agent any
+
+    options {
+        skipDefaultCheckout()
+    }
+
+    stages {
+        stage('Test Pipeline Integration') {
+            steps {
+                script {
+                    // Test shared library functions
+                    def result = deployApp([
+                        environment: 'test',
+                        version: '1.0.0'
+                    ])
+
+                    assert result.status == 'success'
+                }
+            }
+        }
+    }
+}
+```
+
+### CI/CD for Pipeline Testing
+
+```groovy
+## Jenkinsfile.test
+pipeline {
+    agent any
+
+    stages {
+        stage('Lint') {
+            steps {
+                sh 'npm-groovy-lint Jenkinsfile'
+            }
+        }
+
+        stage('Unit Tests') {
+            steps {
+                sh './gradlew test'
+            }
+        }
+
+        stage('Validate Syntax') {
+            steps {
+                sh '''
+                    curl -X POST -F "jenkinsfile=<Jenkinsfile" \
+                        http://localhost:8080/pipeline-model-converter/validate
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            junit 'build/test-results/**/*.xml'
+        }
+    }
+}
+```
+
+### Testing with Different Agents
+
+```groovy
+def testOnAgent(String agentLabel, Closure testClosure) {
+    node(agentLabel) {
+        try {
+            testClosure()
+            echo "Tests passed on ${agentLabel}"
+        } catch (Exception e) {
+            error "Tests failed on ${agentLabel}: ${e.message}"
+        }
+    }
+}
+
+// Usage in pipeline
+pipeline {
+    agent none
+
+    stages {
+        stage('Cross-Platform Tests') {
+            parallel {
+                stage('Linux') {
+                    steps {
+                        script {
+                            testOnAgent('linux') {
+                                sh 'make test'
+                            }
+                        }
+                    }
+                }
+
+                stage('Windows') {
+                    steps {
+                        script {
+                            testOnAgent('windows') {
+                                bat 'nmake test'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+### Mock External Dependencies
+
+```groovy
+## Test with mocked HTTP calls
+@Test
+void testAPICall() {
+    helper.registerAllowedMethod('httpRequest', [Map.class], { Map args ->
+        return [
+            status: 200,
+            content: '{"success": true}'
+        ]
+    })
+
+    def script = loadScript('Jenkinsfile')
+    script.execute()
+
+    assertJobStatusSuccess()
+}
+```
+
+### Performance Testing
+
+Test pipeline performance:
+
+```groovy
+pipeline {
+    agent any
+
+    stages {
+        stage('Performance Test') {
+            steps {
+                script {
+                    def startTime = System.currentTimeMillis()
+
+                    // Run pipeline stages
+                    sh 'npm run build'
+                    sh 'npm test'
+
+                    def duration = System.currentTimeMillis() - startTime
+
+                    echo "Pipeline took ${duration}ms"
+
+                    if (duration > 600000) { // 10 minutes
+                        error "Pipeline exceeds time threshold"
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+---
+
 ## Security Best Practices
 
 ### Secure Credentials Management

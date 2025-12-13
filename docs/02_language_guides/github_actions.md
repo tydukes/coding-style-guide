@@ -568,6 +568,572 @@ jobs:
 
 ---
 
+## Testing
+
+### Testing Workflows Locally with act
+
+Use [act](https://github.com/nektos/act) to test GitHub Actions workflows locally:
+
+```bash
+## Install act
+brew install act  # macOS
+# Or download from https://github.com/nektos/act/releases
+
+## Run all workflows
+act
+
+## Run specific event
+act push
+act pull_request
+act workflow_dispatch
+
+## Run specific job
+act -j test
+
+## Run with specific runner
+act -P ubuntu-latest=catthehacker/ubuntu:act-latest
+
+## Dry run to see what would execute
+act -n
+
+## Run with secrets
+act -s GITHUB_TOKEN=ghp_xxx
+
+## Use secrets file
+act --secret-file .secrets
+```
+
+### Workflow Testing Best Practices
+
+```yaml
+## .github/workflows/test-workflow.yml
+name: Test Workflow
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:  # Enable manual testing
+
+jobs:
+  validate:
+    name: Validate Workflow Syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate workflow files
+        run: |
+          for file in .github/workflows/*.yml; do
+            echo "Validating $file"
+            yamllint "$file"
+          done
+
+  test-action:
+    name: Test Custom Action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test action
+        uses: ./.github/actions/custom-action
+        with:
+          test-mode: true
+
+      - name: Verify action output
+        run: |
+          if [ -z "${{ steps.test-action.outputs.result }}" ]; then
+            echo "Action failed to produce output"
+            exit 1
+          fi
+
+  matrix-test:
+    name: Test Matrix Strategy
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: [18, 20]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run tests
+        run: npm test
+```
+
+### Testing Custom Actions
+
+Create tests for custom actions:
+
+```yaml
+## .github/actions/custom-action/action.yml
+name: Custom Action
+description: Example custom action with testing
+
+inputs:
+  input-value:
+    description: Test input
+    required: true
+
+outputs:
+  result:
+    description: Action result
+    value: ${{ steps.process.outputs.result }}
+
+runs:
+  using: composite
+  steps:
+    - name: Validate input
+      shell: bash
+      run: |
+        if [ -z "${{ inputs.input-value }}" ]; then
+          echo "Error: input-value is required"
+          exit 1
+        fi
+
+    - name: Process input
+      id: process
+      shell: bash
+      run: |
+        result="Processed: ${{ inputs.input-value }}"
+        echo "result=$result" >> $GITHUB_OUTPUT
+```
+
+Test file for custom action:
+
+```yaml
+## .github/workflows/test-custom-action.yml
+name: Test Custom Action
+
+on:
+  pull_request:
+    paths:
+      - '.github/actions/**'
+  workflow_dispatch:
+
+jobs:
+  test-valid-input:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test with valid input
+        id: valid
+        uses: ./.github/actions/custom-action
+        with:
+          input-value: "test-value"
+
+      - name: Verify output
+        run: |
+          expected="Processed: test-value"
+          actual="${{ steps.valid.outputs.result }}"
+          if [ "$actual" != "$expected" ]; then
+            echo "Expected: $expected"
+            echo "Got: $actual"
+            exit 1
+          fi
+
+  test-missing-input:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test with missing input (should fail)
+        id: invalid
+        continue-on-error: true
+        uses: ./.github/actions/custom-action
+        with:
+          input-value: ""
+
+      - name: Verify failure
+        run: |
+          if [ "${{ steps.invalid.outcome }}" != "failure" ]; then
+            echo "Action should have failed with empty input"
+            exit 1
+          fi
+```
+
+### Integration Testing
+
+Test workflow integration with external services:
+
+```yaml
+## .github/workflows/integration-test.yml
+name: Integration Tests
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Daily
+  workflow_dispatch:
+
+jobs:
+  test-docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t test-app:${{ github.sha }} .
+
+      - name: Test container
+        run: |
+          docker run -d --name test-container test-app:${{ github.sha }}
+          sleep 5
+          docker exec test-container curl -f http://localhost:3000/health
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker stop test-container || true
+          docker rm test-container || true
+
+  test-deployment:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to staging
+        run: |
+          # Deploy to staging environment
+          echo "Deploying to staging..."
+
+      - name: Run smoke tests
+        run: |
+          # Verify deployment
+          curl -f https://staging.example.com/health
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          # Rollback deployment
+          echo "Rolling back deployment..."
+```
+
+### Performance Testing
+
+Test workflow performance and efficiency:
+
+```yaml
+## .github/workflows/performance-test.yml
+name: Workflow Performance
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+jobs:
+  measure-performance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Measure cache effectiveness
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies (with timing)
+        run: |
+          start_time=$(date +%s)
+          npm ci
+          end_time=$(date +%s)
+          duration=$((end_time - start_time))
+          echo "Install took ${duration}s"
+
+          if [ "$duration" -gt 120 ]; then
+            echo "::warning::Install taking longer than expected (${duration}s > 120s)"
+          fi
+
+      - name: Check workflow file size
+        run: |
+          for file in .github/workflows/*.yml; do
+            size=$(wc -l < "$file")
+            echo "$file: $size lines"
+            if [ "$size" -gt 300 ]; then
+              echo "::warning::$file is large ($size lines), consider splitting"
+            fi
+          done
+```
+
+### Reusable Workflow Testing
+
+Test reusable workflows:
+
+```yaml
+## .github/workflows/reusable-test.yml
+name: Reusable Test Workflow
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      test-suite:
+        required: false
+        type: string
+        default: 'all'
+    outputs:
+      test-result:
+        description: Test execution result
+        value: ${{ jobs.test.outputs.result }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    outputs:
+      result: ${{ steps.run-tests.outputs.result }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run tests
+        id: run-tests
+        run: |
+          echo "Testing environment: ${{ inputs.environment }}"
+          echo "Test suite: ${{ inputs.test-suite }}"
+
+          # Run tests
+          npm test
+
+          echo "result=success" >> $GITHUB_OUTPUT
+```
+
+Call and test reusable workflow:
+
+```yaml
+## .github/workflows/test-reusable.yml
+name: Test Reusable Workflow
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  call-reusable:
+    uses: ./.github/workflows/reusable-test.yml
+    with:
+      environment: staging
+      test-suite: integration
+
+  verify-output:
+    needs: call-reusable
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check test result
+        run: |
+          result="${{ needs.call-reusable.outputs.test-result }}"
+          if [ "$result" != "success" ]; then
+            echo "Tests failed"
+            exit 1
+          fi
+```
+
+### CI/CD Pipeline Testing
+
+Complete pipeline test:
+
+```yaml
+## .github/workflows/ci-cd-test.yml
+name: CI/CD Pipeline Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint workflows
+        run: |
+          yamllint .github/workflows/
+
+  unit-test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run unit tests
+        run: npm test
+
+  integration-test:
+    runs-on: ubuntu-latest
+    needs: unit-test
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run integration tests
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@postgres:5432/test
+        run: npm run test:integration
+
+  e2e-test:
+    runs-on: ubuntu-latest
+    needs: integration-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+  build:
+    runs-on: ubuntu-latest
+    needs: e2e-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build application
+        run: npm run build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: dist/
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment:
+      name: staging
+      url: https://staging.example.com
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: Deploy to staging
+        run: |
+          echo "Deploying to staging..."
+          # Deployment commands
+
+      - name: Smoke test
+        run: |
+          curl -f https://staging.example.com/health
+```
+
+### Testing with Secrets and Environment Variables
+
+```yaml
+## .github/workflows/test-secrets.yml
+name: Test Secrets Handling
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify required secrets exist
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          if [ -z "$API_KEY" ]; then
+            echo "Error: API_KEY secret not set"
+            exit 1
+          fi
+
+          if [ -z "$DB_PASSWORD" ]; then
+            echo "Error: DB_PASSWORD secret not set"
+            exit 1
+          fi
+
+          echo "All required secrets are configured"
+
+      - name: Test secret masking
+        run: |
+          # Secrets should be masked in logs
+          echo "Testing secret handling..."
+          # Never echo secrets directly!
+```
+
+### Workflow Validation in CI
+
+Add workflow validation to your CI:
+
+```yaml
+## .github/workflows/validate-workflows.yml
+name: Validate Workflows
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - '.github/actions/**'
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install actionlint
+        run: |
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+
+      - name: Run actionlint
+        run: |
+          ./actionlint -color
+
+  yamllint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint YAML files
+        run: |
+          yamllint .github/workflows/
+          yamllint .github/actions/
+
+  test-with-act:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup act
+        run: |
+          curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
+
+      - name: Dry run workflows
+        run: |
+          act -n pull_request
+```
+
+---
+
 ## Security Best Practices
 
 ### Pin Action Versions
