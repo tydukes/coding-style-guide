@@ -1810,6 +1810,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#string-interpolation-in-resource-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        String Interpolation in Resource Names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#count-vs-for_each-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Count vs For_Each Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#depends_on-overuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Depends_On Overuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lifecycle-ignore_changes-abuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle Ignore_Changes Abuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform-vs-provider-version-lock-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform vs Provider Version Lock Missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5193,6 +5265,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#string-interpolation-in-resource-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        String Interpolation in Resource Names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#count-vs-for_each-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Count vs For_Each Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#depends_on-overuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Depends_On Overuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lifecycle-ignore_changes-abuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle Ignore_Changes Abuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform-vs-provider-version-lock-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform vs Provider Version Lock Missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6731,6 +6875,251 @@ terraform-docs<span class="w"> </span>markdown<span class="w"> </span>table<span
 <li>Implement policy-as-code (Sentinel, OPA)</li>
 <li>Monitor for drift</li>
 <li>Regular security audits</li>
+</ul>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="string-interpolation-in-resource-names">String Interpolation in Resource Names<a class="headerlink" href="#string-interpolation-in-resource-names" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Using variables or interpolations in resource names causes Terraform to recreate resources unnecessarily.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Interpolation in resource name</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environment&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span>
+<span class="p">}</span>
+
+<span class="err">resource</span><span class="w"> </span><span class="s2">&quot;aws_instance&quot; &quot;web_${var.environment}&quot;</span><span class="w"> </span><span class="p">{</span><span class="c1">  # ❌ Not allowed!</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-12345678&quot;</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.micro&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use static resource names with dynamic tags or Name attributes.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Static resource name, dynamic tags</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environment&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-12345678&quot;</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.micro&quot;</span>
+
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;web-${var.environment}&quot;</span><span class="c1">  # ✅ Dynamic name in tags</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Resource names must be static (no interpolation)</li>
+<li>Use tags or labels for dynamic naming</li>
+<li>Resource name is for Terraform reference only</li>
+<li>Use <code>Name</code> tag for AWS resource display names</li>
+</ul>
+<h3 id="count-vs-for_each-confusion">Count vs For_Each Confusion<a class="headerlink" href="#count-vs-for_each-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Using <code>count</code> causes resource recreation when list order changes; <code>for_each</code> is more stable.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - count with list (order matters)</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;alice&quot;, &quot;bob&quot;, &quot;charlie&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_user&quot;</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.users</span><span class="p">)</span>
+<span class="w">  </span><span class="na">name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">var.users[count.index</span><span class="p">]</span><span class="c1">  # ❌ Reordering list recreates resources!</span>
+<span class="p">}</span>
+
+<span class="c1">## If you change to [&quot;alice&quot;, &quot;charlie&quot;, &quot;bob&quot;], bob will be recreated</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>for_each</code> with sets or maps for stable addressing.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - for_each with set (order independent)</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;alice&quot;, &quot;bob&quot;, &quot;charlie&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_user&quot;</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">toset</span><span class="p">(</span><span class="nv">var.users</span><span class="p">)</span>
+<span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">each.value</span><span class="c1">  # ✅ Referenced by name, not index</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - for_each with map for complex resources</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;instances&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">web</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.small&quot;</span>
+<span class="w">      </span><span class="na">subnet_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;subnet-abc&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.medium&quot;</span>
+<span class="w">      </span><span class="na">subnet_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;subnet-def&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;servers&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instances</span>
+
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-12345678&quot;</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">each.value.instance_type</span>
+<span class="w">  </span><span class="na">subnet_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">each.value.subnet_id</span>
+
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">each.key</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use <code>for_each</code> when resource identity matters</li>
+<li><code>count</code> is fine for identical resources (e.g., 3 identical workers)</li>
+<li><code>for_each</code> prevents recreation on list reordering</li>
+<li>Reference with <code>resource_type.name[key]</code></li>
+</ul>
+<h3 id="depends_on-overuse">Depends_On Overuse<a class="headerlink" href="#depends_on-overuse" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Explicit <code>depends_on</code> overrides Terraform's dependency graph, slowing applies and hiding issues.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Unnecessary depends_on</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.1.0/24&quot;</span>
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_vpc.main</span><span class="p">]</span><span class="c1">  # ❌ Redundant! Already depends via vpc_id</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Let Terraform infer dependencies from resource references.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Implicit dependency through reference</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span><span class="c1">  # ✅ Implicit dependency</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.1.0/24&quot;</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - depends_on only when no resource reference exists</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_role_policy_attachment&quot;</span><span class="w"> </span><span class="nv">&quot;attach&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">role</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_role.role.name</span>
+<span class="w">  </span><span class="na">policy_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::aws:policy/ReadOnlyAccess&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-12345678&quot;</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.micro&quot;</span>
+<span class="w">  </span><span class="na">iam_instance_profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_role.role.name</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="nv">aws_iam_role_policy_attachment.attach</span><span class="c1">  # ✅ Ensures policy attached before instance starts</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Terraform infers dependencies from resource references</li>
+<li>Only use <code>depends_on</code> for hidden dependencies</li>
+<li>Overuse serializes operations, slowing applies</li>
+<li>Check terraform graph to understand dependencies</li>
+</ul>
+<h3 id="lifecycle-ignore_changes-abuse">Lifecycle Ignore_Changes Abuse<a class="headerlink" href="#lifecycle-ignore_changes-abuse" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Overusing <code>ignore_changes</code> masks configuration drift and makes state inconsistent.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Ignoring too many changes</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-12345678&quot;</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.micro&quot;</span>
+
+<span class="w">  </span><span class="nb">lifecycle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">ignore_changes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="err">ami</span><span class="p">,</span>
+<span class="w">      </span><span class="err">instance_type</span><span class="p">,</span><span class="c1">  # ❌ Why ignore? Should be in Terraform</span>
+<span class="w">      </span><span class="err">tags</span><span class="p">,</span>
+<span class="w">      </span><span class="err">user_data</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Only ignore changes for values managed outside Terraform.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Specific ignore for autoscaling</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_autoscaling_group&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">min_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
+<span class="w">  </span><span class="na">max_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span>
+<span class="w">  </span><span class="na">desired_capacity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+
+<span class="w">  </span><span class="nb">lifecycle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">ignore_changes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="err">desired_capacity</span><span class="c1">  # ✅ Changed by autoscaling, ignore drift</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Ignore tags added by external systems</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-12345678&quot;</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.micro&quot;</span>
+
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">lifecycle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">ignore_changes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="err">tags</span><span class="p">[</span><span class="s2">&quot;CostCenter&quot;</span><span class="p">],</span><span class="c1">  # ✅ Added by cost tracking system</span>
+<span class="w">      </span><span class="err">tags</span><span class="p">[</span><span class="s2">&quot;Owner&quot;</span><span class="p">]</span><span class="c1">        # Added by ownership tracker</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Only ignore changes managed by external systems</li>
+<li>Document why each field is ignored</li>
+<li>Prefer managing all configuration in Terraform</li>
+<li>Use <code>ignore_changes = all</code> very rarely</li>
+</ul>
+<h3 id="terraform-vs-provider-version-lock-missing">Terraform vs Provider Version Lock Missing<a class="headerlink" href="#terraform-vs-provider-version-lock-missing" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Not specifying version constraints causes unexpected behavior when providers update.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - No version constraints</span>
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/aws&quot;</span><span class="c1">  # ❌ No version! Will use latest</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Always pin provider and Terraform versions.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Version constraints</span>
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.5.0, &lt; 2.0.0&quot;</span><span class="c1">  # ✅ Terraform version range</span>
+
+<span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/aws&quot;</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 5.0&quot;</span><span class="c1">  # ✅ Allow 5.x updates, not 6.0</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/random&quot;</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 3.5.0&quot;</span><span class="c1">  # Minimum version</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always specify <code>required_version</code> for Terraform</li>
+<li>Use <code>~&gt;</code> for "compatible with" (e.g., <code>~&gt; 5.0</code> allows 5.1, 5.2, not 6.0)</li>
+<li>Lock exact versions in production with lock file</li>
+<li>Test provider upgrades in non-production first</li>
 </ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>

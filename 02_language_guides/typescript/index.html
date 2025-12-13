@@ -1836,6 +1836,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type-assertions-vs-type-guards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Assertions vs Type Guards
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-chaining-with-nullish-coalescing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional Chaining with Nullish Coalescing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#promise-error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Promise Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enum-vs-union-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enum vs Union Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-widening-in-let" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Widening in Let
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#array-mutation-type-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Array Mutation Type Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4746,6 +4829,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type-assertions-vs-type-guards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Assertions vs Type Guards
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-chaining-with-nullish-coalescing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional Chaining with Nullish Coalescing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#promise-error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Promise Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enum-vs-union-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enum vs Union Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-widening-in-let" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Widening in Let
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#array-mutation-type-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Array Mutation Type Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5994,6 +6160,223 @@ interfaces, and compile-time type checking to enhance code quality and developer
 <span class="w">  </span><span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="type-assertions-vs-type-guards">Type Assertions vs Type Guards<a class="headerlink" href="#type-assertions-vs-type-guards" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Using type assertions (<code>as</code>) bypasses type checking and can cause runtime errors if the assertion is incorrect.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Type assertion with no runtime check</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">processUser</span><span class="p">(</span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">User</span><span class="p">;</span><span class="w">  </span><span class="c1">// No runtime validation!</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">());</span><span class="w">  </span><span class="c1">// Runtime error if data isn&#39;t a User</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use type guards for runtime type checking.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Good - Type guard with runtime check</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">isUser</span><span class="p">(</span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="nx">is</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">    </span><span class="nx">data</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">    </span><span class="s1">&#39;email&#39;</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">    </span><span class="ow">typeof</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">User</span><span class="p">).</span><span class="nx">email</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;string&#39;</span>
+<span class="w">  </span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">processUser</span><span class="p">(</span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">isUser</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Invalid user data&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">email</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">());</span><span class="w">  </span><span class="c1">// Type-safe</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Type assertions don't perform runtime checks</li>
+<li>Use type guards (<code>is</code> operator) for validation</li>
+<li>Prefer <code>unknown</code> over <code>any</code> for better type safety</li>
+<li>Validate external data (APIs, user input) at runtime</li>
+</ul>
+<h3 id="optional-chaining-with-nullish-coalescing">Optional Chaining with Nullish Coalescing<a class="headerlink" href="#optional-chaining-with-nullish-coalescing" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Confusing <code>?.</code> (optional chaining) with <code>||</code> for defaults causes bugs with falsy values.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - || treats 0 and &quot;&quot; as missing</span>
+<span class="kd">interface</span><span class="w"> </span><span class="nx">Config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">timeout?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">retries?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">Config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">timeout</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span><span class="w"> </span><span class="nx">retries</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="w"> </span><span class="p">};</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">timeout</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">30</span><span class="p">;</span><span class="w">  </span><span class="c1">// Returns 30, not 0!</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">retries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">retries</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">3</span><span class="p">;</span><span class="w">   </span><span class="c1">// Returns 3, not 0!</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>??</code> (nullish coalescing) for defaults.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Good - ?? only checks for null/undefined</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">Config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">timeout</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span><span class="w"> </span><span class="nx">retries</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="w"> </span><span class="p">};</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">timeout</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="mf">30</span><span class="p">;</span><span class="w">  </span><span class="c1">// Returns 0 ✅</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">retries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">config</span><span class="p">.</span><span class="nx">retries</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="mf">3</span><span class="p">;</span><span class="w">   </span><span class="c1">// Returns 0 ✅</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>||</code> treats <code>0</code>, <code>""</code>, <code>false</code> as missing</li>
+<li><code>??</code> only checks for <code>null</code> and <code>undefined</code></li>
+<li>Use <code>?.</code> for safe property access</li>
+<li>Combine: <code>obj?.prop ?? defaultValue</code></li>
+</ul>
+<h3 id="promise-error-handling">Promise Error Handling<a class="headerlink" href="#promise-error-handling" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Unhandled promise rejections cause silent failures in production.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Unhandled promise rejection</span>
+<span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">fetchUserData</span><span class="p">(</span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="sb">`/api/users/</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span><span class="w">  </span><span class="c1">// No error handling</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span><span class="w">  </span><span class="c1">// Can throw</span>
+<span class="p">}</span>
+
+<span class="c1">// Fires off request and forgets about errors</span>
+<span class="nx">fetchUserData</span><span class="p">(</span><span class="s1">&#39;123&#39;</span><span class="p">);</span><span class="w">  </span><span class="c1">// Unhandled rejection!</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Always handle promise rejections with try/catch or .catch().</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Good - Proper error handling</span>
+<span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">fetchUserData</span><span class="p">(</span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">User</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="sb">`/api/users/</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`HTTP </span><span class="si">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb">: </span><span class="si">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">statusText</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">isUser</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Invalid user data&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Failed to fetch user&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="nx">error</span><span class="p">;</span><span class="w">  </span><span class="c1">// Re-throw or return fallback</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Usage with error handling</span>
+<span class="nx">fetchUserData</span><span class="p">(</span><span class="s1">&#39;123&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">user</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">user</span><span class="p">))</span>
+<span class="w">  </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">error</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Error:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">));</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always use try/catch with async/await</li>
+<li>Add <code>.catch()</code> to promise chains</li>
+<li>Check <code>response.ok</code> for HTTP errors</li>
+<li>Validate response data structure</li>
+<li>Log errors before re-throwing</li>
+</ul>
+<h3 id="enum-vs-union-types">Enum vs Union Types<a class="headerlink" href="#enum-vs-union-types" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Enums compile to runtime objects, increasing bundle size and creating reverse mapping confusion.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Enum creates runtime object</span>
+<span class="kd">enum</span><span class="w"> </span><span class="nx">UserRole</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">Admin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;ADMIN&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;USER&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">Guest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;GUEST&#39;</span>
+<span class="p">}</span>
+
+<span class="c1">// Compiled output (adds ~100 bytes):</span>
+<span class="c1">// var UserRole;</span>
+<span class="c1">// (function (UserRole) {</span>
+<span class="c1">//   UserRole[&quot;Admin&quot;] = &quot;ADMIN&quot;;</span>
+<span class="c1">//   UserRole[&quot;User&quot;] = &quot;USER&quot;;</span>
+<span class="c1">//   UserRole[&quot;Guest&quot;] = &quot;GUEST&quot;;</span>
+<span class="c1">// })(UserRole || (UserRole = {}));</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use const enums or union types for zero runtime cost.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Good - Union type (no runtime code)</span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">UserRole</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;ADMIN&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;USER&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;GUEST&#39;</span><span class="p">;</span>
+
+<span class="c1">// Good - Const enum (inlined at compile time)</span>
+<span class="kd">const</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="nx">UserRole</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">Admin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;ADMIN&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;USER&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">Guest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;GUEST&#39;</span>
+<span class="p">}</span>
+
+<span class="c1">// Usage remains the same</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">checkRole</span><span class="p">(</span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">UserRole</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">role</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;ADMIN&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Regular enums create runtime objects</li>
+<li>Union types have zero runtime cost</li>
+<li>Const enums are inlined (no runtime object)</li>
+<li>Use union types for API types</li>
+<li>Prefer const enums if you need enum features</li>
+</ul>
+<h3 id="type-widening-in-let">Type Widening in Let<a class="headerlink" href="#type-widening-in-let" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: TypeScript infers wider types for <code>let</code> variables, losing literal type information.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Type widened to string</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pending&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">// Type: string (not &#39;pending&#39;)</span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">Status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pending&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;completed&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;failed&#39;</span><span class="p">;</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">updateStatus</span><span class="p">(</span><span class="nx">s</span><span class="o">:</span><span class="w"> </span><span class="kt">Status</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
+<span class="nx">updateStatus</span><span class="p">(</span><span class="nx">status</span><span class="p">);</span><span class="w">  </span><span class="c1">// Error: string not assignable to Status!</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>const</code> or explicit type annotations.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Good - Use const for literals</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pending&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">// Type: &#39;pending&#39; ✅</span>
+<span class="nx">updateStatus</span><span class="p">(</span><span class="nx">status</span><span class="p">);</span><span class="w">  </span><span class="c1">// Works!</span>
+
+<span class="c1">// Good - Explicit type annotation</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="kt">Status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pending&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">// Type: Status ✅</span>
+<span class="nx">updateStatus</span><span class="p">(</span><span class="nx">status</span><span class="p">);</span><span class="w">  </span><span class="c1">// Works!</span>
+
+<span class="c1">// Good - as const assertion</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">timeout</span><span class="o">:</span><span class="w"> </span><span class="kt">30</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">retries</span><span class="o">:</span><span class="w"> </span><span class="kt">3</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="kd">const</span><span class="p">;</span><span class="w">  </span><span class="c1">// Type: { readonly timeout: 30; readonly retries: 3 }</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>let</code> infers wider types (string not 'hello')</li>
+<li><code>const</code> preserves literal types</li>
+<li>Use <code>as const</code> for readonly literal types</li>
+<li>Add explicit type annotations when needed</li>
+</ul>
+<h3 id="array-mutation-type-issues">Array Mutation Type Issues<a class="headerlink" href="#array-mutation-type-issues" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Array methods like <code>.push()</code> mutate arrays, causing type errors with readonly arrays.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Bad - Mutating readonly array</span>
+<span class="kd">interface</span><span class="w"> </span><span class="nx">Props</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">readonly</span><span class="w"> </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="kt">ReadonlyArray</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">addItem</span><span class="p">(</span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="kt">Props</span><span class="p">,</span><span class="w"> </span><span class="nx">item</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">props</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">item</span><span class="p">);</span><span class="w">  </span><span class="c1">// Error: push doesn&#39;t exist on ReadonlyArray!</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use immutable array operations.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Good - Create new array instead of mutating</span>
+<span class="kd">interface</span><span class="w"> </span><span class="nx">Props</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">readonly</span><span class="w"> </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="kt">ReadonlyArray</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">addItem</span><span class="p">(</span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="kt">Props</span><span class="p">,</span><span class="w"> </span><span class="nx">item</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">ReadonlyArray</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">[...</span><span class="nx">props</span><span class="p">.</span><span class="nx">items</span><span class="p">,</span><span class="w"> </span><span class="nx">item</span><span class="p">];</span><span class="w">  </span><span class="c1">// Creates new array</span>
+<span class="p">}</span>
+
+<span class="c1">// Good - Immutable operations</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">filtered</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">items</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">x</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">x</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;remove&#39;</span><span class="p">);</span><span class="w">  </span><span class="c1">// New array</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">mapped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">x</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">x</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">());</span><span class="w">      </span><span class="c1">// New array</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">sorted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[...</span><span class="nx">items</span><span class="p">].</span><span class="nx">sort</span><span class="p">();</span><span class="w">                    </span><span class="c1">// Copy then sort</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>ReadonlyArray&lt;T&gt;</code> prevents mutation</li>
+<li>Use spread operator to create copies</li>
+<li>Array methods (map, filter) return new arrays</li>
+<li>Sort/reverse mutate; copy first: <code>[...arr].sort()</code></li>
+<li>Prefer immutable operations in React/Redux</li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-any-type">❌ Avoid: any Type<a class="headerlink" href="#avoid-any-type" title="Permanent link">&para;</a></h3>

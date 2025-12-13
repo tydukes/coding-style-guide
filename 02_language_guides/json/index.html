@@ -2470,6 +2470,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trailing-commas-breaking-parsers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trailing Commas Breaking Parsers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#number-precision-loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Number Precision Loss
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comment-attempts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comment Attempts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#string-escaping-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        String Escaping Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-inconsistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Inconsistency
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5145,6 +5217,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trailing-commas-breaking-parsers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trailing Commas Breaking Parsers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#number-precision-loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Number Precision Loss
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comment-attempts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comment Attempts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#string-escaping-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        String Escaping Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-inconsistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Inconsistency
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6246,6 +6390,137 @@ chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>p
 <li>Never make secrets world-readable</li>
 <li>Audit file access regularly</li>
 <li>Encrypt sensitive JSON files at rest</li>
+</ul>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="trailing-commas-breaking-parsers">Trailing Commas Breaking Parsers<a class="headerlink" href="#trailing-commas-breaking-parsers" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Adding trailing commas (common in JavaScript) causes JSON parsers to fail.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;age&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;john@example.com&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Remove all trailing commas.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;age&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;john@example.com&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>JSON specification forbids trailing commas</li>
+<li>Most JSON parsers will reject trailing commas</li>
+<li>Use JSON linter to catch trailing commas</li>
+<li>JavaScript allows trailing commas, JSON does not</li>
+</ul>
+<h3 id="number-precision-loss">Number Precision Loss<a class="headerlink" href="#number-precision-loss" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Large integers lose precision when parsed as JavaScript numbers due to IEEE 754 limits.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">9007199254740993</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;transaction_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12345678901234567890</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use strings for large integers or IDs.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9007199254740993&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;transaction_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;12345678901234567890&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;amount_cents&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1299</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;precision_decimal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123.456789012345&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>JavaScript max safe integer: 2^53 - 1 (9,007,199,254,740,991)</li>
+<li>Database IDs often exceed this limit</li>
+<li>Use strings for IDs, UUIDs, and high-precision numbers</li>
+<li>Keep numeric types only for actual calculations</li>
+</ul>
+<h3 id="comment-attempts">Comment Attempts<a class="headerlink" href="#comment-attempts" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Trying to add comments using <code>//</code> or <code>/* */</code> breaks JSON parsing.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="c1">// This is a comment</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="cm">/* Multi-line</span>
+<span class="cm">     comment */</span>
+<span class="w">  </span><span class="nt">&quot;age&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use a designated key for comments or switch to JSON5/JSONC if comments are needed.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;_comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User configuration&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;John&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;age&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;_note_age&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Age is optional for legacy users&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Standard JSON does not support comments</li>
+<li>Use <code>_comment</code>, <code>_note</code>, or similar keys for documentation</li>
+<li>Consider JSON5 or JSONC for config files needing comments</li>
+<li>Remove comment keys before production if needed</li>
+</ul>
+<h3 id="string-escaping-confusion">String Escaping Confusion<a class="headerlink" href="#string-escaping-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Incorrectly escaping special characters or forgetting to escape quotes.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;C:\Users\John\Documents&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;She said &quot;</span><span class="err">hello</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;regex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\d+&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Properly escape backslashes and quotes.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;C:\\Users\\John\\Documents&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;She said \&quot;hello\&quot;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;regex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\\d+&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;newline&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Line 1\\nLine 2&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always escape backslashes: <code>\</code> becomes <code>\\</code></li>
+<li>Escape double quotes inside strings: <code>"</code> becomes <code>\"</code></li>
+<li>Common escapes: <code>\n</code> (newline), <code>\t</code> (tab), <code>\r</code> (carriage return)</li>
+<li>JSON does not support single-quoted strings</li>
+</ul>
+<h3 id="type-inconsistency">Type Inconsistency<a class="headerlink" href="#type-inconsistency" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Mixing data types for the same field causes parsing and validation issues.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;456&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yes&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Maintain consistent types across all instances.</p>
+<div class="highlight"><pre><span></span><code><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">456</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Keep field types consistent across all objects</li>
+<li>Define and enforce a schema</li>
+<li>Boolean values: <code>true</code> or <code>false</code>, not <code>"true"</code> or <code>1</code></li>
+<li>Numbers: <code>123</code>, not <code>"123"</code> (unless it's an ID)</li>
 </ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>

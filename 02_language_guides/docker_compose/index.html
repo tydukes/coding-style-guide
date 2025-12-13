@@ -2472,6 +2472,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#port-conflict-with-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Conflict with Host
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-depends_on-for-service-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Depends_On for Service Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume-mount-path-typos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume Mount Path Typos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-name-collision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Name Collision
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-file-path-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment File Path Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4959,6 +5031,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#port-conflict-with-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Conflict with Host
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-depends_on-for-service-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Depends_On for Service Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume-mount-path-typos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume Mount Path Typos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-name-collision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Name Collision
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-file-path-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment File Path Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6194,6 +6338,202 @@ docker-compose<span class="w"> </span>top
 <li>Restart unhealthy containers</li>
 <li>Use health checks for rolling updates</li>
 <li>Prevent zombie containers</li>
+</ul>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="port-conflict-with-host">Port Conflict with Host<a class="headerlink" href="#port-conflict-with-host" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Mapping container ports to already-used host ports causes container startup failure.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Port 80 likely in use on host</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:80&quot;</span><span class="w">  </span><span class="c1"># ❌ Conflicts if host already has service on port 80</span>
+
+<span class="w">  </span><span class="nt">api</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapi</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:8080&quot;</span><span class="w">  </span><span class="c1"># ❌ Also tries to bind host port 80!</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use unique host ports or let Docker assign random ports.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Unique host ports</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8080:80&quot;</span><span class="w">  </span><span class="c1"># ✅ Web on host port 8080</span>
+
+<span class="w">  </span><span class="nt">api</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapi</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8081:8080&quot;</span><span class="w">  </span><span class="c1"># ✅ API on host port 8081</span>
+
+<span class="c1">## Good - Random host ports</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80&quot;</span><span class="w">  </span><span class="c1"># ✅ Docker assigns random host port</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Check for port conflicts with <code>docker ps</code> and <code>netstat</code></li>
+<li>Use high ports (&gt;1024) to avoid conflicts</li>
+<li>Omit host port to let Docker assign random port</li>
+<li>Use <code>docker-compose port</code> to find assigned ports</li>
+</ul>
+<h3 id="missing-depends_on-for-service-dependencies">Missing Depends_On for Service Dependencies<a class="headerlink" href="#missing-depends_on-for-service-dependencies" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Services starting before dependencies are ready causes connection failures.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - No dependency specification</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">api</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapi</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB_HOST=db</span>
+<span class="w">    </span><span class="c1"># ❌ May start before database is ready!</span>
+
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>depends_on</code> with health checks.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Explicit dependencies with health checks</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">api</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapi</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_healthy</span><span class="w">  </span><span class="c1"># ✅ Wait for healthy state</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB_HOST=db</span>
+
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">postgres&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>depends_on</code> controls startup order</li>
+<li>Use <code>condition: service_healthy</code> with healthchecks</li>
+<li>Healthchecks ensure service is actually ready</li>
+<li>Without healthcheck, <code>depends_on</code> only waits for container start</li>
+</ul>
+<h3 id="volume-mount-path-typos">Volume Mount Path Typos<a class="headerlink" href="#volume-mount-path-typos" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Typos in volume mount paths cause data to be written to wrong locations or errors.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Typo in container path</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./data:/app/data</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config:/app/cofig</span><span class="w">  </span><span class="c1"># ❌ Typo! Should be /app/config</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Double-check all paths and test volume mounts.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Correct paths</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./data:/app/data</span><span class="w">     </span><span class="c1"># ✅ Correct</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config:/app/config</span><span class="w"> </span><span class="c1"># ✅ Correct</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./logs:/app/logs:rw</span><span class="w">  </span><span class="c1"># Specify read-write explicitly</span>
+
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres_data:/var/lib/postgresql/data</span><span class="w">  </span><span class="c1"># ✅ Named volume</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">postgres_data</span><span class="p">:</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Verify container paths match application expectations</li>
+<li>Use absolute paths or <code>./</code> for relative paths</li>
+<li>Named volumes persist independently of containers</li>
+<li>Use <code>:ro</code> for read-only, <code>:rw</code> for read-write</li>
+</ul>
+<h3 id="network-name-collision">Network Name Collision<a class="headerlink" href="#network-name-collision" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Not specifying network names causes Docker to generate unpredictable names.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Auto-generated network names</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span><span class="w">  </span><span class="c1"># ❌ Network name will be prefixed with directory name</span>
+
+<span class="nt">networks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">frontend</span><span class="p">:</span><span class="w">  </span><span class="c1"># Becomes &quot;myproject_frontend&quot; (unpredictable)</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use explicit network names or accept generated names consistently.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Explicit network names</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span>
+
+<span class="nt">networks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">frontend</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app_frontend</span><span class="w">  </span><span class="c1"># ✅ Explicit name</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+
+<span class="c1">## Good - Accept generated names but document</span>
+<span class="c1"># Networks will be prefixed with project name</span>
+<span class="c1"># Project name from directory or -p flag</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend</span><span class="w">  </span><span class="c1"># ✅ Consistent within project</span>
+
+<span class="nt">networks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">frontend</span><span class="p">:</span><span class="w">  </span><span class="c1"># Will be ${PROJECT}_frontend</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Docker Compose prefixes network names with project name</li>
+<li>Set project name with <code>-p</code> flag or <code>name</code> in compose file</li>
+<li>Use <code>name:</code> in network definition for explicit naming</li>
+<li>External networks use <code>external: true</code></li>
+</ul>
+<h3 id="environment-file-path-errors">Environment File Path Errors<a class="headerlink" href="#environment-file-path-errors" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Wrong paths to <code>.env</code> files cause variables to not load.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Incorrect env_file path</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">api</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapi</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.env</span><span class="w">  </span><span class="c1"># ❌ Relative to current directory, not compose file location!</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../config.env</span><span class="w">  </span><span class="c1"># ❌ May not exist</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use correct relative paths from compose file location.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Correct paths</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">api</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapi</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./.env</span><span class="w">           </span><span class="c1"># ✅ Same directory as compose file</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config/.env</span><span class="w">    </span><span class="c1"># ✅ Subdirectory</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NODE_ENV=production</span><span class="w">  </span><span class="c1"># Explicit override</span>
+
+<span class="c1">## Good - Check file existence</span>
+<span class="c1">## Before running: test -f .env || cp .env.example .env</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>env_file</code> paths are relative to compose file location</li>
+<li>Use <code>environment:</code> for explicit values</li>
+<li><code>environment:</code> overrides <code>env_file</code> values</li>
+<li>Commit <code>.env.example</code>, not <code>.env</code></li>
 </ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>

@@ -1771,6 +1771,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unquoted-variable-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unquoted Variable Expansion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subshell-variable-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subshell Variable Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-command-bracket-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Command Bracket Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-code-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit Code Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arithmetic-expansion-gotchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arithmetic Expansion Gotchas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-e-trap-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set -e Trap Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4734,6 +4817,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unquoted-variable-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unquoted Variable Expansion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subshell-variable-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subshell Variable Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-command-bracket-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Command Bracket Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-code-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit Code Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arithmetic-expansion-gotchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arithmetic Expansion Gotchas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-e-trap-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set -e Trap Pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5932,6 +6098,243 @@ docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </sp
 <span class="c1">## Array length</span>
 <span class="nv">count</span><span class="o">=</span><span class="si">${#</span><span class="nv">servers</span><span class="p">[@]</span><span class="si">}</span>
 </code></pre></div>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="unquoted-variable-expansion">Unquoted Variable Expansion<a class="headerlink" href="#unquoted-variable-expansion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Unquoted variables undergo word splitting and glob expansion, causing failures with
+filenames containing spaces or special characters.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Breaks with spaces in filename</span>
+<span class="nv">file</span><span class="o">=</span><span class="s2">&quot;my document.txt&quot;</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="nv">$file</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># Expands to: [ -f my document.txt ]</span>
+<span class="w">  </span>cat<span class="w"> </span><span class="nv">$file</span><span class="w">  </span><span class="c1"># Error: cat: my: No such file or directory</span>
+<span class="k">fi</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Always quote variable expansions unless you explicitly need word splitting.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Properly quoted</span>
+<span class="nv">file</span><span class="o">=</span><span class="s2">&quot;my document.txt&quot;</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># Correctly: [ -f &quot;my document.txt&quot; ]</span>
+<span class="w">  </span>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+
+<span class="c1">## Good - Array handling</span>
+<span class="nv">files</span><span class="o">=(</span><span class="s2">&quot;file1.txt&quot;</span><span class="w"> </span><span class="s2">&quot;file 2.txt&quot;</span><span class="w"> </span><span class="s2">&quot;file 3.txt&quot;</span><span class="o">)</span>
+<span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">files</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w">  </span><span class="c1"># Preserves each element</span>
+<span class="w">  </span>process<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always quote variables: <code>"$var"</code> not <code>$var</code></li>
+<li>Quote array expansions: <code>"${array[@]}"</code></li>
+<li>Exceptions: When word splitting is intended (rare)</li>
+<li>Use ShellCheck to catch unquoted variables</li>
+</ul>
+<h3 id="subshell-variable-scope">Subshell Variable Scope<a class="headerlink" href="#subshell-variable-scope" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Variables set in subshells (pipes, command substitution) don't persist in the parent shell.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - count remains 0</span>
+<span class="nv">count</span><span class="o">=</span><span class="m">0</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;line1\nline2\nline3&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>line<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nv">count</span><span class="o">=</span><span class="k">$((</span><span class="nv">count</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="k">))</span><span class="w">  </span><span class="c1"># Executes in subshell</span>
+<span class="k">done</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Lines: </span><span class="nv">$count</span><span class="s2">&quot;</span><span class="w">  </span><span class="c1"># Prints: Lines: 0 (subshell variable lost)</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use process substitution, here-strings, or avoid pipes for variable assignment.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Process substitution (no subshell)</span>
+<span class="nv">count</span><span class="o">=</span><span class="m">0</span>
+<span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>line<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nv">count</span><span class="o">=</span><span class="k">$((</span><span class="nv">count</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="k">))</span>
+<span class="k">done</span><span class="w"> </span>&lt;<span class="w"> </span>&lt;<span class="o">(</span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;line1\nline2\nline3&quot;</span><span class="o">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Lines: </span><span class="nv">$count</span><span class="s2">&quot;</span><span class="w">  </span><span class="c1"># Prints: Lines: 3</span>
+
+<span class="c1">## Good - Here-string</span>
+<span class="nv">count</span><span class="o">=</span><span class="m">0</span>
+<span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>line<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nv">count</span><span class="o">=</span><span class="k">$((</span><span class="nv">count</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="k">))</span>
+<span class="k">done</span><span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span>file.txt<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Lines: </span><span class="nv">$count</span><span class="s2">&quot;</span>
+
+<span class="c1">## Good - Read from file directly</span>
+<span class="nv">count</span><span class="o">=</span><span class="m">0</span>
+<span class="k">while</span><span class="w"> </span><span class="nv">IFS</span><span class="o">=</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>line<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nv">count</span><span class="o">=</span><span class="k">$((</span><span class="nv">count</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="k">))</span>
+<span class="k">done</span><span class="w"> </span>&lt;<span class="w"> </span>file.txt
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Lines: </span><span class="nv">$count</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Pipes create subshells; variables set inside don't persist</li>
+<li>Use <code>while ... done &lt; &lt;(command)</code> to avoid subshells</li>
+<li>Command substitution <code>$(...)</code> runs in subshell</li>
+<li>Export doesn't help with pipe subshells</li>
+</ul>
+<h3 id="test-command-bracket-confusion">Test Command Bracket Confusion<a class="headerlink" href="#test-command-bracket-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Mixing <code>[ ]</code> (POSIX test) and <code>[[ ]]</code> (Bash extension) causes portability issues and subtle bugs.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Using == in POSIX test</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$var</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># Not POSIX compliant!</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;match&quot;</span>
+<span class="k">fi</span>
+
+<span class="c1">## Bad - Pattern matching in [ ]</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*.txt<span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># Doesn&#39;t work as expected</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;text file&quot;</span>
+<span class="k">fi</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>[ ]</code> with <code>=</code> for POSIX compliance, or use <code>[[ ]]</code> for Bash-specific features.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - POSIX compliant</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$var</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># Single = for POSIX</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;match&quot;</span>
+<span class="k">fi</span>
+
+<span class="c1">## Good - Bash pattern matching (requires [[ ]])</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*.txt<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># Works with [[ ]]</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;text file&quot;</span>
+<span class="k">fi</span>
+
+<span class="c1">## Good - Bash regex matching</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$email</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span>^<span class="o">[</span>a-z<span class="o">]</span>+@<span class="o">[</span>a-z<span class="o">]</span>+<span class="se">\.</span><span class="o">[</span>a-z<span class="o">]</span>+$<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;valid email&quot;</span>
+<span class="k">fi</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use <code>=</code> not <code>==</code> in <code>[ ]</code> for portability</li>
+<li>Pattern matching requires <code>[[ ]]</code> (Bash-only)</li>
+<li>Regex matching only works with <code>[[ ]]</code></li>
+<li><code>[ ]</code> is POSIX, <code>[[ ]]</code> is Bash-specific</li>
+<li>Choose based on portability needs</li>
+</ul>
+<h3 id="exit-code-confusion">Exit Code Confusion<a class="headerlink" href="#exit-code-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Misunderstanding that 0 means success and non-zero means failure leads to inverted logic.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Inverted logic</span>
+check_status<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span>systemctl<span class="w"> </span>is-active<span class="w"> </span>myapp<span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">1</span><span class="w">  </span><span class="c1"># Wrong! Returns failure on success</span>
+<span class="w">  </span><span class="k">else</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">0</span><span class="w">  </span><span class="c1"># Wrong! Returns success on failure</span>
+<span class="w">  </span><span class="k">fi</span>
+<span class="o">}</span>
+
+<span class="k">if</span><span class="w"> </span>check_status<span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># Triggers on 0 (wrong condition)</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Service is down&quot;</span>
+<span class="k">fi</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Return 0 for success, non-zero for failure. Test exit codes correctly.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Correct exit codes</span>
+check_status<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span>systemctl<span class="w"> </span>is-active<span class="w"> </span>myapp<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">0</span><span class="w">  </span><span class="c1"># Success</span>
+<span class="w">  </span><span class="k">else</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">1</span><span class="w">  </span><span class="c1"># Failure</span>
+<span class="w">  </span><span class="k">fi</span>
+<span class="o">}</span>
+
+<span class="k">if</span><span class="w"> </span>check_status<span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># if command succeeds (returns 0)</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Service is running&quot;</span>
+<span class="k">else</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Service is down&quot;</span>
+<span class="k">fi</span>
+
+<span class="c1">## Good - Direct command testing</span>
+<span class="k">if</span><span class="w"> </span>systemctl<span class="w"> </span>is-active<span class="w"> </span>myapp<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Running&quot;</span>
+<span class="k">fi</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Exit code 0 = success, non-zero = failure</li>
+<li><code>if command</code> succeeds when command returns 0</li>
+<li>Use <code>$?</code> to capture last exit code</li>
+<li>Functions return values via exit codes, not stdout</li>
+<li>Test exit codes: <code>if [ $? -eq 0 ]</code></li>
+</ul>
+<h3 id="arithmetic-expansion-gotchas">Arithmetic Expansion Gotchas<a class="headerlink" href="#arithmetic-expansion-gotchas" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Shell arithmetic doesn't support floating point, and leading zeros cause octal interpretation.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Floating point (not supported)</span>
+<span class="nv">result</span><span class="o">=</span><span class="k">$((</span><span class="m">10</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">3</span><span class="k">))</span><span class="w">  </span><span class="c1"># Result: 3 (not 3.333...)</span>
+<span class="nv">ratio</span><span class="o">=</span><span class="k">$((</span><span class="m">5</span>.5<span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">2</span><span class="k">))</span><span class="w">  </span><span class="c1"># Error: invalid arithmetic operator</span>
+
+<span class="c1">## Bad - Octal interpretation</span>
+<span class="nv">number</span><span class="o">=</span><span class="m">08</span>
+<span class="nv">result</span><span class="o">=</span><span class="k">$((</span><span class="nv">number</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="k">))</span><span class="w">  </span><span class="c1"># Error: invalid octal number</span>
+
+<span class="c1">## Bad - Unquoted variables</span>
+<span class="nv">value</span><span class="o">=</span><span class="s2">&quot;10 + 5&quot;</span>
+<span class="nv">result</span><span class="o">=</span><span class="k">$((</span><span class="nv">value</span><span class="k">))</span><span class="w">  </span><span class="c1"># Evaluates to 15 (code injection risk!)</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>bc</code> for floating point, strip leading zeros, validate input.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Use bc for floating point</span>
+<span class="nv">result</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;scale=2; 10 / 3&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="k">)</span><span class="w">  </span><span class="c1"># 3.33</span>
+<span class="nv">ratio</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;scale=2; 5.5 * 2&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="k">)</span><span class="w">  </span><span class="c1"># 11.0</span>
+
+<span class="c1">## Good - Strip leading zeros</span>
+<span class="nv">number</span><span class="o">=</span><span class="m">08</span>
+<span class="nv">number</span><span class="o">=</span><span class="k">$((</span><span class="m">10#</span><span class="nv">$number</span><span class="k">))</span><span class="w">  </span><span class="c1"># Force base-10: 8</span>
+<span class="nv">result</span><span class="o">=</span><span class="k">$((</span><span class="nv">number</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="k">))</span><span class="w">  </span><span class="c1"># 9</span>
+
+<span class="c1">## Good - Validate numeric input</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$value</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span>^<span class="o">[</span><span class="m">0</span>-9<span class="o">]</span>+$<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nv">result</span><span class="o">=</span><span class="k">$((</span><span class="nv">value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">10</span><span class="k">))</span>
+<span class="k">else</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: Not a number&quot;</span>
+<span class="k">fi</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Shell arithmetic is integer-only</li>
+<li>Use <code>bc</code> for floating point calculations</li>
+<li>Leading zeros trigger octal (base-8) interpretation</li>
+<li>Use <code>10#$var</code> to force base-10</li>
+<li>Validate numeric input before arithmetic</li>
+</ul>
+<h3 id="set-e-trap-pitfalls">Set -e Trap Pitfalls<a class="headerlink" href="#set-e-trap-pitfalls" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: <code>set -e</code> doesn't exit on all errors, particularly in conditionals and pipes, creating false sense of safety.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="nb">set</span><span class="w"> </span>-e<span class="w">  </span><span class="c1"># Exit on error</span>
+
+<span class="c1">## Bad - These don&#39;t trigger exit despite errors</span>
+<span class="k">if</span><span class="w"> </span>false<span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># Condition checked, no exit</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;won&#39;t print&quot;</span>
+<span class="k">fi</span>
+
+<span class="nv">result</span><span class="o">=</span><span class="k">$(</span><span class="nb">false</span><span class="k">)</span><span class="w">  </span><span class="c1"># Command substitution checked, no exit</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Still running: </span><span class="nv">$result</span><span class="s2">&quot;</span>
+
+<span class="nb">false</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;won&#39;t print&quot;</span><span class="w">  </span><span class="c1"># Left side of &amp;&amp; doesn&#39;t exit</span>
+<span class="nb">false</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;will print&quot;</span><span class="w">   </span><span class="c1"># Left side of || doesn&#39;t exit</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Combine <code>set -e</code> with explicit error checking, use <code>set -o pipefail</code>, and understand its limitations.</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail<span class="w">  </span><span class="c1"># Exit on error, undefined vars, pipe failures</span>
+
+<span class="c1">## Good - Explicit error handling</span>
+<span class="k">if</span><span class="w"> </span>!<span class="w"> </span>command1<span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;command1 failed&quot;</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="c1">## Good - Check command substitution</span>
+<span class="k">if</span><span class="w"> </span>!<span class="w"> </span><span class="nv">result</span><span class="o">=</span><span class="k">$(</span>complex_command<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;complex_command failed&quot;</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span>
+<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="c1">## Good - Trap for cleanup</span>
+<span class="nb">trap</span><span class="w"> </span><span class="s1">&#39;echo &quot;Error on line $LINENO&quot; &gt;&amp;2&#39;</span><span class="w"> </span>ERR
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>set -e</code> doesn't exit in: <code>if</code>, <code>while</code>, <code>&amp;&amp;</code>, <code>||</code>, <code>!</code></li>
+<li>Add <code>set -o pipefail</code> to catch pipe failures</li>
+<li>Use <code>set -u</code> to catch undefined variables</li>
+<li>Add traps for cleanup on error</li>
+<li>Don't rely solely on <code>set -e</code></li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-unquoted-variables">❌ Avoid: Unquoted Variables<a class="headerlink" href="#avoid-unquoted-variables" title="Permanent link">&para;</a></h3>

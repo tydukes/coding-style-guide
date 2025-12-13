@@ -2438,6 +2438,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cache-key-collisions-across-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache Key Collisions Across Branches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-dependencies-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Dependencies Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#services-hostname-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Services Hostname Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-precedence-gotchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule Precedence Gotchas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-expansion-in-non-string-contexts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Expansion in Non-String Contexts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5502,6 +5574,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cache-key-collisions-across-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache Key Collisions Across Branches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-dependencies-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Dependencies Specification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#services-hostname-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Services Hostname Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-precedence-gotchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule Precedence Gotchas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-expansion-in-non-string-contexts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Expansion in Non-String Contexts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -7037,6 +7181,187 @@ gitlab-ci-lint<span class="w"> </span>.gitlab-ci.yml
 <span class="w">  </span><span class="nt">only</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 </code></pre></div>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="cache-key-collisions-across-branches">Cache Key Collisions Across Branches<a class="headerlink" href="#cache-key-collisions-across-branches" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Using <code>${CI_COMMIT_REF_SLUG}</code> as cache key causes cache misses when switching branches even for identical dependencies.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Branch-specific cache keys</span>
+<span class="nt">cache</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CI_COMMIT_REF_SLUG}</span><span class="w">  </span><span class="c1"># Different key for each branch</span>
+<span class="w">  </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node_modules/</span>
+
+<span class="nt">build</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span><span class="w">  </span><span class="c1"># Reinstalls on every branch switch</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run build</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use lock file hash as cache key.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Content-based cache keys</span>
+<span class="nt">cache</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">key</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">package-lock.json</span><span class="w">  </span><span class="c1"># ✅ Changes only when dependencies change</span>
+<span class="w">  </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node_modules/</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.npm/</span>
+
+<span class="nt">build</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci --cache .npm</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run build</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use lock file hashes for dependency caches</li>
+<li>Include package manager cache directory (.npm, .yarn)</li>
+<li>Consider <code>${CI_COMMIT_REF_SLUG}-${checksum}</code> for branch isolation</li>
+<li>Use <code>policy: pull</code> in most jobs, <code>pull-push</code> only in one job</li>
+</ul>
+<h3 id="missing-dependencies-specification">Missing Dependencies Specification<a class="headerlink" href="#missing-dependencies-specification" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Jobs fail because <code>dependencies</code> or <code>needs</code> is not specified, causing artifacts from previous jobs to be unavailable.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Implicit dependencies</span>
+<span class="nt">build</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run build</span>
+<span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/</span>
+
+<span class="nt">deploy</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ls dist/</span><span class="w">  </span><span class="c1"># ❌ dist/ not available!</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./deploy.sh</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Explicitly declare job dependencies.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Explicit dependencies</span>
+<span class="nt">build</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run build</span>
+<span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/</span>
+
+<span class="nt">deploy</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
+<span class="w">  </span><span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span><span class="w">  </span><span class="c1"># ✅ Download artifacts from build job</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ls dist/</span><span class="w">  </span><span class="c1"># Now available</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./deploy.sh</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use <code>dependencies: [job1, job2]</code> to download specific artifacts</li>
+<li>Use <code>dependencies: []</code> to download no artifacts</li>
+<li><code>needs</code> creates both dependency and downloads artifacts</li>
+<li>Missing <code>dependencies</code> downloads all artifacts from previous stages</li>
+</ul>
+<h3 id="services-hostname-confusion">Services Hostname Confusion<a class="headerlink" href="#services-hostname-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Trying to connect to services using <code>localhost</code> instead of service name causes connection failures.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Using localhost for services</span>
+<span class="nt">test</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">services</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15</span>
+<span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgresql://user:pass@localhost:5432/db</span><span class="w">  </span><span class="c1"># ❌ Wrong!</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span><span class="w">  </span><span class="c1"># Cannot connect to database</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use service name as hostname.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Use service name as hostname</span>
+<span class="nt">test</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">services</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15</span>
+<span class="w">      </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database</span><span class="w">  </span><span class="c1"># Optional custom alias</span>
+<span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgresql://user:pass@database:5432/db</span><span class="w">  </span><span class="c1"># ✅ Service alias</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Services are accessible by image name (postgres, redis, mongo)</li>
+<li>Use <code>alias</code> to customize service hostname</li>
+<li>Service port is the container's internal port (not mapped)</li>
+<li>Wait for service readiness before running tests</li>
+</ul>
+<h3 id="rule-precedence-gotchas">Rule Precedence Gotchas<a class="headerlink" href="#rule-precedence-gotchas" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Multiple <code>rules</code> entries create unexpected behavior due to first-match-wins semantics.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - First rule always matches</span>
+<span class="nt">deploy</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH</span><span class="w">  </span><span class="c1"># ❌ Matches any branch!</span>
+<span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == &quot;main&quot;</span>
+<span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./deploy.sh</span><span class="w">  </span><span class="c1"># Runs automatically on all branches, not just main</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Order rules from most specific to least specific.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Specific rules first</span>
+<span class="nt">deploy</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == &quot;main&quot;</span>
+<span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span><span class="w">  </span><span class="c1"># ✅ Manual deploy on main</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == &quot;develop&quot;</span>
+<span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span><span class="w">  </span><span class="c1"># Auto deploy on develop</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">never</span><span class="w">  </span><span class="c1"># Don&#39;t run on other branches</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./deploy.sh</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Rules are evaluated top-to-bottom, first match wins</li>
+<li>Always end with a default rule (<code>when: never</code> or <code>when: on_success</code>)</li>
+<li>Use <code>&amp;&amp;</code> for multiple conditions in one rule</li>
+<li>Test rule logic with <code>--dry-run</code></li>
+</ul>
+<h3 id="variable-expansion-in-non-string-contexts">Variable Expansion in Non-String Contexts<a class="headerlink" href="#variable-expansion-in-non-string-contexts" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Variables not expanding in certain YAML contexts like <code>only</code>, <code>except</code>, or numeric values.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Variables don&#39;t expand in only/except</span>
+<span class="nt">deploy</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">only</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_DEFAULT_BRANCH</span><span class="w">  </span><span class="c1"># ❌ Treated as literal string!</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./deploy.sh</span>
+
+<span class="c1">## Bad - Variables in numeric contexts</span>
+<span class="nt">test</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">parallel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$PARALLEL_COUNT</span><span class="w">  </span><span class="c1"># ❌ Not expanded</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>rules</code> for conditional execution and <code>.env</code> syntax for expansion.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Use rules for branch matching</span>
+<span class="nt">deploy</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span><span class="w">  </span><span class="c1"># ✅ Expands correctly</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./deploy.sh</span>
+
+<span class="c1">## Good - Expand variables in script</span>
+<span class="nt">test</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export COUNT=${PARALLEL_COUNT:-4}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;Running $COUNT parallel tests&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test -- --shard=$CI_NODE_INDEX/$COUNT</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use <code>rules</code> instead of <code>only/except</code> for variable-based conditions</li>
+<li>Variables expand in scripts, not in YAML structure</li>
+<li>Use <code>${VAR:-default}</code> for default values</li>
+<li>Numeric YAML keys don't support variable expansion</li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-no-cache">❌ Avoid: No Cache<a class="headerlink" href="#avoid-no-cache" title="Permanent link">&para;</a></h3>

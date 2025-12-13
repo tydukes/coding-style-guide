@@ -2808,6 +2808,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spaces-instead-of-tabs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spaces Instead of Tabs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forgetting-phony-for-non-file-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forgetting .PHONY for Non-File Targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-expansion-timing-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Expansion Timing Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#special-variables-misuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Special Variables Misuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5456,6 +5528,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spaces-instead-of-tabs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spaces Instead of Tabs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forgetting-phony-for-non-file-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forgetting .PHONY for Non-File Targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-expansion-timing-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Expansion Timing Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#special-variables-misuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Special Variables Misuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6928,6 +7072,154 @@ make<span class="w"> </span>-i<span class="w"> </span>potentially-failing-target
 <li>Use VPN for production deployments</li>
 <li>Verify SSH host keys</li>
 <li>Restrict network access where possible</li>
+</ul>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="spaces-instead-of-tabs">Spaces Instead of Tabs<a class="headerlink" href="#spaces-instead-of-tabs" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Make requires tabs for recipe indentation; spaces cause "missing separator" errors.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Spaces instead of tabs</span>
+<span class="nf">build</span><span class="o">:</span>
+<span class="w">    </span>gcc<span class="w"> </span>-o<span class="w"> </span>app<span class="w"> </span>main.c<span class="w">  </span><span class="c1"># ❌ Indented with spaces! Error: missing separator</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use tabs for recipe indentation.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Tab indentation</span>
+<span class="nf">build</span><span class="o">:</span>
+<span class="w"> </span>gcc<span class="w"> </span>-o<span class="w"> </span>app<span class="w"> </span>main.c<span class="w">  </span><span class="c1"># ✅ Indented with tab</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Recipes MUST be indented with tabs</li>
+<li>Configure editor to show tabs vs spaces</li>
+<li>Variable assignments and comments can use spaces</li>
+<li>Use <code>.RECIPEPREFIX = &gt;</code> to change tab requirement (GNU Make 3.82+)</li>
+</ul>
+<h3 id="forgetting-phony-for-non-file-targets">Forgetting .PHONY for Non-File Targets<a class="headerlink" href="#forgetting-phony-for-non-file-targets" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Without <code>.PHONY</code>, Make won't run targets if files with same names exist.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - No .PHONY declaration</span>
+<span class="nf">clean</span><span class="o">:</span>
+<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>*.o<span class="w"> </span>build/
+
+<span class="c">## If a file named &quot;clean&quot; exists, this target won&#39;t run!</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Declare non-file targets as <code>.PHONY</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - PHONY targets declared</span>
+<span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">clean</span> <span class="n">test</span> <span class="n">build</span> <span class="n">all</span>
+
+<span class="nf">clean</span><span class="o">:</span>
+<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>*.o<span class="w"> </span>build/
+
+<span class="nf">test</span><span class="o">:</span>
+<span class="w"> </span>go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>./...
+
+<span class="nf">build</span><span class="o">:</span>
+<span class="w"> </span>go<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>app
+
+<span class="nf">all</span><span class="o">:</span><span class="w"> </span><span class="n">clean</span> <span class="n">build</span> <span class="n">test</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always declare <code>.PHONY</code> for targets that don't create files</li>
+<li>Common PHONY targets: <code>clean</code>, <code>test</code>, <code>install</code>, <code>run</code>, <code>all</code></li>
+<li>PHONY targets run every time, regardless of files</li>
+<li>Place <code>.PHONY</code> declarations at top of Makefile</li>
+</ul>
+<h3 id="variable-expansion-timing-confusion">Variable Expansion Timing Confusion<a class="headerlink" href="#variable-expansion-timing-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Mixing <code>=</code> (lazy) and <code>:=</code> (immediate) assignment causes unexpected behavior.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Unintended recursion</span>
+<span class="nv">FLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">$(</span>FLAGS<span class="k">)</span><span class="w"> </span>-Wall<span class="w">  </span><span class="c1"># ❌ Recursive! FLAGS refers to itself</span>
+
+<span class="nf">build</span><span class="o">:</span>
+<span class="w"> </span>gcc<span class="w"> </span><span class="k">$(</span>FLAGS<span class="k">)</span><span class="w"> </span>main.c<span class="w">  </span><span class="c1"># Infinite expansion error</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>:=</code> for immediate expansion or <code>+=</code> for appending.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Immediate assignment</span>
+<span class="nv">FLAGS</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>-O2
+<span class="nv">FLAGS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>-Wall<span class="w">  </span><span class="c1"># ✅ Appends to existing value</span>
+
+<span class="c">## Good - Conditional assignment</span>
+<span class="nv">FLAGS</span><span class="w"> </span><span class="o">?=</span><span class="w"> </span>-O2<span class="w">  </span><span class="c1"># Only set if not already defined</span>
+
+<span class="nf">build</span><span class="o">:</span>
+<span class="w"> </span>gcc<span class="w"> </span><span class="k">$(</span>FLAGS<span class="k">)</span><span class="w"> </span>main.c
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>=</code>: Lazy (recursive) expansion - expanded when used</li>
+<li><code>:=</code>: Immediate (simple) expansion - expanded at assignment</li>
+<li><code>?=</code>: Conditional assignment - only if not set</li>
+<li><code>+=</code>: Append to existing value</li>
+</ul>
+<h3 id="missing-dependencies">Missing Dependencies<a class="headerlink" href="#missing-dependencies" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Targets don't rebuild when dependencies change, causing stale builds.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - No source file dependencies</span>
+<span class="nf">app</span><span class="o">:</span><span class="w"> </span><span class="n">main</span>.<span class="n">o</span> <span class="n">utils</span>.<span class="n">o</span>
+<span class="w"> </span>gcc<span class="w"> </span>-o<span class="w"> </span>app<span class="w"> </span>main.o<span class="w"> </span>utils.o
+
+<span class="nf">main.o</span><span class="o">:</span>
+<span class="w"> </span>gcc<span class="w"> </span>-c<span class="w"> </span>main.c<span class="w">  </span><span class="c1"># ❌ Won&#39;t rebuild if main.c or header changes!</span>
+
+<span class="nf">utils.o</span><span class="o">:</span>
+<span class="w"> </span>gcc<span class="w"> </span>-c<span class="w"> </span>utils.c
+</code></pre></div>
+<p><strong>Solution</strong>: Specify all dependencies including headers.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Complete dependencies</span>
+<span class="nv">HEADERS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>main.h<span class="w"> </span>utils.h<span class="w"> </span>config.h
+
+<span class="nf">app</span><span class="o">:</span><span class="w"> </span><span class="n">main</span>.<span class="n">o</span> <span class="n">utils</span>.<span class="n">o</span>
+<span class="w"> </span>gcc<span class="w"> </span>-o<span class="w"> </span>app<span class="w"> </span>main.o<span class="w"> </span>utils.o
+
+<span class="nf">main.o</span><span class="o">:</span><span class="w"> </span><span class="n">main</span>.<span class="n">c</span> <span class="k">$(</span><span class="nv">HEADERS</span><span class="k">)</span>  <span class="c"># ✅ Rebuilds when source or headers change</span>
+<span class="w"> </span>gcc<span class="w"> </span>-c<span class="w"> </span>main.c
+
+<span class="nf">utils.o</span><span class="o">:</span><span class="w"> </span><span class="n">utils</span>.<span class="n">c</span> <span class="n">utils</span>.<span class="n">h</span>  <span class="c"># ✅ Specific dependencies</span>
+<span class="w"> </span>gcc<span class="w"> </span>-c<span class="w"> </span>utils.c
+
+<span class="c">## Better - Auto-generate dependencies</span>
+<span class="cp">-include $(SOURCES:.c=.d)</span>
+
+<span class="nf">%.o</span><span class="o">:</span><span class="w"> </span>%.<span class="n">c</span>
+<span class="w"> </span>gcc<span class="w"> </span>-MMD<span class="w"> </span>-c<span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>List all files that affect the target</li>
+<li>Include header files in dependencies</li>
+<li>Use <code>-MMD</code> flag to auto-generate <code>.d</code> dependency files</li>
+<li>Missing dependencies cause inconsistent builds</li>
+</ul>
+<h3 id="special-variables-misuse">Special Variables Misuse<a class="headerlink" href="#special-variables-misuse" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Confusing <code>$@</code>, <code>$&lt;</code>, <code>$^</code>, and <code>$?</code> leads to incorrect recipes.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Wrong automatic variable</span>
+<span class="nf">%.o</span><span class="o">:</span><span class="w"> </span>%.<span class="n">c</span>
+<span class="w"> </span>gcc<span class="w"> </span>-c<span class="w"> </span>$^<span class="w"> </span>-o<span class="w"> </span>$&lt;<span class="w">  </span><span class="c1"># ❌ Swapped! $^ is all prereqs, $&lt; is first prereq</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use correct automatic variables.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Correct automatic variables</span>
+<span class="nf">%.o</span><span class="o">:</span><span class="w"> </span>%.<span class="n">c</span>
+<span class="w"> </span>gcc<span class="w"> </span>-c<span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span><span class="w">  </span><span class="c1"># ✅ $&lt; = first prerequisite, $@ = target</span>
+
+<span class="c">## Common automatic variables:</span>
+<span class="c">## $@ = target name</span>
+<span class="c">## $&lt; = first prerequisite</span>
+<span class="c">## $^ = all prerequisites</span>
+<span class="c">## $? = prerequisites newer than target</span>
+<span class="c">## $* = stem of pattern match</span>
+
+<span class="nf">app</span><span class="o">:</span><span class="w"> </span><span class="n">main</span>.<span class="n">o</span> <span class="n">utils</span>.<span class="n">o</span> <span class="n">config</span>.<span class="n">o</span>
+<span class="w"> </span>gcc<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span><span class="w"> </span>$^<span class="w">  </span><span class="c1"># ✅ $@ = app, $^ = all .o files</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>$@</code>: Target filename</li>
+<li><code>$&lt;</code>: First prerequisite filename</li>
+<li><code>$^</code>: All prerequisite filenames (space-separated)</li>
+<li><code>$?</code>: Prerequisites newer than target</li>
+<li><code>$*</code>: The stem (matched by <code>%</code> in pattern rules)</li>
 </ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>

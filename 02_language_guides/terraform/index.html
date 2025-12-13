@@ -1564,6 +1564,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#state-file-locking-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State File Locking Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#count-vs-for_each-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Count vs For_Each Selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implicit-dependencies-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implicit Dependencies Missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sensitive-data-in-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sensitive Data in State
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provider-version-constraints-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provider Version Constraints Missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-timeouts-not-configured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Timeouts Not Configured
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4957,6 +5040,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#state-file-locking-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State File Locking Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#count-vs-for_each-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Count vs For_Each Selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implicit-dependencies-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implicit Dependencies Missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sensitive-data-in-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sensitive Data in State
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provider-version-constraints-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provider Version Constraints Missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-timeouts-not-configured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Timeouts Not Configured
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6249,6 +6415,302 @@ go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v
 <span class="w">  </span><span class="na">policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_iam_policy_document.app_policy.json</span>
 <span class="p">}</span>
 </code></pre></div>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="state-file-locking-issues">State File Locking Issues<a class="headerlink" href="#state-file-locking-issues" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Multiple team members or CI/CD pipelines running Terraform concurrently can corrupt
+the state file or cause race conditions.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Local state without locking</span>
+terraform<span class="w"> </span>apply<span class="w">  </span><span class="c1"># Person A starts</span>
+terraform<span class="w"> </span>apply<span class="w">  </span><span class="c1"># Person B starts simultaneously - STATE CORRUPTED!</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use remote state with locking enabled (S3 + DynamoDB, Terraform Cloud).</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - S3 backend with DynamoDB locking</span>
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-terraform-state&quot;</span>
+<span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod/terraform.tfstate&quot;</span>
+<span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">    </span><span class="na">encrypt</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-locks&quot;</span><span class="c1">  # Enables locking</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">## Create DynamoDB table for locking</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_dynamodb_table&quot;</span><span class="w"> </span><span class="nv">&quot;terraform_locks&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-locks&quot;</span>
+<span class="w">  </span><span class="na">billing_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PAY_PER_REQUEST&quot;</span>
+<span class="w">  </span><span class="na">hash_key</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;LockID&quot;</span>
+
+<span class="w">  </span><span class="nb">attribute</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;LockID&quot;</span>
+<span class="w">    </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;S&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Never use local state for team projects</li>
+<li>Always enable state locking with remote backends</li>
+<li>S3 backend requires DynamoDB table for locking</li>
+<li>Terraform Cloud provides built-in locking</li>
+<li>Force-unlock only as last resort: <code>terraform force-unlock</code></li>
+</ul>
+<h3 id="count-vs-for_each-selection">Count vs For_Each Selection<a class="headerlink" href="#count-vs-for_each-selection" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Using <code>count</code> creates positional dependencies; removing middle items causes
+destruction and recreation of all subsequent resources.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Using count (positional indexing)</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environments&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dev&quot;, &quot;staging&quot;, &quot;prod&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.environments</span><span class="p">)</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;myapp-${var.environments[count.index]}&quot;</span>
+<span class="p">}</span>
+
+<span class="c1">## Removing &quot;staging&quot; destroys and recreates &quot;prod&quot;!</span>
+<span class="c1">## var.environments = [&quot;dev&quot;, &quot;prod&quot;]</span>
+<span class="c1">## aws_s3_bucket.app[1] changes from &quot;staging&quot; to &quot;prod&quot; (destroy + create)</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>for_each</code> for resource collections that may change.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Using for_each (keyed by name)</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environments&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">type</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="kt">set</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
+<span class="w">  </span><span class="na">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dev&quot;, &quot;staging&quot;, &quot;prod&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environments</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;myapp-${each.value}&quot;</span>
+<span class="p">}</span>
+
+<span class="c1">## Removing &quot;staging&quot; only destroys that bucket</span>
+<span class="c1">## var.environments = [&quot;dev&quot;, &quot;prod&quot;]</span>
+<span class="c1">## Only aws_s3_bucket.app[&quot;staging&quot;] is destroyed</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use <code>for_each</code> when items have unique identifiers</li>
+<li>Use <code>count</code> only for identical resources or simple multipliers</li>
+<li><code>for_each</code> uses map keys; removing items doesn't affect others</li>
+<li><code>count</code> uses positional index; removal shifts all subsequent items</li>
+<li>Converting <code>count</code> to <code>for_each</code> requires state migration</li>
+</ul>
+<h3 id="implicit-dependencies-missing">Implicit Dependencies Missing<a class="headerlink" href="#implicit-dependencies-missing" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Terraform can't detect dependencies that exist only at runtime, causing creation order failures.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Implicit dependency not detected</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_ami.ubuntu.id</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.micro&quot;</span>
+<span class="w">  </span><span class="na">vpc_security_group_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_security_group.app.id</span><span class="p">]</span><span class="c1">  # Explicit dependency</span>
+
+<span class="w">  </span><span class="na">user_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;-</span><span class="dl">EOF</span>
+<span class="sh">              #!/bin/bash</span>
+<span class="sh">              aws s3 cp s3://${aws_s3_bucket.config.bucket}/config.yml /etc/app/</span>
+<span class="dl">              EOF</span>
+<span class="c1">  # Terraform doesn&#39;t know EC2 needs S3 bucket to exist!</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket&quot;</span><span class="w"> </span><span class="nv">&quot;config&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;app-config-bucket&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Add explicit <code>depends_on</code> for runtime dependencies.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Explicit dependency ensures creation order</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_ami.ubuntu.id</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.micro&quot;</span>
+<span class="w">  </span><span class="na">vpc_security_group_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_security_group.app.id</span><span class="p">]</span>
+
+<span class="w">  </span><span class="na">user_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;-</span><span class="dl">EOF</span>
+<span class="sh">              #!/bin/bash</span>
+<span class="sh">              aws s3 cp s3://${aws_s3_bucket.config.bucket}/config.yml /etc/app/</span>
+<span class="dl">              EOF</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="nv">aws_s3_bucket.config</span><span class="p">,</span><span class="c1">  # Ensure bucket exists before EC2</span>
+<span class="w">    </span><span class="nv">aws_iam_role_policy_attachment.app_s3_access</span><span class="c1">  # And permissions</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Terraform detects dependencies from attribute references</li>
+<li>Runtime dependencies (scripts, policies) need <code>depends_on</code></li>
+<li>Use <code>depends_on</code> sparingly; prefer attribute references</li>
+<li>Common scenarios: IAM permissions, DNS records, initialization scripts</li>
+<li>Over-use of <code>depends_on</code> makes plans less efficient</li>
+</ul>
+<h3 id="sensitive-data-in-state">Sensitive Data in State<a class="headerlink" href="#sensitive-data-in-state" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Terraform state files contain all resource attributes in plaintext, exposing secrets.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Database password stored in plaintext state</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">identifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;myapp-db&quot;</span>
+<span class="w">  </span><span class="na">engine</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
+<span class="w">  </span><span class="na">username</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span>
+<span class="w">  </span><span class="na">password</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SuperSecret123!&quot;</span><span class="c1">  # Stored in plaintext in state file!</span>
+<span class="p">}</span>
+
+<span class="c1">## Bad - API keys in outputs</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;api_key&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_api_key.main.value</span><span class="c1">  # Exposed in state and console output</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use secret management services, mark outputs as sensitive, encrypt state.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Use secrets manager</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_secretsmanager_secret&quot;</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;myapp-db-password&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_secretsmanager_secret_version&quot;</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">secret_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_secretsmanager_secret.db_password.id</span>
+<span class="w">  </span><span class="na">secret_string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">random_password.db_password.result</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;random_password&quot;</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">length</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">32</span>
+<span class="w">  </span><span class="na">special</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">identifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;myapp-db&quot;</span>
+<span class="w">  </span><span class="na">engine</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
+<span class="w">  </span><span class="na">username</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span>
+<span class="w">  </span><span class="na">password</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">random_password.db_password.result</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Mark sensitive outputs</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;db_password_arn&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_secretsmanager_secret.db_password.arn</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ARN of database password in Secrets Manager&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;api_key&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">value</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_api_key.main.value</span>
+<span class="w">  </span><span class="na">sensitive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">  # Prevents display in console output</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>All resource attributes are stored in state file</li>
+<li>Encrypt state at rest (S3 encryption, Terraform Cloud encryption)</li>
+<li>Use AWS Secrets Manager/Parameter Store for sensitive values</li>
+<li>Mark outputs as <code>sensitive = true</code></li>
+<li>Never commit state files to version control</li>
+<li>Rotate secrets regularly</li>
+</ul>
+<h3 id="provider-version-constraints-missing">Provider Version Constraints Missing<a class="headerlink" href="#provider-version-constraints-missing" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Running <code>terraform init</code> without version constraints can pull incompatible provider
+versions, breaking existing configurations.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - No version constraints (uses latest)</span>
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/aws&quot;</span>
+<span class="c1">      # No version! Could pull breaking changes</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">## Provider releases breaking change in 5.0</span>
+<span class="c1">## Existing code breaks on next `terraform init`</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Always specify provider version constraints.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Explicit version constraints</span>
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.5.0, &lt; 2.0.0&quot;</span>
+
+<span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/aws&quot;</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 5.0&quot;</span><span class="c1">  # Allow 5.x updates, but not 6.0</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">random</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/random&quot;</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 3.5&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">## Better - Exact version for critical infrastructure</span>
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;= 1.7.0&quot;</span>
+
+<span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/aws&quot;</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;= 5.31.0&quot;</span><span class="c1">  # Exact version for stability</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always specify <code>required_version</code> for Terraform</li>
+<li>Use <code>~&gt;</code> for minor version flexibility: <code>~&gt; 5.0</code> = <code>&gt;= 5.0, &lt; 6.0</code></li>
+<li>Use <code>=</code> for exact version in production</li>
+<li>Lock file (<code>.terraform.lock.hcl</code>) pins exact versions</li>
+<li>Commit lock file to version control</li>
+<li>Test provider upgrades in non-prod first</li>
+</ul>
+<h3 id="resource-timeouts-not-configured">Resource Timeouts Not Configured<a class="headerlink" href="#resource-timeouts-not-configured" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Default timeouts (varies by resource) may be too short for large deployments, causing spurious failures.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Large RDS instance times out with default timeout</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;large&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">identifier</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;large-db&quot;</span>
+<span class="w">  </span><span class="na">instance_class</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;db.r6g.16xlarge&quot;</span>
+<span class="w">  </span><span class="na">allocated_storage</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">10000</span>
+<span class="w">  </span><span class="na">engine</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
+<span class="c1">  # Default timeout may be too short for large instance provisioning</span>
+<span class="p">}</span>
+
+<span class="c1">## Error: timeout while waiting for state to become &#39;available&#39;</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Configure appropriate timeouts for long-running operations.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Explicit timeouts for large resources</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;large&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">identifier</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;large-db&quot;</span>
+<span class="w">  </span><span class="na">instance_class</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;db.r6g.16xlarge&quot;</span>
+<span class="w">  </span><span class="na">allocated_storage</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">10000</span>
+<span class="w">  </span><span class="na">engine</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
+
+<span class="w">  </span><span class="nb">timeouts</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">create</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;60m&quot;</span><span class="c1">  # Allow 60 minutes for creation</span>
+<span class="w">    </span><span class="na">update</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;60m&quot;</span>
+<span class="w">    </span><span class="na">delete</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;60m&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Cluster creation with extended timeout</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_eks_cluster&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production-cluster&quot;</span>
+<span class="w">  </span><span class="na">role_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_role.cluster.arn</span>
+
+<span class="w">  </span><span class="nb">vpc_config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">subnet_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.private</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">id</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">timeouts</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">create</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;30m&quot;</span>
+<span class="w">    </span><span class="na">delete</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;30m&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Default timeouts vary by resource type</li>
+<li>Large databases, clusters need longer timeouts</li>
+<li>Configure <code>create</code>, <code>update</code>, <code>delete</code> separately</li>
+<li>Balance between avoiding premature failures and catching real issues</li>
+<li>Monitor actual creation times to set appropriate values</li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-hardcoded-values">❌ Avoid: Hardcoded Values<a class="headerlink" href="#avoid-hardcoded-values" title="Permanent link">&para;</a></h3>

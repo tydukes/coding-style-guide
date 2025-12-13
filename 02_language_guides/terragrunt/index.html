@@ -1594,6 +1594,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dependency-path-typos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Path Typos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-mock-outputs-in-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Mock Outputs in Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include-block-order-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Include Block Order Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-state-backend-configuration-duplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote State Backend Configuration Duplication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-functions-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Functions Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4914,6 +4986,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dependency-path-typos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Path Typos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-mock-outputs-in-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Mock Outputs in Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include-block-order-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Include Block Order Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-state-backend-configuration-duplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote State Backend Configuration Duplication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-functions-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Functions Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6021,6 +6165,219 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <span class="w">  </span><span class="nb">cd</span><span class="w"> </span>-
 <span class="k">done</span>
 </code></pre></div>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="dependency-path-typos">Dependency Path Typos<a class="headerlink" href="#dependency-path-typos" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Incorrect dependency paths cause Terragrunt to fail silently or create resources in wrong order.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Typo in dependency path</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;network&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../networking&quot;</span><span class="c1">  # ❌ Typo! Should be ../network</span>
+<span class="p">}</span>
+
+<span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">dependency.network.outputs.vpc_id</span><span class="c1">  # Fails at runtime</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Verify dependency paths and test with <code>terragrunt run-all plan</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Correct dependency path</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;network&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../network&quot;</span><span class="c1">  # ✅ Correct path</span>
+<span class="p">}</span>
+
+<span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">dependency.network.outputs.vpc_id</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Use relative paths from terragrunt.hcl location</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;database&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_terragrunt_dir()}/../rds&quot;</span><span class="c1">  # ✅ Explicit relative path</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Dependency paths are relative to <code>terragrunt.hcl</code> location</li>
+<li>Use <code>terragrunt graph-dependencies</code> to visualize dependencies</li>
+<li>Test with <code>terragrunt run-all plan</code> before apply</li>
+<li>Check for circular dependencies with dependency graph</li>
+</ul>
+<h3 id="missing-mock-outputs-in-dependencies">Missing Mock Outputs in Dependencies<a class="headerlink" href="#missing-mock-outputs-in-dependencies" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Dependencies without <code>mock_outputs</code> cause failures during initial <code>plan</code> before dependencies exist.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - No mock outputs</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+<span class="c1">  # ❌ No mock_outputs! Fails on first plan</span>
+<span class="p">}</span>
+
+<span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">dependency.vpc.outputs.vpc_id</span><span class="c1">  # Error: vpc module not yet applied</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Always provide mock outputs for dependencies.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Mock outputs for planning</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+
+<span class="w">  </span><span class="nb">mock_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-mock-12345&quot;</span><span class="c1">  # ✅ Used during initial plan</span>
+<span class="w">    </span><span class="na">subnet_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;subnet-mock-1&quot;, &quot;subnet-mock-2&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;validate&quot;, &quot;plan&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">dependency.vpc.outputs.vpc_id</span>
+<span class="w">  </span><span class="na">subnet_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">dependency.vpc.outputs.subnet_ids</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Mock outputs allow planning before dependencies exist</li>
+<li>Mock values should match expected output types</li>
+<li>Use <code>mock_outputs_allowed_terraform_commands</code> to control when mocks apply</li>
+<li>Real outputs override mocks when dependencies are applied</li>
+</ul>
+<h3 id="include-block-order-matters">Include Block Order Matters<a class="headerlink" href="#include-block-order-matters" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Include blocks are processed in order; later includes can't reference earlier ones.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Trying to reference included locals</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="err">include</span><span class="w"> </span><span class="s2">&quot;region&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">(</span><span class="s2">&quot;region.hcl&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">## ❌ Can&#39;t reference locals from included files here</span>
+<span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="nv">local.region_tags</span><span class="p">)</span><span class="c1">  # Error: locals not defined</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Define locals after includes or use input variables.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Locals defined after includes</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="err">include</span><span class="w"> </span><span class="s2">&quot;region&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">(</span><span class="s2">&quot;region.hcl&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terragrunt&quot;</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="na">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
+<span class="w">  </span><span class="nv">include.root.locals.tags</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">include.region.locals.regional_tags</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">local.common_tags</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Includes are processed top-to-bottom</li>
+<li>Reference included locals with <code>include.&lt;name&gt;.locals.&lt;var&gt;</code></li>
+<li>Define module-specific locals after includes</li>
+<li>Use <code>merge()</code> to combine configurations from multiple includes</li>
+</ul>
+<h3 id="remote-state-backend-configuration-duplication">Remote State Backend Configuration Duplication<a class="headerlink" href="#remote-state-backend-configuration-duplication" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Repeating remote state configuration in every <code>terragrunt.hcl</code> file causes maintenance burden.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Repeated in every module</span>
+<span class="nb">remote_state</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span>
+<span class="w">  </span><span class="nb">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-terraform-state&quot;</span><span class="c1">  # ❌ Duplicated everywhere</span>
+<span class="w">    </span><span class="na">key</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${path_relative_to_include()}/terraform.tfstate&quot;</span>
+<span class="w">    </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">    </span><span class="na">encrypt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-locks&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Define remote state in root <code>terragrunt.hcl</code> and include it.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Root terragrunt.hcl</span>
+<span class="c1">## _root/terragrunt.hcl</span>
+<span class="nb">remote_state</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span>
+<span class="w">  </span><span class="nb">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;backend.tf&quot;</span>
+<span class="w">    </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite_terragrunt&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="nb">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-terraform-state-${get_aws_account_id()}&quot;</span>
+<span class="w">    </span><span class="na">key</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${path_relative_to_include()}/terraform.tfstate&quot;</span>
+<span class="w">    </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.aws_region</span>
+<span class="w">    </span><span class="na">encrypt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-locks-${get_aws_account_id()}&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Child module references root</span>
+<span class="c1">## modules/vpc/terragrunt.hcl</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span><span class="c1">  # ✅ Inherits remote_state config</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Define remote state once in root <code>terragrunt.hcl</code></li>
+<li>Use <code>include</code> to inherit configuration</li>
+<li>Use <code>get_aws_account_id()</code> for multi-account setups</li>
+<li><code>path_relative_to_include()</code> ensures unique state keys</li>
+</ul>
+<h3 id="path-functions-confusion">Path Functions Confusion<a class="headerlink" href="#path-functions-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Mixing up <code>get_terragrunt_dir()</code>, <code>get_parent_terragrunt_dir()</code>, and <code>path_relative_to_include()</code>.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Wrong path function</span>
+<span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">basename</span><span class="p">(</span><span class="err">get_terragrunt_dir</span><span class="p">())</span><span class="c1">  # ❌ Returns module name, not environment</span>
+<span class="p">}</span>
+
+<span class="c1">## Bad - Incorrect relative path</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_parent_terragrunt_dir</span><span class="p">()</span><span class="c1">  # ❌ Points to parent dir, not sibling module</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use correct path functions for each use case.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Correct path functions</span>
+<span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">  # Get environment from parent directory structure</span>
+<span class="c1">  # /envs/production/vpc/terragrunt.hcl -&gt; &quot;production&quot;</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">basename</span><span class="p">(</span><span class="nf">dirname</span><span class="p">(</span><span class="err">get_terragrunt_dir</span><span class="p">()))</span>
+
+<span class="c1">  # Get module name</span>
+<span class="c1">  # /envs/production/vpc/terragrunt.hcl -&gt; &quot;vpc&quot;</span>
+<span class="w">  </span><span class="na">module_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">basename</span><span class="p">(</span><span class="err">get_terragrunt_dir</span><span class="p">())</span>
+
+<span class="c1">  # Get path relative to root</span>
+<span class="c1">  # /envs/production/vpc/terragrunt.hcl -&gt; &quot;envs/production/vpc&quot;</span>
+<span class="w">  </span><span class="na">relative_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">path_relative_to_include</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Sibling module dependency</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span><span class="c1">  # ✅ Relative to current module</span>
+<span class="p">}</span>
+
+<span class="c1">## Good - Find root terragrunt.hcl</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span><span class="c1">  # ✅ Searches up directory tree</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>get_terragrunt_dir()</code>: Absolute path to current module directory</li>
+<li><code>get_parent_terragrunt_dir()</code>: Absolute path to parent with terragrunt.hcl</li>
+<li><code>path_relative_to_include()</code>: Relative path from root to current module</li>
+<li><code>find_in_parent_folders()</code>: Searches up tree for file</li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-hardcoded-values-everywhere">❌ Avoid: Hardcoded Values Everywhere<a class="headerlink" href="#avoid-hardcoded-values-everywhere" title="Permanent link">&para;</a></h3>

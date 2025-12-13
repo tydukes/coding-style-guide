@@ -1653,6 +1653,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#circular-stack-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Circular Stack Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-removal-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Removal Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physical-name-hardcoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical Name Hardcoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-agnostic-stack-anti-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment-Agnostic Stack Anti-Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#construct-id-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Construct ID Conflicts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4831,6 +4903,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#circular-stack-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Circular Stack Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-removal-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Missing Removal Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physical-name-hardcoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical Name Hardcoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-agnostic-stack-anti-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment-Agnostic Stack Anti-Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#construct-id-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Construct ID Conflicts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5997,6 +6141,207 @@ cdk<span class="w"> </span>bootstrap<span class="w"> </span>aws://ACCOUNT-NUMBER
 <li>Implement compliance frameworks (CIS, PCI-DSS)</li>
 <li>Regular dependency audits (<code>npm audit</code>)</li>
 <li>Update CDK and dependencies regularly</li>
+</ul>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="circular-stack-dependencies">Circular Stack Dependencies<a class="headerlink" href="#circular-stack-dependencies" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Creating circular dependencies between stacks causes CDK synthesis to fail.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="nx">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">Circular</span><span class="w"> </span><span class="nx">dependency</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">VpcStack</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">Stack</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">public</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">vpcId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">scope</span><span class="o">:</span><span class="w"> </span><span class="kt">Construct</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">props?</span><span class="o">:</span><span class="w"> </span><span class="kt">cdk.StackProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">props</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">vpc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ec2</span><span class="p">.</span><span class="nx">Vpc</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;VPC&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">vpcId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">vpc</span><span class="p">.</span><span class="nx">vpcId</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// ❌ Referencing AppStack creates circular dependency!</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">appStack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppStack</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;App&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">vpcId</span><span class="o">:</span><span class="w"> </span><span class="kt">this.vpcId</span><span class="w"> </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">AppStack</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">Stack</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">scope</span><span class="o">:</span><span class="w"> </span><span class="kt">Construct</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">vpcId</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// Uses VPC from VpcStack</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Pass values between stacks or use cross-stack references properly.</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="nx">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">Pass</span><span class="w"> </span><span class="nx">values</span><span class="w"> </span><span class="nx">between</span><span class="w"> </span><span class="nx">stacks</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">vpcStack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">VpcStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;VpcStack&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">appStack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;AppStack&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">vpcId</span><span class="o">:</span><span class="w"> </span><span class="kt">vpcStack.vpcId</span><span class="w">  </span><span class="c1">// ✅ One-way dependency</span>
+<span class="p">});</span>
+
+<span class="err">##</span><span class="w"> </span><span class="nx">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">Export</span><span class="w"> </span><span class="nx">and</span><span class="w"> </span><span class="k">import</span><span class="w"> </span><span class="nx">values</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">VpcStack</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">Stack</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">public</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="nx">vpc</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.IVpc</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">scope</span><span class="o">:</span><span class="w"> </span><span class="kt">Construct</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">props?</span><span class="o">:</span><span class="w"> </span><span class="kt">cdk.StackProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">props</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">vpc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ec2</span><span class="p">.</span><span class="nx">Vpc</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;VPC&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">AppStack</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">Stack</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">scope</span><span class="o">:</span><span class="w"> </span><span class="kt">Construct</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">props</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">vpc</span><span class="o">:</span><span class="w"> </span><span class="kt">ec2.IVpc</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// ✅ Uses passed VPC interface</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Stacks should have unidirectional dependencies</li>
+<li>Pass resources as props between stacks</li>
+<li>Use CloudFormation exports for cross-stack references</li>
+<li>Check <code>cdk synth</code> output for dependency issues</li>
+</ul>
+<h3 id="missing-removal-policy">Missing Removal Policy<a class="headerlink" href="#missing-removal-policy" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Stateful resources without removal policy prevent stack deletion.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="nx">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">No</span><span class="w"> </span><span class="nx">removal</span><span class="w"> </span><span class="nx">policy</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DataBucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">versioned</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+<span class="w">  </span><span class="c1">// ❌ No removalPolicy! Stack deletion will fail if bucket has objects</span>
+<span class="p">});</span>
+
+<span class="ow">new</span><span class="w"> </span><span class="nx">dynamodb</span><span class="p">.</span><span class="nx">Table</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Users&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">partitionKey</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="nx">dynamodb</span><span class="p">.</span><span class="nx">AttributeType</span><span class="p">.</span><span class="nx">STRING</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="c1">// ❌ Default is RETAIN, stack won&#39;t delete table</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Explicitly set removal policies for stateful resources.</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="nx">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">Explicit</span><span class="w"> </span><span class="nx">removal</span><span class="w"> </span><span class="nx">policies</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DataBucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">versioned</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">removalPolicy</span><span class="o">:</span><span class="w"> </span><span class="kt">cdk.RemovalPolicy.RETAIN</span><span class="p">,</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">Explicit</span><span class="o">:</span><span class="w"> </span><span class="kt">keep</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="nx">stack</span><span class="w"> </span><span class="ow">delete</span>
+<span class="w">  </span><span class="nx">autoDeleteObjects</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="w">  </span><span class="c1">// Don&#39;t auto-delete in production</span>
+<span class="p">});</span>
+
+<span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;TempBucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">removalPolicy</span><span class="o">:</span><span class="w"> </span><span class="kt">cdk.RemovalPolicy.DESTROY</span><span class="p">,</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">Delete</span><span class="w"> </span><span class="kd">with</span><span class="w"> </span><span class="nx">stack</span><span class="w"> </span><span class="p">(</span><span class="nx">dev</span><span class="o">/</span><span class="nx">test</span><span class="p">)</span>
+<span class="w">  </span><span class="nx">autoDeleteObjects</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+<span class="p">});</span>
+
+<span class="ow">new</span><span class="w"> </span><span class="nx">dynamodb</span><span class="p">.</span><span class="nx">Table</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Users&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">partitionKey</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="nx">dynamodb</span><span class="p">.</span><span class="nx">AttributeType</span><span class="p">.</span><span class="nx">STRING</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">removalPolicy</span><span class="o">:</span><span class="w"> </span><span class="kt">cdk.RemovalPolicy.SNAPSHOT</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">Create</span><span class="w"> </span><span class="nx">snapshot</span><span class="w"> </span><span class="nx">before</span><span class="w"> </span><span class="ow">delete</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>RETAIN</code>: Keep resource on stack deletion (production default)</li>
+<li><code>DESTROY</code>: Delete resource with stack (dev/test)</li>
+<li><code>SNAPSHOT</code>: Create snapshot before deletion (databases)</li>
+<li>Set <code>autoDeleteObjects: true</code> for S3 DESTROY</li>
+</ul>
+<h3 id="physical-name-hardcoding">Physical Name Hardcoding<a class="headerlink" href="#physical-name-hardcoding" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Hardcoded physical names prevent multiple stack instances and updates.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="nx">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">Hardcoded</span><span class="w"> </span><span class="nx">physical</span><span class="w"> </span><span class="nx">names</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Bucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">bucketName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;my-app-bucket&#39;</span><span class="w">  </span><span class="c1">// ❌ Can&#39;t create multiple instances!</span>
+<span class="p">});</span>
+
+<span class="ow">new</span><span class="w"> </span><span class="nx">dynamodb</span><span class="p">.</span><span class="nx">Table</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Table&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">tableName</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;users&#39;</span><span class="p">,</span><span class="w">  </span><span class="c1">// ❌ Prevents parallel deployments</span>
+<span class="w">  </span><span class="nx">partitionKey</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="nx">dynamodb</span><span class="p">.</span><span class="nx">AttributeType</span><span class="p">.</span><span class="nx">STRING</span><span class="w"> </span><span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Let CDK generate names or use tokens.</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="nx">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">Generated</span><span class="w"> </span><span class="nx">names</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Bucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// ✅ CDK generates unique name</span>
+<span class="p">});</span>
+
+<span class="err">##</span><span class="w"> </span><span class="nx">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">Name</span><span class="w"> </span><span class="kd">with</span><span class="w"> </span><span class="nx">stack</span><span class="w"> </span><span class="nx">and</span><span class="w"> </span><span class="nx">environment</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Bucket&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">bucketName</span><span class="o">:</span><span class="w"> </span><span class="sb">`my-app-</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">stackName</span><span class="si">}</span><span class="sb">-</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">account</span><span class="si">}</span><span class="sb">`</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">Unique</span>
+<span class="p">});</span>
+
+<span class="err">##</span><span class="w"> </span><span class="nx">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">Use</span><span class="w"> </span><span class="nx">physical</span><span class="w"> </span><span class="nx">name</span><span class="w"> </span><span class="nx">only</span><span class="w"> </span><span class="nx">when</span><span class="w"> </span><span class="nx">required</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">dynamodb</span><span class="p">.</span><span class="nx">Table</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Table&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">partitionKey</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="nx">dynamodb</span><span class="p">.</span><span class="nx">AttributeType</span><span class="p">.</span><span class="nx">STRING</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="c1">// ✅ No hardcoded name - allows multiple environments</span>
+<span class="p">});</span>
+
+<span class="c1">// Reference generated name</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">cdk</span><span class="p">.</span><span class="nx">CfnOutput</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;TableName&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">table.tableName</span><span class="w">  </span><span class="c1">// ✅ Output the generated name</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Avoid hardcoded physical names when possible</li>
+<li>Let CDK generate unique names</li>
+<li>Use stack name, account, region for uniqueness</li>
+<li>Only hardcode when required by external systems</li>
+</ul>
+<h3 id="environment-agnostic-stack-anti-pattern">Environment-Agnostic Stack Anti-Pattern<a class="headerlink" href="#environment-agnostic-stack-anti-pattern" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Not specifying env makes stack environment-agnostic, limiting CDK features.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="nx">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">Environment</span><span class="o">-</span><span class="nx">agnostic</span><span class="w"> </span><span class="nx">stack</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">MyStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;MyStack&#39;</span><span class="p">);</span><span class="w">  </span><span class="c1">// ❌ No env specified</span>
+
+<span class="c1">// ❌ Can&#39;t use environment-specific features:</span>
+<span class="c1">// - ec2.Vpc.fromLookup() fails</span>
+<span class="c1">// - Hosted zones lookup fails</span>
+<span class="c1">// - Cross-region/account references don&#39;t work</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Explicitly specify environment.</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="nx">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">Explicit</span><span class="w"> </span><span class="nx">environment</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">MyStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;MyStack&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">env</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">account</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.CDK_DEFAULT_ACCOUNT</span><span class="p">,</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">From</span><span class="w"> </span><span class="nx">AWS</span><span class="w"> </span><span class="nx">CLI</span><span class="w"> </span><span class="nx">config</span>
+<span class="w">    </span><span class="nx">region</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.CDK_DEFAULT_REGION</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">});</span>
+
+<span class="err">##</span><span class="w"> </span><span class="nx">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">Multiple</span><span class="w"> </span><span class="nx">environments</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">devStack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">MyStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DevStack&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">env</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">account</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;123456789012&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">region</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;us-east-1&#39;</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">Explicit</span><span class="w"> </span><span class="nx">dev</span>
+<span class="p">});</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">prodStack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">MyStack</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ProdStack&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">env</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">account</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;987654321098&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">region</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;us-west-2&#39;</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">Explicit</span><span class="w"> </span><span class="nx">prod</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always specify <code>env</code> for production stacks</li>
+<li>Use environment variables for flexibility</li>
+<li>Environment-agnostic stacks can't use lookups</li>
+<li>Required for cross-account/region references</li>
+</ul>
+<h3 id="construct-id-conflicts">Construct ID Conflicts<a class="headerlink" href="#construct-id-conflicts" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Duplicate construct IDs within same scope cause synthesis errors.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="nx">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">Duplicate</span><span class="w"> </span><span class="nx">IDs</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Bucket&#39;</span><span class="p">);</span><span class="w">  </span><span class="c1">// First bucket</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Bucket&#39;</span><span class="p">);</span><span class="w">  </span><span class="c1">// ❌ Same ID! Error</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">vpc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ec2</span><span class="p">.</span><span class="nx">Vpc</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;VPC&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">sg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ec2</span><span class="p">.</span><span class="nx">SecurityGroup</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;VPC&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">vpc</span><span class="w"> </span><span class="p">});</span><span class="w">  </span><span class="c1">// ❌ Conflicts with VPC ID!</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use unique, descriptive construct IDs.</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="nx">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">Unique</span><span class="w"> </span><span class="nx">IDs</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;DataBucket&#39;</span><span class="p">);</span><span class="w">     </span><span class="err">#</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">Descriptive</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;LogsBucket&#39;</span><span class="p">);</span><span class="w">     </span><span class="err">#</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">Unique</span>
+<span class="ow">new</span><span class="w"> </span><span class="nx">s3</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;AssetsBucket&#39;</span><span class="p">);</span><span class="w">   </span><span class="err">#</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">Clear</span><span class="w"> </span><span class="nx">purpose</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">vpc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ec2</span><span class="p">.</span><span class="nx">Vpc</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ApplicationVPC&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">sg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ec2</span><span class="p">.</span><span class="nx">SecurityGroup</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;WebSecurityGroup&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">vpc</span><span class="w"> </span><span class="p">});</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="nx">Different</span><span class="w"> </span><span class="nx">IDs</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Construct IDs must be unique within parent scope</li>
+<li>Use descriptive IDs (not generic names like 'Resource')</li>
+<li>IDs form part of CloudFormation logical IDs</li>
+<li>Changing IDs causes resource replacement</li>
 </ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>

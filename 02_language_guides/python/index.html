@@ -1934,6 +1934,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#late-binding-in-closures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Late Binding in Closures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#import-circular-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import Circular Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dictionary-iteration-during-modification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dictionary Iteration During Modification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asyncio-event-loop-blocking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asyncio Event Loop Blocking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-comprehension-memory-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Comprehension Memory Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-handling-anti-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Handling Anti-Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4956,6 +5039,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#late-binding-in-closures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Late Binding in Closures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#import-circular-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import Circular Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dictionary-iteration-during-modification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dictionary Iteration During Modification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asyncio-event-loop-blocking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asyncio Event Loop Blocking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-comprehension-memory-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List Comprehension Memory Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-handling-anti-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Handling Anti-Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6056,6 +6222,264 @@ httpClient.py  # camelCase
 
     <span class="k">return</span> <span class="n">user</span>
 </code></pre></div>
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="late-binding-in-closures">Late Binding in Closures<a class="headerlink" href="#late-binding-in-closures" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Lambda functions and closures bind variables by reference, not value, causing unexpected behavior in loops.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - All functions reference same &#39;i&#39;</span>
+<span class="n">functions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">i</span><span class="p">)</span>  <span class="c1"># Binds to &#39;i&#39; reference</span>
+
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">())</span>  <span class="c1"># Prints: 4 4 4 4 4 (not 0 1 2 3 4)</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use default arguments to capture values at definition time.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Capture value with default argument</span>
+<span class="n">functions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="o">=</span><span class="n">i</span><span class="p">:</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># Captures current value of i</span>
+
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">())</span>  <span class="c1"># Prints: 0 1 2 3 4</span>
+
+<span class="c1">## Good - Use list comprehension</span>
+<span class="n">functions</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="o">=</span><span class="n">i</span><span class="p">:</span> <span class="n">x</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Closures bind variables by reference, not value</li>
+<li>Use default arguments <code>lambda x=i: x</code> to capture values</li>
+<li>List comprehensions create new scope per iteration</li>
+<li>Affects lambdas, nested functions, and class definitions</li>
+</ul>
+<h3 id="import-circular-dependencies">Import Circular Dependencies<a class="headerlink" href="#import-circular-dependencies" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Two modules importing each other causes ImportError or incomplete module initialization.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - module_a.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">module_b</span><span class="w"> </span><span class="kn">import</span> <span class="n">function_b</span>  <span class="c1"># Imports module_b</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">function_a</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">function_b</span><span class="p">()</span>
+
+<span class="c1">## Bad - module_b.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">module_a</span><span class="w"> </span><span class="kn">import</span> <span class="n">function_a</span>  <span class="c1"># Imports module_a (circular!)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">function_b</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">function_a</span><span class="p">()</span>  <span class="c1"># ImportError or AttributeError</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Restructure code, use local imports, or import modules rather than functions.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Import module, not function</span>
+<span class="c1">## module_a.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">module_b</span>  <span class="c1"># Import module, not specific function</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">function_a</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">module_b</span><span class="o">.</span><span class="n">function_b</span><span class="p">()</span>  <span class="c1"># Access via module</span>
+
+<span class="c1">## Good - Local import (deferred)</span>
+<span class="c1">## module_b.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">function_b</span><span class="p">():</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">module_a</span><span class="w"> </span><span class="kn">import</span> <span class="n">function_a</span>  <span class="c1"># Import only when needed</span>
+    <span class="k">return</span> <span class="n">function_a</span><span class="p">()</span>
+
+<span class="c1">## Better - Refactor to remove circular dependency</span>
+<span class="c1">## shared.py (new file)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">shared_function</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+<span class="c1">## module_a.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">shared_function</span>
+
+<span class="c1">## module_b.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">shared_function</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Circular imports fail or create incomplete modules</li>
+<li>Import modules, not functions: <code>import module</code> vs <code>from module import func</code></li>
+<li>Use local imports as temporary workaround</li>
+<li>Best solution: refactor to remove circular dependency</li>
+<li>Extract shared code to third module</li>
+</ul>
+<h3 id="dictionary-iteration-during-modification">Dictionary Iteration During Modification<a class="headerlink" href="#dictionary-iteration-during-modification" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Modifying a dictionary while iterating causes RuntimeError in Python 3.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - RuntimeError: dictionary changed size during iteration</span>
+<span class="n">user_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;alice&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s2">&quot;bob&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s2">&quot;charlie&quot;</span><span class="p">:</span> <span class="mi">35</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">user_data</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">user_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">28</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">user_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>  <span class="c1"># RuntimeError!</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Iterate over a copy or build a new dictionary.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Iterate over copy of keys</span>
+<span class="n">user_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;alice&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s2">&quot;bob&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s2">&quot;charlie&quot;</span><span class="p">:</span> <span class="mi">35</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">user_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>  <span class="c1"># list() creates copy</span>
+    <span class="k">if</span> <span class="n">user_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">28</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">user_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+<span class="c1">## Good - Dictionary comprehension (most Pythonic)</span>
+<span class="n">user_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;alice&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s2">&quot;bob&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s2">&quot;charlie&quot;</span><span class="p">:</span> <span class="mi">35</span><span class="p">}</span>
+<span class="n">user_data</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">user_data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;=</span> <span class="mi">28</span><span class="p">}</span>
+
+<span class="c1">## Good - Filter and rebuild</span>
+<span class="n">user_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">28</span><span class="p">,</span> <span class="n">user_data</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Cannot modify dictionary during iteration</li>
+<li>Use <code>list(dict.keys())</code> to iterate over copy</li>
+<li>Dictionary comprehension is cleaner and faster</li>
+<li>Applies to sets as well (not lists, which support modification)</li>
+</ul>
+<h3 id="asyncio-event-loop-blocking">Asyncio Event Loop Blocking<a class="headerlink" href="#asyncio-event-loop-blocking" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Calling blocking I/O or CPU-intensive code in async functions blocks the entire event loop.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Blocks event loop for 5 seconds</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_data</span><span class="p">():</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># Blocks entire event loop!</span>
+    <span class="k">return</span> <span class="s2">&quot;data&quot;</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># All tasks blocked while one sleeps</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+        <span class="n">fetch_data</span><span class="p">(),</span>
+        <span class="n">fetch_data</span><span class="p">(),</span>
+        <span class="n">fetch_data</span><span class="p">()</span>
+    <span class="p">)</span>  <span class="c1"># Takes 15 seconds sequentially, not 5 seconds concurrently</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use async-compatible libraries or run blocking code in executor.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Use asyncio.sleep for async operations</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_data</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># Non-blocking sleep</span>
+    <span class="k">return</span> <span class="s2">&quot;data&quot;</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Runs concurrently</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+        <span class="n">fetch_data</span><span class="p">(),</span>
+        <span class="n">fetch_data</span><span class="p">(),</span>
+        <span class="n">fetch_data</span><span class="p">()</span>
+    <span class="p">)</span>  <span class="c1"># Takes 5 seconds total</span>
+
+<span class="c1">## Good - Run blocking code in executor</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">blocking_operation</span><span class="p">():</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;data&quot;</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_data</span><span class="p">():</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">blocking_operation</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>time.sleep()</code> blocks event loop; use <code>await asyncio.sleep()</code></li>
+<li>Blocking I/O prevents other tasks from running</li>
+<li>Use <code>aiohttp</code>, <code>aiomysql</code>, etc. for async I/O</li>
+<li>Run blocking code in executor: <code>loop.run_in_executor()</code></li>
+<li>CPU-intensive work should use ProcessPoolExecutor</li>
+</ul>
+<h3 id="list-comprehension-memory-issues">List Comprehension Memory Issues<a class="headerlink" href="#list-comprehension-memory-issues" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: List comprehensions load entire result into memory, causing MemoryError with large datasets.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Loads 100 million integers into memory</span>
+<span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100_000_000</span><span class="p">)]</span>  <span class="c1"># MemoryError!</span>
+<span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="c1">## Bad - Reads entire large file into memory</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;huge_log.txt&quot;</span><span class="p">)]</span>  <span class="c1"># MemoryError!</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use generator expressions for lazy evaluation.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Generator expression (lazy evaluation)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100_000_000</span><span class="p">))</span>  <span class="c1"># Parentheses, not brackets</span>
+<span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># Processes one item at a time</span>
+
+<span class="c1">## Good - Generator for file processing</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;huge_log.txt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>  <span class="c1"># Lazy evaluation</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="n">process</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>  <span class="c1"># One line at a time</span>
+
+<span class="c1">## Good - When you need a list, consider chunking</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_in_chunks</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="n">chunk</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">:</span>
+        <span class="n">chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">chunk_size</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">chunk</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">chunk</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">chunk</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>List comprehensions <code>[...]</code> load everything into memory</li>
+<li>Generator expressions <code>(...)</code> evaluate lazily</li>
+<li>Use generators for large datasets</li>
+<li>Generator expressions can only be iterated once</li>
+<li>Convert to list only when necessary: <code>list(generator)</code></li>
+</ul>
+<h3 id="exception-handling-anti-pattern">Exception Handling Anti-Pattern<a class="headerlink" href="#exception-handling-anti-pattern" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Catching broad exceptions hides bugs and makes debugging impossible.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Catches KeyboardInterrupt, SystemExit, etc.</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">risky_operation</span><span class="p">()</span>
+    <span class="n">process</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>  <span class="c1"># Catches EVERYTHING, including Ctrl+C!</span>
+    <span class="k">pass</span>  <span class="c1"># Silent failure</span>
+
+<span class="c1">## Bad - Too broad exception handling</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># Catches ALL exceptions</span>
+    <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Hides TypeError, KeyError, JSONDecodeError</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Catch specific exceptions and handle appropriately.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Catch specific exceptions</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">requests.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">RequestException</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+<span class="k">except</span> <span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Network error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span>
+<span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid JSON: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span>
+<span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing key in response: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span>
+
+<span class="c1">## Good - Allow critical exceptions to propagate</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">operation</span><span class="p">()</span>
+<span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># Only catch expected errors</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Operation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fallback_value</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Never use bare <code>except:</code> (catches KeyboardInterrupt, SystemExit)</li>
+<li>Avoid catching <code>Exception</code> unless truly necessary</li>
+<li>Catch specific exceptions: <code>ValueError</code>, <code>KeyError</code>, etc.</li>
+<li>Log exceptions before swallowing them</li>
+<li>Use <code>raise</code> to re-raise after logging</li>
+</ul>
+<hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="mutable-default-arguments">Mutable Default Arguments<a class="headerlink" href="#mutable-default-arguments" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Using mutable objects (lists, dicts) as default arguments causes unexpected behavior.</p>

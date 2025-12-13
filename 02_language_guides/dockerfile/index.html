@@ -2480,6 +2480,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-caching-invalidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer Caching Invalidation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-stage-build-arg-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Stage Build ARG Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copy-vs-add-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        COPY vs ADD Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-check-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-time-secrets-leakage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build-Time Secrets Leakage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4940,6 +5012,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-caching-invalidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer Caching Invalidation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-stage-build-arg-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Stage Build ARG Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copy-vs-add-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        COPY vs ADD Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-check-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-time-secrets-leakage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build-Time Secrets Leakage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6046,6 +6190,157 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="w">      </span>org.opencontainers.image.source<span class="o">=</span><span class="s2">&quot;https://github.com/myorg/myapp&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">      </span>org.opencontainers.image.licenses<span class="o">=</span><span class="s2">&quot;MIT&quot;</span>
 </code></pre></div>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="layer-caching-invalidation">Layer Caching Invalidation<a class="headerlink" href="#layer-caching-invalidation" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Placing frequently changing files (source code) before rarely changing files
+(dependencies) invalidates cache on every build, dramatically increasing build times.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Source code copied before dependencies</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.<span class="w">  </span>#<span class="w"> </span>Invalidates<span class="w"> </span>cache<span class="w"> </span>every<span class="w"> </span><span class="nb">time</span><span class="w"> </span>code<span class="w"> </span>changes!
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>install<span class="w">  </span>#<span class="w"> </span>Re-downloads<span class="w"> </span>all<span class="w"> </span>dependencies<span class="w"> </span>every<span class="w"> </span>build
+</code></pre></div>
+<p><strong>Solution</strong>: Copy dependency files first, install, then copy source code.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Dependencies cached separately from source</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./<span class="w">  </span>#<span class="w"> </span>Copy<span class="w"> </span>dependency<span class="w"> </span>manifest<span class="w"> </span>first
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production<span class="w">  </span>#<span class="w"> </span>Install<span class="w"> </span>dependencies<span class="w"> </span><span class="o">(</span>cached<span class="o">)</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.<span class="w">  </span>#<span class="w"> </span>Copy<span class="w"> </span><span class="nb">source</span><span class="w"> </span>code<span class="w"> </span>last
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Order instructions from least to most frequently changing</li>
+<li>Dependencies (package.json) change less than source code</li>
+<li>Each changed layer invalidates all subsequent layers</li>
+<li>Use <code>.dockerignore</code> to exclude unnecessary files</li>
+</ul>
+<h3 id="multi-stage-build-arg-scope">Multi-Stage Build ARG Scope<a class="headerlink" href="#multi-stage-build-arg-scope" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: ARG variables don't persist across build stages unless redeclared, causing build failures.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - ARG not available in second stage</span>
+<span class="k">ARG</span><span class="w"> </span><span class="nv">NODE_VERSION</span><span class="o">=</span><span class="m">20</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:${NODE_VERSION}-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="k">RUN</span><span class="w"> </span>node<span class="w"> </span>--version
+
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:${NODE_VERSION}-alpine</span><span class="w">  </span><span class="c"># Error: NODE_VERSION undefined!</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Redeclare ARG in each stage that needs it.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - ARG redeclared per stage</span>
+<span class="k">ARG</span><span class="w"> </span><span class="nv">NODE_VERSION</span><span class="o">=</span><span class="m">20</span>
+
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:${NODE_VERSION}-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="k">RUN</span><span class="w"> </span>node<span class="w"> </span>--version
+
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:${NODE_VERSION}-alpine</span><span class="w">  </span><span class="c"># Works! ARG redeclared above</span>
+<span class="k">ARG</span><span class="w"> </span>NODE_VERSION<span class="w">  </span>#<span class="w"> </span>Can<span class="w"> </span>reuse<span class="w"> </span>without<span class="w"> </span>value<span class="w"> </span><span class="o">(</span>uses<span class="w"> </span>global<span class="o">)</span>
+<span class="k">RUN</span><span class="w"> </span>node<span class="w"> </span>--version
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>ARG scope is per-stage in multi-stage builds</li>
+<li>Redeclare ARG in each stage that needs it</li>
+<li>Global ARGs (before first FROM) can be referenced without value</li>
+<li>ENV persists across stages, ARG does not</li>
+</ul>
+<h3 id="copy-vs-add-confusion">COPY vs ADD Confusion<a class="headerlink" href="#copy-vs-add-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Using ADD when COPY is sufficient adds unnecessary magic behavior and security risks.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - ADD auto-extracts, can fetch URLs</span>
+<span class="k">ADD</span><span class="w"> </span>https://example.com/file.tar.gz<span class="w"> </span>/app/<span class="w">  </span>#<span class="w"> </span>Security<span class="w"> </span>risk:<span class="w"> </span>executes<span class="w"> </span>remote<span class="w"> </span>code!
+<span class="k">ADD</span><span class="w"> </span>local-archive.tar.gz<span class="w"> </span>/app/<span class="w">  </span>#<span class="w"> </span>Auto-extracts<span class="w"> </span><span class="o">(</span>implicit<span class="w"> </span>behavior<span class="o">)</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use COPY for local files, explicit RUN for extraction/downloads.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Explicit and secure</span>
+<span class="k">COPY</span><span class="w"> </span>local-archive.tar.gz<span class="w"> </span>/tmp/
+<span class="k">RUN</span><span class="w"> </span>tar<span class="w"> </span>-xzf<span class="w"> </span>/tmp/local-archive.tar.gz<span class="w"> </span>-C<span class="w"> </span>/app/<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>/tmp/local-archive.tar.gz
+
+<span class="c">## Good - Explicit download with verification</span>
+<span class="k">RUN</span><span class="w"> </span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://example.com/file.tar.gz<span class="w"> </span>-o<span class="w"> </span>/tmp/file.tar.gz<span class="w"> </span><span class="se">\</span>
+<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;expected-sha256  /tmp/file.tar.gz&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sha256sum<span class="w"> </span>-c<span class="w"> </span>-<span class="w"> </span><span class="se">\</span>
+<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>tar<span class="w"> </span>-xzf<span class="w"> </span>/tmp/file.tar.gz<span class="w"> </span>-C<span class="w"> </span>/app/<span class="w"> </span><span class="se">\</span>
+<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>/tmp/file.tar.gz
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use COPY for all local files</li>
+<li>ADD auto-extracts tar/gz files (implicit behavior)</li>
+<li>ADD can fetch remote URLs (security risk)</li>
+<li>Only use ADD when auto-extraction is explicitly desired</li>
+</ul>
+<h3 id="health-check-missing">Health Check Missing<a class="headerlink" href="#health-check-missing" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Containers report as "running" even when application is crashed or hung, causing failed requests.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - No health check</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.js&quot;</span><span class="p">]</span>
+<span class="c"># Container shows &quot;Up&quot; even if server crashes!</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Add HEALTHCHECK to verify application is responding.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Health check validates application</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
+<span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>40s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>CMD<span class="w"> </span>node<span class="w"> </span>healthcheck.js
+
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.js&quot;</span><span class="p">]</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// healthcheck.js</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">host</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">port</span><span class="o">:</span><span class="w"> </span><span class="mf">3000</span><span class="p">,</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/health&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">timeout</span><span class="o">:</span><span class="w"> </span><span class="mf">2000</span><span class="w"> </span><span class="p">};</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">http</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">200</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="nx">req</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mf">1</span><span class="p">));</span>
+<span class="nx">req</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>HEALTHCHECK verifies application is responding</li>
+<li>Container status reflects health, not just process existence</li>
+<li>Configure appropriate interval, timeout, retries</li>
+<li>Kubernetes uses liveness/readiness probes instead</li>
+<li>Health endpoint should check dependencies (database, cache)</li>
+</ul>
+<h3 id="build-time-secrets-leakage">Build-Time Secrets Leakage<a class="headerlink" href="#build-time-secrets-leakage" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: ARG and ENV values are baked into image layers, exposing secrets in image history.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Secret stored in image layer!</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span>
+<span class="k">ARG</span><span class="w"> </span>NPM_TOKEN<span class="w">  </span>#<span class="w"> </span>Secret<span class="w"> </span>visible<span class="w"> </span><span class="k">in</span><span class="w"> </span>docker<span class="w"> </span>history!
+<span class="k">RUN</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;//registry.npmjs.org/:_authToken=</span><span class="si">${</span><span class="nv">NPM_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.npmrc<span class="w"> </span><span class="se">\</span>
+<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>npm<span class="w"> </span>install<span class="w"> </span><span class="se">\</span>
+<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>.npmrc<span class="w">  </span>#<span class="w"> </span>Too<span class="w"> </span>late!<span class="w"> </span>Token<span class="w"> </span>already<span class="w"> </span><span class="k">in</span><span class="w"> </span>image<span class="w"> </span>layer
+</code></pre></div>
+<p><strong>Solution</strong>: Use build secrets with BuildKit (--secret flag).</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Secret not stored in image</span>
+<span class="c">## syntax=docker/dockerfile:1</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span>
+<span class="k">RUN</span><span class="w"> </span>--mount<span class="o">=</span><span class="nv">type</span><span class="o">=</span>secret,id<span class="o">=</span>npmrc,target<span class="o">=</span>/root/.npmrc<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>npm<span class="w"> </span>install<span class="w"> </span>--only<span class="o">=</span>production
+<span class="c"># Secret mounted at build time, not stored in layer</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## Build with secret</span>
+docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"> </span>--secret<span class="w"> </span><span class="nv">id</span><span class="o">=</span>npmrc,src<span class="o">=</span>.npmrc<span class="w"> </span>-t<span class="w"> </span>myapp<span class="w"> </span>.
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>ARG and ENV values are stored in image layers</li>
+<li>Removing secrets in same/later RUN doesn't remove from history</li>
+<li>Use BuildKit <code>--mount=type=secret</code> for build-time secrets</li>
+<li>Multi-stage builds: copy artifacts, not secrets</li>
+<li>Never commit secrets to Dockerfile or repository</li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-running-as-root">❌ Avoid: Running as Root<a class="headerlink" href="#avoid-running-as-root" title="Permanent link">&para;</a></h3>

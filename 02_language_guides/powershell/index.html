@@ -1929,6 +1929,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#array-vs-arraylist-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Array vs ArrayList Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#null-comparison-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        $null Comparison Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-scope-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Scope Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-vs-foreach-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline vs ForEach Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#try-catch-without-finally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try-Catch Without Finally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4759,6 +4831,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#array-vs-arraylist-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Array vs ArrayList Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#null-comparison-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        $null Comparison Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-scope-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Scope Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-vs-foreach-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline vs ForEach Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#try-catch-without-finally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try-Catch Without Finally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5774,6 +5918,179 @@ cross-platform compatibility.</p>
 <span class="c">## With custom settings</span>
 <span class="nb">Invoke-ScriptAnalyzer</span> <span class="n">-Path</span> <span class="p">.\</span><span class="n">MyModule</span> <span class="n">-Settings</span> <span class="p">.\.</span><span class="n">pslintrc</span><span class="p">.</span><span class="n">psd1</span>
 </code></pre></div>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="array-vs-arraylist-performance">Array vs ArrayList Performance<a class="headerlink" href="#array-vs-arraylist-performance" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Using <code>+=</code> to build arrays creates a new array each time, causing O(n²) performance.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Slow array building</span>
+<span class="nv">$results</span> <span class="p">=</span> <span class="p">@()</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$i</span> <span class="k">in</span> <span class="n">1</span><span class="p">..</span><span class="n">10000</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$results</span> <span class="p">+=</span> <span class="nv">$i</span>  <span class="c"># ❌ Creates new array each iteration! Very slow</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use ArrayList or collect pipeline output.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - ArrayList for dynamic growth</span>
+<span class="nv">$results</span> <span class="p">=</span> <span class="no">[System.Collections.ArrayList]</span><span class="p">::</span><span class="n">new</span><span class="p">()</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$i</span> <span class="k">in</span> <span class="n">1</span><span class="p">..</span><span class="n">10000</span><span class="p">)</span> <span class="p">{</span>
+    <span class="no">[void]</span><span class="nv">$results</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="nv">$i</span><span class="p">)</span>  <span class="c"># ✅ Fast O(1) append</span>
+<span class="p">}</span>
+
+<span class="c">## Good - Collect from pipeline</span>
+<span class="nv">$results</span> <span class="p">=</span> <span class="k">foreach</span> <span class="p">(</span><span class="nv">$i</span> <span class="k">in</span> <span class="n">1</span><span class="p">..</span><span class="n">10000</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$i</span>  <span class="c"># ✅ Output collected into array automatically</span>
+<span class="p">}</span>
+
+<span class="c">## Good - List generic type</span>
+<span class="nv">$results</span> <span class="p">=</span> <span class="no">[System.Collections.Generic.List[int]]</span><span class="p">::</span><span class="n">new</span><span class="p">()</span>
+<span class="nv">$results</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">42</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>+=</code> on arrays copies entire array each time</li>
+<li>Use ArrayList or Generic List for dynamic collections</li>
+<li>Pipeline output collection is efficient</li>
+<li>Use <code>[void]</code> to suppress ArrayList.Add() return value</li>
+</ul>
+<h3 id="null-comparison-order">$null Comparison Order<a class="headerlink" href="#null-comparison-order" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Comparing with <code>$null</code> on right side can give unexpected results with arrays.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - $null on right</span>
+<span class="nv">$array</span> <span class="p">=</span> <span class="p">@(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="n">3</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">(</span><span class="nv">$array</span> <span class="o">-eq</span> <span class="nv">$null</span><span class="p">)</span> <span class="p">{</span>  <span class="c"># ❌ Always false! Returns elements equal to $null</span>
+    <span class="nb">Write-Host</span> <span class="s2">&quot;Array is null&quot;</span>  <span class="c"># Never executes</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Always put <code>$null</code> on the left side of comparisons.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - $null on left</span>
+<span class="nv">$array</span> <span class="p">=</span> <span class="p">@(</span><span class="n">1</span><span class="p">,</span> <span class="n">2</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="n">3</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">(</span><span class="nv">$null</span> <span class="o">-eq</span> <span class="nv">$array</span><span class="p">)</span> <span class="p">{</span>  <span class="c"># ✅ Correct null check</span>
+    <span class="nb">Write-Host</span> <span class="s2">&quot;Array is null&quot;</span>
+<span class="p">}</span>
+
+<span class="c">## Good - Check for empty or null</span>
+<span class="k">if</span> <span class="p">(</span><span class="nv">$null</span> <span class="o">-eq</span> <span class="nv">$array</span> <span class="o">-or</span> <span class="nv">$array</span><span class="p">.</span><span class="n">Count</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">Write-Host</span> <span class="s2">&quot;Array is null or empty&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Always use <code>$null -eq $variable</code>, not <code>$variable -eq $null</code></li>
+<li>With <code>$null</code> on right, <code>-eq</code> filters array for null values</li>
+<li>With <code>$null</code> on left, <code>-eq</code> performs proper null check</li>
+<li>This applies to all comparison operators</li>
+</ul>
+<h3 id="variable-scope-confusion">Variable Scope Confusion<a class="headerlink" href="#variable-scope-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Missing <code>$script:</code> or <code>$global:</code> prefix causes variables to be local-scoped only.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Variable not accessible outside function</span>
+<span class="k">function</span> <span class="nb">Set-Config</span> <span class="p">{</span>
+    <span class="nv">$config</span> <span class="p">=</span> <span class="s2">&quot;production&quot;</span>  <span class="c"># ❌ Local scope only</span>
+<span class="p">}</span>
+
+<span class="nb">Set-Config</span>
+<span class="nb">Write-Host</span> <span class="nv">$config</span>  <span class="c"># Empty! Variable doesn&#39;t exist here</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use scope modifiers for non-local variables.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Script scope</span>
+<span class="k">function</span> <span class="nb">Set-Config</span> <span class="p">{</span>
+    <span class="nv">$script:config</span> <span class="p">=</span> <span class="s2">&quot;production&quot;</span>  <span class="c"># ✅ Accessible in script</span>
+<span class="p">}</span>
+
+<span class="nb">Set-Config</span>
+<span class="nb">Write-Host</span> <span class="nv">$script:config</span>  <span class="c"># &quot;production&quot;</span>
+
+<span class="c">## Good - Global scope (use sparingly)</span>
+<span class="k">function</span> <span class="nb">Set-GlobalConfig</span> <span class="p">{</span>
+    <span class="nv">$global:config</span> <span class="p">=</span> <span class="s2">&quot;production&quot;</span>  <span class="c"># ✅ Accessible everywhere</span>
+<span class="p">}</span>
+
+<span class="c">## Good - Return values instead</span>
+<span class="k">function</span> <span class="nb">Get-Config</span> <span class="p">{</span>
+    <span class="nv">$config</span> <span class="p">=</span> <span class="s2">&quot;production&quot;</span>
+    <span class="k">return</span> <span class="nv">$config</span>  <span class="c"># ✅ Better approach</span>
+<span class="p">}</span>
+
+<span class="nv">$config</span> <span class="p">=</span> <span class="nb">Get-Config</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Variables default to local scope in functions</li>
+<li><code>$script:</code> for script-wide variables</li>
+<li><code>$global:</code> for truly global variables (use rarely)</li>
+<li>Prefer return values over scope manipulation</li>
+</ul>
+<h3 id="pipeline-vs-foreach-performance">Pipeline vs ForEach Performance<a class="headerlink" href="#pipeline-vs-foreach-performance" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Using <code>ForEach-Object</code> in pipeline is slower than <code>foreach</code> loop for in-memory collections.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Slow pipeline for in-memory collection</span>
+<span class="nv">$users</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="n">users</span><span class="p">.</span><span class="n">txt</span>
+<span class="nv">$users</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>  <span class="c"># ❌ Slower for arrays in memory</span>
+    <span class="k">Process</span><span class="n">-User</span> <span class="nv">$_</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>foreach</code> loop for in-memory collections.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Fast foreach loop</span>
+<span class="nv">$users</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="n">users</span><span class="p">.</span><span class="n">txt</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$user</span> <span class="k">in</span> <span class="nv">$users</span><span class="p">)</span> <span class="p">{</span>  <span class="c"># ✅ Faster for in-memory arrays</span>
+    <span class="k">Process</span><span class="n">-User</span> <span class="nv">$user</span>
+<span class="p">}</span>
+
+<span class="c">## Good - Pipeline for streaming</span>
+<span class="nb">Get-ChildItem</span> <span class="n">-Recurse</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>  <span class="c"># ✅ Good for streaming</span>
+    <span class="k">Process</span><span class="o">-File</span> <span class="nv">$_</span>
+<span class="p">}</span>
+
+<span class="c">## Good - Where-Object vs .Where() method</span>
+<span class="nv">$large</span> <span class="p">=</span> <span class="nv">$users</span><span class="p">.</span><span class="n">Where</span><span class="p">({</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Size</span> <span class="o">-gt</span> <span class="n">1MB</span> <span class="p">})</span>  <span class="c"># ✅ Faster method syntax</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>foreach</code> loop is faster for arrays already in memory</li>
+<li>Pipeline (<code>ForEach-Object</code>) good for streaming large datasets</li>
+<li>Use <code>.Where()</code> and <code>.ForEach()</code> methods for better performance</li>
+<li>Pipeline allows memory-efficient processing of large data</li>
+</ul>
+<h3 id="try-catch-without-finally">Try-Catch Without Finally<a class="headerlink" href="#try-catch-without-finally" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Not using <code>finally</code> block causes cleanup code to be skipped on errors.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Bad - Resources not cleaned up on error</span>
+<span class="k">try</span> <span class="p">{</span>
+    <span class="nv">$file</span> <span class="p">=</span> <span class="no">[System.IO.File]</span><span class="p">::</span><span class="n">Open</span><span class="p">(</span><span class="s2">&quot;data.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;Open&quot;</span><span class="p">)</span>
+    <span class="k">Process</span><span class="o">-File</span> <span class="nv">$file</span>
+    <span class="nv">$file</span><span class="p">.</span><span class="n">Close</span><span class="p">()</span>  <span class="c"># ❌ Not called if Process-File throws!</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+    <span class="nb">Write-Error</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>finally</code> for cleanup code.</p>
+<div class="highlight"><pre><span></span><code><span class="c">## Good - Finally ensures cleanup</span>
+<span class="k">try</span> <span class="p">{</span>
+    <span class="nv">$file</span> <span class="p">=</span> <span class="no">[System.IO.File]</span><span class="p">::</span><span class="n">Open</span><span class="p">(</span><span class="s2">&quot;data.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;Open&quot;</span><span class="p">)</span>
+    <span class="k">Process</span><span class="o">-File</span> <span class="nv">$file</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+    <span class="nb">Write-Error</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span>
+<span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$null</span> <span class="o">-ne</span> <span class="nv">$file</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$file</span><span class="p">.</span><span class="n">Close</span><span class="p">()</span>  <span class="c"># ✅ Always called</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c">## Better - Using statement (PowerShell 7+)</span>
+<span class="n">using</span> <span class="p">(</span><span class="nv">$file</span> <span class="p">=</span> <span class="no">[System.IO.File]</span><span class="p">::</span><span class="n">Open</span><span class="p">(</span><span class="s2">&quot;data.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;Open&quot;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">Process</span><span class="o">-File</span> <span class="nv">$file</span>
+<span class="p">}</span>  <span class="c"># ✅ Automatically disposed</span>
+
+<span class="c">## Better - Cmdlet with built-in cleanup</span>
+<span class="nb">Get-Content</span> <span class="s2">&quot;data.txt&quot;</span> <span class="p">|</span> <span class="k">Process</span><span class="n">-Data</span>  <span class="c"># ✅ Handles file closing</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>finally</code> always executes, even on errors or returns</li>
+<li>Use <code>finally</code> for resource cleanup (files, connections, locks)</li>
+<li>PowerShell 7+ supports <code>using</code> statement</li>
+<li>Prefer cmdlets that handle cleanup automatically</li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-using-aliases-in-scripts">❌ Avoid: Using Aliases in Scripts<a class="headerlink" href="#avoid-using-aliases-in-scripts" title="Permanent link">&para;</a></h3>

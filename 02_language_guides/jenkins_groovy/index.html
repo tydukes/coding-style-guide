@@ -2329,6 +2329,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workspace-conflicts-in-parallel-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workspace Conflicts in Parallel Builds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withcredentials-scope-leakage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        withCredentials Scope Leakage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#not-checking-sh-return-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not Checking Sh Return Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#declarative-vs-scripted-syntax-mixing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Declarative vs Scripted Syntax Mixing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-reuse-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Reuse Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5209,6 +5281,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workspace-conflicts-in-parallel-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workspace Conflicts in Parallel Builds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#withcredentials-scope-leakage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        withCredentials Scope Leakage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#not-checking-sh-return-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not Checking Sh Return Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#declarative-vs-scripted-syntax-mixing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Declarative vs Scripted Syntax Mixing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-reuse-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Reuse Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6964,6 +7108,302 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 <li>Implement network segmentation</li>
 <li>Restrict agent network access</li>
 <li>Monitor network traffic</li>
+</ul>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="workspace-conflicts-in-parallel-builds">Workspace Conflicts in Parallel Builds<a class="headerlink" href="#workspace-conflicts-in-parallel-builds" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Parallel stages using same workspace cause file conflicts and corrupted builds.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Parallel</span><span class="w"> </span><span class="n">stages</span><span class="w"> </span><span class="n">share</span><span class="w"> </span><span class="n">workspace</span>
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Parallel&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">parallel</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test A&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;npm test &gt; results.txt&#39;</span><span class="w">  </span><span class="c1">// ❌ Both write to same file!</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test B&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;npm test &gt; results.txt&#39;</span><span class="w">  </span><span class="c1">// ❌ Conflicts with Test A</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use separate workspaces or different file names.</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Separate</span><span class="w"> </span><span class="n">workspaces</span>
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Parallel&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">parallel</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test A&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">label</span><span class="w"> </span><span class="s1">&#39;test-agent&#39;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;npm test &gt; results-a.txt&#39;</span><span class="w">  </span><span class="c1">// ✅ Unique filename</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test B&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">label</span><span class="w"> </span><span class="s1">&#39;test-agent&#39;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;npm test &gt; results-b.txt&#39;</span><span class="w">  </span><span class="c1">// ✅ Different file</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+
+<span class="err">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Use</span><span class="w"> </span><span class="n">ws</span><span class="o">()</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">separate</span><span class="w"> </span><span class="n">workspace</span>
+<span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test A&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">ws</span><span class="o">(</span><span class="s2">&quot;workspace-a&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w">  </span><span class="c1">// ✅ Separate workspace</span>
+<span class="w">            </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;npm test&#39;</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Parallel stages share workspace by default</li>
+<li>Use unique filenames or separate agents</li>
+<li>Use <code>ws()</code> step for custom workspace paths</li>
+<li>Consider using <code>stash</code>/<code>unstash</code> for artifacts</li>
+</ul>
+<h3 id="withcredentials-scope-leakage">withCredentials Scope Leakage<a class="headerlink" href="#withcredentials-scope-leakage" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Credentials exposed outside withCredentials block through environment variables.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Credential</span><span class="w"> </span><span class="n">leaks</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">environment</span>
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">SECRET</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">credentials</span><span class="o">(</span><span class="s1">&#39;my-secret&#39;</span><span class="o">)</span><span class="w">  </span><span class="c1">// ❌ Available to all stages!</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;echo $SECRET&#39;</span><span class="w">  </span><span class="c1">// Exposed</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>withCredentials</code> in smallest possible scope.</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Scoped</span><span class="w"> </span><span class="n">credentials</span>
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Deploy&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">withCredentials</span><span class="o">([</span>
+<span class="w">                    </span><span class="n">usernamePassword</span><span class="o">(</span>
+<span class="w">                        </span><span class="nl">credentialsId:</span><span class="w"> </span><span class="s1">&#39;deploy-creds&#39;</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">usernameVariable:</span><span class="w"> </span><span class="s1">&#39;USER&#39;</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">passwordVariable:</span><span class="w"> </span><span class="s1">&#39;PASS&#39;</span>
+<span class="w">                    </span><span class="o">)</span>
+<span class="w">                </span><span class="o">])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                        echo &quot;Deploying as $USER&quot;</span>
+<span class="s1">                        deploy.sh  # ✅ Creds only in this scope</span>
+<span class="s1">                    &#39;&#39;&#39;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="c1">// ✅ USER and PASS not available here</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Use <code>withCredentials</code> block, not <code>environment</code></li>
+<li>Minimize credential scope</li>
+<li>Credentials auto-masked in console output</li>
+<li>Use credential-specific helper methods</li>
+</ul>
+<h3 id="not-checking-sh-return-status">Not Checking Sh Return Status<a class="headerlink" href="#not-checking-sh-return-status" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Pipeline continues after command failures, masking errors.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Ignores</span><span class="w"> </span><span class="n">command</span><span class="w"> </span><span class="n">failures</span>
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;make build&#39;</span><span class="w">  </span><span class="c1">// ❌ If fails, what happens?</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;make test&#39;</span><span class="w">   </span><span class="c1">// Runs even if build fails!</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Check return status or use proper error handling.</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Check</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">status</span>
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="kt">def</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sh</span><span class="o">(</span><span class="nl">script:</span><span class="w"> </span><span class="s1">&#39;make build&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">returnStatus:</span><span class="w"> </span><span class="kc">true</span><span class="o">)</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="o">(</span><span class="n">result</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">error</span><span class="o">(</span><span class="s2">&quot;Build failed with code ${result}&quot;</span><span class="o">)</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">✅</span><span class="w"> </span><span class="n">Fail</span><span class="w"> </span><span class="n">pipeline</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;make test&#39;</span><span class="w">  </span><span class="c1">// ✅ Only runs if build succeeded</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+
+<span class="err">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Capture</span><span class="w"> </span><span class="n">output</span>
+<span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Check Version&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="kt">def</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sh</span><span class="o">(</span>
+<span class="w">                </span><span class="nl">script:</span><span class="w"> </span><span class="s1">&#39;cat VERSION&#39;</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">returnStdout:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">            </span><span class="o">).</span><span class="na">trim</span><span class="o">()</span><span class="w">  </span><span class="c1">// ✅ Capture and use output</span>
+<span class="w">            </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;Building version ${version}&quot;</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>By default, <code>sh</code> step fails pipeline on non-zero exit</li>
+<li>Use <code>returnStatus: true</code> to capture exit code</li>
+<li>Use <code>returnStdout: true</code> to capture output</li>
+<li>Pipeline fails by default on errors (can override)</li>
+</ul>
+<h3 id="declarative-vs-scripted-syntax-mixing">Declarative vs Scripted Syntax Mixing<a class="headerlink" href="#declarative-vs-scripted-syntax-mixing" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Mixing declarative and scripted syntax incorrectly causes syntax errors.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Invalid</span><span class="w"> </span><span class="n">syntax</span><span class="w"> </span><span class="n">mixing</span>
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="kt">def</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;1.0&#39;</span><span class="w">  </span><span class="c1">// ❌ Can&#39;t use def at stage level!</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">echo</span><span class="w"> </span><span class="n">version</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>script</code> blocks for scripted code in declarative pipelines.</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Proper</span><span class="w"> </span><span class="n">script</span><span class="w"> </span><span class="n">block</span><span class="w"> </span><span class="n">usage</span>
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="kt">def</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;1.0&#39;</span><span class="w">  </span><span class="c1">// ✅ Inside script block</span>
+<span class="w">                    </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;Version: ${version}&quot;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+
+<span class="err">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Declarative</span><span class="w"> </span><span class="n">only</span>
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">VERSION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;1.0&#39;</span><span class="w">  </span><span class="c1">// ✅ Declarative environment</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;Version: ${VERSION}&quot;</span><span class="w">  </span><span class="c1">// ✅ No script block needed</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Declarative syntax requires specific structure</li>
+<li>Use <code>script {}</code> for Groovy code in declarative pipeline</li>
+<li>Keep scripts minimal, prefer declarative syntax</li>
+<li><code>def</code>, loops, conditionals require <code>script {}</code> block</li>
+</ul>
+<h3 id="agent-reuse-assumptions">Agent Reuse Assumptions<a class="headerlink" href="#agent-reuse-assumptions" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Assuming agent state persists between stages causes failures.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Assumes</span><span class="w"> </span><span class="n">agent</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="n">persists</span>
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Setup&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;npm install&#39;</span><span class="w">  </span><span class="c1">// ❌ May run on agent A</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="s1">&#39;different-agent&#39;</span><span class="w">  </span><span class="c1">// ❌ Runs on agent B!</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;npm test&#39;</span><span class="w">  </span><span class="c1">// ❌ node_modules not present!</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use same agent or stash/unstash artifacts.</p>
+<div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Single</span><span class="w"> </span><span class="n">agent</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">all</span><span class="w"> </span><span class="n">stages</span>
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="s1">&#39;nodejs&#39;</span><span class="w"> </span><span class="o">}</span><span class="w">  </span><span class="c1">// ✅ Same agent</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Setup&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;npm install&#39;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;npm test&#39;</span><span class="w">  </span><span class="c1">// ✅ node_modules available</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+
+<span class="err">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Stash</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">unstash</span>
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;npm run build&#39;</span>
+<span class="w">                </span><span class="n">stash</span><span class="w"> </span><span class="nl">name:</span><span class="w"> </span><span class="s1">&#39;dist&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">includes:</span><span class="w"> </span><span class="s1">&#39;dist/**&#39;</span><span class="w">  </span><span class="c1">// ✅ Save artifacts</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Deploy&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="s1">&#39;deploy-agent&#39;</span><span class="w"> </span><span class="o">}</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">unstash</span><span class="w"> </span><span class="s1">&#39;dist&#39;</span><span class="w">  </span><span class="c1">// ✅ Restore artifacts</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;./deploy.sh&#39;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Each stage with different agent gets fresh workspace</li>
+<li>Use top-level <code>agent</code> for shared state</li>
+<li>Use <code>stash</code>/<code>unstash</code> to transfer files between agents</li>
+<li>Workspace cleanup between builds prevents state leaks</li>
 </ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>

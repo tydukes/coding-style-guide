@@ -2346,6 +2346,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boolean-value-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boolean Value Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#indentation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Indentation Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anchor-and-alias-typos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anchor and Alias Typos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiline-string-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiline String Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#duplicate-keys-silently-overwriting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Duplicate Keys Silently Overwriting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4973,6 +5045,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boolean-value-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boolean Value Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#indentation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Indentation Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anchor-and-alias-typos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anchor and Alias Typos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiline-string-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiline String Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#duplicate-keys-silently-overwriting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Duplicate Keys Silently Overwriting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6270,6 +6414,172 @@ chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>p
 <li>Implement timeouts for parsing</li>
 <li>Monitor memory usage during parsing</li>
 <li>Reject malformed YAML early</li>
+</ul>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="boolean-value-confusion">Boolean Value Confusion<a class="headerlink" href="#boolean-value-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Unquoted <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code>, <code>true</code>, <code>false</code> are interpreted as booleans, not strings.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Unintended boolean conversion</span>
+<span class="nt">country_codes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">norway</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no</span><span class="w">  </span><span class="c1"># ❌ Parsed as boolean false, not string &quot;no&quot;</span>
+<span class="w">  </span><span class="nt">yemen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span><span class="w">  </span><span class="c1"># ❌ Parsed as boolean true, not string &quot;yes&quot;</span>
+<span class="w">  </span><span class="nt">india</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">off</span><span class="w">  </span><span class="c1"># ❌ Parsed as boolean false</span>
+
+<span class="nt">switches</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">power</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on</span><span class="w">  </span><span class="c1"># ❌ Parsed as boolean true</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Quote string values that look like booleans.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Explicit strings</span>
+<span class="nt">country_codes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">norway</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;no&quot;</span><span class="w">  </span><span class="c1"># ✅ String &quot;no&quot;</span>
+<span class="w">  </span><span class="nt">yemen</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w">  </span><span class="c1"># ✅ String &quot;yes&quot;</span>
+<span class="w">  </span><span class="nt">india</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;off&quot;</span><span class="w">  </span><span class="c1"># ✅ String &quot;off&quot;</span>
+
+<span class="nt">switches</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">power</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;on&quot;</span><span class="w">  </span><span class="c1"># ✅ String &quot;on&quot;</span>
+
+<span class="c1">## Good - Actual booleans</span>
+<span class="nt">flags</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">  </span><span class="c1"># Boolean</span>
+<span class="w">  </span><span class="nt">debug</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">   </span><span class="c1"># Boolean</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>YAML boolean values: <code>true</code>, <code>false</code>, <code>yes</code>, <code>no</code>, <code>on</code>, <code>off</code></li>
+<li>Always quote values if you want literal strings</li>
+<li>Use explicit <code>true</code>/<code>false</code> for clarity</li>
+<li>Check parser output to verify interpretation</li>
+</ul>
+<h3 id="indentation-errors">Indentation Errors<a class="headerlink" href="#indentation-errors" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Mixing spaces and tabs or incorrect indentation breaks YAML structure.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Inconsistent indentation</span>
+<span class="nt">server</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">port</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span><span class="w">  </span><span class="c1"># ❌ 3 spaces instead of 2</span>
+<span class="w">  </span><span class="nt">database</span><span class="p">:</span>
+<span class="w w-Error"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mydb</span><span class="w">  </span><span class="c1"># ❌ Tab character!</span>
+<span class="w"> </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use consistent spaces (2 or 4) throughout.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Consistent 2-space indentation</span>
+<span class="nt">server</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">  </span><span class="nt">database</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mydb</span>
+<span class="w">    </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>YAML forbids tabs for indentation</li>
+<li>Use 2 or 4 spaces consistently</li>
+<li>Configure editor to convert tabs to spaces</li>
+<li>Use YAML linter to catch indentation errors</li>
+</ul>
+<h3 id="anchor-and-alias-typos">Anchor and Alias Typos<a class="headerlink" href="#anchor-and-alias-typos" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Referencing non-existent anchors or typos in anchor names causes parsing errors.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Anchor/alias mismatch</span>
+<span class="nt">defaults</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;defaults</span>
+<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">  </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+
+<span class="nt">production</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">&lt;&lt;</span><span class="p">:</span><span class="w"> </span><span class="nv">*default</span><span class="w">  </span><span class="c1"># ❌ Typo! Should be *defaults</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod.example.com</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Verify anchor names match alias references.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Matching anchor and alias</span>
+<span class="nt">defaults</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;defaults</span>
+<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">  </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+
+<span class="nt">production</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">&lt;&lt;</span><span class="p">:</span><span class="w"> </span><span class="nv">*defaults</span><span class="w">  </span><span class="c1"># ✅ Correct reference</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod.example.com</span>
+
+<span class="nt">development</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">&lt;&lt;</span><span class="p">:</span><span class="w"> </span><span class="nv">*defaults</span><span class="w">  </span><span class="c1"># ✅ Reusing anchor</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dev.example.com</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Anchors: <code>&amp;anchor_name</code></li>
+<li>Aliases: <code>*anchor_name</code></li>
+<li>Merge: <code>&lt;&lt;: *anchor_name</code></li>
+<li>Anchor must be defined before use</li>
+</ul>
+<h3 id="multiline-string-confusion">Multiline String Confusion<a class="headerlink" href="#multiline-string-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Choosing wrong multiline string style (<code>|</code>, <code>&gt;</code>, <code>|-</code>, <code>&gt;-</code>) for the use case.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Using | when &gt; is better</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">This is a long description that should be on one line</span>
+<span class="w">  </span><span class="no">but was split across multiple lines using the literal</span>
+<span class="w">  </span><span class="no">style which preserves newlines.</span>
+
+<span class="c1">## Bad - Using &gt; when | is needed</span>
+<span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">  </span><span class="no">#!/bin/bash</span>
+<span class="w">  </span><span class="no">set -e</span>
+<span class="w">  </span><span class="no">echo &quot;Line 1&quot;</span>
+<span class="w">  </span><span class="no">echo &quot;Line 2&quot;</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>|</code> for literals (preserve newlines), <code>&gt;</code> for folding (join lines).</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Folded for paragraphs</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">  </span><span class="no">This is a long description that will be folded</span>
+<span class="w">  </span><span class="no">into a single line with spaces replacing the</span>
+<span class="w">  </span><span class="no">newlines. Perfect for prose.</span>
+
+<span class="c1">## Good - Literal for scripts</span>
+<span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">#!/bin/bash</span>
+<span class="w">  </span><span class="no">set -e</span>
+<span class="w">  </span><span class="no">echo &quot;Line 1&quot;</span>
+<span class="w">  </span><span class="no">echo &quot;Line 2&quot;</span>
+
+<span class="c1">## Good - Strip trailing newlines with -</span>
+<span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">  </span><span class="no">docker run \</span>
+<span class="w">    </span><span class="no">--name myapp \</span>
+<span class="w">    </span><span class="no">myimage:latest</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>|</code> (literal): Preserves newlines and indentation</li>
+<li><code>&gt;</code> (folded): Joins lines with spaces</li>
+<li><code>|-</code> and <code>&gt;-</code>: Strip final newline</li>
+<li><code>|+</code> and <code>&gt;+</code>: Keep final newlines</li>
+</ul>
+<h3 id="duplicate-keys-silently-overwriting">Duplicate Keys Silently Overwriting<a class="headerlink" href="#duplicate-keys-silently-overwriting" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: YAML allows duplicate keys; last value wins without warning.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Duplicate keys</span>
+<span class="nt">server</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span><span class="w">  </span><span class="c1"># First definition</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9000</span><span class="w">  </span><span class="c1"># ❌ Silently overwrites first value!</span>
+
+<span class="c1">## Result: port = 9000</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use unique keys or YAML linter to detect duplicates.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Unique keys</span>
+<span class="nt">server</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">http_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">  </span><span class="nt">grpc_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9000</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+
+<span class="c1">## Or use linter to catch duplicates</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>YAML allows duplicate keys (last wins)</li>
+<li>Use YAML linter with <code>key-duplicates: enable</code></li>
+<li>Duplicate keys often indicate copy-paste errors</li>
+<li>Some parsers can be configured to error on duplicates</li>
 </ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>

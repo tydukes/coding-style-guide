@@ -1692,6 +1692,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-precedence-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Precedence Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handler-notification-timing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handler Notification Timing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed-when-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed When Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loop-variable-shadowing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loop Variable Shadowing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template-rendering-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template Rendering Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fact-gathering-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fact Gathering Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4703,6 +4786,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-precedence-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Precedence Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handler-notification-timing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handler Notification Timing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed-when-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed When Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loop-variable-shadowing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loop Variable Shadowing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template-rendering-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template Rendering Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fact-gathering-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fact Gathering Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5800,6 +5966,215 @@ molecule<span class="w"> </span>destroy<span class="w">      </span><span class=
 <span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http_response</span>
 <span class="w">      </span><span class="nt">failed_when</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;Hello</span><span class="nv"> </span><span class="s">World&#39;</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">http_response.content&quot;</span>
 </code></pre></div>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="variable-precedence-confusion">Variable Precedence Confusion<a class="headerlink" href="#variable-precedence-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Ansible has 22 levels of variable precedence, and misunderstanding this order causes
+unexpected variable values at runtime.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## playbook.yml</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy application</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webservers</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span><span class="w">  </span><span class="c1"># Play vars (precedence: 12)</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy_app</span>
+<span class="w">      </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">app_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9000</span><span class="w">  </span><span class="c1"># Role params (precedence: 20)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## roles/deploy_app/defaults/main.yml</span>
+<span class="nt">app_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000</span><span class="w">  </span><span class="c1"># Role defaults (precedence: 2)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## group_vars/webservers.yml</span>
+<span class="nt">app_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span><span class="w">  </span><span class="c1"># Group vars (precedence: 7)</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use extra vars (highest precedence) for overrides, role defaults for fallbacks,
+and document which vars are meant to be overridden.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Clear hierarchy</span>
+<span class="c1">## ansible-playbook site.yml -e &quot;app_port=9000&quot;  # Extra vars always win</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Extra vars (<code>-e</code> or <code>--extra-vars</code>) always win (precedence 22)</li>
+<li>Role vars override almost everything (precedence 15)</li>
+<li>Use role defaults for sensible fallback values</li>
+<li>Document expected override points in role README</li>
+</ul>
+<h3 id="handler-notification-timing">Handler Notification Timing<a class="headerlink" href="#handler-notification-timing" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Handlers only run at the end of a play, not immediately when notified, causing race conditions.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Config updated but service not reloaded yet</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update nginx config</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx.conf.j2</span>
+<span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/nginx/nginx.conf</span>
+<span class="w">  </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reload nginx</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test nginx configuration</span><span class="w">  </span><span class="c1"># Runs BEFORE reload!</span>
+<span class="w">  </span><span class="nt">uri</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost/health</span>
+<span class="w">    </span><span class="nt">status_code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>meta: flush_handlers</code> to force handler execution at specific points.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Force handler execution before testing</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update nginx config</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx.conf.j2</span>
+<span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/nginx/nginx.conf</span>
+<span class="w">  </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reload nginx</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Flush handlers</span>
+<span class="w">  </span><span class="nt">meta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flush_handlers</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test nginx configuration</span><span class="w">  </span><span class="c1"># Now runs AFTER reload</span>
+<span class="w">  </span><span class="nt">uri</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost/health</span>
+<span class="w">    </span><span class="nt">status_code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Handlers run at play end by default</li>
+<li>Use <code>meta: flush_handlers</code> to force immediate execution</li>
+<li>Handlers run once even if notified multiple times</li>
+<li>Failed tasks prevent handler execution unless <code>force_handlers: true</code></li>
+</ul>
+<h3 id="changed-when-detection">Changed When Detection<a class="headerlink" href="#changed-when-detection" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Shell/command tasks always report "changed" status, polluting change reports and
+triggering unnecessary handler notifications.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Always shows as changed</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check if file exists</span>
+<span class="w">  </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test -f /etc/myapp/config.yml</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config_check</span>
+<span class="w">  </span><span class="nt">ignore_errors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>changed_when</code> to properly indicate actual changes.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Only marks as changed when appropriate</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check if file exists</span>
+<span class="w">  </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test -f /etc/myapp/config.yml</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config_check</span>
+<span class="w">  </span><span class="nt">failed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">changed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># This is just a check, not a change</span>
+
+<span class="c1">## Good - Detect actual changes</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add user to group</span>
+<span class="w">  </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">usermod -aG docker {{ username }}</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">usermod_result</span>
+<span class="w">  </span><span class="nt">changed_when</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;no</span><span class="nv"> </span><span class="s">changes&#39;</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">usermod_result.stderr&quot;</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Commands/shell tasks default to "changed" status</li>
+<li>Use <code>changed_when: false</code> for read-only operations</li>
+<li>Parse output to detect actual changes</li>
+<li>Prevents unnecessary handler notifications</li>
+</ul>
+<h3 id="loop-variable-shadowing">Loop Variable Shadowing<a class="headerlink" href="#loop-variable-shadowing" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Using <code>loop</code> creates an <code>item</code> variable that shadows outer loop variables, causing nested loop failures.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Inner loop shadows outer &#39;item&#39;</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create user directories</span>
+<span class="w">  </span><span class="nt">file</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/home/{{</span><span class="nv"> </span><span class="s">item.username</span><span class="nv"> </span><span class="s">}}/{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w">  </span><span class="c1"># Which &#39;item&#39;?</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">directory</span>
+<span class="w">  </span><span class="nt">loop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">users</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">  </span><span class="nt">with_items</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documents</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">downloads</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>loop_control</code> to rename loop variables.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Explicit loop variable names</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create user directories</span>
+<span class="w">  </span><span class="nt">file</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/home/{{</span><span class="nv"> </span><span class="s">user.username</span><span class="nv"> </span><span class="s">}}/{{</span><span class="nv"> </span><span class="s">folder</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">directory</span>
+<span class="w">  </span><span class="nt">loop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">users</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">  </span><span class="nt">loop_control</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">loop_var</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user</span>
+<span class="w">  </span><span class="nt">with_nested</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">users</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;documents&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;downloads&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">loop_control</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">loop_var</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">folder</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Default loop variable is <code>item</code></li>
+<li>Nested loops shadow outer <code>item</code> variables</li>
+<li>Use <code>loop_control: { loop_var: custom_name }</code> for clarity</li>
+<li>Name loop variables descriptively</li>
+</ul>
+<h3 id="template-rendering-errors">Template Rendering Errors<a class="headerlink" href="#template-rendering-errors" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Jinja2 template errors only appear at runtime on target hosts, making debugging difficult.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code>{# templates/config.j2 - Runtime error! #}
+server_url = {{ api_url }}  # Missing quotes for string value
+database_host = {{ db_host | default(localhost) }}  # Undefined variable &#39;localhost&#39;
+workers = {{ worker_count + 10 }}  # TypeError if worker_count is string
+</code></pre></div>
+<p><strong>Solution</strong>: Use proper Jinja2 syntax, test templates locally, and use <code>template</code> module's <code>validate</code> parameter.</p>
+<div class="highlight"><pre><span></span><code>## Good - Proper Jinja2 syntax
+server_url = &quot;{{ api_url }}&quot;
+database_host = &quot;{{ db_host | default(&#39;localhost&#39;) }}&quot;
+workers = {{ worker_count | int + 10 }}
+
+{# Use filters for type conversion #}
+enabled = {{ feature_enabled | bool }}
+timeout = {{ timeout_seconds | int }}
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Validate template after deployment</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy nginx config</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx.conf.j2</span>
+<span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/nginx/nginx.conf</span>
+<span class="w">    </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;nginx</span><span class="nv"> </span><span class="s">-t</span><span class="nv"> </span><span class="s">-c</span><span class="nv"> </span><span class="s">%s&#39;</span><span class="w">  </span><span class="c1"># Test config before replacing</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Quote string values in templates</li>
+<li>Use <code>| default('value')</code> with quotes for string defaults</li>
+<li>Use type filters: <code>| int</code>, <code>| bool</code>, <code>| string</code></li>
+<li>Use <code>validate</code> parameter to test rendered configs</li>
+<li>Test templates with <code>--check --diff</code> mode</li>
+</ul>
+<h3 id="fact-gathering-performance">Fact Gathering Performance<a class="headerlink" href="#fact-gathering-performance" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Fact gathering runs on every play by default, adding 2-5 seconds per host even when facts aren't needed.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Bad - Gathers facts unnecessarily</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Simple file copy</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all</span>
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w">  </span><span class="c1"># Waits 3 seconds gathering facts we don&#39;t use</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Copy file</span>
+<span class="w">      </span><span class="nt">copy</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app.jar</span>
+<span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/app/</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Disable fact gathering when not needed, use smart gathering, or cache facts.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">## Good - Disable when not needed</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Simple file copy</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all</span>
+<span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># Skip fact gathering</span>
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Copy file</span>
+<span class="w">      </span><span class="nt">copy</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app.jar</span>
+<span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/app/</span>
+
+<span class="c1">## Good - Use smart gathering (ansible.cfg)</span>
+<span class="c1">## [defaults]</span>
+<span class="c1">## gathering = smart</span>
+<span class="c1">## fact_caching = jsonfile</span>
+<span class="c1">## fact_caching_connection = /tmp/ansible_facts</span>
+<span class="c1">## fact_caching_timeout = 3600</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Default gathering adds 2-5s per host per play</li>
+<li>Set <code>gather_facts: false</code> when facts aren't needed</li>
+<li>Use <code>gathering = smart</code> to cache facts</li>
+<li>Manually gather facts with <code>setup</code> module when needed</li>
+<li>Use <code>gather_subset</code> to collect only required facts</li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-shellcommand-for-everything">❌ Avoid: Shell/Command for Everything<a class="headerlink" href="#avoid-shellcommand-for-everything" title="Permanent link">&para;</a></h3>

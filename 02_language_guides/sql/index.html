@@ -2212,6 +2212,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#null-comparison-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NULL Comparison Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implicit-type-conversion-performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implicit Type Conversion Performance Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#not-in-with-null-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NOT IN with NULL Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distinct-hiding-performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DISTINCT Hiding Performance Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transaction-isolation-level-misunderstanding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transaction Isolation Level Misunderstanding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5133,6 +5205,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Pitfalls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#null-comparison-confusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NULL Comparison Confusion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implicit-type-conversion-performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implicit Type Conversion Performance Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#not-in-with-null-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NOT IN with NULL Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distinct-hiding-performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DISTINCT Hiding Performance Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transaction-isolation-level-misunderstanding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transaction Isolation Level Misunderstanding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anti-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6433,6 +6577,199 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">public_user_profile</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">app_user</span><span class="p">;</span>
 <span class="k">REVOKE</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">app_user</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Deny access to full table</span>
 </code></pre></div>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="null-comparison-confusion">NULL Comparison Confusion<a class="headerlink" href="#null-comparison-confusion" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Using <code>= NULL</code> or <code>!= NULL</code> instead of <code>IS NULL</code> or <code>IS NOT NULL</code> returns unexpected results.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="n">comparisons</span><span class="w"> </span><span class="n">don</span><span class="s1">&#39;t work with = or !=</span>
+<span class="s1">SELECT * FROM users WHERE email = NULL;  -- ❌ Returns 0 rows (not NULL rows)</span>
+<span class="s1">SELECT * FROM users WHERE email != NULL;  -- ❌ Also returns 0 rows!</span>
+
+<span class="s1">UPDATE users SET status = &#39;</span><span class="n">inactive</span><span class="err">&#39;</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">last_login</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ❌ Updates 0 rows</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>IS NULL</code> and <code>IS NOT NULL</code> operators.</p>
+<div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Correct</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="n">handling</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ Finds rows where email is NULL</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ Finds rows with non-NULL email</span>
+
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">users</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;inactive&#39;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">last_login</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ Updates rows with NULL last_login</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>NULL is not equal to anything, including NULL (<code>NULL = NULL</code> is false)</li>
+<li>Always use <code>IS NULL</code> and <code>IS NOT NULL</code> for NULL checks</li>
+<li><code>COALESCE(column, 'default')</code> provides default values for NULLs</li>
+<li><code>NULLIF(value1, value2)</code> returns NULL if values are equal</li>
+</ul>
+<h3 id="implicit-type-conversion-performance-issues">Implicit Type Conversion Performance Issues<a class="headerlink" href="#implicit-type-conversion-performance-issues" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Comparing different data types forces type conversion, preventing index usage and slowing queries.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">comparison</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="nb">integer</span><span class="w"> </span><span class="k">column</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">order_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;12345&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ❌ Forces type conversion, no index</span>
+
+<span class="o">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">Integer</span><span class="w"> </span><span class="n">comparison</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="k">column</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ❌ Table scan, not index seek</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Match data types in comparisons.</p>
+<div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Correct</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="n">types</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">order_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12345</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ Integer comparison, uses index</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;123&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ String comparison, uses index</span>
+
+<span class="o">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Explicit</span><span class="w"> </span><span class="n">casting</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">needed</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">order_items</span><span class="w"> </span><span class="n">oi</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">CAST</span><span class="p">(</span><span class="n">oi</span><span class="p">.</span><span class="n">order_id_string</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>Match column data types in WHERE clauses and JOINs</li>
+<li>Implicit conversion prevents index usage</li>
+<li>Check execution plans for type conversion warnings</li>
+<li>Use explicit <code>CAST()</code> or <code>CONVERT()</code> when conversion is necessary</li>
+</ul>
+<h3 id="not-in-with-null-values">NOT IN with NULL Values<a class="headerlink" href="#not-in-with-null-values" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: <code>NOT IN</code> with a subquery containing NULL values returns no rows unexpectedly.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">possible</span><span class="w"> </span><span class="n">NULLs</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">products</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">product_id</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">product_id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">discontinued_products</span><span class="w">  </span><span class="c1">-- ❌ If any NULL, returns 0 rows!</span>
+<span class="p">);</span>
+
+<span class="o">##</span><span class="w"> </span><span class="n">This</span><span class="w"> </span><span class="n">happens</span><span class="w"> </span><span class="n">because</span><span class="p">:</span>
+<span class="o">##</span><span class="w"> </span><span class="n">product_id</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span>
+<span class="o">##</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">equivalent</span><span class="w"> </span><span class="k">to</span><span class="p">:</span>
+<span class="o">##</span><span class="w"> </span><span class="n">product_id</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">product_id</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">product_id</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">NULL</span>
+<span class="o">##</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="k">last</span><span class="w"> </span><span class="n">comparison</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">always</span><span class="w"> </span><span class="k">UNKNOWN</span><span class="p">,</span><span class="w"> </span><span class="n">so</span><span class="w"> </span><span class="n">entire</span><span class="w"> </span><span class="n">condition</span><span class="w"> </span><span class="n">fails</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Use <code>NOT EXISTS</code> or filter out NULLs.</p>
+<div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Use</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="n">p</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">discontinued_products</span><span class="w"> </span><span class="n">dp</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">dp</span><span class="p">.</span><span class="n">product_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_id</span><span class="w">  </span><span class="c1">-- ✅ Handles NULLs correctly</span>
+<span class="p">);</span>
+
+<span class="o">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Filter</span><span class="w"> </span><span class="n">NULLs</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">subquery</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">products</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">product_id</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">product_id</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">discontinued_products</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">product_id</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w">  </span><span class="c1">-- ✅ Exclude NULLs</span>
+<span class="p">);</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><code>NOT IN</code> fails with NULL values in subquery</li>
+<li>Prefer <code>NOT EXISTS</code> over <code>NOT IN</code> for subqueries</li>
+<li><code>IN</code> works fine with NULLs, <code>NOT IN</code> does not</li>
+<li>Always check for NULL handling in subqueries</li>
+</ul>
+<h3 id="distinct-hiding-performance-issues">DISTINCT Hiding Performance Issues<a class="headerlink" href="#distinct-hiding-performance-issues" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Using DISTINCT to fix duplicate rows masks underlying join or query logic problems.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">hiding</span><span class="w"> </span><span class="n">incorrect</span><span class="w"> </span><span class="k">join</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">DISTINCT</span>
+<span class="w">    </span><span class="n">u</span><span class="p">.</span><span class="n">username</span><span class="p">,</span>
+<span class="w">    </span><span class="n">u</span><span class="p">.</span><span class="n">email</span><span class="p">,</span>
+<span class="w">    </span><span class="n">o</span><span class="p">.</span><span class="n">order_date</span><span class="w">  </span><span class="c1">-- ❌ Why duplicates? Probably wrong join!</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">order_items</span><span class="w"> </span><span class="n">oi</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">oi</span><span class="p">.</span><span class="n">order_id</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Cartesian product hidden by DISTINCT</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Fix the join logic or use appropriate aggregation.</p>
+<div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Correct</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">aggregation</span>
+<span class="k">SELECT</span>
+<span class="w">    </span><span class="n">u</span><span class="p">.</span><span class="n">username</span><span class="p">,</span>
+<span class="w">    </span><span class="n">u</span><span class="p">.</span><span class="n">email</span><span class="p">,</span>
+<span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">order_count</span><span class="p">,</span>
+<span class="w">    </span><span class="k">MAX</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">order_date</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">latest_order</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
+<span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">email</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ Proper aggregation</span>
+
+<span class="o">##</span><span class="w"> </span><span class="k">Or</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">really</span><span class="w"> </span><span class="n">need</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="k">row</span><span class="w"> </span><span class="n">per</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">latest</span><span class="w"> </span><span class="k">order</span>
+<span class="k">SELECT</span>
+<span class="w">    </span><span class="n">u</span><span class="p">.</span><span class="n">username</span><span class="p">,</span>
+<span class="w">    </span><span class="n">u</span><span class="p">.</span><span class="n">email</span><span class="p">,</span>
+<span class="w">    </span><span class="n">o</span><span class="p">.</span><span class="n">order_date</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="k">LATERAL</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">order_date</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span>
+<span class="w">    </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">order_date</span><span class="w"> </span><span class="k">DESC</span>
+<span class="w">    </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span>
+<span class="p">)</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">true</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ Explicitly get one order per user</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>DISTINCT is expensive (sorting or hashing)</li>
+<li>DISTINCT often indicates incorrect joins</li>
+<li>Fix the root cause instead of masking with DISTINCT</li>
+<li>Use GROUP BY with aggregation for proper deduplication</li>
+</ul>
+<h3 id="transaction-isolation-level-misunderstanding">Transaction Isolation Level Misunderstanding<a class="headerlink" href="#transaction-isolation-level-misunderstanding" title="Permanent link">&para;</a></h3>
+<p><strong>Issue</strong>: Wrong isolation level causes phantom reads, dirty reads, or unnecessary blocking.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">Default</span><span class="w"> </span><span class="k">isolation</span><span class="w"> </span><span class="n">may</span><span class="w"> </span><span class="n">allow</span><span class="w"> </span><span class="n">dirty</span><span class="w"> </span><span class="k">reads</span>
+<span class="k">BEGIN</span><span class="w"> </span><span class="k">TRANSACTION</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ❌ Default isolation (often READ COMMITTED)</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">balance</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="p">;</span>
+<span class="c1">-- Another transaction updates balance here</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="p">;</span>
+
+<span class="k">COMMIT</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ❌ Sum may be inconsistent due to concurrent updates</span>
+
+<span class="o">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">SERIALIZABLE</span><span class="w"> </span><span class="n">causing</span><span class="w"> </span><span class="n">deadlocks</span>
+<span class="k">SET</span><span class="w"> </span><span class="k">TRANSACTION</span><span class="w"> </span><span class="k">ISOLATION</span><span class="w"> </span><span class="k">LEVEL</span><span class="w"> </span><span class="k">SERIALIZABLE</span><span class="p">;</span>
+<span class="k">BEGIN</span><span class="w"> </span><span class="k">TRANSACTION</span><span class="p">;</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">inventory</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">product_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="c1">-- Locks entire result set, causes deadlocks with concurrent transactions</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">inventory</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">quantity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">quantity</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">product_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="k">COMMIT</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Solution</strong>: Choose appropriate isolation level for use case.</p>
+<div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">REPEATABLE</span><span class="w"> </span><span class="k">READ</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">consistent</span><span class="w"> </span><span class="k">reads</span>
+<span class="k">BEGIN</span><span class="w"> </span><span class="k">TRANSACTION</span><span class="w"> </span><span class="k">ISOLATION</span><span class="w"> </span><span class="k">LEVEL</span><span class="w"> </span><span class="k">REPEATABLE</span><span class="w"> </span><span class="k">READ</span><span class="p">;</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">balance</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="p">;</span>
+<span class="c1">-- Other transactions can&#39;t modify these rows until commit</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="p">;</span>
+
+<span class="k">COMMIT</span><span class="p">;</span>
+
+<span class="o">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">READ</span><span class="w"> </span><span class="k">COMMITTED</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">explicit</span><span class="w"> </span><span class="n">locking</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">needed</span>
+<span class="k">BEGIN</span><span class="w"> </span><span class="k">TRANSACTION</span><span class="p">;</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">inventory</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">product_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="k">FOR</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ Explicit row lock</span>
+
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">inventory</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">quantity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">quantity</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">product_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="k">COMMIT</span><span class="p">;</span>
+
+<span class="o">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">READ</span><span class="w"> </span><span class="k">UNCOMMITTED</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">reports</span><span class="w"> </span><span class="p">(</span><span class="n">accept</span><span class="w"> </span><span class="n">dirty</span><span class="w"> </span><span class="k">reads</span><span class="p">)</span>
+<span class="k">SET</span><span class="w"> </span><span class="k">TRANSACTION</span><span class="w"> </span><span class="k">ISOLATION</span><span class="w"> </span><span class="k">LEVEL</span><span class="w"> </span><span class="k">READ</span><span class="w"> </span><span class="k">UNCOMMITTED</span><span class="p">;</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">large_table</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ Fast, no locking, dirty reads OK for reports</span>
+</code></pre></div>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li>READ UNCOMMITTED: Fastest, allows dirty reads (use for reports)</li>
+<li>READ COMMITTED: Default, prevents dirty reads</li>
+<li>REPEATABLE READ: Prevents non-repeatable reads, may have phantom reads</li>
+<li>SERIALIZABLE: Strictest, prevents phantom reads, highest locking</li>
+</ul>
 <hr />
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-select-in-production">❌ Avoid: SELECT * in Production<a class="headerlink" href="#avoid-select-in-production" title="Permanent link">&para;</a></h3>
