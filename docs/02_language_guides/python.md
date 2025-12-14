@@ -1376,6 +1376,325 @@ for word in words:
 result = "".join(parts)
 ```
 
+## Best Practices
+
+### Virtual Environments
+
+Always use virtual environments to isolate project dependencies:
+
+```bash
+# Create virtual environment
+python3 -m venv venv
+
+# Activate (Linux/macOS)
+source venv/bin/activate
+
+# Activate (Windows)
+venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### Dependency Management
+
+Pin exact versions for reproducibility:
+
+```txt
+# requirements.txt
+requests==2.31.0
+pytest==7.4.3
+black==23.12.1
+```
+
+Use `requirements-dev.txt` for development dependencies:
+
+```txt
+# requirements-dev.txt
+-r requirements.txt
+pytest-cov==4.1.0
+mypy==1.7.1
+flake8==6.1.0
+```
+
+### Implement Robust Error Handling
+
+**Good - Specific exceptions:**
+
+```python
+try:
+    user = get_user_by_id(user_id)
+except UserNotFoundError as e:
+    logger.error(f"User {user_id} not found: {e}")
+    raise
+except DatabaseConnectionError as e:
+    logger.critical(f"Database connection failed: {e}")
+    return None
+```
+
+**Bad - Bare except:**
+
+```python
+try:
+    user = get_user_by_id(user_id)
+except:  # ❌ Catches everything including KeyboardInterrupt
+    return None
+```
+
+### Code Organization
+
+Organize imports using isort standards:
+
+```python
+# Standard library
+import os
+import sys
+from pathlib import Path
+
+# Third-party
+import requests
+from fastapi import FastAPI, HTTPException
+
+# Local imports
+from .models import User
+from .utils import validate_email
+```
+
+### Testing Best Practices
+
+Use pytest fixtures for setup/teardown:
+
+```python
+import pytest
+
+@pytest.fixture
+def database_connection():
+    """Provide a database connection for tests."""
+    conn = create_connection()
+    yield conn
+    conn.close()
+
+def test_user_creation(database_connection):
+    user = create_user(database_connection, "test@example.com")
+    assert user.email == "test@example.com"
+```
+
+### Type Hints Best Practices
+
+Use type hints consistently:
+
+```python
+from typing import List, Optional, Dict, Any
+
+def process_users(
+    users: List[Dict[str, Any]],
+    filter_active: bool = True
+) -> List[str]:
+    """Extract names from user dicts.
+
+    Args:
+        users: List of user dictionaries
+        filter_active: Whether to filter for active users only
+
+    Returns:
+        List of user names
+    """
+    return [
+        user["name"]
+        for user in users
+        if not filter_active or user.get("active", False)
+    ]
+```
+
+### Always Use Context Managers
+
+Always use context managers for resource management:
+
+```python
+# Good - Automatic cleanup
+with open("file.txt") as f:
+    data = f.read()
+
+# Good - Multiple resources
+with open("input.txt") as infile, open("output.txt", "w") as outfile:
+    outfile.write(infile.read())
+
+# Custom context manager
+from contextlib import contextmanager
+
+@contextmanager
+def database_transaction(conn):
+    try:
+        yield conn
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+```
+
+### Logging Best Practices
+
+Use structured logging:
+
+```python
+import logging
+
+logger = logging.getLogger(__name__)
+
+def process_order(order_id: str) -> bool:
+    logger.info(
+        "Processing order",
+        extra={
+            "order_id": order_id,
+            "user_id": current_user.id
+        }
+    )
+    try:
+        result = process(order_id)
+        logger.info("Order processed successfully", extra={"order_id": order_id})
+        return result
+    except ProcessingError as e:
+        logger.error(
+            "Order processing failed",
+            extra={"order_id": order_id, "error": str(e)},
+            exc_info=True
+        )
+        raise
+```
+
+### Performance Optimization
+
+Use generators for large datasets:
+
+```python
+# Good - Memory efficient
+def read_large_file(filename: str):
+    with open(filename) as f:
+        for line in f:
+            yield process_line(line)
+
+# Use list comprehensions for small, simple operations
+squares = [x**2 for x in range(100)]
+
+# Use generator expressions for large or complex operations
+sum_of_squares = sum(x**2 for x in range(1000000))
+```
+
+### Follow Security Best Practices
+
+Never hardcode secrets:
+
+```python
+# Bad - Hardcoded secrets
+API_KEY = "sk_live_abc123"  # ❌
+
+# Good - Environment variables
+import os
+API_KEY = os.getenv("API_KEY")
+if not API_KEY:
+    raise ValueError("API_KEY environment variable not set")
+
+# Good - Use python-dotenv for local development
+from dotenv import load_dotenv
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
+```
+
+Sanitize user input:
+
+```python
+from html import escape
+
+def display_user_input(user_text: str) -> str:
+    """Safely display user-provided text."""
+    return escape(user_text)  # Prevents XSS
+
+# Use parameterized queries for databases
+def get_user(conn, email: str):
+    # Good - Parameterized query
+    cursor = conn.execute(
+        "SELECT * FROM users WHERE email = ?",
+        (email,)
+    )
+
+    # Bad - String interpolation (SQL injection risk)
+    # cursor = conn.execute(f"SELECT * FROM users WHERE email = '{email}'")
+```
+
+### Documentation Best Practices
+
+Write comprehensive docstrings:
+
+```python
+def calculate_discount(
+    price: float,
+    discount_percent: float,
+    member_tier: str = "standard"
+) -> float:
+    """Calculate final price after discount.
+
+    Applies percentage discount and additional member tier benefits.
+
+    Args:
+        price: Original price in dollars
+        discount_percent: Discount percentage (0-100)
+        member_tier: Membership tier ('standard', 'premium', 'vip')
+
+    Returns:
+        Final price after all discounts applied
+
+    Raises:
+        ValueError: If discount_percent is not between 0 and 100
+        ValueError: If member_tier is invalid
+
+    Examples:
+        >>> calculate_discount(100.0, 10.0, "standard")
+        90.0
+        >>> calculate_discount(100.0, 20.0, "premium")
+        75.0
+    """
+    if not 0 <= discount_percent <= 100:
+        raise ValueError("Discount must be between 0 and 100")
+
+    valid_tiers = ["standard", "premium", "vip"]
+    if member_tier not in valid_tiers:
+        raise ValueError(f"Invalid tier. Must be one of: {valid_tiers}")
+
+    # Apply percentage discount
+    discounted = price * (1 - discount_percent / 100)
+
+    # Apply tier benefits
+    tier_discount = {"standard": 0, "premium": 0.05, "vip": 0.10}
+    return discounted * (1 - tier_discount[member_tier])
+```
+
+### Code Quality Tools
+
+Configure tools in `pyproject.toml`:
+
+```toml
+[tool.black]
+line-length = 100
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+```
+
 ## References
 
 ### Official Documentation

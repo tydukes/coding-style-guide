@@ -1539,6 +1539,188 @@ INNER JOIN temp_user_ids t ON o.user_id = t.user_id;
 
 ---
 
+## Best Practices
+
+### Index Strategically
+
+Create indexes on frequently queried columns:
+
+```sql
+-- Index foreign keys
+CREATE INDEX idx_orders_user_id ON orders(user_id);
+
+-- Composite index for common query patterns
+CREATE INDEX idx_orders_status_created ON orders(status, created_at);
+
+-- Partial index for specific conditions
+CREATE INDEX idx_active_users ON users(email) WHERE status = 'active';
+```
+
+### Use Parameterized Queries
+
+Prevent SQL injection with parameterized queries:
+
+```sql
+-- Good - Parameterized (Python example)
+cursor.execute(
+    "SELECT * FROM users WHERE email = %s",
+    (user_email,)
+)
+
+-- Bad - String interpolation (SQL injection risk)
+-- cursor.execute(f"SELECT * FROM users WHERE email = '{user_email}'")
+```
+
+### Optimize JOIN Performance
+
+Choose the right JOIN type and order:
+
+```sql
+-- Good - Filter before joining
+SELECT u.name, o.total
+FROM (
+    SELECT user_id, name
+    FROM users
+    WHERE status = 'active'
+) u
+INNER JOIN orders o ON u.user_id = o.user_id;
+
+-- Use appropriate JOIN hints when needed
+SELECT /*+ ORDERED */ u.name, o.total
+FROM users u
+INNER JOIN orders o ON u.user_id = o.user_id;
+```
+
+### Limit Result Sets
+
+Always use LIMIT/TOP for potentially large result sets:
+
+```sql
+-- Pagination with LIMIT/OFFSET
+SELECT user_id, email
+FROM users
+ORDER BY created_at DESC
+LIMIT 100 OFFSET 0;
+
+-- Modern pagination with keyset
+SELECT user_id, email, created_at
+FROM users
+WHERE created_at < '2024-01-01'
+ORDER BY created_at DESC
+LIMIT 100;
+```
+
+### Use Transactions Appropriately
+
+Wrap related operations in transactions:
+
+```sql
+BEGIN TRANSACTION;
+
+UPDATE accounts SET balance = balance - 100 WHERE account_id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE account_id = 2;
+
+INSERT INTO transaction_log (from_account, to_account, amount)
+VALUES (1, 2, 100);
+
+COMMIT;
+```
+
+### Explicitly List Columns (Avoid SELECT *)
+
+Explicitly list columns you need:
+
+```sql
+-- Good - Specific columns
+SELECT user_id, email, created_at
+FROM users
+WHERE status = 'active';
+
+-- Bad - SELECT * wastes bandwidth
+-- SELECT * FROM users WHERE status = 'active';
+```
+
+### Use CTEs for Readability
+
+Common Table Expressions improve query readability:
+
+```sql
+WITH active_users AS (
+    SELECT user_id, email
+    FROM users
+    WHERE status = 'active'
+),
+recent_orders AS (
+    SELECT user_id, COUNT(*) AS order_count
+    FROM orders
+    WHERE created_at > CURRENT_DATE - INTERVAL '30 days'
+    GROUP BY user_id
+)
+SELECT
+    au.email,
+    COALESCE(ro.order_count, 0) AS orders_last_30_days
+FROM active_users au
+LEFT JOIN recent_orders ro ON au.user_id = ro.user_id;
+```
+
+### Analyze Query Performance
+
+Use EXPLAIN to understand query execution:
+
+```sql
+-- PostgreSQL
+EXPLAIN ANALYZE
+SELECT u.email, COUNT(o.order_id)
+FROM users u
+LEFT JOIN orders o ON u.user_id = o.user_id
+GROUP BY u.email;
+
+-- MySQL
+EXPLAIN FORMAT=JSON
+SELECT u.email, COUNT(o.order_id)
+FROM users u
+LEFT JOIN orders o ON u.user_id = o.user_id
+GROUP BY u.email;
+```
+
+### Handle NULLs Explicitly
+
+Be explicit about NULL handling:
+
+```sql
+-- Good - Explicit NULL handling
+SELECT
+    user_id,
+    COALESCE(phone, 'Not provided') AS phone,
+    NULLIF(email, '') AS email  -- Convert empty strings to NULL
+FROM users;
+
+-- Check for NULL explicitly
+WHERE email IS NOT NULL
+  AND status IS NOT NULL;
+```
+
+### Use Database Constraints
+
+Enforce data integrity at the database level:
+
+```sql
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    age INTEGER CHECK (age >= 18),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'suspended'))
+);
+
+-- Foreign key constraints
+ALTER TABLE orders
+    ADD CONSTRAINT fk_orders_users
+    FOREIGN KEY (user_id)
+    REFERENCES users(user_id)
+    ON DELETE CASCADE;
+```
+
 ## Comments
 
 ```sql

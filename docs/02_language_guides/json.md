@@ -1285,6 +1285,197 @@ print(json.dumps(data, indent=2))
 
 ---
 
+## Best Practices
+
+### Use Schema Validation
+
+Define and validate JSON structure with JSON Schema:
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "User",
+  "type": "object",
+  "required": ["id", "email"],
+  "properties": {
+    "id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "age": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 150
+    }
+  }
+}
+```
+
+### Validate Before Parsing
+
+Always validate JSON before parsing to prevent errors:
+
+```python
+import json
+from jsonschema import validate, ValidationError
+
+try:
+    data = json.loads(json_string)
+    validate(instance=data, schema=user_schema)
+except json.JSONDecodeError as e:
+    print(f"Invalid JSON: {e}")
+except ValidationError as e:
+    print(f"Schema validation failed: {e}")
+```
+
+### Use Consistent Casing
+
+Choose one casing style and stick to it:
+
+```json
+// Good - camelCase (JavaScript/TypeScript projects)
+{
+  "userId": 123,
+  "firstName": "John",
+  "createdAt": "2024-01-01T00:00:00Z"
+}
+
+// Good - snake_case (Python/Ruby projects)
+{
+  "user_id": 123,
+  "first_name": "John",
+  "created_at": "2024-01-01T00:00:00Z"
+}
+```
+
+### Avoid Deep Nesting
+
+Keep nesting levels reasonable (max 3-4 levels):
+
+```json
+// Bad - Too deeply nested
+{
+  "user": {
+    "profile": {
+      "address": {
+        "location": {
+          "coordinates": {
+            "lat": 40.7128,
+            "lng": -74.0060
+          }
+        }
+      }
+    }
+  }
+}
+
+// Good - Flattened structure
+{
+  "userId": 123,
+  "addressLat": 40.7128,
+  "addressLng": -74.0060
+}
+```
+
+### Use Arrays for Lists
+
+Always use arrays for lists, even with one item:
+
+```json
+// Good - Consistent array usage
+{
+  "users": [
+    {"id": 1, "name": "John"}
+  ]
+}
+
+// Bad - Inconsistent (object when multiple, single value when one)
+{
+  "user": {"id": 1, "name": "John"}
+}
+```
+
+### Include Metadata
+
+Add version and timestamp metadata for API responses:
+
+```json
+{
+  "meta": {
+    "version": "1.0",
+    "timestamp": "2024-01-15T10:30:00Z",
+    "requestId": "abc-123"
+  },
+  "data": {
+    "users": [...]
+  }
+}
+```
+
+### Handle Null Values Consistently
+
+Be explicit about null handling:
+
+```json
+// Good - Explicit null
+{
+  "name": "John",
+  "middleName": null,
+  "phone": "+1234567890"
+}
+
+// Consider omitting null fields entirely
+{
+  "name": "John",
+  "phone": "+1234567890"
+}
+```
+
+### Use ISO 8601 for Dates
+
+Always use ISO 8601 format for dates:
+
+```json
+{
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-15T14:45:30.123Z",
+  "date": "2024-01-15"
+}
+```
+
+### Minify for Production
+
+Minify JSON in production, pretty-print for development:
+
+```bash
+# Development - pretty print
+cat data.json | jq '.'
+
+# Production - minified
+cat data.json | jq -c '.'
+```
+
+### Version Your APIs
+
+Include API version in JSON responses:
+
+```json
+{
+  "apiVersion": "2.0",
+  "data": {
+    "users": [...]
+  },
+  "links": {
+    "self": "/api/v2/users",
+    "docs": "/api/v2/docs"
+  }
+}
+```
+
 ## References
 
 ### Official Documentation

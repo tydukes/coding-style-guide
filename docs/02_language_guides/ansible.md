@@ -1499,6 +1499,597 @@ kinds:
 
 ---
 
+## Best Practices
+
+### Always Use Fully Qualified Collection Names (FQCN)
+
+Use explicit collection names to avoid ambiguity and future-proof playbooks:
+
+```yaml
+# Good - Fully qualified collection name
+- name: Install nginx
+  ansible.builtin.package:
+    name: nginx
+    state: present
+
+- name: Copy configuration
+  ansible.builtin.copy:
+    src: config.yml
+    dest: /etc/app/config.yml
+
+# Bad - Short module name (deprecated)
+- name: Install nginx
+  package:
+    name: nginx
+    state: present
+```
+
+### Always Name Tasks
+
+Provide descriptive names for every task:
+
+```yaml
+# Good - Clear, descriptive task names
+- name: Install PostgreSQL database server
+  ansible.builtin.package:
+    name: postgresql-server
+    state: present
+
+- name: Create application database and user
+  community.postgresql.postgresql_db:
+    name: appdb
+    state: present
+
+# Bad - No task names
+- ansible.builtin.package:
+    name: postgresql-server
+    state: present
+```
+
+### Ensure Idempotency
+
+Write tasks that can be run multiple times without causing issues:
+
+```yaml
+# Good - Idempotent operations
+- name: Ensure nginx is installed
+  ansible.builtin.package:
+    name: nginx
+    state: present  # Idempotent: installs only if missing
+
+- name: Ensure directory exists
+  ansible.builtin.file:
+    path: /opt/app
+    state: directory
+    mode: '0755'
+
+# Bad - Not idempotent
+- name: Download file
+  ansible.builtin.command: wget https://example.com/file.tar.gz -O /tmp/file.tar.gz
+  # This re-downloads every time, even if file exists
+
+# Good - Idempotent download
+- name: Download file
+  ansible.builtin.get_url:
+    url: https://example.com/file.tar.gz
+    dest: /tmp/file.tar.gz
+    mode: '0644'
+    checksum: sha256:abc123...
+```
+
+### Use Variables Instead of Hardcoding
+
+Parameterize playbooks with variables:
+
+```yaml
+# Good - Variables for flexibility
+---
+- name: Deploy application
+  hosts: webservers
+  vars:
+    app_name: myapp
+    app_port: 8080
+    app_user: appuser
+    app_dir: /opt/{{ app_name }}
+  tasks:
+    - name: Create application directory
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ app_user }}"
+        mode: '0755'
+
+# Bad - Hardcoded values
+- name: Create application directory
+  ansible.builtin.file:
+    path: /opt/myapp
+    state: directory
+    owner: appuser
+    mode: '0755'
+```
+
+### Organize with Roles
+
+Structure complex playbooks using roles:
+
+```yaml
+# Good - Organized with roles
+---
+- name: Configure web infrastructure
+  hosts: webservers
+  roles:
+    - role: common
+      vars:
+        common_packages:
+          - vim
+          - curl
+          - git
+    - role: nginx
+      vars:
+        nginx_worker_processes: 4
+    - role: ssl_certificates
+    - role: application
+
+# Bad - Everything in one playbook
+- name: Configure web infrastructure
+  hosts: webservers
+  tasks:
+    - name: Install common packages
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop: [vim, curl, git]
+    # ... 100 more tasks ...
+```
+
+### Use Tags for Flexibility
+
+Tag tasks for selective execution:
+
+```yaml
+---
+- name: Complete application deployment
+  hosts: appservers
+  tasks:
+    - name: Install dependencies
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - python3
+        - python3-pip
+      tags:
+        - packages
+        - setup
+
+    - name: Deploy application code
+      ansible.builtin.git:
+        repo: "{{ app_repo }}"
+        dest: /opt/app
+        version: "{{ app_version }}"
+      tags:
+        - deploy
+        - code
+
+    - name: Run database migrations
+      ansible.builtin.command:
+        cmd: python3 manage.py migrate
+        chdir: /opt/app
+      tags:
+        - deploy
+        - database
+
+# Run only deployment tasks
+# ansible-playbook site.yml --tags "deploy"
+
+# Skip database migrations
+# ansible-playbook site.yml --skip-tags "database"
+```
+
+### Implement Proper Error Handling
+
+Use blocks with rescue for robust error handling:
+
+```yaml
+---
+- name: Deploy with automatic rollback
+  hosts: appservers
+  tasks:
+    - name: Deployment with rollback
+      block:
+        - name: Stop application
+          ansible.builtin.service:
+            name: myapp
+            state: stopped
+
+        - name: Deploy new version
+          ansible.builtin.copy:
+            src: app-v2.jar
+            dest: /opt/app/app.jar
+            backup: true
+          register: deploy_result
+
+        - name: Start application
+          ansible.builtin.service:
+            name: myapp
+            state: started
+
+        - name: Wait for health check
+          ansible.builtin.uri:
+            url: http://localhost:8080/health
+            status_code: 200
+          retries: 10
+          delay: 5
+
+      rescue:
+        - name: Rollback on failure
+          ansible.builtin.copy:
+            src: "{{ deploy_result.backup_file }}"
+            dest: /opt/app/app.jar
+            remote_src: true
+          when: deploy_result.backup_file is defined
+
+        - name: Restart with previous version
+          ansible.builtin.service:
+            name: myapp
+            state: restarted
+
+        - name: Send failure notification
+          ansible.builtin.debug:
+            msg: "Deployment failed, rolled back to previous version"
+
+      always:
+        - name: Clean up temporary files
+          ansible.builtin.file:
+            path: /tmp/deploy
+            state: absent
+```
+
+### Use Ansible Vault for Secrets
+
+Never store secrets in plain text:
+
+```yaml
+# Good - Use vault for secrets
+---
+# vars/vault.yml (encrypted)
+vault_db_password: "SuperSecret123"
+vault_api_key: "sk_live_abc123"
+
+# playbook.yml
+- name: Configure application
+  hosts: appservers
+  vars_files:
+    - vars/vault.yml
+  tasks:
+    - name: Deploy configuration
+      ansible.builtin.template:
+        src: config.yml.j2
+        dest: /etc/app/config.yml
+        mode: '0600'
+      no_log: true  # Prevent secrets in output
+
+# Run with: ansible-playbook playbook.yml --ask-vault-pass
+```
+
+```bash
+# Encrypt secrets file
+ansible-vault encrypt vars/vault.yml
+
+# Encrypt inline string
+ansible-vault encrypt_string 'SuperSecret123' --name 'vault_db_password'
+```
+
+### Disable Fact Gathering When Not Needed
+
+Improve performance by skipping unnecessary fact gathering:
+
+```yaml
+# Good - Disable when facts not needed
+---
+- name: Simple file deployment
+  hosts: all
+  gather_facts: false  # Saves 2-5 seconds per host
+  tasks:
+    - name: Copy application files
+      ansible.builtin.copy:
+        src: app.jar
+        dest: /opt/app/
+
+# Good - Gather only required facts
+- name: OS-specific configuration
+  hosts: all
+  gather_facts: true
+  gather_subset:
+    - '!all'
+    - '!min'
+    - network
+    - virtual
+  tasks:
+    - name: Configure based on OS
+      ansible.builtin.template:
+        src: "config_{{ ansible_os_family }}.j2"
+        dest: /etc/app/config.yml
+```
+
+### Use Check Mode for Dry Runs
+
+Test playbooks before execution:
+
+```bash
+# Run in check mode (dry run)
+ansible-playbook site.yml --check
+
+# Show differences that would be made
+ansible-playbook site.yml --check --diff
+
+# Limit to specific hosts
+ansible-playbook site.yml --check --limit webservers
+```
+
+```yaml
+# Mark tasks that support check mode
+- name: Create directory
+  ansible.builtin.file:
+    path: /opt/app
+    state: directory
+  check_mode: yes  # Always runs in check mode
+
+# Mark tasks that should run even in check mode
+- name: Gather current state
+  ansible.builtin.command: cat /etc/app/version
+  check_mode: no  # Runs even when --check is used
+  changed_when: false
+```
+
+### Version Pin Collections
+
+Specify collection versions in requirements.yml:
+
+```yaml
+# collections/requirements.yml
+---
+collections:
+  - name: community.general
+    version: ">=5.0.0,<6.0.0"
+  - name: ansible.posix
+    version: "1.5.4"
+  - name: community.docker
+    version: "3.4.8"
+
+# Install collections
+# ansible-galaxy collection install -r collections/requirements.yml
+```
+
+### Document Playbooks and Roles
+
+Add clear documentation to playbooks and roles:
+
+```yaml
+---
+# playbooks/deploy-app.yml
+
+## @module application_deployment
+## @description Deploy application to production servers
+## @dependencies ansible.builtin, community.general
+## @version 2.1.0
+## @author DevOps Team
+## @tags deployment, production, application
+##
+## Variables:
+##   app_version: Application version to deploy (required)
+##   app_environment: Target environment (dev/staging/prod)
+##   skip_migrations: Skip database migrations (default: false)
+##
+## Usage:
+##   ansible-playbook playbooks/deploy-app.yml -e "app_version=1.2.3"
+
+- name: Deploy application to production
+  hosts: appservers
+  vars:
+    app_environment: production
+    skip_migrations: false
+  tasks:
+    # ... tasks ...
+```
+
+### Use Handlers Correctly
+
+Trigger handlers efficiently and flush when needed:
+
+```yaml
+---
+- name: Configure nginx
+  hosts: webservers
+  tasks:
+    - name: Update nginx main configuration
+      ansible.builtin.template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify: Reload nginx
+
+    - name: Update virtual host configuration
+      ansible.builtin.template:
+        src: vhost.conf.j2
+        dest: /etc/nginx/sites-enabled/{{ item }}
+      loop: "{{ nginx_vhosts }}"
+      notify: Reload nginx
+
+    # Handler runs once even though notified twice
+
+  handlers:
+    - name: Reload nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+
+# Force handler execution before testing
+- name: Test configuration
+  hosts: webservers
+  tasks:
+    - name: Update nginx config
+      ansible.builtin.template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify: Reload nginx
+
+    - name: Force handler execution
+      ansible.builtin.meta: flush_handlers
+
+    - name: Test nginx is responding
+      ansible.builtin.uri:
+        url: http://localhost/health
+        status_code: 200
+```
+
+### Validate Templates
+
+Use the validate parameter to test configurations before deployment:
+
+```yaml
+---
+- name: Deploy nginx configuration
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    validate: 'nginx -t -c %s'
+    backup: true
+  notify: Reload nginx
+
+- name: Deploy SSH daemon config
+  ansible.builtin.template:
+    src: sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    validate: '/usr/sbin/sshd -t -f %s'
+    mode: '0600'
+  notify: Restart sshd
+```
+
+### Use Assertions for Prerequisites
+
+Validate requirements before executing playbooks:
+
+```yaml
+---
+- name: Deploy application
+  hosts: appservers
+  tasks:
+    - name: Verify required variables are defined
+      ansible.builtin.assert:
+        that:
+          - app_version is defined
+          - app_version is match('^\d+\.\d+\.\d+$')
+          - app_environment in ['dev', 'staging', 'prod']
+          - db_host is defined
+        fail_msg: "Required variables are missing or invalid"
+        success_msg: "All prerequisites validated"
+
+    - name: Check disk space before deployment
+      ansible.builtin.assert:
+        that:
+          - ansible_mounts | selectattr('mount', 'equalto', '/opt') | map(attribute='size_available') | first > 5000000000
+        fail_msg: "Insufficient disk space on /opt (need 5GB)"
+
+    - name: Proceed with deployment
+      # ... deployment tasks ...
+```
+
+### Use Delegation Appropriately
+
+Run tasks on different hosts when needed:
+
+```yaml
+---
+- name: Database operations
+  hosts: appservers
+  tasks:
+    - name: Run database migration (on db server)
+      ansible.builtin.command: /opt/scripts/migrate.sh
+      delegate_to: "{{ groups['dbservers'][0] }}"
+      run_once: true  # Run only once, not for each appserver
+
+    - name: Add host to monitoring (on monitoring server)
+      community.general.datadog_monitor:
+        name: "{{ inventory_hostname }}"
+        state: present
+      delegate_to: monitoring.example.com
+
+    - name: Update load balancer (locally)
+      ansible.builtin.uri:
+        url: "https://lb.example.com/api/update"
+        method: POST
+        body_format: json
+        body:
+          server: "{{ inventory_hostname }}"
+      delegate_to: localhost
+```
+
+### Optimize with Async and Polling
+
+Run long tasks asynchronously:
+
+```yaml
+---
+- name: Long-running tasks
+  hosts: appservers
+  tasks:
+    - name: Start long backup process
+      ansible.builtin.command: /usr/local/bin/backup.sh
+      async: 3600  # Allow up to 1 hour
+      poll: 0  # Fire and forget
+      register: backup_job
+
+    - name: Continue with other tasks
+      ansible.builtin.debug:
+        msg: "Backup running in background"
+
+    - name: Check backup job status
+      ansible.builtin.async_status:
+        jid: "{{ backup_job.ansible_job_id }}"
+      register: backup_result
+      until: backup_result.finished
+      retries: 60
+      delay: 60  # Check every minute
+
+# Run tasks in parallel across hosts
+- name: Install packages in parallel
+  hosts: all
+  strategy: free  # Don't wait for all hosts to finish each task
+  tasks:
+    - name: Install updates
+      ansible.builtin.package:
+        name: "*"
+        state: latest
+```
+
+### Use Includes and Imports Strategically
+
+Break up large playbooks:
+
+```yaml
+# main.yml
+---
+- name: Full infrastructure deployment
+  hosts: all
+  tasks:
+    - name: Include pre-deployment checks
+      ansible.builtin.include_tasks: tasks/pre_checks.yml
+
+    - name: Import common configuration (static)
+      ansible.builtin.import_tasks: tasks/common_setup.yml
+
+    - name: Include environment-specific tasks (dynamic)
+      ansible.builtin.include_tasks: "tasks/{{ app_environment }}_setup.yml"
+
+    - name: Import roles based on host group
+      ansible.builtin.include_role:
+        name: "{{ item }}"
+      loop: "{{ group_names }}"
+      when: item in ['webserver', 'database', 'cache']
+```
+
+---
+
 ## References
 
 ### Official Documentation

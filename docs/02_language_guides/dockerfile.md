@@ -1296,6 +1296,415 @@ hadolint --format json Dockerfile
 
 ---
 
+## Best Practices
+
+### Use Multi-Stage Builds
+
+Separate build and runtime dependencies to minimize final image size:
+
+```dockerfile
+# Build stage with all development tools
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build && npm run test
+
+# Production stage with only runtime dependencies
+FROM node:20-alpine AS production
+WORKDIR /app
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
+COPY --from=builder --chown=nodejs:nodejs /app/package*.json ./
+RUN npm ci --only=production
+USER nodejs
+EXPOSE 3000
+CMD ["node", "dist/index.js"]
+```
+
+### Optimize Layer Caching
+
+Order instructions from least to most frequently changing:
+
+```dockerfile
+# Good - Dependencies cached separately
+FROM python:3.11-slim
+WORKDIR /app
+
+# 1. Copy dependency files first (change infrequently)
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 2. Copy source code last (changes frequently)
+COPY . .
+
+# Bad - Invalidates cache on every code change
+# COPY . .
+# RUN pip install -r requirements.txt
+```
+
+### Always Use .dockerignore
+
+Exclude unnecessary files from build context:
+
+```dockerignore
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Dependencies
+node_modules
+__pycache__
+*.pyc
+venv/
+
+# Build artifacts
+dist
+build
+*.o
+*.so
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+
+# Documentation
+*.md
+docs/
+LICENSE
+
+# Tests
+tests/
+*.test.js
+coverage/
+
+# CI/CD
+.github
+.gitlab-ci.yml
+Jenkinsfile
+
+# Environment files
+.env
+.env.*
+*.local
+
+# Docker files
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+```
+
+### Choose Minimal Base Images
+
+Use slim or distroless images to reduce attack surface:
+
+```dockerfile
+# Good - Alpine (minimal)
+FROM node:20-alpine
+
+# Good - Distroless (no shell, smallest attack surface)
+FROM gcr.io/distroless/nodejs20-debian12
+
+# Good - Slim (smaller than default)
+FROM python:3.11-slim
+
+# Avoid - Full images (large, unnecessary packages)
+FROM node:20
+FROM python:3.11
+FROM ubuntu:22.04
+```
+
+### Pin Specific Versions
+
+Always pin base image versions for reproducible builds:
+
+```dockerfile
+# Good - Fully pinned
+FROM node:20.11.1-alpine3.19
+FROM python:3.11.8-slim-bookworm
+
+# Acceptable - Major.minor pinned
+FROM node:20-alpine
+FROM python:3.11-slim
+
+# Bad - Unpredictable
+FROM node:latest
+FROM python:3
+```
+
+### Combine RUN Commands
+
+Reduce layers and image size by chaining commands:
+
+```dockerfile
+# Good - Single layer with cleanup
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        libpq-dev && \
+    pip install --no-cache-dir -r requirements.txt && \
+    apt-get purge -y --auto-remove build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
+# Bad - Multiple layers, no cleanup
+RUN apt-get update
+RUN apt-get install -y build-essential libpq-dev
+RUN pip install -r requirements.txt
+RUN apt-get remove -y build-essential
+```
+
+### Run Containers as Non-Root User
+
+Create and use a non-root user for security:
+
+```dockerfile
+# Node.js - use built-in node user
+FROM node:20-alpine
+WORKDIR /app
+COPY --chown=node:node . .
+USER node
+CMD ["node", "index.js"]
+
+# Python - create custom user
+FROM python:3.11-slim
+WORKDIR /app
+RUN useradd -m -u 1001 appuser && \
+    chown -R appuser:appuser /app
+COPY --chown=appuser:appuser . .
+USER appuser
+CMD ["python", "app.py"]
+
+# Alpine - create user with adduser
+FROM alpine:3.19
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -S appuser -u 1001 -G appgroup
+USER appuser
+```
+
+### Use BuildKit Secrets
+
+Never store secrets in image layers:
+
+```dockerfile
+# syntax=docker/dockerfile:1
+
+# Good - Secrets mounted at build time, not stored
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN --mount=type=secret,id=npmrc,target=/root/.npmrc \
+    npm ci --only=production
+
+# Build with: docker buildx build --secret id=npmrc,src=.npmrc -t myapp .
+```
+
+```dockerfile
+# Bad - Secret stored in image layer
+ARG NPM_TOKEN
+RUN echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc && \
+    npm install && \
+    rm .npmrc  # Too late! Token already in layer
+```
+
+### Add Health Checks
+
+Include health checks to monitor container status:
+
+```dockerfile
+# HTTP health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+  CMD curl -f http://localhost:3000/health || exit 1
+
+# TCP health check
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD nc -z localhost 3000 || exit 1
+
+# Custom health check script
+COPY healthcheck.sh /usr/local/bin/
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD /usr/local/bin/healthcheck.sh
+```
+
+### Use Metadata Labels
+
+Add OCI-compliant labels for documentation:
+
+```dockerfile
+LABEL org.opencontainers.image.title="My Application" \
+      org.opencontainers.image.description="Production-ready web service" \
+      org.opencontainers.image.version="1.0.0" \
+      org.opencontainers.image.authors="team@example.com" \
+      org.opencontainers.image.url="https://example.com" \
+      org.opencontainers.image.source="https://github.com/org/repo" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.revision="${GIT_COMMIT}"
+```
+
+### Leverage Build Cache Mounts
+
+Use cache mounts for package managers:
+
+```dockerfile
+# syntax=docker/dockerfile:1
+
+# Python - cache pip packages
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt ./
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt
+
+# Node.js - cache npm packages
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --only=production
+
+# Go - cache modules
+FROM golang:1.21-alpine
+WORKDIR /app
+COPY go.* ./
+RUN --mount=type=cache,target=/go/pkg/mod \
+    go mod download
+```
+
+### Minimize Image Size
+
+Use techniques to keep images small:
+
+```dockerfile
+# 1. Use minimal base images
+FROM python:3.11-slim  # Not python:3.11
+
+# 2. Clean up package manager cache
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends pkg && \
+    rm -rf /var/lib/apt/lists/*
+
+# 3. Remove build dependencies after use
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev && \
+    pip install package && \
+    apk del .build-deps
+
+# 4. Use --no-cache for package installations
+RUN pip install --no-cache-dir package
+RUN npm ci --only=production
+
+# 5. Copy only necessary files
+COPY --from=builder /app/dist ./dist  # Not COPY --from=builder /app ./
+```
+
+### Use COPY Instead of ADD
+
+Prefer COPY for transparency:
+
+```dockerfile
+# Good - COPY for local files
+COPY package.json ./
+COPY src/ ./src/
+
+# Bad - ADD has implicit behavior
+ADD package.json ./  # Could auto-extract if it were a tar
+ADD https://example.com/file.tar.gz /tmp/  # Fetches URL
+
+# Only use ADD for explicit tar extraction
+ADD archive.tar.gz /opt/  # Explicitly want auto-extraction
+```
+
+### Set Working Directory
+
+Always use WORKDIR instead of cd:
+
+```dockerfile
+# Good - WORKDIR is persistent
+WORKDIR /app
+COPY . .
+RUN npm install
+
+# Bad - cd only affects single RUN
+RUN cd /app  # Doesn't persist to next instruction
+COPY . .  # Copies to wrong location!
+```
+
+### Avoid Installing Unnecessary Packages
+
+Install only required dependencies:
+
+```dockerfile
+# Good - Minimal installation
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        libpq5 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Bad - Installing unnecessary packages
+RUN apt-get update && \
+    apt-get install -y \
+        ca-certificates \
+        libpq5 \
+        vim \
+        curl \
+        wget \
+        git  # Not needed in production!
+```
+
+### Use Explicit Ports
+
+Document exposed ports with EXPOSE:
+
+```dockerfile
+# Good - Document all exposed ports
+EXPOSE 3000/tcp
+EXPOSE 9090/tcp  # Metrics
+EXPOSE 8080/udp  # Custom protocol
+
+# Note: EXPOSE is documentation only
+# Actual port publishing happens at runtime:
+# docker run -p 3000:3000 myapp
+```
+
+### Regularly Scan Images for Vulnerabilities
+
+Regularly scan images for security issues:
+
+```bash
+# Scan with Trivy
+trivy image myapp:latest
+
+# Scan with Grype
+grype myapp:latest
+
+# Fail CI on critical vulnerabilities
+trivy image --exit-code 1 --severity CRITICAL myapp:latest
+```
+
+### Use Specific ENTRYPOINT and CMD
+
+Use exec form for proper signal handling:
+
+```dockerfile
+# Good - Exec form (JSON array)
+ENTRYPOINT ["python", "-m", "uvicorn"]
+CMD ["main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+# Bad - Shell form (creates unnecessary shell process)
+ENTRYPOINT python -m uvicorn
+CMD main:app --host 0.0.0.0 --port 8000
+
+# Combined usage allows runtime argument override
+# docker run myapp main:app --reload  # Overrides CMD, keeps ENTRYPOINT
+```
+
+---
+
 ## References
 
 ### Official Documentation
