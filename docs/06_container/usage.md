@@ -2,11 +2,9 @@
 title: "Container Usage Guide"
 description: "Containerized validation tools and integration patterns"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [docker, containers, validation, cicd, integration]
 category: "Container"
 status: "active"
-version: "0.1.0"
 ---
 
 The Coding Style Guide Validator is available as a containerized tool, making it easy to

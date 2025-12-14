@@ -2,11 +2,9 @@
 title: "YAML Style Guide"
 description: "YAML configuration standards for consistent, readable, and maintainable configuration files"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [yaml, configuration, data, serialization, kubernetes]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1546,5 +1544,4 @@ database:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

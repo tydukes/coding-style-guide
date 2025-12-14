@@ -2,11 +2,9 @@
 title: "Complete Python Package Example"
 description: "Full working example of a modern Python package with best practices"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [python, package, example, best-practices, complete]
 category: "Examples"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview
@@ -930,5 +928,4 @@ The package is fully functional and can be installed, tested, and used as a real
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

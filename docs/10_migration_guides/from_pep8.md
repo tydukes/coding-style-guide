@@ -2,11 +2,9 @@
 title: "Migrating from PEP 8 to Dukes Engineering Style Guide"
 description: "Step-by-step migration guide from standard PEP 8 to the enhanced Dukes Engineering Python style guide"
 author: "Tyler Dukes"
-date: "2025-12-07"
 tags: [migration, pep8, python, style-guide, upgrade, transition]
 category: "Migration Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview

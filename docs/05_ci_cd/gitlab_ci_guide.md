@@ -3,11 +3,9 @@ title: "Comprehensive GitLab CI/CD Guide"
 description: "Production-ready GitLab CI/CD pipelines for building, testing, and deploying
   applications with best practices, security, and optimization"
 author: "Tyler Dukes"
-date: "2025-11-30"
 tags: [gitlab-ci, cicd, deployment, automation, devops, pipelines]
 category: "CI/CD"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview
@@ -1155,5 +1153,4 @@ test:with:artifacts:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-11-30
 **Status**: Active

@@ -2,11 +2,9 @@
 title: "Integration Guide"
 description: "Guide for integrating style standards with AI assistants and development workflows"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [integration, ai, claude, workflow, automation]
 category: "Integration"
 status: "active"
-version: "0.1.0"
 ---
 
 Use this prompt to quickly integrate the coding style guide validator into any codebase.
@@ -42,7 +40,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Validate coding standards
-        uses: tydukes/coding-style-guide/.github/actions/validate@v1.0.0
+        uses: tydukes/coding-style-guide/.github/actions/validate@latest
         with:
           mode: validate
           path: .
@@ -58,7 +56,7 @@ Add these targets to the repository \`Makefile\` (or create one):
 ## Coding style validation targets
 .PHONY: validate lint format validate-docs
 
-IMAGE ?= ghcr.io/tydukes/coding-style-guide:v1.0.0
+IMAGE ?= ghcr.io/tydukes/coding-style-guide:latest
 
 validate: ## Run full coding standards validation
  @docker run --rm -v $$(pwd):/workspace $(IMAGE) validate
@@ -83,7 +81,7 @@ Create \`scripts/validate.sh\`:
 
 set -euo pipefail
 
-IMAGE="${VALIDATOR_IMAGE:-ghcr.io/tydukes/coding-style-guide:v1.0.0}"
+IMAGE="${VALIDATOR_IMAGE:-ghcr.io/tydukes/coding-style-guide:latest}"
 COMMAND="${1:-validate}"
 
 docker run --rm -v "$(pwd):/workspace" "${IMAGE}" "${COMMAND}"
@@ -101,7 +99,7 @@ repos:
     hooks:
       - id: coding-style-validator
         name: Validate Coding Standards
-        entry: docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:v1.0.0
+        entry: docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest
         args: [lint]
         language: system
         pass_filenames: false
@@ -122,7 +120,7 @@ validator to ensure consistent code quality.
 
 Using Docker:
 \`\`\`bash
-docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:v1.0.0 validate
+docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest validate
 \`\`\`
 
 Using Makefile:
@@ -161,7 +159,7 @@ validate-coding-standards:
     - docker:dind
   script:
     - docker run --rm -v $CI_PROJECT_DIR:/workspace
-        ghcr.io/tydukes/coding-style-guide:v1.0.0 validate
+        ghcr.io/tydukes/coding-style-guide:latest validate
   only:
     - merge_requests
     - main
@@ -210,7 +208,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: tydukes/coding-style-guide/.github/actions/validate@v1.0.0
+      - uses: tydukes/coding-style-guide/.github/actions/validate@latest
         with:
           mode: validate
 \`\`\`
@@ -220,7 +218,7 @@ Add a Makefile with validation targets:
 \`\`\`makefile
 .PHONY: validate lint format
 
-IMAGE ?= ghcr.io/tydukes/coding-style-guide:v1.0.0
+IMAGE ?= ghcr.io/tydukes/coding-style-guide:latest
 
 validate:
  @docker run --rm -v $$(pwd):/workspace $(IMAGE) validate
@@ -247,7 +245,7 @@ Test locally with: \`make validate\`
 Integrate the coding style guide validator into this GitHub repository:
 
 1. Add GitHub Actions workflow at \`.github/workflows/validate-coding-standards.yml\`
-   - Use the reusable action: \`tydukes/coding-style-guide/.github/actions/validate@v1.0.0\`
+   - Use the reusable action: \`tydukes/coding-style-guide/.github/actions/validate@latest\`
    - Trigger on push to main/develop and all pull requests
    - Use validation mode: \`validate\`
 
@@ -260,7 +258,7 @@ Integrate the coding style guide validator into this GitHub repository:
 
 4. Ensure the workflow is configured to run as a required status check (mention this in PR)
 
-Use container: \`ghcr.io/tydukes/coding-style-guide:v1.0.0\`
+Use container: \`ghcr.io/tydukes/coding-style-guide:latest\`
 \`\`\`
 
 ### For GitLab Repositories
@@ -271,12 +269,12 @@ Integrate the coding style guide validator into this GitLab repository:
 1. Add validation job to \`.gitlab-ci.yml\`:
    - Stage: validate
    - Use Docker-in-Docker
-   - Run: \`docker run --rm -v $CI_PROJECT_DIR:/workspace ghcr.io/tydukes/coding-style-guide:v1.0.0 validate\`
+   - Run: \`docker run --rm -v $CI_PROJECT_DIR:/workspace ghcr.io/tydukes/coding-style-guide:latest validate\`
    - Trigger on: merge_requests, main, develop
 
 2. Create local validation script at \`scripts/validate.sh\`
    - Make it executable
-   - Use container: \`ghcr.io/tydukes/coding-style-guide:v1.0.0\`
+   - Use container: \`ghcr.io/tydukes/coding-style-guide:latest\`
 
 3. Update README.md with validation instructions
 
@@ -290,7 +288,7 @@ Set up coding style validation for local development:
 
 1. Create \`Makefile\` with these targets:
    - validate, lint, format, validate-docs
-   - Use container: \`ghcr.io/tydukes/coding-style-guide:v1.0.0\`
+   - Use container: \`ghcr.io/tydukes/coding-style-guide:latest\`
 
 2. Create \`scripts/validate.sh\` wrapper script
    - Accept command as first argument (validate, lint, format)
@@ -334,7 +332,7 @@ Replace \`v1.0.0\` with:
 Add to the GitHub Action:
 
 ```yaml
-- uses: tydukes/coding-style-guide/.github/actions/validate@v1.0.0
+- uses: tydukes/coding-style-guide/.github/actions/validate@latest
   with:
     mode: validate
     path: .
@@ -354,7 +352,7 @@ Integrate the tydukes/coding-style-guide validator into this repository with the
 ## GitHub Actions
 Create \`.github/workflows/validate-coding-standards.yml\` that:
 - Triggers on push to main/develop and all PRs
-- Uses the reusable action: \`tydukes/coding-style-guide/.github/actions/validate@v1.0.0\`
+- Uses the reusable action: \`tydukes/coding-style-guide/.github/actions/validate@latest\`
 - Runs in validation mode
 - Should be a required check for PRs
 
@@ -365,7 +363,7 @@ Add a \`Makefile\` with these targets:
 - \`make format\` - Auto-format code
 - \`make help\` - Show available targets
 
-All targets should use: \`ghcr.io/tydukes/coding-style-guide:v1.0.0\`
+All targets should use: \`ghcr.io/tydukes/coding-style-guide:latest\`
 
 ## Documentation
 Update \`README.md\` with a new "Code Quality" section that explains:
@@ -379,7 +377,7 @@ If this repo has:
 - \`.gitlab-ci.yml\` - Add validation job
 - \`CONTRIBUTING.md\` - Add validation instructions
 
-Container: \`ghcr.io/tydukes/coding-style-guide:v1.0.0\`
+Container: \`ghcr.io/tydukes/coding-style-guide:latest\`
 Documentation: https://tydukes.github.io/coding-style-guide/
 
 Please implement all applicable options based on the repository structure.
@@ -389,9 +387,9 @@ Please implement all applicable options based on the repository structure.
 
 ## Quick Reference
 
-**Container Image**: `ghcr.io/tydukes/coding-style-guide:v1.0.0`
+**Container Image**: `ghcr.io/tydukes/coding-style-guide:latest`
 
-**GitHub Action**: `tydukes/coding-style-guide/.github/actions/validate@v1.0.0`
+**GitHub Action**: `tydukes/coding-style-guide/.github/actions/validate@latest`
 
 **Documentation**: <https://tydukes.github.io/coding-style-guide/>
 

@@ -2,11 +2,9 @@
 title: "Terragrunt Style Guide"
 description: "Terragrunt wrapper standards for DRY Terraform configurations and multi-environment management"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [terragrunt, terraform, iac, dry, devops, infrastructure]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1557,5 +1555,4 @@ Add to `.gitignore`:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

@@ -2,11 +2,9 @@
 title: "Bash Scripting Style Guide"
 description: "POSIX-compliant shell scripting standards for automation and DevOps"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [bash, shell, scripting, posix, automation]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1919,5 +1917,4 @@ user_id = data['id']
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

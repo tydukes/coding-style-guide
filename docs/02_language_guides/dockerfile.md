@@ -2,11 +2,9 @@
 title: "Dockerfile Style Guide"
 description: "Docker container image standards for secure, efficient, and maintainable container builds"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [docker, dockerfile, containers, devops, security]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1320,5 +1318,4 @@ hadolint --format json Dockerfile
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

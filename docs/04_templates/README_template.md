@@ -2,11 +2,9 @@
 title: "README Template"
 description: "Standard README template for modules and packages"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [template, readme, documentation, standards]
 category: "Templates"
 status: "active"
-version: "0.1.0"
 ---
 
 ## Purpose

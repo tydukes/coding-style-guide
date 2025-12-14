@@ -2,11 +2,9 @@
 title: "AWS CDK Style Guide"
 description: "AWS Cloud Development Kit standards for infrastructure as code with TypeScript"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [aws-cdk, cdk, aws, infrastructure, typescript, iac]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1566,5 +1564,4 @@ bootstrap:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

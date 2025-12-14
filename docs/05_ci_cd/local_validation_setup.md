@@ -2,11 +2,9 @@
 title: "Local Validation Setup Guide"
 description: "Complete guide to setting up a local development environment with all validation tools, linters, formatters, and testing frameworks for consistent code quality"
 author: "Tyler Dukes"
-date: "2025-12-01"
 tags: [local-development, validation, setup, tooling, linters, formatters, testing]
 category: "CI/CD"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Introduction

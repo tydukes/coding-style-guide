@@ -2,11 +2,9 @@
 title: "Metadata Schema Reference"
 description: "Comprehensive metadata tag schema for code annotations and AI integration"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [metadata, schema, annotations, ai, validation]
 category: "Metadata Schema"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview

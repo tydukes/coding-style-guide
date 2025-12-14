@@ -3,11 +3,9 @@ title: "Anti-Patterns and Common Mistakes"
 description: "Before/after examples showing common anti-patterns and their corrections across
   Terraform, Ansible, Python, TypeScript, Bash, Docker, and CI/CD"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [anti-patterns, best-practices, refactoring, code-quality]
 category: "Anti-Patterns"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview
@@ -1232,5 +1230,4 @@ e2e-test:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

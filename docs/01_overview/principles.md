@@ -2,11 +2,9 @@
 title: "Core Principles"
 description: "Foundational principles governing the style guide: automation, AI-friendly metadata, and semantic versioning"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [principles, foundations, automation, metadata, standards]
 category: "Overview"
 status: "active"
-version: "1.1.0"
 ---
 
 <!-- markdownlint-disable MD024 -->
@@ -61,7 +59,7 @@ repos:
 ```yaml
 ## .github/workflows/ci.yml
 - name: Validate coding standards
-  uses: tydukes/coding-style-guide/.github/actions/validate@v1.0.0
+  uses: tydukes/coding-style-guide/.github/actions/validate@latest
   with:
     mode: validate
 ```

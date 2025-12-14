@@ -2,11 +2,9 @@
 title: "GitHub Actions Workflow Templates"
 description: "Comprehensive GitHub Actions workflow templates for CI/CD, testing, and deployment"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [github-actions, ci-cd, workflows, automation, devops]
 category: "Templates"
 status: "active"
-version: "1.0.0"
 ---
 <!-- markdownlint-disable MD013 MD024 -->
 
@@ -937,5 +935,4 @@ steps:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

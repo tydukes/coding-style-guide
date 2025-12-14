@@ -2,11 +2,9 @@
 title: "Python Style Guide"
 description: "Comprehensive Python coding standards for DevOps, automation, and infrastructure development"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [python, programming, devops, automation, testing, pep8, type-hints]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview

@@ -2,11 +2,9 @@
 title: "Refactoring Examples"
 description: "Real-world code refactoring examples with before/after comparisons and explanations"
 author: "Tyler Dukes"
-date: "2025-12-06"
 tags: [refactoring, code-improvement, best-practices, examples]
 category: "Refactoring"
 status: "active"
-version: "1.0.0"
 ---
 
 This directory contains real-world refactoring examples demonstrating how to improve code quality,
@@ -236,5 +234,4 @@ Closes #123
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-12-06
 **Maintainer**: Tyler Dukes

@@ -2,11 +2,9 @@
 title: "Jenkins & Groovy Style Guide"
 description: "Jenkins declarative and scripted pipeline standards for CI/CD automation"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [jenkins, groovy, cicd, pipelines, automation, devops]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -2179,5 +2177,4 @@ java -jar jenkins-cli.jar -s http://jenkins.example.com/ declarative-linter < Je
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

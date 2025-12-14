@@ -2,11 +2,9 @@
 title: "Complete Terraform Module Example"
 description: "Full working example of a production-ready Terraform module with best practices"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [terraform, module, example, aws, vpc, best-practices]
 category: "Examples"
 status: "active"
-version: "1.0.0"
 ---
 <!-- markdownlint-disable MD013 -->
 
@@ -824,5 +822,4 @@ The module is production-ready and follows AWS Well-Architected Framework princi
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

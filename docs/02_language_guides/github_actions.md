@@ -2,11 +2,9 @@
 title: "GitHub Actions Style Guide"
 description: "GitHub Actions workflow standards for CI/CD automation and repository workflows"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [github-actions, cicd, automation, workflows, devops]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1847,5 +1845,4 @@ ignore: |
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

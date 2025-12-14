@@ -2,11 +2,9 @@
 title: "Migrating from Google Python Style Guide to Dukes Engineering Style Guide"
 description: "Step-by-step migration guide from Google Python Style Guide to the Dukes Engineering Python style guide"
 author: "Tyler Dukes"
-date: "2025-12-07"
 tags: [migration, google-style-guide, python, style-guide, upgrade, transition]
 category: "Migration Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview

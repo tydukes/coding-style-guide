@@ -2,11 +2,9 @@
 title: "SQL Style Guide"
 description: "Database-agnostic SQL standards for queries, schemas, and migrations"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [sql, database, queries, data, standards]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1590,5 +1588,4 @@ GROUP BY u.user_id, u.email, u.created_at;
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

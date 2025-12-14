@@ -2,11 +2,9 @@
 title: "Code Block Language Tag Standards"
 description: "Standardized language tags for markdown code blocks across all documentation"
 author: "Tyler Dukes"
-date: "2025-12-07"
 tags: [standards, documentation, code-blocks, markdown, syntax-highlighting]
 category: "Standards"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Purpose

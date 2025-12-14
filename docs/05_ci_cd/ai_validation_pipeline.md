@@ -3,11 +3,9 @@ title: "AI Validation Pipeline"
 description: "Comprehensive AI-powered validation pipeline for automated code review, style
   checking, and quality assurance"
 author: "Tyler Dukes"
-date: "2025-11-30"
 tags: [cicd, ai, validation, automation, pipeline, code-review]
 category: "CI/CD"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview
@@ -1204,5 +1202,4 @@ metrics:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-11-30
 **Status**: Active

@@ -2,11 +2,9 @@
 title: "Pre-commit Config Template"
 description: "Comprehensive .pre-commit-config.yaml templates for automated code quality checks"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [pre-commit, git-hooks, quality, automation, linting]
 category: "Templates"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview
@@ -771,5 +769,4 @@ jobs:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active
