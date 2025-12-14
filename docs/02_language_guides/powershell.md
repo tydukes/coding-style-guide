@@ -662,6 +662,221 @@ Invoke-ScriptAnalyzer -Path .\MyModule -Settings .\.pslintrc.psd1
 
 ---
 
+## Common Pitfalls
+
+### Array vs ArrayList Performance
+
+**Issue**: Using `+=` to build arrays creates a new array each time, causing O(n²) performance.
+
+**Example**:
+
+```powershell
+## Bad - Slow array building
+$results = @()
+foreach ($i in 1..10000) {
+    $results += $i  # ❌ Creates new array each iteration! Very slow
+}
+```
+
+**Solution**: Use ArrayList or collect pipeline output.
+
+```powershell
+## Good - ArrayList for dynamic growth
+$results = [System.Collections.ArrayList]::new()
+foreach ($i in 1..10000) {
+    [void]$results.Add($i)  # ✅ Fast O(1) append
+}
+
+## Good - Collect from pipeline
+$results = foreach ($i in 1..10000) {
+    $i  # ✅ Output collected into array automatically
+}
+
+## Good - List generic type
+$results = [System.Collections.Generic.List[int]]::new()
+$results.Add(42)
+```
+
+**Key Points**:
+
+- `+=` on arrays copies entire array each time
+- Use ArrayList or Generic List for dynamic collections
+- Pipeline output collection is efficient
+- Use `[void]` to suppress ArrayList.Add() return value
+
+### $null Comparison Order
+
+**Issue**: Comparing with `$null` on right side can give unexpected results with arrays.
+
+**Example**:
+
+```powershell
+## Bad - $null on right
+$array = @(1, 2, $null, 3)
+if ($array -eq $null) {  # ❌ Always false! Returns elements equal to $null
+    Write-Host "Array is null"  # Never executes
+}
+```
+
+**Solution**: Always put `$null` on the left side of comparisons.
+
+```powershell
+## Good - $null on left
+$array = @(1, 2, $null, 3)
+if ($null -eq $array) {  # ✅ Correct null check
+    Write-Host "Array is null"
+}
+
+## Good - Check for empty or null
+if ($null -eq $array -or $array.Count -eq 0) {
+    Write-Host "Array is null or empty"
+}
+```
+
+**Key Points**:
+
+- Always use `$null -eq $variable`, not `$variable -eq $null`
+- With `$null` on right, `-eq` filters array for null values
+- With `$null` on left, `-eq` performs proper null check
+- This applies to all comparison operators
+
+### Variable Scope Confusion
+
+**Issue**: Missing `$script:` or `$global:` prefix causes variables to be local-scoped only.
+
+**Example**:
+
+```powershell
+## Bad - Variable not accessible outside function
+function Set-Config {
+    $config = "production"  # ❌ Local scope only
+}
+
+Set-Config
+Write-Host $config  # Empty! Variable doesn't exist here
+```
+
+**Solution**: Use scope modifiers for non-local variables.
+
+```powershell
+## Good - Script scope
+function Set-Config {
+    $script:config = "production"  # ✅ Accessible in script
+}
+
+Set-Config
+Write-Host $script:config  # "production"
+
+## Good - Global scope (use sparingly)
+function Set-GlobalConfig {
+    $global:config = "production"  # ✅ Accessible everywhere
+}
+
+## Good - Return values instead
+function Get-Config {
+    $config = "production"
+    return $config  # ✅ Better approach
+}
+
+$config = Get-Config
+```
+
+**Key Points**:
+
+- Variables default to local scope in functions
+- `$script:` for script-wide variables
+- `$global:` for truly global variables (use rarely)
+- Prefer return values over scope manipulation
+
+### Pipeline vs ForEach Performance
+
+**Issue**: Using `ForEach-Object` in pipeline is slower than `foreach` loop for in-memory collections.
+
+**Example**:
+
+```powershell
+## Bad - Slow pipeline for in-memory collection
+$users = Get-Content users.txt
+$users | ForEach-Object {  # ❌ Slower for arrays in memory
+    Process-User $_
+}
+```
+
+**Solution**: Use `foreach` loop for in-memory collections.
+
+```powershell
+## Good - Fast foreach loop
+$users = Get-Content users.txt
+foreach ($user in $users) {  # ✅ Faster for in-memory arrays
+    Process-User $user
+}
+
+## Good - Pipeline for streaming
+Get-ChildItem -Recurse | ForEach-Object {  # ✅ Good for streaming
+    Process-File $_
+}
+
+## Good - Where-Object vs .Where() method
+$large = $users.Where({ $_.Size -gt 1MB })  # ✅ Faster method syntax
+```
+
+**Key Points**:
+
+- `foreach` loop is faster for arrays already in memory
+- Pipeline (`ForEach-Object`) good for streaming large datasets
+- Use `.Where()` and `.ForEach()` methods for better performance
+- Pipeline allows memory-efficient processing of large data
+
+### Try-Catch Without Finally
+
+**Issue**: Not using `finally` block causes cleanup code to be skipped on errors.
+
+**Example**:
+
+```powershell
+## Bad - Resources not cleaned up on error
+try {
+    $file = [System.IO.File]::Open("data.txt", "Open")
+    Process-File $file
+    $file.Close()  # ❌ Not called if Process-File throws!
+} catch {
+    Write-Error $_.Exception.Message
+}
+```
+
+**Solution**: Use `finally` for cleanup code.
+
+```powershell
+## Good - Finally ensures cleanup
+try {
+    $file = [System.IO.File]::Open("data.txt", "Open")
+    Process-File $file
+} catch {
+    Write-Error $_.Exception.Message
+} finally {
+    if ($null -ne $file) {
+        $file.Close()  # ✅ Always called
+    }
+}
+
+## Better - Using statement (PowerShell 7+)
+using ($file = [System.IO.File]::Open("data.txt", "Open")) {
+    Process-File $file
+}  # ✅ Automatically disposed
+
+## Better - Cmdlet with built-in cleanup
+Get-Content "data.txt" | Process-Data  # ✅ Handles file closing
+```
+
+**Key Points**:
+
+- `finally` always executes, even on errors or returns
+- Use `finally` for resource cleanup (files, connections, locks)
+- PowerShell 7+ supports `using` statement
+- Prefer cmdlets that handle cleanup automatically
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Using Aliases in Scripts

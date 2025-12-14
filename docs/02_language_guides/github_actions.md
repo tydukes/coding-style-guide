@@ -1172,6 +1172,268 @@ jobs:
 
 ---
 
+## Common Pitfalls
+
+### Caching Mismatch Between Jobs
+
+**Issue**: Using different cache keys in different jobs causes unnecessary cache misses and slower workflows.
+
+**Example**:
+
+```yaml
+## Bad - Inconsistent cache keys
+build:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: npm-${{ hashFiles('package.json') }}  # Only package.json
+    - run: npm ci
+
+test:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: deps-${{ hashFiles('package-lock.json') }}  # Different key!
+    - run: npm test
+```
+
+**Solution**: Use consistent cache keys across all jobs.
+
+```yaml
+## Good - Consistent cache strategy
+.cache-deps: &cache-deps
+  uses: actions/cache@v4
+  with:
+    path: |
+      ~/.npm
+      node_modules
+    key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+    restore-keys: |
+      ${{ runner.os }}-npm-
+
+build:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    - name: Cache dependencies
+      <<: *cache-deps
+    - run: npm ci
+
+test:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    - name: Cache dependencies
+      <<: *cache-deps
+    - run: npm test
+```
+
+**Key Points**:
+
+- Use identical cache keys across all jobs
+- Include lock files (package-lock.json, yarn.lock) in hash
+- Use restore-keys for fallback cache matching
+- Cache both package manager cache and node_modules
+
+### Forgetting to Checkout Code
+
+**Issue**: Forgetting `actions/checkout` causes jobs to fail because repository code is not available.
+
+**Example**:
+
+```yaml
+## Bad - Missing checkout step
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # Missing: - uses: actions/checkout@v4
+      - run: npm install  # Fails - no package.json found!
+      - run: npm test
+```
+
+**Solution**: Always checkout code as the first step.
+
+```yaml
+## Good - Checkout code first
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4  # ✅ Always first!
+      - run: npm install
+      - run: npm test
+```
+
+**Key Points**:
+
+- `actions/checkout` should be the first step in nearly every job
+- Each job runs in a fresh VM with no repository code
+- Reusable workflows also need checkout in each job
+- Use `fetch-depth: 0` for full git history when needed
+
+### Artifact Upload/Download Name Mismatch
+
+**Issue**: Mismatched artifact names between upload and download causes job failures.
+
+**Example**:
+
+```yaml
+## Bad - Mismatched artifact names
+build:
+  runs-on: ubuntu-latest
+  steps:
+    - run: npm run build
+    - uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts  # Name: "build-artifacts"
+        path: dist/
+
+deploy:
+  needs: build
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: dist  # ❌ Wrong name!
+    - run: ./deploy.sh
+```
+
+**Solution**: Use consistent artifact names.
+
+```yaml
+## Good - Matching artifact names
+build:
+  runs-on: ubuntu-latest
+  steps:
+    - run: npm run build
+    - uses: actions/upload-artifact@v4
+      with:
+        name: build-output
+        path: dist/
+
+deploy:
+  needs: build
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: build-output  # ✅ Matches upload
+        path: dist/
+    - run: ./deploy.sh
+```
+
+**Key Points**:
+
+- Artifact names must match exactly between upload and download
+- Document artifact names in workflow comments
+- Use descriptive names (build-output, test-reports)
+- Verify artifact availability with `actions/download-artifact@v4`
+
+### Matrix Strategy Without Continue-on-Error
+
+**Issue**: One matrix job failure cancels all other matrix jobs, preventing complete test coverage.
+
+**Example**:
+
+```yaml
+## Bad - One failure cancels all
+test:
+  strategy:
+    matrix:
+      node-version: [16, 18, 20, 22]
+      # No fail-fast or continue-on-error
+  runs-on: ubuntu-latest
+  steps:
+    - run: npm test  # If Node 18 fails, Node 20 and 22 never run
+```
+
+**Solution**: Use `fail-fast: false` to run all matrix combinations.
+
+```yaml
+## Good - All matrix jobs run
+test:
+  strategy:
+    fail-fast: false  # ✅ Continue on failures
+    matrix:
+      node-version: [16, 18, 20, 22]
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm test
+```
+
+**Key Points**:
+
+- Set `fail-fast: false` to see all matrix results
+- Use `continue-on-error: true` for experimental jobs
+- Review all matrix failures, not just the first
+- Matrix jobs run in parallel by default
+
+### Environment Variable Scope Confusion
+
+**Issue**: Environment variables defined at different levels override each other unexpectedly.
+
+**Example**:
+
+```yaml
+## Bad - Unclear variable precedence
+env:
+  NODE_ENV: production  # Workflow level
+
+jobs:
+  test:
+    env:
+      NODE_ENV: test  # Job level - overrides workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests
+        env:
+          NODE_ENV: development  # Step level - overrides job
+        run: echo $NODE_ENV  # Prints "development", not "test" or "production"
+```
+
+**Solution**: Be explicit about variable scope.
+
+```yaml
+## Good - Clear variable hierarchy
+env:
+  GLOBAL_CONFIG: enabled  # Workflow level - shared by all jobs
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      TEST_ENV: ci  # Job level - specific to this job
+    steps:
+      - name: Unit tests
+        run: |
+          echo "Global: $GLOBAL_CONFIG"
+          echo "Job: $TEST_ENV"
+          npm test
+
+      - name: Integration tests
+        env:
+          INTEGRATION_MODE: full  # Step level - specific to this step only
+        run: npm run test:integration
+```
+
+**Key Points**:
+
+- Step-level env variables override job-level variables
+- Job-level env variables override workflow-level variables
+- Use workflow-level for truly global values
+- Document variable precedence in comments
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Hardcoded Secrets

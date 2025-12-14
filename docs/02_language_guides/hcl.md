@@ -1326,6 +1326,293 @@ resource "aws_instance" "web" {
 
 ---
 
+## Common Pitfalls
+
+### String Interpolation in Resource Names
+
+**Issue**: Using variables or interpolations in resource names causes Terraform to recreate resources unnecessarily.
+
+**Example**:
+
+```hcl
+## Bad - Interpolation in resource name
+variable "environment" {
+  default = "prod"
+}
+
+resource "aws_instance" "web_${var.environment}" {  # ❌ Not allowed!
+  ami           = "ami-12345678"
+  instance_type = "t3.micro"
+}
+```
+
+**Solution**: Use static resource names with dynamic tags or Name attributes.
+
+```hcl
+## Good - Static resource name, dynamic tags
+variable "environment" {
+  default = "prod"
+}
+
+resource "aws_instance" "web" {
+  ami           = "ami-12345678"
+  instance_type = "t3.micro"
+
+  tags = {
+    Name        = "web-${var.environment}"  # ✅ Dynamic name in tags
+    Environment = var.environment
+  }
+}
+```
+
+**Key Points**:
+
+- Resource names must be static (no interpolation)
+- Use tags or labels for dynamic naming
+- Resource name is for Terraform reference only
+- Use `Name` tag for AWS resource display names
+
+### Count vs For_Each Confusion
+
+**Issue**: Using `count` causes resource recreation when list order changes; `for_each` is more stable.
+
+**Example**:
+
+```hcl
+## Bad - count with list (order matters)
+variable "users" {
+  default = ["alice", "bob", "charlie"]
+}
+
+resource "aws_iam_user" "users" {
+  count = length(var.users)
+  name  = var.users[count.index]  # ❌ Reordering list recreates resources!
+}
+
+## If you change to ["alice", "charlie", "bob"], bob will be recreated
+```
+
+**Solution**: Use `for_each` with sets or maps for stable addressing.
+
+```hcl
+## Good - for_each with set (order independent)
+variable "users" {
+  default = ["alice", "bob", "charlie"]
+}
+
+resource "aws_iam_user" "users" {
+  for_each = toset(var.users)
+  name     = each.value  # ✅ Referenced by name, not index
+}
+
+## Good - for_each with map for complex resources
+variable "instances" {
+  default = {
+    web = {
+      instance_type = "t3.small"
+      subnet_id     = "subnet-abc"
+    }
+    api = {
+      instance_type = "t3.medium"
+      subnet_id     = "subnet-def"
+    }
+  }
+}
+
+resource "aws_instance" "servers" {
+  for_each = var.instances
+
+  ami           = "ami-12345678"
+  instance_type = each.value.instance_type
+  subnet_id     = each.value.subnet_id
+
+  tags = {
+    Name = each.key
+  }
+}
+```
+
+**Key Points**:
+
+- Use `for_each` when resource identity matters
+- `count` is fine for identical resources (e.g., 3 identical workers)
+- `for_each` prevents recreation on list reordering
+- Reference with `resource_type.name[key]`
+
+### Depends_On Overuse
+
+**Issue**: Explicit `depends_on` overrides Terraform's dependency graph, slowing applies and hiding issues.
+
+**Example**:
+
+```hcl
+## Bad - Unnecessary depends_on
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "aws_subnet" "public" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.1.0/24"
+  depends_on = [aws_vpc.main]  # ❌ Redundant! Already depends via vpc_id
+}
+```
+
+**Solution**: Let Terraform infer dependencies from resource references.
+
+```hcl
+## Good - Implicit dependency through reference
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "aws_subnet" "public" {
+  vpc_id     = aws_vpc.main.id  # ✅ Implicit dependency
+  cidr_block = "10.0.1.0/24"
+}
+
+## Good - depends_on only when no resource reference exists
+resource "aws_iam_role_policy_attachment" "attach" {
+  role       = aws_iam_role.role.name
+  policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+}
+
+resource "aws_instance" "app" {
+  ami           = "ami-12345678"
+  instance_type = "t3.micro"
+  iam_instance_profile = aws_iam_role.role.name
+
+  depends_on = [
+    aws_iam_role_policy_attachment.attach  # ✅ Ensures policy attached before instance starts
+  ]
+}
+```
+
+**Key Points**:
+
+- Terraform infers dependencies from resource references
+- Only use `depends_on` for hidden dependencies
+- Overuse serializes operations, slowing applies
+- Check terraform graph to understand dependencies
+
+### Lifecycle Ignore_Changes Abuse
+
+**Issue**: Overusing `ignore_changes` masks configuration drift and makes state inconsistent.
+
+**Example**:
+
+```hcl
+## Bad - Ignoring too many changes
+resource "aws_instance" "web" {
+  ami           = "ami-12345678"
+  instance_type = "t3.micro"
+
+  lifecycle {
+    ignore_changes = [
+      ami,
+      instance_type,  # ❌ Why ignore? Should be in Terraform
+      tags,
+      user_data
+    ]
+  }
+}
+```
+
+**Solution**: Only ignore changes for values managed outside Terraform.
+
+```hcl
+## Good - Specific ignore for autoscaling
+resource "aws_autoscaling_group" "web" {
+  min_size = 1
+  max_size = 10
+  desired_capacity = 3
+
+  lifecycle {
+    ignore_changes = [
+      desired_capacity  # ✅ Changed by autoscaling, ignore drift
+    ]
+  }
+}
+
+## Good - Ignore tags added by external systems
+resource "aws_instance" "web" {
+  ami           = "ami-12345678"
+  instance_type = "t3.micro"
+
+  tags = {
+    ManagedBy = "Terraform"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      tags["CostCenter"],  # ✅ Added by cost tracking system
+      tags["Owner"]        # Added by ownership tracker
+    ]
+  }
+}
+```
+
+**Key Points**:
+
+- Only ignore changes managed by external systems
+- Document why each field is ignored
+- Prefer managing all configuration in Terraform
+- Use `ignore_changes = all` very rarely
+
+### Terraform vs Provider Version Lock Missing
+
+**Issue**: Not specifying version constraints causes unexpected behavior when providers update.
+
+**Example**:
+
+```hcl
+## Bad - No version constraints
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"  # ❌ No version! Will use latest
+    }
+  }
+}
+
+provider "aws" {
+  region = "us-east-1"
+}
+```
+
+**Solution**: Always pin provider and Terraform versions.
+
+```hcl
+## Good - Version constraints
+terraform {
+  required_version = ">= 1.5.0, < 2.0.0"  # ✅ Terraform version range
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"  # ✅ Allow 5.x updates, not 6.0
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = ">= 3.5.0"  # Minimum version
+    }
+  }
+}
+
+provider "aws" {
+  region = "us-east-1"
+}
+```
+
+**Key Points**:
+
+- Always specify `required_version` for Terraform
+- Use `~>` for "compatible with" (e.g., `~> 5.0` allows 5.1, 5.2, not 6.0)
+- Lock exact versions in production with lock file
+- Test provider upgrades in non-production first
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Hardcoded Values

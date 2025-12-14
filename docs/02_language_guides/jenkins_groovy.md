@@ -1572,6 +1572,344 @@ pipeline {
 
 ---
 
+## Common Pitfalls
+
+### Workspace Conflicts in Parallel Builds
+
+**Issue**: Parallel stages using same workspace cause file conflicts and corrupted builds.
+
+**Example**:
+
+```groovy
+## Bad - Parallel stages share workspace
+pipeline {
+    agent any
+    stages {
+        stage('Parallel') {
+            parallel {
+                stage('Test A') {
+                    steps {
+                        sh 'npm test > results.txt'  // ❌ Both write to same file!
+                    }
+                }
+                stage('Test B') {
+                    steps {
+                        sh 'npm test > results.txt'  // ❌ Conflicts with Test A
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+**Solution**: Use separate workspaces or different file names.
+
+```groovy
+## Good - Separate workspaces
+pipeline {
+    agent any
+    stages {
+        stage('Parallel') {
+            parallel {
+                stage('Test A') {
+                    agent {
+                        label 'test-agent'
+                    }
+                    steps {
+                        sh 'npm test > results-a.txt'  // ✅ Unique filename
+                    }
+                }
+                stage('Test B') {
+                    agent {
+                        label 'test-agent'
+                    }
+                    steps {
+                        sh 'npm test > results-b.txt'  // ✅ Different file
+                    }
+                }
+            }
+        }
+    }
+}
+
+## Good - Use ws() to create separate workspace
+stage('Test A') {
+    steps {
+        ws("workspace-a") {  // ✅ Separate workspace
+            sh 'npm test'
+        }
+    }
+}
+```
+
+**Key Points**:
+
+- Parallel stages share workspace by default
+- Use unique filenames or separate agents
+- Use `ws()` step for custom workspace paths
+- Consider using `stash`/`unstash` for artifacts
+
+### withCredentials Scope Leakage
+
+**Issue**: Credentials exposed outside withCredentials block through environment variables.
+
+**Example**:
+
+```groovy
+## Bad - Credential leaks to environment
+pipeline {
+    environment {
+        SECRET = credentials('my-secret')  // ❌ Available to all stages!
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'echo $SECRET'  // Exposed
+            }
+        }
+    }
+}
+```
+
+**Solution**: Use `withCredentials` in smallest possible scope.
+
+```groovy
+## Good - Scoped credentials
+pipeline {
+    agent any
+    stages {
+        stage('Deploy') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'deploy-creds',
+                        usernameVariable: 'USER',
+                        passwordVariable: 'PASS'
+                    )
+                ]) {
+                    sh '''
+                        echo "Deploying as $USER"
+                        deploy.sh  # ✅ Creds only in this scope
+                    '''
+                }
+                // ✅ USER and PASS not available here
+            }
+        }
+    }
+}
+```
+
+**Key Points**:
+
+- Use `withCredentials` block, not `environment`
+- Minimize credential scope
+- Credentials auto-masked in console output
+- Use credential-specific helper methods
+
+### Not Checking Sh Return Status
+
+**Issue**: Pipeline continues after command failures, masking errors.
+
+**Example**:
+
+```groovy
+## Bad - Ignores command failures
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'make build'  // ❌ If fails, what happens?
+                sh 'make test'   // Runs even if build fails!
+            }
+        }
+    }
+}
+```
+
+**Solution**: Check return status or use proper error handling.
+
+```groovy
+## Good - Check return status
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    def result = sh(script: 'make build', returnStatus: true)
+                    if (result != 0) {
+                        error("Build failed with code ${result}")  # ✅ Fail pipeline
+                    }
+                }
+                sh 'make test'  // ✅ Only runs if build succeeded
+            }
+        }
+    }
+}
+
+## Good - Capture output
+stage('Check Version') {
+    steps {
+        script {
+            def version = sh(
+                script: 'cat VERSION',
+                returnStdout: true
+            ).trim()  // ✅ Capture and use output
+            echo "Building version ${version}"
+        }
+    }
+}
+```
+
+**Key Points**:
+
+- By default, `sh` step fails pipeline on non-zero exit
+- Use `returnStatus: true` to capture exit code
+- Use `returnStdout: true` to capture output
+- Pipeline fails by default on errors (can override)
+
+### Declarative vs Scripted Syntax Mixing
+
+**Issue**: Mixing declarative and scripted syntax incorrectly causes syntax errors.
+
+**Example**:
+
+```groovy
+## Bad - Invalid syntax mixing
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            def version = '1.0'  // ❌ Can't use def at stage level!
+            steps {
+                echo version
+            }
+        }
+    }
+}
+```
+
+**Solution**: Use `script` blocks for scripted code in declarative pipelines.
+
+```groovy
+## Good - Proper script block usage
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    def version = '1.0'  // ✅ Inside script block
+                    echo "Version: ${version}"
+                }
+            }
+        }
+    }
+}
+
+## Good - Declarative only
+pipeline {
+    agent any
+    environment {
+        VERSION = '1.0'  // ✅ Declarative environment
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo "Version: ${VERSION}"  // ✅ No script block needed
+            }
+        }
+    }
+}
+```
+
+**Key Points**:
+
+- Declarative syntax requires specific structure
+- Use `script {}` for Groovy code in declarative pipeline
+- Keep scripts minimal, prefer declarative syntax
+- `def`, loops, conditionals require `script {}` block
+
+### Agent Reuse Assumptions
+
+**Issue**: Assuming agent state persists between stages causes failures.
+
+**Example**:
+
+```groovy
+## Bad - Assumes agent state persists
+pipeline {
+    agent any
+    stages {
+        stage('Setup') {
+            steps {
+                sh 'npm install'  // ❌ May run on agent A
+            }
+        }
+        stage('Test') {
+            agent {
+                label 'different-agent'  // ❌ Runs on agent B!
+            }
+            steps {
+                sh 'npm test'  // ❌ node_modules not present!
+            }
+        }
+    }
+}
+```
+
+**Solution**: Use same agent or stash/unstash artifacts.
+
+```groovy
+## Good - Single agent for all stages
+pipeline {
+    agent { label 'nodejs' }  // ✅ Same agent
+    stages {
+        stage('Setup') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'npm test'  // ✅ node_modules available
+            }
+        }
+    }
+}
+
+## Good - Stash and unstash
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'npm run build'
+                stash name: 'dist', includes: 'dist/**'  // ✅ Save artifacts
+            }
+        }
+        stage('Deploy') {
+            agent { label 'deploy-agent' }
+            steps {
+                unstash 'dist'  // ✅ Restore artifacts
+                sh './deploy.sh'
+            }
+        }
+    }
+}
+```
+
+**Key Points**:
+
+- Each stage with different agent gets fresh workspace
+- Use top-level `agent` for shared state
+- Use `stash`/`unstash` to transfer files between agents
+- Workspace cleanup between builds prevents state leaks
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Avoid: Hardcoded Credentials

@@ -794,6 +794,314 @@ def get_user(
     return user
 ```
 
+## Common Pitfalls
+
+### Late Binding in Closures
+
+**Issue**: Lambda functions and closures bind variables by reference, not value, causing unexpected behavior in loops.
+
+**Example**:
+
+```python
+## Bad - All functions reference same 'i'
+functions = []
+for i in range(5):
+    functions.append(lambda: i)  # Binds to 'i' reference
+
+for f in functions:
+    print(f())  # Prints: 4 4 4 4 4 (not 0 1 2 3 4)
+```
+
+**Solution**: Use default arguments to capture values at definition time.
+
+```python
+## Good - Capture value with default argument
+functions = []
+for i in range(5):
+    functions.append(lambda x=i: x)  # Captures current value of i
+
+for f in functions:
+    print(f())  # Prints: 0 1 2 3 4
+
+## Good - Use list comprehension
+functions = [lambda x=i: x for i in range(5)]
+```
+
+**Key Points**:
+
+- Closures bind variables by reference, not value
+- Use default arguments `lambda x=i: x` to capture values
+- List comprehensions create new scope per iteration
+- Affects lambdas, nested functions, and class definitions
+
+### Import Circular Dependencies
+
+**Issue**: Two modules importing each other causes ImportError or incomplete module initialization.
+
+**Example**:
+
+```python
+## Bad - module_a.py
+from module_b import function_b  # Imports module_b
+
+def function_a():
+    return function_b()
+
+## Bad - module_b.py
+from module_a import function_a  # Imports module_a (circular!)
+
+def function_b():
+    return function_a()  # ImportError or AttributeError
+```
+
+**Solution**: Restructure code, use local imports, or import modules rather than functions.
+
+```python
+## Good - Import module, not function
+## module_a.py
+import module_b  # Import module, not specific function
+
+def function_a():
+    return module_b.function_b()  # Access via module
+
+## Good - Local import (deferred)
+## module_b.py
+def function_b():
+    from module_a import function_a  # Import only when needed
+    return function_a()
+
+## Better - Refactor to remove circular dependency
+## shared.py (new file)
+def shared_function():
+    pass
+
+## module_a.py
+from shared import shared_function
+
+## module_b.py
+from shared import shared_function
+```
+
+**Key Points**:
+
+- Circular imports fail or create incomplete modules
+- Import modules, not functions: `import module` vs `from module import func`
+- Use local imports as temporary workaround
+- Best solution: refactor to remove circular dependency
+- Extract shared code to third module
+
+### Dictionary Iteration During Modification
+
+**Issue**: Modifying a dictionary while iterating causes RuntimeError in Python 3.
+
+**Example**:
+
+```python
+## Bad - RuntimeError: dictionary changed size during iteration
+user_data = {"alice": 25, "bob": 30, "charlie": 35}
+for key in user_data:
+    if user_data[key] > 28:
+        del user_data[key]  # RuntimeError!
+```
+
+**Solution**: Iterate over a copy or build a new dictionary.
+
+```python
+## Good - Iterate over copy of keys
+user_data = {"alice": 25, "bob": 30, "charlie": 35}
+for key in list(user_data.keys()):  # list() creates copy
+    if user_data[key] > 28:
+        del user_data[key]
+
+## Good - Dictionary comprehension (most Pythonic)
+user_data = {"alice": 25, "bob": 30, "charlie": 35}
+user_data = {k: v for k, v in user_data.items() if v <= 28}
+
+## Good - Filter and rebuild
+user_data = dict(filter(lambda item: item[1] <= 28, user_data.items()))
+```
+
+**Key Points**:
+
+- Cannot modify dictionary during iteration
+- Use `list(dict.keys())` to iterate over copy
+- Dictionary comprehension is cleaner and faster
+- Applies to sets as well (not lists, which support modification)
+
+### Asyncio Event Loop Blocking
+
+**Issue**: Calling blocking I/O or CPU-intensive code in async functions blocks the entire event loop.
+
+**Example**:
+
+```python
+## Bad - Blocks event loop for 5 seconds
+import asyncio
+import time
+
+async def fetch_data():
+    time.sleep(5)  # Blocks entire event loop!
+    return "data"
+
+async def main():
+    # All tasks blocked while one sleeps
+    await asyncio.gather(
+        fetch_data(),
+        fetch_data(),
+        fetch_data()
+    )  # Takes 15 seconds sequentially, not 5 seconds concurrently
+```
+
+**Solution**: Use async-compatible libraries or run blocking code in executor.
+
+```python
+## Good - Use asyncio.sleep for async operations
+import asyncio
+
+async def fetch_data():
+    await asyncio.sleep(5)  # Non-blocking sleep
+    return "data"
+
+async def main():
+    # Runs concurrently
+    await asyncio.gather(
+        fetch_data(),
+        fetch_data(),
+        fetch_data()
+    )  # Takes 5 seconds total
+
+## Good - Run blocking code in executor
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
+
+def blocking_operation():
+    time.sleep(5)
+    return "data"
+
+async def fetch_data():
+    loop = asyncio.get_event_loop()
+    result = await loop.run_in_executor(None, blocking_operation)
+    return result
+```
+
+**Key Points**:
+
+- `time.sleep()` blocks event loop; use `await asyncio.sleep()`
+- Blocking I/O prevents other tasks from running
+- Use `aiohttp`, `aiomysql`, etc. for async I/O
+- Run blocking code in executor: `loop.run_in_executor()`
+- CPU-intensive work should use ProcessPoolExecutor
+
+### List Comprehension Memory Issues
+
+**Issue**: List comprehensions load entire result into memory, causing MemoryError with large datasets.
+
+**Example**:
+
+```python
+## Bad - Loads 100 million integers into memory
+result = [i * 2 for i in range(100_000_000)]  # MemoryError!
+total = sum(result)
+
+## Bad - Reads entire large file into memory
+lines = [line.strip() for line in open("huge_log.txt")]  # MemoryError!
+```
+
+**Solution**: Use generator expressions for lazy evaluation.
+
+```python
+## Good - Generator expression (lazy evaluation)
+result = (i * 2 for i in range(100_000_000))  # Parentheses, not brackets
+total = sum(result)  # Processes one item at a time
+
+## Good - Generator for file processing
+with open("huge_log.txt") as f:
+    lines = (line.strip() for line in f)  # Lazy evaluation
+    for line in lines:
+        process(line)  # One line at a time
+
+## Good - When you need a list, consider chunking
+def process_in_chunks(iterable, chunk_size=10000):
+    chunk = []
+    for item in iterable:
+        chunk.append(item)
+        if len(chunk) >= chunk_size:
+            yield chunk
+            chunk = []
+    if chunk:
+        yield chunk
+```
+
+**Key Points**:
+
+- List comprehensions `[...]` load everything into memory
+- Generator expressions `(...)` evaluate lazily
+- Use generators for large datasets
+- Generator expressions can only be iterated once
+- Convert to list only when necessary: `list(generator)`
+
+### Exception Handling Anti-Pattern
+
+**Issue**: Catching broad exceptions hides bugs and makes debugging impossible.
+
+**Example**:
+
+```python
+## Bad - Catches KeyboardInterrupt, SystemExit, etc.
+try:
+    result = risky_operation()
+    process(result)
+except:  # Catches EVERYTHING, including Ctrl+C!
+    pass  # Silent failure
+
+## Bad - Too broad exception handling
+try:
+    data = json.loads(response.text)
+    user_id = data["user"]["id"]
+except Exception as e:  # Catches ALL exceptions
+    return None  # Hides TypeError, KeyError, JSONDecodeError
+```
+
+**Solution**: Catch specific exceptions and handle appropriately.
+
+```python
+## Good - Catch specific exceptions
+import json
+from requests.exceptions import RequestException
+
+try:
+    response = requests.get(url)
+    response.raise_for_status()
+    data = response.json()
+    user_id = data["user"]["id"]
+except RequestException as e:
+    logger.error(f"Network error: {e}")
+    raise
+except json.JSONDecodeError as e:
+    logger.error(f"Invalid JSON: {e}")
+    raise
+except KeyError as e:
+    logger.error(f"Missing key in response: {e}")
+    raise
+
+## Good - Allow critical exceptions to propagate
+try:
+    result = operation()
+except (ValueError, TypeError) as e:  # Only catch expected errors
+    logger.warning(f"Operation failed: {e}")
+    result = fallback_value
+```
+
+**Key Points**:
+
+- Never use bare `except:` (catches KeyboardInterrupt, SystemExit)
+- Avoid catching `Exception` unless truly necessary
+- Catch specific exceptions: `ValueError`, `KeyError`, etc.
+- Log exceptions before swallowing them
+- Use `raise` to re-raise after logging
+
+---
+
 ## Anti-Patterns
 
 ### Mutable Default Arguments
