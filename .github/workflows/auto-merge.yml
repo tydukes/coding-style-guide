@@ -1,10 +1,6 @@
 name: Auto-Merge
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
-  pull_request_review:
-    types: [submitted]
   workflow_run:
     workflows: ["CI"]
     types: [completed]
@@ -12,10 +8,8 @@ on:
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
-    # Only run for workflow_run events with successful CI, or for PR/review events
-    if: |
-      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
-      (github.event_name == 'pull_request' || github.event_name == 'pull_request_review')
+    # Only run if CI workflow completed successfully
+    if: github.event.workflow_run.conclusion == 'success'
 
     permissions:
       contents: write
@@ -27,28 +21,22 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            let prNumber;
+            // Get PR from the workflow run branch
+            const { data: pullRequests } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head: `${context.repo.owner}:${context.payload.workflow_run.head_branch}`
+            });
 
-            if (context.eventName === 'workflow_run') {
-              // For workflow_run events, get PR from the workflow run
-              const { data: pullRequests } = await github.rest.pulls.list({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                state: 'open',
-                head: `${context.repo.owner}:${context.payload.workflow_run.head_branch}`
-              });
-
-              if (pullRequests.length === 0) {
-                console.log('No open PR found for this branch');
-                return null;
-              }
-
-              prNumber = pullRequests[0].number;
-            } else {
-              // For pull_request events, get from context
-              prNumber = context.payload.pull_request.number;
+            if (pullRequests.length === 0) {
+              console.log('No open PR found for this branch');
+              core.setFailed('No PR found for branch');
+              return null;
             }
 
+            const prNumber = pullRequests[0].number;
+            console.log(`Found PR #${prNumber} for branch ${context.payload.workflow_run.head_branch}`);
             core.setOutput('number', prNumber);
             return prNumber;
 
@@ -79,62 +67,6 @@ jobs:
 
             core.setOutput('author', author);
             core.setOutput('pr_number', prNumber);
-
-      - name: Wait for required checks
-        if: steps.pr-details.outputs.pr_number != ''
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const prNumber = ${{ steps.pr-details.outputs.pr_number }};
-
-            const { data: pr } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber
-            });
-
-            const { data: checks } = await github.rest.checks.listForRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: pr.head.sha
-            });
-
-            // Only check required CI checks, exclude auto-merge itself
-            const requiredChecks = ['build', 'spell-check', 'link-check', 'build-and-push'];
-            const relevantChecks = checks.check_runs.filter(check =>
-              requiredChecks.includes(check.name)
-            );
-
-            // Check if any required checks are still running
-            const runningChecks = relevantChecks.filter(check =>
-              check.status !== 'completed'
-            );
-
-            if (runningChecks.length > 0) {
-              console.log(`Waiting for ${runningChecks.length} required checks to complete:`);
-              runningChecks.forEach(check => {
-                console.log(`  - ${check.name}: ${check.status}`);
-              });
-              core.setFailed(`${runningChecks.length} required checks still running`);
-              return;
-            }
-
-            // Check if all completed checks passed
-            const failedChecks = relevantChecks.filter(check =>
-              check.status === 'completed' && check.conclusion !== 'success'
-            );
-
-            if (failedChecks.length > 0) {
-              console.log('Failed checks:');
-              failedChecks.forEach(check => {
-                console.log(`  - ${check.name}: ${check.conclusion}`);
-              });
-              core.setFailed(`${failedChecks.length} required checks failed`);
-              return;
-            }
-
-            console.log('✅ All required checks passed');
-            console.log(`Checked: ${relevantChecks.map(c => c.name).join(', ')}`);
 
       - name: Auto-approve PR
         if: steps.pr-details.outputs.pr_number != ''
