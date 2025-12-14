@@ -68,16 +68,48 @@ jobs:
               ref: context.payload.pull_request.head.sha
             });
 
-            // Check if all checks passed
-            const allChecksPassed = checks.check_runs.every(check =>
-              check.status === 'completed' && check.conclusion === 'success'
+            // Filter out the auto-merge check itself to avoid circular dependency
+            const relevantChecks = checks.check_runs.filter(check =>
+              check.name !== 'auto-merge'
             );
 
-            const allStatusesPassed = statuses.data.state === 'success';
+            // Check if there are any checks still running
+            const runningChecks = relevantChecks.filter(check =>
+              check.status !== 'completed'
+            );
 
-            if (!allChecksPassed || !allStatusesPassed) {
-              core.setFailed('Not all checks have passed');
+            if (runningChecks.length > 0) {
+              console.log(`Waiting for ${runningChecks.length} checks to complete:`);
+              runningChecks.forEach(check => {
+                console.log(`  - ${check.name}: ${check.status}`);
+              });
+              core.setFailed(`${runningChecks.length} checks still running`);
+              return;
             }
+
+            // Check if all completed checks passed
+            const failedChecks = relevantChecks.filter(check =>
+              check.status === 'completed' && check.conclusion !== 'success'
+            );
+
+            if (failedChecks.length > 0) {
+              console.log('Failed checks:');
+              failedChecks.forEach(check => {
+                console.log(`  - ${check.name}: ${check.conclusion}`);
+              });
+              core.setFailed(`${failedChecks.length} checks failed`);
+              return;
+            }
+
+            // Check commit statuses
+            if (statuses.data.state !== 'success' && statuses.data.state !== 'pending') {
+              core.setFailed(`Commit status: ${statuses.data.state}`);
+              return;
+            }
+
+            console.log('✅ All required checks passed');
+            console.log(`Total checks: ${relevantChecks.length}`);
+            console.log(`Status state: ${statuses.data.state}`);
 
       - name: Auto-approve PR
         uses: actions/github-script@v7
