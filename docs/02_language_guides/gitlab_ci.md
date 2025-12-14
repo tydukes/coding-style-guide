@@ -1124,6 +1124,871 @@ metrics:pipeline:
     - main
 ```
 
+### Tiered Pipeline Architecture
+
+Implement a three-tier testing strategy that balances speed, coverage, and confidence:
+
+#### Tier 1: Fast Feedback (< 2 minutes)
+
+Static analysis and linting that runs on every commit:
+
+```yaml
+stages:
+  - validate    # Tier 1: Fast feedback
+  - test        # Tier 2: Unit tests
+  - integration # Tier 3: Integration tests
+  - deploy
+
+# Tier 1: Static Analysis - Fast feedback on every push
+lint:yaml:
+  stage: validate
+  image: cytopia/yamllint:latest
+  script:
+    - yamllint -c .yamllint.yml .
+  rules:
+    - changes:
+        - "**/*.yml"
+        - "**/*.yaml"
+
+lint:terraform:
+  stage: validate
+  image: hashicorp/terraform:latest
+  script:
+    - terraform fmt -check -recursive
+    - terraform init -backend=false
+    - terraform validate
+  rules:
+    - changes:
+        - "**/*.tf"
+        - "**/*.tfvars"
+
+lint:ansible:
+  stage: validate
+  image: python:3.11-slim
+  before_script:
+    - pip install ansible-lint yamllint
+  script:
+    - ansible-lint --strict
+    - yamllint playbooks/ roles/
+  cache:
+    key: ansible-lint
+    paths:
+      - .cache/pip
+  rules:
+    - changes:
+        - "**/*.yml"
+        - "playbooks/**/*"
+        - "roles/**/*"
+
+security:static:
+  stage: validate
+  image: aquasec/tfsec:latest
+  script:
+    - tfsec . --format json --out tfsec-results.json
+  artifacts:
+    reports:
+      sast: tfsec-results.json
+    expire_in: 7 days
+  rules:
+    - changes:
+        - "**/*.tf"
+
+security:secrets:
+  stage: validate
+  image: trufflesecurity/trufflehog:latest
+  script:
+    - trufflehog git file://. --fail --no-update
+  allow_failure: false
+```
+
+#### Tier 2: Unit Tests (< 10 minutes)
+
+Module-level testing that runs on pull requests:
+
+```yaml
+# Tier 2: Unit Tests - Run on merge requests
+test:terraform:
+  stage: test
+  image: golang:1.21
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - cd tests
+    - go mod download
+  script:
+    - go test -v -timeout 20m -parallel 4 ./...
+  artifacts:
+    when: always
+    reports:
+      junit: tests/report.xml
+    expire_in: 7 days
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+test:ansible:
+  stage: test
+  image: python:3.11-slim
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - pip install molecule[docker] ansible-lint
+  script:
+    - molecule test
+  cache:
+    key: molecule-${CI_COMMIT_REF_SLUG}
+    paths:
+      - .cache/pip
+  artifacts:
+    when: on_failure
+    paths:
+      - molecule/default/*.log
+    expire_in: 7 days
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+test:unit:parallel:
+  stage: test
+  image: node:18-alpine
+  parallel:
+    matrix:
+      - PLATFORM: [ubuntu-22.04, debian-11, rhel-9]
+  before_script:
+    - npm ci
+  script:
+    - npm run test:unit:$PLATFORM
+  artifacts:
+    when: always
+    reports:
+      junit: junit-${PLATFORM}.xml
+    expire_in: 7 days
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+```
+
+#### Tier 3: Integration & Compliance (< 60 minutes)
+
+Full-stack testing that runs nightly or pre-release:
+
+```yaml
+# Tier 3: Integration Tests - Nightly or on main branch
+integration:full-stack:
+  stage: integration
+  image: golang:1.21
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    AWS_REGION: us-east-1
+  before_script:
+    - cd tests/integration
+    - go mod download
+  script:
+    - go test -v -timeout 60m ./...
+  artifacts:
+    when: always
+    reports:
+      junit: integration-results.xml
+    paths:
+      - tests/integration/logs/
+    expire_in: 30 days
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+
+compliance:security:
+  stage: integration
+  image: chef/inspec:latest
+  before_script:
+    - inspec --version
+  script:
+    - inspec exec compliance/security-baseline.rb --reporter cli json:compliance-results.json
+  artifacts:
+    reports:
+      junit: compliance-results.json
+    paths:
+      - compliance-results.json
+    expire_in: 90 days
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_COMMIT_TAG
+```
+
+### Progressive Enforcement Strategy
+
+Gradually introduce and enforce quality gates without disrupting development:
+
+#### Phase 1: Warning Only (Weeks 1-2)
+
+Start with informational feedback that doesn't block merges:
+
+```yaml
+# .gitlab-ci.yml - Phase 1: Warning Only
+lint:terraform:warning:
+  stage: validate
+  image: hashicorp/terraform:latest
+  script:
+    - terraform fmt -check -recursive || echo "⚠️ Terraform formatting issues detected"
+    - terraform init -backend=false
+    - terraform validate || echo "⚠️ Terraform validation failed"
+  allow_failure: true  # Don't block merge
+  rules:
+    - if: $ENFORCEMENT_PHASE == "warning"
+    - if: $ENFORCEMENT_PHASE == null  # Default to warning
+
+security:scan:warning:
+  stage: validate
+  image: aquasec/tfsec:latest
+  script:
+    - tfsec . --soft-fail  # Report but don't fail
+  allow_failure: true
+  artifacts:
+    reports:
+      sast: tfsec-results.json
+    expire_in: 30 days
+```
+
+#### Phase 2: Advisory with Auto-Fix (Weeks 3-4)
+
+Provide automated fixes and merge request comments:
+
+```yaml
+# Phase 2: Advisory with automated fixes
+lint:terraform:advisory:
+  stage: validate
+  image: hashicorp/terraform:latest
+  before_script:
+    - apk add --no-cache git curl jq
+  script:
+    - |
+      # Check formatting
+      terraform fmt -check -recursive || {
+        echo "Formatting issues detected. Auto-fixing..."
+        terraform fmt -recursive
+
+        # Create MR comment with suggestions
+        COMMENT="## 🔧 Terraform Formatting\n\n"
+        COMMENT+="Formatting issues were detected. Run \`terraform fmt -recursive\` to fix.\n\n"
+        COMMENT+="<details><summary>Files affected</summary>\n\n$(terraform fmt -check -recursive 2>&1)\n</details>"
+
+        curl --request POST \
+          --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" \
+          --data "body=${COMMENT}" \
+          "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes"
+
+        exit 1  # Fail but with helpful message
+      }
+  allow_failure: true  # Still advisory, but failing
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $ENFORCEMENT_PHASE == "advisory"
+
+coverage:advisory:
+  stage: test
+  image: node:18-alpine
+  needs: [test:unit]
+  script:
+    - |
+      COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+      echo "Coverage: $COVERAGE%"
+
+      if (( $(echo "$COVERAGE < 80" | bc -l) )); then
+        COMMENT="## 📊 Code Coverage\n\n"
+        COMMENT+="Current coverage: ${COVERAGE}%\nTarget: 80%\n\n"
+        COMMENT+="⚠️ Coverage is below threshold. Consider adding more tests."
+
+        curl --request POST \
+          --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" \
+          --data "body=${COMMENT}" \
+          "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes"
+
+        exit 1
+      fi
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $ENFORCEMENT_PHASE == "advisory"
+```
+
+#### Phase 3: Strict Enforcement (Week 5+)
+
+Full merge-blocking enforcement:
+
+```yaml
+# Phase 3: Strict enforcement - blocks merges
+lint:terraform:strict:
+  stage: validate
+  image: hashicorp/terraform:latest
+  script:
+    - terraform fmt -check -recursive
+    - terraform init -backend=false
+    - terraform validate
+  allow_failure: false  # Block merge on failure
+  rules:
+    - if: $ENFORCEMENT_PHASE == "strict"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH  # Always strict on main
+
+security:scan:strict:
+  stage: validate
+  image: aquasec/tfsec:latest
+  script:
+    - tfsec . --minimum-severity HIGH --force-all-dirs
+  allow_failure: false
+  rules:
+    - if: $ENFORCEMENT_PHASE == "strict"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+coverage:strict:
+  stage: test
+  image: node:18-alpine
+  needs: [test:unit]
+  script:
+    - |
+      COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+      echo "Coverage: $COVERAGE%"
+
+      if (( $(echo "$COVERAGE < 80" | bc -l) )); then
+        echo "❌ Coverage ${COVERAGE}% is below 80% threshold"
+        exit 1
+      fi
+
+      echo "✅ Coverage ${COVERAGE}% meets threshold"
+  allow_failure: false
+  rules:
+    - if: $ENFORCEMENT_PHASE == "strict"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+```
+
+#### Enforcement Rollout Timeline
+
+Configure progressive rollout with CI/CD variables:
+
+```yaml
+# .gitlab-ci.yml - Dynamic enforcement based on timeline
+variables:
+  ENFORCEMENT_PHASE: "warning"  # Default phase
+
+# Set enforcement phase based on date or manual trigger
+.determine_phase: &determine_phase
+  before_script:
+    - |
+      # Automatic progression based on date
+      CURRENT_DATE=$(date +%s)
+      ROLLOUT_START=1704067200  # 2024-01-01
+
+      WEEKS_ELAPSED=$(( ($CURRENT_DATE - $ROLLOUT_START) / 604800 ))
+
+      if [ $WEEKS_ELAPSED -lt 2 ]; then
+        export ENFORCEMENT_PHASE="warning"
+      elif [ $WEEKS_ELAPSED -lt 4 ]; then
+        export ENFORCEMENT_PHASE="advisory"
+      else
+        export ENFORCEMENT_PHASE="strict"
+      fi
+
+      echo "Enforcement phase: $ENFORCEMENT_PHASE (Week $WEEKS_ELAPSED)"
+```
+
+### Change Detection and Optimization
+
+Optimize pipeline execution by testing only what changed:
+
+#### Path-Based Job Execution
+
+```yaml
+# Run jobs only when relevant files change
+terraform:vpc:
+  stage: test
+  image: hashicorp/terraform:latest
+  script:
+    - cd modules/vpc
+    - terraform init
+    - terraform validate
+    - terraform plan
+  rules:
+    - changes:
+        - modules/vpc/**/*
+        - modules/vpc/*.tf
+      when: always
+    - when: never  # Don't run if no changes
+
+ansible:webserver:
+  stage: test
+  image: python:3.11-slim
+  before_script:
+    - pip install molecule[docker]
+  script:
+    - cd roles/webserver
+    - molecule test
+  rules:
+    - changes:
+        - roles/webserver/**/*
+        - playbooks/webserver.yml
+      when: always
+    - when: never
+
+test:backend:
+  stage: test
+  script:
+    - pytest tests/backend/
+  rules:
+    - changes:
+        - backend/**/*.py
+        - requirements.txt
+      when: always
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: always
+    - when: never
+```
+
+#### Monorepo Optimization
+
+Efficient testing in monorepo structures:
+
+```yaml
+# .gitlab-ci.yml for monorepo
+include:
+  - local: '/services/api/.gitlab-ci.yml'
+    rules:
+      - changes:
+          - services/api/**/*
+  - local: '/services/web/.gitlab-ci.yml'
+    rules:
+      - changes:
+          - services/web/**/*
+  - local: '/infrastructure/.gitlab-ci.yml'
+    rules:
+      - changes:
+          - infrastructure/**/*
+
+# Global lint jobs still run on any change
+lint:global:
+  stage: validate
+  image: python:3.11-slim
+  script:
+    - pip install pre-commit
+    - pre-commit run --all-files
+  cache:
+    key: pre-commit-${CI_COMMIT_REF_SLUG}
+    paths:
+      - .cache/pre-commit
+```
+
+#### Dynamic Pipeline Generation
+
+Generate pipelines based on detected changes:
+
+```yaml
+generate:pipeline:
+  stage: .pre
+  image: python:3.11-slim
+  script:
+    - |
+      # Detect changed modules
+      git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA $CI_COMMIT_SHA > changed_files.txt
+
+      # Generate dynamic pipeline
+      python scripts/generate_pipeline.py changed_files.txt > generated-pipeline.yml
+  artifacts:
+    paths:
+      - generated-pipeline.yml
+    expire_in: 1 day
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+trigger:dynamic:
+  stage: validate
+  needs: [generate:pipeline]
+  trigger:
+    include:
+      - artifact: generated-pipeline.yml
+        job: generate:pipeline
+    strategy: depend
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+```
+
+### Parallel Execution Strategies
+
+Maximize pipeline efficiency with parallelization:
+
+#### Matrix-Based Parallel Testing
+
+```yaml
+# Test across multiple platforms in parallel
+test:multi-platform:
+  stage: test
+  image: python:3.11-slim
+  parallel:
+    matrix:
+      - PLATFORM: [ubuntu-20.04, ubuntu-22.04, debian-11]
+        PYTHON_VERSION: ['3.9', '3.10', '3.11']
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    TEST_PLATFORM: $PLATFORM
+    TEST_PYTHON: $PYTHON_VERSION
+  script:
+    - echo "Testing on $PLATFORM with Python $PYTHON_VERSION"
+    - docker run --rm python:$PYTHON_VERSION-slim python --version
+    - pytest --platform=$PLATFORM
+  artifacts:
+    when: always
+    reports:
+      junit: junit-${PLATFORM}-${PYTHON_VERSION}.xml
+    expire_in: 7 days
+
+# Parallel Terraform module testing
+test:terraform:modules:
+  stage: test
+  image: golang:1.21
+  parallel:
+    matrix:
+      - MODULE: [vpc, rds, eks, s3]
+  script:
+    - cd modules/$MODULE/tests
+    - go test -v -timeout 20m
+  artifacts:
+    when: always
+    reports:
+      junit: $MODULE-results.xml
+    expire_in: 7 days
+```
+
+#### Sharded Test Execution
+
+```yaml
+# Split large test suite across multiple runners
+test:sharded:
+  stage: test
+  image: node:18-alpine
+  parallel: 8  # Split into 8 shards
+  before_script:
+    - npm ci
+  script:
+    - |
+      echo "Running shard $CI_NODE_INDEX of $CI_NODE_TOTAL"
+      npm run test -- --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL
+  artifacts:
+    when: always
+    reports:
+      junit: junit-shard-${CI_NODE_INDEX}.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage-shard-${CI_NODE_INDEX}.xml
+    expire_in: 7 days
+
+# Merge coverage from all shards
+coverage:merge:
+  stage: .post
+  image: node:18-alpine
+  needs:
+    - test:sharded
+  script:
+    - npm install -g nyc
+    - nyc merge coverage/ .nyc_output/coverage.json
+    - nyc report --reporter=html --reporter=text
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  artifacts:
+    paths:
+      - coverage/
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    expire_in: 30 days
+```
+
+#### Parallel DAG Execution
+
+```yaml
+# Use DAG for parallel execution with dependencies
+stages:
+  - validate
+  - build
+  - test
+  - deploy
+
+# Fast parallel validation
+lint:yaml:
+  stage: validate
+  script: yamllint .
+
+lint:terraform:
+  stage: validate
+  script: terraform fmt -check
+
+lint:ansible:
+  stage: validate
+  script: ansible-lint
+
+# Build can start as soon as validation passes
+build:api:
+  stage: build
+  needs: [lint:yaml]  # Only needs yaml lint
+  script: docker build -t api .
+
+build:web:
+  stage: build
+  needs: [lint:yaml]
+  script: docker build -t web .
+
+# Tests run in parallel, each with specific dependencies
+test:api:unit:
+  stage: test
+  needs: [build:api]
+  script: pytest api/tests/
+
+test:api:integration:
+  stage: test
+  needs: [build:api]
+  script: pytest api/tests/integration/
+
+test:web:unit:
+  stage: test
+  needs: [build:web]
+  script: npm test
+
+# Deploy only after ALL tests pass
+deploy:staging:
+  stage: deploy
+  needs:
+    - test:api:unit
+    - test:api:integration
+    - test:web:unit
+  script: kubectl apply -f k8s/staging/
+```
+
+### Artifact Management
+
+Optimize artifact storage and retention:
+
+#### Tiered Retention Policy
+
+```yaml
+# Tier 1: Short-term artifacts (7 days)
+test:unit:
+  stage: test
+  script: npm test
+  artifacts:
+    when: always
+    reports:
+      junit: junit.xml
+    paths:
+      - test-results/
+    expire_in: 7 days  # Short retention for frequent tests
+
+# Tier 2: Medium-term artifacts (30 days)
+test:coverage:
+  stage: test
+  script: npm run coverage
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    paths:
+      - coverage/
+    expire_in: 30 days  # Keep coverage reports longer
+
+# Tier 3: Long-term artifacts (90 days)
+compliance:audit:
+  stage: integration
+  script: inspec exec compliance/
+  artifacts:
+    paths:
+      - compliance-results.json
+      - audit-evidence/
+    expire_in: 90 days  # Compliance evidence retention
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Tier 4: Release artifacts (1 year)
+build:release:
+  stage: build
+  script: make build
+  artifacts:
+    paths:
+      - dist/
+      - CHANGELOG.md
+    expire_in: 365 days  # Keep release artifacts
+  rules:
+    - if: $CI_COMMIT_TAG
+```
+
+#### Selective Artifact Storage
+
+```yaml
+# Only store artifacts on failure for debugging
+test:integration:
+  stage: test
+  script: pytest tests/integration/
+  artifacts:
+    when: on_failure  # Only save when test fails
+    paths:
+      - logs/
+      - screenshots/
+      - test-results/
+    expire_in: 14 days
+
+# Always store artifacts but with compression
+build:optimized:
+  stage: build
+  script:
+    - make build
+    - tar -czf dist.tar.gz dist/
+  artifacts:
+    paths:
+      - dist.tar.gz  # Compressed artifact
+    expire_in: 30 days
+```
+
+#### Artifact Dependencies
+
+```yaml
+# Reuse artifacts across jobs
+build:
+  stage: build
+  script: npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 day
+
+test:e2e:
+  stage: test
+  needs:
+    - job: build
+      artifacts: true  # Download build artifacts
+  script:
+    - npm run test:e2e dist/
+
+deploy:production:
+  stage: deploy
+  needs:
+    - job: build
+      artifacts: true
+  script:
+    - cp -r dist/* /var/www/html/
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+```
+
+### Merge Request Integration
+
+Enhance MR visibility with pipeline integration:
+
+#### Coverage Badges and Metrics
+
+```yaml
+# Generate coverage badge
+coverage:badge:
+  stage: .post
+  image: node:18-alpine
+  needs: [test:coverage]
+  script:
+    - |
+      COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+      COLOR="red"
+      if (( $(echo "$COVERAGE >= 80" | bc -l) )); then
+        COLOR="green"
+      elif (( $(echo "$COVERAGE >= 60" | bc -l) )); then
+        COLOR="yellow"
+      fi
+
+      # Generate badge
+      BADGE_URL="https://img.shields.io/badge/coverage-${COVERAGE}%25-${COLOR}"
+      echo "Coverage badge: $BADGE_URL"
+
+      # Post to MR
+      COMMENT="## 📊 Test Coverage\n\n![Coverage](${BADGE_URL})\n\nCurrent coverage: **${COVERAGE}%**"
+
+      curl --request POST \
+        --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" \
+        --data "body=${COMMENT}" \
+        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+```
+
+#### Inline MR Comments
+
+```yaml
+# Post test results as MR comments
+test:results:comment:
+  stage: .post
+  image: alpine:latest
+  needs: [test:unit, test:integration]
+  before_script:
+    - apk add --no-cache curl jq
+  script:
+    - |
+      # Aggregate test results
+      UNIT_PASSED=$(cat test-results/unit.json | jq '.stats.passes')
+      UNIT_FAILED=$(cat test-results/unit.json | jq '.stats.failures')
+      INTEGRATION_PASSED=$(cat test-results/integration.json | jq '.stats.passes')
+      INTEGRATION_FAILED=$(cat test-results/integration.json | jq '.stats.failures')
+
+      # Create formatted comment
+      COMMENT="## ✅ Test Results\n\n"
+      COMMENT+="### Unit Tests\n"
+      COMMENT+="- ✅ Passed: ${UNIT_PASSED}\n"
+      COMMENT+="- ❌ Failed: ${UNIT_FAILED}\n\n"
+      COMMENT+="### Integration Tests\n"
+      COMMENT+="- ✅ Passed: ${INTEGRATION_PASSED}\n"
+      COMMENT+="- ❌ Failed: ${INTEGRATION_FAILED}\n"
+
+      # Post comment
+      curl --request POST \
+        --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" \
+        --header "Content-Type: application/json" \
+        --data "{\"body\":\"${COMMENT}\"}" \
+        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  when: always
+```
+
+#### Dashboard Links
+
+```yaml
+# Add links to external dashboards
+dashboard:link:
+  stage: .post
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl
+  script:
+    - |
+      GRAFANA_URL="https://grafana.example.com/d/pipeline?var-pipeline=${CI_PIPELINE_ID}"
+      SONAR_URL="https://sonar.example.com/dashboard?id=${CI_PROJECT_PATH}"
+
+      COMMENT="## 📊 Quality Dashboards\n\n"
+      COMMENT+="- [Pipeline Metrics](${GRAFANA_URL})\n"
+      COMMENT+="- [Code Quality](${SONAR_URL})\n"
+      COMMENT+="- [Test Report](${CI_PROJECT_URL}/-/pipelines/${CI_PIPELINE_ID}/test_report)"
+
+      curl --request POST \
+        --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" \
+        --data "body=${COMMENT}" \
+        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+```
+
 ---
 
 ## Common Pitfalls
