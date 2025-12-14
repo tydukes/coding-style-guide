@@ -79,24 +79,28 @@ jobs:
               core.setFailed('Not all checks have passed');
             }
 
-      - name: Auto-approve Dependabot PR
-        if: steps.dependabot-check.outputs.is_dependabot == 'true'
+      - name: Auto-approve PR
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.AUTO_MERGE_TOKEN }}
           script: |
+            const author = context.payload.pull_request.user.login;
+            const approvalBody = author === 'dependabot[bot]'
+              ? '✅ Auto-approved by workflow: All checks passed for Dependabot PR'
+              : '✅ Auto-approved by workflow: All checks passed';
+
             await github.rest.pulls.createReview({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.payload.pull_request.number,
               event: 'APPROVE',
-              body: '✅ Auto-approved by workflow: All checks passed for Dependabot PR'
+              body: approvalBody
             });
 
       - name: Enable auto-merge
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.AUTO_MERGE_TOKEN }}
           script: |
             try {
               await github.rest.pulls.merge({
@@ -125,10 +129,9 @@ jobs:
             }
 
       - name: Delete branch after merge
-        if: steps.dependabot-check.outputs.is_dependabot == 'true'
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.AUTO_MERGE_TOKEN }}
           script: |
             try {
               await github.rest.git.deleteRef({

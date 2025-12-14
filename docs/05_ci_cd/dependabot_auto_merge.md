@@ -102,15 +102,104 @@ jobs:
       - name: Wait for status checks
         # Ensures all CI checks pass before merge
 
-      - name: Auto-approve Dependabot PR
-        # Automatically approves Dependabot PRs
+      - name: Auto-approve PR
+        # Automatically approves PR using AUTO_MERGE_TOKEN
+        # Works for both Dependabot and maintainer PRs
 
       - name: Enable auto-merge
         # Merges PR using squash strategy
 
       - name: Delete branch after merge
-        # Cleans up Dependabot branches
+        # Cleans up branches after successful merge
 ```
+
+## Setup Requirements
+
+### Personal Access Token (PAT)
+
+This workflow uses a fine-grained Personal Access Token to bypass branch protection approval requirements,
+enabling full automation for both Dependabot and maintainer PRs.
+
+#### Why a PAT is Needed
+
+The default `GITHUB_TOKEN` has limitations:
+
+- ❌ Cannot approve PRs created by the same user running the workflow
+- ❌ Cannot bypass branch protection rules requiring approvals
+
+A PAT with appropriate permissions:
+
+- ✅ Can approve PRs from any user (including repository owner)
+- ✅ Can merge PRs that meet branch protection requirements
+- ✅ Enables full automation without manual intervention
+
+#### Creating the PAT
+
+1. **Navigate to GitHub Settings**:
+   - Go to: <https://github.com/settings/personal-access-tokens/new>
+   - Or: Settings → Developer settings → Personal access tokens → Fine-grained tokens
+
+2. **Configure Token Settings**:
+
+   **Token name**: `AUTO_MERGE_TOKEN`
+
+   **Expiration**: `90 days` (recommended - you'll get renewal reminders)
+
+   **Repository access**:
+   - Select: **Only select repositories**
+   - Choose: Your repository (e.g., `tydukes/coding-style-guide`)
+
+   **Permissions** (Repository permissions):
+   - `Contents`: **Read and write**
+   - `Pull requests`: **Read and write**
+   - `Metadata`: **Read-only** (automatically selected)
+
+3. **Generate and Copy Token**:
+   - Click "Generate token"
+   - **Copy the token immediately** (you'll only see it once)
+
+4. **Store as Repository Secret**:
+
+   Using GitHub CLI:
+
+   ```bash
+   # Option 1: Prompted for token
+   gh secret set AUTO_MERGE_TOKEN --repo owner/repo
+
+   # Option 2: Pipe token directly
+   echo "your_token_here" | gh secret set AUTO_MERGE_TOKEN --repo owner/repo
+   ```
+
+   Or via GitHub web UI:
+   - Go to: Repository → Settings → Secrets and variables → Actions
+   - Click "New repository secret"
+   - Name: `AUTO_MERGE_TOKEN`
+   - Value: Paste your token
+   - Click "Add secret"
+
+#### Token Renewal
+
+Fine-grained PATs expire for security. GitHub will email you before expiration:
+
+1. **7 days before**: First reminder
+2. **1 day before**: Final reminder
+3. **On expiration**: Workflow will fail
+
+To renew:
+
+1. Go to: <https://github.com/settings/tokens>
+2. Find `AUTO_MERGE_TOKEN`
+3. Click "Regenerate token"
+4. Update the repository secret with the new value
+
+#### PAT Security Best Practices
+
+- ✅ **Scope**: Limited to specific repository only
+- ✅ **Permissions**: Minimum required (contents + PRs)
+- ✅ **Expiration**: 90-day rotation enforced
+- ✅ **Auditing**: All PAT actions logged in audit log
+- ⚠️ **Storage**: Never commit the token to git
+- ⚠️ **Sharing**: Keep the token secure, don't share it
 
 ## How It Works
 
@@ -222,7 +311,7 @@ Before auto-merge, the following must pass:
 
 ## Maintainer Auto-Merge
 
-The workflow also supports auto-merge for repository maintainer (@tydukes):
+The workflow supports full auto-merge for repository maintainer (@tydukes):
 
 ```yaml
 if: |
@@ -230,11 +319,34 @@ if: |
   github.event.pull_request.user.login == 'tydukes'
 ```
 
-This enables fast iteration when:
+### How Maintainer Auto-Merge Works
+
+With the `AUTO_MERGE_TOKEN` configured:
+
+1. ✅ **Auto-Approval**: PAT approves the PR (bypasses self-approval restriction)
+2. ✅ **Branch Protection**: Approval requirement satisfied
+3. ✅ **Auto-Merge**: PR merges automatically when checks pass
+4. ✅ **Branch Cleanup**: Feature branch deleted after merge
+
+### Benefits for Sole Maintainer
+
+- **Zero Manual Steps**: Create PR → Wait for CI → Automatic merge
+- **Fast Iteration**: Quick documentation fixes and updates
+- **Consistent Process**: Same workflow for dependencies and feature work
+- **Future-Proof**: Branch protection already in place for future contributors
+
+### Use Cases
+
+Perfect for:
 
 - Making quick documentation fixes
 - Updating configuration files
 - Applying style guide updates
+- Minor feature additions
+- Refactoring work
+
+**Note**: You can still manually review PRs before the workflow runs by closing/reopening
+or by pushing updates to force CI re-run.
 
 ## Monitoring and Troubleshooting
 
@@ -270,6 +382,18 @@ gh run view <run-id>
 
 - **Solution**: Dependabot automatically rebases, wait for update
 - **Manual**: Close PR, Dependabot will recreate
+
+**Issue**: PAT authentication errors
+
+- **Check**: Verify `AUTO_MERGE_TOKEN` secret exists in repository settings
+- **Check**: Ensure PAT hasn't expired (check email notifications)
+- **Solution**: Regenerate PAT and update repository secret
+
+**Issue**: "Resource not accessible by integration" error
+
+- **Check**: Verify PAT has `contents: write` and `pull_requests: write` permissions
+- **Check**: Ensure PAT is scoped to the correct repository
+- **Solution**: Recreate PAT with proper permissions
 
 ### GitHub Permissions Required
 
