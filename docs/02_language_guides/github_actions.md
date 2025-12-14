@@ -1829,6 +1829,697 @@ ignore: |
 
 ---
 
+## Best Practices
+
+### Pin Action Versions with SHA
+
+Pin actions to specific commit SHAs for security and reproducibility:
+
+```yaml
+# Good - Pinned to specific SHA with version comment
+- uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+- uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8  # v4.0.2
+
+# Acceptable - Pinned to major version (less secure)
+- uses: actions/checkout@v4
+- uses: actions/setup-node@v4
+
+# Bad - Mutable references
+- uses: actions/checkout@main  # Can change at any time
+- uses: actions/checkout@master
+```
+
+### Use Caching to Speed Up Workflows
+
+Cache dependencies to reduce build times:
+
+```yaml
+# Good - Built-in caching
+- name: Setup Node.js
+  uses: actions/setup-node@v4
+  with:
+    node-version: '20'
+    cache: 'npm'  # Automatically caches npm dependencies
+
+# Good - Manual caching for more control
+- name: Cache dependencies
+  uses: actions/cache@v4
+  with:
+    path: |
+      ~/.npm
+      ~/.cache
+      node_modules
+    key: ${{ runner.os }}-deps-${{ hashFiles('**/package-lock.json') }}
+    restore-keys: |
+      ${{ runner.os }}-deps-
+
+# Good - Cache build outputs
+- name: Cache build
+  uses: actions/cache@v4
+  with:
+    path: dist/
+    key: build-${{ github.sha }}
+```
+
+### Use Minimal Permissions
+
+Follow the principle of least privilege:
+
+```yaml
+# Good - Minimal permissions at workflow level
+name: CI Pipeline
+
+permissions:
+  contents: read  # Only read repository content
+  pull-requests: write  # Write comments on PRs
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read  # This job only reads
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm test
+
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # This job needs write access
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm publish
+
+# Bad - No explicit permissions (gets all permissions)
+name: CI Pipeline
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # No permissions specified - security risk!
+```
+
+### Use Matrix Strategy for Compatibility Testing
+
+Test across multiple versions and platforms:
+
+```yaml
+# Good - Test multiple Node versions and operating systems
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false  # Run all combinations
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: [18, 20, 22]
+        include:
+          - os: ubuntu-latest
+            node-version: 22
+            experimental: true
+        exclude:
+          - os: macos-latest
+            node-version: 18  # Skip old Node on macOS
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm test
+```
+
+### Use Concurrency Controls
+
+Prevent conflicting workflow runs:
+
+```yaml
+# Good - Prevent concurrent deployments
+name: Deploy Production
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false  # Wait for current deployment to finish
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./deploy.sh
+
+# Good - Cancel old PR builds
+name: CI
+
+on:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true  # Cancel old builds on new commits
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm test
+```
+
+### Set Timeout Limits
+
+Prevent workflows from running indefinitely:
+
+```yaml
+# Good - Workflow and job level timeouts
+name: CI
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # Entire job timeout
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+        timeout-minutes: 5  # Per-step timeout
+
+      - name: Run tests
+        run: npm test
+        timeout-minutes: 15
+
+      - name: Build
+        run: npm run build
+        timeout-minutes: 10
+```
+
+### Always Checkout Code First
+
+Make checkout the first step in every job:
+
+```yaml
+# Good - Checkout first
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4  # ✅ Always first
+        with:
+          fetch-depth: 0  # Full history if needed
+
+      - run: npm ci
+      - run: npm run build
+
+# Bad - Missing checkout
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm ci  # ❌ Fails - no package.json found
+```
+
+### Use Reusable Workflows
+
+Create reusable workflows for common tasks:
+
+```yaml
+# .github/workflows/reusable-test.yml
+name: Reusable Test Workflow
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: true
+        type: string
+      test-command:
+        required: false
+        type: string
+        default: 'npm test'
+    secrets:
+      NPM_TOKEN:
+        required: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: 'npm'
+
+      - run: npm ci
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - run: ${{ inputs.test-command }}
+
+# .github/workflows/ci.yml - Use reusable workflow
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test-node-18:
+    uses: ./.github/workflows/reusable-test.yml
+    with:
+      node-version: '18'
+    secrets: inherit
+
+  test-node-20:
+    uses: ./.github/workflows/reusable-test.yml
+    with:
+      node-version: '20'
+      test-command: 'npm run test:coverage'
+    secrets: inherit
+```
+
+### Use Environment Protection Rules
+
+Protect sensitive environments:
+
+```yaml
+# Good - Use environment with protection rules
+jobs:
+  deploy-production:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://example.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to production
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: ./deploy.sh
+
+# Configure in GitHub:
+# Settings > Environments > production
+# - Required reviewers: team leads
+# - Wait timer: 5 minutes
+# - Deployment branches: main only
+```
+
+### Name All Jobs and Steps
+
+Use descriptive names for clarity:
+
+```yaml
+# Good - Clear names
+name: CI/CD Pipeline
+
+jobs:
+  lint-and-format:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Check Prettier formatting
+        run: npm run format:check
+
+# Bad - No names
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npm run lint
+```
+
+### Use Artifacts for Job Dependencies
+
+Share build outputs between jobs:
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+          retention-days: 7
+          if-no-files-found: error
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+
+      - run: npm run test:dist
+
+  deploy:
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+
+      - run: ./deploy.sh dist/
+```
+
+### Use If Conditions Effectively
+
+Control job and step execution:
+
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run tests
+        run: npm test
+
+  deploy-staging:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    steps:
+      - name: Deploy to staging
+        run: ./deploy.sh staging
+
+  deploy-production:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - name: Deploy to production
+        run: ./deploy.sh production
+
+  notify-failure:
+    needs: [test, deploy-staging, deploy-production]
+    runs-on: ubuntu-latest
+    if: failure()  # Only run if previous jobs failed
+    steps:
+      - name: Send notification
+        run: ./notify.sh "Build failed"
+```
+
+### Use Workflow Dispatch for Manual Triggers
+
+Allow manual workflow execution with inputs:
+
+```yaml
+name: Deploy Application
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      version:
+        description: 'Application version to deploy'
+        required: true
+        type: string
+      dry_run:
+        description: 'Perform dry run only'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.version }}
+
+      - name: Deploy ${{ inputs.version }} to ${{ inputs.environment }}
+        run: |
+          if [ "${{ inputs.dry_run }}" == "true" ]; then
+            echo "DRY RUN: Would deploy ${{ inputs.version }}"
+          else
+            ./deploy.sh ${{ inputs.environment }} ${{ inputs.version }}
+          fi
+```
+
+### Implement Proper Error Handling
+
+Use continue-on-error and conditional steps:
+
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run unit tests
+        id: unit-tests
+        run: npm test
+        continue-on-error: true
+
+      - name: Run integration tests
+        id: integration-tests
+        run: npm run test:integration
+        continue-on-error: true
+
+      - name: Generate test report
+        if: always()  # Run even if tests failed
+        run: npm run test:report
+
+      - name: Check test results
+        if: steps.unit-tests.outcome == 'failure' || steps.integration-tests.outcome == 'failure'
+        run: |
+          echo "Tests failed"
+          exit 1
+
+  experimental-test:
+    runs-on: ubuntu-latest
+    continue-on-error: true  # Don't fail workflow if this fails
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm run test:experimental
+```
+
+### Use Job Outputs
+
+Pass data between jobs:
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      artifact-name: ${{ steps.build.outputs.artifact }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get version
+        id: get-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build application
+        id: build
+        run: |
+          npm run build
+          ARTIFACT="app-$(date +%s).tar.gz"
+          echo "artifact=$ARTIFACT" >> $GITHUB_OUTPUT
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy version ${{ needs.build.outputs.version }}
+        run: |
+          echo "Deploying version: ${{ needs.build.outputs.version }}"
+          echo "Artifact: ${{ needs.build.outputs.artifact }}"
+          ./deploy.sh
+```
+
+### Use Composite Actions for Reusable Steps
+
+Create composite actions for common step sequences:
+
+```yaml
+# .github/actions/setup-app/action.yml
+name: 'Setup Application'
+description: 'Install dependencies and setup environment'
+
+inputs:
+  node-version:
+    description: 'Node.js version to use'
+    required: false
+    default: '20'
+  install-command:
+    description: 'Command to install dependencies'
+    required: false
+    default: 'npm ci'
+
+outputs:
+  cache-hit:
+    description: 'Whether dependencies were cached'
+    value: ${{ steps.cache.outputs.cache-hit }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+
+    - name: Cache node modules
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+    - name: Install dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: ${{ inputs.install-command }}
+
+# Use in workflow
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup application
+        uses: ./.github/actions/setup-app
+        with:
+          node-version: '20'
+
+      - run: npm run build
+```
+
+### Use Path Filters
+
+Trigger workflows only when relevant files change:
+
+```yaml
+# Good - Only run tests when code changes
+name: Test
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/test.yml'
+
+# Good - Skip workflows for documentation changes
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - '.gitignore'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm test
+```
+
+### Use Step Summaries
+
+Add workflow summaries for better visibility:
+
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run tests
+        run: npm test
+
+      - name: Generate test summary
+        if: always()
+        run: |
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Unit tests: Passed" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Integration tests: Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "- Lines: 85%" >> $GITHUB_STEP_SUMMARY
+          echo "- Branches: 78%" >> $GITHUB_STEP_SUMMARY
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: ./deploy.sh
+
+      - name: Add deployment summary
+        run: |
+          echo "## Deployment Complete 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Environment: Production" >> $GITHUB_STEP_SUMMARY
+          echo "Version: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "URL: https://example.com" >> $GITHUB_STEP_SUMMARY
+```
+
+---
+
 ## References
 
 ### Official Documentation

@@ -1384,6 +1384,646 @@ function Test-ScriptObfuscation {
 
 ---
 
+## Best Practices
+
+### Use Approved Verbs
+
+Always use approved PowerShell verbs from `Get-Verb`:
+
+```powershell
+# Good - Approved verbs
+function Get-UserData { }
+function Set-Configuration { }
+function New-Deployment { }
+function Remove-TempFiles { }
+function Start-Service { }
+function Stop-Process { }
+
+# Bad - Unapproved verbs
+function Fetch-UserData { }    # Use Get
+function Delete-TempFiles { }  # Use Remove
+function Create-Deployment { } # Use New
+function Retrieve-Data { }     # Use Get
+```
+
+### Use CmdletBinding for Advanced Functions
+
+Enable advanced function features with `[CmdletBinding()]`:
+
+```powershell
+# Good - Advanced function with CmdletBinding
+function Get-SystemInfo {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$ComputerName
+    )
+
+    Write-Verbose "Connecting to $ComputerName"  # Verbose only shown with -Verbose
+    Write-Debug "Debug info"  # Debug only shown with -Debug
+
+    # Function implementation
+}
+
+# Good - Support WhatIf and Confirm
+function Remove-OldFiles {
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
+    param(
+        [string]$Path
+    )
+
+    Get-ChildItem $Path | ForEach-Object {
+        if ($PSCmdlet.ShouldProcess($_.FullName, "Delete file")) {
+            Remove-Item $_.FullName
+        }
+    }
+}
+
+# Usage
+Remove-OldFiles -Path C:\Temp -WhatIf  # Shows what would be deleted
+Remove-OldFiles -Path C:\Temp -Confirm  # Asks for confirmation
+```
+
+### Support Pipeline Input
+
+Make functions pipeline-aware:
+
+```powershell
+# Good - Accept pipeline input
+function Get-FileSize {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [string[]]$Path
+    )
+
+    begin {
+        Write-Verbose "Starting file size calculation"
+        $TotalSize = 0
+    }
+
+    process {
+        foreach ($FilePath in $Path) {
+            $item = Get-Item $FilePath
+            $TotalSize += $item.Length
+            [PSCustomObject]@{
+                Path = $FilePath
+                SizeKB = [math]::Round($item.Length / 1KB, 2)
+            }
+        }
+    }
+
+    end {
+        Write-Verbose "Total size: $([math]::Round($TotalSize / 1MB, 2)) MB"
+    }
+}
+
+# Usage
+Get-ChildItem C:\Logs | Get-FileSize
+'file1.txt', 'file2.txt' | Get-FileSize
+```
+
+### Use Parameter Validation
+
+Validate parameters declaratively:
+
+```powershell
+# Good - Comprehensive validation
+function New-UserAccount {
+    [CmdletBinding()]
+    param(
+        # Required and not empty
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$UserName,
+
+        # Pattern validation (email)
+        [Parameter(Mandatory)]
+        [ValidatePattern('^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')]
+        [string]$Email,
+
+        # Range validation
+        [ValidateRange(18, 120)]
+        [int]$Age = 18,
+
+        # Set validation
+        [ValidateSet('Admin', 'User', 'Guest')]
+        [string]$Role = 'User',
+
+        # Length validation
+        [ValidateLength(8, 64)]
+        [string]$Password,
+
+        # Script validation
+        [ValidateScript({
+            if (Test-Path $_ -PathType Container) { $true }
+            else { throw "Path '$_' does not exist" }
+        })]
+        [string]$HomeDirectory,
+
+        # Count validation
+        [ValidateCount(1, 5)]
+        [string[]]$Groups
+    )
+
+    # Function implementation
+}
+```
+
+### Write Comment-Based Help
+
+Document functions with comment-based help:
+
+```powershell
+function Get-ServiceStatus {
+    <#
+    .SYNOPSIS
+    Retrieves the current status of Windows services.
+
+    .DESCRIPTION
+    Queries one or more Windows services and returns their current status,
+    startup type, and running state. Supports filtering by service name pattern.
+
+    .PARAMETER ServiceName
+    The name or name pattern of the service(s) to query.
+    Supports wildcards (* and ?).
+
+    .PARAMETER ComputerName
+    The remote computer to query. Defaults to local computer.
+
+    .PARAMETER IncludeDependent
+    Include dependent services in the output.
+
+    .EXAMPLE
+    Get-ServiceStatus -ServiceName "wuauserv"
+    Gets the status of the Windows Update service.
+
+    .EXAMPLE
+    Get-ServiceStatus -ServiceName "w*" -ComputerName Server01
+    Gets all services starting with 'w' on Server01.
+
+    .EXAMPLE
+    Get-ServiceStatus -ServiceName "MSSQLSERVER" -IncludeDependent
+    Gets SQL Server status including dependent services.
+
+    .INPUTS
+    String. You can pipe service names to Get-ServiceStatus.
+
+    .OUTPUTS
+    PSCustomObject. Returns service status information.
+
+    .NOTES
+    Requires administrative privileges for remote computers.
+    Author: Tyler Dukes
+    Version: 1.0.0
+
+    .LINK
+    https://docs.microsoft.com/powershell
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [string[]]$ServiceName
+    )
+
+    # Implementation
+}
+
+# Access help
+Get-Help Get-ServiceStatus
+Get-Help Get-ServiceStatus -Examples
+Get-Help Get-ServiceStatus -Detailed
+```
+
+### Use Try-Catch for Error Handling
+
+Handle errors explicitly:
+
+```powershell
+# Good - Comprehensive error handling
+function Get-RemoteData {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Url,
+
+        [int]$MaxRetries = 3
+    )
+
+    $attempt = 0
+    while ($attempt -lt $MaxRetries) {
+        $attempt++
+        try {
+            Write-Verbose "Attempt $attempt of $MaxRetries"
+
+            $response = Invoke-RestMethod -Uri $Url -ErrorAction Stop
+            Write-Verbose "Successfully retrieved data"
+            return $response
+
+        } catch [System.Net.WebException] {
+            Write-Warning "Network error: $($_.Exception.Message)"
+            if ($attempt -eq $MaxRetries) {
+                Write-Error "Failed after $MaxRetries attempts"
+                throw
+            }
+            Start-Sleep -Seconds (2 * $attempt)
+
+        } catch [System.UnauthorizedAccessException] {
+            Write-Error "Authentication failed: Check credentials"
+            throw  # Don't retry authentication errors
+
+        } catch {
+            Write-Error "Unexpected error: $($_.Exception.Message)"
+            Write-Debug $_.ScriptStackTrace
+            throw
+
+        } finally {
+            Write-Verbose "Completed attempt $attempt"
+        }
+    }
+}
+```
+
+### Use Splatting for Readability
+
+Use hash tables for multiple parameters:
+
+```powershell
+# Good - Splatting for readability
+$userParams = @{
+    Name              = "John Doe"
+    SamAccountName    = "jdoe"
+    UserPrincipalName = "jdoe@contoso.com"
+    EmailAddress      = "jdoe@contoso.com"
+    Path              = "OU=Users,DC=contoso,DC=com"
+    AccountPassword   = $securePassword
+    Enabled           = $true
+    ChangePasswordAtLogon = $false
+}
+New-ADUser @userParams
+
+# Good - Combine positional and splatted parameters
+$copyParams = @{
+    Recurse = $true
+    Force   = $true
+    Verbose = $true
+}
+Copy-Item -Path C:\Source -Destination C:\Dest @copyParams
+
+# Good - Modify splat based on conditions
+$params = @{
+    ComputerName = $server
+    ScriptBlock  = { Get-Process }
+}
+if ($credential) {
+    $params['Credential'] = $credential
+}
+Invoke-Command @params
+
+# Bad - Long parameter list
+New-ADUser -Name "John Doe" -SamAccountName "jdoe" `
+    -UserPrincipalName "jdoe@contoso.com" -EmailAddress "jdoe@contoso.com" `
+    -Path "OU=Users,DC=contoso,DC=com" -AccountPassword $securePassword `
+    -Enabled $true -ChangePasswordAtLogon $false
+```
+
+### Avoid Aliases in Scripts
+
+Use full cmdlet names for clarity:
+
+```powershell
+# Good - Full cmdlet names
+Get-ChildItem -Path C:\Logs -Filter *.log |
+    Where-Object { $_.Length -gt 10MB } |
+    ForEach-Object { Remove-Item $_.FullName }
+
+# Bad - Aliases reduce readability
+gci C:\Logs -Filter *.log |
+    ? { $_.Length -gt 10MB } |
+    % { ri $_.FullName }
+
+# Exception: Aliases OK in interactive console
+# But NEVER in scripts or modules
+```
+
+### Return Objects, Not Text
+
+Output structured objects for pipeline compatibility:
+
+```powershell
+# Good - Return objects
+function Get-DiskInfo {
+    [CmdletBinding()]
+    param([string[]]$ComputerName = $env:COMPUTERNAME)
+
+    foreach ($computer in $ComputerName) {
+        $disk = Get-WmiObject Win32_LogicalDisk -ComputerName $computer -Filter "DriveType=3"
+
+        foreach ($d in $disk) {
+            [PSCustomObject]@{
+                ComputerName = $computer
+                Drive        = $d.DeviceID
+                SizeGB       = [math]::Round($d.Size / 1GB, 2)
+                FreeGB       = [math]::Round($d.FreeSpace / 1GB, 2)
+                PercentFree  = [math]::Round(($d.FreeSpace / $d.Size) * 100, 2)
+            }
+        }
+    }
+}
+
+# Can be used in pipeline
+Get-DiskInfo -ComputerName Server01 | Where-Object { $_.PercentFree -lt 20 }
+Get-DiskInfo | Export-Csv disks.csv -NoTypeInformation
+Get-DiskInfo | ConvertTo-Json | Out-File disks.json
+
+# Bad - Return text
+function Get-DiskInfo {
+    $disk = Get-WmiObject Win32_LogicalDisk -Filter "DriveType=3"
+    Write-Host "Drive: $($disk.DeviceID)"  # Can't be piped!
+    Write-Host "Free: $($disk.FreeSpace)"
+}
+```
+
+### Use Write-Verbose and Write-Debug
+
+Provide informational output without breaking pipeline:
+
+```powershell
+# Good - Use Write-Verbose for progress
+function Deploy-Application {
+    [CmdletBinding()]
+    param(
+        [string]$Source,
+        [string]$Destination
+    )
+
+    Write-Verbose "Starting deployment from $Source to $Destination"
+
+    Write-Verbose "Backing up existing files"
+    Backup-Files -Path $Destination
+
+    Write-Verbose "Copying new files"
+    Copy-Item -Path $Source\* -Destination $Destination -Recurse
+
+    Write-Debug "Deployment details: $(Get-Date)"
+    Write-Verbose "Deployment completed successfully"
+}
+
+# Run with -Verbose to see progress
+Deploy-Application -Source C:\App -Destination C:\Deploy -Verbose
+
+# Bad - Using Write-Host
+function Deploy-Application {
+    Write-Host "Starting deployment"  # Can't be suppressed or captured
+    # ...
+}
+```
+
+### Type Parameters Explicitly
+
+Always specify parameter types:
+
+```powershell
+# Good - Typed parameters
+function Set-ServiceConfiguration {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$ServiceName,
+
+        [Parameter(Mandatory)]
+        [ValidateSet('Running', 'Stopped')]
+        [string]$DesiredState,
+
+        [int]$TimeoutSeconds = 30,
+
+        [switch]$Force,
+
+        [PSCredential]$Credential
+    )
+
+    # Function implementation
+}
+
+# Bad - Untyped parameters
+function Set-ServiceConfiguration {
+    param(
+        $ServiceName,  # No type = accepts anything
+        $DesiredState,
+        $TimeoutSeconds = 30
+    )
+}
+```
+
+### Use Proper Scoping
+
+Manage variable scope appropriately:
+
+```powershell
+# Good - Clear scope management
+$script:ConfigPath = "C:\Config"  # Script-level variable
+
+function Get-Configuration {
+    [CmdletBinding()]
+    param()
+
+    # Access script-level variable
+    $config = Get-Content $script:ConfigPath | ConvertFrom-Json
+    return $config  # Return value, don't use global scope
+}
+
+function Set-Configuration {
+    [CmdletBinding()]
+    param(
+        [PSCustomObject]$Config
+    )
+
+    # Modify script-level variable
+    $Config | ConvertTo-Json | Set-Content $script:ConfigPath
+}
+
+# Bad - Using global scope unnecessarily
+function Get-Configuration {
+    $global:config = Get-Content "C:\Config"  # Pollutes global scope
+}
+```
+
+### Optimize with foreach vs ForEach-Object
+
+Choose the right iteration method:
+
+```powershell
+# Good - foreach loop for in-memory collections (faster)
+$files = Get-ChildItem C:\Logs
+foreach ($file in $files) {
+    Process-File $file
+}
+
+# Good - ForEach-Object for pipeline/streaming (memory efficient)
+Get-ChildItem C:\Logs -Recurse | ForEach-Object {
+    Process-File $_
+}
+
+# Good - Use .ForEach() method for best performance
+$results = (Get-Process).ForEach({ $_.Name })
+
+# Good - Use .Where() method instead of Where-Object
+$largeFiles = (Get-ChildItem).Where({ $_.Length -gt 1MB })
+
+# Bad - ForEach-Object for small in-memory arrays
+$files = @('file1.txt', 'file2.txt', 'file3.txt')
+$files | ForEach-Object {  # Slower than foreach for small arrays
+    Process-File $_
+}
+```
+
+### Use PSScriptAnalyzer
+
+Lint scripts for best practices:
+
+```powershell
+# Install PSScriptAnalyzer
+Install-Module -Name PSScriptAnalyzer -Scope CurrentUser
+
+# Analyze single file
+Invoke-ScriptAnalyzer -Path .\MyScript.ps1
+
+# Analyze directory
+Invoke-ScriptAnalyzer -Path .\MyModule -Recurse
+
+# Fix issues automatically
+Invoke-ScriptAnalyzer -Path .\MyScript.ps1 -Fix
+
+# Custom settings file
+Invoke-ScriptAnalyzer -Path .\MyModule -Settings .\.pslintrc.psd1
+
+# CI/CD integration
+$results = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Error, Warning
+if ($results) {
+    $results | Format-Table -AutoSize
+    throw "Script analysis failed with $($results.Count) issues"
+}
+```
+
+### Use Begin-Process-End Blocks
+
+Structure pipeline functions properly:
+
+```powershell
+# Good - Proper pipeline structure
+function Measure-FileSize {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [System.IO.FileInfo[]]$File
+    )
+
+    begin {
+        Write-Verbose "Starting file size measurement"
+        $totalSize = 0
+        $fileCount = 0
+    }
+
+    process {
+        foreach ($f in $File) {
+            $totalSize += $f.Length
+            $fileCount++
+
+            [PSCustomObject]@{
+                FileName = $f.Name
+                SizeMB   = [math]::Round($f.Length / 1MB, 2)
+            }
+        }
+    }
+
+    end {
+        Write-Verbose "Processed $fileCount files"
+        Write-Verbose "Total size: $([math]::Round($totalSize / 1GB, 2)) GB"
+    }
+}
+
+# Usage
+Get-ChildItem C:\Data -Recurse | Measure-FileSize
+```
+
+### Avoid Invoke-Expression
+
+Never use `Invoke-Expression` with untrusted input:
+
+```powershell
+# Bad - Code injection risk
+$userInput = Read-Host "Enter command"
+Invoke-Expression $userInput  # DANGEROUS!
+
+# Good - Use parameterized cmdlets
+$processName = Read-Host "Enter process name"
+Get-Process -Name $processName  # Safe
+
+# Good - Use script blocks with validated input
+$action = Read-Host "Choose action (start/stop)"
+$scriptBlock = switch ($action) {
+    'start' { { Start-Service $serviceName } }
+    'stop'  { { Stop-Service $serviceName } }
+    default { throw "Invalid action" }
+}
+& $scriptBlock  # Execute validated script block
+```
+
+### Test with Pester
+
+Write tests for your functions:
+
+```powershell
+# Install Pester
+Install-Module -Name Pester -Force -SkipPublisherCheck
+
+# MyFunction.Tests.ps1
+BeforeAll {
+    . $PSScriptRoot/MyFunction.ps1
+}
+
+Describe 'Get-UserProfile' {
+    Context 'Parameter validation' {
+        It 'Should require UserName parameter' {
+            { Get-UserProfile } | Should -Throw -ExpectedMessage '*UserName*'
+        }
+
+        It 'Should validate email format' {
+            { Get-UserProfile -UserName "test" -Email "invalid" } |
+                Should -Throw
+        }
+    }
+
+    Context 'Functionality' {
+        BeforeEach {
+            Mock Get-ADUser {
+                [PSCustomObject]@{
+                    SamAccountName = 'testuser'
+                    DisplayName    = 'Test User'
+                    EmailAddress   = 'test@example.com'
+                }
+            }
+        }
+
+        It 'Should return user object' {
+            $result = Get-UserProfile -UserName 'testuser'
+            $result.UserName | Should -Be 'testuser'
+        }
+
+        It 'Should call Get-ADUser once' {
+            Get-UserProfile -UserName 'testuser'
+            Should -Invoke Get-ADUser -Exactly 1
+        }
+    }
+}
+
+# Run tests
+Invoke-Pester -Path .\MyFunction.Tests.ps1
+Invoke-Pester -Path .\MyFunction.Tests.ps1 -CodeCoverage .\MyFunction.ps1
+```
+
+---
+
 ## Tool Configurations
 
 ### VSCode settings.json

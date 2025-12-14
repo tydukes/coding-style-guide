@@ -1818,6 +1818,410 @@ output "internet_gateway_id" {
 
 ---
 
+## Best Practices
+
+### Module Organization
+
+Structure modules with clear separation of concerns:
+
+```text
+modules/
+├── vpc/
+│   ├── main.tf           # Primary resource definitions
+│   ├── variables.tf      # Input variables
+│   ├── outputs.tf        # Output values
+│   ├── versions.tf       # Provider version constraints
+│   ├── README.md         # Module documentation
+│   └── examples/         # Usage examples
+│       └── basic/
+│           └── main.tf
+```
+
+### Use Remote State Management
+
+Always use remote state for team collaboration:
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket         = "my-terraform-state"
+    key            = "prod/vpc/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "terraform-state-lock"
+  }
+}
+```
+
+**State locking** prevents concurrent modifications:
+
+```hcl
+# Create DynamoDB table for state locking
+resource "aws_dynamodb_table" "terraform_locks" {
+  name         = "terraform-state-lock"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+}
+```
+
+### Variable Validation
+
+Use validation blocks to ensure correct input:
+
+```hcl
+variable "environment" {
+  description = "Environment name"
+  type        = string
+
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "Environment must be dev, staging, or prod."
+  }
+}
+
+variable "instance_count" {
+  description = "Number of instances to create"
+  type        = number
+
+  validation {
+    condition     = var.instance_count >= 1 && var.instance_count <= 10
+    error_message = "Instance count must be between 1 and 10."
+  }
+}
+```
+
+### Version Constraints
+
+Pin provider versions for stability:
+
+```hcl
+terraform {
+  required_version = ">= 1.5.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"  # Allow patch updates
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.5"
+    }
+  }
+}
+```
+
+### Resource Naming
+
+Use consistent naming conventions:
+
+```hcl
+# Good - Descriptive and follows pattern
+resource "aws_security_group" "web_server" {
+  name        = "${var.project_name}-${var.environment}-web-sg"
+  description = "Security group for web servers"
+
+  tags = {
+    Name        = "${var.project_name}-${var.environment}-web-sg"
+    Environment = var.environment
+    ManagedBy   = "Terraform"
+  }
+}
+
+# Bad - Generic names
+resource "aws_security_group" "sg1" {
+  name = "my-sg"
+}
+```
+
+### Tagging Standards
+
+Implement consistent tagging for all resources:
+
+```hcl
+locals {
+  common_tags = {
+    Environment = var.environment
+    Project     = var.project_name
+    ManagedBy   = "Terraform"
+    Owner       = var.team_email
+    CostCenter  = var.cost_center
+  }
+}
+
+resource "aws_instance" "web" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project_name}-${var.environment}-web"
+      Role = "web-server"
+    }
+  )
+}
+```
+
+### Data Sources vs. Resources
+
+Use data sources to reference existing infrastructure:
+
+```hcl
+# Data source - reference existing VPC
+data "aws_vpc" "existing" {
+  tags = {
+    Name = "production-vpc"
+  }
+}
+
+# Resource - create new subnet in existing VPC
+resource "aws_subnet" "app" {
+  vpc_id     = data.aws_vpc.existing.id
+  cidr_block = "10.0.1.0/24"
+}
+```
+
+### Never Hardcode Secrets
+
+Never hardcode secrets:
+
+```hcl
+# Bad - Hardcoded secrets
+variable "database_password" {
+  default = "super-secret-password"  # ❌ Never do this
+}
+
+# Good - Use AWS Secrets Manager
+data "aws_secretsmanager_secret_version" "db_password" {
+  secret_id = "prod/database/password"
+}
+
+resource "aws_db_instance" "main" {
+  engine   = "postgres"
+  username = "admin"
+  password = data.aws_secretsmanager_secret_version.db_password.secret_string
+}
+
+# Good - Use environment variables (for local development)
+variable "database_password" {
+  description = "Database password (set via TF_VAR_database_password)"
+  type        = string
+  sensitive   = true
+}
+```
+
+### Count vs. For_Each
+
+Prefer `for_each` over `count` for better flexibility:
+
+```hcl
+# Good - for_each allows removal of specific items
+locals {
+  subnets = {
+    public_a  = { cidr = "10.0.1.0/24", az = "us-east-1a" }
+    public_b  = { cidr = "10.0.2.0/24", az = "us-east-1b" }
+    private_a = { cidr = "10.0.3.0/24", az = "us-east-1a" }
+  }
+}
+
+resource "aws_subnet" "main" {
+  for_each = local.subnets
+
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = each.value.cidr
+  availability_zone = each.value.az
+
+  tags = {
+    Name = "${var.project_name}-${each.key}"
+  }
+}
+
+# Access specific subnet
+output "public_a_subnet" {
+  value = aws_subnet.main["public_a"].id
+}
+```
+
+### Dependency Management
+
+Use `depends_on` sparingly - implicit dependencies are preferred:
+
+```hcl
+# Good - Implicit dependency (preferred)
+resource "aws_instance" "app" {
+  subnet_id = aws_subnet.private.id  # Implicit dependency
+}
+
+# Use depends_on only for hidden dependencies
+resource "aws_iam_role_policy" "example" {
+  role   = aws_iam_role.example.name
+  policy = data.aws_iam_policy_document.example.json
+
+  # Explicit dependency needed for policy attachment timing
+  depends_on = [aws_iam_role.example]
+}
+```
+
+### Use Workspaces for Environment Separation
+
+Use workspaces for environment separation:
+
+```hcl
+# Select workspace-specific configuration
+locals {
+  workspace_config = {
+    dev = {
+      instance_type = "t3.micro"
+      instance_count = 1
+    }
+    prod = {
+      instance_type = "t3.large"
+      instance_count = 3
+    }
+  }
+
+  config = local.workspace_config[terraform.workspace]
+}
+
+resource "aws_instance" "app" {
+  count         = local.config.instance_count
+  instance_type = local.config.instance_type
+
+  tags = {
+    Environment = terraform.workspace
+  }
+}
+```
+
+### Output Organization
+
+Provide useful outputs with descriptions:
+
+```hcl
+output "vpc_id" {
+  description = "ID of the VPC"
+  value       = aws_vpc.main.id
+}
+
+output "public_subnet_ids" {
+  description = "List of public subnet IDs"
+  value       = [for s in aws_subnet.public : s.id]
+}
+
+output "database_endpoint" {
+  description = "Database connection endpoint"
+  value       = aws_db_instance.main.endpoint
+  sensitive   = true  # Don't show in plan output
+}
+```
+
+### Module Composition
+
+Compose larger systems from smaller modules:
+
+```hcl
+# Root module composing multiple modules
+module "vpc" {
+  source = "./modules/vpc"
+
+  environment = var.environment
+  cidr_block  = "10.0.0.0/16"
+}
+
+module "security_groups" {
+  source = "./modules/security-groups"
+
+  vpc_id      = module.vpc.vpc_id
+  environment = var.environment
+}
+
+module "app_servers" {
+  source = "./modules/ec2-cluster"
+
+  subnet_ids         = module.vpc.private_subnet_ids
+  security_group_ids = [module.security_groups.app_sg_id]
+
+  depends_on = [module.vpc]
+}
+```
+
+### Lifecycle Rules
+
+Use lifecycle rules to prevent accidental resource destruction:
+
+```hcl
+resource "aws_db_instance" "production" {
+  identifier = "prod-database"
+  engine     = "postgres"
+
+  lifecycle {
+    prevent_destroy = true  # Prevent accidental deletion
+  }
+}
+
+resource "aws_instance" "web" {
+  ami           = data.aws_ami.latest.id
+  instance_type = var.instance_type
+
+  lifecycle {
+    create_before_destroy = true  # Create replacement before destroying
+    ignore_changes        = [tags["Updated"]]  # Ignore specific changes
+  }
+}
+```
+
+### Terraform Formatting
+
+Always format code before committing:
+
+```bash
+# Format all .tf files
+terraform fmt -recursive
+
+# Check formatting (CI/CD)
+terraform fmt -check -recursive
+
+# Validate configuration
+terraform validate
+```
+
+### Documentation
+
+Document modules thoroughly:
+
+```hcl
+/**
+ * # VPC Module
+ *
+ * Creates a VPC with public and private subnets across multiple AZs.
+ *
+ * ## Usage
+ *
+ * ```hcl
+ * module "vpc" {
+ *   source = "./modules/vpc"
+ *
+ *   environment     = "prod"
+ *   vpc_cidr        = "10.0.0.0/16"
+ *   azs             = ["us-east-1a", "us-east-1b"]
+ *   private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
+ *   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
+ * }
+ * ```
+ */
+
+variable "vpc_cidr" {
+  description = "CIDR block for VPC"
+  type        = string
+}
+```
+
 ## See Also
 
 ### Related Infrastructure Guides

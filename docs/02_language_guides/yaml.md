@@ -1524,6 +1524,267 @@ database:
 
 ---
 
+## Best Practices
+
+### Use Consistent Indentation
+
+Always use 2 spaces (never tabs):
+
+```yaml
+# Good - Consistent 2-space indentation
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+```
+
+### Quote Strings When Needed
+
+Quote strings that could be misinterpreted:
+
+```yaml
+# Good - Explicit quoting
+version: "3.8"  # Quoted to preserve as string
+port: 8080      # Number doesn't need quotes
+enabled: true   # Boolean doesn't need quotes
+name: "yes"     # Quote reserved words
+config: "true"  # Quote boolean-like strings
+
+# Strings with special characters
+message: "Hello: World"
+path: "C:\\Users\\Admin"
+```
+
+### Use Anchors and Aliases for DRY
+
+Reuse configuration with anchors (`&`) and aliases (`*`):
+
+```yaml
+# Define anchor
+defaults: &defaults
+  cpu: "100m"
+  memory: "128Mi"
+  timeout: 30
+
+# Reuse with alias
+web:
+  <<: *defaults
+  replicas: 3
+
+api:
+  <<: *defaults
+  replicas: 5
+  memory: "256Mi"  # Override specific value
+```
+
+### Validate YAML Before Deployment
+
+Always validate YAML syntax:
+
+```bash
+# Lint YAML files
+yamllint config.yaml
+
+# Validate Kubernetes manifests
+kubectl apply --dry-run=client -f deployment.yaml
+
+# Validate Docker Compose
+docker compose config
+```
+
+### Use Multi-line Strings Appropriately
+
+Choose the right multi-line syntax:
+
+```yaml
+# Literal block (|) - preserves newlines
+script: |
+  #!/bin/bash
+  echo "Line 1"
+  echo "Line 2"
+
+# Folded block (>) - folds newlines to spaces
+description: >
+  This is a long description
+  that will be folded into
+  a single line with spaces.
+
+# Literal with strip (|-) - removes trailing newlines
+config: |-
+  key1=value1
+  key2=value2
+```
+
+### Organize Keys Logically
+
+Group related keys together:
+
+```yaml
+# Good - Logical organization
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  namespace: production
+  labels:
+    app: web
+    tier: frontend
+spec:
+  type: LoadBalancer
+  selector:
+    app: web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+```
+
+### Avoid Complex Nesting
+
+Keep nesting levels reasonable (max 4 levels):
+
+```yaml
+# Bad - Too deeply nested
+app:
+  services:
+    backend:
+      config:
+        database:
+          connection:
+            pool:
+              size: 10
+
+# Good - Flattened structure or split into multiple files
+database_pool_size: 10
+```
+
+### Use Lists for Multiple Items
+
+Always use lists for collections:
+
+```yaml
+# Good - List syntax
+ports:
+  - 80
+  - 443
+  - 8080
+
+environments:
+  - name: NODE_ENV
+    value: production
+  - name: PORT
+    value: "3000"
+
+# Inline list (use sparingly)
+tags: [web, frontend, production]
+```
+
+### Comment Complex Configurations
+
+Add comments to explain non-obvious configurations:
+
+```yaml
+# Database connection pool settings
+# Increased from 10 to 20 based on load testing results (PERF-123)
+database:
+  pool:
+    min: 5
+    max: 20
+    acquire_timeout: 30000  # milliseconds
+
+# Health check configuration
+# More aggressive checks after incident INC-456
+healthcheck:
+  interval: 10s  # Check every 10 seconds
+  timeout: 5s    # Timeout after 5 seconds
+  retries: 3     # Retry 3 times before marking unhealthy
+```
+
+### Separate Environment Configurations
+
+Use separate YAML files for different environments:
+
+```yaml
+# base-config.yaml (shared)
+app:
+  name: myapp
+  version: "1.0.0"
+
+# production-config.yaml
+app:
+  replicas: 3
+  resources:
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+
+# dev-config.yaml
+app:
+  replicas: 1
+  resources:
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+```
+
+### Use Schema Validation
+
+Validate against JSON Schema:
+
+```yaml
+# With $schema reference
+$schema: https://json.schemastore.org/github-workflow.json
+
+name: CI Pipeline
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+```
+
+### Handle Null Values Explicitly
+
+Be explicit about null values:
+
+```yaml
+# Explicit null
+user:
+  name: John
+  middle_name: null
+  email: john@example.com
+
+# Or omit null fields entirely
+user:
+  name: John
+  email: john@example.com
+```
+
+### Version Your Configuration
+
+Include version information in YAML files:
+
+```yaml
+# Kubernetes uses apiVersion
+apiVersion: apps/v1
+kind: Deployment
+
+# Docker Compose uses version
+version: "3.8"
+services:
+  web:
+    image: nginx:latest
+
+# Custom configs should include version
+config_version: "2.0"
+settings:
+  timeout: 30
+```
+
 ## References
 
 ### Official Documentation
