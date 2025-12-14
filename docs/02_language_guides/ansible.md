@@ -740,6 +740,992 @@ scenario:
       failed_when: "'Hello World' not in http_response.content"
 ```
 
+### Role Testing Best Practices
+
+#### When to Write Tests
+
+Write tests for Ansible roles when:
+
+- **Reusable roles**: Any role used across multiple projects, teams, or playbooks
+- **Critical infrastructure**: Roles managing production systems, security configurations, or compliance requirements
+- **Complex logic**: Roles with conditional tasks, dynamic includes, or computed variables
+- **Public roles**: Any role shared on Ansible Galaxy or internally across teams
+- **Compliance requirements**: Roles requiring audit trails or regulatory compliance evidence
+
+#### What to Test
+
+Test the following aspects of your Ansible roles:
+
+1. **Task Execution**: Verify all tasks execute successfully on target platforms
+2. **Idempotency**: Ensure role runs produce no changes on subsequent executions
+3. **Service State**: Validate services are running and configured correctly
+4. **File Content**: Check configuration files contain expected values
+5. **Network Connectivity**: Test ports are open and services are accessible
+6. **Security Posture**: Verify permissions, ownership, and security settings
+7. **Cross-Platform**: Test on all supported operating systems
+
+### Tiered Testing Strategy
+
+Implement a three-tier approach to balance speed, coverage, and confidence:
+
+#### Tier 1: Static Analysis (< 30 seconds)
+
+Fast linting and syntax validation that runs on every commit:
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/ansible/ansible-lint
+    rev: v24.2.0
+    hooks:
+      - id: ansible-lint
+        args: [--strict]
+        files: \.(yaml|yml)$
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: [-c=.yamllint.yml]
+```
+
+```yaml
+# .yamllint.yml
+---
+extends: default
+
+rules:
+  line-length:
+    max: 120
+    level: warning
+  comments:
+    min-spaces-from-content: 1
+  indentation:
+    spaces: 2
+    indent-sequences: true
+```
+
+```yaml
+# .ansible-lint
+---
+profile: production
+
+exclude_paths:
+  - .github/
+  - .cache/
+  - molecule/
+
+skip_list:
+  - yaml[line-length]  # Handled by yamllint
+
+warn_list:
+  - experimental
+  - role-name
+
+enable_list:
+  - no-same-owner  # Ensure different owner/group
+  - args  # Check task arguments
+  - empty-string-compare  # Prefer not item.foo
+  - no-log-password  # Mark password tasks with no_log
+  - name[casing]  # Enforce task name casing
+```
+
+#### Tier 2: Role Execution Tests (< 5 minutes)
+
+Molecule converge tests that run on pull requests:
+
+```yaml
+# molecule/default/molecule.yml
+---
+driver:
+  name: docker
+
+platforms:
+  - name: ubuntu-22.04
+    image: geerlingguy/docker-ubuntu2204-ansible:latest
+    pre_build_image: true
+    privileged: true
+    command: /lib/systemd/systemd
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+  - name: rhel-9
+    image: geerlingguy/docker-rockylinux9-ansible:latest
+    pre_build_image: true
+    privileged: true
+    command: /usr/sbin/init
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      callbacks_enabled: profile_tasks,timer
+      stdout_callback: yaml
+  inventory:
+    host_vars:
+      ubuntu-22.04:
+        ansible_python_interpreter: /usr/bin/python3
+      rhel-9:
+        ansible_python_interpreter: /usr/bin/python3
+
+verifier:
+  name: ansible
+
+scenario:
+  name: default
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy
+```
+
+#### Tier 3: Compliance Verification (< 15 minutes)
+
+InSpec integration for security and compliance testing (nightly or pre-release):
+
+```yaml
+# molecule/compliance/molecule.yml
+---
+driver:
+  name: docker
+
+platforms:
+  - name: ubuntu-22.04-compliance
+    image: geerlingguy/docker-ubuntu2204-ansible:latest
+    pre_build_image: true
+    privileged: true
+    command: /lib/systemd/systemd
+
+provisioner:
+  name: ansible
+
+verifier:
+  name: testinfra
+  additional_files_or_dirs:
+    - ../compliance/
+  env:
+    PYTHONWARNINGS: ignore
+
+scenario:
+  name: compliance
+  test_sequence:
+    - destroy
+    - create
+    - converge
+    - verify
+    - destroy
+```
+
+```ruby
+# molecule/compliance/tests/test_security.rb
+control 'nginx-security' do
+  title 'NGINX Security Configuration'
+  desc 'Verify NGINX is configured securely'
+
+  describe package('nginx') do
+    it { should be_installed }
+  end
+
+  describe service('nginx') do
+    it { should be_installed }
+    it { should be_enabled }
+    it { should be_running }
+  end
+
+  describe file('/etc/nginx/nginx.conf') do
+    it { should exist }
+    it { should be_file }
+    it { should be_owned_by 'root' }
+    it { should be_grouped_into 'root' }
+    it { should_not be_readable.by('others') }
+    it { should_not be_writable.by('others') }
+    it { should_not be_executable.by('others') }
+  end
+
+  describe nginx_conf('/etc/nginx/nginx.conf') do
+    its('params') { should include 'server_tokens' => ['off'] }
+    its('params') { should include 'ssl_protocols' => [['TLSv1.2', 'TLSv1.3']] }
+  end
+
+  describe port(80) do
+    it { should be_listening }
+    its('protocols') { should include 'tcp' }
+  end
+
+  describe port(443) do
+    it { should be_listening }
+    its('protocols') { should include 'tcp' }
+  end
+
+  describe file('/var/www/html') do
+    it { should exist }
+    it { should be_directory }
+    it { should be_owned_by 'www-data' }
+  end
+end
+
+control 'cis-benchmark' do
+  title 'CIS Ubuntu 22.04 Benchmark Checks'
+  desc 'Verify compliance with CIS benchmarks'
+
+  describe file('/etc/ssh/sshd_config') do
+    its('content') { should match /^PermitRootLogin no/ }
+    its('content') { should match /^PasswordAuthentication no/ }
+    its('content') { should match /^X11Forwarding no/ }
+  end
+
+  describe file('/etc/audit/auditd.conf') do
+    it { should exist }
+    its('content') { should match /^max_log_file_action = keep_logs/ }
+  end
+end
+```
+
+### Role Contracts
+
+Define explicit guarantees for each role using a CONTRACT.md file:
+
+````markdown
+# Role Contract: Web Server
+
+## Purpose
+Deploys and configures NGINX web server with TLS support, security hardening, and monitoring.
+
+## Guarantees
+
+### Tasks Performed
+- Install NGINX from official repository
+- Configure virtual hosts with TLS certificates
+- Set up security headers and SSL/TLS best practices
+- Configure log rotation and monitoring
+- Enable and start NGINX service
+
+### Behavior Guarantees
+1. **Idempotency**: Multiple runs produce no changes after initial deployment
+2. **Service Availability**: NGINX service running and enabled on boot
+3. **Security**: TLS 1.2+ only, server tokens disabled, secure headers configured
+4. **Permissions**: All config files owned by root with 0644, private keys 0600
+5. **Compatibility**: Supports Ubuntu 20.04+, RHEL 8+, Debian 11+
+
+### Required Variables
+```yaml
+# Required inputs with validation
+nginx_server_name: "example.com"  # Must be valid FQDN
+nginx_document_root: "/var/www/html"  # Must be absolute path
+nginx_ssl_certificate: "/etc/ssl/certs/server.crt"  # Must exist
+nginx_ssl_certificate_key: "/etc/ssl/private/server.key"  # Must exist, mode 0600
+
+# Optional with defaults
+nginx_worker_processes: "auto"  # Number or 'auto'
+nginx_worker_connections: 1024  # Integer >= 512
+nginx_keepalive_timeout: 65  # Integer in seconds
+nginx_enable_ssl: true  # Boolean
+nginx_ssl_protocols: "TLSv1.2 TLSv1.3"  # String
+```
+
+### Post-Conditions
+
+After successful execution, the following conditions are guaranteed:
+
+- NGINX package is installed (latest stable version)
+- Service is running and enabled
+- Port 80 (HTTP) is listening
+- Port 443 (HTTPS) is listening if `nginx_enable_ssl: true`
+- Configuration passes `nginx -t` validation
+- Log files exist at `/var/log/nginx/` with proper rotation
+- User `www-data` exists with appropriate permissions
+
+### Platform Support Matrix
+
+| Platform | Versions | Status | Notes |
+|----------|----------|--------|-------|
+| Ubuntu | 20.04, 22.04 | ✅ Tested | Primary support |
+| Debian | 11, 12 | ✅ Tested | Full support |
+| RHEL | 8, 9 | ✅ Tested | Uses EPEL repo |
+| Rocky Linux | 8, 9 | ✅ Tested | RHEL equivalent |
+| CentOS Stream | 9 | ⚠️ Experimental | Limited testing |
+| Windows | N/A | ❌ Not supported | Use IIS role |
+
+## Breaking Changes Policy
+
+### Semantic Versioning
+
+- **Major version bump**: Breaking changes to role interface (variables, tasks, handlers)
+- **Minor version bump**: New features, backward-compatible changes
+- **Patch version bump**: Bug fixes, documentation updates
+
+### Deprecation Notice Period
+
+Breaking changes will be:
+
+1. Announced in CHANGELOG.md at least one minor version in advance
+2. Marked with deprecation warnings in task output
+3. Documented in migration guides with examples
+
+## Testing Requirements
+
+### Minimum Test Coverage
+
+- ✅ ansible-lint with production profile passes
+- ✅ yamllint with strict config passes
+- ✅ Molecule converge succeeds on all supported platforms
+- ✅ Idempotence test passes (second run makes no changes)
+- ✅ InSpec security tests pass (if compliance scenario exists)
+- ✅ Service verification (ports open, service running)
+
+### CI/CD Requirements
+
+- All tier 1 tests (static analysis) on every commit
+- Tier 2 tests (converge + idempotence) on every PR
+- Tier 3 tests (compliance) nightly or on release tag
+
+## Dependencies
+
+### Role Dependencies
+
+```yaml
+# meta/main.yml
+dependencies:
+  - role: common_setup
+    vars:
+      setup_firewall: true
+  - role: ssl_certificates
+    when: nginx_enable_ssl | bool
+```
+
+### Collection Dependencies
+
+- `ansible.builtin` (core Ansible modules)
+- `community.general` >= 5.0.0 (for advanced features)
+- `ansible.posix` >= 1.4.0 (for sysctl, firewall)
+
+### System Dependencies
+
+- Python 3.8+ on control node
+- Python 3.6+ on managed nodes
+- OpenSSL 1.1.1+ for TLS support
+
+## Support and Maintenance
+
+- **Maintained by**: DevOps Team
+- **Contact**: <devops@example.com>
+- **Documentation**: <https://docs.example.com/roles/web_server>
+- **Source**: <https://github.com/example/ansible-roles>
+- **License**: MIT
+
+````
+
+### Idempotency Verification
+
+Idempotency is critical for Ansible roles. Ensure roles can be run multiple times without making changes:
+
+#### Testing Idempotency with Molecule
+
+```bash
+# Run converge twice and check for changes
+molecule converge
+molecule converge  # Should report 0 changes
+
+# Or use built-in idempotence test
+molecule test  # Includes idempotence check in sequence
+```
+
+Molecule's idempotence test runs the playbook twice and fails if the second run makes any changes:
+
+```yaml
+# molecule/default/molecule.yml - idempotence is built into test_sequence
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - converge
+    - idempotence  # Fails if second converge makes changes
+    - verify
+    - destroy
+```
+
+#### Common Idempotency Issues
+
+```yaml
+# BAD - Always reports changed
+- name: Configure application
+  ansible.builtin.shell: |
+    echo "config=true" >> /etc/app.conf
+  # Always appends, never idempotent
+
+# GOOD - Idempotent configuration
+- name: Configure application
+  ansible.builtin.lineinfile:
+    path: /etc/app.conf
+    line: "config=true"
+    create: true
+  # Only adds line if not present
+```
+
+```yaml
+# BAD - Timestamp always changes
+- name: Deploy configuration
+  ansible.builtin.template:
+    src: config.j2
+    dest: /etc/app/config.yml
+  # If template includes {{ ansible_date_time }}, always changes
+
+# GOOD - Stable template
+- name: Deploy configuration
+  ansible.builtin.template:
+    src: config.j2
+    dest: /etc/app/config.yml
+  # Template content deterministic, only changes when needed
+```
+
+```yaml
+# BAD - Command module always shows changed
+- name: Create user
+  ansible.builtin.command: useradd myuser
+  # Fails on subsequent runs, not idempotent
+
+# GOOD - User module is idempotent
+- name: Create user
+  ansible.builtin.user:
+    name: myuser
+    state: present
+  # Creates user if absent, no change if exists
+```
+
+### Multi-Platform Testing
+
+Test roles across different operating systems and versions:
+
+```yaml
+# molecule/multi-platform/molecule.yml
+---
+driver:
+  name: docker
+
+platforms:
+  # Debian family
+  - name: ubuntu-20-04
+    image: geerlingguy/docker-ubuntu2004-ansible:latest
+    pre_build_image: true
+    privileged: true
+    command: /lib/systemd/systemd
+
+  - name: ubuntu-22-04
+    image: geerlingguy/docker-ubuntu2204-ansible:latest
+    pre_build_image: true
+    privileged: true
+    command: /lib/systemd/systemd
+
+  - name: debian-11
+    image: geerlingguy/docker-debian11-ansible:latest
+    pre_build_image: true
+    privileged: true
+    command: /lib/systemd/systemd
+
+  # RHEL family
+  - name: rhel-8
+    image: geerlingguy/docker-rockylinux8-ansible:latest
+    pre_build_image: true
+    privileged: true
+    command: /usr/sbin/init
+
+  - name: rhel-9
+    image: geerlingguy/docker-rockylinux9-ansible:latest
+    pre_build_image: true
+    privileged: true
+    command: /usr/sbin/init
+
+  # Windows (requires different driver)
+  # - name: windows-2022
+  #   image: jborean93/ansible-windows:2022
+  #   pre_build_image: true
+
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        ansible_python_interpreter: /usr/bin/python3
+    host_vars:
+      ubuntu-20-04:
+        nginx_package: nginx
+      ubuntu-22-04:
+        nginx_package: nginx
+      debian-11:
+        nginx_package: nginx
+      rhel-8:
+        nginx_package: nginx
+        nginx_service: nginx
+      rhel-9:
+        nginx_package: nginx
+        nginx_service: nginx
+
+verifier:
+  name: ansible
+
+scenario:
+  name: multi-platform
+  test_sequence:
+    - destroy
+    - create
+    - converge
+    - idempotence
+    - verify
+    - destroy
+```
+
+#### Platform-Specific Tasks
+
+```yaml
+# tasks/main.yml
+---
+- name: Include OS-specific variables
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Install NGINX (Debian/Ubuntu)
+  ansible.builtin.apt:
+    name: "{{ nginx_package }}"
+    state: present
+    update_cache: true
+  when: ansible_os_family == "Debian"
+
+- name: Install NGINX (RHEL/Rocky)
+  ansible.builtin.yum:
+    name: "{{ nginx_package }}"
+    state: present
+    enablerepo: epel
+  when: ansible_os_family == "RedHat"
+
+- name: Configure NGINX
+  ansible.builtin.template:
+    src: "nginx.conf.j2"
+    dest: "{{ nginx_config_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload NGINX
+```
+
+```yaml
+# vars/Debian.yml
+---
+nginx_package: nginx
+nginx_config_path: /etc/nginx/nginx.conf
+nginx_service: nginx
+nginx_user: www-data
+```
+
+```yaml
+# vars/RedHat.yml
+---
+nginx_package: nginx
+nginx_config_path: /etc/nginx/nginx.conf
+nginx_service: nginx
+nginx_user: nginx
+```
+
+### CI/CD Integration
+
+#### GitHub Actions Pipeline
+
+```yaml
+# .github/workflows/ansible-ci.yml
+name: Ansible Role CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+env:
+  PYTHON_VERSION: '3.11'
+  ANSIBLE_VERSION: '2.16'
+
+jobs:
+  # Tier 1: Fast Static Analysis
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install ansible-lint yamllint ansible==${{ env.ANSIBLE_VERSION }}
+
+      - name: Run yamllint
+        run: yamllint .
+
+      - name: Run ansible-lint
+        run: ansible-lint --strict
+
+  # Tier 2: Molecule Tests
+  molecule:
+    name: Molecule Test (${{ matrix.distro }})
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        distro:
+          - ubuntu2204
+          - debian11
+          - rockylinux9
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install molecule[docker] ansible==${{ env.ANSIBLE_VERSION }}
+          pip install molecule-plugins[docker]
+
+      - name: Run Molecule
+        run: molecule test
+        env:
+          MOLECULE_DISTRO: ${{ matrix.distro }}
+          PY_COLORS: 1
+          ANSIBLE_FORCE_COLOR: 1
+
+      - name: Upload molecule logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: molecule-logs-${{ matrix.distro }}
+          path: |
+            molecule/default/*.log
+            /tmp/molecule/**
+
+  # Tier 3: Compliance Tests (only on main branch)
+  compliance:
+    name: Compliance Tests
+    runs-on: ubuntu-latest
+    needs: molecule
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install molecule[docker] ansible==${{ env.ANSIBLE_VERSION }}
+          pip install inspec-bin
+
+      - name: Run compliance scenario
+        run: molecule test -s compliance
+
+      - name: Upload compliance reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: compliance-reports
+          path: molecule/compliance/reports/
+```
+
+#### GitLab CI Pipeline
+
+```yaml
+# .gitlab-ci.yml
+---
+stages:
+  - lint
+  - test
+  - compliance
+
+variables:
+  PYTHON_VERSION: "3.11"
+  ANSIBLE_VERSION: "2.16"
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+
+# Tier 1: Static Analysis
+yamllint:
+  stage: lint
+  image: python:${PYTHON_VERSION}
+  before_script:
+    - pip install yamllint
+  script:
+    - yamllint .
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+ansible-lint:
+  stage: lint
+  image: python:${PYTHON_VERSION}
+  before_script:
+    - pip install ansible-lint ansible==${ANSIBLE_VERSION}
+  script:
+    - ansible-lint --strict
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+# Tier 2: Molecule Tests
+.molecule_template: &molecule_template
+  stage: test
+  image: python:${PYTHON_VERSION}
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - pip install molecule[docker] ansible==${ANSIBLE_VERSION}
+    - pip install molecule-plugins[docker]
+  script:
+    - molecule test
+  artifacts:
+    when: on_failure
+    paths:
+      - molecule/default/*.log
+    expire_in: 1 week
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+molecule-ubuntu:
+  <<: *molecule_template
+  variables:
+    MOLECULE_DISTRO: ubuntu2204
+
+molecule-debian:
+  <<: *molecule_template
+  variables:
+    MOLECULE_DISTRO: debian11
+
+molecule-rocky:
+  <<: *molecule_template
+  variables:
+    MOLECULE_DISTRO: rockylinux9
+
+# Tier 3: Compliance
+compliance:
+  stage: compliance
+  image: python:${PYTHON_VERSION}
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - pip install molecule[docker] ansible==${ANSIBLE_VERSION}
+    - pip install inspec-bin
+  script:
+    - molecule test -s compliance
+  artifacts:
+    paths:
+      - molecule/compliance/reports/
+    expire_in: 30 days
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+```
+
+### Test Coverage Requirements
+
+Establish minimum coverage thresholds for roles:
+
+#### Coverage Metrics
+
+1. **Task Coverage**: All tasks executed at least once in tests
+2. **Platform Coverage**: Tested on all supported OS families
+3. **Variable Coverage**: All required and optional variables tested
+4. **Handler Coverage**: All handlers triggered and verified
+5. **Conditional Coverage**: All `when` conditions tested (true/false paths)
+6. **Error Coverage**: Error handling tested with invalid inputs
+
+#### Measuring Coverage
+
+```yaml
+# molecule/default/verify.yml
+---
+- name: Verify role behavior
+  hosts: all
+  gather_facts: true
+  tasks:
+    # Service state verification
+    - name: Check service is running
+      ansible.builtin.service_facts:
+
+    - name: Assert NGINX is running
+      ansible.builtin.assert:
+        that:
+          - "'nginx' in services"
+          - "services['nginx'].state == 'running'"
+          - "services['nginx'].status == 'enabled'"
+        fail_msg: "NGINX service not running or not enabled"
+
+    # Port verification
+    - name: Check HTTP port is listening
+      ansible.builtin.wait_for:
+        port: 80
+        state: started
+        timeout: 5
+
+    - name: Check HTTPS port is listening
+      ansible.builtin.wait_for:
+        port: 443
+        state: started
+        timeout: 5
+      when: nginx_enable_ssl | default(true) | bool
+
+    # Configuration file verification
+    - name: Check NGINX config exists
+      ansible.builtin.stat:
+        path: /etc/nginx/nginx.conf
+      register: nginx_conf
+
+    - name: Assert NGINX config is correct
+      ansible.builtin.assert:
+        that:
+          - nginx_conf.stat.exists
+          - nginx_conf.stat.mode == '0644'
+          - nginx_conf.stat.pw_name == 'root'
+
+    # Content verification
+    - name: Read NGINX config
+      ansible.builtin.slurp:
+        src: /etc/nginx/nginx.conf
+      register: nginx_config_content
+
+    - name: Verify security headers
+      ansible.builtin.assert:
+        that:
+          - "'server_tokens off' in nginx_config_content['content'] | b64decode"
+        fail_msg: "Security headers not configured"
+
+    # HTTP response verification
+    - name: Test HTTP response
+      ansible.builtin.uri:
+        url: http://localhost
+        return_content: true
+        status_code: 200
+      register: http_response
+
+    - name: Verify response content
+      ansible.builtin.assert:
+        that:
+          - http_response.status == 200
+          - "'nginx' in http_response.server.lower()"
+
+    # Log file verification
+    - name: Check log files exist
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: log_files
+      loop:
+        - /var/log/nginx/access.log
+        - /var/log/nginx/error.log
+
+    - name: Assert log files configured
+      ansible.builtin.assert:
+        that:
+          - item.stat.exists
+        fail_msg: "Log file {{ item.item }} does not exist"
+      loop: "{{ log_files.results }}"
+```
+
+#### Role README Testing Section
+
+Include testing instructions in role README:
+
+````markdown
+## Testing
+
+This role includes comprehensive tests using Molecule and InSpec.
+
+### Prerequisites
+- Docker (for Molecule container-based testing)
+- Python 3.8+
+- pip packages: `molecule[docker]`, `ansible-lint`, `yamllint`
+
+### Quick Start
+```bash
+# Install dependencies
+pip install molecule[docker] molecule-plugins[docker] ansible-lint yamllint
+
+# Run full test suite
+molecule test
+
+# Run specific scenarios
+molecule test -s default      # Default platform tests
+molecule test -s compliance   # Security compliance tests
+molecule test -s multi-platform  # All supported platforms
+```
+
+### Test Scenarios
+
+#### Default Scenario
+
+Tests role on Ubuntu 22.04 with default variables:
+
+```bash
+molecule converge  # Deploy role
+molecule verify    # Run assertions
+molecule destroy   # Clean up
+```
+
+#### Compliance Scenario
+
+Runs InSpec security and compliance tests:
+
+```bash
+molecule test -s compliance
+```
+
+#### Multi-Platform Scenario
+
+Tests across Ubuntu, Debian, and RHEL:
+
+```bash
+molecule test -s multi-platform
+```
+
+### Continuous Integration
+
+All tests run automatically on:
+
+- Every commit: Static analysis (lint)
+- Every PR: Molecule converge and idempotence tests
+- Main branch: Full compliance suite
+- Nightly: Multi-platform tests
+
+### Coverage Reports
+
+Test coverage reports are generated in `molecule/reports/`:
+
+- `coverage.json`: Task and platform coverage
+- `compliance.json`: InSpec compliance results
+- `idempotence.log`: Idempotence test output
+
+````
+
 ---
 
 ## Common Pitfalls
