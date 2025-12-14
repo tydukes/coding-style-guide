@@ -2,11 +2,9 @@
 title: "Getting Started"
 description: "Quick start guide for adopting the Dukes Engineering Style Guide in your projects"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [getting-started, quickstart, installation, setup, tutorial]
 category: "Overview"
 status: "active"
-version: "1.0.0"
 ---
 
 Welcome to the Dukes Engineering Style Guide! This guide will help you quickly adopt consistent coding standards,
@@ -218,7 +216,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Validate Code Standards
-        uses: tydukes/coding-style-guide/.github/actions/validate@v1.0.0
+        uses: tydukes/coding-style-guide/.github/actions/validate@latest
         with:
           mode: validate  # validate, lint, format, docs, metadata
           path: .

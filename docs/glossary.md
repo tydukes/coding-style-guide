@@ -2,11 +2,9 @@
 title: "Glossary"
 description: "Comprehensive glossary of terms used in the Dukes Engineering Style Guide"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [glossary, terms, definitions, reference, dictionary]
 category: "Reference"
 status: "active"
-version: "1.0.0"
 ---
 
 This glossary defines terms used throughout the Dukes Engineering Style Guide, including technical concepts, tool names,

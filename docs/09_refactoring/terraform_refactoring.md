@@ -2,11 +2,9 @@
 title: "Terraform Refactoring Examples"
 description: "Real-world Terraform code refactoring examples with before/after comparisons"
 author: "Tyler Dukes"
-date: "2025-12-06"
 tags: [terraform, refactoring, best-practices, examples, iac]
 category: "Refactoring"
 status: "active"
-version: "1.0.0"
 ---
 
 Real-world examples of refactoring Terraform code to improve maintainability, reusability, and adherence to best practices.
@@ -854,4 +852,3 @@ resource "aws_security_group" "web_frontend" {
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-12-06

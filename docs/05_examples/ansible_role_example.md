@@ -2,11 +2,9 @@
 title: "Complete Ansible Role Example"
 description: "Full working example of a production-ready Ansible role with best practices"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [ansible, role, example, nginx, best-practices, complete]
 category: "Examples"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview
@@ -815,5 +813,4 @@ The role is production-ready and follows Ansible best practices for reusability 
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

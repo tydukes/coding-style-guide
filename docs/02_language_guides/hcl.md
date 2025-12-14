@@ -2,11 +2,9 @@
 title: "HCL Style Guide"
 description: "HashiCorp Configuration Language standards for infrastructure as code configuration"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [hcl, hashicorp, terraform, packer, nomad, configuration]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1946,5 +1944,4 @@ check: fmt validate lint
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

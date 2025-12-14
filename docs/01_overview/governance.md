@@ -2,11 +2,9 @@
 title: "Governance Model"
 description: "Repository governance including GitFlow branching, PR requirements, and change management"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [governance, gitflow, branching, pr-process, change-management]
 category: "Overview"
 status: "active"
-version: "1.1.0"
 ---
 
 This document defines how the Dukes Engineering Style Guide is governed, including branching strategies, pull request

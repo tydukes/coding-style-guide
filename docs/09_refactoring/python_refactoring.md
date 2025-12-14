@@ -2,11 +2,9 @@
 title: "Python Refactoring Examples"
 description: "Real-world Python code refactoring examples with before/after comparisons"
 author: "Tyler Dukes"
-date: "2025-12-06"
 tags: [python, refactoring, best-practices, examples]
 category: "Refactoring"
 status: "active"
-version: "1.0.0"
 ---
 
 Real-world examples of refactoring Python code to improve readability, maintainability, and adherence to best practices.
@@ -617,4 +615,3 @@ def calculate_discount(user: User, product: Product) -> Decimal:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-12-06

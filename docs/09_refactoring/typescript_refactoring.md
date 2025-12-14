@@ -2,11 +2,9 @@
 title: "TypeScript Refactoring Examples"
 description: "Real-world TypeScript code refactoring examples with before/after comparisons"
 author: "Tyler Dukes"
-date: "2025-12-06"
 tags: [typescript, refactoring, best-practices, react, nodejs]
 category: "Refactoring"
 status: "active"
-version: "1.0.0"
 ---
 
 Real-world examples of refactoring TypeScript code to improve type safety, maintainability, and modern best practices.
@@ -814,4 +812,3 @@ const processProductsPipe = (products: Product[]) =>
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-12-06

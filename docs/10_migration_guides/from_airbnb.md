@@ -3,11 +3,9 @@ title: "Migrating from Airbnb Style Guide to Dukes Engineering Style Guide"
 description: "Step-by-step migration guide from Airbnb JavaScript/React Style Guide to the Dukes Engineering
 TypeScript style guide"
 author: "Tyler Dukes"
-date: "2025-12-07"
 tags: [migration, airbnb-style-guide, javascript, typescript, react, style-guide, upgrade, transition]
 category: "Migration Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview

@@ -2,11 +2,9 @@
 title: "Security Scanning Guide"
 description: "Comprehensive guide to security scanning tools, vulnerability detection, secret scanning, dependency analysis, and security best practices for DevOps pipelines"
 author: "Tyler Dukes"
-date: "2025-12-01"
 tags: [security, scanning, sast, dast, sca, secrets, vulnerabilities, compliance]
 category: "CI/CD"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Introduction

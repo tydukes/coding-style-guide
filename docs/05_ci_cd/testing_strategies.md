@@ -2,11 +2,9 @@
 title: "Testing Strategies Documentation"
 description: "Comprehensive guide to testing strategies including unit testing, integration testing, E2E testing, performance testing, and test automation for all supported languages"
 author: "Tyler Dukes"
-date: "2025-12-01"
 tags: [testing, unit-tests, integration-tests, e2e, performance, automation, tdd, bdd]
 category: "CI/CD"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Introduction

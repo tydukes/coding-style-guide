@@ -2,11 +2,9 @@
 title: "PowerShell Style Guide"
 description: "Cross-platform PowerShell 7+ scripting standards for automation and infrastructure management"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [powershell, scripting, cross-platform, automation, windows, infrastructure]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1429,5 +1427,4 @@ function Test-ScriptObfuscation {
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

@@ -2,11 +2,9 @@
 title: "GitLab CI/CD Style Guide"
 description: "GitLab CI/CD pipeline standards for automated testing, building, and deployment"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [gitlab-ci, gitlab, cicd, pipelines, automation, devops]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -2115,5 +2113,4 @@ services:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

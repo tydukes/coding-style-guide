@@ -3,11 +3,9 @@ title: "Comprehensive GitHub Actions CI/CD Guide"
 description: "Production-ready GitHub Actions pipelines for building, testing, and deploying
   applications with best practices, security, and optimization"
 author: "Tyler Dukes"
-date: "2025-11-30"
 tags: [github-actions, cicd, deployment, automation, devops, pipelines]
 category: "CI/CD"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview
@@ -1506,5 +1504,4 @@ jobs:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-11-30
 **Status**: Active

@@ -2,11 +2,9 @@
 title: "Python Package Template"
 description: "Complete template structure for creating modern Python packages with pyproject.toml"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [python, package, template, pyproject]
 category: "Templates"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview
@@ -986,5 +984,4 @@ docs-build: ## Build documentation
 ---
 
 __Version__: 1.0.0
-__Last Updated__: 2025-10-28
 __Status__: Active

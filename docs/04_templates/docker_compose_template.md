@@ -2,11 +2,9 @@
 title: "Docker Compose Template"
 description: "Comprehensive Docker Compose templates for multi-container applications"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [docker-compose, containers, orchestration, microservices]
 category: "Templates"
 status: "active"
-version: "1.0.0"
 ---
 <!-- markdownlint-disable MD024 -->
 
@@ -832,5 +830,4 @@ MEMORY_LIMIT=2G
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

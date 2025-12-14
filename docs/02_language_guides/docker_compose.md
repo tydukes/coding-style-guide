@@ -2,11 +2,9 @@
 title: "Docker Compose Style Guide"
 description: "Docker Compose standards for multi-container application orchestration and development environments"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [docker-compose, docker, containers, orchestration, devops]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1549,5 +1547,4 @@ services:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

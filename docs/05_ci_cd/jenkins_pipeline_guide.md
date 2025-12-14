@@ -2,11 +2,9 @@
 title: "Jenkins Pipeline Guide"
 description: "Comprehensive guide to building production-grade CI/CD pipelines with Jenkins, including declarative and scripted pipelines, shared libraries, deployment strategies, and security best practices"
 author: "Tyler Dukes"
-date: "2025-12-01"
 tags: [jenkins, ci-cd, groovy, pipeline, automation, deployment, devops, shared-libraries]
 category: "CI/CD"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Introduction

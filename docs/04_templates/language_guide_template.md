@@ -2,11 +2,9 @@
 title: "[Language Name] Style Guide"
 description: "Comprehensive style guide for [Language Name] covering naming, formatting, testing, and best practices"
 author: "Tyler Dukes"
-date: "YYYY-MM-DD"
 tags: [language-name, style-guide, best-practices, standards]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 <!-- This is a template for creating new language-specific style guides. -->
@@ -692,7 +690,6 @@ repos:
 ---
 
 **Template Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Maintainer**: Tyler Dukes
 
 **Note**: This template should be customized for each language. Delete placeholder text and fill in

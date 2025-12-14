@@ -2,11 +2,9 @@
 title: "IDE Integration Guide"
 description: "Comprehensive guide to integrating linters, formatters, and validation tools into VS Code, JetBrains IDEs, Vim/Neovim, and other popular editors"
 author: "Tyler Dukes"
-date: "2025-12-01"
 tags: [ide, editor, integration, vscode, jetbrains, vim, neovim, development-tools]
 category: "CI/CD"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Introduction

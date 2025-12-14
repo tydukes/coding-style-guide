@@ -2,11 +2,9 @@
 title: "TypeScript Style Guide"
 description: "TypeScript coding standards for React, Next.js, and Node.js applications"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [typescript, javascript, react, nextjs, nodejs]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1440,5 +1438,4 @@ if (isValidResult(result)) {
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

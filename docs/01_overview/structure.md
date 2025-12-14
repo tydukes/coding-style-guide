@@ -2,11 +2,9 @@
 title: "Repository Structure"
 description: "Repository layout and organization patterns for style guide implementation"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [structure, organization, repository-layout, monorepo, multi-repo, best-practices]
 category: "Overview"
 status: "active"
-version: "1.1.0"
 ---
 
 ## This Style Guide's Structure (Monorepo)

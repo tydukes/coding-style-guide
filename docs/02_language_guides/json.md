@@ -2,11 +2,9 @@
 title: "JSON Style Guide"
 description: "JSON configuration and data exchange standards for consistent, valid, and maintainable JSON"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [json, configuration, data, serialization, api]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1308,5 +1306,4 @@ print(json.dumps(data, indent=2))
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

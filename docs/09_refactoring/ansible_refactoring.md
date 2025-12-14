@@ -2,11 +2,9 @@
 title: "Ansible Refactoring Examples"
 description: "Real-world Ansible code refactoring examples with before/after comparisons"
 author: "Tyler Dukes"
-date: "2025-12-06"
 tags: [ansible, refactoring, best-practices, examples, automation]
 category: "Refactoring"
 status: "active"
-version: "1.0.0"
 ---
 
 Real-world examples of refactoring Ansible playbooks and roles to improve maintainability, reusability, and adherence
@@ -1087,4 +1085,3 @@ enable_monitoring: false
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-12-06

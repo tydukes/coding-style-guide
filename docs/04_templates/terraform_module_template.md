@@ -2,11 +2,9 @@
 title: "Terraform Module Template"
 description: "Complete template structure for creating reusable Terraform modules"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [terraform, module, template, infrastructure]
 category: "Templates"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview
@@ -667,5 +665,4 @@ Use descriptive, consistent output names:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

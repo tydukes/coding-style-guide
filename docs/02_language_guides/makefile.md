@@ -2,11 +2,9 @@
 title: "Makefile Style Guide"
 description: "Makefile standards for consistent, maintainable build automation and task execution"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [makefile, make, build, automation, devops]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1847,5 +1845,4 @@ jobs:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

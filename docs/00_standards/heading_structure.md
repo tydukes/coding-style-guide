@@ -2,11 +2,9 @@
 title: "Documentation Heading Structure Standards"
 description: "Standardized heading hierarchy and organization for all documentation files"
 author: "Tyler Dukes"
-date: "2025-12-07"
 tags: [standards, documentation, headings, structure, consistency]
 category: "Standards"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Purpose

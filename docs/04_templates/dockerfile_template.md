@@ -2,11 +2,9 @@
 title: "Dockerfile Template"
 description: "Comprehensive multi-stage Dockerfile templates for containerized applications"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [docker, dockerfile, containers, multi-stage, security]
 category: "Templates"
 status: "active"
-version: "1.0.0"
 ---
 <!-- markdownlint-disable MD024 -->
 
@@ -708,5 +706,4 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

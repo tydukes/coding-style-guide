@@ -2,11 +2,9 @@
 title: "Ansible Style Guide"
 description: "Configuration management standards for Ansible playbooks and roles"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [ansible, configuration-management, automation, devops, collections]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -1523,5 +1521,4 @@ kinds:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

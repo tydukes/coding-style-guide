@@ -3,11 +3,9 @@ title: "Dependabot Auto-Merge Configuration"
 description: "Automated dependency updates with auto-merge for patch and minor versions using
   Dependabot and GitHub Actions"
 author: "Tyler Dukes"
-date: "2025-12-13"
 tags: [dependabot, automation, dependencies, github-actions, security]
 category: "CI/CD"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview

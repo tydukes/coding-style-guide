@@ -2,11 +2,9 @@
 title: "Pre-commit Hooks Guide"
 description: "Comprehensive guide to implementing pre-commit hooks for automated code quality checks, security scanning, and consistent formatting across all supported languages"
 author: "Tyler Dukes"
-date: "2025-12-01"
 tags: [pre-commit, hooks, code-quality, automation, linting, formatting, security]
 category: "CI/CD"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Introduction

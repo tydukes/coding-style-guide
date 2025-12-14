@@ -2,11 +2,9 @@
 title: "Kubernetes & Helm Style Guide"
 description: "Container orchestration standards for Kubernetes manifests and Helm charts"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [kubernetes, helm, containers, orchestration, k8s]
 category: "Language Guides"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Language Overview
@@ -2139,5 +2137,4 @@ spec:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active

@@ -2,11 +2,9 @@
 title: "Bash Refactoring Examples"
 description: "Real-world Bash script refactoring examples with before/after comparisons"
 author: "Tyler Dukes"
-date: "2025-12-06"
 tags: [bash, refactoring, best-practices, examples, shell-scripting]
 category: "Refactoring"
 status: "active"
-version: "1.0.0"
 ---
 
 Real-world examples of refactoring Bash scripts to improve reliability, maintainability, and adherence to best practices.
@@ -1256,4 +1254,3 @@ shellcheck --format=json script.sh
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-12-06

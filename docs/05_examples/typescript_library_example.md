@@ -2,11 +2,9 @@
 title: "Complete TypeScript Library Example"
 description: "Production-ready TypeScript validation library (ts-validator) demonstrating modern library development, testing, bundling, and publishing"
 author: "Tyler Dukes"
-date: "2025-10-28"
 tags: [typescript, library, validation, npm, testing, bundling]
 category: "Examples"
 status: "active"
-version: "1.0.0"
 ---
 
 ## Overview
@@ -1549,5 +1547,4 @@ This TypeScript library example demonstrates:
 ---
 
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
 **Status**: Active
