@@ -3944,7 +3944,7 @@ jobs:
 <span class="w">      </span><span class="k">-</span><span class="w"> </span>uses: actions/checkout@v4
 
 <span class="w">      </span><span class="k">-</span><span class="w"> </span>name: Validate coding standards
-        uses: tydukes/coding-style-guide/.github/actions/validate@v1.0.0
+        uses: tydukes/coding-style-guide/.github/actions/validate@latest
         with:
           mode: validate
           path: .
@@ -3960,7 +3960,7 @@ Add these targets to the repository \`Makefile\` (or create one):
 <span class="gu">## Coding style validation targets</span>
 .PHONY: validate lint format validate-docs
 
-IMAGE ?= ghcr.io/tydukes/coding-style-guide:v1.0.0
+IMAGE ?= ghcr.io/tydukes/coding-style-guide:latest
 
 validate: ## Run full coding standards validation
  <span class="ni">@docker</span> run --rm -v $$(pwd):/workspace $(IMAGE) validate
@@ -3985,7 +3985,7 @@ Create \`scripts/validate.sh\`:
 
 set -euo pipefail
 
-IMAGE=&quot;${VALIDATOR_IMAGE:-ghcr.io/tydukes/coding-style-guide:v1.0.0}&quot;
+IMAGE=&quot;${VALIDATOR_IMAGE:-ghcr.io/tydukes/coding-style-guide:latest}&quot;
 COMMAND=&quot;${1:-validate}&quot;
 
 docker run --rm -v &quot;$(pwd):/workspace&quot; &quot;${IMAGE}&quot; &quot;${COMMAND}&quot;
@@ -4003,7 +4003,7 @@ repos:
     hooks:
 <span class="w">      </span><span class="k">-</span><span class="w"> </span>id: coding-style-validator
         name: Validate Coding Standards
-        entry: docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:v1.0.0
+        entry: docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest
         args: [lint]
         language: system
         pass_filenames: false
@@ -4024,7 +4024,7 @@ validator to ensure consistent code quality.
 
 Using Docker:
 \`\`\`bash
-docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:v1.0.0 validate
+docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest validate
 \`\`\`
 
 Using Makefile:
@@ -4063,7 +4063,7 @@ validate-coding-standards:
 <span class="w">    </span><span class="k">-</span><span class="w"> </span>docker:dind
   script:
 <span class="w">    </span><span class="k">-</span><span class="w"> </span>docker run --rm -v $CI_PROJECT_DIR:/workspace
-        ghcr.io/tydukes/coding-style-guide:v1.0.0 validate
+        ghcr.io/tydukes/coding-style-guide:latest validate
   only:
 <span class="w">    </span><span class="k">-</span><span class="w"> </span>merge_requests
 <span class="w">    </span><span class="k">-</span><span class="w"> </span>main
@@ -4112,7 +4112,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 <span class="w">      </span><span class="k">-</span><span class="w"> </span>uses: actions/checkout@v4
-<span class="w">      </span><span class="k">-</span><span class="w"> </span>uses: tydukes/coding-style-guide/.github/actions/validate@v1.0.0
+<span class="w">      </span><span class="k">-</span><span class="w"> </span>uses: tydukes/coding-style-guide/.github/actions/validate@latest
         with:
           mode: validate
 \`\`\`
@@ -4122,7 +4122,7 @@ Add a Makefile with validation targets:
 \`\`\`makefile
 .PHONY: validate lint format
 
-IMAGE ?= ghcr.io/tydukes/coding-style-guide:v1.0.0
+IMAGE ?= ghcr.io/tydukes/coding-style-guide:latest
 
 validate:
  <span class="ni">@docker</span> run --rm -v $$(pwd):/workspace $(IMAGE) validate
@@ -4149,7 +4149,7 @@ Test locally with: \`make validate\`
 Integrate the coding style guide validator into this GitHub repository:
 
 <span class="k">1.</span> Add GitHub Actions workflow at \`.github/workflows/validate-coding-standards.yml\`
-<span class="w">   </span><span class="k">-</span><span class="w"> </span>Use the reusable action: \`tydukes/coding-style-guide/.github/actions/validate@v1.0.0\`
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Use the reusable action: \`tydukes/coding-style-guide/.github/actions/validate@latest\`
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Trigger on push to main/develop and all pull requests
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Use validation mode: \`validate\`
 
@@ -4162,7 +4162,7 @@ Integrate the coding style guide validator into this GitHub repository:
 
 <span class="k">4.</span> Ensure the workflow is configured to run as a required status check (mention this in PR)
 
-Use container: \`ghcr.io/tydukes/coding-style-guide:v1.0.0\`
+Use container: \`ghcr.io/tydukes/coding-style-guide:latest\`
 \`\`\`
 
 <span class="gu">### For GitLab Repositories</span>
@@ -4173,12 +4173,12 @@ Integrate the coding style guide validator into this GitLab repository:
 <span class="k">1.</span> Add validation job to \`.gitlab-ci.yml\`:
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Stage: validate
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Use Docker-in-Docker
-<span class="w">   </span><span class="k">-</span><span class="w"> </span>Run: \`docker run --rm -v $CI_PROJECT_DIR:/workspace ghcr.io/tydukes/coding-style-guide:v1.0.0 validate\`
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Run: \`docker run --rm -v $CI_PROJECT_DIR:/workspace ghcr.io/tydukes/coding-style-guide:latest validate\`
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Trigger on: merge_requests, main, develop
 
 <span class="k">2.</span> Create local validation script at \`scripts/validate.sh\`
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Make it executable
-<span class="w">   </span><span class="k">-</span><span class="w"> </span>Use container: \`ghcr.io/tydukes/coding-style-guide:v1.0.0\`
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Use container: \`ghcr.io/tydukes/coding-style-guide:latest\`
 
 <span class="k">3.</span> Update README.md with validation instructions
 
@@ -4192,7 +4192,7 @@ Set up coding style validation for local development:
 
 <span class="k">1.</span> Create \`Makefile\` with these targets:
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>validate, lint, format, validate-docs
-<span class="w">   </span><span class="k">-</span><span class="w"> </span>Use container: \`ghcr.io/tydukes/coding-style-guide:v1.0.0\`
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>Use container: \`ghcr.io/tydukes/coding-style-guide:latest\`
 
 <span class="k">2.</span> Create \`scripts/validate.sh\` wrapper script
 <span class="w">   </span><span class="k">-</span><span class="w"> </span>Accept command as first argument (validate, lint, format)
@@ -4236,7 +4236,7 @@ Replace \`v1.0.0\` with:
 Add to the GitHub Action:
 
 ```yaml
-<span class="k">-</span><span class="w"> </span>uses: tydukes/coding-style-guide/.github/actions/validate@v1.0.0
+<span class="k">-</span><span class="w"> </span>uses: tydukes/coding-style-guide/.github/actions/validate@latest
   with:
     mode: validate
     path: .
@@ -4251,7 +4251,7 @@ Integrate the tydukes/coding-style-guide validator into this repository with the
 <h2 id="github-actions">GitHub Actions<a class="headerlink" href="#github-actions" title="Permanent link">&para;</a></h2>
 <p>Create `.github/workflows/validate-coding-standards.yml` that:
 - Triggers on push to main/develop and all PRs
-- Uses the reusable action: `tydukes/coding-style-guide/.github/actions/validate@v1.0.0`
+- Uses the reusable action: `tydukes/coding-style-guide/.github/actions/validate@latest`
 - Runs in validation mode
 - Should be a required check for PRs</p>
 <h2 id="local-development">Local Development<a class="headerlink" href="#local-development" title="Permanent link">&para;</a></h2>
@@ -4260,7 +4260,7 @@ Integrate the tydukes/coding-style-guide validator into this repository with the
 - `make lint` - Linters only
 - `make format` - Auto-format code
 - `make help` - Show available targets</p>
-<p>All targets should use: `ghcr.io/tydukes/coding-style-guide:v1.0.0`</p>
+<p>All targets should use: `ghcr.io/tydukes/coding-style-guide:latest`</p>
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
 <p>Update `README.md` with a new "Code Quality" section that explains:
 - How to run validation locally
@@ -4271,14 +4271,14 @@ Integrate the tydukes/coding-style-guide validator into this repository with the
 - `.pre-commit-config.yaml` - Add validator hook
 - `.gitlab-ci.yml` - Add validation job
 - `CONTRIBUTING.md` - Add validation instructions</p>
-<p>Container: `ghcr.io/tydukes/coding-style-guide:v1.0.0`
+<p>Container: `ghcr.io/tydukes/coding-style-guide:latest`
 Documentation: https://tydukes.github.io/coding-style-guide/</p>
 <p>Please implement all applicable options based on the repository structure.
 ```</p>
 <hr />
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
-<p><strong>Container Image</strong>: <code>ghcr.io/tydukes/coding-style-guide:v1.0.0</code></p>
-<p><strong>GitHub Action</strong>: <code>tydukes/coding-style-guide/.github/actions/validate@v1.0.0</code></p>
+<p><strong>Container Image</strong>: <code>ghcr.io/tydukes/coding-style-guide:latest</code></p>
+<p><strong>GitHub Action</strong>: <code>tydukes/coding-style-guide/.github/actions/validate@latest</code></p>
 <p><strong>Documentation</strong>: <a href="https://tydukes.github.io/coding-style-guide/">https://tydukes.github.io/coding-style-guide/</a></p>
 <p><strong>Commands</strong>: <code>validate</code>, <code>lint</code>, <code>format</code>, <code>docs</code>, <code>metadata</code></p>
 <p><strong>Repository</strong>: <a href="https://github.com/tydukes/coding-style-guide">https://github.com/tydukes/coding-style-guide</a></p>
