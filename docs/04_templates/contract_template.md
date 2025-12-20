@@ -526,7 +526,7 @@ molecule test -s compliance              # Compliance scenario
 
 ### Example 1: Terraform VPC Module Contract
 
-See the [Terraform guide Testing section](../02_language_guides/terraform.md#module-contracts) for a complete
+See the [Terraform guide Testing section](../02_language_guides/terraform.md#module-contract) for a complete
 VPC module CONTRACT.md example.
 
 ### Example 2: Ansible Webserver Role Contract
@@ -536,7 +536,8 @@ webserver role CONTRACT.md example.
 
 ## Additional Resources
 
-- [IaC Testing Standards](../05_ci_cd/iac_testing_standards.md#contract-based-development) - Contract-based development philosophy
+- [IaC Testing Standards](../05_ci_cd/iac_testing_standards.md#3-contract-based-development) - Contract-based
+  development philosophy
 - [Terraform Testing Guide](../02_language_guides/terraform.md#testing) - Terraform-specific testing
 - [Ansible Testing Guide](../02_language_guides/ansible.md#testing-with-molecule) - Ansible-specific testing
 
