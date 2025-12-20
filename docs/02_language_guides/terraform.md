@@ -792,6 +792,808 @@ cd tests
 go test -v -timeout 30m
 ```
 
+### Testing Philosophy and Strategy
+
+#### When to Write Tests
+
+Write tests for Terraform modules when:
+
+- **Reusable modules**: Any module used across multiple projects or teams
+- **Critical infrastructure**: Resources that impact production availability or security
+- **Complex logic**: Modules with conditional resources, dynamic blocks, or computed values
+- **Public modules**: Any module shared externally or published to registries
+- **Compliance requirements**: Infrastructure requiring audit trails or compliance evidence
+
+#### What to Test
+
+Test the following aspects of your Terraform modules:
+
+1. **Resource Creation**: Verify expected resources are created
+2. **Input Validation**: Test that invalid inputs are rejected
+3. **Output Correctness**: Validate outputs match expected values
+4. **State Consistency**: Ensure idempotent apply operations
+5. **Cross-Resource Dependencies**: Test resource relationships and ordering
+6. **Error Handling**: Verify graceful handling of failures
+
+### Tiered Testing Strategy
+
+Implement a three-tiered testing approach for comprehensive quality assurance:
+
+#### Tier 1: Static Analysis (Fast, Always Run)
+
+Fast checks that run on every commit:
+
+```bash
+# Terraform formatting
+terraform fmt -check -recursive
+
+# Terraform validation
+terraform validate
+
+# TFLint for best practices
+tflint --recursive
+
+# TFSec for security scanning
+tfsec .
+
+# Checkov for policy compliance
+checkov -d .
+```
+
+**CI/CD Integration**:
+
+```yaml
+# .github/workflows/terraform-lint.yml
+name: Terraform Lint
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+      - name: Run TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      - name: TFLint
+        run: tflint --recursive
+
+      - name: Run TFSec
+        uses: aquasecurity/tfsec-action@v1.0.0
+```
+
+#### Tier 2: Unit Tests (Module-Level, Run on PR)
+
+Test individual modules in isolation using Terratest or native Terraform tests:
+
+```go
+// tests/unit/s3_bucket_test.go
+package test
+
+import (
+    "testing"
+    "github.com/gruntwork-io/terratest/modules/terraform"
+    "github.com/stretchr/testify/assert"
+)
+
+func TestS3BucketModule(t *testing.T) {
+    t.Parallel()
+
+    terraformOptions := &terraform.Options{
+        TerraformDir: "../../modules/s3-bucket",
+        Vars: map[string]interface{}{
+            "bucket_name": "test-bucket-12345",
+            "environment": "test",
+            "versioning_enabled": true,
+        },
+        NoColor: true,
+    }
+
+    defer terraform.Destroy(t, terraformOptions)
+
+    // Test Plan
+    planExitCode := terraform.InitAndPlanWithExitCode(t, terraformOptions)
+    assert.Equal(t, 0, planExitCode, "Plan should succeed")
+
+    // Test Apply
+    terraform.Apply(t, terraformOptions)
+
+    // Validate Outputs
+    bucketName := terraform.Output(t, terraformOptions, "bucket_name")
+    assert.Equal(t, "test-bucket-12345", bucketName)
+
+    bucketArn := terraform.Output(t, terraformOptions, "bucket_arn")
+    assert.Contains(t, bucketArn, "arn:aws:s3:::test-bucket-12345")
+
+    // Validate versioning is enabled
+    versioning := terraform.Output(t, terraformOptions, "versioning_enabled")
+    assert.Equal(t, "true", versioning)
+}
+```
+
+**Native Terraform Unit Tests**:
+
+```hcl
+# tests/s3_bucket.tftest.hcl
+variables {
+  bucket_name = "test-bucket-12345"
+  environment = "test"
+  versioning_enabled = true
+}
+
+run "validate_bucket_creation" {
+  command = apply
+
+  assert {
+    condition     = aws_s3_bucket.main.bucket == var.bucket_name
+    error_message = "Bucket name does not match expected value"
+  }
+
+  assert {
+    condition     = aws_s3_bucket.main.tags["Environment"] == "test"
+    error_message = "Environment tag not set correctly"
+  }
+}
+
+run "validate_versioning_enabled" {
+  command = apply
+
+  assert {
+    condition     = aws_s3_bucket_versioning.main[0].versioning_configuration[0].status == "Enabled"
+    error_message = "Versioning should be enabled when versioning_enabled is true"
+  }
+}
+
+run "validate_outputs" {
+  command = apply
+
+  assert {
+    condition     = output.bucket_name == var.bucket_name
+    error_message = "Output bucket_name does not match input"
+  }
+
+  assert {
+    condition     = can(regex("^arn:aws:s3:::", output.bucket_arn))
+    error_message = "Bucket ARN format is invalid"
+  }
+}
+```
+
+#### Tier 3: Integration Tests (Full Stack, Run Nightly/Pre-Release)
+
+Test complete infrastructure stacks in isolated environments:
+
+```go
+// tests/integration/full_stack_test.go
+package test
+
+import (
+    "testing"
+    "time"
+    "github.com/gruntwork-io/terratest/modules/terraform"
+    "github.com/gruntwork-io/terratest/modules/aws"
+    "github.com/stretchr/testify/assert"
+)
+
+func TestFullApplicationStack(t *testing.T) {
+    t.Parallel()
+
+    awsRegion := "us-east-1"
+
+    terraformOptions := &terraform.Options{
+        TerraformDir: "../../examples/complete",
+        Vars: map[string]interface{}{
+            "environment": "integration-test",
+            "aws_region":  awsRegion,
+        },
+        MaxRetries:         3,
+        TimeBetweenRetries: 5 * time.Second,
+    }
+
+    defer terraform.Destroy(t, terraformOptions)
+    terraform.InitAndApply(t, terraformOptions)
+
+    // Test VPC
+    vpcID := terraform.Output(t, terraformOptions, "vpc_id")
+    vpc := aws.GetVpcById(t, vpcID, awsRegion)
+    assert.Equal(t, "10.0.0.0/16", *vpc.CidrBlock)
+
+    // Test RDS Instance
+    dbEndpoint := terraform.Output(t, terraformOptions, "db_endpoint")
+    assert.NotEmpty(t, dbEndpoint)
+
+    // Test Application Load Balancer
+    albDNS := terraform.Output(t, terraformOptions, "alb_dns_name")
+    assert.NotEmpty(t, albDNS)
+
+    // Integration: Verify connectivity
+    // (In real tests, you'd verify the app responds correctly)
+}
+```
+
+### Module Contracts and Guarantees
+
+Define explicit contracts for each reusable module using a `CONTRACT.md` file:
+
+#### CONTRACT.md Template
+
+```markdown
+# Module Contract: VPC Network
+
+## Purpose
+Provides a production-ready VPC with public and private subnets across multiple availability zones.
+
+## Guarantees
+
+### Resources Created
+- 1 VPC with DNS hostnames and DNS support enabled
+- N public subnets (min 2, configurable)
+- N private subnets (min 2, configurable)
+- 1 Internet Gateway
+- 1 NAT Gateway per availability zone (if private subnets enabled)
+- Route tables for public and private subnets
+
+### Behavior Guarantees
+1. **High Availability**: Subnets distributed across at least 2 availability zones
+2. **Network Isolation**: Private subnets have no direct internet access
+3. **Idempotency**: Multiple applies produce identical infrastructure
+4. **Tagging Consistency**: All resources tagged with project, environment, managed_by
+
+### Input Requirements
+- `vpc_cidr_block`: Must be valid CIDR (validated via variable validation)
+- `environment`: Must be one of: dev, staging, prod
+- `availability_zones`: List of at least 2 AZs
+
+### Output Guarantees
+- `vpc_id`: Always returns valid VPC ID
+- `public_subnet_ids`: Non-empty list if public subnets requested
+- `private_subnet_ids`: Non-empty list if private subnets requested
+
+## Compatibility Promises
+
+### Semantic Versioning
+- **Major version bump**: Breaking changes to inputs, outputs, or resource naming
+- **Minor version bump**: New features, backward-compatible changes
+- **Patch version bump**: Bug fixes only
+
+### Breaking Changes Policy
+Breaking changes will be:
+1. Documented in CHANGELOG.md
+2. Announced at least 2 minor versions in advance
+3. Provided with migration guides
+
+## Testing Coverage
+- ✅ Terraform validate passes
+- ✅ TFLint with no errors
+- ✅ Terratest unit tests for all guarantees
+- ✅ Integration tests for multi-AZ deployment
+- ✅ Security scans (TFSec, Checkov) pass
+
+## Platform Support
+- **AWS Provider**: >= 4.0, < 6.0
+- **Terraform**: >= 1.3.0
+```
+
+#### Module README Example
+
+Every module should document its contract in the README:
+
+```markdown
+# VPC Network Module
+
+## Usage
+
+```hcl
+module "vpc" {
+  source = "github.com/myorg/terraform-modules//vpc?ref=v2.1.0"
+
+  vpc_cidr_block      = "10.0.0.0/16"
+  environment         = "prod"
+  availability_zones  = ["us-east-1a", "us-east-1b", "us-east-1c"]
+
+  enable_nat_gateway  = true
+  single_nat_gateway  = false  # One NAT per AZ for HA
+}
+```
+
+## Inputs
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| vpc_cidr_block | string | Yes | - | CIDR block for VPC (must be /16 or larger) |
+| environment | string | Yes | - | Environment name (dev/staging/prod) |
+| availability_zones | list(string) | Yes | - | List of AZs (minimum 2) |
+
+## Outputs
+
+| Name | Type | Description | Guaranteed |
+|------|------|-------------|------------|
+| vpc_id | string | VPC identifier | Always non-empty |
+| public_subnet_ids | list(string) | Public subnet IDs | Non-empty if public subnets enabled |
+| private_subnet_ids | list(string) | Private subnet IDs | Non-empty if private subnets enabled |
+
+## Module Contract
+
+See [CONTRACT.md Template](../04_templates/contract_template.md) for detailed guarantees, compatibility promises,
+and breaking change policies.
+
+## Module Testing
+
+This module is tested with:
+
+- Terraform 1.6+ native tests
+- Terratest integration tests
+- TFLint, TFSec, Checkov security scans
+
+Run tests:
+
+```bash
+terraform test                    # Native tests
+cd tests && go test -v -timeout 30m  # Terratest
+```
+
+### Test Coverage Requirements
+
+Establish minimum coverage thresholds for modules:
+
+#### Coverage Metrics
+
+1. **Resource Coverage**: Test creation of all resource types
+2. **Input Coverage**: Test all required and optional variables
+3. **Output Coverage**: Validate all outputs
+4. **Conditional Coverage**: Test all conditional resource creation paths
+5. **Error Coverage**: Test input validation and error cases
+
+#### Coverage Checklist
+
+For each module, verify:
+
+- [ ] **Terraform Validate**: Passes with no errors
+- [ ] **Format Check**: `terraform fmt -check` passes
+- [ ] **Linting**: TFLint passes with no errors
+- [ ] **Security Scan**: TFSec/Checkov pass or exceptions documented
+- [ ] **Unit Tests**: All resources tested individually
+- [ ] **Integration Tests**: Module tested in realistic scenario
+- [ ] **Contract Tests**: All guarantees validated
+- [ ] **Input Validation Tests**: Invalid inputs rejected appropriately
+- [ ] **Output Tests**: All outputs return expected values
+- [ ] **Idempotency Test**: Multiple applies produce no changes
+
+#### Coverage Reporting
+
+Generate and track coverage reports:
+
+```bash
+# Generate test coverage report
+go test -v -coverprofile=coverage.out ./...
+go tool cover -html=coverage.out -o coverage.html
+
+# Terraform test coverage
+terraform test -json | tee test-results.json
+
+# Parse results for CI/CD
+jq '.test_results[] | select(.status != "pass")' test-results.json
+```
+
+### CI/CD Integration
+
+#### Pre-Commit Hooks
+
+Configure pre-commit hooks for local validation:
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.86.0
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_validate
+      - id: terraform_docs
+      - id: terraform_tflint
+        args:
+          - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
+      - id: terraform_tfsec
+      - id: terraform_checkov
+        args:
+          - --args=--quiet
+          - --args=--framework terraform
+```
+
+Install and run:
+
+```bash
+pip install pre-commit
+pre-commit install
+pre-commit run --all-files
+```
+
+#### GitHub Actions CI/CD Pipeline
+
+Complete testing pipeline with tiered approach:
+
+```yaml
+# .github/workflows/terraform-ci.yml
+name: Terraform CI/CD
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+env:
+  TF_VERSION: 1.6.0
+
+jobs:
+  # Tier 1: Fast Static Analysis
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        run: terraform init -backend=false
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+
+      - name: Run TFLint
+        run: tflint --recursive --format=compact
+
+      - name: Run TFSec
+        uses: aquasecurity/tfsec-action@v1.0.0
+        with:
+          soft_fail: false
+
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: .
+          framework: terraform
+          quiet: true
+
+  # Tier 2: Unit Tests
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: static-analysis
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Run Terraform Tests
+        run: terraform test
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Run Terratest Unit Tests
+        run: |
+          cd tests/unit
+          go test -v -timeout 20m -parallel 4
+        env:
+          AWS_DEFAULT_REGION: us-east-1
+
+  # Tier 3: Integration Tests (only on main branch)
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Run Integration Tests
+        run: |
+          cd tests/integration
+          go test -v -timeout 60m
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: tests/integration/test-results.json
+
+  # Generate Test Report
+  test-report:
+    name: Generate Test Report
+    runs-on: ubuntu-latest
+    needs: [static-analysis, unit-tests]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Test Results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*-test-results'
+
+      - name: Generate Report
+        run: |
+          echo "# Test Results" > test-report.md
+          echo "## Summary" >> test-report.md
+          echo "- Static Analysis: ${{ needs.static-analysis.result }}" >> test-report.md
+          echo "- Unit Tests: ${{ needs.unit-tests.result }}" >> test-report.md
+
+      - name: Comment PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('test-report.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
+```
+
+#### GitLab CI Pipeline
+
+```yaml
+# .gitlab-ci.yml
+stages:
+  - validate
+  - test-unit
+  - test-integration
+  - report
+
+variables:
+  TF_VERSION: "1.6.0"
+
+# Tier 1: Static Analysis
+terraform-validate:
+  stage: validate
+  image: hashicorp/terraform:$TF_VERSION
+  script:
+    - terraform fmt -check -recursive
+    - terraform init -backend=false
+    - terraform validate
+
+tflint:
+  stage: validate
+  image: ghcr.io/terraform-linters/tflint:latest
+  script:
+    - tflint --recursive
+
+tfsec:
+  stage: validate
+  image: aquasec/tfsec:latest
+  script:
+    - tfsec . --soft-fail=false
+
+# Tier 2: Unit Tests
+terraform-test:
+  stage: test-unit
+  image: hashicorp/terraform:$TF_VERSION
+  script:
+    - terraform test
+  artifacts:
+    reports:
+      junit: test-results.xml
+
+terratest-unit:
+  stage: test-unit
+  image: golang:1.21
+  script:
+    - cd tests/unit
+    - go test -v -timeout 20m ./... | tee test-output.log
+  artifacts:
+    paths:
+      - tests/unit/test-output.log
+
+# Tier 3: Integration Tests
+terratest-integration:
+  stage: test-integration
+  image: golang:1.21
+  only:
+    - main
+    - tags
+  script:
+    - cd tests/integration
+    - go test -v -timeout 60m ./...
+  artifacts:
+    paths:
+      - tests/integration/test-results.json
+
+# Generate Coverage Report
+test-coverage:
+  stage: report
+  image: golang:1.21
+  script:
+    - go test -coverprofile=coverage.out ./...
+    - go tool cover -html=coverage.out -o coverage.html
+  coverage: '/coverage: \d+.\d+% of statements/'
+  artifacts:
+    paths:
+      - coverage.html
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+```
+
+### Coverage and Compliance Reporting
+
+#### Generating Compliance Evidence
+
+Create audit-ready test reports:
+
+```go
+// tests/compliance/compliance_test.go
+package test
+
+import (
+    "encoding/json"
+    "os"
+    "testing"
+    "time"
+)
+
+type ComplianceReport struct {
+    TestSuite     string    `json:"test_suite"`
+    ExecutionTime time.Time `json:"execution_time"`
+    Results       []TestResult `json:"results"`
+    Summary       Summary   `json:"summary"`
+}
+
+type TestResult struct {
+    Name        string `json:"name"`
+    Status      string `json:"status"`
+    Description string `json:"description"`
+    Evidence    string `json:"evidence"`
+}
+
+type Summary struct {
+    Total  int `json:"total"`
+    Passed int `json:"passed"`
+    Failed int `json:"failed"`
+}
+
+func TestComplianceReport(t *testing.T) {
+    report := ComplianceReport{
+        TestSuite:     "VPC Module Compliance",
+        ExecutionTime: time.Now(),
+        Results:       []TestResult{},
+    }
+
+    // Run tests and collect results
+    tests := []struct {
+        name     string
+        testFunc func() (bool, string)
+        control  string
+    }{
+        {"VPC DNS Enabled", testDNSEnabled, "NET-001"},
+        {"Multi-AZ Deployment", testMultiAZ, "HA-001"},
+        {"Private Subnet Isolation", testPrivateIsolation, "SEC-001"},
+    }
+
+    for _, tc := range tests {
+        passed, evidence := tc.testFunc()
+        status := "PASS"
+        if !passed {
+            status = "FAIL"
+            report.Summary.Failed++
+        } else {
+            report.Summary.Passed++
+        }
+
+        report.Results = append(report.Results, TestResult{
+            Name:        tc.name,
+            Status:      status,
+            Description: tc.control,
+            Evidence:    evidence,
+        })
+        report.Summary.Total++
+    }
+
+    // Write compliance report
+    file, _ := json.MarshalIndent(report, "", "  ")
+    os.WriteFile("compliance-report.json", file, 0644)
+}
+```
+
+#### Dashboard Integration
+
+Integrate test results with dashboards:
+
+```bash
+# Send results to monitoring/dashboarding system
+curl -X POST https://dashboard.example.com/api/test-results \
+  -H "Content-Type: application/json" \
+  -d @test-results.json
+
+# Upload to S3 for historical tracking
+aws s3 cp test-results.json \
+  s3://test-results-bucket/terraform/$(date +%Y-%m-%d)/results.json
+
+# Create GitHub deployment status
+gh api repos/:owner/:repo/deployments/:deployment_id/statuses \
+  -f state=success \
+  -f description="All tests passed"
+```
+
+#### Coverage Metrics Collection
+
+Track test coverage over time:
+
+```bash
+#!/bin/bash
+# scripts/collect-coverage.sh
+
+# Run tests with coverage
+terraform test -json > test-results.json
+cd tests && go test -coverprofile=coverage.out ./... -json > go-test-results.json
+
+# Parse coverage
+COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print $3}')
+
+# Store metrics
+cat > coverage-metrics.json <<EOF
+{
+  "timestamp": "$(date -Iseconds)",
+  "terraform_tests": {
+    "total": $(jq '.test_results | length' test-results.json),
+    "passed": $(jq '[.test_results[] | select(.status == "pass")] | length' test-results.json)
+  },
+  "go_tests": {
+    "coverage": "$COVERAGE"
+  }
+}
+EOF
+
+# Push to metrics system
+curl -X POST https://metrics.example.com/coverage \
+  -d @coverage-metrics.json
+```
+
 ---
 
 ## Security Best Practices
@@ -2246,7 +3048,7 @@ variable "vpc_cidr" {
 - [Testing Strategies](../05_ci_cd/testing_strategies.md) - Terratest, kitchen-terraform patterns
 - [Security Scanning Guide](../05_ci_cd/security_scanning_guide.md) - checkov, tfsec, terrascan
 
-### CI/CD Integration
+### CI/CD Resources
 
 - [GitHub Actions Guide](../05_ci_cd/github_actions_guide.md) - Terraform workflow examples
 - [GitLab CI Guide](../05_ci_cd/gitlab_ci_guide.md) - Terraform pipeline configuration
