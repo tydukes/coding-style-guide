@@ -1,0 +1,6537 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Language-agnostic testing philosophy and standards for Infrastructure as Code">
+      
+      
+        <meta name="author" content="Tyler Dukes">
+      
+      
+        <link rel="canonical" href="https://tydukes.github.io/coding-style-guide/05_ci_cd/iac_testing_standards/">
+      
+      
+        <link rel="prev" href="../testing_strategies/">
+      
+      
+        <link rel="next" href="../../06_container/usage/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>IaC Testing Philosophy and Standards - The Dukes Engineering Style Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-XXXXXXXXXX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-XXXXXXXXXX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-testing-philosophy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="The Dukes Engineering Style Guide" class="md-header__button md-logo" aria-label="The Dukes Engineering Style Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            The Dukes Engineering Style Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              IaC Testing Philosophy and Standards
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/tydukes/coding-style-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    coding-style-guide
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01_overview/getting_started/" class="md-tabs__link">
+          
+  
+  
+  Overview
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../00_standards/heading_structure/" class="md-tabs__link">
+          
+  
+  
+  Standards
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02_language_guides/terraform/" class="md-tabs__link">
+          
+  
+  
+  Language Guides
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../03_metadata_schema/schema_reference/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Metadata Schema
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../04_templates/README_template/" class="md-tabs__link">
+          
+  
+  
+  Templates
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../05_examples/python_package_example/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../09_refactoring/" class="md-tabs__link">
+          
+  
+  
+  Refactoring
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../08_anti_patterns/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Anti-Patterns
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../10_migration_guides/from_pep8/" class="md-tabs__link">
+          
+  
+  
+  Migration Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../ai_validation_pipeline/" class="md-tabs__link">
+          
+  
+  
+  CI / CD
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../06_container/usage/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Container Usage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../07_integration/integration_prompt/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Integration Guide
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../glossary/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="The Dukes Engineering Style Guide" class="md-nav__button md-logo" aria-label="The Dukes Engineering Style Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    The Dukes Engineering Style Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/tydukes/coding-style-guide" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    coding-style-guide
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Overview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_overview/getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_overview/principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_overview/governance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_overview/structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structure
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standards
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Standards
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00_standards/heading_structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heading Structure
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00_standards/code_block_language_tags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Block Language Tags
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Infrastructure as Code
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/terraform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform & Terragrunt
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/terragrunt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terragrunt (live)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/hcl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HCL
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/cdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS CDK
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes & Helm
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Configuration Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/ansible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Programming Languages
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Programming Languages
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/typescript/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TypeScript
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/bash/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bash
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/powershell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PowerShell
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQL
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI/CD & Automation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CI/CD & Automation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/jenkins_groovy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins / Groovy
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/github_actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Actions
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/gitlab_ci/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitLab CI/CD
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Formats
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Formats
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/yaml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YAML
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JSON
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containerization
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containerization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/dockerfile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dockerfile
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/docker_compose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Compose
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Build Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_language_guides/makefile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Makefile
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_metadata_schema/schema_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata Schema
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Templates
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_templates/README_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    README Template
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_templates/terraform_module_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform Module
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_templates/python_package_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Package
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_templates/gitignore_templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .gitignore Templates
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_templates/precommit_config_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-commit Config
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_templates/github_actions_workflow_templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Actions Workflows
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_templates/dockerfile_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dockerfile
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_templates/docker_compose_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker Compose
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_templates/helm_chart_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Helm Chart
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_templates/contract_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CONTRACT.md Template
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_templates/testing_docs_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing Documentation
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_examples/python_package_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Package
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_examples/terraform_module_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform Module
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_examples/ansible_role_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible Role
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_examples/typescript_library_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TypeScript Library
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Refactoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Refactoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09_refactoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09_refactoring/python_refactoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Examples
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09_refactoring/typescript_refactoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TypeScript Examples
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09_refactoring/terraform_refactoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform Examples
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09_refactoring/ansible_refactoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible Examples
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09_refactoring/bash_refactoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bash Examples
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08_anti_patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anti-Patterns
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Migration Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10_migration_guides/from_pep8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From PEP 8
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10_migration_guides/from_google/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Google Style Guide
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10_migration_guides/from_airbnb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From Airbnb Style Guide
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI / CD
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CI / CD
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ai_validation_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Validation Pipeline
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../github_actions_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Actions Guide
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dependabot_auto_merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependabot Auto-Merge
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gitlab_ci_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitLab CI Guide
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jenkins_pipeline_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins Pipeline Guide
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../precommit_hooks_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-commit Hooks Guide
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../local_validation_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local Validation Setup
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ide_integration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IDE Integration Guide
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security_scanning_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Scanning Guide
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing_strategies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing Strategies
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IaC Testing Standards
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IaC Testing Standards
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-testing-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Testing Philosophy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Testing Philosophy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-test-infrastructure-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Test Infrastructure Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shift-left-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shift-Left Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-cost-of-production-bugs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Cost of Production Bugs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-testing-pyramid-for-iac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Testing Pyramid for IaC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Testing Pyramid for IaC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-analysis-tier-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static Analysis (Tier 0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unit-tests-tier-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unit Tests (Tier 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-tests-tier-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Tests (Tier 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compliance-tests-tier-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance Tests (Tier 3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smoke-tests-tier-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Smoke Tests (Tier 4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-contract-based-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Contract-Based Development
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Contract-Based Development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Contract?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contractmd-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CONTRACT.md Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contract-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#writing-testable-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing Testable Contracts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#versioning-and-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning and Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-coverage-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Coverage Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Coverage Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-to-measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to Measure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimum-coverage-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum Coverage Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risk-based-coverage-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risk-Based Coverage Decisions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#platformos-coverage-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform/OS Coverage Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-test-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Test Organization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Test Organization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#directory-structure-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Structure Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Directory Structure Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#terraform-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ansible-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ansible Roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-data-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Data Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixture-and-mock-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixture and Mock Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-quality-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Quality Gates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Quality Gates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tiered-enforcement-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiered Enforcement Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-warning-only-weeks-1-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Warning Only (Weeks 1-2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-advisory-weeks-3-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Advisory (Weeks 3-4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-strict-enforcement-week-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Strict Enforcement (Week 5+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exceptions-and-override-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exceptions and Override Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emergency-bypass-procedures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emergency Bypass Procedures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-cicd-integration-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. CI/CD Integration Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. CI/CD Integration Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-stage-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline Stage Organization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#artifact-generation-and-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Artifact Generation and Retention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reporting-and-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reporting and Dashboards
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feedback-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feedback Mechanisms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-developer-experience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Developer Experience
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Developer Experience">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-commit-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Commit Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-testing-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Testing Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fast-feedback-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fast Feedback Mechanisms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-compliance-governance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Compliance &amp; Governance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Compliance &amp; Governance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evidence-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-trail-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Trail Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regulatory-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regulatory Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compliance-ready-reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance-Ready Reporting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-continuous-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Continuous Improvement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Continuous Improvement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metrics-to-track" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics to Track
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-cycles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Cycles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contract-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#platform-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Expansion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_container/usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Usage
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_integration/integration_prompt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-testing-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Testing Philosophy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Testing Philosophy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-test-infrastructure-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Test Infrastructure Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shift-left-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shift-Left Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-cost-of-production-bugs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Cost of Production Bugs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-testing-pyramid-for-iac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Testing Pyramid for IaC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Testing Pyramid for IaC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-analysis-tier-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static Analysis (Tier 0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unit-tests-tier-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unit Tests (Tier 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-tests-tier-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Tests (Tier 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compliance-tests-tier-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance Tests (Tier 3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smoke-tests-tier-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Smoke Tests (Tier 4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-contract-based-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Contract-Based Development
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Contract-Based Development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Contract?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contractmd-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CONTRACT.md Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contract-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#writing-testable-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing Testable Contracts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#versioning-and-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning and Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-coverage-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Coverage Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Coverage Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-to-measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to Measure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimum-coverage-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum Coverage Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risk-based-coverage-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risk-Based Coverage Decisions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#platformos-coverage-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform/OS Coverage Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-test-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Test Organization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Test Organization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#directory-structure-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Structure Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Directory Structure Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#terraform-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ansible-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ansible Roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-data-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Data Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixture-and-mock-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixture and Mock Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-quality-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Quality Gates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Quality Gates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tiered-enforcement-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiered Enforcement Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-warning-only-weeks-1-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Warning Only (Weeks 1-2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-advisory-weeks-3-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Advisory (Weeks 3-4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-strict-enforcement-week-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Strict Enforcement (Week 5+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exceptions-and-override-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exceptions and Override Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emergency-bypass-procedures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emergency Bypass Procedures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-cicd-integration-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. CI/CD Integration Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. CI/CD Integration Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-stage-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline Stage Organization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#artifact-generation-and-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Artifact Generation and Retention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reporting-and-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reporting and Dashboards
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feedback-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feedback Mechanisms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-developer-experience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Developer Experience
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Developer Experience">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-commit-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Commit Hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-testing-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Testing Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fast-feedback-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fast Feedback Mechanisms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-compliance-governance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Compliance &amp; Governance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Compliance &amp; Governance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evidence-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-trail-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Trail Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regulatory-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regulatory Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compliance-ready-reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance-Ready Reporting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-continuous-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Continuous Improvement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Continuous Improvement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metrics-to-track" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics to Track
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-cycles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Cycles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contract-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#platform-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Expansion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+  <h1>IaC Testing Standards</h1>
+
+<p>This document defines the organization-wide testing philosophy and standards for Infrastructure as Code (IaC).
+These principles apply across all IaC tools including Terraform, Terragrunt, Ansible, Kubernetes manifests,
+and other infrastructure automation technologies.</p>
+<h2 id="1-testing-philosophy">1. Testing Philosophy<a class="headerlink" href="#1-testing-philosophy" title="Permanent link">&para;</a></h2>
+<h3 id="why-test-infrastructure-code">Why Test Infrastructure Code<a class="headerlink" href="#why-test-infrastructure-code" title="Permanent link">&para;</a></h3>
+<p>Infrastructure code controls production systems, data, and availability. Bugs in infrastructure code can cause:</p>
+<ul>
+<li><strong>Production outages</strong>: Misconfigured networking, load balancers, or DNS</li>
+<li><strong>Security vulnerabilities</strong>: Exposed ports, weak encryption, misconfigured IAM</li>
+<li><strong>Data loss</strong>: Incorrect database configurations, backup failures</li>
+<li><strong>Cost overruns</strong>: Improperly scaled resources, orphaned infrastructure</li>
+<li><strong>Compliance violations</strong>: Missing audit logs, inadequate access controls</li>
+</ul>
+<p><strong>Testing infrastructure code is not optional—it's a fundamental requirement for production readiness.</strong></p>
+<h3 id="shift-left-testing">Shift-Left Testing<a class="headerlink" href="#shift-left-testing" title="Permanent link">&para;</a></h3>
+<p>Catch issues as early as possible in the development cycle:</p>
+<div class="highlight"><pre><span></span><code>Developer&#39;s    Commit    CI        Integration   Production
+  Machine       Hook    Pipeline     Testing      Deployment
+     |            |        |             |             |
+     ▼            ▼        ▼             ▼             ▼
+  [Static]    [Lint]  [Unit Tests] [Integration] [Smoke Tests]
+  $0 cost     $1       $10           $100          $1000+
+
+  Cost of finding bugs increases exponentially as code moves right →
+</code></pre></div>
+<p><strong>Key Principles:</strong></p>
+<ol>
+<li><strong>Fast Feedback Loops</strong>: Developers get results in seconds/minutes, not hours</li>
+<li><strong>Automated Validation</strong>: No manual approval gates before basic checks</li>
+<li><strong>Local Testing</strong>: Tests run on developer machines before commit</li>
+<li><strong>Pre-Commit Hooks</strong>: Block invalid code from entering version control</li>
+<li><strong>CI Pipeline Gating</strong>: Automated quality gates at every stage</li>
+</ol>
+<h3 id="the-cost-of-production-bugs">The Cost of Production Bugs<a class="headerlink" href="#the-cost-of-production-bugs" title="Permanent link">&para;</a></h3>
+<p>Real-world impact of infrastructure bugs:</p>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Example</th>
+<th>Impact</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical</td>
+<td>Security group exposed to 0.0.0.0/0</td>
+<td>Data breach</td>
+<td>$100K - $10M+</td>
+</tr>
+<tr>
+<td>High</td>
+<td>Incorrect database configuration</td>
+<td>Data loss</td>
+<td>$50K - $500K</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>Misconfigured load balancer</td>
+<td>Service degradation</td>
+<td>$10K - $50K</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>Suboptimal resource sizing</td>
+<td>Cost inefficiency</td>
+<td>$1K - $10K</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Testing prevents these issues before they reach production.</strong></p>
+<h2 id="2-testing-pyramid-for-iac">2. Testing Pyramid for IaC<a class="headerlink" href="#2-testing-pyramid-for-iac" title="Permanent link">&para;</a></h2>
+<p>IaC testing follows a modified testing pyramid optimized for infrastructure validation:</p>
+<div class="highlight"><pre><span></span><code>          ╱╲ Smoke Tests (Production)
+         ╱  ╲ &lt; 5% of test effort
+        ╱────╲
+       ╱ Comp ╲ Compliance &amp; Security
+      ╱  liance╲ 10-15% of test effort
+     ╱──────────╲
+    ╱Integration╲ Integration Tests
+   ╱   Tests     ╲ 20-30% of test effort
+  ╱──────────────╲
+ ╱   Unit Tests   ╲ Module/Role Tests
+╱                  ╲ 50-60% of test effort
+────────────────────
+   Static Analysis   Lint, Format, Security Scans
+   (Pre-requisite)   Run on every commit
+</code></pre></div>
+<h3 id="static-analysis-tier-0">Static Analysis (Tier 0)<a class="headerlink" href="#static-analysis-tier-0" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose</strong>: Catch syntax errors, style violations, and obvious security issues</p>
+<p><strong>Tools</strong>:</p>
+<ul>
+<li>Terraform: <code>terraform fmt</code>, <code>terraform validate</code>, <code>tflint</code>, <code>tfsec</code>, <code>checkov</code></li>
+<li>Ansible: <code>ansible-lint</code>, <code>yamllint</code></li>
+<li>Kubernetes: <code>kubeval</code>, <code>kube-linter</code></li>
+</ul>
+<p><strong>Execution</strong>: &lt; 30 seconds, runs on every commit</p>
+<p><strong>Example Coverage</strong>:</p>
+<ul>
+<li>Syntax validation</li>
+<li>Formatting consistency</li>
+<li>Deprecated API usage</li>
+<li>Common security misconfigurations</li>
+<li>Secret detection</li>
+</ul>
+<h3 id="unit-tests-tier-1">Unit Tests (Tier 1)<a class="headerlink" href="#unit-tests-tier-1" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose</strong>: Verify individual modules/roles work as specified</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Fast (&lt; 10 minutes)</li>
+<li>Isolated (no external dependencies)</li>
+<li>Deterministic (same input = same output)</li>
+<li>Test module contracts and guarantees</li>
+</ul>
+<p><strong>Tools</strong>:</p>
+<ul>
+<li>Terraform: Terratest (Go), Native Terraform Tests (.tftest.hcl)</li>
+<li>Ansible: Molecule with Docker driver</li>
+<li>Kubernetes: Unit (Go testing framework)</li>
+</ul>
+<p><strong>What to Test</strong>:</p>
+<ol>
+<li><strong>Resource Creation</strong>: Expected resources are created</li>
+<li><strong>Input Validation</strong>: Invalid inputs are rejected</li>
+<li><strong>Output Correctness</strong>: Outputs match expected values</li>
+<li><strong>Idempotency</strong>: Multiple runs produce identical results</li>
+<li><strong>Conditional Logic</strong>: All code paths are exercised</li>
+<li><strong>Error Handling</strong>: Graceful handling of failures</li>
+</ol>
+<p><strong>Example</strong>: Testing a VPC Terraform module</p>
+<div class="highlight"><pre><span></span><code>✓ Creates VPC with correct CIDR
+✓ Creates 2 public subnets across AZs
+✓ Creates 2 private subnets across AZs
+✓ Creates Internet Gateway
+✓ Creates NAT Gateways (one per AZ)
+✓ Configures route tables correctly
+✓ Rejects invalid CIDR blocks
+✓ Validates AZ count &gt;= 2
+✓ Idempotent on re-apply
+</code></pre></div>
+<h3 id="integration-tests-tier-2">Integration Tests (Tier 2)<a class="headerlink" href="#integration-tests-tier-2" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose</strong>: Verify multiple components work together</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Slower (&lt; 60 minutes)</li>
+<li>Uses real infrastructure (test environments)</li>
+<li>Tests cross-module interactions</li>
+<li>Validates end-to-end workflows</li>
+</ul>
+<p><strong>What to Test</strong>:</p>
+<ol>
+<li><strong>Multi-Module Deployments</strong>: VPC + EKS + RDS together</li>
+<li><strong>Network Connectivity</strong>: Subnets can reach each other</li>
+<li><strong>Service Integration</strong>: Application can connect to database</li>
+<li><strong>DNS Resolution</strong>: Service discovery works correctly</li>
+<li><strong>Load Balancer Routing</strong>: Traffic flows to correct targets</li>
+</ol>
+<p><strong>Example</strong>: Testing a three-tier application stack</p>
+<div class="highlight"><pre><span></span><code>✓ VPC created successfully
+✓ RDS instance accessible from private subnet
+✓ EKS cluster deployed and healthy
+✓ Application pods can connect to database
+✓ Load balancer routes traffic to pods
+✓ DNS resolves to load balancer
+✓ HTTPS certificate validates correctly
+✓ Health checks pass for all services
+</code></pre></div>
+<h3 id="compliance-tests-tier-3">Compliance Tests (Tier 3)<a class="headerlink" href="#compliance-tests-tier-3" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose</strong>: Verify infrastructure meets security and regulatory requirements</p>
+<p><strong>Tools</strong>:</p>
+<ul>
+<li>InSpec: Compliance validation framework</li>
+<li>Chef InSpec: Security and compliance testing</li>
+<li>Open Policy Agent (OPA): Policy enforcement</li>
+<li>Cloud Custodian: Cloud governance</li>
+</ul>
+<p><strong>What to Test</strong>:</p>
+<ol>
+<li><strong>Security Baselines</strong>: CIS benchmarks, STIG compliance</li>
+<li><strong>Access Controls</strong>: Proper IAM permissions, least privilege</li>
+<li><strong>Encryption</strong>: Data encrypted at rest and in transit</li>
+<li><strong>Audit Logging</strong>: CloudTrail, audit logs enabled</li>
+<li><strong>Network Security</strong>: No public access to sensitive resources</li>
+<li><strong>Compliance Standards</strong>: SOC2, PCI-DSS, HIPAA requirements</li>
+</ol>
+<p><strong>Example</strong>: CIS AWS Foundations Benchmark</p>
+<div class="highlight"><pre><span></span><code>✓ IAM password policy configured
+✓ MFA enabled on root account
+✓ CloudTrail enabled in all regions
+✓ S3 buckets have encryption enabled
+✓ VPC Flow Logs enabled
+✓ Security groups don&#39;t allow 0.0.0.0/0 on sensitive ports
+✓ EBS volumes encrypted
+✓ RDS instances have backup enabled
+</code></pre></div>
+<h3 id="smoke-tests-tier-4">Smoke Tests (Tier 4)<a class="headerlink" href="#smoke-tests-tier-4" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose</strong>: Verify deployed infrastructure is functioning</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Runs in production (or production-like environment)</li>
+<li>Tests actual deployed resources</li>
+<li>Validates end-to-end functionality</li>
+<li>Runs post-deployment</li>
+</ul>
+<p><strong>What to Test</strong>:</p>
+<ol>
+<li><strong>Service Health</strong>: All services respond to health checks</li>
+<li><strong>Connectivity</strong>: External services can reach endpoints</li>
+<li><strong>Authentication</strong>: Auth flows work correctly</li>
+<li><strong>Critical Paths</strong>: Key user journeys function</li>
+<li><strong>Performance</strong>: Response times within SLAs</li>
+</ol>
+<p><strong>Example</strong>: Post-deployment smoke tests</p>
+<div class="highlight"><pre><span></span><code>✓ HTTPS endpoint responds (200 OK)
+✓ Health check endpoint healthy
+✓ Database connection pool active
+✓ Cache service responding
+✓ Message queue accepting messages
+✓ Monitoring and alerting active
+✓ Backup jobs scheduled
+</code></pre></div>
+<h2 id="3-contract-based-development">3. Contract-Based Development<a class="headerlink" href="#3-contract-based-development" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-a-contract">What is a Contract?<a class="headerlink" href="#what-is-a-contract" title="Permanent link">&para;</a></h3>
+<p>A <strong>contract</strong> is an explicit, testable promise about what infrastructure code will create and how it will behave.</p>
+<p><strong>Contracts define</strong>:</p>
+<ul>
+<li><strong>Purpose</strong>: What problem this module/role solves</li>
+<li><strong>Inputs</strong>: Required and optional parameters</li>
+<li><strong>Outputs</strong>: Values provided for use by other modules</li>
+<li><strong>Resources</strong>: What infrastructure will be created</li>
+<li><strong>Behavior</strong>: Guarantees about how infrastructure will function</li>
+<li><strong>Compatibility</strong>: Which platforms, versions are supported</li>
+</ul>
+<h3 id="contractmd-purpose">CONTRACT.md Purpose<a class="headerlink" href="#contractmd-purpose" title="Permanent link">&para;</a></h3>
+<p>Every reusable module/role must include a <code>CONTRACT.md</code> file that explicitly states its guarantees.</p>
+<p><strong>Benefits</strong>:</p>
+<ol>
+<li><strong>Testability</strong>: Contracts are directly testable</li>
+<li><strong>Documentation</strong>: Self-documenting modules</li>
+<li><strong>Versioning</strong>: Clear breaking change policies</li>
+<li><strong>Trust</strong>: Consumers know exactly what to expect</li>
+<li><strong>Quality</strong>: Forces thoughtful module design</li>
+</ol>
+<h3 id="contract-structure">Contract Structure<a class="headerlink" href="#contract-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="gh"># Module Contract: [Name]</span>
+
+<span class="gu">## Purpose</span>
+[One paragraph describing what this module does]
+
+<span class="gu">## Guarantees</span>
+
+<span class="gu">### Resources Created</span>
+<span class="k">-</span><span class="w"> </span>[List of infrastructure resources that will be created]
+
+<span class="gu">### Behavior Guarantees</span>
+<span class="k">1.</span> [Specific, testable promise about behavior]
+<span class="k">2.</span> [Another guarantee]
+
+<span class="gu">### Input Requirements</span>
+[Document all inputs with validation rules]
+
+<span class="gu">### Output Guarantees</span>
+[Document all outputs and their format]
+
+<span class="gu">### Platform Support Matrix</span>
+[Which platforms/versions are supported]
+
+<span class="gu">## Breaking Changes Policy</span>
+[Semantic versioning rules and deprecation timeline]
+
+<span class="gu">## Testing Requirements</span>
+<span class="k">-</span><span class="w"> </span>[List of tests that must pass]
+<span class="k">-</span><span class="w"> </span>[Coverage requirements]
+</code></pre></div>
+<p><strong>See</strong>: CONTRACT.md Template (issue #169) for complete example</p>
+<h3 id="writing-testable-contracts">Writing Testable Contracts<a class="headerlink" href="#writing-testable-contracts" title="Permanent link">&para;</a></h3>
+<p><strong>BAD</strong> (vague, untestable):</p>
+<blockquote>
+<p>"This module creates networking resources"</p>
+</blockquote>
+<p><strong>GOOD</strong> (specific, testable):</p>
+<blockquote>
+<p>"This module creates:</p>
+<ul>
+<li>Exactly 1 VPC with DNS hostnames enabled</li>
+<li>N public subnets (min 2, configurable)</li>
+<li>N private subnets (min 2, configurable)</li>
+<li>Subnets distributed across at least 2 availability zones</li>
+<li>1 Internet Gateway attached to public subnets</li>
+<li>1 NAT Gateway per availability zone for private subnets"</li>
+</ul>
+</blockquote>
+<p>Every statement in the "GOOD" example can be verified with automated tests.</p>
+<h3 id="versioning-and-compatibility">Versioning and Compatibility<a class="headerlink" href="#versioning-and-compatibility" title="Permanent link">&para;</a></h3>
+<p>Use <strong>Semantic Versioning</strong> for infrastructure modules:</p>
+<ul>
+<li><strong>MAJOR</strong> (v1.0.0 → v2.0.0): Breaking changes to interface, resources, or behavior</li>
+<li><strong>MINOR</strong> (v1.0.0 → v1.1.0): New features, backward-compatible changes</li>
+<li><strong>PATCH</strong> (v1.0.0 → v1.0.1): Bug fixes, no functional changes</li>
+</ul>
+<p><strong>Breaking Change Examples</strong>:</p>
+<ul>
+<li>Renaming input variables</li>
+<li>Removing output values</li>
+<li>Changing resource names (causes recreation)</li>
+<li>Removing resources</li>
+<li>Changing default values that affect behavior</li>
+</ul>
+<p><strong>Breaking Change Policy</strong>:</p>
+<ol>
+<li>Announce in CHANGELOG.md at least 2 minor versions in advance</li>
+<li>Mark deprecated features with warnings</li>
+<li>Provide migration guides with examples</li>
+<li>Maintain deprecated features for minimum 2 minor versions</li>
+</ol>
+<h2 id="4-coverage-standards">4. Coverage Standards<a class="headerlink" href="#4-coverage-standards" title="Permanent link">&para;</a></h2>
+<h3 id="what-to-measure">What to Measure<a class="headerlink" href="#what-to-measure" title="Permanent link">&para;</a></h3>
+<p>Coverage is not just about lines of code—it's about <strong>guarantees tested</strong>.</p>
+<p><strong>Coverage Dimensions</strong>:</p>
+<ol>
+<li><strong>Guarantee Coverage</strong>: % of contract promises verified by tests</li>
+<li><strong>Resource Coverage</strong>: % of resource types exercised in tests</li>
+<li><strong>Input Coverage</strong>: % of input variables tested (including edge cases)</li>
+<li><strong>Output Coverage</strong>: % of outputs validated</li>
+<li><strong>Conditional Coverage</strong>: % of conditional logic paths tested</li>
+<li><strong>Platform Coverage</strong>: % of supported platforms tested</li>
+</ol>
+<h3 id="minimum-coverage-thresholds">Minimum Coverage Thresholds<a class="headerlink" href="#minimum-coverage-thresholds" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Coverage Type</th>
+<th>Minimum</th>
+<th>Target</th>
+<th>Critical Modules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Guarantee Coverage</td>
+<td>100%</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Resource Coverage</td>
+<td>80%</td>
+<td>90%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Input Coverage</td>
+<td>70%</td>
+<td>85%</td>
+<td>95%</td>
+</tr>
+<tr>
+<td>Output Coverage</td>
+<td>100%</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Conditional Coverage</td>
+<td>80%</td>
+<td>90%</td>
+<td>95%</td>
+</tr>
+<tr>
+<td>Platform Coverage</td>
+<td>2+ platforms</td>
+<td>All supported</td>
+<td>All supported</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Critical Modules</strong> include:</p>
+<ul>
+<li>Security-related modules (IAM, networking, encryption)</li>
+<li>Data storage modules (databases, object storage)</li>
+<li>Publicly published modules</li>
+<li>Modules used across multiple teams/projects</li>
+</ul>
+<h3 id="risk-based-coverage-decisions">Risk-Based Coverage Decisions<a class="headerlink" href="#risk-based-coverage-decisions" title="Permanent link">&para;</a></h3>
+<p>Not all code requires equal coverage. Use risk assessment:</p>
+<p><strong>High Risk</strong> (requires maximum coverage):</p>
+<ul>
+<li>Production infrastructure</li>
+<li>Security configurations</li>
+<li>Data storage and backups</li>
+<li>Network access controls</li>
+<li>Compliance-related resources</li>
+</ul>
+<p><strong>Medium Risk</strong> (requires standard coverage):</p>
+<ul>
+<li>Development/staging environments</li>
+<li>Non-critical applications</li>
+<li>Internal tools</li>
+<li>Monitoring and logging</li>
+</ul>
+<p><strong>Low Risk</strong> (can have reduced coverage):</p>
+<ul>
+<li>Temporary test environments</li>
+<li>Proof-of-concept code</li>
+<li>Development utilities</li>
+<li>Documentation-only changes</li>
+</ul>
+<h3 id="platformos-coverage-requirements">Platform/OS Coverage Requirements<a class="headerlink" href="#platformos-coverage-requirements" title="Permanent link">&para;</a></h3>
+<p><strong>Minimum Platform Coverage</strong>: Test on at least 2 different platforms/OS distributions</p>
+<p><strong>Platform Selection Guidelines</strong>:</p>
+<ol>
+<li><strong>Primary Platform</strong>: Most commonly used in production</li>
+<li><strong>Secondary Platform</strong>: Second most common or most different architecture</li>
+<li><strong>Edge Case Platform</strong>: If claiming support, must test</li>
+</ol>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li><strong>Ansible Roles</strong>: Ubuntu 22.04 (primary) + RHEL 9 (secondary) + Windows (if supported)</li>
+<li><strong>Terraform Modules</strong>: AWS (primary) + Azure (if multi-cloud) + GCP (if supported)</li>
+<li><strong>Kubernetes</strong>: EKS (primary) + GKE (secondary) + on-prem (if supported)</li>
+</ul>
+<h2 id="5-test-organization">5. Test Organization<a class="headerlink" href="#5-test-organization" title="Permanent link">&para;</a></h2>
+<h3 id="directory-structure-standards">Directory Structure Standards<a class="headerlink" href="#directory-structure-standards" title="Permanent link">&para;</a></h3>
+<p>Organize tests in a consistent, discoverable structure:</p>
+<h4 id="terraform-modules">Terraform Modules<a class="headerlink" href="#terraform-modules" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>modules/
+└── vpc/
+    ├── main.tf
+    ├── variables.tf
+    ├── outputs.tf
+    ├── CONTRACT.md
+    ├── README.md
+    ├── examples/
+    │   └── complete/
+    │       └── main.tf
+    └── tests/
+        ├── unit/
+        │   └── vpc_test.go
+        ├── integration/
+        │   └── full_stack_test.go
+        ├── compliance/
+        │   └── security_baseline.rb
+        └── fixtures/
+            └── test_vpc.tfvars
+</code></pre></div>
+<h4 id="ansible-roles">Ansible Roles<a class="headerlink" href="#ansible-roles" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>roles/
+└── webserver/
+    ├── tasks/
+    │   └── main.yml
+    ├── defaults/
+    │   └── main.yml
+    ├── meta/
+    │   └── main.yml
+    ├── CONTRACT.md
+    ├── README.md
+    └── molecule/
+        ├── default/
+        │   ├── molecule.yml
+        │   ├── converge.yml
+        │   └── verify.yml
+        ├── compliance/
+        │   ├── molecule.yml
+        │   └── tests/
+        │       └── test_security.rb
+        └── multi-platform/
+            └── molecule.yml
+</code></pre></div>
+<h3 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h3>
+<p><strong>Test Files</strong>:</p>
+<ul>
+<li>Unit tests: <code>*_test.go</code>, <code>test_*.py</code>, <code>*_spec.rb</code></li>
+<li>Integration tests: <code>*_integration_test.go</code>, <code>test_*_integration.py</code></li>
+<li>Compliance tests: <code>*_compliance.rb</code>, <code>security_baseline.rb</code></li>
+</ul>
+<p><strong>Test Functions/Methods</strong>:</p>
+<ul>
+<li>Use descriptive names: <code>TestVPCCreatesCorrectSubnets</code> (not <code>TestVPC</code>)</li>
+<li>Follow pattern: <code>Test[Module][What]</code> or <code>test_[module]_[what]</code></li>
+<li>Be specific: <code>TestWebserverInstallsNginxPackage</code> (not <code>TestInstall</code>)</li>
+</ul>
+<h3 id="test-data-management">Test Data Management<a class="headerlink" href="#test-data-management" title="Permanent link">&para;</a></h3>
+<p><strong>Principles</strong>:</p>
+<ol>
+<li><strong>No Secrets in Test Data</strong>: Use fake credentials, placeholder values</li>
+<li><strong>Realistic But Safe</strong>: Test data resembles production but is clearly fake</li>
+<li><strong>Version Controlled</strong>: Test fixtures in git, not environment variables</li>
+<li><strong>Isolated</strong>: Each test uses independent test data</li>
+<li><strong>Repeatable</strong>: Same test data produces same results</li>
+</ol>
+<p><strong>Test Data Locations</strong>:</p>
+<ul>
+<li><strong>Fixtures</strong>: <code>tests/fixtures/*.tfvars</code>, <code>molecule/default/vars.yml</code></li>
+<li><strong>Mock Responses</strong>: <code>tests/mocks/*.json</code></li>
+<li><strong>Test Certificates</strong>: <code>tests/fixtures/certs/*.pem</code> (self-signed)</li>
+</ul>
+<p><strong>Example Test Fixture</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># tests/fixtures/test_config.yml</span>
+<span class="nt">vpc_cidr</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10.0.0.0/16&quot;</span>
+<span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
+<span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test-project&quot;</span>
+<span class="c1"># DO NOT use real values</span>
+<span class="nt">aws_account_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;123456789012&quot;</span><span class="w">  </span><span class="c1"># Fake account</span>
+</code></pre></div>
+<h3 id="fixture-and-mock-usage">Fixture and Mock Usage<a class="headerlink" href="#fixture-and-mock-usage" title="Permanent link">&para;</a></h3>
+<p><strong>When to Use Fixtures</strong>:</p>
+<ul>
+<li>Consistent test data across multiple tests</li>
+<li>Complex configuration structures</li>
+<li>Known-good examples for regression testing</li>
+</ul>
+<p><strong>When to Use Mocks</strong>:</p>
+<ul>
+<li>External API calls (AWS API, cloud providers)</li>
+<li>Expensive operations (avoid real resource creation in unit tests)</li>
+<li>Non-deterministic responses (random values, timestamps)</li>
+</ul>
+<p><strong>Example Mock</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Mock AWS API responses in unit tests</span>
+<span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;boto3.client&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_s3_bucket_creation</span><span class="p">(</span><span class="n">mock_boto</span><span class="p">):</span>
+    <span class="n">mock_s3</span> <span class="o">=</span> <span class="n">mock_boto</span><span class="o">.</span><span class="n">return_value</span>
+    <span class="n">mock_s3</span><span class="o">.</span><span class="n">create_bucket</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Location&#39;</span><span class="p">:</span> <span class="s1">&#39;/test-bucket&#39;</span><span class="p">}</span>
+
+    <span class="c1"># Test code that creates S3 bucket</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">create_bucket</span><span class="p">(</span><span class="s1">&#39;test-bucket&#39;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Location&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/test-bucket&#39;</span>
+    <span class="n">mock_s3</span><span class="o">.</span><span class="n">create_bucket</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="6-quality-gates">6. Quality Gates<a class="headerlink" href="#6-quality-gates" title="Permanent link">&para;</a></h2>
+<h3 id="tiered-enforcement-approach">Tiered Enforcement Approach<a class="headerlink" href="#tiered-enforcement-approach" title="Permanent link">&para;</a></h3>
+<p>Introduce quality gates progressively to avoid disrupting development:</p>
+<div class="highlight"><pre><span></span><code>Phase 1          Phase 2              Phase 3
+Warning Only     Advisory             Strict Enforcement
+(Weeks 1-2)      (Weeks 3-4)          (Week 5+)
+
+┌─────────┐      ┌─────────┐          ┌─────────┐
+│ Lint    │      │ Lint    │          │ Lint    │
+│ Fails   │──▶   │ Fails   │──▶       │ Fails   │──▶ ❌ Block Merge
+│         │      │         │          │         │
+│ ⚠️ Warn │      │ 🔧 Fix  │          │ 🚫 Block│
+│ Continue│      │ + Comment│          │ Merge   │
+└─────────┘      └─────────┘          └─────────┘
+
+Allow Merge      Allow Merge          Block Merge
++ Warning        + MR Comment         Hard Requirement
+</code></pre></div>
+<h3 id="phase-1-warning-only-weeks-1-2">Phase 1: Warning Only (Weeks 1-2)<a class="headerlink" href="#phase-1-warning-only-weeks-1-2" title="Permanent link">&para;</a></h3>
+<p><strong>Goal</strong>: Build awareness without blocking work</p>
+<p><strong>Behavior</strong>:</p>
+<ul>
+<li>Tests run on every PR</li>
+<li>Failures logged but don't block merge</li>
+<li>Metrics collected on failure rates</li>
+<li>Team sees quality status but not forced to fix</li>
+</ul>
+<p><strong>Implementation</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># GitLab CI</span>
+<span class="nt">lint:terraform</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform fmt -check || echo &quot;⚠️ Formatting issues detected&quot;</span>
+<span class="w">  </span><span class="nt">allow_failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="c1"># GitHub Actions</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lint Terraform</span>
+<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform fmt -check</span>
+<span class="w">  </span><span class="nt">continue-on-error</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<p><strong>Success Criteria</strong>: Failure rate &lt; 20% before moving to Phase 2</p>
+<h3 id="phase-2-advisory-weeks-3-4">Phase 2: Advisory (Weeks 3-4)<a class="headerlink" href="#phase-2-advisory-weeks-3-4" title="Permanent link">&para;</a></h3>
+<p><strong>Goal</strong>: Provide automated fixes and guidance</p>
+<p><strong>Behavior</strong>:</p>
+<ul>
+<li>Tests run and report failures</li>
+<li>Automated fix suggestions posted to MR/PR</li>
+<li>Failures still don't block merge (yet)</li>
+<li>Dashboard shows quality trends</li>
+</ul>
+<p><strong>Implementation</strong>:</p>
+<ul>
+<li>Post MR/PR comments with fix instructions</li>
+<li>Provide automated fix commands</li>
+<li>Link to documentation and examples</li>
+<li>Show quality trend (improving/degrading)</li>
+</ul>
+<p><strong>Example MR Comment</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## 🔧 Terraform Formatting Issues</span>
+
+Formatting issues detected in 3 files. Run this command to fix:
+
+​```bash
+terraform fmt -recursive
+​```
+
+<span class="gs">**Files affected**</span>:
+<span class="k">-</span><span class="w"> </span>modules/vpc/main.tf
+<span class="k">-</span><span class="w"> </span>modules/rds/variables.tf
+
+<span class="gs">**Documentation**</span>: [<span class="nt">Terraform Style Guide</span>](<span class="na">link</span>)
+</code></pre></div>
+<p><strong>Success Criteria</strong>: Failure rate &lt; 10% before moving to Phase 3</p>
+<h3 id="phase-3-strict-enforcement-week-5">Phase 3: Strict Enforcement (Week 5+)<a class="headerlink" href="#phase-3-strict-enforcement-week-5" title="Permanent link">&para;</a></h3>
+<p><strong>Goal</strong>: Enforce quality standards</p>
+<p><strong>Behavior</strong>:</p>
+<ul>
+<li>Tests run on every PR</li>
+<li>Failures block merge</li>
+<li>Exceptions require explicit approval</li>
+<li>Always enforced on main/production branches</li>
+</ul>
+<p><strong>Implementation</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># GitLab CI</span>
+<span class="nt">lint:terraform</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform fmt -check</span>
+<span class="w">  </span><span class="nt">allow_failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$ENFORCEMENT_PHASE == &quot;strict&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span><span class="w">  </span><span class="c1"># Always strict on main</span>
+
+<span class="c1"># GitHub Actions</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lint Terraform</span>
+<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform fmt -check</span>
+<span class="w">  </span><span class="c1"># No continue-on-error = blocks on failure</span>
+</code></pre></div>
+<p><strong>Success Criteria</strong>: &lt; 5% failure rate, minimal exceptions needed</p>
+<h3 id="exceptions-and-override-policies">Exceptions and Override Policies<a class="headerlink" href="#exceptions-and-override-policies" title="Permanent link">&para;</a></h3>
+<p><strong>When Exceptions Are Allowed</strong>:</p>
+<ol>
+<li><strong>Emergency Fixes</strong>: Production incidents requiring immediate fix</li>
+<li><strong>External Dependencies</strong>: Third-party module failures outside our control</li>
+<li><strong>Tool Bugs</strong>: Known issues in linting/testing tools</li>
+<li><strong>Deprecation Periods</strong>: Temporary bypass during breaking changes</li>
+</ol>
+<p><strong>Exception Process</strong>:</p>
+<ol>
+<li>Create exception request (GitHub issue, Jira ticket)</li>
+<li>Document reason and mitigation plan</li>
+<li>Obtain approval from tech lead or higher</li>
+<li>Set expiration date (max 30 days)</li>
+<li>Track exceptions in dashboard</li>
+<li>Review and close or extend before expiration</li>
+</ol>
+<p><strong>Exception Request Template</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## Quality Gate Exception Request</span>
+
+<span class="gs">**Requester**</span>: [Name]
+<span class="gs">**Date**</span>: [YYYY-MM-DD]
+<span class="gs">**Expiration**</span>: [YYYY-MM-DD] (max 30 days)
+
+<span class="gu">### What quality gate is being bypassed?</span>
+[Specific check/test being skipped]
+
+<span class="gu">### Why is this exception needed?</span>
+[Detailed justification]
+
+<span class="gu">### What is the risk?</span>
+[Impact if bypassed check would have failed]
+
+<span class="gu">### Mitigation Plan</span>
+[How will risk be addressed?]
+
+<span class="gu">### Approval</span>
+<span class="k">- [ ]</span> Tech Lead: [Name]
+<span class="k">- [ ]</span> Security Team (if security-related): [Name]
+</code></pre></div>
+<h3 id="emergency-bypass-procedures">Emergency Bypass Procedures<a class="headerlink" href="#emergency-bypass-procedures" title="Permanent link">&para;</a></h3>
+<p><strong>For Production Incidents Only</strong>:</p>
+<ol>
+<li><strong>Verbal Approval</strong>: Tech lead or on-call approves verbally</li>
+<li><strong>Skip Quality Gates</strong>: Merge with <code>[emergency-bypass]</code> in commit message</li>
+<li><strong>Create Incident Ticket</strong>: Document incident and bypass</li>
+<li><strong>Post-Incident Review</strong>: Within 24 hours, review what was bypassed</li>
+<li><strong>Remediation</strong>: Fix bypassed checks within 7 days</li>
+</ol>
+<p><strong>Automated Detection</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Detect emergency bypasses in CI</span>
+<span class="nt">emergency-bypass</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">if echo &quot;$CI_COMMIT_MESSAGE&quot; | grep -q &quot;\[emergency-bypass\]&quot;; then</span>
+<span class="w">        </span><span class="no">echo &quot;🚨 Emergency bypass detected&quot;</span>
+<span class="w">        </span><span class="no"># Post to Slack, create ticket</span>
+<span class="w">        </span><span class="no">./scripts/notify_emergency_bypass.sh</span>
+<span class="w">      </span><span class="no">fi</span>
+<span class="w">  </span><span class="nt">allow_failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h2 id="7-cicd-integration-patterns">7. CI/CD Integration Patterns<a class="headerlink" href="#7-cicd-integration-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="pipeline-stage-organization">Pipeline Stage Organization<a class="headerlink" href="#pipeline-stage-organization" title="Permanent link">&para;</a></h3>
+<p>Organize CI/CD pipelines in three tiers matching the testing pyramid:</p>
+<div class="highlight"><pre><span></span><code>Tier 1: Validate (Fast Feedback)
+├─ Lint (YAML, Terraform, Ansible)
+├─ Format Check
+├─ Security Scan (Static)
+└─ Secret Detection
+   ⏱️ &lt; 2 minutes
+
+Tier 2: Test (Unit &amp; Module)
+├─ Unit Tests (Terratest, Molecule)
+├─ Module Contract Verification
+└─ Parallel Platform Tests
+   ⏱️ &lt; 10 minutes
+
+Tier 3: Integration (Full Stack)
+├─ Integration Tests
+├─ Compliance Verification (InSpec)
+└─ Smoke Tests
+   ⏱️ &lt; 60 minutes
+   🕒 Nightly or Pre-Release
+</code></pre></div>
+<h3 id="artifact-generation-and-retention">Artifact Generation and Retention<a class="headerlink" href="#artifact-generation-and-retention" title="Permanent link">&para;</a></h3>
+<p><strong>Generated Artifacts</strong>:</p>
+<ol>
+<li><strong>Test Reports</strong>: JUnit XML, JSON results</li>
+<li><strong>Coverage Reports</strong>: Cobertura, LCOV formats</li>
+<li><strong>Compliance Evidence</strong>: InSpec JSON, audit logs</li>
+<li><strong>Plan Files</strong>: Terraform plans for review</li>
+<li><strong>Logs</strong>: Detailed execution logs for debugging</li>
+</ol>
+<p><strong>Retention Policy</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Artifact Type</th>
+<th>Retention</th>
+<th>Justification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test Results</td>
+<td>7 days</td>
+<td>Short-term debugging</td>
+</tr>
+<tr>
+<td>Coverage Reports</td>
+<td>30 days</td>
+<td>Trend analysis</td>
+</tr>
+<tr>
+<td>Compliance Evidence</td>
+<td>90 days</td>
+<td>Audit requirements</td>
+</tr>
+<tr>
+<td>Release Artifacts</td>
+<td>365 days</td>
+<td>Production traceability</td>
+</tr>
+<tr>
+<td>Failed Test Logs</td>
+<td>14 days</td>
+<td>Debugging failures</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Storage Optimization</strong>:</p>
+<ul>
+<li>Compress large artifacts (tar.gz)</li>
+<li>Store only on failure for debugging artifacts</li>
+<li>Archive to long-term storage (S3 Glacier) after retention period</li>
+</ul>
+<h3 id="reporting-and-dashboards">Reporting and Dashboards<a class="headerlink" href="#reporting-and-dashboards" title="Permanent link">&para;</a></h3>
+<p><strong>Required Dashboards</strong>:</p>
+<ol>
+<li><strong>Test Coverage Dashboard</strong>:</li>
+<li>Coverage trends over time</li>
+<li>Per-module coverage breakdown</li>
+<li>
+<p>Platform coverage matrix</p>
+</li>
+<li>
+<p><strong>Quality Gates Dashboard</strong>:</p>
+</li>
+<li>Pass/fail rates by gate</li>
+<li>Enforcement phase status</li>
+<li>
+<p>Exception tracking</p>
+</li>
+<li>
+<p><strong>Pipeline Performance Dashboard</strong>:</p>
+</li>
+<li>Average pipeline duration</li>
+<li>Test execution times</li>
+<li>
+<p>Flaky test tracking</p>
+</li>
+<li>
+<p><strong>Compliance Dashboard</strong>:</p>
+</li>
+<li>Compliance test results</li>
+<li>CIS benchmark scores</li>
+<li>Security scan findings</li>
+</ol>
+<p><strong>Tool Recommendations</strong>:</p>
+<ul>
+<li>Grafana with GitLab/GitHub metrics</li>
+<li>SonarQube for code quality</li>
+<li>Allure for test reporting</li>
+<li>Custom dashboards with Prometheus + Grafana</li>
+</ul>
+<h3 id="feedback-mechanisms">Feedback Mechanisms<a class="headerlink" href="#feedback-mechanisms" title="Permanent link">&para;</a></h3>
+<p><strong>Merge/Pull Request Comments</strong>:</p>
+<ul>
+<li>Test result summary</li>
+<li>Coverage metrics with trends</li>
+<li>Failed test details with logs</li>
+<li>Fix suggestions with commands</li>
+<li>Links to dashboards and documentation</li>
+</ul>
+<p><strong>Badges</strong>:</p>
+<ul>
+<li>Coverage badge with percentage</li>
+<li>Build status badge</li>
+<li>Compliance status badge</li>
+<li>Latest release badge</li>
+</ul>
+<p><strong>Notifications</strong>:</p>
+<ul>
+<li>Slack/Teams notifications for failures</li>
+<li>Email for critical compliance failures</li>
+<li>GitHub/GitLab notifications for reviewers</li>
+<li>Weekly digest of quality metrics</li>
+</ul>
+<h2 id="8-developer-experience">8. Developer Experience<a class="headerlink" href="#8-developer-experience" title="Permanent link">&para;</a></h2>
+<h3 id="pre-commit-hooks">Pre-Commit Hooks<a class="headerlink" href="#pre-commit-hooks" title="Permanent link">&para;</a></h3>
+<p><strong>Required Pre-Commit Checks</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># .pre-commit-config.yaml</span>
+<span class="nt">repos</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/antonbabenko/pre-commit-terraform</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.83.0</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform_fmt</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform_validate</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform_docs</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ansible/ansible-lint</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v6.20.0</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ansible-lint</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/adrienverge/yamllint</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.32.0</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yamllint</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/trufflesecurity/trufflehog</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v3.54.0</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trufflehog</span>
+</code></pre></div>
+<p><strong>Best Practices</strong>:</p>
+<ul>
+<li>Keep hooks fast (&lt; 10 seconds total)</li>
+<li>Only run checks on changed files</li>
+<li>Provide auto-fix where possible</li>
+<li>Allow bypass for emergencies (<code>git commit --no-verify</code>)</li>
+<li>Track bypass usage for metrics</li>
+</ul>
+<h3 id="local-testing-capabilities">Local Testing Capabilities<a class="headerlink" href="#local-testing-capabilities" title="Permanent link">&para;</a></h3>
+<p><strong>Developers Must Be Able to</strong>:</p>
+<ol>
+<li><strong>Run All Tests Locally</strong>: No "CI-only" tests</li>
+<li><strong>Test Individual Modules</strong>: Don't require full stack</li>
+<li><strong>Use Mocked Dependencies</strong>: Avoid real cloud resources for unit tests</li>
+<li><strong>Get Fast Feedback</strong>: Unit tests complete in &lt; 2 minutes locally</li>
+<li><strong>Debug Failures</strong>: Clear error messages and logs</li>
+</ol>
+<p><strong>Local Testing Tools</strong>:</p>
+<ul>
+<li><strong>Terraform</strong>: <code>terraform test</code>, Terratest with local Docker</li>
+<li><strong>Ansible</strong>: <code>molecule test</code> with Docker driver</li>
+<li><strong>GitLab CI</strong>: <code>gitlab-ci-local</code> for running pipelines locally</li>
+<li><strong>GitHub Actions</strong>: <code>act</code> for local action testing</li>
+</ul>
+<p><strong>Example Local Test Commands</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Terraform module</span>
+<span class="nb">cd</span><span class="w"> </span>modules/vpc
+terraform<span class="w"> </span><span class="nb">test</span><span class="w">  </span><span class="c1"># Run native Terraform tests</span>
+<span class="nb">cd</span><span class="w"> </span>tests<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v<span class="w"> </span>./...<span class="w">  </span><span class="c1"># Run Terratest</span>
+
+<span class="c1"># Ansible role</span>
+<span class="nb">cd</span><span class="w"> </span>roles/webserver
+molecule<span class="w"> </span><span class="nb">test</span><span class="w">  </span><span class="c1"># Run full test sequence</span>
+molecule<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-s<span class="w"> </span>compliance<span class="w">  </span><span class="c1"># Run compliance tests</span>
+
+<span class="c1"># GitLab CI pipeline</span>
+gitlab-ci-local<span class="w">  </span><span class="c1"># Run full pipeline</span>
+gitlab-ci-local<span class="w"> </span>--job<span class="w"> </span>lint:terraform<span class="w">  </span><span class="c1"># Run specific job</span>
+</code></pre></div>
+<h3 id="fast-feedback-mechanisms">Fast Feedback Mechanisms<a class="headerlink" href="#fast-feedback-mechanisms" title="Permanent link">&para;</a></h3>
+<p><strong>Feedback Speed Targets</strong>:</p>
+<ul>
+<li><strong>Pre-Commit Hooks</strong>: &lt; 10 seconds</li>
+<li><strong>Lint Stage</strong>: &lt; 2 minutes</li>
+<li><strong>Unit Tests</strong>: &lt; 10 minutes</li>
+<li><strong>Integration Tests</strong>: &lt; 60 minutes</li>
+<li><strong>Full Pipeline</strong>: &lt; 90 minutes</li>
+</ul>
+<p><strong>Optimization Strategies</strong>:</p>
+<ol>
+<li><strong>Parallel Execution</strong>: Run tests across multiple runners</li>
+<li><strong>Change Detection</strong>: Only test changed modules</li>
+<li><strong>Caching</strong>: Cache dependencies (pip, npm, Go modules)</li>
+<li><strong>Incremental Testing</strong>: Run smoke tests first, full tests later</li>
+<li><strong>Sharding</strong>: Split large test suites across runners</li>
+</ol>
+<h3 id="documentation-requirements">Documentation Requirements<a class="headerlink" href="#documentation-requirements" title="Permanent link">&para;</a></h3>
+<p><strong>Every Module/Role Must Have</strong>:</p>
+<ol>
+<li><strong>README.md</strong>: Usage examples, inputs, outputs</li>
+<li><strong>CONTRACT.md</strong>: Explicit guarantees and promises</li>
+<li><strong>CHANGELOG.md</strong>: Version history and breaking changes</li>
+<li><strong>Testing Section</strong>: How to run tests, what they verify</li>
+</ol>
+<p><strong>README.md Template</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Module Name</span>
+
+[One-sentence description]
+
+<span class="gu">## Usage</span>
+
+[Minimal working example]
+
+<span class="gu">## Testing</span>
+
+[How to run tests locally]
+
+<span class="gu">## Inputs</span>
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+
+<span class="gu">## Outputs</span>
+
+| Name | Type | Description |
+|------|------|-------------|
+
+<span class="gu">## Platform Support</span>
+
+<span class="k">-</span><span class="w"> </span>Platform 1: Tested
+<span class="k">-</span><span class="w"> </span>Platform 2: Tested
+
+<span class="gu">## See Also</span>
+
+<span class="k">-</span><span class="w"> </span>[<span class="nt">CONTRACT.md</span>](<span class="na">CONTRACT.md</span>) - Module guarantees
+<span class="k">-</span><span class="w"> </span>[<span class="nt">CHANGELOG.md</span>](<span class="na">CHANGELOG.md</span>) - Version history
+</code></pre></div>
+<h2 id="9-compliance-governance">9. Compliance &amp; Governance<a class="headerlink" href="#9-compliance-governance" title="Permanent link">&para;</a></h2>
+<h3 id="evidence-generation">Evidence Generation<a class="headerlink" href="#evidence-generation" title="Permanent link">&para;</a></h3>
+<p><strong>Required Evidence</strong>:</p>
+<ol>
+<li><strong>Test Execution Logs</strong>: Prove tests were run</li>
+<li><strong>Test Results</strong>: JUnit XML, JSON reports</li>
+<li><strong>Compliance Reports</strong>: InSpec JSON, CIS benchmark results</li>
+<li><strong>Coverage Reports</strong>: Code and guarantee coverage</li>
+<li><strong>Audit Trails</strong>: Who approved, when, what changed</li>
+</ol>
+<p><strong>Evidence Format</strong>:</p>
+<ul>
+<li><strong>Machine-Readable</strong>: JSON, XML for automated processing</li>
+<li><strong>Human-Readable</strong>: HTML, PDF reports for auditors</li>
+<li><strong>Signed/Verified</strong>: Cryptographic signatures for tamper-proofing</li>
+<li><strong>Timestamped</strong>: Precise execution timestamps</li>
+<li><strong>Traceable</strong>: Linked to git commits and PRs</li>
+</ul>
+<p><strong>Example Compliance Evidence</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;report_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;compliance_verification&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-01-15T10:30:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;module&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vpc-module-v1.2.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;commit_sha&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc123def456&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;pull_request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/org/repo/pull/123&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;tests_executed&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;passed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;failed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;skipped&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;compliance_checks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;cis_aws_foundations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;passed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;failed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;score&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;100%&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;pci_dss&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;passed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;failed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;score&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;100%&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;evidence_files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;artifacts/junit-report.xml&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;artifacts/inspec-results.json&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;artifacts/coverage-report.xml&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;approved_by&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tech-lead@example.com&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;verification_signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha256:...&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="audit-trail-maintenance">Audit Trail Maintenance<a class="headerlink" href="#audit-trail-maintenance" title="Permanent link">&para;</a></h3>
+<p><strong>What to Track</strong>:</p>
+<ol>
+<li><strong>Code Changes</strong>: Git commits, PRs, approvals</li>
+<li><strong>Test Results</strong>: All test executions with results</li>
+<li><strong>Quality Gate Bypasses</strong>: Who, when, why, approval</li>
+<li><strong>Deployment Events</strong>: What was deployed, when, by whom</li>
+<li><strong>Access Changes</strong>: IAM modifications, permission grants</li>
+</ol>
+<p><strong>Audit Trail Storage</strong>:</p>
+<ul>
+<li><strong>Git History</strong>: Permanent record of code changes</li>
+<li><strong>CI/CD Logs</strong>: Retained per retention policy</li>
+<li><strong>Centralized Logging</strong>: CloudWatch, Splunk, ELK stack</li>
+<li><strong>Compliance Databases</strong>: Long-term audit storage</li>
+</ul>
+<p><strong>Audit Trail Query Examples</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- Find all quality gate bypasses in last 30 days</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">commit_sha</span><span class="p">,</span><span class="w"> </span><span class="n">author</span><span class="p">,</span><span class="w"> </span><span class="n">bypass_reason</span><span class="p">,</span><span class="w"> </span><span class="n">approved_by</span><span class="p">,</span><span class="w"> </span><span class="k">timestamp</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">audit_log</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;quality_gate_bypass&#39;</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+
+<span class="c1">-- Find all deployments that failed compliance checks</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">deployment_id</span><span class="p">,</span><span class="w"> </span><span class="n">module</span><span class="p">,</span><span class="w"> </span><span class="n">compliance_score</span><span class="p">,</span><span class="w"> </span><span class="n">deployer</span><span class="p">,</span><span class="w"> </span><span class="k">timestamp</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">deployments</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">compliance_score</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">100</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="regulatory-requirements">Regulatory Requirements<a class="headerlink" href="#regulatory-requirements" title="Permanent link">&para;</a></h3>
+<p><strong>SOC 2 Requirements</strong>:</p>
+<ul>
+<li>Automated security testing in CI/CD</li>
+<li>Evidence of test execution</li>
+<li>Access control audit logs</li>
+<li>Change management records</li>
+<li>Incident response documentation</li>
+</ul>
+<p><strong>PCI-DSS Requirements</strong>:</p>
+<ul>
+<li>Network segmentation testing</li>
+<li>Encryption verification</li>
+<li>Access control validation</li>
+<li>Vulnerability scanning</li>
+<li>Quarterly compliance reviews</li>
+</ul>
+<p><strong>HIPAA Requirements</strong>:</p>
+<ul>
+<li>Data encryption verification</li>
+<li>Access audit logs</li>
+<li>Security risk assessments</li>
+<li>Breach notification procedures</li>
+<li>Business associate agreements</li>
+</ul>
+<p><strong>Compliance Testing Integration</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Compliance-specific test job</span>
+<span class="nt">compliance:pci</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compliance</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inspec exec compliance/pci-dss.rb --reporter json:pci-results.json</span>
+<span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">reports</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">junit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pci-results.json</span>
+<span class="w">    </span><span class="nt">expire_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">365 days</span><span class="w">  </span><span class="c1"># Long retention for audit</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;schedule&quot;</span>
+</code></pre></div>
+<h3 id="compliance-ready-reporting">Compliance-Ready Reporting<a class="headerlink" href="#compliance-ready-reporting" title="Permanent link">&para;</a></h3>
+<p><strong>Report Requirements</strong>:</p>
+<ol>
+<li><strong>Executive Summary</strong>: High-level compliance status</li>
+<li><strong>Detailed Findings</strong>: Specific pass/fail results</li>
+<li><strong>Evidence Links</strong>: Artifacts, logs, screenshots</li>
+<li><strong>Remediation Plans</strong>: For any failures</li>
+<li><strong>Trend Analysis</strong>: Compliance score over time</li>
+</ol>
+<p><strong>Report Generation</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate compliance report</span>
+inspec<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>compliance/<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--reporter<span class="w"> </span>html:compliance-report.html<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--reporter<span class="w"> </span>json:compliance-report.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--reporter<span class="w"> </span>cli
+
+<span class="c1"># Upload to compliance dashboard</span>
+aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>compliance-report.html<span class="w"> </span>s3://compliance-reports/<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>/
+</code></pre></div>
+<h2 id="10-continuous-improvement">10. Continuous Improvement<a class="headerlink" href="#10-continuous-improvement" title="Permanent link">&para;</a></h2>
+<h3 id="metrics-to-track">Metrics to Track<a class="headerlink" href="#metrics-to-track" title="Permanent link">&para;</a></h3>
+<p><strong>Quality Metrics</strong>:</p>
+<ol>
+<li><strong>Test Coverage</strong>: Overall and per-module</li>
+<li><strong>Test Pass Rate</strong>: % of tests passing</li>
+<li><strong>Flaky Test Rate</strong>: % of tests with inconsistent results</li>
+<li><strong>Bug Escape Rate</strong>: Bugs found in production vs. testing</li>
+<li><strong>Mean Time to Detection (MTTD)</strong>: Time from bug introduction to detection</li>
+</ol>
+<p><strong>Performance Metrics</strong>:</p>
+<ol>
+<li><strong>Pipeline Duration</strong>: Total time for full pipeline</li>
+<li><strong>Test Execution Time</strong>: Time per test suite</li>
+<li><strong>Feedback Loop Time</strong>: Commit to test results</li>
+<li><strong>Build Success Rate</strong>: % of pipelines passing</li>
+<li><strong>Deployment Frequency</strong>: How often we deploy</li>
+</ol>
+<p><strong>Process Metrics</strong>:</p>
+<ol>
+<li><strong>Quality Gate Bypass Rate</strong>: % of merges bypassing gates</li>
+<li><strong>Exception Request Rate</strong>: How many exceptions needed</li>
+<li><strong>Pre-Commit Hook Bypass Rate</strong>: % of commits without hooks</li>
+<li><strong>Documentation Completeness</strong>: % of modules with CONTRACT.md</li>
+<li><strong>Platform Coverage</strong>: % of modules tested on all platforms</li>
+</ol>
+<h3 id="review-cycles">Review Cycles<a class="headerlink" href="#review-cycles" title="Permanent link">&para;</a></h3>
+<p><strong>Weekly Reviews</strong>:</p>
+<ul>
+<li>Test failure trends</li>
+<li>Flaky test identification</li>
+<li>Quality gate bypass analysis</li>
+<li>Pipeline performance</li>
+</ul>
+<p><strong>Monthly Reviews</strong>:</p>
+<ul>
+<li>Coverage trend analysis</li>
+<li>Compliance status review</li>
+<li>Exception requests review</li>
+<li>Tool and process improvements</li>
+</ul>
+<p><strong>Quarterly Reviews</strong>:</p>
+<ul>
+<li>Contract maintenance (update guarantees)</li>
+<li>Platform support review (add/remove platforms)</li>
+<li>Testing strategy assessment</li>
+<li>Regulatory compliance audit</li>
+</ul>
+<p><strong>Annual Reviews</strong>:</p>
+<ul>
+<li>Comprehensive testing standards review</li>
+<li>Tool evaluation and upgrades</li>
+<li>Security standards updates</li>
+<li>Industry best practices alignment</li>
+</ul>
+<h3 id="contract-maintenance">Contract Maintenance<a class="headerlink" href="#contract-maintenance" title="Permanent link">&para;</a></h3>
+<p><strong>Quarterly Contract Review</strong>:</p>
+<ol>
+<li><strong>Accuracy Check</strong>: Do guarantees match current behavior?</li>
+<li><strong>Completeness Check</strong>: Are all behaviors documented?</li>
+<li><strong>Platform Update</strong>: Add/remove supported platforms</li>
+<li><strong>Deprecation Planning</strong>: Mark features for removal</li>
+<li><strong>Test Alignment</strong>: Do tests verify all guarantees?</li>
+</ol>
+<p><strong>Contract Update Process</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## Contract Review Checklist</span>
+
+<span class="k">- [ ]</span> Reviewed all &quot;Guarantees&quot; sections
+<span class="k">- [ ]</span> Verified platform support matrix is current
+<span class="k">- [ ]</span> Updated breaking changes policy
+<span class="k">- [ ]</span> Confirmed test coverage matches guarantees
+<span class="k">- [ ]</span> Updated examples and usage documentation
+<span class="k">- [ ]</span> Checked for deprecated features
+<span class="k">- [ ]</span> Planned next version changes
+</code></pre></div>
+<h3 id="platform-expansion">Platform Expansion<a class="headerlink" href="#platform-expansion" title="Permanent link">&para;</a></h3>
+<p><strong>When to Add Platform Support</strong>:</p>
+<ol>
+<li><strong>Business Need</strong>: New platform used in production</li>
+<li><strong>Customer Request</strong>: External users need different platform</li>
+<li><strong>Risk Reduction</strong>: Avoid vendor lock-in</li>
+<li><strong>Compliance</strong>: Regulatory requirement for specific platform</li>
+</ol>
+<p><strong>Platform Addition Process</strong>:</p>
+<ol>
+<li><strong>Evaluate Feasibility</strong>: Can module work on new platform?</li>
+<li><strong>Update Contract</strong>: Add platform to support matrix</li>
+<li><strong>Add Platform Tests</strong>: Create test scenarios</li>
+<li><strong>Document Differences</strong>: Platform-specific behavior</li>
+<li><strong>Update CI/CD</strong>: Add platform to test matrix</li>
+<li><strong>Announce Support</strong>: Update README, release notes</li>
+</ol>
+<p><strong>Example Platform Addition</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Before: Only testing Ubuntu</span>
+<span class="nt">test:ansible</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">matrix</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">PLATFORM</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">ubuntu-22.04</span><span class="p p-Indicator">]</span>
+
+<span class="c1"># After: Added RHEL support</span>
+<span class="nt">test:ansible</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">matrix</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">PLATFORM</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">ubuntu-22.04</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">rhel-9</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>This document defines the organization-wide standards for Infrastructure as Code testing. Key principles:</p>
+<ol>
+<li><strong>Test Everything</strong>: IaC bugs are expensive; testing prevents them</li>
+<li><strong>Shift Left</strong>: Catch issues early for lowest cost</li>
+<li><strong>Contract-Driven</strong>: Test what you promise</li>
+<li><strong>Progressive Enforcement</strong>: Start permissive, tighten gradually</li>
+<li><strong>Evidence-Based</strong>: Generate compliance-ready artifacts</li>
+<li><strong>Developer-Friendly</strong>: Fast feedback, local testing, good DX</li>
+<li><strong>Continuous Improvement</strong>: Regular reviews, metric tracking</li>
+</ol>
+<p><strong>See Also</strong>:</p>
+<ul>
+<li><a href="../../02_language_guides/terraform/#testing">Terraform Testing Guide</a></li>
+<li><a href="../../02_language_guides/ansible/#testing-with-molecule">Ansible Testing Guide</a></li>
+<li><a href="../../02_language_guides/gitlab_ci/#tiered-pipeline-architecture">GitLab CI Pipeline Architecture</a></li>
+<li><a href="../../04_templates/contract_template/">CONTRACT.md Template</a></li>
+<li><a href="../../04_templates/testing_docs_template/">Testing Documentation Template</a></li>
+</ul>
+<hr />
+<p><em>This living document is reviewed quarterly and updated based on lessons learned,
+industry best practices, and regulatory requirements.</em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/tydukes" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://linkedin.com/in/tydukes" target="_blank" rel="noopener" title="linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "content.code.annotate", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -6,37 +6,37 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Real-world code refactoring examples with before/after comparisons and explanations">
+        <meta name="description" content="Standardized template for module and role contracts">
       
       
         <meta name="author" content="Tyler Dukes">
       
       
-        <link rel="canonical" href="https://tydukes.github.io/coding-style-guide/09_refactoring/">
+        <link rel="canonical" href="https://tydukes.github.io/coding-style-guide/04_templates/contract_template/">
       
       
-        <link rel="prev" href="../05_examples/typescript_library_example/">
+        <link rel="prev" href="../helm_chart_template/">
       
       
-        <link rel="next" href="python_refactoring/">
+        <link rel="next" href="../testing_docs_template/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
-        <title>Refactoring Examples - The Dukes Engineering Style Guide</title>
+        <title>CONTRACT.md Template - The Dukes Engineering Style Guide</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -55,7 +55,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -90,7 +90,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#what-is-refactoring" class="md-skip">
+        <a href="#purpose" class="md-skip">
           Skip to content
         </a>
       
@@ -104,7 +104,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="The Dukes Engineering Style Guide" class="md-header__button md-logo" aria-label="The Dukes Engineering Style Guide" data-md-component="logo">
+    <a href="../.." title="The Dukes Engineering Style Guide" class="md-header__button md-logo" aria-label="The Dukes Engineering Style Guide" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Refactoring Examples
+              CONTRACT.md Template
             
           </span>
         </div>
@@ -226,7 +226,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -247,7 +247,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../01_overview/getting_started/" class="md-tabs__link">
+        <a href="../../01_overview/getting_started/" class="md-tabs__link">
           
   
   
@@ -267,7 +267,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../00_standards/heading_structure/" class="md-tabs__link">
+        <a href="../../00_standards/heading_structure/" class="md-tabs__link">
           
   
   
@@ -294,7 +294,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../02_language_guides/terraform/" class="md-tabs__link">
+        <a href="../../02_language_guides/terraform/" class="md-tabs__link">
           
   
   
@@ -315,7 +315,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../03_metadata_schema/schema_reference/" class="md-tabs__link">
+      <a href="../../03_metadata_schema/schema_reference/" class="md-tabs__link">
         
   
   
@@ -332,11 +332,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../04_templates/README_template/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../README_template/" class="md-tabs__link">
           
   
   
@@ -356,7 +358,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../05_examples/python_package_example/" class="md-tabs__link">
+        <a href="../../05_examples/python_package_example/" class="md-tabs__link">
           
   
   
@@ -372,13 +374,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../09_refactoring/" class="md-tabs__link">
           
   
   
@@ -396,7 +396,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../08_anti_patterns/" class="md-tabs__link">
+      <a href="../../08_anti_patterns/" class="md-tabs__link">
         
   
   
@@ -417,7 +417,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../10_migration_guides/from_pep8/" class="md-tabs__link">
+        <a href="../../10_migration_guides/from_pep8/" class="md-tabs__link">
           
   
   
@@ -437,7 +437,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../05_ci_cd/ai_validation_pipeline/" class="md-tabs__link">
+        <a href="../../05_ci_cd/ai_validation_pipeline/" class="md-tabs__link">
           
   
   
@@ -455,7 +455,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../06_container/usage/" class="md-tabs__link">
+      <a href="../../06_container/usage/" class="md-tabs__link">
         
   
   
@@ -474,7 +474,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../07_integration/integration_prompt/" class="md-tabs__link">
+      <a href="../../07_integration/integration_prompt/" class="md-tabs__link">
         
   
   
@@ -493,7 +493,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../glossary/" class="md-tabs__link">
+      <a href="../../glossary/" class="md-tabs__link">
         
   
   
@@ -512,7 +512,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../changelog/" class="md-tabs__link">
+      <a href="../../changelog/" class="md-tabs__link">
         
   
   
@@ -547,7 +547,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="The Dukes Engineering Style Guide" class="md-nav__button md-logo" aria-label="The Dukes Engineering Style Guide" data-md-component="logo">
+    <a href="../.." title="The Dukes Engineering Style Guide" class="md-nav__button md-logo" aria-label="The Dukes Engineering Style Guide" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -577,7 +577,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -661,7 +661,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../01_overview/getting_started/" class="md-nav__link">
+      <a href="../../01_overview/getting_started/" class="md-nav__link">
         
   
   
@@ -696,7 +696,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../01_overview/principles/" class="md-nav__link">
+      <a href="../../01_overview/principles/" class="md-nav__link">
         
   
   
@@ -731,7 +731,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../01_overview/governance/" class="md-nav__link">
+      <a href="../../01_overview/governance/" class="md-nav__link">
         
   
   
@@ -766,7 +766,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../01_overview/structure/" class="md-nav__link">
+      <a href="../../01_overview/structure/" class="md-nav__link">
         
   
   
@@ -858,7 +858,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../00_standards/heading_structure/" class="md-nav__link">
+      <a href="../../00_standards/heading_structure/" class="md-nav__link">
         
   
   
@@ -893,7 +893,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../00_standards/code_block_language_tags/" class="md-nav__link">
+      <a href="../../00_standards/code_block_language_tags/" class="md-nav__link">
         
   
   
@@ -1035,7 +1035,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/terraform/" class="md-nav__link">
+      <a href="../../02_language_guides/terraform/" class="md-nav__link">
         
   
   
@@ -1070,7 +1070,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/terragrunt/" class="md-nav__link">
+      <a href="../../02_language_guides/terragrunt/" class="md-nav__link">
         
   
   
@@ -1105,7 +1105,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/hcl/" class="md-nav__link">
+      <a href="../../02_language_guides/hcl/" class="md-nav__link">
         
   
   
@@ -1140,7 +1140,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/cdk/" class="md-nav__link">
+      <a href="../../02_language_guides/cdk/" class="md-nav__link">
         
   
   
@@ -1175,7 +1175,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/kubernetes/" class="md-nav__link">
+      <a href="../../02_language_guides/kubernetes/" class="md-nav__link">
         
   
   
@@ -1268,7 +1268,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/ansible/" class="md-nav__link">
+      <a href="../../02_language_guides/ansible/" class="md-nav__link">
         
   
   
@@ -1361,7 +1361,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/python/" class="md-nav__link">
+      <a href="../../02_language_guides/python/" class="md-nav__link">
         
   
   
@@ -1396,7 +1396,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/typescript/" class="md-nav__link">
+      <a href="../../02_language_guides/typescript/" class="md-nav__link">
         
   
   
@@ -1431,7 +1431,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/bash/" class="md-nav__link">
+      <a href="../../02_language_guides/bash/" class="md-nav__link">
         
   
   
@@ -1466,7 +1466,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/powershell/" class="md-nav__link">
+      <a href="../../02_language_guides/powershell/" class="md-nav__link">
         
   
   
@@ -1501,7 +1501,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/sql/" class="md-nav__link">
+      <a href="../../02_language_guides/sql/" class="md-nav__link">
         
   
   
@@ -1594,7 +1594,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/jenkins_groovy/" class="md-nav__link">
+      <a href="../../02_language_guides/jenkins_groovy/" class="md-nav__link">
         
   
   
@@ -1629,7 +1629,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/github_actions/" class="md-nav__link">
+      <a href="../../02_language_guides/github_actions/" class="md-nav__link">
         
   
   
@@ -1664,7 +1664,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/gitlab_ci/" class="md-nav__link">
+      <a href="../../02_language_guides/gitlab_ci/" class="md-nav__link">
         
   
   
@@ -1757,7 +1757,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/yaml/" class="md-nav__link">
+      <a href="../../02_language_guides/yaml/" class="md-nav__link">
         
   
   
@@ -1792,7 +1792,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/json/" class="md-nav__link">
+      <a href="../../02_language_guides/json/" class="md-nav__link">
         
   
   
@@ -1885,7 +1885,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/dockerfile/" class="md-nav__link">
+      <a href="../../02_language_guides/dockerfile/" class="md-nav__link">
         
   
   
@@ -1920,7 +1920,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/docker_compose/" class="md-nav__link">
+      <a href="../../02_language_guides/docker_compose/" class="md-nav__link">
         
   
   
@@ -2013,7 +2013,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_language_guides/makefile/" class="md-nav__link">
+      <a href="../../02_language_guides/makefile/" class="md-nav__link">
         
   
   
@@ -2063,7 +2063,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../03_metadata_schema/schema_reference/" class="md-nav__link">
+      <a href="../../03_metadata_schema/schema_reference/" class="md-nav__link">
         
   
   
@@ -2094,24 +2094,29 @@
       
   
   
+    
   
   
+  
     
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -2129,7 +2134,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2147,7 +2152,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04_templates/README_template/" class="md-nav__link">
+      <a href="../README_template/" class="md-nav__link">
         
   
   
@@ -2182,7 +2187,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04_templates/terraform_module_template/" class="md-nav__link">
+      <a href="../terraform_module_template/" class="md-nav__link">
         
   
   
@@ -2217,7 +2222,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04_templates/python_package_template/" class="md-nav__link">
+      <a href="../python_package_template/" class="md-nav__link">
         
   
   
@@ -2252,7 +2257,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04_templates/gitignore_templates/" class="md-nav__link">
+      <a href="../gitignore_templates/" class="md-nav__link">
         
   
   
@@ -2287,7 +2292,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04_templates/precommit_config_template/" class="md-nav__link">
+      <a href="../precommit_config_template/" class="md-nav__link">
         
   
   
@@ -2322,7 +2327,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04_templates/github_actions_workflow_templates/" class="md-nav__link">
+      <a href="../github_actions_workflow_templates/" class="md-nav__link">
         
   
   
@@ -2357,7 +2362,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04_templates/dockerfile_template/" class="md-nav__link">
+      <a href="../dockerfile_template/" class="md-nav__link">
         
   
   
@@ -2392,7 +2397,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04_templates/docker_compose_template/" class="md-nav__link">
+      <a href="../docker_compose_template/" class="md-nav__link">
         
   
   
@@ -2427,7 +2432,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04_templates/helm_chart_template/" class="md-nav__link">
+      <a href="../helm_chart_template/" class="md-nav__link">
         
   
   
@@ -2459,10 +2464,42 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../04_templates/contract_template/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CONTRACT.md Template
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2485,6 +2522,118 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-this-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use This Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use-this-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Use This Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#template-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template Content
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-terraform-vpc-module-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: Terraform VPC Module Contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-ansible-webserver-role-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Ansible Webserver Role Contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2497,7 +2646,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04_templates/testing_docs_template/" class="md-nav__link">
+      <a href="../testing_docs_template/" class="md-nav__link">
         
   
   
@@ -2589,7 +2738,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_examples/python_package_example/" class="md-nav__link">
+      <a href="../../05_examples/python_package_example/" class="md-nav__link">
         
   
   
@@ -2624,7 +2773,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_examples/terraform_module_example/" class="md-nav__link">
+      <a href="../../05_examples/terraform_module_example/" class="md-nav__link">
         
   
   
@@ -2659,7 +2808,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_examples/ansible_role_example/" class="md-nav__link">
+      <a href="../../05_examples/ansible_role_example/" class="md-nav__link">
         
   
   
@@ -2694,7 +2843,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_examples/typescript_library_example/" class="md-nav__link">
+      <a href="../../05_examples/typescript_library_example/" class="md-nav__link">
         
   
   
@@ -2733,29 +2882,24 @@
       
   
   
-    
   
   
-  
     
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -2773,7 +2917,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2788,42 +2932,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-    
-  
-  
-    <span class="md-status md-status--active"></span>
-  
-
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../09_refactoring/" class="md-nav__link">
         
   
   
@@ -2846,401 +2958,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-is-refactoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What is Refactoring?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#refactoring-vs-rewriting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Refactoring vs. Rewriting
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#when-to-refactor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When to Refactor
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="When to Refactor">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#good-times-to-refactor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Good Times to Refactor
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#avoid-refactoring-when" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Avoid Refactoring When
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-refactoring-patterns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Refactoring Patterns
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Common Refactoring Patterns">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#code-organization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Organization
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code-clarity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Clarity
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code-quality" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Quality
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#refactoring-by-language" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Refactoring by Language
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Refactoring by Language">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#python-refactoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Python Refactoring
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#typescript-refactoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TypeScript Refactoring
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#terraform-refactoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Terraform Refactoring
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ansible-refactoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ansible Refactoring
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bash-refactoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bash Refactoring
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#refactoring-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Refactoring Workflow
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Refactoring Workflow">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-ensure-tests-exist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Ensure Tests Exist
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-make-small-incremental-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Make Small, Incremental Changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-use-automated-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Use Automated Tools
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-code-review" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Code Review
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-document-rationale" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Document Rationale
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#measuring-refactoring-success" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Measuring Refactoring Success
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Measuring Refactoring Success">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#code-metrics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Metrics
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tools-for-measurement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tools for Measurement
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Best Practices
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#anti-patterns-to-avoid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Anti-Patterns to Avoid
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resources
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Resources">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#books" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Books
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#online-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Online Resources
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#related-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Documentation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -3253,7 +2970,7 @@
   
   
     <li class="md-nav__item">
-      <a href="python_refactoring/" class="md-nav__link">
+      <a href="../../09_refactoring/python_refactoring/" class="md-nav__link">
         
   
   
@@ -3288,7 +3005,7 @@
   
   
     <li class="md-nav__item">
-      <a href="typescript_refactoring/" class="md-nav__link">
+      <a href="../../09_refactoring/typescript_refactoring/" class="md-nav__link">
         
   
   
@@ -3323,7 +3040,7 @@
   
   
     <li class="md-nav__item">
-      <a href="terraform_refactoring/" class="md-nav__link">
+      <a href="../../09_refactoring/terraform_refactoring/" class="md-nav__link">
         
   
   
@@ -3358,7 +3075,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ansible_refactoring/" class="md-nav__link">
+      <a href="../../09_refactoring/ansible_refactoring/" class="md-nav__link">
         
   
   
@@ -3393,7 +3110,7 @@
   
   
     <li class="md-nav__item">
-      <a href="bash_refactoring/" class="md-nav__link">
+      <a href="../../09_refactoring/bash_refactoring/" class="md-nav__link">
         
   
   
@@ -3435,7 +3152,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../08_anti_patterns/" class="md-nav__link">
+      <a href="../../08_anti_patterns/" class="md-nav__link">
         
   
   
@@ -3519,7 +3236,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../10_migration_guides/from_pep8/" class="md-nav__link">
+      <a href="../../10_migration_guides/from_pep8/" class="md-nav__link">
         
   
   
@@ -3554,7 +3271,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../10_migration_guides/from_google/" class="md-nav__link">
+      <a href="../../10_migration_guides/from_google/" class="md-nav__link">
         
   
   
@@ -3589,7 +3306,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../10_migration_guides/from_airbnb/" class="md-nav__link">
+      <a href="../../10_migration_guides/from_airbnb/" class="md-nav__link">
         
   
   
@@ -3681,7 +3398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_ci_cd/ai_validation_pipeline/" class="md-nav__link">
+      <a href="../../05_ci_cd/ai_validation_pipeline/" class="md-nav__link">
         
   
   
@@ -3716,7 +3433,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_ci_cd/github_actions_guide/" class="md-nav__link">
+      <a href="../../05_ci_cd/github_actions_guide/" class="md-nav__link">
         
   
   
@@ -3751,7 +3468,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_ci_cd/dependabot_auto_merge/" class="md-nav__link">
+      <a href="../../05_ci_cd/dependabot_auto_merge/" class="md-nav__link">
         
   
   
@@ -3786,7 +3503,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_ci_cd/gitlab_ci_guide/" class="md-nav__link">
+      <a href="../../05_ci_cd/gitlab_ci_guide/" class="md-nav__link">
         
   
   
@@ -3821,7 +3538,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_ci_cd/jenkins_pipeline_guide/" class="md-nav__link">
+      <a href="../../05_ci_cd/jenkins_pipeline_guide/" class="md-nav__link">
         
   
   
@@ -3856,7 +3573,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_ci_cd/precommit_hooks_guide/" class="md-nav__link">
+      <a href="../../05_ci_cd/precommit_hooks_guide/" class="md-nav__link">
         
   
   
@@ -3891,7 +3608,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_ci_cd/local_validation_setup/" class="md-nav__link">
+      <a href="../../05_ci_cd/local_validation_setup/" class="md-nav__link">
         
   
   
@@ -3926,7 +3643,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_ci_cd/ide_integration_guide/" class="md-nav__link">
+      <a href="../../05_ci_cd/ide_integration_guide/" class="md-nav__link">
         
   
   
@@ -3961,7 +3678,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_ci_cd/security_scanning_guide/" class="md-nav__link">
+      <a href="../../05_ci_cd/security_scanning_guide/" class="md-nav__link">
         
   
   
@@ -3996,7 +3713,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_ci_cd/testing_strategies/" class="md-nav__link">
+      <a href="../../05_ci_cd/testing_strategies/" class="md-nav__link">
         
   
   
@@ -4031,7 +3748,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_ci_cd/iac_testing_standards/" class="md-nav__link">
+      <a href="../../05_ci_cd/iac_testing_standards/" class="md-nav__link">
         
   
   
@@ -4073,7 +3790,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../06_container/usage/" class="md-nav__link">
+      <a href="../../06_container/usage/" class="md-nav__link">
         
   
   
@@ -4107,7 +3824,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../07_integration/integration_prompt/" class="md-nav__link">
+      <a href="../../07_integration/integration_prompt/" class="md-nav__link">
         
   
   
@@ -4141,7 +3858,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../glossary/" class="md-nav__link">
+      <a href="../../glossary/" class="md-nav__link">
         
   
   
@@ -4175,7 +3892,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
+      <a href="../../changelog/" class="md-nav__link">
         
   
   
@@ -4227,10 +3944,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-is-refactoring" class="md-nav__link">
+  <a href="#purpose" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What is Refactoring?
+        Purpose
       
     </span>
   </a>
@@ -4238,10 +3955,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#refactoring-vs-rewriting" class="md-nav__link">
+  <a href="#when-to-use-this-template" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Refactoring vs. Rewriting
+        When to Use This Template
       
     </span>
   </a>
@@ -4249,22 +3966,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#when-to-refactor" class="md-nav__link">
+  <a href="#how-to-use-this-template" class="md-nav__link">
     <span class="md-ellipsis">
       
-        When to Refactor
+        How to Use This Template
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="When to Refactor">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#template-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template Content
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#good-times-to-refactor" class="md-nav__link">
+  <a href="#example-1-terraform-vpc-module-contract" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Good Times to Refactor
+        Example 1: Terraform VPC Module Contract
       
     </span>
   </a>
@@ -4272,10 +4011,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#avoid-refactoring-when" class="md-nav__link">
+  <a href="#example-2-ansible-webserver-role-contract" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Avoid Refactoring When
+        Example 2: Ansible Webserver Role Contract
       
     </span>
   </a>
@@ -4288,318 +4027,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-refactoring-patterns" class="md-nav__link">
+  <a href="#additional-resources" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Refactoring Patterns
+        Additional Resources
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Common Refactoring Patterns">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#code-organization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Organization
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code-clarity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Clarity
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#code-quality" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Quality
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#refactoring-by-language" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Refactoring by Language
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Refactoring by Language">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#python-refactoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Python Refactoring
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#typescript-refactoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TypeScript Refactoring
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#terraform-refactoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Terraform Refactoring
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ansible-refactoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ansible Refactoring
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bash-refactoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bash Refactoring
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#refactoring-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Refactoring Workflow
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Refactoring Workflow">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-ensure-tests-exist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Ensure Tests Exist
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-make-small-incremental-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Make Small, Incremental Changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-use-automated-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Use Automated Tools
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-code-review" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Code Review
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-document-rationale" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Document Rationale
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#measuring-refactoring-success" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Measuring Refactoring Success
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Measuring Refactoring Success">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#code-metrics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Code Metrics
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tools-for-measurement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tools for Measurement
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Best Practices
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#anti-patterns-to-avoid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Anti-Patterns to Avoid
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resources
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Resources">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#books" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Books
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#online-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Online Resources
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#related-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Documentation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4623,230 +4057,530 @@
   
 
 
-  <h1>Overview</h1>
+  <h1>CONTRACT.md Template</h1>
 
-<p>This directory contains real-world refactoring examples demonstrating how to improve code quality,
-maintainability, and adherence to the style guide principles. Each example shows before/after code
-with detailed explanations of the refactoring patterns applied.</p>
-<h2 id="what-is-refactoring">What is Refactoring?<a class="headerlink" href="#what-is-refactoring" title="Permanent link">&para;</a></h2>
-<p><strong>Refactoring</strong> is the process of restructuring existing code without changing its external behavior.
-The goal is to improve:</p>
+<p>This template provides a standardized format for documenting explicit guarantees and promises for
+Terraform modules, Ansible roles, and other Infrastructure as Code components.</p>
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>A CONTRACT.md file serves as an explicit agreement between the module/role author and consumers,
+defining testable guarantees about behavior, inputs, outputs, and platform support.</p>
+<h2 id="when-to-use-this-template">When to Use This Template<a class="headerlink" href="#when-to-use-this-template" title="Permanent link">&para;</a></h2>
+<p>Create a CONTRACT.md file for:</p>
 <ul>
-<li><strong>Readability</strong>: Make code easier to understand</li>
-<li><strong>Maintainability</strong>: Reduce technical debt and complexity</li>
-<li><strong>Performance</strong>: Optimize execution efficiency</li>
-<li><strong>Testability</strong>: Make code easier to test</li>
-<li><strong>Reusability</strong>: Extract common patterns</li>
-<li><strong>Security</strong>: Remove vulnerabilities</li>
+<li><strong>Reusable Terraform modules</strong>: Any module used across multiple projects</li>
+<li><strong>Shared Ansible roles</strong>: Roles used by multiple teams or playbooks</li>
+<li><strong>Public IaC components</strong>: Any code published externally</li>
+<li><strong>Critical infrastructure</strong>: Modules/roles managing production systems</li>
+<li><strong>Complex logic</strong>: Components with non-trivial behavior</li>
 </ul>
-<h2 id="refactoring-vs-rewriting">Refactoring vs. Rewriting<a class="headerlink" href="#refactoring-vs-rewriting" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th><strong>Refactoring</strong></th>
-<th><strong>Rewriting</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Incremental changes</td>
-<td>Complete replacement</td>
-</tr>
-<tr>
-<td>Preserves functionality</td>
-<td>May change functionality</td>
-</tr>
-<tr>
-<td>Lower risk</td>
-<td>Higher risk</td>
-</tr>
-<tr>
-<td>Continuous improvement</td>
-<td>One-time effort</td>
-</tr>
-<tr>
-<td>Maintain tests</td>
-<td>Rebuild tests</td>
-</tr>
-</tbody>
-</table>
-<h2 id="when-to-refactor">When to Refactor<a class="headerlink" href="#when-to-refactor" title="Permanent link">&para;</a></h2>
-<h3 id="good-times-to-refactor">Good Times to Refactor<a class="headerlink" href="#good-times-to-refactor" title="Permanent link">&para;</a></h3>
-<p>✅ <strong>During feature development</strong> - Boy Scout Rule (leave code better than you found it)
-✅ <strong>Before adding new features</strong> - Clean up the area you'll be working in
-✅ <strong>During code review</strong> - Address technical debt discovered
-✅ <strong>When fixing bugs</strong> - Improve code structure to prevent similar bugs
-✅ <strong>Regular maintenance</strong> - Scheduled refactoring sessions</p>
-<h3 id="avoid-refactoring-when">Avoid Refactoring When<a class="headerlink" href="#avoid-refactoring-when" title="Permanent link">&para;</a></h3>
-<p>❌ <strong>Under tight deadlines</strong> - Unless refactoring makes the deadline easier to meet
-❌ <strong>Broken code</strong> - Fix functionality first, then refactor
-❌ <strong>No tests</strong> - Add tests before refactoring
-❌ <strong>Unclear requirements</strong> - Clarify expectations first</p>
-<h2 id="common-refactoring-patterns">Common Refactoring Patterns<a class="headerlink" href="#common-refactoring-patterns" title="Permanent link">&para;</a></h2>
-<h3 id="code-organization">Code Organization<a class="headerlink" href="#code-organization" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Extract Function</strong>: Break large functions into smaller, focused ones</li>
-<li><strong>Extract Class</strong>: Move related functionality into a dedicated class</li>
-<li><strong>Inline Function</strong>: Remove unnecessary abstraction layers</li>
-<li><strong>Move Method</strong>: Relocate methods to more appropriate classes</li>
-</ul>
-<h3 id="code-clarity">Code Clarity<a class="headerlink" href="#code-clarity" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Rename</strong>: Use descriptive, meaningful names</li>
-<li><strong>Replace Magic Numbers</strong>: Use named constants</li>
-<li><strong>Simplify Conditionals</strong>: Reduce complexity of if/else logic</li>
-<li><strong>Remove Dead Code</strong>: Delete unused code</li>
-</ul>
-<h3 id="code-structure">Code Structure<a class="headerlink" href="#code-structure" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Replace Conditional with Polymorphism</strong>: Use inheritance instead of type checking</li>
-<li><strong>Introduce Parameter Object</strong>: Group related parameters</li>
-<li><strong>Preserve Whole Object</strong>: Pass objects instead of individual fields</li>
-<li><strong>Replace Temp with Query</strong>: Replace temporary variables with method calls</li>
-</ul>
-<h3 id="code-quality">Code Quality<a class="headerlink" href="#code-quality" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Decompose Conditional</strong>: Break complex conditionals into well-named functions</li>
-<li><strong>Consolidate Duplicate Code</strong>: Apply DRY principle</li>
-<li><strong>Simplify Method Chains</strong>: Reduce coupling and improve readability</li>
-<li><strong>Replace Nested Conditional with Guard Clauses</strong>: Early returns for error cases</li>
-</ul>
-<h2 id="refactoring-by-language">Refactoring by Language<a class="headerlink" href="#refactoring-by-language" title="Permanent link">&para;</a></h2>
-<p>This directory includes language-specific refactoring examples:</p>
-<h3 id="python-refactoring">Python Refactoring<a class="headerlink" href="#python-refactoring" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="python_refactoring/#extract-function">Extract function from long method</a></li>
-<li><a href="python_refactoring/#magic-numbers">Replace magic numbers with constants</a></li>
-<li><a href="python_refactoring/#conditionals">Simplify complex conditionals</a></li>
-<li><a href="python_refactoring/#comprehensions">Use comprehensions effectively</a></li>
-<li><a href="python_refactoring/#type-hints">Apply type hints</a></li>
-</ul>
-<h3 id="typescript-refactoring">TypeScript Refactoring<a class="headerlink" href="#typescript-refactoring" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="typescript_refactoring/#extract-components">Extract components from monolithic files</a></li>
-<li><a href="typescript_refactoring/#replace-any">Replace any with proper types</a></li>
-<li><a href="typescript_refactoring/#async-await">Simplify async/await chains</a></li>
-<li><a href="typescript_refactoring/#es6-features">Use modern ES6+ features</a></li>
-<li><a href="typescript_refactoring/#functional">Apply functional programming patterns</a></li>
-</ul>
-<h3 id="terraform-refactoring">Terraform Refactoring<a class="headerlink" href="#terraform-refactoring" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="terraform_refactoring/#extract-modules">Extract reusable modules</a></li>
-<li><a href="terraform_refactoring/#variables">Simplify variable structures</a></li>
-<li><a href="terraform_refactoring/#for-each">Use for_each instead of count</a></li>
-<li><a href="terraform_refactoring/#locals">Apply locals for DRY</a></li>
-<li><a href="terraform_refactoring/#naming">Improve resource naming</a></li>
-</ul>
-<h3 id="ansible-refactoring">Ansible Refactoring<a class="headerlink" href="#ansible-refactoring" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="ansible_refactoring/#extract-roles">Extract roles from playbooks</a></li>
-<li><a href="ansible_refactoring/#blocks">Use blocks for error handling</a></li>
-<li><a href="ansible_refactoring/#handlers">Apply handlers effectively</a></li>
-<li><a href="ansible_refactoring/#conditionals">Simplify conditionals</a></li>
-<li><a href="ansible_refactoring/#collections">Use collections</a></li>
-</ul>
-<h3 id="bash-refactoring">Bash Refactoring<a class="headerlink" href="#bash-refactoring" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="bash_refactoring/#extract-functions">Extract functions from scripts</a></li>
-<li><a href="bash_refactoring/#error-handling">Add error handling</a></li>
-<li><a href="bash_refactoring/#arrays">Use arrays instead of strings</a></li>
-<li><a href="bash_refactoring/#posix">Apply POSIX compliance</a></li>
-<li><a href="bash_refactoring/#quoting">Improve variable quoting</a></li>
-</ul>
-<h2 id="refactoring-workflow">Refactoring Workflow<a class="headerlink" href="#refactoring-workflow" title="Permanent link">&para;</a></h2>
-<h3 id="1-ensure-tests-exist">1. Ensure Tests Exist<a class="headerlink" href="#1-ensure-tests-exist" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">## Run existing tests before refactoring</span>
-pytest<span class="w"> </span>tests/
-npm<span class="w"> </span><span class="nb">test</span>
-terraform<span class="w"> </span><span class="nb">test</span>
-</code></pre></div>
-<p><strong>If no tests exist</strong>: Write tests first to ensure refactoring doesn't break functionality.</p>
-<h3 id="2-make-small-incremental-changes">2. Make Small, Incremental Changes<a class="headerlink" href="#2-make-small-incremental-changes" title="Permanent link">&para;</a></h3>
-<ul>
-<li>One refactoring at a time</li>
-<li>Commit after each successful refactoring</li>
-<li>Run tests after each change</li>
-</ul>
-<h3 id="3-use-automated-tools">3. Use Automated Tools<a class="headerlink" href="#3-use-automated-tools" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Python</strong>: <code>black</code>, <code>isort</code>, <code>pylint</code>, <code>mypy</code></li>
-<li><strong>TypeScript</strong>: <code>prettier</code>, <code>eslint</code>, <code>tsc --strict</code></li>
-<li><strong>Terraform</strong>: <code>terraform fmt</code>, <code>tflint</code>, <code>terrascan</code></li>
-<li><strong>Ansible</strong>: <code>ansible-lint</code>, <code>yamllint</code></li>
-<li><strong>Bash</strong>: <code>shellcheck</code>, <code>shfmt</code></li>
-</ul>
-<h3 id="4-code-review">4. Code Review<a class="headerlink" href="#4-code-review" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Peer review refactored code</li>
-<li>Ensure changes are understood</li>
-<li>Verify tests pass in CI/CD</li>
-</ul>
-<h3 id="5-document-rationale">5. Document Rationale<a class="headerlink" href="#5-document-rationale" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>## Good commit message
-refactor: extract user validation into separate function
-
-Moved user input validation from main() into validate_user()
-to improve testability and reusability. Reduces main() function
-complexity from 150 to 80 lines.
-
-Closes #123
-</code></pre></div>
-<h2 id="measuring-refactoring-success">Measuring Refactoring Success<a class="headerlink" href="#measuring-refactoring-success" title="Permanent link">&para;</a></h2>
-<h3 id="code-metrics">Code Metrics<a class="headerlink" href="#code-metrics" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Cyclomatic Complexity</strong>: Lower is better (aim for &lt; 10 per function)</li>
-<li><strong>Lines per Function</strong>: Smaller functions (aim for &lt; 50 lines)</li>
-<li><strong>Code Duplication</strong>: Reduce duplicate code (aim for &lt; 5%)</li>
-<li><strong>Test Coverage</strong>: Maintain or improve (aim for &gt; 80%)</li>
-</ul>
-<h3 id="tools-for-measurement">Tools for Measurement<a class="headerlink" href="#tools-for-measurement" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Python</strong>: <code>radon</code>, <code>pylint</code>, <code>coverage</code></li>
-<li><strong>TypeScript</strong>: <code>complexity-report</code>, <code>istanbul</code>, <code>sonarqube</code></li>
-<li><strong>Terraform</strong>: <code>terraform validate</code>, <code>tflint</code></li>
-<li><strong>General</strong>: <code>sonarqube</code>, <code>code-climate</code></li>
-</ul>
-<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h2 id="how-to-use-this-template">How to Use This Template<a class="headerlink" href="#how-to-use-this-template" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>Test First</strong>: Always have tests before refactoring</li>
-<li><strong>Small Steps</strong>: Make incremental changes</li>
-<li><strong>Commit Often</strong>: Checkpoint after each successful refactoring</li>
-<li><strong>Code Review</strong>: Get feedback on refactoring decisions</li>
-<li><strong>Document Why</strong>: Explain the reasoning behind changes</li>
-<li><strong>Measure Impact</strong>: Track improvements with metrics</li>
-<li><strong>Avoid Scope Creep</strong>: Stick to one refactoring pattern at a time</li>
-<li><strong>Preserve Behavior</strong>: Don't mix refactoring with feature changes</li>
+<li>Copy the template below to your module/role root directory as <code>CONTRACT.md</code></li>
+<li>Fill in all applicable sections</li>
+<li>Remove sections marked <code>[Optional]</code> if not relevant</li>
+<li>Keep guarantee statements numbered for test traceability</li>
+<li>Update the contract whenever guarantees change</li>
+<li>Reference guarantee numbers in test descriptions</li>
 </ol>
-<h2 id="anti-patterns-to-avoid">Anti-Patterns to Avoid<a class="headerlink" href="#anti-patterns-to-avoid" title="Permanent link">&para;</a></h2>
-<p>❌ <strong>Big Bang Refactoring</strong>: Rewriting large portions of code at once
-❌ <strong>Refactoring Without Tests</strong>: Changing code without safety net
-❌ <strong>Premature Optimization</strong>: Refactoring before understanding performance needs
-❌ <strong>Over-Engineering</strong>: Adding unnecessary abstraction
-❌ <strong>Mixing Concerns</strong>: Refactoring and adding features simultaneously
-❌ <strong>Ignoring Style Guide</strong>: Refactoring without following project standards</p>
-<h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
-<h3 id="books">Books<a class="headerlink" href="#books" title="Permanent link">&para;</a></h3>
+<hr />
+<h2 id="template-content">Template Content<a class="headerlink" href="#template-content" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="gh"># Module Contract: [Module/Role Name]</span>
+
+<span class="k">&gt; </span><span class="ge">**Version**: [X.Y.Z]</span>
+<span class="k">&gt; </span><span class="ge">**Last Updated**: [YYYY-MM-DD]</span>
+<span class="k">&gt; </span><span class="ge">**Maintained by**: [Team Name or Individual]</span>
+<span class="k">&gt; </span><span class="ge">**Status**: [Active | Deprecated | Experimental]</span>
+
+<span class="gu">## 1. Purpose</span>
+
+[One or two paragraphs describing what this module/role does and what problem it solves.
+Be specific about the use case.]
+
+<span class="gu">## 2. Guarantees</span>
+
+These are explicit, testable promises about what this module/role will do:
+
+<span class="gu">### Resource Guarantees</span>
+
+[List all infrastructure resources that will be created, modified, or managed]
+
+<span class="k">1.</span> <span class="gs">**G1**</span>: [Specific guarantee about resource creation]
+<span class="k">2.</span> <span class="gs">**G2**</span>: [Another guarantee]
+<span class="k">3.</span> <span class="gs">**G3**</span>: [Continue numbering for traceability]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**G1**</span>: Creates exactly 1 VPC in the specified AWS region
+<span class="k">-</span><span class="w"> </span><span class="gs">**G2**</span>: VPC has DNS hostnames and DNS support enabled
+<span class="k">-</span><span class="w"> </span><span class="gs">**G3**</span>: Creates N public subnets distributed across at least 2 availability zones
+
+<span class="gu">### Behavior Guarantees</span>
+
+[Promises about how the code behaves]
+
+<span class="k">1.</span> <span class="gs">**G4**</span>: [Idempotency guarantee or behavioral promise]
+<span class="k">2.</span> <span class="gs">**G5**</span>: [Security or compliance guarantee]
+<span class="k">3.</span> <span class="gs">**G6**</span>: [Performance or availability guarantee]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**G4**</span>: Multiple executions produce identical results (idempotent)
+<span class="k">-</span><span class="w"> </span><span class="gs">**G5**</span>: All S3 buckets have encryption enabled by default
+<span class="k">-</span><span class="w"> </span><span class="gs">**G6**</span>: Load balancer health checks pass before marking deployment complete
+
+<span class="gu">### Data Integrity Guarantees [Optional]</span>
+
+[For modules/roles handling data]
+
+<span class="k">1.</span> <span class="gs">**G7**</span>: [Data protection guarantee]
+<span class="k">2.</span> <span class="gs">**G8**</span>: [Backup or recovery guarantee]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**G7**</span>: Database backups retained for 30 days minimum
+<span class="k">-</span><span class="w"> </span><span class="gs">**G8**</span>: Encryption at rest enabled for all data stores
+
+<span class="gu">## 3. Inputs (Parameters)</span>
+
+<span class="gu">### Required Inputs</span>
+
+| Name | Type | Description | Validation Rules | Example |
+|------|------|-------------|------------------|---------|
+| <span class="sb">`input_name`</span> | <span class="sb">`type`</span> | [Description] | [Constraints] | <span class="sb">`example_value`</span> |
+
+<span class="gs">**Example**</span>:
+
+| Name | Type | Description | Validation Rules | Example |
+|------|------|-------------|------------------|---------|
+| <span class="sb">`vpc_cidr`</span> | <span class="sb">`string`</span> | VPC CIDR block | Must be valid IPv4 CIDR, /16 to /28 | <span class="sb">`&quot;10.0.0.0/16&quot;`</span> |
+| <span class="sb">`environment`</span> | <span class="sb">`string`</span> | Deployment environment | Must be: dev, staging, prod | <span class="sb">`&quot;prod&quot;`</span> |
+| <span class="sb">`availability_zones`</span> | <span class="sb">`list(string)`</span> | AZs for subnet distribution | Minimum 2 AZs | <span class="sb">`[&quot;us-east-1a&quot;, &quot;us-east-1b&quot;]`</span> |
+
+<span class="gu">### Optional Inputs</span>
+
+| Name | Type | Default | Description | Validation Rules | Example |
+|------|------|---------|-------------|------------------|---------|
+| <span class="sb">`input_name`</span> | <span class="sb">`type`</span> | <span class="sb">`default_value`</span> | [Description] | [Constraints] | <span class="sb">`example_value`</span> |
+
+<span class="gs">**Example**</span>:
+
+| Name | Type | Default | Description | Validation Rules | Example |
+|------|------|---------|-------------|------------------|---------|
+| <span class="sb">`enable_nat_gateway`</span> | <span class="sb">`bool`</span> | <span class="sb">`true`</span> | Create NAT gateways | None | <span class="sb">`false`</span> |
+| <span class="sb">`tags`</span> | <span class="sb">`map(string)`</span> | <span class="sb">`{}`</span> | Additional resource tags | None | <span class="sb">`{&quot;Project&quot;: &quot;MyApp&quot;}`</span> |
+
+<span class="gu">## 4. Outputs (Returns)</span>
+
+| Name | Type | Description | Always Available? |
+|------|------|-------------|-------------------|
+| <span class="sb">`output_name`</span> | <span class="sb">`type`</span> | [Description] | [Yes/No] |
+
+<span class="gs">**Example**</span>:
+
+| Name | Type | Description | Always Available? |
+|------|------|-------------|-------------------|
+| <span class="sb">`vpc_id`</span> | <span class="sb">`string`</span> | The ID of the created VPC | Yes |
+| <span class="sb">`public_subnet_ids`</span> | <span class="sb">`list(string)`</span> | IDs of public subnets | Yes |
+| <span class="sb">`nat_gateway_ids`</span> | <span class="sb">`list(string)`</span> | IDs of NAT gateways | Only if <span class="sb">`enable_nat_gateway = true`</span> |
+
+<span class="gu">## 5. Platform Requirements</span>
+
+<span class="gu">### Supported Platforms</span>
+
+| Platform | Versions | Status | Notes |
+|----------|----------|--------|-------|
+| [OS/Cloud Provider] | [Versions] | ✅ Tested / ⚠️ Experimental / ❌ Not Supported | [Any notes] |
+
+<span class="gs">**Example**</span>:
+
+| Platform | Versions | Status | Notes |
+|----------|----------|--------|-------|
+| AWS | us-east-1, us-west-2, eu-west-1 | ✅ Tested | Primary support |
+| Ubuntu | 20.04, 22.04 | ✅ Tested | LTS versions only |
+| RHEL | 8, 9 | ✅ Tested | Requires EPEL repo |
+| Windows Server | 2019, 2022 | ⚠️ Experimental | Limited testing |
+
+<span class="gu">### Tool Requirements</span>
+
+| Tool | Minimum Version | Recommended Version |
+|------|----------------|---------------------|
+| Terraform | <span class="sb">`&gt;= 1.3.0`</span> | <span class="sb">`1.6.0`</span> |
+| Terraform Provider (AWS) | <span class="sb">`&gt;= 4.0.0, &lt; 6.0.0`</span> | <span class="sb">`5.x`</span> |
+
+<span class="gs">**Or for Ansible**</span>:
+
+| Tool | Minimum Version | Recommended Version |
+|------|----------------|---------------------|
+| Ansible | <span class="sb">`&gt;= 2.14`</span> | <span class="sb">`2.16`</span> |
+| Python (control node) | <span class="sb">`&gt;= 3.8`</span> | <span class="sb">`3.11`</span> |
+| Python (managed nodes) | <span class="sb">`&gt;= 3.6`</span> | <span class="sb">`3.9`</span> |
+
+<span class="gu">## 6. Dependencies</span>
+
+<span class="gu">### Module/Role Dependencies</span>
+
+[List any other modules or roles that this depends on]
+
+<span class="gs">**Example**</span> (Terraform):
+
+<span class="sb">```hcl</span>
+<span class="c1"># This module depends on:</span>
+<span class="c1"># - Network module (for VPC ID)</span>
+<span class="c1"># - Security module (for security groups)</span>
+<span class="sb">```</span>
+
+<span class="gs">**Example**</span> (Ansible):
+
+<span class="sb">```yaml</span>
+<span class="c1"># meta/main.yml</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">common_setup</span>
+<span class="w">    </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">setup_firewall</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssl_certificates</span>
+<span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enable_ssl | bool</span>
+<span class="sb">```</span>
+
+<span class="gu">### Collection Dependencies [Ansible Only]</span>
+
+<span class="k">-</span><span class="w"> </span><span class="sb">`ansible.builtin`</span> (core modules)
+<span class="k">-</span><span class="w"> </span><span class="sb">`community.general`</span> &gt;= 5.0.0
+<span class="k">-</span><span class="w"> </span><span class="sb">`ansible.posix`</span> &gt;= 1.4.0
+
+<span class="gu">### External Service Dependencies [Optional]</span>
+
+[APIs, external services required]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span>AWS IAM for resource creation
+<span class="k">-</span><span class="w"> </span>Route53 for DNS management (if <span class="sb">`create_dns_records = true`</span>)
+
+<span class="gu">## 7. Pre-requisites</span>
+
+<span class="gu">### IAM Permissions Required [Cloud Providers]</span>
+
+<span class="gs">**Example**</span> (AWS):
+
+<span class="sb">```json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;ec2:CreateVpc&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ec2:DescribeVpcs&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ec2:ModifyVpcAttribute&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ec2:CreateSubnet&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ec2:DescribeSubnets&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ec2:CreateInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ec2:AttachInternetGateway&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ec2:CreateNatGateway&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ec2:DescribeNatGateways&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ec2:AllocateAddress&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ec2:DescribeAddresses&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ec2:CreateRouteTable&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ec2:CreateRoute&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ec2:AssociateRouteTable&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<span class="p">}</span>
+<span class="sb">```</span>
+
+<span class="gu">### Network Requirements [Optional]</span>
+
+<span class="k">-</span><span class="w"> </span>Outbound internet access for package downloads
+<span class="k">-</span><span class="w"> </span>Access to package repositories (apt, yum, etc.)
+<span class="k">-</span><span class="w"> </span>Specific port access (list ports)
+
+<span class="gu">### Existing Resources Required [Optional]</span>
+
+[If module requires pre-existing infrastructure]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span>S3 bucket for Terraform state (if using remote backend)
+<span class="k">-</span><span class="w"> </span>KMS key for encryption (provide ARN via <span class="sb">`kms_key_arn`</span> variable)
+
+<span class="gu">## 8. Side Effects</span>
+
+<span class="gu">### Resources Created</span>
+
+[Comprehensive list of all resources this creates]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span>1 VPC
+<span class="k">-</span><span class="w"> </span>N public subnets (configurable)
+<span class="k">-</span><span class="w"> </span>N private subnets (configurable)
+<span class="k">-</span><span class="w"> </span>1 Internet Gateway
+<span class="k">-</span><span class="w"> </span>N NAT Gateways (one per AZ)
+<span class="k">-</span><span class="w"> </span>N Elastic IPs (for NAT Gateways)
+<span class="k">-</span><span class="w"> </span>Route tables and associations
+
+<span class="gu">### Resources Modified [Optional]</span>
+
+[If this modifies existing resources]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span>Updates security group rules for existing EC2 instances
+<span class="k">-</span><span class="w"> </span>Modifies Route53 DNS records
+
+<span class="gu">### State Changes</span>
+
+[What changes in Terraform state or system state]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span>Terraform state includes all VPC resources
+<span class="k">-</span><span class="w"> </span>AWS CloudFormation stack created (if applicable)
+
+<span class="gu">### Network Impact [Optional]</span>
+
+[If this affects network connectivity]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span>Creates new network segments
+<span class="k">-</span><span class="w"> </span>May cause brief connectivity interruption during NAT Gateway creation
+<span class="k">-</span><span class="w"> </span>Adds routes to existing route tables
+
+<span class="gu">### Cost Implications</span>
+
+[Estimated cost impact]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**Estimated Monthly Cost**</span>: $50-200 (varies by region and NAT Gateway data transfer)
+<span class="k">-</span><span class="w"> </span><span class="gs">**Cost Drivers**</span>: NAT Gateways ($0.045/hour each), Elastic IPs, data transfer
+
+<span class="gu">## 9. Idempotency Contract [Ansible Only]</span>
+
+<span class="gu">### Idempotency Guarantees</span>
+
+<span class="k">1.</span> <span class="gs">**I1**</span>: Running role multiple times produces no additional changes
+<span class="k">2.</span> <span class="gs">**I2**</span>: Tasks report &quot;changed&quot; only when actual changes are made
+<span class="k">3.</span> <span class="gs">**I3**</span>: Service restarts only occur when configuration changes
+
+<span class="gu">### Safe Rerun Scenarios</span>
+
+<span class="k">-</span><span class="w"> </span>After failed execution (safe to retry)
+<span class="k">-</span><span class="w"> </span>During configuration drift remediation
+<span class="k">-</span><span class="w"> </span>As part of regular compliance runs
+
+<span class="gu">### Changed vs Unchanged Detection</span>
+
+[How the role detects if changes are needed]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span>Package installation: Only reports changed if package version differs
+<span class="k">-</span><span class="w"> </span>Service state: Only reports changed if service was not running
+<span class="k">-</span><span class="w"> </span>File content: Only reports changed if file content differs
+
+<span class="gu">## 10. Testing Requirements</span>
+
+<span class="gu">### Minimum Test Coverage</span>
+
+<span class="k">-</span><span class="w"> </span>✅ Static analysis (lint, format) passes
+<span class="k">-</span><span class="w"> </span>✅ Unit tests verify all guarantees (G1-GN)
+<span class="k">-</span><span class="w"> </span>✅ Idempotency tests pass (2 runs, 0 changes on run 2)
+<span class="k">-</span><span class="w"> </span>✅ All supported platforms tested
+<span class="k">-</span><span class="w"> </span>✅ Security scans pass (no HIGH or CRITICAL findings)
+
+<span class="gu">### Required Test Scenarios</span>
+
+<span class="k">1.</span> <span class="gs">**Scenario**</span>: Basic deployment with default values
+<span class="w">   </span><span class="k">-</span><span class="w"> </span><span class="gs">**Tests**</span>: G1, G2, G3, G4
+<span class="k">2.</span> <span class="gs">**Scenario**</span>: Deployment with custom configuration
+<span class="w">   </span><span class="k">-</span><span class="w"> </span><span class="gs">**Tests**</span>: G1-G6, input validation
+<span class="k">3.</span> <span class="gs">**Scenario**</span>: Multi-platform deployment
+<span class="w">   </span><span class="k">-</span><span class="w"> </span><span class="gs">**Tests**</span>: All guarantees on each supported platform
+
+<span class="gu">### Compliance Checks Required [Optional]</span>
+
+[For compliance-sensitive modules]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span>CIS AWS Foundations Benchmark (applicable controls)
+<span class="k">-</span><span class="w"> </span>PCI-DSS requirements for network segmentation
+<span class="k">-</span><span class="w"> </span>HIPAA encryption requirements
+
+<span class="gu">## 11. Breaking Changes Policy</span>
+
+<span class="gu">### Semantic Versioning</span>
+
+This module/role follows [<span class="nt">Semantic Versioning</span>](<span class="na">https://semver.org/</span>):
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**MAJOR**</span> (X.0.0): Breaking changes to interface, behavior, or resource names
+<span class="k">-</span><span class="w"> </span><span class="gs">**MINOR**</span> (x.Y.0): New features, backward-compatible changes, new guarantees
+<span class="k">-</span><span class="w"> </span><span class="gs">**PATCH**</span> (x.y.Z): Bug fixes, documentation updates
+
+<span class="gu">### What Constitutes a Breaking Change</span>
+
+<span class="k">-</span><span class="w"> </span>Renaming input variables
+<span class="k">-</span><span class="w"> </span>Changing input types or validation rules
+<span class="k">-</span><span class="w"> </span>Removing output values
+<span class="k">-</span><span class="w"> </span>Changing resource names (causes Terraform recreation)
+<span class="k">-</span><span class="w"> </span>Removing or renaming resources
+<span class="k">-</span><span class="w"> </span>Changing default values that affect behavior
+<span class="k">-</span><span class="w"> </span>Removing platform support
+
+<span class="gu">### Deprecation Timeline</span>
+
+Breaking changes follow this timeline:
+
+<span class="k">1.</span> <span class="gs">**Announce**</span>: Document in CHANGELOG.md at least 2 minor versions before removal
+<span class="k">2.</span> <span class="gs">**Warn**</span>: Add deprecation warnings to code/documentation
+<span class="k">3.</span> <span class="gs">**Migrate**</span>: Provide migration guide with examples
+<span class="k">4.</span> <span class="gs">**Remove**</span>: Remove in next major version
+
+<span class="gs">**Example Timeline**</span>:
+
+<span class="k">-</span><span class="w"> </span>v1.2.0: Announce <span class="sb">`old_var`</span> will be replaced by <span class="sb">`new_var`</span>
+<span class="k">-</span><span class="w"> </span>v1.3.0: Support both <span class="sb">`old_var`</span> and <span class="sb">`new_var`</span>, warn on <span class="sb">`old_var`</span> usage
+<span class="k">-</span><span class="w"> </span>v1.4.0: Continue supporting both with warnings
+<span class="k">-</span><span class="w"> </span>v2.0.0: Remove <span class="sb">`old_var`</span>, only support <span class="sb">`new_var`</span>
+
+<span class="gu">### Backwards Compatibility Promise</span>
+
+<span class="k">-</span><span class="w"> </span>All minor versions within a major version are backward-compatible
+<span class="k">-</span><span class="w"> </span>Deprecated features supported for minimum 2 minor versions
+<span class="k">-</span><span class="w"> </span>Migration guides provided for all breaking changes
+
+<span class="gu">## 12. Known Limitations</span>
+
+<span class="gu">### Current Constraints</span>
+
+[List any known limitations or constraints]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span>Maximum of 5 NAT Gateways per VPC (AWS limit)
+<span class="k">-</span><span class="w"> </span>Cannot modify VPC CIDR after creation
+<span class="k">-</span><span class="w"> </span>Windows support is experimental (limited testing)
+
+<span class="gu">### Unsupported Scenarios</span>
+
+[Scenarios that are explicitly not supported]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span>IPv6-only VPCs (not currently supported)
+<span class="k">-</span><span class="w"> </span>VPC peering across regions (use separate module)
+<span class="k">-</span><span class="w"> </span>Multi-region deployments (use multiple module instances)
+
+<span class="gu">### Future Enhancements Planned [Optional]</span>
+
+[Planned improvements]
+
+<span class="gs">**Example**</span>:
+
+<span class="k">-</span><span class="w"> </span>v2.0: Add support for IPv6
+<span class="k">-</span><span class="w"> </span>v2.1: Add VPC Flow Logs integration
+<span class="k">-</span><span class="w"> </span>v3.0: Support for Transit Gateway attachments
+
+<span class="gu">## 13. Support and Maintenance</span>
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**Maintained by**</span>: [Team Name / Individual]
+<span class="k">-</span><span class="w"> </span><span class="gs">**Contact**</span>: [Email or Slack channel]
+<span class="k">-</span><span class="w"> </span><span class="gs">**Documentation**</span>: [Link to full documentation]
+<span class="k">-</span><span class="w"> </span><span class="gs">**Source Code**</span>: [GitHub/GitLab repository URL]
+<span class="k">-</span><span class="w"> </span><span class="gs">**Issues**</span>: [Issue tracker URL]
+<span class="k">-</span><span class="w"> </span><span class="gs">**License**</span>: [MIT / Apache 2.0 / Proprietary]
+
+<span class="gu">### Support Level</span>
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**Active Support**</span>: Bug fixes, security patches, new features
+<span class="k">-</span><span class="w"> </span><span class="gs">**Maintenance Mode**</span>: Critical bug fixes and security patches only
+<span class="k">-</span><span class="w"> </span><span class="gs">**Deprecated**</span>: No active support, migration path provided
+
+<span class="gu">### Review Schedule</span>
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**Quarterly Review**</span>: Update guarantees, platform support, dependencies
+<span class="k">-</span><span class="w"> </span><span class="gs">**Annual Review**</span>: Major version planning, breaking changes assessment
+
+---
+
+<span class="gu">## Usage Example</span>
+
+See [<span class="nt">README.md</span>](<span class="na">README.md</span>) for complete usage examples.
+
+<span class="gs">**Quick Start**</span>:
+
+<span class="sb">```hcl</span>
+<span class="c1"># Terraform example</span>
+<span class="kr">module</span><span class="w"> </span><span class="nv">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;./modules/vpc&quot;</span>
+
+<span class="w">  </span><span class="na">vpc_cidr</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<span class="w">  </span><span class="na">environment</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span>
+<span class="w">  </span><span class="na">availability_zones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;</span><span class="p">]</span>
+
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MyApp&quot;</span>
+<span class="w">    </span><span class="na">Owner</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DevOps&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="sb">```</span>
+
+<span class="sb">```yaml</span>
+<span class="c1"># Ansible example</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy web server</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webservers</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webserver</span>
+<span class="w">      </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">nginx_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.24&quot;</span>
+<span class="w">        </span><span class="nt">enable_ssl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">ssl_certificate_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/etc/ssl/certs/server.crt&quot;</span>
+<span class="sb">```</span>
+
+---
+
+<span class="gu">## Testing This Contract</span>
+
+All guarantees in this contract are verified by automated tests:
+
+<span class="sb">```bash</span>
+<span class="c1"># Terraform</span>
+terraform<span class="w"> </span><span class="nb">test</span><span class="w">                           </span><span class="c1"># Native Terraform tests</span>
+<span class="nb">cd</span><span class="w"> </span>tests<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v<span class="w"> </span>-timeout<span class="w"> </span>30m<span class="w">      </span><span class="c1"># Terratest Go tests</span>
+
+<span class="c1"># Ansible</span>
+molecule<span class="w"> </span><span class="nb">test</span><span class="w">                            </span><span class="c1"># Full test sequence</span>
+molecule<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-s<span class="w"> </span>compliance<span class="w">              </span><span class="c1"># Compliance scenario</span>
+<span class="sb">```</span>
+
+<span class="gs">**Test Mapping**</span>:
+
+<span class="k">-</span><span class="w"> </span><span class="sb">`test_vpc_creation.go`</span>: Tests G1, G2
+<span class="k">-</span><span class="w"> </span><span class="sb">`test_subnets.go`</span>: Tests G3
+<span class="k">-</span><span class="w"> </span><span class="sb">`test_nat_gateways.go`</span>: Tests G5
+<span class="k">-</span><span class="w"> </span><span class="sb">`test_idempotency.go`</span>: Tests G4
+
+---
+
+<span class="ge">*This contract is a living document. Update it whenever module/role behavior changes.*</span>
+</code></pre></div>
+<hr />
+<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
+<h3 id="example-1-terraform-vpc-module-contract">Example 1: Terraform VPC Module Contract<a class="headerlink" href="#example-1-terraform-vpc-module-contract" title="Permanent link">&para;</a></h3>
+<p>See the <a href="../../02_language_guides/terraform/#module-contract">Terraform guide Testing section</a> for a complete
+VPC module CONTRACT.md example.</p>
+<h3 id="example-2-ansible-webserver-role-contract">Example 2: Ansible Webserver Role Contract<a class="headerlink" href="#example-2-ansible-webserver-role-contract" title="Permanent link">&para;</a></h3>
+<p>See the <a href="../../02_language_guides/ansible/#role-contracts">Ansible guide Testing section</a> for a complete
+webserver role CONTRACT.md example.</p>
+<h2 id="additional-resources">Additional Resources<a class="headerlink" href="#additional-resources" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="https://martinfowler.com/books/refactoring.html">Refactoring: Improving the Design of Existing Code</a> by Martin Fowler</li>
-<li><a href="https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882">Clean Code</a> by Robert C. Martin</li>
-<li><a href="https://www.amazon.com/Working-Effectively-Legacy-Michael-Feathers/dp/0131177052">Working Effectively with Legacy Code</a> by Michael Feathers</li>
-</ul>
-<h3 id="online-resources">Online Resources<a class="headerlink" href="#online-resources" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="https://refactoring.guru/">Refactoring Guru</a> - Refactoring patterns and examples</li>
-<li><a href="https://sourcemaking.com/refactoring">Source Making</a> - Design patterns and refactorings</li>
-<li><a href="https://refactoring.guru/refactoring/smells">Code Smells</a> - Identifying code that needs refactoring</li>
-</ul>
-<h3 id="related-documentation">Related Documentation<a class="headerlink" href="#related-documentation" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="../08_anti_patterns/">Anti-Patterns</a> - Common mistakes to avoid</li>
-<li><a href="../02_language_guides/">Language Guides</a> - Language-specific best practices</li>
-<li><a href="../05_examples/">Examples</a> - Complete project examples</li>
-<li><a href="../05_ci_cd/testing_strategies/">Testing Strategies</a> - Testing approaches for refactored code</li>
+<li><a href="../../05_ci_cd/iac_testing_standards/#3-contract-based-development">IaC Testing Standards</a> - Contract-based
+  development philosophy</li>
+<li><a href="../../02_language_guides/terraform/#testing">Terraform Testing Guide</a> - Terraform-specific testing</li>
+<li><a href="../../02_language_guides/ansible/#testing-with-molecule">Ansible Testing Guide</a> - Ansible-specific testing</li>
 </ul>
 <hr />
-<p><strong>Version</strong>: 1.0.0
-<strong>Maintainer</strong>: Tyler Dukes</p>
+<p><em>Template Version: 1.0.0</em>
+<em>Last Updated: 2025-01-15</em></p>
 
 
 
@@ -4923,10 +4657,10 @@ Closes #123
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "content.code.annotate", "search.highlight", "search.share"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "content.code.annotate", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
