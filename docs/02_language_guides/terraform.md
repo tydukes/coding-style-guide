@@ -67,6 +67,451 @@ Language).
 | Backend | Remote with locking | `backend "s3" { ... }` | Never local for teams |
 | Workspace | Environment isolation | `terraform workspace select prod` | Separate environments |
 
+### Quick Start Example
+
+Complete, production-ready configuration demonstrating all conventions:
+
+```hcl
+## versions.tf - Terraform and provider version constraints
+terraform {
+  required_version = ">= 1.6.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+
+  backend "s3" {
+    bucket         = "mycompany-terraform-state"
+    key            = "projects/web-app/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "terraform-state-locks"
+  }
+}
+
+## providers.tf - Provider configuration with default tags
+provider "aws" {
+  region = var.aws_region
+
+  default_tags {
+    tags = local.common_tags
+  }
+}
+
+## variables.tf - Input variable declarations
+variable "project" {
+  description = "Project name used for resource naming and tagging"
+  type        = string
+
+  validation {
+    condition     = can(regex("^[a-z][a-z0-9-]{2,29}$", var.project))
+    error_message = "Project must be lowercase alphanumeric with hyphens, 3-30 characters."
+  }
+}
+
+variable "environment" {
+  description = "Environment name (dev, staging, prod)"
+  type        = string
+
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "Environment must be dev, staging, or prod."
+  }
+}
+
+variable "aws_region" {
+  description = "AWS region for resource deployment"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "vpc_cidr" {
+  description = "CIDR block for VPC network"
+  type        = string
+  default     = "10.0.0.0/16"
+
+  validation {
+    condition     = can(cidrhost(var.vpc_cidr, 0))
+    error_message = "VPC CIDR must be a valid IPv4 CIDR block."
+  }
+}
+
+variable "availability_zones" {
+  description = "List of availability zones for subnet distribution"
+  type        = list(string)
+  default     = ["us-east-1a", "us-east-1b"]
+
+  validation {
+    condition     = length(var.availability_zones) >= 2
+    error_message = "At least 2 availability zones required for high availability."
+  }
+}
+
+variable "enable_nat_gateway" {
+  description = "Enable NAT Gateway for private subnets (incurs costs)"
+  type        = bool
+  default     = true
+}
+
+variable "instance_type" {
+  description = "EC2 instance type for application servers"
+  type        = string
+  default     = "t3.small"
+}
+
+variable "instance_count" {
+  description = "Number of application server instances"
+  type        = number
+  default     = 2
+
+  validation {
+    condition     = var.instance_count >= 1 && var.instance_count <= 10
+    error_message = "Instance count must be between 1 and 10."
+  }
+}
+
+variable "additional_tags" {
+  description = "Additional tags to apply to all resources"
+  type        = map(string)
+  default     = {}
+}
+
+## locals.tf - Computed local values
+locals {
+  # Common resource naming prefix
+  name_prefix = "${var.project}-${var.environment}"
+
+  # Common tags applied to all resources
+  common_tags = merge(
+    {
+      Project     = var.project
+      Environment = var.environment
+      ManagedBy   = "terraform"
+      Repository  = "github.com/myorg/myrepo"
+    },
+    var.additional_tags
+  )
+
+  # Subnet CIDR calculation
+  public_subnet_cidrs = [
+    for idx in range(length(var.availability_zones)) :
+    cidrsubnet(var.vpc_cidr, 8, idx)
+  ]
+
+  private_subnet_cidrs = [
+    for idx in range(length(var.availability_zones)) :
+    cidrsubnet(var.vpc_cidr, 8, idx + 100)
+  ]
+}
+
+## data.tf - External data source lookups
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"] # Canonical
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+data "aws_caller_identity" "current" {}
+
+data "aws_region" "current" {}
+
+## main.tf - Primary resource definitions
+
+###############################################################################
+# VPC and Networking
+###############################################################################
+
+resource "aws_vpc" "main" {
+  cidr_block           = var.vpc_cidr
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+
+  tags = {
+    Name = "${local.name_prefix}-vpc"
+  }
+}
+
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "${local.name_prefix}-igw"
+  }
+}
+
+resource "aws_subnet" "public" {
+  count                   = length(var.availability_zones)
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = local.public_subnet_cidrs[count.index]
+  availability_zone       = var.availability_zones[count.index]
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "${local.name_prefix}-public-${var.availability_zones[count.index]}"
+    Type = "public"
+  }
+}
+
+resource "aws_subnet" "private" {
+  count             = length(var.availability_zones)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = local.private_subnet_cidrs[count.index]
+  availability_zone = var.availability_zones[count.index]
+
+  tags = {
+    Name = "${local.name_prefix}-private-${var.availability_zones[count.index]}"
+    Type = "private"
+  }
+}
+
+resource "aws_eip" "nat" {
+  count  = var.enable_nat_gateway ? length(var.availability_zones) : 0
+  domain = "vpc"
+
+  tags = {
+    Name = "${local.name_prefix}-nat-eip-${var.availability_zones[count.index]}"
+  }
+
+  depends_on = [aws_internet_gateway.main]
+}
+
+resource "aws_nat_gateway" "main" {
+  count         = var.enable_nat_gateway ? length(var.availability_zones) : 0
+  allocation_id = aws_eip.nat[count.index].id
+  subnet_id     = aws_subnet.public[count.index].id
+
+  tags = {
+    Name = "${local.name_prefix}-nat-${var.availability_zones[count.index]}"
+  }
+
+  depends_on = [aws_internet_gateway.main]
+}
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main.id
+  }
+
+  tags = {
+    Name = "${local.name_prefix}-public-rt"
+    Type = "public"
+  }
+}
+
+resource "aws_route_table_association" "public" {
+  count          = length(var.availability_zones)
+  subnet_id      = aws_subnet.public[count.index].id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table" "private" {
+  count  = length(var.availability_zones)
+  vpc_id = aws_vpc.main.id
+
+  dynamic "route" {
+    for_each = var.enable_nat_gateway ? [1] : []
+    content {
+      cidr_block     = "0.0.0.0/0"
+      nat_gateway_id = aws_nat_gateway.main[count.index].id
+    }
+  }
+
+  tags = {
+    Name = "${local.name_prefix}-private-rt-${var.availability_zones[count.index]}"
+    Type = "private"
+  }
+}
+
+resource "aws_route_table_association" "private" {
+  count          = length(var.availability_zones)
+  subnet_id      = aws_subnet.private[count.index].id
+  route_table_id = aws_route_table.private[count.index].id
+}
+
+###############################################################################
+# Security Groups
+###############################################################################
+
+resource "aws_security_group" "web" {
+  name_prefix = "${local.name_prefix}-web-"
+  description = "Security group for web application servers"
+  vpc_id      = aws_vpc.main.id
+
+  tags = {
+    Name = "${local.name_prefix}-web-sg"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "web_http" {
+  security_group_id = aws_security_group.web.id
+  description       = "Allow HTTP traffic from internet"
+
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "tcp"
+  cidr_ipv4   = "0.0.0.0/0"
+
+  tags = {
+    Name = "allow-http"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "web_https" {
+  security_group_id = aws_security_group.web.id
+  description       = "Allow HTTPS traffic from internet"
+
+  from_port   = 443
+  to_port     = 443
+  ip_protocol = "tcp"
+  cidr_ipv4   = "0.0.0.0/0"
+
+  tags = {
+    Name = "allow-https"
+  }
+}
+
+resource "aws_vpc_security_group_egress_rule" "web_all" {
+  security_group_id = aws_security_group.web.id
+  description       = "Allow all outbound traffic"
+
+  ip_protocol = "-1"
+  cidr_ipv4   = "0.0.0.0/0"
+
+  tags = {
+    Name = "allow-all-outbound"
+  }
+}
+
+###############################################################################
+# EC2 Instances
+###############################################################################
+
+resource "aws_instance" "web" {
+  count         = var.instance_count
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = var.instance_type
+  subnet_id     = aws_subnet.private[count.index % length(var.availability_zones)].id
+
+  vpc_security_group_ids = [aws_security_group.web.id]
+
+  root_block_device {
+    volume_type           = "gp3"
+    volume_size           = 20
+    encrypted             = true
+    delete_on_termination = true
+  }
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+  }
+
+  user_data = base64encode(templatefile("${path.module}/user_data.sh", {
+    environment = var.environment
+    project     = var.project
+  }))
+
+  tags = {
+    Name  = "${local.name_prefix}-web-${count.index + 1}"
+    Index = count.index + 1
+  }
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = [ami, user_data]
+  }
+}
+
+## outputs.tf - Output value declarations
+output "vpc_id" {
+  description = "ID of the created VPC"
+  value       = aws_vpc.main.id
+}
+
+output "vpc_cidr" {
+  description = "CIDR block of the VPC"
+  value       = aws_vpc.main.cidr_block
+}
+
+output "public_subnet_ids" {
+  description = "List of public subnet IDs"
+  value       = aws_subnet.public[*].id
+}
+
+output "private_subnet_ids" {
+  description = "List of private subnet IDs"
+  value       = aws_subnet.private[*].id
+}
+
+output "nat_gateway_ips" {
+  description = "Elastic IPs of NAT Gateways"
+  value       = var.enable_nat_gateway ? aws_eip.nat[*].public_ip : []
+}
+
+output "web_security_group_id" {
+  description = "ID of web application security group"
+  value       = aws_security_group.web.id
+}
+
+output "web_instance_ids" {
+  description = "IDs of web application EC2 instances"
+  value       = aws_instance.web[*].id
+}
+
+output "web_instance_private_ips" {
+  description = "Private IP addresses of web instances"
+  value       = aws_instance.web[*].private_ip
+}
+
+output "account_id" {
+  description = "AWS Account ID where resources are deployed"
+  value       = data.aws_caller_identity.current.account_id
+}
+
+output "region" {
+  description = "AWS region where resources are deployed"
+  value       = data.aws_region.current.name
+}
+```
+
+This example demonstrates:
+
+- ✅ **File organization**: Logical separation (versions.tf, providers.tf, variables.tf, locals.tf, data.tf, main.tf,
+  outputs.tf)
+- ✅ **Naming conventions**: Consistent snake_case for resources, variables, and outputs
+- ✅ **Variable validation**: Input validation with helpful error messages
+- ✅ **Type constraints**: Explicit types (string, number, bool, list, map)
+- ✅ **Local values**: Computed values for DRY configuration
+- ✅ **Data sources**: External lookups (AMI, account info, region)
+- ✅ **Resource grouping**: Logical sections with comments
+- ✅ **Dynamic blocks**: Conditional route creation based on NAT Gateway enablement
+- ✅ **Count and indexing**: Multiple subnets across availability zones
+- ✅ **Lifecycle rules**: create_before_destroy, ignore_changes, prevent_destroy
+- ✅ **Security hardening**: IMDSv2, encrypted volumes, least-privilege security groups
+- ✅ **Tagging strategy**: Consistent tags applied via default_tags and resource-specific tags
+- ✅ **Dependency management**: Explicit and implicit dependencies
+- ✅ **Output organization**: Comprehensive outputs for downstream consumption
+
 ## Naming Conventions
 
 ### Resource Names
@@ -443,6 +888,444 @@ resource "aws_security_group" "application" {
   }
 
   tags = local.common_tags
+}
+```
+
+### Advanced Dynamic Block Patterns
+
+#### Multi-Level Nested Dynamic Blocks
+
+```hcl
+## Complex ALB with multiple target groups and listeners
+resource "aws_lb" "application" {
+  name               = "${var.project}-${var.environment}-alb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb.id]
+  subnets            = aws_subnet.public[*].id
+
+  dynamic "access_logs" {
+    for_each = var.enable_access_logs ? [1] : []
+    content {
+      bucket  = aws_s3_bucket.alb_logs[0].id
+      prefix  = "alb-logs"
+      enabled = true
+    }
+  }
+
+  tags = local.common_tags
+}
+
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.application.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  certificate_arn   = var.certificate_arn
+
+  dynamic "default_action" {
+    for_each = var.default_action_type == "fixed-response" ? [1] : []
+    content {
+      type = "fixed-response"
+
+      fixed_response {
+        content_type = "text/plain"
+        message_body = "Not Found"
+        status_code  = "404"
+      }
+    }
+  }
+
+  dynamic "default_action" {
+    for_each = var.default_action_type == "forward" ? [1] : []
+    content {
+      type             = "forward"
+      target_group_arn = aws_lb_target_group.main.arn
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "path_based" {
+  for_each     = var.listener_rules
+  listener_arn = aws_lb_listener.https.arn
+  priority     = each.value.priority
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.services[each.key].arn
+  }
+
+  dynamic "condition" {
+    for_each = try([each.value.path_pattern], [])
+    content {
+      path_pattern {
+        values = condition.value
+      }
+    }
+  }
+
+  dynamic "condition" {
+    for_each = try([each.value.host_header], [])
+    content {
+      host_header {
+        values = condition.value
+      }
+    }
+  }
+
+  dynamic "condition" {
+    for_each = try([each.value.http_header], [])
+    content {
+      http_header {
+        http_header_name = condition.value.name
+        values           = condition.value.values
+      }
+    }
+  }
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${var.project}-${var.environment}-rule-${each.key}"
+    }
+  )
+}
+```
+
+#### Dynamic Blocks with Complex Variables
+
+```hcl
+## variables.tf - Define complex structures
+variable "firewall_rules" {
+  description = "Map of firewall rules to create"
+  type = map(object({
+    description = string
+    priority    = number
+    direction   = string
+    access      = string
+    protocol    = string
+    source_ports = optional(list(string))
+    destination_ports = optional(list(string))
+    source_addresses = optional(list(string))
+    destination_addresses = optional(list(string))
+  }))
+
+  default = {
+    allow_http = {
+      description           = "Allow HTTP from internet"
+      priority              = 100
+      direction             = "Inbound"
+      access                = "Allow"
+      protocol              = "Tcp"
+      source_ports          = ["*"]
+      destination_ports     = ["80"]
+      source_addresses      = ["*"]
+      destination_addresses = ["*"]
+    }
+    allow_https = {
+      description           = "Allow HTTPS from internet"
+      priority              = 110
+      direction             = "Inbound"
+      access                = "Allow"
+      protocol              = "Tcp"
+      source_ports          = ["*"]
+      destination_ports     = ["443"]
+      source_addresses      = ["*"]
+      destination_addresses = ["*"]
+    }
+    deny_rdp = {
+      description           = "Deny RDP from internet"
+      priority              = 200
+      direction             = "Inbound"
+      access                = "Deny"
+      protocol              = "Tcp"
+      source_ports          = ["*"]
+      destination_ports     = ["3389"]
+      source_addresses      = ["*"]
+      destination_addresses = ["*"]
+    }
+  }
+}
+
+## main.tf - Use dynamic blocks with complex iteration
+resource "azurerm_network_security_group" "main" {
+  name                = "${var.project}-${var.environment}-nsg"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.main.name
+
+  dynamic "security_rule" {
+    for_each = var.firewall_rules
+    content {
+      name                       = security_rule.key
+      description                = security_rule.value.description
+      priority                   = security_rule.value.priority
+      direction                  = security_rule.value.direction
+      access                     = security_rule.value.access
+      protocol                   = security_rule.value.protocol
+      source_port_range          = try(security_rule.value.source_ports[0], "*")
+      destination_port_range     = try(security_rule.value.destination_ports[0], "*")
+      source_address_prefix      = try(security_rule.value.source_addresses[0], "*")
+      destination_address_prefix = try(security_rule.value.destination_addresses[0], "*")
+    }
+  }
+
+  tags = local.common_tags
+}
+```
+
+#### Conditional Dynamic Blocks with Nested Iteration
+
+```hcl
+## CloudWatch alarms with dynamic thresholds per environment
+locals {
+  alarm_config = {
+    prod = {
+      cpu = {
+        threshold           = 80
+        evaluation_periods  = 2
+        datapoints_to_alarm = 2
+        treat_missing_data  = "breaching"
+      }
+      memory = {
+        threshold           = 85
+        evaluation_periods  = 3
+        datapoints_to_alarm = 2
+        treat_missing_data  = "breaching"
+      }
+      disk = {
+        threshold           = 90
+        evaluation_periods  = 1
+        datapoints_to_alarm = 1
+        treat_missing_data  = "breaching"
+      }
+    }
+    staging = {
+      cpu = {
+        threshold           = 90
+        evaluation_periods  = 3
+        datapoints_to_alarm = 3
+        treat_missing_data  = "notBreaching"
+      }
+    }
+    dev = {}
+  }
+
+  alarms_for_environment = try(local.alarm_config[var.environment], {})
+}
+
+resource "aws_cloudwatch_metric_alarm" "instance_alarms" {
+  for_each = {
+    for pair in setproduct(aws_instance.web[*].id, keys(local.alarms_for_environment)) :
+    "${pair[0]}-${pair[1]}" => {
+      instance_id = pair[0]
+      metric_name = pair[1]
+      config      = local.alarms_for_environment[pair[1]]
+    }
+  }
+
+  alarm_name          = "${var.project}-${var.environment}-${each.value.instance_id}-${each.value.metric_name}"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = each.value.config.evaluation_periods
+  metric_name         = title(each.value.metric_name)
+  namespace           = "AWS/EC2"
+  period              = "300"
+  statistic           = "Average"
+  threshold           = each.value.config.threshold
+  alarm_description   = "${title(each.value.metric_name)} utilization alarm for ${each.value.instance_id}"
+  treat_missing_data  = each.value.config.treat_missing_data
+  datapoints_to_alarm = each.value.config.datapoints_to_alarm
+
+  dimensions = {
+    InstanceId = each.value.instance_id
+  }
+
+  dynamic "alarm_actions" {
+    for_each = var.enable_sns_notifications ? [var.sns_topic_arn] : []
+    content {
+      alarm_actions = [alarm_actions.value]
+    }
+  }
+
+  tags = merge(
+    local.common_tags,
+    {
+      InstanceId = each.value.instance_id
+      MetricType = each.value.metric_name
+    }
+  )
+}
+```
+
+#### Dynamic Blocks for IAM Policies
+
+```hcl
+## Dynamically construct IAM policy with multiple statements
+locals {
+  iam_policy_statements = {
+    s3_read = {
+      effect = "Allow"
+      actions = [
+        "s3:GetObject",
+        "s3:ListBucket"
+      ]
+      resources = [
+        aws_s3_bucket.data.arn,
+        "${aws_s3_bucket.data.arn}/*"
+      ]
+    }
+    dynamodb_write = var.enable_dynamodb ? {
+      effect = "Allow"
+      actions = [
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem"
+      ]
+      resources = [
+        aws_dynamodb_table.main[0].arn
+      ]
+    } : null
+    kms_decrypt = var.enable_encryption ? {
+      effect = "Allow"
+      actions = [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+      ]
+      resources = [
+        aws_kms_key.main[0].arn
+      ]
+    } : null
+    cloudwatch_logs = {
+      effect = "Allow"
+      actions = [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ]
+      resources = [
+        "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.function_name}:*"
+      ]
+    }
+  }
+
+  # Filter out null statements
+  active_policy_statements = {
+    for k, v in local.iam_policy_statements :
+    k => v if v != null
+  }
+}
+
+data "aws_iam_policy_document" "lambda_execution" {
+  dynamic "statement" {
+    for_each = local.active_policy_statements
+    content {
+      sid       = title(replace(statement.key, "_", ""))
+      effect    = statement.value.effect
+      actions   = statement.value.actions
+      resources = statement.value.resources
+    }
+  }
+
+  dynamic "statement" {
+    for_each = var.enable_vpc ? [1] : []
+    content {
+      sid    = "VpcAccess"
+      effect = "Allow"
+      actions = [
+        "ec2:CreateNetworkInterface",
+        "ec2:DescribeNetworkInterfaces",
+        "ec2:DeleteNetworkInterface",
+        "ec2:AssignPrivateIpAddresses",
+        "ec2:UnassignPrivateIpAddresses"
+      ]
+      resources = ["*"]
+    }
+  }
+}
+
+resource "aws_iam_policy" "lambda_execution" {
+  name        = "${var.project}-${var.environment}-lambda-policy"
+  path        = "/"
+  description = "IAM policy for Lambda function execution"
+  policy      = data.aws_iam_policy_document.lambda_execution.json
+
+  tags = local.common_tags
+}
+```
+
+#### Dynamic Blocks with for_each and Conditionals
+
+```hcl
+## RDS instance with dynamic parameter groups
+variable "db_parameters" {
+  description = "Database parameter overrides by environment"
+  type = map(map(object({
+    value        = string
+    apply_method = string
+  })))
+
+  default = {
+    prod = {
+      max_connections = {
+        value        = "500"
+        apply_method = "immediate"
+      }
+      shared_buffers = {
+        value        = "{DBInstanceClassMemory/4096}"
+        apply_method = "pending-reboot"
+      }
+      work_mem = {
+        value        = "16384"
+        apply_method = "immediate"
+      }
+    }
+    staging = {
+      max_connections = {
+        value        = "200"
+        apply_method = "immediate"
+      }
+    }
+    dev = {}
+  }
+}
+
+resource "aws_db_parameter_group" "postgres" {
+  name        = "${var.project}-${var.environment}-pg-params"
+  family      = "postgres15"
+  description = "Custom parameter group for ${var.environment}"
+
+  dynamic "parameter" {
+    for_each = try(var.db_parameters[var.environment], {})
+    content {
+      name         = parameter.key
+      value        = parameter.value.value
+      apply_method = parameter.value.apply_method
+    }
+  }
+
+  # Always set these parameters regardless of environment
+  parameter {
+    name  = "log_statement"
+    value = var.environment == "prod" ? "ddl" : "all"
+  }
+
+  parameter {
+    name  = "log_min_duration_statement"
+    value = var.environment == "prod" ? "1000" : "100"
+  }
+
+  dynamic "parameter" {
+    for_each = var.enable_slow_query_log ? [1] : []
+    content {
+      name  = "slow_query_log"
+      value = "1"
+    }
+  }
+
+  tags = local.common_tags
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 ```
 
@@ -2850,6 +3733,530 @@ output "public_a_subnet" {
 }
 ```
 
+#### Advanced for_each Patterns
+
+```hcl
+## for_each with maps - Complex IAM users and policies
+locals {
+  users = {
+    alice = {
+      groups = ["developers", "admins"]
+      tags   = { Department = "Engineering", Level = "Senior" }
+    }
+    bob = {
+      groups = ["developers"]
+      tags   = { Department = "Engineering", Level = "Junior" }
+    }
+    charlie = {
+      groups = ["operations", "admins"]
+      tags   = { Department = "Operations", Level = "Senior" }
+    }
+  }
+}
+
+resource "aws_iam_user" "users" {
+  for_each = local.users
+
+  name = each.key
+  path = "/employees/"
+
+  tags = merge(
+    {
+      Name      = each.key
+      ManagedBy = "terraform"
+    },
+    each.value.tags
+  )
+}
+
+resource "aws_iam_user_group_membership" "users" {
+  for_each = local.users
+
+  user   = aws_iam_user.users[each.key].name
+  groups = each.value.groups
+
+  depends_on = [aws_iam_user.users]
+}
+
+## for_each with sets - Multiple security group rules
+variable "allowed_ssh_cidrs" {
+  type    = set(string)
+  default = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ssh" {
+  for_each = var.allowed_ssh_cidrs
+
+  security_group_id = aws_security_group.main.id
+  description       = "SSH from ${each.value}"
+
+  from_port   = 22
+  to_port     = 22
+  ip_protocol = "tcp"
+  cidr_ipv4   = each.value
+
+  tags = {
+    Name  = "allow-ssh-${replace(each.value, "/", "-")}"
+    CIDR  = each.value
+  }
+}
+
+## for_each with toset() - Convert list to set
+variable "availability_zones" {
+  type    = list(string)
+  default = ["us-east-1a", "us-east-1b", "us-east-1c"]
+}
+
+resource "aws_subnet" "private" {
+  for_each = toset(var.availability_zones)
+
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = cidrsubnet(var.vpc_cidr, 8, index(var.availability_zones, each.value) + 100)
+  availability_zone = each.value
+
+  tags = {
+    Name = "${var.project}-private-${each.value}"
+    Type = "private"
+    AZ   = each.value
+  }
+}
+
+## for_each with filtered maps - Conditional resource creation
+locals {
+  all_environments = {
+    dev = {
+      instance_type   = "t3.micro"
+      instance_count  = 1
+      enable_backups  = false
+    }
+    staging = {
+      instance_type   = "t3.small"
+      instance_count  = 2
+      enable_backups  = true
+    }
+    prod = {
+      instance_type   = "t3.large"
+      instance_count  = 3
+      enable_backups  = true
+    }
+  }
+
+  # Only create resources for environments with backups enabled
+  backup_environments = {
+    for k, v in local.all_environments : k => v
+    if v.enable_backups
+  }
+}
+
+resource "aws_backup_plan" "environments" {
+  for_each = local.backup_environments
+
+  name = "${var.project}-${each.key}-backup-plan"
+
+  rule {
+    rule_name         = "daily_backup"
+    target_vault_name = aws_backup_vault.main.name
+    schedule          = "cron(0 2 * * ? *)"
+
+    lifecycle {
+      delete_after = each.key == "prod" ? 30 : 7
+    }
+  }
+
+  tags = {
+    Environment = each.key
+    Tier        = "backup"
+  }
+}
+
+## for_each with nested maps - Multi-region VPC peering
+locals {
+  vpc_peering = {
+    "us-east-1-to-us-west-2" = {
+      vpc_id        = aws_vpc.us_east_1.id
+      peer_vpc_id   = aws_vpc.us_west_2.id
+      peer_region   = "us-west-2"
+      auto_accept   = false
+    }
+    "us-east-1-to-eu-west-1" = {
+      vpc_id        = aws_vpc.us_east_1.id
+      peer_vpc_id   = aws_vpc.eu_west_1.id
+      peer_region   = "eu-west-1"
+      auto_accept   = false
+    }
+  }
+}
+
+resource "aws_vpc_peering_connection" "cross_region" {
+  for_each = local.vpc_peering
+
+  vpc_id        = each.value.vpc_id
+  peer_vpc_id   = each.value.peer_vpc_id
+  peer_region   = each.value.peer_region
+  auto_accept   = each.value.auto_accept
+
+  tags = {
+    Name = each.key
+    Side = "Requester"
+  }
+}
+
+resource "aws_vpc_peering_connection_accepter" "cross_region" {
+  for_each = local.vpc_peering
+
+  provider                  = aws.peer
+  vpc_peering_connection_id = aws_vpc_peering_connection.cross_region[each.key].id
+  auto_accept               = true
+
+  tags = {
+    Name = each.key
+    Side = "Accepter"
+  }
+}
+
+## for_each with complex transformations - S3 buckets with policies
+locals {
+  buckets = {
+    logs = {
+      versioning            = true
+      lifecycle_days        = 90
+      public_access_block   = true
+      allowed_principals    = ["arn:aws:iam::123456789012:root"]
+    }
+    data = {
+      versioning            = true
+      lifecycle_days        = 365
+      public_access_block   = true
+      allowed_principals    = ["arn:aws:iam::123456789012:role/DataProcessor"]
+    }
+    backups = {
+      versioning            = true
+      lifecycle_days        = 2555  # 7 years
+      public_access_block   = true
+      allowed_principals    = ["arn:aws:iam::123456789012:role/BackupService"]
+    }
+  }
+}
+
+resource "aws_s3_bucket" "buckets" {
+  for_each = local.buckets
+
+  bucket = "${var.project}-${var.environment}-${each.key}"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-${each.key}"
+    Type        = each.key
+    Versioning  = tostring(each.value.versioning)
+    Retention   = "${each.value.lifecycle_days} days"
+  }
+}
+
+resource "aws_s3_bucket_versioning" "buckets" {
+  for_each = {
+    for k, v in local.buckets : k => v
+    if v.versioning
+  }
+
+  bucket = aws_s3_bucket.buckets[each.key].id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "buckets" {
+  for_each = local.buckets
+
+  bucket = aws_s3_bucket.buckets[each.key].id
+
+  rule {
+    id     = "transition-and-expire"
+    status = "Enabled"
+
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+
+    transition {
+      days          = 90
+      storage_class = "GLACIER"
+    }
+
+    expiration {
+      days = each.value.lifecycle_days
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 30
+    }
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "buckets" {
+  for_each = {
+    for k, v in local.buckets : k => v
+    if v.public_access_block
+  }
+
+  bucket = aws_s3_bucket.buckets[each.key].id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+data "aws_iam_policy_document" "bucket_policy" {
+  for_each = local.buckets
+
+  statement {
+    sid    = "AllowSpecificPrincipals"
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = each.value.allowed_principals
+    }
+
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:ListBucket"
+    ]
+
+    resources = [
+      aws_s3_bucket.buckets[each.key].arn,
+      "${aws_s3_bucket.buckets[each.key].arn}/*"
+    ]
+  }
+
+  statement {
+    sid    = "DenyInsecureTransport"
+    effect = "Deny"
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = ["s3:*"]
+
+    resources = [
+      aws_s3_bucket.buckets[each.key].arn,
+      "${aws_s3_bucket.buckets[each.key].arn}/*"
+    ]
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "buckets" {
+  for_each = local.buckets
+
+  bucket = aws_s3_bucket.buckets[each.key].id
+  policy = data.aws_iam_policy_document.bucket_policy[each.key].json
+}
+
+## for_each with setproduct() - Cross-region backups
+locals {
+  source_regions = ["us-east-1", "us-west-2"]
+  backup_regions = ["eu-west-1", "ap-southeast-1"]
+
+  # Create all combinations of source and backup regions
+  backup_rules = {
+    for pair in setproduct(local.source_regions, local.backup_regions) :
+    "${pair[0]}-to-${pair[1]}" => {
+      source_region = pair[0]
+      backup_region = pair[1]
+    }
+  }
+}
+
+resource "aws_backup_region_settings" "cross_region" {
+  for_each = local.backup_rules
+
+  resource_type_opt_in_preference = {
+    "EBS"       = true
+    "RDS"       = true
+    "DynamoDB"  = true
+  }
+}
+
+## for_each with merge() - Combining default and custom tags
+variable "custom_tags" {
+  type = map(map(string))
+  default = {
+    web = {
+      Application = "WebServer"
+      PublicFacing = "true"
+    }
+    db = {
+      Application = "Database"
+      Encrypted = "true"
+    }
+  }
+}
+
+locals {
+  default_tags = {
+    Project     = var.project
+    Environment = var.environment
+    ManagedBy   = "terraform"
+    CostCenter  = var.cost_center
+  }
+
+  instance_configs = {
+    web = {
+      instance_type = "t3.medium"
+      ami_id        = data.aws_ami.web.id
+    }
+    db = {
+      instance_type = "t3.large"
+      ami_id        = data.aws_ami.db.id
+    }
+  }
+
+  # Merge default tags with custom tags for each instance type
+  instance_tags = {
+    for k, v in local.instance_configs : k => merge(
+      local.default_tags,
+      lookup(var.custom_tags, k, {}),
+      {
+        Name = "${var.project}-${var.environment}-${k}"
+        Type = k
+      }
+    )
+  }
+}
+
+resource "aws_instance" "instances" {
+  for_each = local.instance_configs
+
+  ami           = each.value.ami_id
+  instance_type = each.value.instance_type
+
+  tags = local.instance_tags[each.key]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+## for_each with flatten() and for expressions - Complex multi-level iteration
+variable "applications" {
+  type = map(object({
+    environments = list(string)
+    instance_types = map(string)
+  }))
+
+  default = {
+    webapp = {
+      environments = ["dev", "staging", "prod"]
+      instance_types = {
+        dev     = "t3.micro"
+        staging = "t3.small"
+        prod    = "t3.large"
+      }
+    }
+    api = {
+      environments = ["dev", "prod"]
+      instance_types = {
+        dev  = "t3.small"
+        prod = "t3.xlarge"
+      }
+    }
+  }
+}
+
+locals {
+  # Flatten nested structure into list of objects
+  app_env_combinations = flatten([
+    for app_name, app_config in var.applications : [
+      for env in app_config.environments : {
+        app_name      = app_name
+        environment   = env
+        instance_type = app_config.instance_types[env]
+        key           = "${app_name}-${env}"
+      }
+    ]
+  ])
+
+  # Convert list to map for for_each
+  app_env_map = {
+    for item in local.app_env_combinations :
+    item.key => item
+  }
+}
+
+resource "aws_instance" "app_instances" {
+  for_each = local.app_env_map
+
+  ami           = data.aws_ami.app[each.value.app_name].id
+  instance_type = each.value.instance_type
+
+  tags = {
+    Name        = "${var.project}-${each.value.app_name}-${each.value.environment}"
+    Application = each.value.app_name
+    Environment = each.value.environment
+  }
+}
+
+## for_each with conditional logic - Environment-specific resources
+locals {
+  environments = {
+    dev = {
+      create_bastion    = true
+      create_nat        = false
+      instance_count    = 1
+      enable_monitoring = false
+    }
+    staging = {
+      create_bastion    = true
+      create_nat        = true
+      instance_count    = 2
+      enable_monitoring = true
+    }
+    prod = {
+      create_bastion    = false
+      create_nat        = true
+      instance_count    = 3
+      enable_monitoring = true
+    }
+  }
+
+  current_env = local.environments[var.environment]
+
+  # Create map only if bastion should be created
+  bastion_config = local.current_env.create_bastion ? {
+    bastion = {
+      instance_type = var.environment == "prod" ? "t3.small" : "t3.micro"
+      subnet_id     = aws_subnet.public[0].id
+    }
+  } : {}
+}
+
+resource "aws_instance" "bastion" {
+  for_each = local.bastion_config
+
+  ami           = data.aws_ami.bastion.id
+  instance_type = each.value.instance_type
+  subnet_id     = each.value.subnet_id
+
+  vpc_security_group_ids = [aws_security_group.bastion.id]
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-bastion"
+    Environment = var.environment
+    Role        = "bastion"
+  }
+}
+```
+
 ### Dependency Management
 
 Use `depends_on` sparingly - implicit dependencies are preferred:
@@ -2952,6 +4359,691 @@ module "app_servers" {
   depends_on = [module.vpc]
 }
 ```
+
+#### Complete Multi-Tier Application Stack
+
+```hcl
+## Root module (main.tf) - Complete 3-tier web application
+terraform {
+  required_version = ">= 1.6.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+
+  backend "s3" {
+    bucket         = "mycompany-terraform-state"
+    key            = "applications/web-app/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "terraform-state-locks"
+  }
+}
+
+provider "aws" {
+  region = var.aws_region
+
+  default_tags {
+    tags = {
+      Project     = var.project
+      Environment = var.environment
+      ManagedBy   = "terraform"
+      CostCenter  = var.cost_center
+    }
+  }
+}
+
+## Networking Layer
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 5.0"
+
+  name = "${var.project}-${var.environment}-vpc"
+  cidr = var.vpc_cidr
+
+  azs             = var.availability_zones
+  private_subnets = var.private_subnet_cidrs
+  public_subnets  = var.public_subnet_cidrs
+  database_subnets = var.database_subnet_cidrs
+
+  enable_nat_gateway = var.enable_nat_gateway
+  single_nat_gateway = var.environment != "prod"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+
+  # VPC Flow Logs
+  enable_flow_log                      = true
+  create_flow_log_cloudwatch_iam_role  = true
+  create_flow_log_cloudwatch_log_group = true
+
+  tags = {
+    Tier = "networking"
+  }
+}
+
+## Security Groups Module
+module "security_groups" {
+  source = "./modules/security-groups"
+
+  vpc_id      = module.vpc.vpc_id
+  vpc_cidr    = module.vpc.vpc_cidr_block
+  project     = var.project
+  environment = var.environment
+
+  # Allow specific CIDR blocks for SSH access
+  ssh_cidr_blocks = var.ssh_cidr_blocks
+
+  # ALB security group rules
+  alb_ingress_rules = {
+    http = {
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+      description = "Allow HTTP from internet"
+    }
+    https = {
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+      description = "Allow HTTPS from internet"
+    }
+  }
+
+  depends_on = [module.vpc]
+}
+
+## Application Load Balancer
+module "alb" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "~> 8.0"
+
+  name = "${var.project}-${var.environment}-alb"
+
+  load_balancer_type = "application"
+  vpc_id             = module.vpc.vpc_id
+  subnets            = module.vpc.public_subnets
+  security_groups    = [module.security_groups.alb_sg_id]
+
+  # Access logs
+  access_logs = {
+    bucket = module.s3_logs.s3_bucket_id
+    prefix = "alb-logs"
+  }
+
+  target_groups = [
+    {
+      name             = "${var.project}-${var.environment}-tg"
+      backend_protocol = "HTTP"
+      backend_port     = 80
+      target_type      = "instance"
+
+      health_check = {
+        enabled             = true
+        interval            = 30
+        path                = "/health"
+        port                = "traffic-port"
+        healthy_threshold   = 3
+        unhealthy_threshold = 3
+        timeout             = 6
+        protocol            = "HTTP"
+        matcher             = "200-299"
+      }
+
+      stickiness = {
+        enabled = true
+        type    = "lb_cookie"
+      }
+    }
+  ]
+
+  https_listeners = [
+    {
+      port               = 443
+      protocol           = "HTTPS"
+      certificate_arn    = module.acm.acm_certificate_arn
+      target_group_index = 0
+
+      ssl_policy = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+    }
+  ]
+
+  http_tcp_listeners = [
+    {
+      port        = 80
+      protocol    = "HTTP"
+      action_type = "redirect"
+
+      redirect = {
+        port        = "443"
+        protocol    = "HTTPS"
+        status_code = "HTTP_301"
+      }
+    }
+  ]
+
+  tags = {
+    Tier = "presentation"
+  }
+
+  depends_on = [module.vpc, module.security_groups, module.s3_logs]
+}
+
+## ACM Certificate for HTTPS
+module "acm" {
+  source  = "terraform-aws-modules/acm/aws"
+  version = "~> 4.0"
+
+  domain_name = var.domain_name
+  zone_id     = data.aws_route53_zone.main.zone_id
+
+  subject_alternative_names = [
+    "*.${var.domain_name}"
+  ]
+
+  wait_for_validation = true
+
+  tags = {
+    Tier = "security"
+  }
+}
+
+## S3 Bucket for Logs
+module "s3_logs" {
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "~> 3.0"
+
+  bucket = "${var.project}-${var.environment}-logs"
+  acl    = "log-delivery-write"
+
+  # S3 bucket-level Public Access Block configuration
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+
+  versioning = {
+    enabled = true
+  }
+
+  lifecycle_rule = [
+    {
+      id      = "log-retention"
+      enabled = true
+
+      transition = [
+        {
+          days          = 30
+          storage_class = "STANDARD_IA"
+        },
+        {
+          days          = 90
+          storage_class = "GLACIER"
+        }
+      ]
+
+      expiration = {
+        days = 365
+      }
+
+      noncurrent_version_expiration = {
+        days = 30
+      }
+    }
+  ]
+
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+
+  tags = {
+    Tier = "storage"
+  }
+}
+
+## Application Tier - Auto Scaling Group
+module "asg" {
+  source  = "terraform-aws-modules/autoscaling/aws"
+  version = "~> 6.0"
+
+  name = "${var.project}-${var.environment}-asg"
+
+  min_size                  = var.asg_min_size
+  max_size                  = var.asg_max_size
+  desired_capacity          = var.asg_desired_capacity
+  wait_for_capacity_timeout = 0
+  health_check_type         = "ELB"
+  health_check_grace_period = 300
+  vpc_zone_identifier       = module.vpc.private_subnets
+  target_group_arns         = module.alb.target_group_arns
+
+  # Launch template
+  launch_template_name        = "${var.project}-${var.environment}-lt"
+  launch_template_description = "Launch template for ${var.project} application servers"
+  update_default_version      = true
+
+  image_id          = data.aws_ami.app_ami.id
+  instance_type     = var.instance_type
+  user_data         = base64encode(templatefile("${path.module}/templates/user_data.sh", {
+    environment        = var.environment
+    project           = var.project
+    log_group_name    = module.cloudwatch_logs.cloudwatch_log_group_name
+    parameter_path    = "/${var.project}/${var.environment}"
+  }))
+
+  security_groups = [module.security_groups.app_sg_id]
+
+  iam_instance_profile_arn = module.ec2_instance_profile.iam_instance_profile_arn
+
+  block_device_mappings = [
+    {
+      device_name = "/dev/xvda"
+
+      ebs = {
+        volume_size           = 30
+        volume_type           = "gp3"
+        iops                  = 3000
+        throughput            = 125
+        encrypted             = true
+        kms_key_id            = module.kms.key_arn
+        delete_on_termination = true
+      }
+    }
+  ]
+
+  metadata_options = {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = "enabled"
+  }
+
+  # Auto scaling policies
+  scaling_policies = {
+    scale_up = {
+      policy_type = "TargetTrackingScaling"
+      target_tracking_configuration = {
+        predefined_metric_specification = {
+          predefined_metric_type = "ASGAverageCPUUtilization"
+        }
+        target_value = 70.0
+      }
+    }
+  }
+
+  tags = {
+    Tier = "application"
+  }
+
+  depends_on = [module.vpc, module.security_groups, module.alb]
+}
+
+## EC2 Instance Profile (IAM Role)
+module "ec2_instance_profile" {
+  source = "./modules/iam-instance-profile"
+
+  name        = "${var.project}-${var.environment}-instance-profile"
+  project     = var.project
+  environment = var.environment
+
+  policy_arns = [
+    "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy",
+    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+    module.app_policy.policy_arn
+  ]
+
+  tags = {
+    Tier = "security"
+  }
+}
+
+## Application-Specific IAM Policy
+module "app_policy" {
+  source = "./modules/iam-policy"
+
+  name        = "${var.project}-${var.environment}-app-policy"
+  description = "Application permissions for ${var.project}"
+
+  policy_statements = [
+    {
+      sid    = "S3Access"
+      effect = "Allow"
+      actions = [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:ListBucket"
+      ]
+      resources = [
+        module.s3_app_data.s3_bucket_arn,
+        "${module.s3_app_data.s3_bucket_arn}/*"
+      ]
+    },
+    {
+      sid    = "ParameterStoreAccess"
+      effect = "Allow"
+      actions = [
+        "ssm:GetParameter",
+        "ssm:GetParameters",
+        "ssm:GetParametersByPath"
+      ]
+      resources = [
+        "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/${var.project}/${var.environment}/*"
+      ]
+    },
+    {
+      sid    = "SecretsManagerAccess"
+      effect = "Allow"
+      actions = [
+        "secretsmanager:GetSecretValue"
+      ]
+      resources = [
+        module.db_credentials.secret_arn
+      ]
+    }
+  ]
+
+  tags = {
+    Tier = "security"
+  }
+}
+
+## Database Tier - RDS PostgreSQL
+module "rds" {
+  source  = "terraform-aws-modules/rds/aws"
+  version = "~> 6.0"
+
+  identifier = "${var.project}-${var.environment}-db"
+
+  engine               = "postgres"
+  engine_version       = "15.4"
+  family               = "postgres15"
+  major_engine_version = "15"
+  instance_class       = var.db_instance_class
+
+  allocated_storage     = var.db_allocated_storage
+  max_allocated_storage = var.db_max_allocated_storage
+  storage_encrypted     = true
+  kms_key_id            = module.kms.key_arn
+
+  db_name  = var.db_name
+  username = var.db_username
+  port     = 5432
+
+  # Password managed by Secrets Manager
+  manage_master_user_password = true
+  master_user_secret_kms_key_id = module.kms.key_arn
+
+  multi_az               = var.environment == "prod"
+  db_subnet_group_name   = module.vpc.database_subnet_group_name
+  vpc_security_group_ids = [module.security_groups.db_sg_id]
+
+  maintenance_window              = "Mon:00:00-Mon:03:00"
+  backup_window                   = "03:00-06:00"
+  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
+  backup_retention_period         = var.environment == "prod" ? 30 : 7
+  skip_final_snapshot             = var.environment != "prod"
+  deletion_protection             = var.environment == "prod"
+
+  performance_insights_enabled          = true
+  performance_insights_retention_period = 7
+  create_monitoring_role                = true
+  monitoring_interval                   = 60
+  monitoring_role_name                  = "${var.project}-${var.environment}-rds-monitoring"
+
+  parameters = [
+    {
+      name  = "autovacuum"
+      value = 1
+    },
+    {
+      name  = "client_encoding"
+      value = "utf8"
+    },
+    {
+      name  = "max_connections"
+      value = var.environment == "prod" ? "500" : "200"
+    },
+    {
+      name  = "shared_preload_libraries"
+      value = "pg_stat_statements"
+    }
+  ]
+
+  tags = {
+    Tier = "database"
+  }
+
+  depends_on = [module.vpc, module.security_groups, module.kms]
+}
+
+## KMS Key for Encryption
+module "kms" {
+  source  = "terraform-aws-modules/kms/aws"
+  version = "~> 2.0"
+
+  description = "KMS key for ${var.project} ${var.environment}"
+  key_usage   = "ENCRYPT_DECRYPT"
+
+  # Key policy
+  key_administrators = [
+    data.aws_caller_identity.current.arn
+  ]
+
+  key_users = [
+    module.ec2_instance_profile.iam_role_arn,
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+  ]
+
+  # Aliases
+  aliases = ["${var.project}/${var.environment}"]
+
+  # Key rotation
+  enable_key_rotation = true
+
+  tags = {
+    Tier = "security"
+  }
+}
+
+## CloudWatch Log Group for Application Logs
+module "cloudwatch_logs" {
+  source  = "terraform-aws-modules/cloudwatch/aws//modules/log-group"
+  version = "~> 4.0"
+
+  name              = "/aws/ec2/${var.project}/${var.environment}"
+  retention_in_days = var.environment == "prod" ? 90 : 30
+
+  kms_key_id = module.kms.key_arn
+
+  tags = {
+    Tier = "monitoring"
+  }
+
+  depends_on = [module.kms]
+}
+
+## S3 Bucket for Application Data
+module "s3_app_data" {
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "~> 3.0"
+
+  bucket = "${var.project}-${var.environment}-app-data"
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+
+  versioning = {
+    enabled = true
+  }
+
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        sse_algorithm     = "aws:kms"
+        kms_master_key_id = module.kms.key_arn
+      }
+    }
+  }
+
+  lifecycle_rule = [
+    {
+      id      = "transition-old-versions"
+      enabled = true
+
+      noncurrent_version_transition = [
+        {
+          days          = 30
+          storage_class = "STANDARD_IA"
+        }
+      ]
+
+      noncurrent_version_expiration = {
+        days = 90
+      }
+    }
+  ]
+
+  tags = {
+    Tier = "storage"
+  }
+
+  depends_on = [module.kms]
+}
+
+## Route53 DNS Records
+module "route53_records" {
+  source  = "terraform-aws-modules/route53/aws//modules/records"
+  version = "~> 2.0"
+
+  zone_id = data.aws_route53_zone.main.zone_id
+
+  records = [
+    {
+      name    = var.environment == "prod" ? "" : var.environment
+      type    = "A"
+      alias   = {
+        name    = module.alb.lb_dns_name
+        zone_id = module.alb.lb_zone_id
+      }
+    },
+    {
+      name    = var.environment == "prod" ? "www" : "www.${var.environment}"
+      type    = "A"
+      alias   = {
+        name    = module.alb.lb_dns_name
+        zone_id = module.alb.lb_zone_id
+      }
+    }
+  ]
+
+  depends_on = [module.alb]
+}
+
+## Secrets Manager for Database Credentials
+module "db_credentials" {
+  source  = "terraform-aws-modules/secrets-manager/aws"
+  version = "~> 1.0"
+
+  name        = "${var.project}/${var.environment}/db/credentials"
+  description = "Database credentials for ${var.project} ${var.environment}"
+
+  secret_string = jsonencode({
+    username = module.rds.db_instance_username
+    password = module.rds.db_instance_password
+    engine   = "postgres"
+    host     = module.rds.db_instance_endpoint
+    port     = 5432
+    dbname   = var.db_name
+  })
+
+  recovery_window_in_days = var.environment == "prod" ? 30 : 7
+
+  kms_key_id = module.kms.key_arn
+
+  tags = {
+    Tier = "security"
+  }
+
+  depends_on = [module.rds, module.kms]
+}
+
+## Data Sources
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
+data "aws_route53_zone" "main" {
+  name         = var.domain_name
+  private_zone = false
+}
+
+data "aws_ami" "app_ami" {
+  most_recent = true
+  owners      = ["self"]
+
+  filter {
+    name   = "name"
+    values = ["${var.project}-app-*"]
+  }
+
+  filter {
+    name   = "tag:Environment"
+    values = [var.environment]
+  }
+}
+
+## Outputs
+output "alb_dns_name" {
+  description = "DNS name of the Application Load Balancer"
+  value       = module.alb.lb_dns_name
+}
+
+output "app_url" {
+  description = "Application URL"
+  value       = var.environment == "prod" ? "https://${var.domain_name}" : "https://${var.environment}.${var.domain_name}"
+}
+
+output "database_endpoint" {
+  description = "RDS database endpoint"
+  value       = module.rds.db_instance_endpoint
+  sensitive   = true
+}
+
+output "kms_key_id" {
+  description = "KMS key ID for encryption"
+  value       = module.kms.key_id
+}
+
+output "log_group_name" {
+  description = "CloudWatch log group name"
+  value       = module.cloudwatch_logs.cloudwatch_log_group_name
+}
+
+output "s3_app_data_bucket" {
+  description = "S3 bucket for application data"
+  value       = module.s3_app_data.s3_bucket_id
+}
+```
+
+This complete example demonstrates:
+
+- **Multi-tier architecture**: Presentation (ALB), Application (ASG), Database (RDS)
+- **Security layers**: KMS encryption, Secrets Manager, Security Groups, IAM roles
+- **High availability**: Multi-AZ deployment, Auto Scaling, Load Balancing
+- **Monitoring & Logging**: CloudWatch Logs, RDS Performance Insights, ALB access logs
+- **Module composition**: 15+ modules working together
+- **Data flow**: Modules passing outputs as inputs to dependent modules
+- **Environment-aware**: Different configurations for dev/staging/prod
+- **Best practices**: Encryption at rest, private subnets, least-privilege IAM
 
 ### Lifecycle Rules
 
