@@ -1130,7 +1130,8 @@ module "vpc" {
 
 ## Module Contract
 
-See [CONTRACT.md](./CONTRACT.md) for detailed guarantees, compatibility promises, and breaking change policies.
+See [CONTRACT.md Template](../../04_templates/contract_template.md) for detailed guarantees, compatibility promises,
+and breaking change policies.
 
 ## Module Testing
 
