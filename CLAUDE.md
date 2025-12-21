@@ -1,6 +1,6 @@
-# CLAUDE.md - AI Assistant Guide
+# CLAUDE.md
 
-This document provides context for AI assistants (like Claude Code) working with this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
@@ -12,165 +12,566 @@ DevOps and software engineering practices.
 - **Repository**: <https://github.com/tydukes/coding-style-guide>
 - **Documentation Site**: <https://tydukes.github.io/coding-style-guide/>
 - **License**: MIT
+- **Current Version**: 1.7.0 (in `pyproject.toml`)
+
+### Covered Languages
+
+- **Infrastructure as Code**: Terraform, Terragrunt, HCL, AWS CDK, Kubernetes/Helm, Ansible
+- **Programming**: Python, TypeScript, Bash, PowerShell, SQL, Groovy (Jenkins)
+- **CI/CD**: GitHub Actions, GitLab CI/CD
+- **Configuration**: YAML, JSON
+- **Containers**: Dockerfile, Docker Compose
+- **Build Tools**: Makefile
+
+## Development Commands
+
+### Prerequisites
+
+- Python 3.10+
+- [uv package manager](https://docs.astral.sh/uv/)
+
+### Building & Serving Documentation
+
+```bash
+# Install dependencies
+uv sync
+
+# Upgrade dependencies
+uv sync --upgrade
+
+# Start local documentation server (http://127.0.0.1:8000)
+mkdocs serve
+
+# Build documentation
+mkdocs build
+
+# Build with strict mode (fails on warnings)
+mkdocs build --strict
+```
+
+### Validation & Testing
+
+```bash
+# Validate @module metadata tags in all documentation
+uv run python scripts/validate_metadata.py docs/
+
+# Analyze code-to-text ratio in language guides (target: 3:1)
+uv run python scripts/analyze_code_ratio.py
+
+# Run pre-commit linters
+bash scripts/pre_commit_linter.sh
+
+# Run all pre-commit hooks
+pre-commit run --all-files
+
+# Run metadata validation manually (manual-stage hook)
+pre-commit run validate-metadata --hook-stage manual
+
+# Python formatting and linting
+uv run black .
+uv run flake8
+```
+
+### Docker-based Workflows
+
+```bash
+# Run full validation suite
+docker-compose run --rm validator
+
+# Run linters only
+docker-compose run --rm lint
+
+# Auto-format code
+docker-compose run --rm format
+
+# Build and validate docs
+docker-compose run --rm docs
+
+# Validate metadata tags
+docker-compose run --rm metadata
+```
+
+### Using Published Container
+
+```bash
+# Run full validation
+docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest validate
+
+# Run linters only
+docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest lint
+
+# Auto-format code
+docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest format
+
+# Build docs
+docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest docs
+
+# Validate metadata
+docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest metadata
+
+# Show help
+docker run --rm ghcr.io/tydukes/coding-style-guide:latest help
+```
+
+## Architecture & Unique Patterns
+
+This project has several distinctive architectural patterns that aren't obvious from the file structure:
+
+### 1. 3:1 Code-to-Text Ratio Requirement
+
+**Philosophy**: "Show, don't tell" - language guides should be heavy on examples, light on prose.
+
+- **Requirement**: All language guides in `docs/02_language_guides/` must
+  maintain at least 3 lines of code examples for every 1 line of explanatory text
+- **Validation**: `scripts/analyze_code_ratio.py`
+- **Current Status**: 18/19 guides pass (94.7%)
+- **Algorithm**:
+  - Lines inside ``` code blocks count as "code"
+  - Non-blank lines outside code blocks count as "text"
+  - YAML frontmatter is excluded
+  - Ratio = code_lines / text_lines
+
+**Running the analysis**:
+
+```bash
+$ uv run python scripts/analyze_code_ratio.py
+
+Code-to-Text Ratio Analysis
+================================================================================
+Language Guide                   Code Lines   Text Lines      Ratio     Status
+--------------------------------------------------------------------------------
+terraform                              2124         6285       0.34     ❌ FAIL
+ansible                                2258          330       6.84     ✅ PASS
+...
+================================================================================
+Achievement: 18/19 guides pass
+```
+
+### 2. CONTRACT.md Template for IaC
+
+**Purpose**: Enable contract-based development for reusable Terraform modules and Ansible roles.
+
+**Key Pattern**: Numbered guarantees (G1, G2, G3...) that are:
+
+- Explicitly testable
+- Mapped directly to automated tests
+- Versioned with semantic versioning
+- Include breaking change deprecation timeline
+
+**Structure**: 13-section template (`docs/04_templates/contract_template.md`):
+
+1. Purpose
+2. Guarantees (G1, G2, G3... numbered for test traceability)
+3. Inputs/Outputs with validation rules
+4. Platform requirements matrix
+5. Dependencies and IAM permissions
+6. Side effects and cost implications
+7. Idempotency contract (Ansible)
+8. Testing requirements
+9. Breaking changes policy
+10. Known limitations
+11. Support and maintenance
+12. Usage examples
+13. Test mapping
+
+**Example guarantee**:
+
+```markdown
+## Guarantees
+
+- **G1**: Creates exactly 1 VPC with DNS hostnames enabled
+- **G2**: Creates N public subnets distributed across at least 2 AZs
+- **G3**: All S3 buckets have encryption enabled by default
+```
+
+Each guarantee is referenced in test descriptions: `test_vpc_creation.go: Tests G1, G2`.
+
+### 3. Dual Metadata System
+
+**Two complementary metadata approaches**:
+
+**A. YAML Frontmatter** (for documentation files):
+
+```yaml
+---
+title: "Document Title"
+description: "Brief purpose description"
+author: "Tyler Dukes"
+tags: [tag1, tag2, tag3]
+category: "Category Name"
+status: "active"
+---
+```
+
+**B. Code Comment Metadata** (for source code):
+
+```python
+"""
+@module module_name
+@description Brief purpose description
+@version 1.0.0
+@author Tyler Dukes
+@last_updated 2025-01-15
+@status stable
+"""
+```
+
+**Unique aspect**: Same metadata schema works across **all** languages
+(Python, Terraform, Bash, YAML, etc.) enabling universal tooling.
+
+**Validation**: `scripts/validate_metadata.py` supports 8 languages with
+language-specific comment syntax but universal tag format.
+
+### 4. Progressive Enforcement in CI/CD
+
+**5-Stage Validation Pipeline**:
+
+```text
+Stage 1: Pre-commit Hooks (< 30 sec)
+  └─> Formatting, linting, secret detection
+
+Stage 2: CI Pipeline (< 10 min)
+  └─> Metadata validation, lint checks, docs build
+
+Stage 3: Quality Gates (< 10 min)
+  └─> Spell checking, link checking
+
+Stage 4: Deployment (< 5 min)
+  └─> GitHub Pages deployment, container publish
+
+Stage 5: Auto-Merge (after CI success)
+  └─> Auto-approve and merge for allowed authors
+```
+
+**Key behavior**: Metadata validation is **non-blocking** (warning only), but spell checking **blocks** merges.
 
 ## Project Structure
 
 ```text
 coding-style-guide/
 ├── docs/                           # MkDocs documentation source
-│   ├── 01_overview/               # General principles and governance
-│   ├── 02_language_guides/        # Language-specific style guides
-│   ├── 03_metadata_schema/        # Schema documentation
-│   ├── 04_templates/              # Document templates
-│   ├── 05_ci_cd/                  # CI/CD and validation pipelines
-│   ├── 06_container/              # Container usage documentation
-│   ├── 07_integration/            # Integration guides
-│   ├── changelog.md               # Project changelog
-│   └── index.md                   # Documentation home page
-├── .github/                        # GitHub workflows and actions
-│   ├── workflows/                 # CI/CD workflows
-│   └── actions/                   # Custom GitHub actions
-├── Dockerfile                      # Container definition
-├── docker-compose.yml             # Local development container setup
-├── docker-entrypoint.sh           # Container entry point script
+│   ├── 00_standards/               # Documentation standards
+│   ├── 01_overview/                # Principles, governance, structure
+│   ├── 02_language_guides/         # 19 language-specific guides
+│   ├── 03_metadata_schema/         # Universal metadata schema
+│   ├── 04_templates/               # CONTRACT.md, TESTING.md, etc.
+│   ├── 05_ci_cd/                   # IaC testing standards, pipelines
+│   ├── 05_examples/                # Full example implementations
+│   ├── 06_container/               # Container usage documentation
+│   ├── 07_integration/             # Integration guides
+│   ├── 08_anti_patterns/           # Anti-patterns documentation
+│   ├── 09_refactoring/             # Refactoring examples
+│   ├── 10_migration_guides/        # Migration from other style guides
+│   ├── changelog.md                # Project changelog
+│   ├── glossary.md                 # Terminology
+│   └── index.md                    # Documentation home
+├── scripts/                        # Validation and utility scripts
+│   ├── analyze_code_ratio.py      # Enforces 3:1 code-to-text ratio
+│   ├── validate_metadata.py       # Validates @module tags
+│   ├── remove_hardcoded_versions.py # Removes static version references
+│   └── pre_commit_linter.sh       # Pre-commit linter wrapper
+├── .github/
+│   ├── workflows/                  # CI/CD automation
+│   │   ├── ci.yml                 # Main CI pipeline
+│   │   ├── deploy.yml             # Documentation deployment
+│   │   ├── container.yml          # Container build/publish
+│   │   ├── auto-merge.yml         # Auto-merge approved PRs
+│   │   ├── spell-checker.yml      # Spell checking (BLOCKING)
+│   │   └── link-checker.yml       # Link validation
+│   └── actions/validate/          # Custom validation action
+├── Dockerfile                      # Multi-stage container
+├── docker-compose.yml             # Service definitions
+├── docker-entrypoint.sh           # Container entrypoint with modes
 ├── mkdocs.yml                     # MkDocs configuration
-├── pyproject.toml                 # Python project configuration
-└── uv.lock                        # Dependency lock file
+├── pyproject.toml                 # Python dependencies (uv)
+└── .pre-commit-config.yaml        # Pre-commit hooks
 ```
 
-## Languages Covered
+## CI/CD & Automation
 
-The style guide provides standards for:
+### Auto-Merge Behavior
 
-- **Infrastructure as Code**: Terraform, Terragrunt, Ansible, Kubernetes/Helm
-- **Programming Languages**: Python, TypeScript, Bash, PowerShell, SQL
-- **CI/CD**: Jenkins/Groovy, GitHub Actions
-- **Configuration**: YAML, JSON, Dockerfile
+**IMPORTANT**: PRs from specific authors are automatically merged after CI passes.
 
-## Development Setup
+- **Allowed authors**: `dependabot[bot]`, `tydukes`
+- **Merge strategy**: Squash
+- **Branch cleanup**: Auto-deletes branch after merge
+- **Trigger**: Runs after `ci.yml` workflow succeeds
+- **Requirement**: `AUTO_MERGE_TOKEN` secret must be configured
 
-### Prerequisites
+### GitHub Workflows
 
-- Python 3.10 or higher
-- [uv](https://docs.astral.sh/uv/) package manager
+**ci.yml** (Main CI Pipeline):
 
-### Local Development
+- Triggers: Push/PR to main
+- Steps:
+  1. Installs UV and syncs dependencies (with caching)
+  2. Validates metadata with `scripts/validate_metadata.py` (non-blocking)
+  3. Runs linters via `scripts/pre_commit_linter.sh` (blocking)
+  4. Builds MkDocs with `--strict` flag (blocking)
+  5. Uploads docs artifact (7-day retention)
 
-1. Install dependencies:
+**deploy.yml** (Documentation Deployment):
 
-   ```bash
-   uv sync
-   ```
+- Triggers: Push to main
+- Deploys MkDocs to GitHub Pages using `mkdocs gh-deploy --force`
 
-2. Run the documentation server:
+**container.yml** (Container Build):
 
-   ```bash
-   mkdocs serve
-   ```
+- Triggers: Push to main, tags (v\*), PRs, manual
+- Multi-platform: linux/amd64, linux/arm64
+- Publishes to: `ghcr.io/tydukes/coding-style-guide`
+- Generates SBOM with Anchore
 
-   Access at: <http://127.0.0.1:8000>
+**spell-checker.yml** (Quality Gate - BLOCKING):
 
-### Docker Development
+- Triggers: Push/PR to main, weekly on Mondays
+- **FAILS workflow** if spelling errors found
+- Uses cSpell with 275+ whitelisted technical terms
+- Creates issues on main branch failures
+- Comments on PRs with errors
+
+**link-checker.yml** (Quality Gate):
+
+- Triggers: Push/PR to main, weekly on Mondays
+- Auto-creates issues with `broken-links` label
+- Retries on 429 (rate limit)
+- Config: `.github/markdown-link-check-config.json`
+
+### Pre-commit Hooks
+
+**Hooks that run on every commit**:
+
+```yaml
+# File checks
+- trailing-whitespace, end-of-file-fixer
+- check-yaml (--unsafe), check-json
+- check-added-large-files (max 1000kb)
+- check-merge-conflict, check-case-conflict
+- mixed-line-ending, detect-private-key
+
+# Python
+- black (formatting)
+- flake8 (linting, max line 100, ignores E203/W503)
+
+# YAML
+- yamllint (max line 120, document-start disabled)
+
+# Shell
+- shellcheck
+
+# Markdown
+- markdownlint (with --fix, config: .markdownlint.json)
+
+# Terraform
+- terraform_fmt, terraform_validate, terraform_docs
+```
+
+**Manual-stage hooks** (run with `--hook-stage manual`):
+
+```yaml
+- validate-metadata  # Runs scripts/validate_metadata.py
+```
+
+## Validation Scripts
+
+### analyze_code_ratio.py
+
+**Purpose**: Enforce 3:1 code-to-text ratio in language guides.
+
+**Usage**:
 
 ```bash
-docker-compose up
+uv run python scripts/analyze_code_ratio.py
 ```
 
-## Key Features
+**Output**:
 
-### 1. Metadata Schema
+```text
+Language Guide                   Code Lines   Text Lines      Ratio     Status
+--------------------------------------------------------------------------------
+terraform                              2124         6285       0.34     ❌ FAIL
+ansible                                2258          330       6.84     ✅ PASS
+python                                 1012          318       3.18     ✅ PASS
+...
+--------------------------------------------------------------------------------
+OVERALL                               26337        10740       2.45     ❌ FAIL
+================================================================================
+Achievement: 18/19 guides pass
+```
 
-The project includes a comprehensive metadata schema for documentation
-frontmatter. When working with documentation files in `docs/`, be aware of:
+### validate_metadata.py
 
-- Required metadata fields in YAML frontmatter
-- Validation rules (see `03_metadata_schema/`)
+**Purpose**: Validate @module metadata tags across all languages.
 
-### 2. AI Validation Pipeline
+**Supported languages**: Python, Terraform/HCL, TypeScript, Bash, PowerShell, YAML, SQL, Markdown
 
-The project includes an AI-powered validation pipeline
-(`05_ci_cd/ai_validation_pipeline.md`) for automated code review and style
-checking.
+**Required tags**: `@module`, `@description`, `@version`
 
-### 3. Container Support
+**Validates**:
 
-A containerized version is available for easy integration into CI/CD pipelines
-(`06_container/usage.md`).
+- Semantic versioning format (MAJOR.MINOR.PATCH)
+- ISO 8601 date format (YYYY-MM-DD)
+- Module name format (lowercase, underscores/hyphens only)
+- Status values (draft, in-progress, review, stable, deprecated, archived)
+- Unique module names (no duplicates)
 
-### 4. Pre-commit Hooks
+**Usage**:
 
-The project uses pre-commit hooks for code quality. Configured in `pyproject.toml`.
+```bash
+# Validate all docs
+python scripts/validate_metadata.py docs/
+
+# Validate specific language
+python scripts/validate_metadata.py --language python src/
+
+# Strict mode (exit 1 on errors)
+python scripts/validate_metadata.py --strict docs/
+```
+
+### remove_hardcoded_versions.py
+
+**Purpose**: Remove hardcoded version/date information from document footers to maintain dynamic versioning.
+
+**Patterns removed**:
+
+- `**Version**: X.Y.Z`
+- `**Template Version**: X.Y.Z`
+- `*Template Version: X.Y.Z*`
+- `*Last Updated: YYYY-MM-DD*`
+
+**Usage**:
+
+```bash
+uv run python scripts/remove_hardcoded_versions.py
+```
 
 ## Working with Documentation
 
-### Adding New Style Guide Content
+### Adding a New Language Guide
 
-1. Create a new markdown file in the appropriate `docs/` subdirectory
-2. Add proper YAML frontmatter (see existing files for examples)
-3. Update `mkdocs.yml` navigation if adding a new page
-4. Run `mkdocs serve` to preview changes locally
+1. Create file: `docs/02_language_guides/{language}.md`
+2. Add YAML frontmatter with all required fields:
+
+   ```yaml
+   ---
+   title: "{Language} Style Guide"
+   description: "Brief description"
+   author: "Tyler Dukes"
+   tags: [language, tag2, tag3]
+   category: "Language Guides"
+   status: "active"
+   ---
+   ```
+
+3. Follow `docs/04_templates/language_guide_template.md` structure
+4. **Ensure 3:1 code-to-text ratio** (verify with `analyze_code_ratio.py`)
+5. Update `mkdocs.yml` navigation under appropriate category
+6. Test locally: `mkdocs serve`
+7. Validate: `uv run python scripts/validate_metadata.py docs/02_language_guides/{language}.md`
 
 ### Modifying Existing Guides
 
-1. Always read the full file before making changes
-2. Maintain consistent formatting with existing content
-3. Preserve the existing structure and metadata
-4. Test locally with `mkdocs serve`
+**Critical rules**:
 
-## GitHub Workflows
+1. **Always preserve YAML frontmatter** - Required for MkDocs metadata
+2. **Maintain or improve code-to-text ratio** - Don't add prose without adding examples
+3. **Use proper code block language tags** - No bare ``` blocks (enforced by markdownlint)
+4. **Test links** - Link checker runs weekly, creates issues for broken links
+5. **Check spelling** - Spell checker **blocks** merge if errors found
+6. **Verify locally**: `mkdocs serve` before pushing
 
-The repository includes several CI/CD workflows:
+### Code Block Language Tags
 
-- **ci.yml**: Continuous integration checks
-- **deploy.yml**: Documentation deployment to GitHub Pages
-- **sync.yml**: Repository synchronization tasks
-- **container.yml**: Container build and validation
+**Strict enforcement**: ALL code blocks must have language tags.
 
-When modifying workflows, ensure they remain compatible with the project's validation requirements.
+**CORRECT** (with language tag):
 
-## Common Tasks
-
-### Adding a New Language Guide
-
-1. Create a new file: `docs/02_language_guides/{language}.md`
-2. Follow the structure of existing language guides
-3. Add metadata frontmatter
-4. Update `mkdocs.yml` navigation under "Language Guides"
-5. Test locally
-
-### Updating Dependencies
-
-```bash
-uv sync --upgrade
+```python
+def example():
+    pass
 ```
 
-### Running Tests
+**INCORRECT** (bare code block without language tag) - Don't do this!
 
-```bash
-uv run pytest
-```
+Use proper language tags for all code blocks to enable syntax highlighting
+and pass markdownlint validation.
 
-### Code Formatting
+**Standard tags**: Use canonical names (`python` not `py`, `yaml` not `yml`, `bash` not `sh`)
 
-```bash
-uv run black .
-uv run flake8
-```
+### Metadata Schema Requirements
 
-## Integration with Other Projects
+**For documentation files** (`.md`):
 
-The style guide is designed to be referenced and integrated into other projects.
-See `07_integration/integration_prompt.md` for guidance on how to integrate
-these standards into your workflow.
+- Required: `title`, `description`, `author`, `tags`, `category`, `status`
+- Validated by CI (non-blocking warnings)
+
+**For source code** (optional but encouraged):
+
+- Use `@module`, `@description`, `@version` tags in comments
+- Follows language-specific comment syntax
+- Validated by `scripts/validate_metadata.py`
 
 ## Important Notes for AI Assistants
 
-1. **Preserve Metadata**: When editing documentation files, always preserve YAML frontmatter
-2. **Follow Style Guide**: Apply the standards documented here when working on code
-3. **Test Changes**: Always test documentation changes with `mkdocs serve`
-4. **Respect Structure**: Maintain the existing directory structure
-5. **CI/CD Awareness**: Be mindful of GitHub Actions that validate changes
-6. **Container First**: The project supports containerized workflows
+### Version Management
+
+When updating versions:
+
+1. **Update `pyproject.toml`** - Source of truth for project version
+2. **Update `docs/changelog.md`** - Document changes in [Unreleased] section
+3. **Create GitHub release** - Use `gh release create v{X.Y.Z}`
+4. **Never hardcode versions** in document footers - Use dynamic references
+
+### Automation Awareness
+
+**Auto-merge behavior**:
+
+- PRs from `dependabot[bot]` or `tydukes` will auto-merge after CI passes
+- Other PRs require manual approval
+- All merges use squash strategy
+
+**Spell checking blocks merges**:
+
+- If you add new technical terms, they may trigger spell check failures
+- Whitelist terms in `.github/cspell.json` under `words` array
+- Run locally: `npx cspell "docs/**/*.md"`
+
+**Metadata validation is non-blocking**:
+
+- Warnings appear in CI but don't fail builds
+- Fix warnings to maintain code quality
+
+### Container-First Workflows
+
+The repository is designed to be used as a containerized validator:
+
+```bash
+# Other projects can use this as a validation tool
+docker run --rm -v $(pwd):/workspace \
+  ghcr.io/tydukes/coding-style-guide:latest validate
+```
+
+When making changes to validation logic:
+
+- Test container builds locally: `docker build -t test .`
+- Verify entrypoint modes work: `docker run --rm test help`
+- Multi-platform builds happen automatically on main branch pushes
+
+## 3:1 Code Ratio Philosophy
+
+This is **THE** defining quality metric for language guides:
+
+- Readers learn better from examples than explanations
+- Code is self-documenting when following the style guide
+- Reduces maintenance burden (code examples are validated by linters)
+- AI models train better on example-heavy documentation
+
+**When adding content**:
+
+- For every paragraph of explanation, add 3+ code examples
+- Use real-world, production-ready examples (not trivial "hello world")
+- Show complete context (imports, error handling, not just snippets)
 
 ## Contributing
 
@@ -183,14 +584,6 @@ See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community standards.
 ## Security
 
 See [SECURITY.md](SECURITY.md) for security policies and vulnerability reporting.
-
-## Questions?
-
-For questions about the project structure or contributing, please:
-
-1. Review the documentation at <https://tydukes.github.io/coding-style-guide/>
-2. Check existing GitHub issues
-3. Open a new issue if needed
 
 ---
 
