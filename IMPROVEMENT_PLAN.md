@@ -26,13 +26,13 @@ For each question, select one option (A, B, C, D, or E):
 
 ## Table of Contents
 
-1. [Critical Suggestions (1-20)](#critical-suggestions)
-2. [High Priority Suggestions (21-40)](#high-priority-suggestions)
-3. [Language Guide Expansions (41-65)](#language-guide-expansions)
-4. [New Language Guides (66-75)](#new-language-guides)
-5. [Templates & Metadata (76-85)](#templates--metadata)
-6. [CI/CD & Automation (86-95)](#cicd--automation)
-7. [Documentation Quality (96-100)](#documentation-quality)
+1. [Critical Suggestions (1-20)](#critical-suggestions-1-20)
+2. [High Priority Suggestions (21-40)](#high-priority-suggestions-21-40)
+3. [Language Guide Expansions (41-65)](#language-guide-expansions-41-65)
+4. [New Language Guides (66-75)](#new-language-guides-66-75)
+5. [Templates & Metadata (76-85)](#templates--metadata-76-85)
+6. [CI/CD & Automation (86-95)](#cicd--automation-86-95)
+7. [Documentation Quality (96-100)](#documentation-quality-96-100)
 8. [Clarifying Questions (1-100)](#clarifying-questions)
 
 ---
