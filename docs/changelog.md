@@ -20,30 +20,135 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Comprehensive YAML frontmatter to all 21 documentation files ([#83](https://github.com/tydukes/coding-style-guide/pull/83))
-  - Includes title, description, author, date, tags, category, status, version
-  - Improves MkDocs Material theme integration
-  - Enables better search and navigation
-- Comprehensive repository structure documentation ([#84](https://github.com/tydukes/coding-style-guide/pull/84))
-  - Expanded structure.md from 14 to 467+ lines
-  - Added three recommended organizational patterns (monorepo, multi-repo, hybrid)
-  - Directory standards and naming conventions
-  - File organization best practices
-  - Infrastructure as Code organization guidance
-  - CI/CD organization patterns
-  - Version control patterns (GitFlow)
-  - Makefile organization examples
-  - Migration strategies between patterns
+- Comprehensive IaC testing sections and templates ([#165](https://github.com/tydukes/coding-style-guide/pull/165)-[#170](https://github.com/tydukes/coding-style-guide/pull/170))
+  - Expanded Terraform Testing section with comprehensive best practices
+  - Expanded Ansible Testing section with role testing and contracts
+  - Tiered Pipeline Architecture for GitLab CI guide
+  - IaC Testing Philosophy and Standards document
+  - CONTRACT.md template for IaC modules and roles
+  - TESTING.md template for IaC projects
+- Production-ready code examples to Terraform guide ([#81](https://github.com/tydukes/coding-style-guide/pull/81))
+  - CI/CD pipeline examples (GitHub Actions, GitLab CI)
+  - Complete Terratest integration test suite
+  - Production modules: EKS, Monitoring, ECS, Lambda, DynamoDB
+  - 4,673 lines of deployment-ready code following best practices
 
 ### Fixed
 
-- Critical contradiction in structure.md that incorrectly stated project is "multi-repo" ([#84](https://github.com/tydukes/coding-style-guide/pull/84))
-- Duplicate H1 headings in documentation (MkDocs Material uses frontmatter titles) ([#83](https://github.com/tydukes/coding-style-guide/pull/83))
+- Navigation structure to include IaC templates
+- Broken anchor links in documentation
+- Metadata validation errors
 
 ### Changed
 
-- Documentation structure now uses frontmatter titles instead of markdown H1 headings ([#83](https://github.com/tydukes/coding-style-guide/pull/83))
-- structure.md version bumped from 1.0.0 to 1.1.0 for significant content addition ([#84](https://github.com/tydukes/coding-style-guide/pull/84))
+- Improved code-to-text ratio: 18/19 guides now pass 3:1 target (94.7% achievement)
+
+## [1.7.0] - 2025-12-20
+
+### Added
+
+- Comprehensive IaC testing framework and standards ([#175](https://github.com/tydukes/coding-style-guide/pull/175))
+  - Enhanced Terraform guide with testing best practices
+  - Enhanced Ansible guide with role testing strategies
+  - GitLab CI tiered pipeline architecture
+  - IaC Testing Philosophy and Standards document
+
+### Changed
+
+- Multiple dependency updates
+  - Bumped actions/cache from 4 to 5 ([#177](https://github.com/tydukes/coding-style-guide/pull/177))
+  - Bumped actions/upload-artifact from 5 to 6 ([#178](https://github.com/tydukes/coding-style-guide/pull/178))
+  - Bumped actions/github-script from 7 to 8 ([#179](https://github.com/tydukes/coding-style-guide/pull/179))
+  - Bumped peter-evans/create-pull-request from 7 to 8 ([#176](https://github.com/tydukes/coding-style-guide/pull/176))
+
+## [1.6.0] - 2025-12-14
+
+### Added
+
+- Best Practices sections to 9 language guides ([#174](https://github.com/tydukes/coding-style-guide/pull/174))
+  - Python, TypeScript, Bash, PowerShell, SQL
+  - Terraform, Terragrunt, Ansible, Kubernetes
+  - Each section includes code organization, naming, error handling, performance
+- Comprehensive Common Pitfalls sections to all 19 language guides ([#163](https://github.com/tydukes/coding-style-guide/pull/163))
+  - Real-world examples of common mistakes
+  - Solutions and best practices for each pitfall
+  - Cross-referenced with anti-patterns sections
+
+### Fixed
+
+- Removed hardcoded dates, versions, and static metadata ([#173](https://github.com/tydukes/coding-style-guide/pull/173))
+  - Dynamic date generation for examples
+  - Version-agnostic documentation
+  - Improved maintainability
+
+### Changed
+
+- Configured Dependabot auto-merge for dependency updates ([#172](https://github.com/tydukes/coding-style-guide/pull/172))
+  - Automated patch and minor version updates
+  - Streamlined dependency management
+
+## [1.5.0] - 2025-12-13
+
+### Added
+
+- Comprehensive Security Best Practices to all language guides ([#161](https://github.com/tydukes/coding-style-guide/pull/161))
+  - Input validation, authentication, encryption
+  - Secret management and secure coding practices
+  - Language-specific security patterns
+- Comprehensive Testing sections to all language guides ([#162](https://github.com/tydukes/coding-style-guide/pull/162))
+  - Unit testing, integration testing, test organization
+  - Testing frameworks and best practices
+  - CI/CD integration patterns
+
+### Changed
+
+- Multiple dependency updates
+  - Bumped actions/checkout from 4 to 6 ([#155](https://github.com/tydukes/coding-style-guide/pull/155))
+  - Bumped actions/github-script from 7 to 8 ([#156](https://github.com/tydukes/coding-style-guide/pull/156))
+  - Bumped peter-evans/create-pull-request from 6 to 7 ([#157](https://github.com/tydukes/coding-style-guide/pull/157))
+  - Bumped actions/setup-node from 4 to 6 ([#158](https://github.com/tydukes/coding-style-guide/pull/158))
+  - Bumped actions/upload-artifact from 4 to 5 ([#159](https://github.com/tydukes/coding-style-guide/pull/159))
+
+## [1.4.0] - 2025-12-08
+
+### Added
+
+- Anti-patterns sections to all 19 language guides
+  - Initial 9 language guides ([#152](https://github.com/tydukes/coding-style-guide/pull/152))
+  - Remaining 9 language guides ([#153](https://github.com/tydukes/coding-style-guide/pull/153))
+  - Real-world examples of code to avoid
+- Code block language tag standards ([#151](https://github.com/tydukes/coding-style-guide/pull/151))
+  - Standardized syntax highlighting tags
+  - Improved documentation consistency
+- Documentation heading structure standards ([#150](https://github.com/tydukes/coding-style-guide/pull/150))
+  - Consistent heading hierarchy
+  - Improved navigation and readability
+
+### Fixed
+
+- Standardized heading structure across all documentation ([#160](https://github.com/tydukes/coding-style-guide/pull/160))
+  - Removed duplicate H1 headings
+  - Fixed heading hierarchy issues
+- Resolved broken links and updated link-check exclusions ([#154](https://github.com/tydukes/coding-style-guide/pull/154))
+
+## [1.3.0] - 2025-12-07
+
+### Added
+
+- Comprehensive migration guides
+  - PEP 8 migration guide ([#147](https://github.com/tydukes/coding-style-guide/pull/147))
+  - Google Python Style Guide migration guide ([#148](https://github.com/tydukes/coding-style-guide/pull/148))
+  - Airbnb Style Guide migration guide ([#149](https://github.com/tydukes/coding-style-guide/pull/149))
+- Visual repository structure diagrams ([#146](https://github.com/tydukes/coding-style-guide/pull/146))
+  - Mermaid diagrams for GitFlow, CI/CD, and Metadata Flow ([#145](https://github.com/tydukes/coding-style-guide/pull/145))
+- Comprehensive refactoring examples directory ([#144](https://github.com/tydukes/coding-style-guide/pull/144))
+  - Before/after examples for common refactoring patterns
+- Quick Reference tables to all 19 language guides ([#141](https://github.com/tydukes/coding-style-guide/pull/141))
+  - At-a-glance syntax and best practices
+
+### Fixed
+
+- Resolved broken links in documentation ([#142](https://github.com/tydukes/coding-style-guide/pull/142))
 
 ## [1.2.1] - 2025-10-28
 
@@ -173,7 +278,12 @@ coding-style-guide/
 
 ## Release Links
 
-- [Unreleased](https://github.com/tydukes/coding-style-guide/compare/v1.2.1...HEAD)
+- [Unreleased](https://github.com/tydukes/coding-style-guide/compare/v1.7.0...HEAD)
+- [1.7.0](https://github.com/tydukes/coding-style-guide/releases/tag/v1.7.0) - 2025-12-20
+- [1.6.0](https://github.com/tydukes/coding-style-guide/releases/tag/v1.6.0) - 2025-12-14
+- [1.5.0](https://github.com/tydukes/coding-style-guide/releases/tag/v1.5.0) - 2025-12-13
+- [1.4.0](https://github.com/tydukes/coding-style-guide/releases/tag/v1.4.0) - 2025-12-08
+- [1.3.0](https://github.com/tydukes/coding-style-guide/releases/tag/v1.3.0) - 2025-12-07
 - [1.2.1](https://github.com/tydukes/coding-style-guide/releases/tag/v1.2.1) - 2025-10-28
 - [1.2.0](https://github.com/tydukes/coding-style-guide/releases/tag/v1.2.0) - 2025-10-27
 - [1.1.0](https://github.com/tydukes/coding-style-guide/releases/tag/v1.1.0) - 2025-10-27
