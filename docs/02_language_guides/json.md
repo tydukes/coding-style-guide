@@ -1496,5 +1496,4 @@ Include API version in JSON responses:
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

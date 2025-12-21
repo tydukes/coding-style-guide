@@ -1152,5 +1152,4 @@ test:with:artifacts:
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

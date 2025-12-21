@@ -1546,5 +1546,4 @@ This TypeScript library example demonstrates:
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

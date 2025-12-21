@@ -801,7 +801,7 @@ yamllint==1.32.0
 
 ---
 
-*Last Updated: [YYYY-MM-DD]*
+
 *Test Framework Version: [X.Y.Z]*
 ````
 
@@ -827,6 +827,3 @@ Molecule and InSpec testing examples.
 - [Ansible Testing Guide](../02_language_guides/ansible.md#testing-with-molecule) - Ansible-specific testing
 
 ---
-
-*Template Version: 1.0.0*
-*Last Updated: 2025-01-15*

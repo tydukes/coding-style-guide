@@ -821,5 +821,4 @@ The module is production-ready and follows AWS Well-Architected Framework princi
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

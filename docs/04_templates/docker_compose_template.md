@@ -829,5 +829,4 @@ MEMORY_LIMIT=2G
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

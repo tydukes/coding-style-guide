@@ -1229,5 +1229,4 @@ e2e-test:
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

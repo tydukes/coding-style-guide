@@ -2176,5 +2176,4 @@ java -jar jenkins-cli.jar -s http://jenkins.example.com/ declarative-linter < Je
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

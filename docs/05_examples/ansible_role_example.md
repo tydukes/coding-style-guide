@@ -812,5 +812,4 @@ The role is production-ready and follows Ansible best practices for reusability 
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

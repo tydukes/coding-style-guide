@@ -850,5 +850,3 @@ resource "aws_security_group" "web_frontend" {
 - [Testing Strategies](../05_ci_cd/testing_strategies.md)
 
 ---
-
-**Version**: 1.0.0
