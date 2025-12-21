@@ -613,5 +613,3 @@ def calculate_discount(user: User, product: Product) -> Decimal:
 - [Python Package Example](../05_examples/python_package_example.md)
 
 ---
-
-**Version**: 1.0.0

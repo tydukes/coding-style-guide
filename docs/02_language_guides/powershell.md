@@ -2066,5 +2066,4 @@ Invoke-Pester -Path .\MyFunction.Tests.ps1 -CodeCoverage .\MyFunction.ps1
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

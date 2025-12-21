@@ -689,7 +689,6 @@ repos:
 
 ---
 
-**Template Version**: 1.0.0
 **Maintainer**: Tyler Dukes
 
 **Note**: This template should be customized for each language. Delete placeholder text and fill in

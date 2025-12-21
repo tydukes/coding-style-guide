@@ -1554,5 +1554,4 @@ Add to `.gitignore`:
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

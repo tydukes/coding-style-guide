@@ -927,5 +927,4 @@ The package is fully functional and can be installed, tested, and used as a real
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

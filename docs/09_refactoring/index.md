@@ -233,5 +233,4 @@ Closes #123
 
 ---
 
-**Version**: 1.0.0
 **Maintainer**: Tyler Dukes

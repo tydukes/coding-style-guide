@@ -1916,5 +1916,4 @@ user_id = data['id']
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

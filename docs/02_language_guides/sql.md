@@ -1769,5 +1769,4 @@ GROUP BY u.user_id, u.email, u.created_at;
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

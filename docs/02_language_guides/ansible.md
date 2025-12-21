@@ -3097,5 +3097,4 @@ Break up large playbooks:
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

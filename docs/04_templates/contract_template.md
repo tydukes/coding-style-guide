@@ -542,6 +542,3 @@ webserver role CONTRACT.md example.
 - [Ansible Testing Guide](../02_language_guides/ansible.md#testing-with-molecule) - Ansible-specific testing
 
 ---
-
-*Template Version: 1.0.0*
-*Last Updated: 2025-01-15*

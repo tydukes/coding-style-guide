@@ -705,5 +705,4 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

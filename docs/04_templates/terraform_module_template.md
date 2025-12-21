@@ -664,5 +664,4 @@ Use descriptive, consistent output names:
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active

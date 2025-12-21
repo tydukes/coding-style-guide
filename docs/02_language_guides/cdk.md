@@ -1563,5 +1563,4 @@ bootstrap:
 
 ---
 
-**Version**: 1.0.0
 **Status**: Active
