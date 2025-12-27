@@ -245,16 +245,88 @@ Stage 5: Auto-Merge (after CI success)
 
 **Key behavior**: Metadata validation is **non-blocking** (warning only), but spell checking **blocks** merges.
 
+## IDE Settings
+
+This repository includes **pre-configured IDE settings** that automatically
+enforce the style guide standards. These files can be copied to other projects
+for instant compliance.
+
+### Files Included
+
+```text
+.vscode/
+├── settings.json           # Comprehensive VS Code settings for all languages
+└── extensions.json         # Recommended extension list
+
+.idea/
+├── codeStyles/
+│   ├── Project.xml        # IntelliJ code style settings
+│   └── codeStyleConfig.xml
+└── inspectionProfiles/
+    ├── Project.xml        # IntelliJ inspection rules
+    └── profiles_settings.xml
+
+.editorconfig               # Universal editor configuration
+```
+
+### Key Features
+
+**VS Code settings include:**
+
+- Black formatter for Python (100 char line)
+- Flake8 linting (extends ignore E203, W503)
+- yamllint integration (120 char line)
+- markdownlint with custom rules
+- shellcheck integration
+- Terraform language server with auto-format
+- Format on save for all languages
+- Language-specific rulers and tab sizes
+
+**IntelliJ settings include:**
+
+- Code style settings matching pre-commit hooks exactly
+- Inspection profiles for all languages
+- Auto-format on save configuration
+- EditorConfig support enabled
+
+**EditorConfig provides:**
+
+- Universal settings that work across all editors
+- Language-specific indentation (Python: 4 spaces, YAML: 2 spaces, etc.)
+- Line ending normalization (LF)
+- Trailing whitespace removal (except Markdown)
+- Final newline enforcement
+
+### Usage in Other Projects
+
+Users can copy these settings to their projects:
+
+```bash
+# Copy all IDE settings
+cp -r .vscode your-project/
+cp -r .idea your-project/
+cp .editorconfig your-project/
+```
+
+See `docs/04_templates/ide_settings_template.md` for comprehensive documentation.
+
 ## Project Structure
 
 ```text
 coding-style-guide/
+├── .vscode/                        # VS Code IDE settings
+│   ├── settings.json              # Language-specific formatting/linting
+│   └── extensions.json            # Recommended extensions
+├── .idea/                         # IntelliJ/PyCharm IDE settings
+│   ├── codeStyles/                # Code style configurations
+│   └── inspectionProfiles/        # Inspection rules
+├── .editorconfig                  # Universal editor configuration
 ├── docs/                           # MkDocs documentation source
 │   ├── 00_standards/               # Documentation standards
 │   ├── 01_overview/                # Principles, governance, structure
 │   ├── 02_language_guides/         # 19 language-specific guides
 │   ├── 03_metadata_schema/         # Universal metadata schema
-│   ├── 04_templates/               # CONTRACT.md, TESTING.md, etc.
+│   ├── 04_templates/               # CONTRACT.md, TESTING.md, ide_settings_template.md, etc.
 │   ├── 05_ci_cd/                   # IaC testing standards, pipelines
 │   ├── 05_examples/                # Full example implementations
 │   ├── 06_container/               # Container usage documentation

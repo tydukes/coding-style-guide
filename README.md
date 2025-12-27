@@ -46,6 +46,60 @@ Visit <http://127.0.0.1:8000> to view the documentation.
 docker-compose up
 ```
 
+### IDE Setup
+
+This repository includes pre-configured IDE settings that automatically enforce
+the style guide standards. Copy these files to your project for automatic
+formatting and linting.
+
+#### VS Code
+
+```bash
+# Copy VS Code settings
+cp -r .vscode your-project/
+
+# Install recommended extensions (prompted automatically when opening the project)
+```
+
+The `.vscode/settings.json` file includes:
+
+- Black formatter for Python (100 char line)
+- Flake8 linting (ignores E203, W503)
+- yamllint integration (120 char line)
+- markdownlint with custom rules
+- shellcheck integration
+- Terraform language server with auto-format
+- Format on save for all languages
+
+#### IntelliJ/PyCharm
+
+```bash
+# Copy IntelliJ settings
+cp -r .idea your-project/
+```
+
+Includes:
+
+- Code style settings for all languages
+- Inspection profiles matching linting standards
+- Auto-format on save configuration
+
+#### EditorConfig (Universal)
+
+```bash
+# Copy EditorConfig (works with all editors)
+cp .editorconfig your-project/
+```
+
+EditorConfig provides language-specific indentation and line endings that work
+across all editors (VS Code, IntelliJ, Vim, Emacs, etc.).
+
+**Supported languages:** Python, Terraform, YAML, Bash, TypeScript, Markdown,
+SQL, PowerShell, Groovy, and more.
+
+For detailed setup instructions, see the
+[IDE Settings Template](https://tydukes.github.io/coding-style-guide/04_templates/ide_settings_template/).
+
 ## Documentation
 
 Full documentation is available at: <https://tydukes.github.io/coding-style-guide/>
