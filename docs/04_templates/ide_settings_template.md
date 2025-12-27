@@ -645,13 +645,13 @@ format code on save.
 
 ### Complete File Listings
 
-See the actual configuration files in this repository:
+See the actual configuration files in this repository on GitHub:
 
-- [.vscode/settings.json](../../.vscode/settings.json)
-- [.vscode/extensions.json](../../.vscode/extensions.json)
-- [.idea/codeStyles/Project.xml](../../.idea/codeStyles/Project.xml)
-- [.idea/inspectionProfiles/Project.xml](../../.idea/inspectionProfiles/Project.xml)
-- [.editorconfig](../../.editorconfig)
+- [.vscode/settings.json](https://github.com/tydukes/coding-style-guide/blob/main/.vscode/settings.json)
+- [.vscode/extensions.json](https://github.com/tydukes/coding-style-guide/blob/main/.vscode/extensions.json)
+- [.idea/codeStyles/Project.xml](https://github.com/tydukes/coding-style-guide/blob/main/.idea/codeStyles/Project.xml)
+- [.idea/inspectionProfiles/Project.xml](https://github.com/tydukes/coding-style-guide/blob/main/.idea/inspectionProfiles/Project.xml)
+- [.editorconfig](https://github.com/tydukes/coding-style-guide/blob/main/.editorconfig)
 
 ### Related Documentation
 
@@ -659,7 +659,7 @@ See the actual configuration files in this repository:
 - [Terraform Style Guide](../02_language_guides/terraform.md)
 - [YAML Style Guide](../02_language_guides/yaml.md)
 - [Bash Style Guide](../02_language_guides/bash.md)
-- [Pre-commit Hooks Documentation](../05_ci_cd/pre_commit_hooks.md)
+- [Pre-commit Hooks Documentation](../05_ci_cd/precommit_hooks_guide.md)
 
 ### External Resources
 
