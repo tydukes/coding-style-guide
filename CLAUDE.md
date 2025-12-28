@@ -425,6 +425,14 @@ priorities.
 - **Trigger**: Runs after `ci.yml` workflow succeeds
 - **Requirement**: `AUTO_MERGE_TOKEN` secret must be configured
 
+**Dependabot Workflow**:
+
+- Dependabot PRs are created without assigned reviewers or assignees
+- Community members can review and approve Dependabot PRs
+- Auto-merge automatically triggers after CI validation passes
+- No manual reviewer assignment needed
+- CI validation remains a blocking requirement for merge
+
 ### GitHub Workflows
 
 **ci.yml** (Main CI Pipeline):
