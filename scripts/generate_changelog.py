@@ -16,11 +16,9 @@ from typing import Any, Dict, List
 try:
     import requests
 except ImportError:
-    print("Error: requests library not found. Installing...")
-    import subprocess
-
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
-    import requests
+    print("Error: requests library not found.")
+    print("Please install it using: uv sync")
+    sys.exit(1)
 
 
 def fetch_releases() -> List[Dict[str, Any]]:
