@@ -47,8 +47,11 @@ jobs:
           EOF
 
       - name: Validate PR commits
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           npx commitlint \
-            --from ${{ github.event.pull_request.base.sha }} \
-            --to ${{ github.event.pull_request.head.sha }} \
+            --from "${BASE_SHA}" \
+            --to "${HEAD_SHA}" \
             --verbose
