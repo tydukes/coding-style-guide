@@ -43,7 +43,12 @@ def fetch_releases() -> List[Dict[str, Any]]:
     }
 
     try:
-        response = requests.get(url, headers=headers)
+        response = requests.get(
+            url,
+            headers=headers,
+            timeout=30,  # 30 second timeout
+            verify=True,  # Verify SSL certificates
+        )
         response.raise_for_status()
         releases = response.json()
         print(f"Successfully fetched {len(releases)} releases")
