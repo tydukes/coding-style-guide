@@ -2725,7 +2725,7 @@ After completing your scenario, here's your roadmap:
 
 - **Documentation Site**: [https://tydukes.github.io/coding-style-guide/](https://tydukes.github.io/coding-style-guide/)
 - **GitHub Repository**: [https://github.com/tydukes/coding-style-guide](https://github.com/tydukes/coding-style-guide)
-- **Container Registry**: [ghcr.io/tydukes/coding-style-guide](https://github.com/tydukes/coding-style-guide/pkgs/container/coding-style-guide)
+- **Container Registry**: `ghcr.io/tydukes/coding-style-guide`
 - **Issues**: [GitHub Issues](https://github.com/tydukes/coding-style-guide/issues)
 
 ### Quick Reference
