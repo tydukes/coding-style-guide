@@ -7,6 +7,7 @@ Thank you for your interest in contributing to the Coding Style Guide! We welcom
 - [Code of Conduct](#code-of-conduct)
 - [Getting Started](#getting-started)
 - [How to Contribute](#how-to-contribute)
+- [Issue and PR Labels](#issue-and-pr-labels)
 - [Development Setup](#development-setup)
 - [Submitting Changes](#submitting-changes)
 - [Style Guidelines](#style-guidelines)
@@ -44,6 +45,49 @@ uphold this code.
 - Include examples of good and bad practices
 - Provide rationale for the guideline
 - Update relevant tests if applicable
+
+## Issue and PR Labels
+
+We use a structured labeling system to organize work and make it easier to find relevant issues and PRs.
+
+### When Creating Issues
+
+Please add appropriate labels to your issues:
+
+- **Type** (required): What kind of issue is this?
+  - `type:feature` - New feature or request
+  - `type:bug` - Something isn't working
+  - `type:docs` - Documentation improvements
+  - `type:maintenance` - Routine maintenance
+  - `type:security` - Security-related fixes
+
+- **Scope** (optional): Which part of the project does this affect?
+  - `scope:dependencies` - Dependency updates
+  - `scope:language-guide` - Language-specific guides
+  - `scope:ide-settings` - IDE configurations
+  - `scope:automation` - CI/CD and scripts
+  - `scope:container` - Docker-related changes
+
+- **Priority** (optional): How urgent is this?
+  - `priority:critical` - Immediate action required
+  - `priority:high` - Important but not urgent
+  - `priority:medium` - Normal importance
+  - `priority:low` - Nice to have
+
+- **Language** (if applicable): Which language guide is affected?
+  - Use language labels like `terraform`, `python`, `bash`, `typescript`, etc.
+
+### When Working on Issues
+
+Add status labels to track progress:
+
+- `status:in-progress` - When you start working on an issue
+- `status:blocked` - If you're waiting on something or someone
+- `status:needs-review` - When you're ready for review
+
+### Full Label Taxonomy
+
+For the complete label taxonomy and usage guidelines, see the [Label Taxonomy section in CLAUDE.md](CLAUDE.md#label-taxonomy).
 
 ## Development Setup
 
