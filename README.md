@@ -8,7 +8,14 @@
 [![Link Checker](https://github.com/tydukes/coding-style-guide/actions/workflows/link-checker.yml/badge.svg)](https://github.com/tydukes/coding-style-guide/actions/workflows/link-checker.yml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Code-to-Text Ratio](https://img.shields.io/badge/code--to--text%20ratio-18%2F19%20pass%20(94.7%25)-green.svg)](https://tydukes.github.io/coding-style-guide/)
+[![Code-to-Text Ratio](https://img.shields.io/badge/code--to--text%20ratio-2.38:1-yellow.svg)](https://tydukes.github.io/coding-style-guide/project_status/)
+[![Guides Passing](https://img.shields.io/badge/guides%20passing-18%2F20%20(90.0%25)-success.svg)](https://tydukes.github.io/coding-style-guide/project_status/)
+[![Documentation Pages](https://img.shields.io/badge/docs%20pages-73-blue.svg)](https://tydukes.github.io/coding-style-guide/)
+[![Version](https://img.shields.io/github/v/release/tydukes/coding-style-guide)](https://github.com/tydukes/coding-style-guide/releases)
+[![Last Commit](https://img.shields.io/github/last-commit/tydukes/coding-style-guide)](https://github.com/tydukes/coding-style-guide/commits/main)
+[![Contributors](https://img.shields.io/github/contributors/tydukes/coding-style-guide)](https://github.com/tydukes/coding-style-guide/graphs/contributors)
+[![Issues](https://img.shields.io/github/issues/tydukes/coding-style-guide)](https://github.com/tydukes/coding-style-guide/issues)
+[![PRs](https://img.shields.io/github/issues-pr/tydukes/coding-style-guide)](https://github.com/tydukes/coding-style-guide/pulls)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
 > **A comprehensive, multi-language coding style guide with automated validation tools**
