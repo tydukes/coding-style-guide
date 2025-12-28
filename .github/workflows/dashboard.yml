@@ -1,0 +1,70 @@
+name: Update Project Dashboard
+
+on:
+  schedule:
+    # Run every Sunday at midnight UTC
+    - cron: '0 0 * * 0'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**/*.md'
+      - 'scripts/analyze_code_ratio.py'
+      - 'scripts/generate_dashboard.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install UV
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Add UV to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Cache UV dependencies
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cache/uv
+            .venv
+          key: ${{ runner.os }}-uv-${{ hashFiles('pyproject.toml', 'uv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
+
+      - name: Sync environment
+        run: uv sync
+
+      - name: Generate dashboard
+        run: |
+          uv run python scripts/generate_dashboard.py
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --quiet docs/project_status.md || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/project_status.md
+          git commit -m "chore: update project health dashboard [skip ci]"
+          git push
+
+      - name: Summary
+        run: |
+          if [ "${{ steps.check_changes.outputs.changed }}" == "true" ]; then
+            echo "✅ Dashboard updated successfully" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No changes to dashboard" >> $GITHUB_STEP_SUMMARY
+          fi
