@@ -591,8 +591,6 @@ We welcome contributions! See our guides:
 
 - **Issues**: [GitHub Issues](
     https://github.com/tydukes/coding-style-guide/issues)
-- **Discussions**: [GitHub Discussions](
-    https://github.com/tydukes/coding-style-guide/discussions)
 - **Documentation**: [https://tydukes.github.io/coding-style-guide/](
     https://tydukes.github.io/coding-style-guide/)
 
