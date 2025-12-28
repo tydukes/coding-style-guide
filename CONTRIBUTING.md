@@ -139,17 +139,74 @@ docker-compose up
 
 ### Commit Message Format
 
-Use clear and descriptive commit messages:
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) to automate versioning and changelog generation.
+
+**Format**: `<type>(<scope>): <subject>`
+
+**Types**:
+
+- `feat`: New feature (MINOR version bump)
+- `fix`: Bug fix (PATCH version bump)
+- `docs`: Documentation only changes (PATCH version bump)
+- `style`: Code style changes (formatting, no logic change) (PATCH)
+- `refactor`: Code refactoring (no feature/fix) (PATCH)
+- `test`: Adding/updating tests (PATCH)
+- `chore`: Maintenance tasks (PATCH)
+- `ci`: CI/CD changes (PATCH)
+- `perf`: Performance improvements (PATCH)
+- `build`: Build system changes (PATCH)
+- `revert`: Revert a previous commit (PATCH)
+- `BREAKING CHANGE`: Breaking change (MAJOR version bump)
+
+**Examples**:
 
 ```text
-type: brief description
-
-Longer explanation if necessary
-
-Fixes #123
+feat(python): add type hints validation
+fix(terraform): correct module output documentation
+docs(readme): update installation instructions
+chore(deps): update mkdocs to 1.6.1
+ci(workflows): add automated release workflow
+BREAKING CHANGE(api): remove deprecated endpoints
 ```
 
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+**Scope** (optional but encouraged):
+
+- Language name (python, terraform, bash, etc.)
+- Component (ci, docs, container, automation, etc.)
+- File/module name
+
+**Subject**:
+
+- Use imperative mood ("add" not "added")
+- No capitalization of first letter
+- No period at the end
+- Keep under 72 characters
+
+**Why Conventional Commits?**
+
+- Automatically generates changelogs
+- Automatically determines semantic version bumps
+- Provides better history and context
+- Enables automated workflows
+
+**Breaking Changes**:
+
+To indicate a breaking change, either:
+
+1. Use `BREAKING CHANGE:` in the commit footer
+2. Add `!` after the type/scope: `feat(api)!: remove deprecated endpoints`
+
+**Full Example**:
+
+```text
+feat(terraform): add CONTRACT.md validation script
+
+Add a Python script that validates CONTRACT.md files for all
+Terraform modules, checking for required sections and numbered
+guarantees.
+
+Closes #213
+```
 
 ## Style Guidelines
 

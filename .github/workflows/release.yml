@@ -1,0 +1,193 @@
+name: Automated Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Version bump type (if manual override needed)'
+        required: false
+        type: choice
+        options:
+          - auto
+          - major
+          - minor
+          - patch
+        default: auto
+
+jobs:
+  determine-version:
+    name: Determine Next Version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      new_version: ${{ steps.bump.outputs.new_version }}
+      bump_type: ${{ steps.analyze.outputs.bump_type }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get current version
+        id: current
+        run: |
+          CURRENT=$(grep -oP '(?<=version = ")[^"]*' pyproject.toml)
+          echo "version=$CURRENT" >> $GITHUB_OUTPUT
+          echo "Current version: $CURRENT"
+
+      - name: Analyze commits for version bump
+        id: analyze
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -z "$LAST_TAG" ]; then
+            echo "No previous tags found, analyzing all commits"
+            COMMITS=$(git log --pretty=format:"%s")
+          else
+            echo "Analyzing commits since $LAST_TAG"
+            COMMITS=$(git log $LAST_TAG..HEAD --pretty=format:"%s")
+          fi
+
+          BUMP_TYPE="patch"
+
+          # Check for breaking changes
+          if echo "$COMMITS" | grep -qE "^BREAKING CHANGE|^[a-z]+(\([a-z]+\))?!:"; then
+            BUMP_TYPE="major"
+            echo "Found breaking changes, bumping MAJOR version"
+          # Check for features
+          elif echo "$COMMITS" | grep -qE "^feat"; then
+            BUMP_TYPE="minor"
+            echo "Found features, bumping MINOR version"
+          else
+            echo "Found fixes/chores only, bumping PATCH version"
+          fi
+
+          echo "bump_type=$BUMP_TYPE" >> $GITHUB_OUTPUT
+
+      - name: Bump version
+        id: bump
+        run: |
+          CURRENT="${{ steps.current.outputs.version }}"
+          INPUT_BUMP="${{ github.event.inputs.bump_type }}"
+          AUTO_BUMP="${{ steps.analyze.outputs.bump_type }}"
+
+          # Use manual override if provided and not 'auto'
+          if [ "$INPUT_BUMP" != "auto" ] && [ -n "$INPUT_BUMP" ]; then
+            BUMP_TYPE="$INPUT_BUMP"
+            echo "Using manual bump type: $BUMP_TYPE"
+          else
+            BUMP_TYPE="$AUTO_BUMP"
+            echo "Using automatic bump type: $BUMP_TYPE"
+          fi
+
+          IFS='.' read -ra VERSION <<< "$CURRENT"
+          MAJOR="${VERSION[0]}"
+          MINOR="${VERSION[1]}"
+          PATCH="${VERSION[2]}"
+
+          case $BUMP_TYPE in
+            major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version will be: $NEW_VERSION"
+
+  update-version:
+    name: Update Version and Create Release
+    needs: determine-version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Update pyproject.toml
+        env:
+          NEW_VERSION: ${{ needs.determine-version.outputs.new_version }}
+        run: |
+          sed -i "s/version = \".*\"/version = \"${NEW_VERSION}\"/" pyproject.toml
+          echo "Updated version in pyproject.toml to ${NEW_VERSION}"
+
+      - name: Commit version bump
+        env:
+          NEW_VERSION: ${{ needs.determine-version.outputs.new_version }}
+        run: |
+          git add pyproject.toml
+          git commit -m "chore(release): bump version to ${NEW_VERSION}"
+          git push
+
+      - name: Create GitHub Release
+        id: create_release
+        env:
+          NEW_VERSION: ${{ needs.determine-version.outputs.new_version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "v${NEW_VERSION}" \
+            --title "v${NEW_VERSION}" \
+            --generate-notes
+          echo "Created release v${NEW_VERSION}"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          uv sync
+
+      - name: Generate Changelog
+        run: |
+          uv run python scripts/generate_changelog.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit updated changelog
+        env:
+          NEW_VERSION: ${{ needs.determine-version.outputs.new_version }}
+        run: |
+          if git diff --quiet docs/changelog.md; then
+            echo "No changes to changelog"
+          else
+            git add docs/changelog.md
+            git commit -m "docs(changelog): update changelog for v${NEW_VERSION}"
+            git push
+          fi
+
+      - name: Summary
+        env:
+          NEW_VERSION: ${{ needs.determine-version.outputs.new_version }}
+          BUMP_TYPE: ${{ needs.determine-version.outputs.bump_type }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "### Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **New Version**: v${NEW_VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Bump Type**: ${BUMP_TYPE}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release URL**: https://github.com/${REPO}/releases/tag/v${NEW_VERSION}" >> $GITHUB_STEP_SUMMARY

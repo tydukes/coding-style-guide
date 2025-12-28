@@ -464,6 +464,38 @@ priorities.
 - Retries on 429 (rate limit)
 - Config: `.github/markdown-link-check-config.json`
 
+**commit-lint.yml** (Commit Message Validation):
+
+- Triggers: PR opened, edited, synchronized, reopened
+- Validates commit messages against conventional commit format
+- Uses commitlint with @commitlint/config-conventional
+- Enforces types: feat, fix, docs, style, refactor, test, chore, ci, perf, build, revert
+- **BLOCKS merge** if commit messages don't follow convention
+- Config: In-workflow commitlintrc.json
+
+**release.yml** (Automated Release):
+
+- Triggers: Manual workflow dispatch
+- Automatically determines version bump based on conventional commits
+- Updates `pyproject.toml` with new version
+- Creates GitHub release with auto-generated notes
+- Generates and commits updated changelog
+- Supports manual override for version bump type
+- Version bump rules:
+  - `BREAKING CHANGE` or `!`: MAJOR (X.0.0)
+  - `feat`: MINOR (0.X.0)
+  - `fix`, `docs`, `chore`, etc.: PATCH (0.0.X)
+
+**How Releases Work**:
+
+1. Developer triggers release workflow manually
+2. Workflow analyzes commits since last tag
+3. Determines version bump (major/minor/patch)
+4. Updates `pyproject.toml` automatically
+5. Creates GitHub release with auto-generated notes
+6. Generates changelog from all releases
+7. Commits changelog back to main branch
+
 ### Pre-commit Hooks
 
 **Hooks that run on every commit**:
@@ -572,6 +604,39 @@ python scripts/validate_metadata.py --strict docs/
 uv run python scripts/remove_hardcoded_versions.py
 ```
 
+### generate_changelog.py
+
+**Purpose**: Automatically generate `docs/changelog.md` from GitHub releases using the GitHub API.
+
+**How it works**:
+
+- Fetches all releases from GitHub API
+- Formats releases in Keep a Changelog compatible markdown
+- Includes release notes, dates, and links
+- Skips draft releases
+- Marks pre-releases appropriately
+
+**Usage**:
+
+```bash
+# Requires GITHUB_TOKEN environment variable
+export GITHUB_TOKEN="your_token_here"
+uv run python scripts/generate_changelog.py
+```
+
+**Output**:
+
+- Generates/overwrites `docs/changelog.md`
+- Includes [Unreleased] section for upcoming changes
+- Lists all releases in reverse chronological order
+- Adds footer with generation timestamp
+
+**Integration**:
+
+- Automatically runs as part of `release.yml` workflow
+- Should not be run manually unless necessary
+- Changelog is auto-committed after generation
+
 ## Working with Documentation
 
 ### Adding a New Language Guide
@@ -642,14 +707,60 @@ and pass markdownlint validation.
 
 ### Version Management
 
-When updating versions:
+**Automated Release Process** (Preferred Method):
+
+This project uses **automated semantic versioning** based on conventional commits:
+
+1. **Ensure commits follow conventional commit format** - Required for automatic version detection
+2. **Trigger release workflow** - Go to Actions → Automated Release → Run workflow
+3. **Workflow automatically**:
+   - Analyzes commits since last release
+   - Determines version bump (major/minor/patch)
+   - Updates `pyproject.toml`
+   - Creates GitHub release with auto-generated notes
+   - Generates and commits updated changelog
+
+**Version Bump Rules**:
+
+- `BREAKING CHANGE` or `type!:` → MAJOR (1.7.0 → 2.0.0)
+- `feat:` → MINOR (1.7.0 → 1.8.0)
+- `fix:`, `docs:`, `chore:`, etc. → PATCH (1.7.0 → 1.7.1)
+
+**Manual Override**:
+
+If you need to override the automatic version detection, you can specify the bump type when triggering the workflow:
+
+- Select "major", "minor", or "patch" instead of "auto"
+
+**Manual Release Process** (Legacy/Emergency Only):
+
+Only use this if the automated workflow fails:
 
 1. **Update `pyproject.toml`** - Source of truth for project version
-2. **Update `docs/changelog.md`** - Document changes in [Unreleased] section
-3. **Create GitHub release** - Use `gh release create v{X.Y.Z}`
+2. **Create GitHub release** - Use `gh release create v{X.Y.Z} --generate-notes`
+3. **Run changelog generator** - `uv run python scripts/generate_changelog.py`
 4. **Never hardcode versions** in document footers - Use dynamic references
 
+**Changelog Generation**:
+
+The `docs/changelog.md` file is **automatically generated** from GitHub releases:
+
+- Run manually: `uv run python scripts/generate_changelog.py`
+- Automatically runs as part of release workflow
+- Fetches all releases from GitHub API
+- Formats as Keep a Changelog compatible markdown
+- Never edit `docs/changelog.md` manually
+
 ### Automation Awareness
+
+**Conventional commits are enforced**:
+
+- All commits in PRs must follow conventional commit format
+- Commit message validation runs on every PR
+- **BLOCKS merge** if commits don't follow convention
+- Required format: `type(scope): subject`
+- See CONTRIBUTING.md for full guidelines
+- Use commitlint locally before pushing: `npx commitlint --from HEAD~1 --to HEAD`
 
 **Auto-merge behavior**:
 
