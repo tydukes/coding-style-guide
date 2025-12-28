@@ -7,20 +7,22 @@ category: "Planning"
 status: "active"
 ---
 
-# Terraform Code-to-Text Ratio Improvement Plan
-
 ## Executive Summary
 
-This document outlines the strategy for achieving the 3:1 code-to-text ratio target for `docs/02_language_guides/terraform.md` while acknowledging the significant progress already made (94.7% of guides passing).
+This document outlines the strategy for achieving the 3:1 code-to-text ratio target for
+`docs/02_language_guides/terraform.md` while acknowledging the significant progress already
+made (94.7% of guides passing).
 
 **Current Status (as of 2025-12-27)**:
 
 - **Overall Achievement**: 18/19 guides pass (94.7%)
 - **terraform.md Ratio**: 0.34:1 (2,123 code lines / 6,285 text lines)
 - **Target Ratio**: 3:1
-- **Gap**: Need +16,732 additional code lines OR maintain current code and create focused sub-guides
+- **Gap**: Need +16,732 additional code lines OR maintain current code and create focused
+  sub-guides
 
-**Recommendation**: Close issue #81 to recognize achievement, implement this plan to reach 3:1 for terraform.md over the next 2-3 development cycles.
+**Recommendation**: Close issue #81 to recognize achievement, implement this plan to reach 3:1
+for terraform.md over the next 2-3 development cycles.
 
 ---
 
@@ -80,7 +82,7 @@ Terraform is particularly suited to this approach because:
 **Breakdown**:
 
 | Phase | Focus Area | Code Lines Added | Timeline |
-|-------|-----------|------------------|----------|
+| ------- | ----------- | ------------------ | ---------- |
 | **Phase 1** | Testing & Validation | ~5,000 lines | Weeks 1-4 |
 | **Phase 2** | Security & Compliance | ~4,000 lines | Weeks 5-8 |
 | **Phase 3** | Advanced Networking | ~4,000 lines | Weeks 9-12 |
@@ -108,7 +110,7 @@ Terraform is particularly suited to this approach because:
 
 **Objective**: Demonstrate comprehensive testing practices for Terraform modules.
 
-**Weeks 1-2: Terratest Examples**
+#### Weeks 1-2: Terratest Examples
 
 Add complete Terratest suites for existing modules:
 
@@ -140,7 +142,7 @@ Add complete Terratest suites for existing modules:
    - Verify CloudWatch log groups
    - Test trigger configurations
 
-**Weeks 3-4: Integration Testing Examples**
+#### Weeks 3-4: Integration Testing Examples
 
 1. **Multi-Module Integration Tests** (~1,200 lines)
    - Test complete 3-tier application deployment
@@ -164,7 +166,7 @@ Add complete Terratest suites for existing modules:
 
 **Objective**: Show comprehensive security hardening and compliance patterns.
 
-**Weeks 5-6: Security Services**
+#### Weeks 5-6: Security Services
 
 1. **AWS WAF Module** (~700 lines)
    - Complete WAF configuration with rule groups
@@ -187,7 +189,7 @@ Add complete Terratest suites for existing modules:
    - Cross-account secret sharing
    - Vault integration examples
 
-**Weeks 7-8: Compliance Frameworks**
+#### Weeks 7-8: Compliance Frameworks
 
 1. **CIS AWS Foundations Benchmark** (~800 lines)
    - IAM password policy configuration
@@ -218,7 +220,7 @@ Add complete Terratest suites for existing modules:
 
 **Objective**: Cover enterprise networking patterns and hybrid cloud connectivity.
 
-**Weeks 9-10: AWS Networking Services**
+#### Weeks 9-10: AWS Networking Services
 
 1. **Transit Gateway Hub-and-Spoke** (~900 lines)
    - Multi-VPC transit gateway setup
@@ -241,7 +243,7 @@ Add complete Terratest suites for existing modules:
    - Cross-account endpoint sharing
    - DNS configuration
 
-**Weeks 11-12: Hybrid and Multi-Region**
+#### Weeks 11-12: Hybrid and Multi-Region
 
 1. **Site-to-Site VPN** (~700 lines)
    - VPN connection setup
@@ -272,7 +274,7 @@ Add complete Terratest suites for existing modules:
 
 **Objective**: Demonstrate operational excellence and DR capabilities.
 
-**Weeks 13-14: Cost Optimization**
+#### Weeks 13-14: Cost Optimization
 
 1. **Reserved Instances Management** (~500 lines)
    - RI purchasing strategy
@@ -295,7 +297,7 @@ Add complete Terratest suites for existing modules:
    - Predictive scaling
    - Custom metrics scaling
 
-**Weeks 15-16: Disaster Recovery**
+#### Weeks 15-16: Disaster Recovery
 
 1. **Backup and Restore** (~800 lines)
    - AWS Backup vault configuration
@@ -463,7 +465,8 @@ For each phase:
 
 ### Approach 3: Split into Multiple Guides (Contingency Plan)
 
-**Idea**: Create terraform-basics.md, terraform-testing.md, terraform-production.md, terraform-security.md
+**Idea**: Create terraform-basics.md, terraform-testing.md, terraform-production.md,
+terraform-security.md
 
 **Analysis**:
 
@@ -481,7 +484,7 @@ For each phase:
 ### Developer Time Estimates
 
 | Phase | Primary Work | Review & Testing | Total Hours |
-|-------|--------------|------------------|-------------|
+| ------- | -------------- | ------------------ | ------------- |
 | Phase 1 | 40 hours | 12 hours | 52 hours |
 | Phase 2 | 32 hours | 10 hours | 42 hours |
 | Phase 3 | 32 hours | 10 hours | 42 hours |
@@ -534,7 +537,8 @@ To validate examples:
 
 ## Conclusion
 
-This plan provides a realistic, phased approach to achieving the 3:1 code-to-text ratio for terraform.md while maintaining the high quality standards established in the style guide.
+This plan provides a realistic, phased approach to achieving the 3:1 code-to-text ratio for
+terraform.md while maintaining the high quality standards established in the style guide.
 
 **Key Principles**:
 
