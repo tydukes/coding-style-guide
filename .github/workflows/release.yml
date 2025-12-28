@@ -14,14 +14,12 @@ on:
           - patch
         default: auto
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   determine-version:
     name: Determine Next Version
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       new_version: ${{ steps.bump.outputs.new_version }}
       bump_type: ${{ steps.analyze.outputs.bump_type }}
@@ -110,6 +108,9 @@ jobs:
     name: Update Version and Create Release
     needs: determine-version
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
