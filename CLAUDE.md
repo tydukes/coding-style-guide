@@ -359,6 +359,60 @@ coding-style-guide/
 └── .pre-commit-config.yaml        # Pre-commit hooks
 ```
 
+## Label Taxonomy
+
+This project uses a comprehensive label system for issue and PR categorization:
+
+### Type Labels
+
+- `type:feature` - New feature or request
+- `type:bug` - Something isn't working
+- `type:docs` - Documentation improvements or additions
+- `type:maintenance` - Routine maintenance and upkeep
+- `type:security` - Security-related improvements or fixes
+
+### Scope Labels
+
+- `scope:dependencies` - Dependency updates and management
+- `scope:language-guide` - Language-specific style guide updates
+- `scope:ide-settings` - IDE configuration and settings
+- `scope:automation` - CI/CD, scripts, and automated workflows
+- `scope:container` - Docker and container-related changes
+
+### Priority Labels
+
+- `priority:critical` - Critical priority - immediate action required
+- `priority:high` - High priority - important but not urgent
+- `priority:medium` - Medium priority - normal importance
+- `priority:low` - Low priority - nice to have
+
+### Status Labels
+
+- `status:blocked` - Blocked by another issue or external dependency
+- `status:in-progress` - Work is currently in progress
+- `status:needs-review` - Needs review or feedback
+
+### Language Labels
+
+Each supported language has a dedicated label for easy filtering:
+
+- `terraform`, `python`, `bash`, `typescript`, `ansible`, `kubernetes`, `yaml`, `json`, `docker`, `makefile`,
+  `github-actions`, `gitlab`, `jenkins`, `sql`, `powershell`, `terragrunt`, `hcl`, `cdk`
+
+### Usage Guidelines
+
+- **Every issue should have at least one `type:` label** to indicate the kind of work
+- Add `scope:` labels to indicate which part of the project is affected
+- Set `priority:` based on urgency and impact
+- Use `status:` labels to track work progress
+- Add language labels when the issue is language-specific
+
+### Historical Note
+
+The `phase-1` through `phase-6` labels were retired in January 2025 after the initial project milestones
+were completed. All issues were migrated to the new taxonomy to better reflect ongoing maintenance and
+priorities.
+
 ## CI/CD & Automation
 
 ### Auto-Merge Behavior
