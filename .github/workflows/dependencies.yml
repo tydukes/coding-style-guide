@@ -15,15 +15,15 @@ jobs:
     name: Check Python Dependencies
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.1
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.1.0
         with:
           python-version: '3.11'
 
       - name: Install UV
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v7.1.6
 
       - name: Sync dependencies
         run: uv sync
@@ -46,10 +46,10 @@ jobs:
     name: Check GitHub Actions Versions
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.1
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.1.0
         with:
           python-version: '3.11'
 
@@ -65,7 +65,7 @@ jobs:
     name: Check Docker Image Versions
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.1
 
       - name: Check Docker base image versions
         run: bash scripts/check_docker_versions.sh
@@ -74,10 +74,10 @@ jobs:
     name: Check Pre-commit Hook Versions
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.1
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.1.0
         with:
           python-version: '3.11'
 
@@ -115,10 +115,10 @@ jobs:
     needs: [check-python-deps, check-github-actions, check-docker-images, check-precommit]
     if: failure() && github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.1
 
       - name: Create issue for outdated dependencies
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const title = '🚨 Outdated Dependencies Detected';
