@@ -5,6 +5,7 @@
 [![Build Status](https://github.com/tydukes/coding-style-guide/actions/workflows/deploy.yml/badge.svg)](https://github.com/tydukes/coding-style-guide/actions/workflows/deploy.yml)
 [![CI Status](https://github.com/tydukes/coding-style-guide/actions/workflows/ci.yml/badge.svg)](https://github.com/tydukes/coding-style-guide/actions/workflows/ci.yml)
 [![Container](https://github.com/tydukes/coding-style-guide/actions/workflows/container.yml/badge.svg)](https://github.com/tydukes/coding-style-guide/actions/workflows/container.yml)
+[![Dependencies](https://github.com/tydukes/coding-style-guide/actions/workflows/dependencies.yml/badge.svg)](https://github.com/tydukes/coding-style-guide/actions/workflows/dependencies.yml)
 [![Link Checker](https://github.com/tydukes/coding-style-guide/actions/workflows/link-checker.yml/badge.svg)](https://github.com/tydukes/coding-style-guide/actions/workflows/link-checker.yml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)

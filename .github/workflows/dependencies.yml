@@ -1,0 +1,186 @@
+name: Dependency Version Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run daily at 9 AM UTC
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-python-deps:
+    name: Check Python Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Check for outdated packages
+        run: |
+          echo "Checking for outdated Python packages..."
+          OUTDATED=$(uv pip list --outdated --format=json 2>/dev/null || echo "[]")
+
+          if [ "$OUTDATED" != "[]" ] && [ -n "$OUTDATED" ]; then
+            echo "::error::Outdated Python packages detected!"
+            echo "The following packages are outdated:"
+            uv pip list --outdated
+            exit 1
+          fi
+
+          echo "✅ All Python packages are up to date!"
+
+  check-github-actions:
+    name: Check GitHub Actions Versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check for outdated actions
+        run: python scripts/check_action_versions.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  check-docker-images:
+    name: Check Docker Image Versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Docker base image versions
+        run: bash scripts/check_docker_versions.sh
+
+  check-precommit:
+    name: Check Pre-commit Hook Versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Check for outdated hooks
+        run: |
+          echo "Checking for outdated pre-commit hooks..."
+
+          # Create a temporary file to store the current config
+          cp .pre-commit-config.yaml .pre-commit-config.yaml.backup
+
+          # Run autoupdate to see if anything would change
+          pre-commit autoupdate
+
+          # Check if anything changed
+          if ! diff -q .pre-commit-config.yaml .pre-commit-config.yaml.backup > /dev/null; then
+            echo "::error::Outdated pre-commit hooks detected!"
+            echo "The following hooks are outdated:"
+            diff .pre-commit-config.yaml.backup .pre-commit-config.yaml || true
+
+            # Restore original file
+            mv .pre-commit-config.yaml.backup .pre-commit-config.yaml
+            exit 1
+          fi
+
+          # Cleanup
+          rm .pre-commit-config.yaml.backup
+          echo "✅ All pre-commit hooks are up to date!"
+
+  create-issue-on-failure:
+    name: Create Issue on Dependency Check Failure
+    runs-on: ubuntu-latest
+    needs: [check-python-deps, check-github-actions, check-docker-images, check-precommit]
+    if: failure() && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create issue for outdated dependencies
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '🚨 Outdated Dependencies Detected';
+            const body = `## Overview
+
+            The automated dependency version check has detected outdated dependencies in the main branch.
+
+            ## Details
+
+            - **Workflow Run**: ${context.payload.repository.html_url}/actions/runs/${context.runId}
+            - **Triggered**: ${new Date().toISOString()}
+            - **Branch**: ${context.ref}
+
+            ## Action Required
+
+            Review the failed workflow run to identify which dependencies are outdated and update them accordingly.
+
+            ## Jobs Status
+
+            Check the workflow run link above to see which specific dependency checks failed:
+            - Python packages
+            - GitHub Actions
+            - Docker images
+            - Pre-commit hooks
+
+            ---
+
+            *This issue was automatically created by the dependency-version-check workflow.*`;
+
+            // Check if an issue already exists
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'scope:dependencies,type:maintenance'
+            });
+
+            const existingIssue = issues.data.find(issue =>
+              issue.title.includes('Outdated Dependencies Detected')
+            );
+
+            if (existingIssue) {
+              // Update existing issue with comment
+              const commentBody = [
+                'Another outdated dependency detected!',
+                '',
+                `**Workflow Run**: ${context.payload.repository.html_url}/actions/runs/${context.runId}`,
+                `**Triggered**: ${new Date().toISOString()}`
+              ].join('\n');
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: commentBody
+              });
+              console.log(`Updated existing issue #${existingIssue.number}`);
+            } else {
+              // Create new issue
+              const issue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['scope:dependencies', 'type:maintenance', 'priority:high']
+              });
+              console.log(`Created new issue #${issue.data.number}`);
+            }
