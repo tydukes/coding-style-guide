@@ -341,6 +341,8 @@ coding-style-guide/
 │   ├── analyze_code_ratio.py      # Enforces 3:1 code-to-text ratio
 │   ├── validate_metadata.py       # Validates @module tags
 │   ├── remove_hardcoded_versions.py # Removes static version references
+│   ├── check_action_versions.py   # Checks GitHub Actions for updates
+│   ├── check_docker_versions.sh   # Checks Docker images for updates
 │   └── pre_commit_linter.sh       # Pre-commit linter wrapper
 ├── .github/
 │   ├── workflows/                  # CI/CD automation
@@ -348,6 +350,7 @@ coding-style-guide/
 │   │   ├── deploy.yml             # Documentation deployment
 │   │   ├── container.yml          # Container build/publish
 │   │   ├── auto-merge.yml         # Auto-merge approved PRs
+│   │   ├── dependencies.yml       # Dependency version check (BLOCKING)
 │   │   ├── spell-checker.yml      # Spell checking (BLOCKING)
 │   │   └── link-checker.yml       # Link validation
 │   └── actions/validate/          # Custom validation action
@@ -504,6 +507,21 @@ priorities.
 6. Generates changelog from all releases
 7. Commits changelog back to main branch
 
+**dependencies.yml** (Dependency Version Check - BLOCKING):
+
+- Triggers: Push/PR to main, daily at 9 AM UTC, manual
+- **FAILS workflow** if any outdated dependencies detected
+- Checks:
+  1. **Python packages** - Uses `uv pip list --outdated` to detect outdated packages
+  2. **GitHub Actions** - Compares workflow action versions against latest releases via GitHub API
+  3. **Docker images** - Checks Dockerfile base images against Docker Hub latest tags
+  4. **Pre-commit hooks** - Runs `pre-commit autoupdate` to detect outdated hook versions
+- Auto-creates issues on main branch failures with `scope:dependencies` label
+- **Enforces proactive dependency management** - CI fails immediately on outdated versions
+- Supporting scripts:
+  - `scripts/check_action_versions.py` - GitHub Actions version checker
+  - `scripts/check_docker_versions.sh` - Docker image version checker
+
 ### Pre-commit Hooks
 
 **Hooks that run on every commit**:
@@ -644,6 +662,85 @@ uv run python scripts/generate_changelog.py
 - Automatically runs as part of `release.yml` workflow
 - Should not be run manually unless necessary
 - Changelog is auto-committed after generation
+
+### check_action_versions.py
+
+**Purpose**: Check GitHub Actions in workflows for outdated versions using GitHub API.
+
+**How it works**:
+
+- Parses all workflow files in `.github/workflows/`
+- Extracts all `uses:` statements with action references
+- Queries GitHub API for latest release tags
+- Compares current versions against latest available
+- Exits with code 1 if any actions are outdated
+
+**Usage**:
+
+```bash
+# Requires GITHUB_TOKEN environment variable
+export GITHUB_TOKEN="your_token_here"
+python scripts/check_action_versions.py
+```
+
+**Output**:
+
+```text
+Checking GitHub Actions versions...
+
+✅ actions/checkout@v4 is up to date (ci.yml:10)
+✅ actions/setup-python@v5 is up to date (ci.yml:15)
+❌ astral-sh/setup-uv@v3 -> v4 (ci.yml:20)
+
+::error::Outdated GitHub Actions detected!
+
+The following actions are outdated:
+  - astral-sh/setup-uv: v3 -> v4 (ci.yml:20)
+```
+
+**Integration**:
+
+- Runs as part of `dependencies.yml` workflow
+- Blocks CI if outdated actions detected
+- Automatically creates issues on main branch failures
+
+### check_docker_versions.sh
+
+**Purpose**: Check Dockerfile base image versions against Docker Hub latest tags.
+
+**How it works**:
+
+- Parses `Dockerfile` to extract all `FROM` statements
+- Queries Docker Hub API for latest semantic version tags
+- Compares current image versions against latest available
+- Filters out pre-release tags (alpha, beta, rc)
+- Exits with code 1 if any images are outdated
+
+**Usage**:
+
+```bash
+bash scripts/check_docker_versions.sh
+```
+
+**Output**:
+
+```text
+Checking Docker base image versions...
+
+Checking: python:3.11-slim
+✅ python:3.11-slim is up to date
+
+Checking: node:20-alpine
+❌ node:20-alpine is outdated! Latest: 22
+
+::error::Outdated Docker base images detected!
+```
+
+**Integration**:
+
+- Runs as part of `dependencies.yml` workflow
+- Blocks CI if outdated images detected
+- Automatically creates issues on main branch failures
 
 ## Working with Documentation
 
