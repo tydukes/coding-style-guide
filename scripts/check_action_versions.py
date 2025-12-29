@@ -12,12 +12,12 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import requests
 
 
-def get_latest_release_tag(repo: str, token: str) -> str:
+def get_latest_release_tag(repo: str, token: str) -> Optional[str]:
     """
     Get the latest release tag for a GitHub repository.
 
@@ -26,7 +26,7 @@ def get_latest_release_tag(repo: str, token: str) -> str:
         token: GitHub API token
 
     Returns:
-        Latest release tag (e.g., 'v4')
+        Latest release tag (e.g., 'v4') or None if not found
     """
     headers = {
         "Authorization": f"token {token}",

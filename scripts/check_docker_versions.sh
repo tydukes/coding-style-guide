@@ -66,7 +66,11 @@ extract_version() {
 # Function to compare versions
 version_gt() {
     # Returns 0 (true) if $1 > $2
-    [[ "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" ]]
+    if [[ "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" ]]; then
+        return 0
+    else
+        return 1
+    fi
 }
 
 # Extract all FROM statements from Dockerfile
