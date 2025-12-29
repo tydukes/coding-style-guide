@@ -130,6 +130,86 @@ def is_version_outdated(current: str, latest: str) -> bool:
         return current != latest
 
 
+def collect_all_actions(workflow_dir: Path) -> Dict[str, List[Tuple[str, Path, int]]]:
+    """
+    Collect all actions from workflow files.
+
+    Args:
+        workflow_dir: Path to .github/workflows directory
+
+    Returns:
+        Dictionary mapping action repos to list of (version, file, line_num)
+    """
+    all_actions: Dict[str, List[Tuple[str, Path, int]]] = {}
+
+    for workflow_file in sorted(workflow_dir.glob("*.yml")):
+        actions = extract_actions_from_workflow(workflow_file)
+        for action_repo, version, line_num in actions:
+            if action_repo not in all_actions:
+                all_actions[action_repo] = []
+            all_actions[action_repo].append((version, workflow_file, line_num))
+
+    return all_actions
+
+
+def check_action_for_updates(
+    action_repo: str,
+    usages: List[Tuple[str, Path, int]],
+    token: str,
+    outdated_actions: List[Tuple[str, str, str, str, int]],
+) -> None:
+    """
+    Check a single action for updates across all its usages.
+
+    Args:
+        action_repo: Repository name (e.g., 'actions/checkout')
+        usages: List of (version, workflow_file, line_num) tuples
+        token: GitHub API token
+        outdated_actions: List to append outdated actions to
+    """
+    latest_tag = get_latest_release_tag(action_repo, token)
+
+    if not latest_tag:
+        print(f"⚠️  Could not determine latest version for {action_repo}")
+        return
+
+    for current_version, workflow_file, line_num in usages:
+        if is_version_outdated(current_version, latest_tag):
+            outdated_actions.append(
+                (
+                    action_repo,
+                    current_version,
+                    latest_tag,
+                    workflow_file.name,
+                    line_num,
+                )
+            )
+            print(
+                f"❌ {action_repo}@{current_version} -> {latest_tag} "
+                f"({workflow_file.name}:{line_num})"
+            )
+        else:
+            print(
+                f"✅ {action_repo}@{current_version} is up to date "
+                f"({workflow_file.name}:{line_num})"
+            )
+
+
+def print_outdated_summary(
+    outdated_actions: List[Tuple[str, str, str, str, int]],
+) -> None:
+    """
+    Print summary of outdated actions.
+
+    Args:
+        outdated_actions: List of (action, current, latest, workflow, line_num)
+    """
+    print("::error::Outdated GitHub Actions detected!")
+    print("\nThe following actions are outdated:\n")
+    for action, current, latest, workflow, line_num in outdated_actions:
+        print(f"  - {action}: {current} -> {latest} ({workflow}:{line_num})")
+
+
 def check_action_versions() -> int:
     """
     Check all GitHub Actions in workflows for outdated versions.
@@ -147,62 +227,18 @@ def check_action_versions() -> int:
         print("::error::GITHUB_TOKEN environment variable not set!")
         return 1
 
-    all_actions: Dict[str, List[Tuple[str, Path, int]]] = {}
-    outdated_actions = []
-
     print("Checking GitHub Actions versions...\n")
 
-    # Collect all actions from all workflow files
-    for workflow_file in sorted(workflow_dir.glob("*.yml")):
-        actions = extract_actions_from_workflow(workflow_file)
-        for action_repo, version, line_num in actions:
-            if action_repo not in all_actions:
-                all_actions[action_repo] = []
-            all_actions[action_repo].append((version, workflow_file, line_num))
+    all_actions = collect_all_actions(workflow_dir)
+    outdated_actions = []
 
-    # Check each unique action
     for action_repo, usages in sorted(all_actions.items()):
-        latest_tag = get_latest_release_tag(action_repo, token)
-
-        if not latest_tag:
-            print(f"⚠️  Could not determine latest version for {action_repo}")
-            continue
-
-        # Check each usage of this action
-        for current_version, workflow_file, line_num in usages:
-            if is_version_outdated(current_version, latest_tag):
-                outdated_actions.append(
-                    (
-                        action_repo,
-                        current_version,
-                        latest_tag,
-                        workflow_file.name,
-                        line_num,
-                    )
-                )
-                print(
-                    f"❌ {action_repo}@{current_version} -> {latest_tag} "
-                    f"({workflow_file.name}:{line_num})"
-                )
-            else:
-                print(
-                    f"✅ {action_repo}@{current_version} is up to date "
-                    f"({workflow_file.name}:{line_num})"
-                )
+        check_action_for_updates(action_repo, usages, token, outdated_actions)
 
     print()
 
     if outdated_actions:
-        print("::error::Outdated GitHub Actions detected!")
-        print("\nThe following actions are outdated:\n")
-        for (
-            action,
-            current,
-            latest,
-            workflow,
-            line_num,
-        ) in outdated_actions:
-            print(f"  - {action}: {current} -> {latest} ({workflow}:{line_num})")
+        print_outdated_summary(outdated_actions)
         return 1
 
     print("✅ All GitHub Actions are up to date!")
