@@ -22,7 +22,7 @@ echo ""
 
 # Function to get latest tag from Docker Hub
 get_latest_tag() {
-    local image=$1
+    local image="$1"
     local repo
     local tag_api_url
 
@@ -54,19 +54,23 @@ get_latest_tag() {
         head -n 1)
 
     echo "$latest_tag"
+    return 0
 }
 
 # Function to extract version from tag
 extract_version() {
-    local tag=$1
+    local tag="$1"
     # Extract version number from tags like "3.11-slim", "3.11.9-slim", etc.
     echo "$tag" | grep -oE '^[0-9]+\.[0-9]+(\.[0-9]+)?' | head -n 1
+    return 0
 }
 
 # Function to compare versions
 version_gt() {
+    local ver1="$1"
+    local ver2="$2"
     # Returns 0 (true) if $1 > $2
-    if [[ "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" ]]; then
+    if [[ "$(printf '%s\n' "$ver1" "$ver2" | sort -V | head -n 1)" != "$ver1" ]]; then
         return 0
     else
         return 1
@@ -75,7 +79,7 @@ version_gt() {
 
 # Extract all FROM statements from Dockerfile
 if [[ ! -f "$DOCKERFILE" ]]; then
-    echo -e "${RED}::error::Dockerfile not found!${NC}"
+    echo -e "${RED}::error::Dockerfile not found!${NC}" >&2
     exit 1
 fi
 
@@ -131,7 +135,7 @@ for from_line in "${from_lines[@]}"; do
 done
 
 if [[ $OUTDATED -eq 1 ]]; then
-    echo "::error::Outdated Docker base images detected!"
+    echo "::error::Outdated Docker base images detected!" >&2
     exit 1
 fi
 
