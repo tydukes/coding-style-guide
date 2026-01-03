@@ -436,6 +436,93 @@ priorities.
 - No manual reviewer assignment needed
 - CI validation remains a blocking requirement for merge
 
+### Centralized Version Management
+
+**IMPORTANT**: All workflow versions are managed centrally through `.github/versions.yml`.
+
+**Single Source of Truth**:
+
+- **File**: `.github/versions.yml`
+- **Purpose**: Centralize all version numbers for GitHub Actions, runtimes, and tools
+- **Benefits**:
+  - Update versions in one place instead of editing multiple workflow files
+  - Ensures consistency across all workflows
+  - Simplifies dependency management
+  - Provides clear audit trail of version changes
+
+**Structure**:
+
+```yaml
+# .github/versions.yml
+runtimes:
+  python: '3.11'
+  node: '20'
+
+actions:
+  checkout: 'v6.0.1'
+  setup-python: 'v6.1.0'
+  # ... other action versions
+
+tools:
+  uv_install_script: 'https://astral.sh/uv/install.sh'
+```
+
+**Usage in Workflows**:
+
+All workflows load versions using the composite action:
+
+```yaml
+steps:
+  - uses: actions/checkout@v6.0.1
+
+  - name: Load versions
+    id: versions
+    uses: ./.github/actions/load-versions
+
+  - name: Setup Python
+    uses: actions/setup-python@${{ steps.versions.outputs.setup-python-version }}
+    with:
+      python-version: ${{ steps.versions.outputs.python-version }}
+```
+
+**Load Versions Composite Action**:
+
+- **Location**: `.github/actions/load-versions/action.yml`
+- **Function**: Reads `.github/versions.yml` and exposes all versions as outputs
+- **Dependencies**: Installs `yq` if not available
+- **Outputs**: All runtime versions, action versions, and tool URLs
+
+**Validation**:
+
+The `dependencies.yml` workflow includes automatic validation:
+
+```bash
+# Validates that versions.yml has latest versions
+python scripts/validate_versions.py
+```
+
+**Updating Versions**:
+
+1. Edit `.github/versions.yml`
+2. Update the relevant version number
+3. Commit and push
+4. All workflows will automatically use the new version
+5. Dependency check validates versions are up-to-date
+
+**Example: Updating Python Version**:
+
+```yaml
+# Before
+runtimes:
+  python: '3.11'
+
+# After
+runtimes:
+  python: '3.12'
+```
+
+All workflows using `${{ steps.versions.outputs.python-version }}` will now use Python 3.12.
+
 ### GitHub Workflows
 
 **ci.yml** (Main CI Pipeline):
@@ -516,11 +603,13 @@ priorities.
   2. **GitHub Actions** - Compares workflow action versions against latest releases via GitHub API
   3. **Docker images** - Checks Dockerfile base images against Docker Hub latest tags
   4. **Pre-commit hooks** - Runs `pre-commit autoupdate` to detect outdated hook versions
+  5. **versions.yml** - Validates that `.github/versions.yml` has latest versions
 - Auto-creates issues on main branch failures with `scope:dependencies` label
 - **Enforces proactive dependency management** - CI fails immediately on outdated versions
 - Supporting scripts:
   - `scripts/check_action_versions.py` - GitHub Actions version checker
   - `scripts/check_docker_versions.sh` - Docker image version checker
+  - `scripts/validate_versions.py` - versions.yml validator
 
 ### Pre-commit Hooks
 
@@ -740,6 +829,47 @@ Checking: node:20-alpine
 
 - Runs as part of `dependencies.yml` workflow
 - Blocks CI if outdated images detected
+- Automatically creates issues on main branch failures
+
+### validate_versions.py
+
+**Purpose**: Validate that `.github/versions.yml` contains the latest versions.
+
+**How it works**:
+
+- Reads `.github/versions.yml` to get current version definitions
+- Queries GitHub API for latest release tags for all actions
+- Compares current versions against latest available
+- Exits with code 1 if any versions are outdated
+
+**Usage**:
+
+```bash
+# Requires GITHUB_TOKEN environment variable
+export GITHUB_TOKEN="your_token_here"
+python scripts/validate_versions.py
+```
+
+**Output**:
+
+```text
+Validating versions.yml against latest releases...
+
+✅ checkout: v6.0.1 is up to date
+✅ setup-python: v6.1.0 is up to date
+❌ setup-node: v5 -> v6 is outdated
+
+::error::Outdated versions detected in versions.yml!
+
+The following versions are outdated:
+  - setup-node: v5 -> v6
+```
+
+**Integration**:
+
+- Runs as part of `dependencies.yml` workflow
+- Validates centralized version definitions
+- Blocks CI if versions.yml is outdated
 - Automatically creates issues on main branch failures
 
 ## Working with Documentation

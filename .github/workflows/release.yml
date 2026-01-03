@@ -24,7 +24,7 @@ jobs:
       new_version: ${{ steps.bump.outputs.new_version }}
       bump_type: ${{ steps.analyze.outputs.bump_type }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.1
         with:
           fetch-depth: 0
 
@@ -112,10 +112,14 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.1
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Load versions
+        id: versions
+        uses: ./.github/actions/load-versions
 
       - name: Configure git
         run: |
@@ -149,13 +153,13 @@ jobs:
           echo "Created release v${NEW_VERSION}"
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@${{ steps.versions.outputs.setup-python-version }}
         with:
-          python-version: '3.11'
+          python-version: ${{ steps.versions.outputs.python-version }}
 
       - name: Install uv
         run: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh
+          curl -LsSf ${{ steps.versions.outputs.uv-install-script }} | sh
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
