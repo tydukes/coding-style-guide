@@ -11,7 +11,7 @@
 import os
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import requests
 import yaml
@@ -33,7 +33,7 @@ def load_versions_yml() -> Dict:
         return yaml.safe_load(f)
 
 
-def get_latest_release_tag(repo: str, token: str) -> str:
+def get_latest_release_tag(repo: str, token: str) -> Optional[str]:
     """
     Get the latest release tag for a GitHub repository.
 
