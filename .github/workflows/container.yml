@@ -22,14 +22,18 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.1
+
+      - name: Load versions
+        id: versions
+        uses: ./.github/actions/load-versions
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@${{ steps.versions.outputs.docker-setup-buildx-version }}
 
       - name: Log in to Container Registry
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3
+        uses: docker/login-action@${{ steps.versions.outputs.docker-login-version }}
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -37,7 +41,7 @@ jobs:
 
       - name: Extract metadata
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@${{ steps.versions.outputs.docker-metadata-version }}
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -49,7 +53,7 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@${{ steps.versions.outputs.docker-build-push-version }}
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
@@ -70,7 +74,7 @@ jobs:
 
       - name: Generate SBOM
         if: github.event_name != 'pull_request'
-        uses: anchore/sbom-action@v0
+        uses: anchore/sbom-action@${{ steps.versions.outputs.anchore-sbom-version }}
         with:
           image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
           format: spdx-json
@@ -78,7 +82,7 @@ jobs:
 
       - name: Upload SBOM
         if: github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@${{ steps.versions.outputs.upload-artifact-version }}
         with:
           name: sbom
           path: sbom.spdx.json

@@ -13,18 +13,22 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.1
         with:
           fetch-depth: 0  # Fetch all history for git info plugin
 
+      - name: Load versions
+        id: versions
+        uses: ./.github/actions/load-versions
+
       - name: Install UV
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        run: curl -LsSf ${{ steps.versions.outputs.uv-install-script }} | sh
 
       - name: Add UV to PATH
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Cache UV dependencies
-        uses: actions/cache@v5
+        uses: actions/cache@${{ steps.versions.outputs.cache-version }}
         with:
           path: |
             ~/.cache/uv

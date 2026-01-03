@@ -17,13 +17,17 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.1
 
+      - name: Load versions
+        id: versions
+        uses: ./.github/actions/load-versions
+
       - name: Set up Python
-        uses: actions/setup-python@v6.1.0
+        uses: actions/setup-python@${{ steps.versions.outputs.setup-python-version }}
         with:
-          python-version: '3.11'
+          python-version: ${{ steps.versions.outputs.python-version }}
 
       - name: Install UV
-        uses: astral-sh/setup-uv@v7.1.6
+        uses: astral-sh/setup-uv@${{ steps.versions.outputs.setup-uv-version }}
 
       - name: Sync dependencies
         run: uv sync
@@ -48,10 +52,14 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.1
 
+      - name: Load versions
+        id: versions
+        uses: ./.github/actions/load-versions
+
       - name: Set up Python
-        uses: actions/setup-python@v6.1.0
+        uses: actions/setup-python@${{ steps.versions.outputs.setup-python-version }}
         with:
-          python-version: '3.11'
+          python-version: ${{ steps.versions.outputs.python-version }}
 
       - name: Install requests module
         run: pip install requests
@@ -76,10 +84,14 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.1
 
+      - name: Load versions
+        id: versions
+        uses: ./.github/actions/load-versions
+
       - name: Set up Python
-        uses: actions/setup-python@v6.1.0
+        uses: actions/setup-python@${{ steps.versions.outputs.setup-python-version }}
         with:
-          python-version: '3.11'
+          python-version: ${{ steps.versions.outputs.python-version }}
 
       - name: Install pre-commit
         run: pip install pre-commit
@@ -109,16 +121,43 @@ jobs:
           rm .pre-commit-config.yaml.backup
           echo "✅ All pre-commit hooks are up to date!"
 
+  validate-versions-yml:
+    name: Validate versions.yml
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.1
+
+      - name: Load versions
+        id: versions
+        uses: ./.github/actions/load-versions
+
+      - name: Set up Python
+        uses: actions/setup-python@${{ steps.versions.outputs.setup-python-version }}
+        with:
+          python-version: ${{ steps.versions.outputs.python-version }}
+
+      - name: Install dependencies
+        run: pip install requests pyyaml
+
+      - name: Validate versions.yml
+        run: python scripts/validate_versions.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   create-issue-on-failure:
     name: Create Issue on Dependency Check Failure
     runs-on: ubuntu-latest
-    needs: [check-python-deps, check-github-actions, check-docker-images, check-precommit]
+    needs: [check-python-deps, check-github-actions, check-docker-images, check-precommit, validate-versions-yml]
     if: failure() && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v6.0.1
 
+      - name: Load versions
+        id: versions
+        uses: ./.github/actions/load-versions
+
       - name: Create issue for outdated dependencies
-        uses: actions/github-script@v8
+        uses: actions/github-script@${{ steps.versions.outputs.github-script-version }}
         with:
           script: |
             const title = '🚨 Outdated Dependencies Detected';
