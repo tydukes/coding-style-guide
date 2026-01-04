@@ -18,7 +18,18 @@ jobs:
         id: versions
         uses: ./actions/load-versions
 
-      - name: Print version outputs
-        run: |
-          echo "UV install script: ${{ steps.versions.outputs.uv-install-script }}"
-          echo "Cache version: ${{ steps.versions.outputs.cache-version }}"
+      - name: Install UV
+        run: curl -LsSf ${{ steps.versions.outputs.uv-install-script }} | sh
+
+      - name: Add UV to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Cache UV dependencies
+        uses: actions/cache@${{ steps.versions.outputs.cache-version }}
+        with:
+          path: |
+            ~/.cache/uv
+            .venv
+          key: ${{ runner.os }}-uv-${{ hashFiles('pyproject.toml', 'uv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
