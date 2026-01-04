@@ -1,0 +1,24 @@
+name: CI Test
+
+"on":
+  push:
+    branches:
+      - fix/composite-action-main-branch-230
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.1
+
+      - name: Load versions
+        id: versions
+        uses: ./actions/load-versions
+
+      - name: Print version outputs
+        run: |
+          echo "UV install script: ${{ steps.versions.outputs.uv-install-script }}"
+          echo "Cache version: ${{ steps.versions.outputs.cache-version }}"
