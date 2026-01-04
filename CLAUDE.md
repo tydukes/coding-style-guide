@@ -438,17 +438,28 @@ priorities.
 
 ### Centralized Version Management
 
-**IMPORTANT**: All workflow versions are managed centrally through `.github/versions.yml`.
+**IMPORTANT**: Workflow action versions are managed centrally through `.github/versions.yml`
+as a **documentation reference only**.
 
-**Single Source of Truth**:
+**GitHub Actions Limitation**:
+
+GitHub Actions **cannot** use step outputs in `uses:` fields because they are evaluated
+at workflow parse time, before any steps execute. This means:
+
+```yaml
+# ❌ DOES NOT WORK - causes workflow to fail with 0 jobs
+- uses: actions/cache@${{ steps.versions.outputs.cache-version }}
+
+# ✅ WORKS - hardcoded version required
+- uses: actions/cache@v5
+```
+
+**Single Source of Truth (Documentation)**:
 
 - **File**: `.github/versions.yml`
-- **Purpose**: Centralize all version numbers for GitHub Actions, runtimes, and tools
-- **Benefits**:
-  - Update versions in one place instead of editing multiple workflow files
-  - Ensures consistency across all workflows
-  - Simplifies dependency management
-  - Provides clear audit trail of version changes
+- **Purpose**: Document which versions should be used across all workflows
+- **Usage**: Reference when manually updating workflow files
+- **Validation**: `validate_versions.py` ensures documented versions match latest releases
 
 **Structure**:
 
@@ -461,67 +472,45 @@ runtimes:
 actions:
   checkout: 'v6.0.1'
   setup-python: 'v6.1.0'
+  cache: 'v5'
   # ... other action versions
 
 tools:
   uv_install_script: 'https://astral.sh/uv/install.sh'
 ```
 
-**Usage in Workflows**:
+**Workflow Implementation**:
 
-All workflows load versions using the composite action:
+All workflows use **hardcoded versions** that match `versions.yml`:
 
 ```yaml
 steps:
-  - uses: actions/checkout@v6.0.1
+  - uses: actions/checkout@v6.0.1  # From versions.yml: actions.checkout
 
-  - name: Load versions
-    id: versions
-    uses: ./.github/actions/load-versions
-
-  - name: Setup Python
-    uses: actions/setup-python@${{ steps.versions.outputs.setup-python-version }}
+  - name: Set up Python
+    uses: actions/setup-python@v6.1.0  # From versions.yml: actions.setup-python
     with:
-      python-version: ${{ steps.versions.outputs.python-version }}
+      python-version: '3.11'  # From versions.yml: runtimes.python
+
+  - name: Cache dependencies
+    uses: actions/cache@v5  # From versions.yml: actions.cache
 ```
-
-**Load Versions Composite Action**:
-
-- **Location**: `.github/actions/load-versions/action.yml`
-- **Function**: Reads `.github/versions.yml` and exposes all versions as outputs
-- **Dependencies**: Installs `yq` if not available
-- **Outputs**: All runtime versions, action versions, and tool URLs
 
 **Validation**:
 
-The `dependencies.yml` workflow includes automatic validation:
+The `dependencies.yml` workflow validates that `versions.yml` contains latest versions:
 
 ```bash
-# Validates that versions.yml has latest versions
+# Validates that versions.yml has latest versions from GitHub/npm/PyPI
 python scripts/validate_versions.py
 ```
 
 **Updating Versions**:
 
 1. Edit `.github/versions.yml`
-2. Update the relevant version number
+2. Manually update all workflow files to use the new version
 3. Commit and push
-4. All workflows will automatically use the new version
-5. Dependency check validates versions are up-to-date
-
-**Example: Updating Python Version**:
-
-```yaml
-# Before
-runtimes:
-  python: '3.11'
-
-# After
-runtimes:
-  python: '3.12'
-```
-
-All workflows using `${{ steps.versions.outputs.python-version }}` will now use Python 3.12.
+4. CI validates versions.yml is up-to-date with latest releases
 
 ### GitHub Actions Version Policy
 

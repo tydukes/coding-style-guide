@@ -20,16 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6.0.1
-
-      - name: Load versions
-        id: versions
-        uses: ./.github/actions/load-versions
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@${{ steps.versions.outputs.setup-node-version }}
+        uses: actions/setup-node@v6
         with:
-          node-version: ${{ steps.versions.outputs.node-version }}
+          node-version: '20'
 
       - name: Install cSpell
         run: npm install -g cspell
@@ -53,7 +49,7 @@ jobs:
 
       - name: Upload spell check results
         if: steps.spell-check.outputs.spell_errors == 'true'
-        uses: actions/upload-artifact@${{ steps.versions.outputs.upload-artifact-version }}
+        uses: actions/upload-artifact@v6
         with:
           name: spell-check-results
           path: spell-check-results.txt
@@ -63,7 +59,7 @@ jobs:
         if: |
           steps.spell-check.outputs.spell_errors == 'true' &&
           github.event_name == 'pull_request'
-        uses: actions/github-script@${{ steps.versions.outputs.github-script-version }}
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
@@ -103,7 +99,7 @@ jobs:
         if: |
           steps.spell-check.outputs.spell_errors == 'true' &&
           github.event_name != 'pull_request'
-        uses: actions/github-script@${{ steps.versions.outputs.github-script-version }}
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
