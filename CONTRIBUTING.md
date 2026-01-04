@@ -208,6 +208,29 @@ guarantees.
 Closes #213
 ```
 
+### GitHub Actions Contributions
+
+When adding or updating GitHub Actions workflows:
+
+- **Use version tags** for official actions (actions/*, astral-sh/*, etc.)
+- **Use SHA pinning** for third-party actions with elevated permissions
+- Include comments explaining why SHA pinning is used (if applicable)
+- Verify action source is from trusted publisher
+- See `SECURITY.md` for full versioning policy
+
+**Example**:
+
+```yaml
+# Official action - use version tag
+- uses: actions/checkout@v4
+
+# Third-party action with elevated permissions - use SHA pinning
+- uses: third-party/deploy-action@8f4d7e2c1a3b9f5e7d6c8a4b2e1f3d5c7a9b8e6f
+  # SHA pinning used: third-party action with repository write access
+  with:
+    token: ${{ secrets.DEPLOY_TOKEN }}
+```
+
 ## Style Guidelines
 
 ### Documentation
