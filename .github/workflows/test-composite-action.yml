@@ -1,0 +1,26 @@
+name: Test Composite Action
+
+"on":
+  push:
+    branches:
+      - fix/composite-action-main-branch-230
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.1
+
+      - name: Load versions
+        id: versions
+        uses: ./.github/actions/load-versions
+
+      - name: Print versions
+        run: |
+          echo "Python version: ${{ steps.versions.outputs.python-version }}"
+          echo "Node version: ${{ steps.versions.outputs.node-version }}"
+          echo "Checkout version: ${{ steps.versions.outputs.checkout-version }}"
+          echo "Setup Python version: ${{ steps.versions.outputs.setup-python-version }}"
