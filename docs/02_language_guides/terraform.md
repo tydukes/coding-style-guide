@@ -2619,6 +2619,3093 @@ resource "aws_iam_policy" "app" {
 
 ---
 
+## Security and Compliance Patterns
+
+This section provides comprehensive examples of production-grade security hardening and compliance
+frameworks. These patterns demonstrate AWS Well-Architected Security Pillar best practices.
+
+### AWS WAF Configuration
+
+AWS WAF (Web Application Firewall) protects web applications from common exploits. This example
+shows a complete WAF v2 setup with comprehensive security rules.
+
+```hcl
+## modules/aws-waf/variables.tf
+
+variable "project" {
+  description = "Project name"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "rate_limit" {
+  description = "Rate limit for requests per 5 minutes per IP"
+  type        = number
+  default     = 2000
+}
+
+variable "allowed_countries" {
+  description = "List of allowed country codes (ISO 3166-1 alpha-2)"
+  type        = list(string)
+  default     = ["US", "CA", "GB", "DE", "FR"]
+}
+
+variable "blocked_ip_addresses" {
+  description = "List of IP addresses to block"
+  type        = list(string)
+  default     = []
+}
+
+variable "alb_arn" {
+  description = "ARN of the Application Load Balancer to protect"
+  type        = string
+}
+
+variable "enable_logging" {
+  description = "Enable WAF logging to CloudWatch"
+  type        = bool
+  default     = true
+}
+```
+
+```hcl
+## modules/aws-waf/main.tf
+
+## IP Set for blocked addresses
+resource "aws_wafv2_ip_set" "blocked_ips" {
+  name               = "${var.project}-${var.environment}-blocked-ips"
+  description        = "Blocked IP addresses"
+  scope              = "REGIONAL"
+  ip_address_version = "IPV4"
+  addresses          = var.blocked_ip_addresses
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-blocked-ips"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## IP Set for Amazon IP reputation list
+resource "aws_wafv2_ip_set" "amazon_ip_reputation" {
+  name               = "${var.project}-${var.environment}-amazon-reputation"
+  description        = "Amazon IP reputation list"
+  scope              = "REGIONAL"
+  ip_address_version = "IPV4"
+  addresses          = []  # Managed by AWS
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-amazon-reputation"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## Web ACL with comprehensive security rules
+resource "aws_wafv2_web_acl" "main" {
+  name        = "${var.project}-${var.environment}-web-acl"
+  description = "WAF rules for ${var.project} ${var.environment}"
+  scope       = "REGIONAL"
+
+  default_action {
+    allow {}
+  }
+
+  ## Rule 1: Block known bad IPs
+  rule {
+    name     = "BlockedIPAddresses"
+    priority = 1
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      ip_set_reference_statement {
+        arn = aws_wafv2_ip_set.blocked_ips.arn
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "BlockedIPAddresses"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  ## Rule 2: AWS Managed Rules - Core Rule Set (CRS)
+  rule {
+    name     = "AWSManagedRulesCommonRuleSet"
+    priority = 2
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesCommonRuleSet"
+        vendor_name = "AWS"
+
+        ## Exclude specific rules if needed
+        # excluded_rule {
+        #   name = "SizeRestrictions_BODY"
+        # }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWSManagedRulesCommonRuleSet"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  ## Rule 3: SQL Injection protection
+  rule {
+    name     = "SQLInjectionProtection"
+    priority = 3
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesSQLiRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "SQLInjectionProtection"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  ## Rule 4: XSS (Cross-site scripting) protection
+  rule {
+    name     = "XSSProtection"
+    priority = 4
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesKnownBadInputsRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "XSSProtection"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  ## Rule 5: Rate limiting per IP
+  rule {
+    name     = "RateLimitPerIP"
+    priority = 5
+
+    action {
+      block {
+        custom_response {
+          response_code = 429
+          custom_response_body_key = "rate_limit_response"
+        }
+      }
+    }
+
+    statement {
+      rate_based_statement {
+        limit              = var.rate_limit
+        aggregate_key_type = "IP"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "RateLimitPerIP"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  ## Rule 6: Geographic blocking
+  rule {
+    name     = "GeoBlocking"
+    priority = 6
+
+    action {
+      block {}
+    }
+
+    statement {
+      not_statement {
+        statement {
+          geo_match_statement {
+            country_codes = var.allowed_countries
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "GeoBlocking"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  ## Rule 7: AWS Managed Rules - Anonymous IP List
+  rule {
+    name     = "AWSManagedRulesAnonymousIpList"
+    priority = 7
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesAnonymousIpList"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AnonymousIPList"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  ## Rule 8: AWS Managed Rules - Amazon IP Reputation List
+  rule {
+    name     = "AWSManagedRulesAmazonIpReputationList"
+    priority = 8
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesAmazonIpReputationList"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AmazonIPReputationList"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  ## Custom response for rate limiting
+  custom_response_body {
+    key          = "rate_limit_response"
+    content      = "Too many requests. Please try again later."
+    content_type = "TEXT_PLAIN"
+  }
+
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    metric_name                = "${var.project}-${var.environment}-web-acl"
+    sampled_requests_enabled   = true
+  }
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-web-acl"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## Associate WAF with ALB
+resource "aws_wafv2_web_acl_association" "alb" {
+  resource_arn = var.alb_arn
+  web_acl_arn  = aws_wafv2_web_acl.main.arn
+}
+
+## CloudWatch Log Group for WAF logs
+resource "aws_cloudwatch_log_group" "waf_logs" {
+  count             = var.enable_logging ? 1 : 0
+  name              = "/aws/waf/${var.project}-${var.environment}"
+  retention_in_days = 30
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-waf-logs"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## WAF logging configuration
+resource "aws_wafv2_web_acl_logging_configuration" "main" {
+  count                   = var.enable_logging ? 1 : 0
+  resource_arn            = aws_wafv2_web_acl.main.arn
+  log_destination_configs = [aws_cloudwatch_log_group.waf_logs[0].arn]
+
+  redacted_fields {
+    single_header {
+      name = "authorization"
+    }
+  }
+
+  redacted_fields {
+    single_header {
+      name = "cookie"
+    }
+  }
+}
+
+## CloudWatch Alarms for WAF
+resource "aws_cloudwatch_metric_alarm" "waf_blocked_requests" {
+  alarm_name          = "${var.project}-${var.environment}-waf-blocked-requests"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "BlockedRequests"
+  namespace           = "AWS/WAFV2"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "100"
+  alarm_description   = "Alert when WAF blocks more than 100 requests"
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    WebACL = aws_wafv2_web_acl.main.name
+    Region = data.aws_region.current.name
+    Rule   = "ALL"
+  }
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-waf-blocked-requests"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "waf_rate_limited_requests" {
+  alarm_name          = "${var.project}-${var.environment}-waf-rate-limited"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "RateLimitPerIP"
+  namespace           = "AWS/WAFV2"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "50"
+  alarm_description   = "Alert when rate limiting triggers frequently"
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    WebACL = aws_wafv2_web_acl.main.name
+    Region = data.aws_region.current.name
+    Rule   = "RateLimitPerIP"
+  }
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-waf-rate-limited"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+data "aws_region" "current" {}
+```
+
+```hcl
+## modules/aws-waf/outputs.tf
+
+output "web_acl_id" {
+  description = "ID of the WAF Web ACL"
+  value       = aws_wafv2_web_acl.main.id
+}
+
+output "web_acl_arn" {
+  description = "ARN of the WAF Web ACL"
+  value       = aws_wafv2_web_acl.main.arn
+}
+
+output "web_acl_capacity" {
+  description = "Web ACL capacity units used"
+  value       = aws_wafv2_web_acl.main.capacity
+}
+
+output "blocked_ips_set_id" {
+  description = "ID of the blocked IPs set"
+  value       = aws_wafv2_ip_set.blocked_ips.id
+}
+
+output "log_group_name" {
+  description = "Name of the CloudWatch log group for WAF logs"
+  value       = var.enable_logging ? aws_cloudwatch_log_group.waf_logs[0].name : null
+}
+```
+
+### GuardDuty and Security Hub Integration
+
+GuardDuty provides intelligent threat detection, while Security Hub aggregates security findings
+across AWS accounts. This example shows multi-account setup with automated remediation.
+
+```hcl
+## modules/security-monitoring/variables.tf
+
+variable "project" {
+  description = "Project name"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "enable_s3_protection" {
+  description = "Enable S3 protection in GuardDuty"
+  type        = bool
+  default     = true
+}
+
+variable "enable_eks_protection" {
+  description = "Enable EKS protection in GuardDuty"
+  type        = bool
+  default     = true
+}
+
+variable "enable_rds_protection" {
+  description = "Enable RDS protection in GuardDuty"
+  type        = bool
+  default     = true
+}
+
+variable "enable_lambda_protection" {
+  description = "Enable Lambda protection in GuardDuty"
+  type        = bool
+  default     = true
+}
+
+variable "finding_publishing_frequency" {
+  description = "GuardDuty finding publishing frequency"
+  type        = string
+  default     = "FIFTEEN_MINUTES"
+  validation {
+    condition     = contains(["FIFTEEN_MINUTES", "ONE_HOUR", "SIX_HOURS"], var.finding_publishing_frequency)
+    error_message = "Must be FIFTEEN_MINUTES, ONE_HOUR, or SIX_HOURS"
+  }
+}
+
+variable "security_standards" {
+  description = "List of security standards to enable in Security Hub"
+  type        = list(string)
+  default = [
+    "aws-foundational-security-best-practices/v/1.0.0",
+    "cis-aws-foundations-benchmark/v/1.4.0",
+    "pci-dss/v/3.2.1"
+  ]
+}
+
+variable "sns_topic_arn" {
+  description = "SNS topic ARN for critical findings notifications"
+  type        = string
+}
+
+variable "admin_email" {
+  description = "Email address for security notifications"
+  type        = string
+}
+```
+
+```hcl
+## modules/security-monitoring/main.tf
+
+## GuardDuty Detector
+resource "aws_guardduty_detector" "main" {
+  enable                       = true
+  finding_publishing_frequency = var.finding_publishing_frequency
+
+  datasources {
+    s3_logs {
+      enable = var.enable_s3_protection
+    }
+
+    kubernetes {
+      audit_logs {
+        enable = var.enable_eks_protection
+      }
+    }
+  }
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-guardduty"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## GuardDuty S3 Protection
+resource "aws_guardduty_detector_feature" "s3_protection" {
+  count       = var.enable_s3_protection ? 1 : 0
+  detector_id = aws_guardduty_detector.main.id
+  name        = "S3_DATA_EVENTS"
+  status      = "ENABLED"
+}
+
+## GuardDuty RDS Protection
+resource "aws_guardduty_detector_feature" "rds_protection" {
+  count       = var.enable_rds_protection ? 1 : 0
+  detector_id = aws_guardduty_detector.main.id
+  name        = "RDS_LOGIN_EVENTS"
+  status      = "ENABLED"
+}
+
+## GuardDuty Lambda Protection
+resource "aws_guardduty_detector_feature" "lambda_protection" {
+  count       = var.enable_lambda_protection ? 1 : 0
+  detector_id = aws_guardduty_detector.main.id
+  name        = "LAMBDA_NETWORK_LOGS"
+  status      = "ENABLED"
+}
+
+## Security Hub
+resource "aws_securityhub_account" "main" {}
+
+## Enable security standards
+resource "aws_securityhub_standards_subscription" "standards" {
+  for_each      = toset(var.security_standards)
+  depends_on    = [aws_securityhub_account.main]
+  standards_arn = "arn:aws:securityhub:${data.aws_region.current.name}::standards/${each.value}"
+}
+
+## Security Hub Insights - Critical and High Severity Findings
+resource "aws_securityhub_insight" "critical_high_findings" {
+  filters {
+    severity_label {
+      comparison = "EQUALS"
+      value      = "CRITICAL"
+    }
+  }
+
+  filters {
+    severity_label {
+      comparison = "EQUALS"
+      value      = "HIGH"
+    }
+  }
+
+  filters {
+    workflow_status {
+      comparison = "NOT_EQUALS"
+      value      = "RESOLVED"
+    }
+  }
+
+  group_by_attribute = "ResourceType"
+  name               = "${var.project}-${var.environment}-critical-high-findings"
+}
+
+## Security Hub Insights - Unresolved Findings by Resource
+resource "aws_securityhub_insight" "unresolved_by_resource" {
+  filters {
+    workflow_status {
+      comparison = "NOT_EQUALS"
+      value      = "RESOLVED"
+    }
+  }
+
+  group_by_attribute = "ResourceId"
+  name               = "${var.project}-${var.environment}-unresolved-by-resource"
+}
+
+## EventBridge rule for critical GuardDuty findings
+resource "aws_cloudwatch_event_rule" "guardduty_findings" {
+  name        = "${var.project}-${var.environment}-guardduty-findings"
+  description = "Capture critical GuardDuty findings"
+
+  event_pattern = jsonencode({
+    source      = ["aws.guardduty"]
+    detail-type = ["GuardDuty Finding"]
+    detail = {
+      severity = [
+        { numeric = [">=" 7.0] }  ## High and Critical severity
+      ]
+    }
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-guardduty-findings"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## EventBridge target - SNS for notifications
+resource "aws_cloudwatch_event_target" "sns" {
+  rule      = aws_cloudwatch_event_rule.guardduty_findings.name
+  target_id = "SendToSNS"
+  arn       = var.sns_topic_arn
+}
+
+## EventBridge rule for Security Hub findings
+resource "aws_cloudwatch_event_rule" "securityhub_findings" {
+  name        = "${var.project}-${var.environment}-securityhub-findings"
+  description = "Capture critical Security Hub findings"
+
+  event_pattern = jsonencode({
+    source      = ["aws.securityhub"]
+    detail-type = ["Security Hub Findings - Imported"]
+    detail = {
+      findings = {
+        Severity = {
+          Label = ["CRITICAL", "HIGH"]
+        }
+        Compliance = {
+          Status = ["FAILED"]
+        }
+      }
+    }
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-securityhub-findings"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## EventBridge target for Security Hub - SNS
+resource "aws_cloudwatch_event_target" "securityhub_sns" {
+  rule      = aws_cloudwatch_event_rule.securityhub_findings.name
+  target_id = "SendToSNS"
+  arn       = var.sns_topic_arn
+}
+
+## Lambda function for automated remediation
+resource "aws_lambda_function" "auto_remediation" {
+  filename      = "auto_remediation.zip"
+  function_name = "${var.project}-${var.environment}-auto-remediation"
+  role          = aws_iam_role.remediation_lambda.arn
+  handler       = "index.handler"
+  runtime       = "python3.11"
+  timeout       = 300
+
+  environment {
+    variables = {
+      PROJECT     = var.project
+      ENVIRONMENT = var.environment
+      SNS_TOPIC   = var.sns_topic_arn
+    }
+  }
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-auto-remediation"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## IAM role for remediation Lambda
+resource "aws_iam_role" "remediation_lambda" {
+  name = "${var.project}-${var.environment}-remediation-lambda"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-remediation-lambda"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## IAM policy for remediation Lambda
+resource "aws_iam_role_policy" "remediation_lambda" {
+  name = "${var.project}-${var.environment}-remediation-policy"
+  role = aws_iam_role.remediation_lambda.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "CloudWatchLogs"
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.project}-${var.environment}-auto-remediation:*"
+      },
+      {
+        Sid    = "SecurityGroupRemediation"
+        Effect = "Allow"
+        Action = [
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:DescribeSecurityGroups"
+        ]
+        Resource = "*"
+        Condition = {
+          StringEquals = {
+            "aws:ResourceTag/Project" = var.project
+          }
+        }
+      },
+      {
+        Sid    = "S3BucketRemediation"
+        Effect = "Allow"
+        Action = [
+          "s3:PutBucketPublicAccessBlock",
+          "s3:PutBucketAcl"
+        ]
+        Resource = "arn:aws:s3:::${var.project}-*"
+      },
+      {
+        Sid    = "SNSPublish"
+        Effect = "Allow"
+        Action = [
+          "sns:Publish"
+        ]
+        Resource = var.sns_topic_arn
+      }
+    ]
+  })
+}
+
+## EventBridge target - Lambda for auto-remediation
+resource "aws_cloudwatch_event_target" "remediation_lambda" {
+  rule      = aws_cloudwatch_event_rule.securityhub_findings.name
+  target_id = "InvokeRemediationLambda"
+  arn       = aws_lambda_function.auto_remediation.arn
+}
+
+## Lambda permission for EventBridge
+resource "aws_lambda_permission" "allow_eventbridge" {
+  statement_id  = "AllowExecutionFromEventBridge"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.auto_remediation.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.securityhub_findings.arn
+}
+
+## SNS email subscription for admin
+resource "aws_sns_topic_subscription" "admin_email" {
+  topic_arn = var.sns_topic_arn
+  protocol  = "email"
+  endpoint  = var.admin_email
+}
+
+## CloudWatch Log Group for GuardDuty findings
+resource "aws_cloudwatch_log_group" "guardduty_findings" {
+  name              = "/aws/guardduty/${var.project}-${var.environment}"
+  retention_in_days = 90
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-guardduty-logs"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## CloudWatch metric filter for GuardDuty findings
+resource "aws_cloudwatch_log_metric_filter" "guardduty_critical" {
+  name           = "${var.project}-${var.environment}-guardduty-critical"
+  log_group_name = aws_cloudwatch_log_group.guardduty_findings.name
+  pattern        = "[severity >= 7]"
+
+  metric_transformation {
+    name      = "GuardDutyCriticalFindings"
+    namespace = "${var.project}/${var.environment}/Security"
+    value     = "1"
+  }
+}
+
+## CloudWatch alarm for critical GuardDuty findings
+resource "aws_cloudwatch_metric_alarm" "guardduty_critical" {
+  alarm_name          = "${var.project}-${var.environment}-guardduty-critical"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "GuardDutyCriticalFindings"
+  namespace           = "${var.project}/${var.environment}/Security"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "0"
+  alarm_description   = "Alert on any critical GuardDuty findings"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [var.sns_topic_arn]
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-guardduty-critical"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+```
+
+```hcl
+## modules/security-monitoring/outputs.tf
+
+output "guardduty_detector_id" {
+  description = "ID of the GuardDuty detector"
+  value       = aws_guardduty_detector.main.id
+}
+
+output "securityhub_account_id" {
+  description = "Security Hub account ID"
+  value       = aws_securityhub_account.main.id
+}
+
+output "remediation_lambda_arn" {
+  description = "ARN of the auto-remediation Lambda function"
+  value       = aws_lambda_function.auto_remediation.arn
+}
+
+output "critical_findings_insight_arn" {
+  description = "ARN of the critical findings Security Hub insight"
+  value       = aws_securityhub_insight.critical_high_findings.arn
+}
+```
+
+### Advanced Secrets Management
+
+Complete secrets management with automatic rotation, cross-account sharing, and service integration
+patterns for production workloads.
+
+```hcl
+## modules/secrets-manager/variables.tf
+
+variable "project" {
+  description = "Project name"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "database_engine" {
+  description = "Database engine (mysql, postgres, etc.)"
+  type        = string
+  default     = "postgres"
+}
+
+variable "rotation_days" {
+  description = "Number of days between automatic rotation"
+  type        = number
+  default     = 30
+}
+
+variable "enable_cross_account_access" {
+  description = "Enable cross-account secret access"
+  type        = bool
+  default     = false
+}
+
+variable "allowed_account_ids" {
+  description = "AWS account IDs allowed to access secrets"
+  type        = list(string)
+  default     = []
+}
+```
+
+```hcl
+## modules/secrets-manager/main.tf
+
+## KMS key for encrypting secrets
+resource "aws_kms_key" "secrets" {
+  description             = "${var.project}-${var.environment} secrets encryption key"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-secrets-kms"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+resource "aws_kms_alias" "secrets" {
+  name          = "alias/${var.project}-${var.environment}-secrets"
+  target_key_id = aws_kms_key.secrets.key_id
+}
+
+## Database master password secret
+resource "aws_secretsmanager_secret" "db_master_password" {
+  name                    = "${var.project}-${var.environment}-db-master-password"
+  description             = "Database master password with automatic rotation"
+  kms_key_id              = aws_kms_key.secrets.arn
+  recovery_window_in_days = 7
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-db-master-password"
+    Project     = var.project
+    Environment = var.environment
+    Rotation    = "enabled"
+  }
+}
+
+## Generate initial random password
+resource "random_password" "db_master" {
+  length  = 32
+  special = true
+  ## Exclude characters that may cause issues
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+## Store initial password
+resource "aws_secretsmanager_secret_version" "db_master_password" {
+  secret_id = aws_secretsmanager_secret.db_master_password.id
+  secret_string = jsonencode({
+    username = "admin"
+    password = random_password.db_master.result
+    engine   = var.database_engine
+    host     = ""  ## Will be updated by rotation Lambda
+    port     = var.database_engine == "postgres" ? 5432 : 3306
+    dbname   = "${var.project}_${var.environment}"
+  })
+
+  lifecycle {
+    ignore_changes = [secret_string]  ## Let rotation Lambda manage this
+  }
+}
+
+## IAM role for rotation Lambda
+resource "aws_iam_role" "rotation_lambda" {
+  name = "${var.project}-${var.environment}-secret-rotation"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-secret-rotation"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## IAM policy for rotation Lambda
+resource "aws_iam_role_policy" "rotation_lambda" {
+  name = "${var.project}-${var.environment}-rotation-policy"
+  role = aws_iam_role.rotation_lambda.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "CloudWatchLogs"
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.project}-${var.environment}-secret-rotation:*"
+      },
+      {
+        Sid    = "SecretsManagerAccess"
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:DescribeSecret",
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:PutSecretValue",
+          "secretsmanager:UpdateSecretVersionStage"
+        ]
+        Resource = aws_secretsmanager_secret.db_master_password.arn
+      },
+      {
+        Sid    = "KMSDecrypt"
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt",
+          "kms:DescribeKey",
+          "kms:GenerateDataKey"
+        ]
+        Resource = aws_kms_key.secrets.arn
+      },
+      {
+        Sid    = "RDSAccess"
+        Effect = "Allow"
+        Action = [
+          "rds:DescribeDBInstances",
+          "rds:DescribeDBClusters"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "VPCAccess"
+        Effect = "Allow"
+        Action = [
+          "ec2:CreateNetworkInterface",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DeleteNetworkInterface",
+          "ec2:DescribeSubnets",
+          "ec2:DescribeSecurityGroups"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+## Lambda function for password rotation
+resource "aws_lambda_function" "rotation" {
+  filename      = "rotation_lambda.zip"
+  function_name = "${var.project}-${var.environment}-secret-rotation"
+  role          = aws_iam_role.rotation_lambda.arn
+  handler       = "rotation.lambda_handler"
+  runtime       = "python3.11"
+  timeout       = 300
+
+  environment {
+    variables = {
+      SECRETS_MANAGER_ENDPOINT = "https://secretsmanager.${data.aws_region.current.name}.amazonaws.com"
+    }
+  }
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-secret-rotation"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## Lambda permission for Secrets Manager
+resource "aws_lambda_permission" "rotation" {
+  statement_id  = "AllowExecutionFromSecretsManager"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.rotation.function_name
+  principal     = "secretsmanager.amazonaws.com"
+}
+
+## Enable automatic rotation
+resource "aws_secretsmanager_secret_rotation" "db_master_password" {
+  secret_id           = aws_secretsmanager_secret.db_master_password.id
+  rotation_lambda_arn = aws_lambda_function.rotation.arn
+
+  rotation_rules {
+    automatically_after_days = var.rotation_days
+  }
+
+  depends_on = [aws_lambda_permission.rotation]
+}
+
+## Application API key secret
+resource "aws_secretsmanager_secret" "api_key" {
+  name                    = "${var.project}-${var.environment}-api-key"
+  description             = "Application API key"
+  kms_key_id              = aws_kms_key.secrets.arn
+  recovery_window_in_days = 7
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-api-key"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+resource "random_password" "api_key" {
+  length  = 64
+  special = false
+}
+
+resource "aws_secretsmanager_secret_version" "api_key" {
+  secret_id     = aws_secretsmanager_secret.api_key.id
+  secret_string = random_password.api_key.result
+}
+
+## Cross-account access policy (if enabled)
+resource "aws_secretsmanager_secret_policy" "cross_account" {
+  count     = var.enable_cross_account_access ? 1 : 0
+  secret_arn = aws_secretsmanager_secret.db_master_password.arn
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowCrossAccountAccess"
+        Effect = "Allow"
+        Principal = {
+          AWS = [for account_id in var.allowed_account_ids : "arn:aws:iam::${account_id}:root"]
+        }
+        Action = [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+## CloudWatch alarms for rotation failures
+resource "aws_cloudwatch_metric_alarm" "rotation_failed" {
+  alarm_name          = "${var.project}-${var.environment}-secret-rotation-failed"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "Errors"
+  namespace           = "AWS/Lambda"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "0"
+  alarm_description   = "Alert when secret rotation fails"
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    FunctionName = aws_lambda_function.rotation.function_name
+  }
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-rotation-failed"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## Example: ECS task definition with secret injection
+resource "aws_ecs_task_definition" "app" {
+  family                   = "${var.project}-${var.environment}-app"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = "256"
+  memory                   = "512"
+  execution_role_arn       = aws_iam_role.ecs_execution.arn
+  task_role_arn            = aws_iam_role.ecs_task.arn
+
+  container_definitions = jsonencode([
+    {
+      name  = "app"
+      image = "myapp:latest"
+      secrets = [
+        {
+          name      = "DB_PASSWORD"
+          valueFrom = aws_secretsmanager_secret.db_master_password.arn
+        },
+        {
+          name      = "API_KEY"
+          valueFrom = aws_secretsmanager_secret.api_key.arn
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = "/ecs/${var.project}-${var.environment}"
+          "awslogs-region"        = data.aws_region.current.name
+          "awslogs-stream-prefix" = "app"
+        }
+      }
+    }
+  ])
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-app-task"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## ECS execution role (for pulling secrets)
+resource "aws_iam_role" "ecs_execution" {
+  name = "${var.project}-${var.environment}-ecs-execution"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-ecs-execution"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+resource "aws_iam_role_policy" "ecs_execution" {
+  name = "${var.project}-${var.environment}-ecs-execution-policy"
+  role = aws_iam_role.ecs_execution.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "GetSecrets"
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:GetSecretValue"
+        ]
+        Resource = [
+          aws_secretsmanager_secret.db_master_password.arn,
+          aws_secretsmanager_secret.api_key.arn
+        ]
+      },
+      {
+        Sid    = "DecryptSecrets"
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt",
+          "kms:DescribeKey"
+        ]
+        Resource = aws_kms_key.secrets.arn
+      },
+      {
+        Sid    = "CloudWatchLogs"
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+## ECS task role (for application runtime)
+resource "aws_iam_role" "ecs_task" {
+  name = "${var.project}-${var.environment}-ecs-task"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-ecs-task"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+```
+
+```hcl
+## modules/secrets-manager/outputs.tf
+
+output "kms_key_id" {
+  description = "ID of the KMS key for secrets encryption"
+  value       = aws_kms_key.secrets.id
+}
+
+output "kms_key_arn" {
+  description = "ARN of the KMS key for secrets encryption"
+  value       = aws_kms_key.secrets.arn
+}
+
+output "db_password_secret_arn" {
+  description = "ARN of the database password secret"
+  value       = aws_secretsmanager_secret.db_master_password.arn
+}
+
+output "api_key_secret_arn" {
+  description = "ARN of the API key secret"
+  value       = aws_secretsmanager_secret.api_key.arn
+}
+
+output "rotation_lambda_arn" {
+  description = "ARN of the rotation Lambda function"
+  value       = aws_lambda_function.rotation.arn
+}
+```
+
+### CIS AWS Foundations Benchmark Compliance
+
+Implementation of CIS AWS Foundations Benchmark controls with automated remediation and compliance
+monitoring. Each resource maps to specific CIS controls.
+
+```hcl
+## modules/cis-compliance/variables.tf
+
+variable "project" {
+  description = "Project name"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "password_max_age" {
+  description = "Maximum age for IAM user passwords (CIS 1.11)"
+  type        = number
+  default     = 90
+}
+
+variable "password_min_length" {
+  description = "Minimum length for IAM passwords (CIS 1.9)"
+  type        = number
+  default     = 14
+}
+
+variable "cloudtrail_bucket_name" {
+  description = "S3 bucket name for CloudTrail logs"
+  type        = string
+}
+
+variable "sns_topic_arn" {
+  description = "SNS topic ARN for compliance notifications"
+  type        = string
+}
+```
+
+```hcl
+## modules/cis-compliance/main.tf
+
+## CIS 1.5-1.11: IAM Password Policy
+resource "aws_iam_account_password_policy" "strict" {
+  minimum_password_length        = var.password_min_length
+  require_lowercase_characters   = true
+  require_uppercase_characters   = true
+  require_numbers                = true
+  require_symbols                = true
+  allow_users_to_change_password = true
+  max_password_age               = var.password_max_age
+  password_reuse_prevention      = 24
+  hard_expiry                    = false
+}
+
+## CIS 2.1: CloudTrail - Ensure CloudTrail is enabled in all regions
+resource "aws_cloudtrail" "main" {
+  name                          = "${var.project}-${var.environment}-trail"
+  s3_bucket_name                = var.cloudtrail_bucket_name
+  include_global_service_events = true
+  is_multi_region_trail         = true
+  enable_log_file_validation    = true  ## CIS 2.2
+  kms_key_id                    = aws_kms_key.cloudtrail.arn
+
+  event_selector {
+    read_write_type           = "All"
+    include_management_events = true
+
+    ## CIS 2.6: S3 bucket-level logging
+    data_resource {
+      type   = "AWS::S3::Object"
+      values = ["arn:aws:s3:::*/*"]
+    }
+  }
+
+  cloud_watch_logs_group_arn = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
+  cloud_watch_logs_role_arn  = aws_iam_role.cloudtrail_cloudwatch.arn
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-trail"
+    Project     = var.project
+    Environment = var.environment
+    CIS         = "2.1,2.2,2.4,2.6"
+  }
+}
+
+## CIS 2.7: CloudTrail logs encrypted at rest using KMS
+resource "aws_kms_key" "cloudtrail" {
+  description             = "${var.project}-${var.environment} CloudTrail encryption key"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "Enable IAM User Permissions"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        }
+        Action   = "kms:*"
+        Resource = "*"
+      },
+      {
+        Sid    = "Allow CloudTrail to encrypt logs"
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        }
+        Action = [
+          "kms:GenerateDataKey*",
+          "kms:DecryptDataKey"
+        ]
+        Resource = "*"
+        Condition = {
+          StringLike = {
+            "kms:EncryptionContext:aws:cloudtrail:arn" = "arn:aws:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"
+          }
+        }
+      },
+      {
+        Sid    = "Allow CloudTrail to describe key"
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        }
+        Action   = "kms:DescribeKey"
+        Resource = "*"
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-cloudtrail-kms"
+    Project     = var.project
+    Environment = var.environment
+    CIS         = "2.7"
+  }
+}
+
+resource "aws_kms_alias" "cloudtrail" {
+  name          = "alias/${var.project}-${var.environment}-cloudtrail"
+  target_key_id = aws_kms_key.cloudtrail.key_id
+}
+
+## CIS 2.4: CloudTrail integration with CloudWatch Logs
+resource "aws_cloudwatch_log_group" "cloudtrail" {
+  name              = "/aws/cloudtrail/${var.project}-${var.environment}"
+  retention_in_days = 90
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-cloudtrail-logs"
+    Project     = var.project
+    Environment = var.environment
+    CIS         = "2.4"
+  }
+}
+
+## IAM role for CloudTrail to CloudWatch Logs
+resource "aws_iam_role" "cloudtrail_cloudwatch" {
+  name = "${var.project}-${var.environment}-cloudtrail-cloudwatch"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-cloudtrail-cloudwatch"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+resource "aws_iam_role_policy" "cloudtrail_cloudwatch" {
+  name = "${var.project}-${var.environment}-cloudtrail-cloudwatch-policy"
+  role = aws_iam_role.cloudtrail_cloudwatch.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AWSCloudTrailCreateLogStream"
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
+      }
+    ]
+  })
+}
+
+## CIS 2.9: VPC Flow Logs enabled
+resource "aws_flow_log" "vpc" {
+  for_each             = toset(["vpc-12345678"])  ## Replace with actual VPC IDs
+  iam_role_arn         = aws_iam_role.vpc_flow_log.arn
+  log_destination_type = "cloud-watch-logs"
+  log_destination      = aws_cloudwatch_log_group.vpc_flow_logs.arn
+  traffic_type         = "ALL"
+  vpc_id               = each.value
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-vpc-flow-logs"
+    Project     = var.project
+    Environment = var.environment
+    CIS         = "2.9"
+  }
+}
+
+resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
+  name              = "/aws/vpc/${var.project}-${var.environment}"
+  retention_in_days = 30
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-vpc-flow-logs"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+resource "aws_iam_role" "vpc_flow_log" {
+  name = "${var.project}-${var.environment}-vpc-flow-log"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "vpc-flow-logs.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-vpc-flow-log"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+resource "aws_iam_role_policy" "vpc_flow_log" {
+  name = "${var.project}-${var.environment}-vpc-flow-log-policy"
+  role = aws_iam_role.vpc_flow_log.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogGroups",
+          "logs:DescribeLogStreams"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+## CIS 3.3: CloudWatch alarm for root account usage
+resource "aws_cloudwatch_log_metric_filter" "root_usage" {
+  name           = "${var.project}-${var.environment}-root-account-usage"
+  log_group_name = aws_cloudwatch_log_group.cloudtrail.name
+  pattern        = "{$.userIdentity.type=\"Root\" && $.userIdentity.invokedBy NOT EXISTS && $.eventType !=\"AwsServiceEvent\"}"
+
+  metric_transformation {
+    name      = "RootAccountUsage"
+    namespace = "${var.project}/${var.environment}/CIS"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "root_usage" {
+  alarm_name          = "${var.project}-${var.environment}-root-account-usage"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "RootAccountUsage"
+  namespace           = "${var.project}/${var.environment}/CIS"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "1"
+  alarm_description   = "CIS 3.3: Alert on root account usage"
+  alarm_actions       = [var.sns_topic_arn]
+  treat_missing_data  = "notBreaching"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-root-usage"
+    Project     = var.project
+    Environment = var.environment
+    CIS         = "3.3"
+  }
+}
+
+## CIS 3.1: Unauthorized API calls
+resource "aws_cloudwatch_log_metric_filter" "unauthorized_api_calls" {
+  name           = "${var.project}-${var.environment}-unauthorized-api-calls"
+  log_group_name = aws_cloudwatch_log_group.cloudtrail.name
+  pattern        = "{($.errorCode=\"*UnauthorizedOperation\") || ($.errorCode=\"AccessDenied*\")}"
+
+  metric_transformation {
+    name      = "UnauthorizedAPICalls"
+    namespace = "${var.project}/${var.environment}/CIS"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "unauthorized_api_calls" {
+  alarm_name          = "${var.project}-${var.environment}-unauthorized-api-calls"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "UnauthorizedAPICalls"
+  namespace           = "${var.project}/${var.environment}/CIS"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "5"
+  alarm_description   = "CIS 3.1: Alert on unauthorized API calls"
+  alarm_actions       = [var.sns_topic_arn]
+  treat_missing_data  = "notBreaching"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-unauthorized-api-calls"
+    Project     = var.project
+    Environment = var.environment
+    CIS         = "3.1"
+  }
+}
+
+## CIS 3.4: IAM policy changes
+resource "aws_cloudwatch_log_metric_filter" "iam_policy_changes" {
+  name           = "${var.project}-${var.environment}-iam-policy-changes"
+  log_group_name = aws_cloudwatch_log_group.cloudtrail.name
+  pattern = <<PATTERN
+{($.eventName=DeleteGroupPolicy) || ($.eventName=DeleteRolePolicy) || ($.eventName=DeleteUserPolicy) ||
+($.eventName=PutGroupPolicy) || ($.eventName=PutRolePolicy) || ($.eventName=PutUserPolicy) ||
+($.eventName=CreatePolicy) || ($.eventName=DeletePolicy) || ($.eventName=CreatePolicyVersion) ||
+($.eventName=DeletePolicyVersion) || ($.eventName=AttachRolePolicy) || ($.eventName=DetachRolePolicy) ||
+($.eventName=AttachUserPolicy) || ($.eventName=DetachUserPolicy) || ($.eventName=AttachGroupPolicy) ||
+($.eventName=DetachGroupPolicy)}
+PATTERN
+
+  metric_transformation {
+    name      = "IAMPolicyChanges"
+    namespace = "${var.project}/${var.environment}/CIS"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "iam_policy_changes" {
+  alarm_name          = "${var.project}-${var.environment}-iam-policy-changes"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "IAMPolicyChanges"
+  namespace           = "${var.project}/${var.environment}/CIS"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "1"
+  alarm_description   = "CIS 3.4: Alert on IAM policy changes"
+  alarm_actions       = [var.sns_topic_arn]
+  treat_missing_data  = "notBreaching"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-iam-policy-changes"
+    Project     = var.project
+    Environment = var.environment
+    CIS         = "3.4"
+  }
+}
+
+## AWS Config for compliance monitoring
+resource "aws_config_configuration_recorder" "main" {
+  name     = "${var.project}-${var.environment}-config-recorder"
+  role_arn = aws_iam_role.config.arn
+
+  recording_group {
+    all_supported                 = true
+    include_global_resource_types = true
+  }
+}
+
+resource "aws_config_delivery_channel" "main" {
+  name           = "${var.project}-${var.environment}-config-delivery"
+  s3_bucket_name = var.cloudtrail_bucket_name
+  depends_on     = [aws_config_configuration_recorder.main]
+}
+
+resource "aws_config_configuration_recorder_status" "main" {
+  name       = aws_config_configuration_recorder.main.name
+  is_enabled = true
+  depends_on = [aws_config_delivery_channel.main]
+}
+
+## IAM role for AWS Config
+resource "aws_iam_role" "config" {
+  name = "${var.project}-${var.environment}-config"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "config.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/ConfigRole"
+  ]
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-config"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## AWS Config Rules for CIS compliance
+resource "aws_config_config_rule" "s3_bucket_public_read_prohibited" {
+  name = "${var.project}-${var.environment}-s3-public-read-prohibited"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "S3_BUCKET_PUBLIC_READ_PROHIBITED"
+  }
+
+  depends_on = [aws_config_configuration_recorder.main]
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-s3-public-read-prohibited"
+    Project     = var.project
+    Environment = var.environment
+    CIS         = "2.1.1"
+  }
+}
+
+resource "aws_config_config_rule" "encrypted_volumes" {
+  name = "${var.project}-${var.environment}-encrypted-volumes"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "ENCRYPTED_VOLUMES"
+  }
+
+  depends_on = [aws_config_configuration_recorder.main]
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-encrypted-volumes"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+```
+
+```hcl
+## modules/cis-compliance/outputs.tf
+
+output "cloudtrail_arn" {
+  description = "ARN of the multi-region CloudTrail"
+  value       = aws_cloudtrail.main.arn
+}
+
+output "cloudtrail_kms_key_arn" {
+  description = "ARN of the CloudTrail KMS encryption key"
+  value       = aws_kms_key.cloudtrail.arn
+}
+
+output "config_recorder_id" {
+  description = "ID of the AWS Config recorder"
+  value       = aws_config_configuration_recorder.main.id
+}
+
+output "vpc_flow_log_group_name" {
+  description = "Name of the VPC Flow Logs CloudWatch log group"
+  value       = aws_cloudwatch_log_group.vpc_flow_logs.name
+}
+```
+
+### HIPAA Compliance Module
+
+HIPAA-compliant infrastructure with encryption, audit logging, access controls, and disaster recovery.
+All resources meet HIPAA Security Rule technical safeguards.
+
+```hcl
+## modules/hipaa-compliance/variables.tf
+
+variable "project" {
+  description = "Project name"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "backup_retention_days" {
+  description = "Number of days to retain backups (HIPAA requires 6 years)"
+  type        = number
+  default     = 2190  ## 6 years
+}
+
+variable "log_retention_days" {
+  description = "Number of days to retain audit logs (HIPAA requires 6 years)"
+  type        = number
+  default     = 2190  ## 6 years
+}
+
+variable "database_instance_class" {
+  description = "RDS instance class"
+  type        = string
+  default     = "db.t3.medium"
+}
+
+variable "multi_az" {
+  description = "Enable Multi-AZ deployment for high availability"
+  type        = bool
+  default     = true
+}
+```
+
+```hcl
+## modules/hipaa-compliance/main.tf
+
+## KMS Key for HIPAA encryption (required for PHI)
+resource "aws_kms_key" "hipaa" {
+  description             = "${var.project}-${var.environment} HIPAA encryption key"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true  ## HIPAA requires key rotation
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-hipaa-kms"
+    Project     = var.project
+    Environment = var.environment
+    Compliance  = "HIPAA"
+    DataClass   = "PHI"
+  }
+}
+
+resource "aws_kms_alias" "hipaa" {
+  name          = "alias/${var.project}-${var.environment}-hipaa"
+  target_key_id = aws_kms_key.hipaa.key_id
+}
+
+## HIPAA-compliant S3 bucket for PHI storage
+resource "aws_s3_bucket" "phi_data" {
+  bucket = "${var.project}-${var.environment}-phi-data"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-phi-data"
+    Project     = var.project
+    Environment = var.environment
+    Compliance  = "HIPAA"
+    DataClass   = "PHI"
+  }
+}
+
+## Block all public access (HIPAA requirement)
+resource "aws_s3_bucket_public_access_block" "phi_data" {
+  bucket = aws_s3_bucket.phi_data.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+## Enable versioning for data recovery (HIPAA integrity requirement)
+resource "aws_s3_bucket_versioning" "phi_data" {
+  bucket = aws_s3_bucket.phi_data.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+## Server-side encryption with KMS (HIPAA encryption requirement)
+resource "aws_s3_bucket_server_side_encryption_configuration" "phi_data" {
+  bucket = aws_s3_bucket.phi_data.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.hipaa.arn
+    }
+    bucket_key_enabled = true
+  }
+}
+
+## Access logging (HIPAA audit requirement)
+resource "aws_s3_bucket" "access_logs" {
+  bucket = "${var.project}-${var.environment}-phi-access-logs"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-phi-access-logs"
+    Project     = var.project
+    Environment = var.environment
+    Compliance  = "HIPAA"
+  }
+}
+
+resource "aws_s3_bucket_logging" "phi_data" {
+  bucket = aws_s3_bucket.phi_data.id
+
+  target_bucket = aws_s3_bucket.access_logs.id
+  target_prefix = "s3-access-logs/"
+}
+
+## Lifecycle policy for log retention (HIPAA requires 6 years)
+resource "aws_s3_bucket_lifecycle_configuration" "access_logs" {
+  bucket = aws_s3_bucket.access_logs.id
+
+  rule {
+    id     = "hipaa-retention"
+    status = "Enabled"
+
+    transition {
+      days          = 90
+      storage_class = "STANDARD_IA"
+    }
+
+    transition {
+      days          = 365
+      storage_class = "GLACIER"
+    }
+
+    expiration {
+      days = var.log_retention_days
+    }
+  }
+}
+
+## HIPAA-compliant RDS database with encryption
+resource "aws_db_instance" "phi_database" {
+  identifier     = "${var.project}-${var.environment}-phi-db"
+  engine         = "postgres"
+  engine_version = "15.4"
+  instance_class = var.database_instance_class
+
+  allocated_storage     = 100
+  max_allocated_storage = 1000
+  storage_type          = "gp3"
+  storage_encrypted     = true  ## HIPAA encryption requirement
+  kms_key_id            = aws_kms_key.hipaa.arn
+
+  ## High availability (HIPAA availability requirement)
+  multi_az = var.multi_az
+
+  ## Database configuration
+  db_name  = "${var.project}_${var.environment}"
+  username = "admin"
+  password = random_password.db_password.result
+
+  ## Network configuration - private subnet only
+  db_subnet_group_name   = aws_db_subnet_group.phi.name
+  vpc_security_group_ids = [aws_security_group.phi_database.id]
+  publicly_accessible    = false  ## HIPAA requires private access only
+
+  ## Backup configuration (HIPAA disaster recovery requirement)
+  backup_retention_period = var.backup_retention_days
+  backup_window           = "03:00-04:00"
+  maintenance_window      = "mon:04:00-mon:05:00"
+
+  ## Enable automated backups
+  copy_tags_to_snapshot = true
+  skip_final_snapshot   = false
+  final_snapshot_identifier = "${var.project}-${var.environment}-phi-db-final-snapshot"
+
+  ## Point-in-time recovery (HIPAA requirement)
+  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
+
+  ## Deletion protection (prevent accidental data loss)
+  deletion_protection = true
+
+  ## Performance Insights with encryption
+  performance_insights_enabled    = true
+  performance_insights_kms_key_id = aws_kms_key.hipaa.arn
+
+  ## Enhanced monitoring
+  monitoring_interval = 60
+  monitoring_role_arn = aws_iam_role.rds_monitoring.arn
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-phi-db"
+    Project     = var.project
+    Environment = var.environment
+    Compliance  = "HIPAA"
+    DataClass   = "PHI"
+  }
+}
+
+resource "random_password" "db_password" {
+  length  = 32
+  special = true
+}
+
+## DB subnet group for RDS
+resource "aws_db_subnet_group" "phi" {
+  name       = "${var.project}-${var.environment}-phi-subnet-group"
+  subnet_ids = ["subnet-12345678", "subnet-87654321"]  ## Replace with actual private subnet IDs
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-phi-subnet-group"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## Security group for RDS - least privilege access
+resource "aws_security_group" "phi_database" {
+  name        = "${var.project}-${var.environment}-phi-db-sg"
+  description = "Security group for HIPAA-compliant database"
+  vpc_id      = "vpc-12345678"  ## Replace with actual VPC ID
+
+  ## Only allow access from application tier
+  ingress {
+    description     = "PostgreSQL from application tier"
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [aws_security_group.app_tier.id]
+  }
+
+  egress {
+    description = "Allow all outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-phi-db-sg"
+    Project     = var.project
+    Environment = var.environment
+    Compliance  = "HIPAA"
+  }
+}
+
+## Application tier security group
+resource "aws_security_group" "app_tier" {
+  name        = "${var.project}-${var.environment}-app-tier-sg"
+  description = "Security group for application tier"
+  vpc_id      = "vpc-12345678"  ## Replace with actual VPC ID
+
+  ## HTTPS only (encryption in transit)
+  ingress {
+    description = "HTTPS from ALB"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]  ## Replace with VPC CIDR
+  }
+
+  egress {
+    description = "Allow all outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-app-tier-sg"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## IAM role for RDS enhanced monitoring
+resource "aws_iam_role" "rds_monitoring" {
+  name = "${var.project}-${var.environment}-rds-monitoring"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "monitoring.rds.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+  ]
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-rds-monitoring"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## CloudTrail for audit logging (HIPAA requirement)
+resource "aws_cloudtrail" "hipaa_audit" {
+  name                          = "${var.project}-${var.environment}-hipaa-audit"
+  s3_bucket_name                = aws_s3_bucket.audit_logs.id
+  include_global_service_events = true
+  is_multi_region_trail         = true
+  enable_log_file_validation    = true  ## Integrity validation
+  kms_key_id                    = aws_kms_key.hipaa.arn
+
+  event_selector {
+    read_write_type           = "All"
+    include_management_events = true
+
+    ## Log all S3 data events for PHI bucket
+    data_resource {
+      type = "AWS::S3::Object"
+      values = [
+        "${aws_s3_bucket.phi_data.arn}/*"
+      ]
+    }
+
+    ## Log all RDS data events
+    data_resource {
+      type = "AWS::RDS::DBInstance"
+      values = [
+        "arn:aws:rds:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:db:*"
+      ]
+    }
+  }
+
+  cloud_watch_logs_group_arn = "${aws_cloudwatch_log_group.hipaa_audit.arn}:*"
+  cloud_watch_logs_role_arn  = aws_iam_role.cloudtrail_cloudwatch.arn
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-hipaa-audit"
+    Project     = var.project
+    Environment = var.environment
+    Compliance  = "HIPAA"
+  }
+}
+
+## S3 bucket for CloudTrail audit logs
+resource "aws_s3_bucket" "audit_logs" {
+  bucket = "${var.project}-${var.environment}-hipaa-audit-logs"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-hipaa-audit-logs"
+    Project     = var.project
+    Environment = var.environment
+    Compliance  = "HIPAA"
+  }
+}
+
+## CloudWatch log group for audit trail
+resource "aws_cloudwatch_log_group" "hipaa_audit" {
+  name              = "/aws/cloudtrail/${var.project}-${var.environment}-hipaa"
+  retention_in_days = var.log_retention_days
+
+  kms_key_id = aws_kms_key.hipaa.arn
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-hipaa-audit-logs"
+    Project     = var.project
+    Environment = var.environment
+    Compliance  = "HIPAA"
+  }
+}
+
+## IAM role for CloudTrail to CloudWatch Logs
+resource "aws_iam_role" "cloudtrail_cloudwatch" {
+  name = "${var.project}-${var.environment}-cloudtrail-cloudwatch"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-cloudtrail-cloudwatch"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+resource "aws_iam_role_policy" "cloudtrail_cloudwatch" {
+  name = "${var.project}-${var.environment}-cloudtrail-cloudwatch-policy"
+  role = aws_iam_role.cloudtrail_cloudwatch.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AWSCloudTrailCreateLogStream"
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "${aws_cloudwatch_log_group.hipaa_audit.arn}:*"
+      }
+    ]
+  })
+}
+
+## AWS Backup for disaster recovery (HIPAA requirement)
+resource "aws_backup_vault" "hipaa" {
+  name        = "${var.project}-${var.environment}-hipaa-vault"
+  kms_key_arn = aws_kms_key.hipaa.arn
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-hipaa-vault"
+    Project     = var.project
+    Environment = var.environment
+    Compliance  = "HIPAA"
+  }
+}
+
+resource "aws_backup_plan" "hipaa" {
+  name = "${var.project}-${var.environment}-hipaa-backup-plan"
+
+  rule {
+    rule_name         = "daily_backup"
+    target_vault_name = aws_backup_vault.hipaa.name
+    schedule          = "cron(0 5 ? * * *)"  ## Daily at 5 AM UTC
+
+    lifecycle {
+      cold_storage_after = 90
+      delete_after       = var.backup_retention_days
+    }
+
+    recovery_point_tags = {
+      BackupPlan  = "HIPAA"
+      Project     = var.project
+      Environment = var.environment
+    }
+  }
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-hipaa-backup-plan"
+    Project     = var.project
+    Environment = var.environment
+    Compliance  = "HIPAA"
+  }
+}
+
+## Backup selection for RDS
+resource "aws_backup_selection" "hipaa_rds" {
+  name         = "${var.project}-${var.environment}-hipaa-rds-backup"
+  plan_id      = aws_backup_plan.hipaa.id
+  iam_role_arn = aws_iam_role.backup.arn
+
+  resources = [
+    aws_db_instance.phi_database.arn
+  ]
+}
+
+## IAM role for AWS Backup
+resource "aws_iam_role" "backup" {
+  name = "${var.project}-${var.environment}-backup"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "backup.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup",
+    "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForRestores"
+  ]
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-backup"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+## VPC Flow Logs (HIPAA network monitoring requirement)
+resource "aws_flow_log" "hipaa" {
+  iam_role_arn    = aws_iam_role.vpc_flow_log.arn
+  log_destination = aws_cloudwatch_log_group.vpc_flow_logs.arn
+  traffic_type    = "ALL"
+  vpc_id          = "vpc-12345678"  ## Replace with actual VPC ID
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-hipaa-flow-logs"
+    Project     = var.project
+    Environment = var.environment
+    Compliance  = "HIPAA"
+  }
+}
+
+resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
+  name              = "/aws/vpc/${var.project}-${var.environment}-hipaa"
+  retention_in_days = var.log_retention_days
+  kms_key_id        = aws_kms_key.hipaa.arn
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-vpc-flow-logs"
+    Project     = var.project
+    Environment = var.environment
+    Compliance  = "HIPAA"
+  }
+}
+
+## IAM role for VPC Flow Logs
+resource "aws_iam_role" "vpc_flow_log" {
+  name = "${var.project}-${var.environment}-vpc-flow-log"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "vpc-flow-logs.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-vpc-flow-log"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+resource "aws_iam_role_policy" "vpc_flow_log" {
+  name = "${var.project}-${var.environment}-vpc-flow-log-policy"
+  role = aws_iam_role.vpc_flow_log.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogGroups",
+          "logs:DescribeLogStreams"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+```
+
+```hcl
+## modules/hipaa-compliance/outputs.tf
+
+output "kms_key_arn" {
+  description = "ARN of the HIPAA encryption KMS key"
+  value       = aws_kms_key.hipaa.arn
+}
+
+output "phi_data_bucket_id" {
+  description = "ID of the PHI data S3 bucket"
+  value       = aws_s3_bucket.phi_data.id
+}
+
+output "database_endpoint" {
+  description = "Endpoint of the HIPAA-compliant RDS database"
+  value       = aws_db_instance.phi_database.endpoint
+  sensitive   = true
+}
+
+output "backup_vault_arn" {
+  description = "ARN of the AWS Backup vault"
+  value       = aws_backup_vault.hipaa.arn
+}
+
+output "cloudtrail_arn" {
+  description = "ARN of the HIPAA audit CloudTrail"
+  value       = aws_cloudtrail.hipaa_audit.arn
+}
+```
+
+### SOC 2 Compliance Controls
+
+SOC 2 Type II compliance implementation covering Common Criteria (CC) trust service principles:
+Security, Availability, Processing Integrity, Confidentiality, and Privacy.
+
+```hcl
+## modules/soc2-compliance/variables.tf
+
+variable "project" {
+  description = "Project name"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "change_management_approvers" {
+  description = "Email addresses of change management approvers"
+  type        = list(string)
+}
+
+variable "incident_response_team" {
+  description = "Email addresses of incident response team"
+  type        = list(string)
+}
+
+variable "backup_retention_days" {
+  description = "Number of days to retain backups"
+  type        = number
+  default     = 90
+}
+```
+
+```hcl
+## modules/soc2-compliance/main.tf
+
+## CC6.1: Change Management Controls - CloudTrail for all changes
+resource "aws_cloudtrail" "change_management" {
+  name                          = "${var.project}-${var.environment}-changes"
+  s3_bucket_name                = aws_s3_bucket.audit_logs.id
+  include_global_service_events = true
+  is_multi_region_trail         = true
+  enable_log_file_validation    = true
+
+  event_selector {
+    read_write_type           = "All"
+    include_management_events = true
+  }
+
+  cloud_watch_logs_group_arn = "${aws_cloudwatch_log_group.changes.arn}:*"
+  cloud_watch_logs_role_arn  = aws_iam_role.cloudtrail_cloudwatch.arn
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-change-management"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC6.1"
+  }
+}
+
+## S3 bucket for audit logs
+resource "aws_s3_bucket" "audit_logs" {
+  bucket = "${var.project}-${var.environment}-soc2-audit-logs"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-soc2-audit-logs"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC6.1,CC7.2"
+  }
+}
+
+resource "aws_s3_bucket_versioning" "audit_logs" {
+  bucket = aws_s3_bucket.audit_logs.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "audit_logs" {
+  bucket = aws_s3_bucket.audit_logs.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+## CloudWatch log group for change tracking
+resource "aws_cloudwatch_log_group" "changes" {
+  name              = "/aws/soc2/${var.project}-${var.environment}/changes"
+  retention_in_days = 365  ## SOC 2 requires 1+ year retention
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-changes"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC6.1"
+  }
+}
+
+## IAM role for CloudTrail to CloudWatch
+resource "aws_iam_role" "cloudtrail_cloudwatch" {
+  name = "${var.project}-${var.environment}-cloudtrail-cloudwatch"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-cloudtrail-cloudwatch"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+resource "aws_iam_role_policy" "cloudtrail_cloudwatch" {
+  name = "${var.project}-${var.environment}-cloudtrail-policy"
+  role = aws_iam_role.cloudtrail_cloudwatch.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AWSCloudTrailCreateLogStream"
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "${aws_cloudwatch_log_group.changes.arn}:*"
+      }
+    ]
+  })
+}
+
+## CC6.6: Monitoring and Alerting - CloudWatch alarms
+resource "aws_cloudwatch_metric_alarm" "infrastructure_changes" {
+  alarm_name          = "${var.project}-${var.environment}-infrastructure-changes"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "InfrastructureChanges"
+  namespace           = "${var.project}/${var.environment}/SOC2"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "10"
+  alarm_description   = "SOC 2 CC6.6: Alert on high rate of infrastructure changes"
+  alarm_actions       = [aws_sns_topic.soc2_alerts.arn]
+  treat_missing_data  = "notBreaching"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-infrastructure-changes"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC6.6"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "unauthorized_access" {
+  alarm_name          = "${var.project}-${var.environment}-unauthorized-access"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "UnauthorizedAccess"
+  namespace           = "${var.project}/${var.environment}/SOC2"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "5"
+  alarm_description   = "SOC 2 CC6.6: Alert on unauthorized access attempts"
+  alarm_actions       = [aws_sns_topic.soc2_alerts.arn]
+  treat_missing_data  = "notBreaching"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-unauthorized-access"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC6.6,CC6.7"
+  }
+}
+
+## SNS topic for SOC 2 alerts
+resource "aws_sns_topic" "soc2_alerts" {
+  name = "${var.project}-${var.environment}-soc2-alerts"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-soc2-alerts"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC6.6,CC7.3"
+  }
+}
+
+## Subscribe incident response team
+resource "aws_sns_topic_subscription" "incident_response" {
+  for_each  = toset(var.incident_response_team)
+  topic_arn = aws_sns_topic.soc2_alerts.arn
+  protocol  = "email"
+  endpoint  = each.value
+}
+
+## CC7.2: Incident Response - EventBridge for automated response
+resource "aws_cloudwatch_event_rule" "security_findings" {
+  name        = "${var.project}-${var.environment}-security-findings"
+  description = "SOC 2 CC7.2: Capture security findings for incident response"
+
+  event_pattern = jsonencode({
+    source      = ["aws.securityhub", "aws.guardduty"]
+    detail-type = ["Security Hub Findings - Imported", "GuardDuty Finding"]
+    detail = {
+      severity = ["HIGH", "CRITICAL"]
+    }
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-security-findings"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC7.2,CC7.3"
+  }
+}
+
+resource "aws_cloudwatch_event_target" "incident_response" {
+  rule      = aws_cloudwatch_event_rule.security_findings.name
+  target_id = "IncidentResponseLambda"
+  arn       = aws_lambda_function.incident_response.arn
+}
+
+## Lambda function for automated incident response
+resource "aws_lambda_function" "incident_response" {
+  filename      = "incident_response.zip"
+  function_name = "${var.project}-${var.environment}-incident-response"
+  role          = aws_iam_role.incident_response.arn
+  handler       = "index.handler"
+  runtime       = "python3.11"
+  timeout       = 300
+
+  environment {
+    variables = {
+      SNS_TOPIC_ARN = aws_sns_topic.soc2_alerts.arn
+      PROJECT       = var.project
+      ENVIRONMENT   = var.environment
+    }
+  }
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-incident-response"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC7.2,CC7.3"
+  }
+}
+
+## IAM role for incident response Lambda
+resource "aws_iam_role" "incident_response" {
+  name = "${var.project}-${var.environment}-incident-response"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-incident-response"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+resource "aws_iam_role_policy" "incident_response" {
+  name = "${var.project}-${var.environment}-incident-response-policy"
+  role = aws_iam_role.incident_response.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "CloudWatchLogs"
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.project}-${var.environment}-incident-response:*"
+      },
+      {
+        Sid    = "SNSPublish"
+        Effect = "Allow"
+        Action = [
+          "sns:Publish"
+        ]
+        Resource = aws_sns_topic.soc2_alerts.arn
+      },
+      {
+        Sid    = "SecurityHubAccess"
+        Effect = "Allow"
+        Action = [
+          "securityhub:GetFindings",
+          "securityhub:UpdateFindings"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "RemediationActions"
+        Effect = "Allow"
+        Action = [
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:ModifyInstanceAttribute",
+          "s3:PutBucketPublicAccessBlock",
+          "iam:AttachUserPolicy",
+          "iam:DetachUserPolicy"
+        ]
+        Resource = "*"
+        Condition = {
+          StringEquals = {
+            "aws:ResourceTag/Project" = var.project
+          }
+        }
+      }
+    ]
+  })
+}
+
+## Lambda permission for EventBridge
+resource "aws_lambda_permission" "allow_eventbridge" {
+  statement_id  = "AllowExecutionFromEventBridge"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.incident_response.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.security_findings.arn
+}
+
+## CC6.8: Access Review - IAM Access Analyzer
+resource "aws_accessanalyzer_analyzer" "main" {
+  analyzer_name = "${var.project}-${var.environment}-access-analyzer"
+  type          = "ACCOUNT"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-access-analyzer"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC6.8"
+  }
+}
+
+## CC7.4: Backup and Recovery - AWS Backup
+resource "aws_backup_vault" "soc2" {
+  name = "${var.project}-${var.environment}-soc2-vault"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-soc2-vault"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC7.4,A1.2"
+  }
+}
+
+resource "aws_backup_plan" "soc2" {
+  name = "${var.project}-${var.environment}-soc2-backup-plan"
+
+  rule {
+    rule_name         = "daily_backup"
+    target_vault_name = aws_backup_vault.soc2.name
+    schedule          = "cron(0 3 ? * * *)"  ## Daily at 3 AM UTC
+
+    lifecycle {
+      delete_after = var.backup_retention_days
+    }
+
+    recovery_point_tags = {
+      BackupPlan  = "SOC2"
+      Project     = var.project
+      Environment = var.environment
+    }
+  }
+
+  ## Weekly backup with longer retention
+  rule {
+    rule_name         = "weekly_backup"
+    target_vault_name = aws_backup_vault.soc2.name
+    schedule          = "cron(0 5 ? * 1 *)"  ## Weekly on Mondays at 5 AM UTC
+
+    lifecycle {
+      cold_storage_after = 30
+      delete_after       = 365
+    }
+
+    recovery_point_tags = {
+      BackupPlan  = "SOC2-Weekly"
+      Project     = var.project
+      Environment = var.environment
+    }
+  }
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-soc2-backup-plan"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC7.4,A1.2"
+  }
+}
+
+## CC6.1: Encryption at Rest and in Transit
+resource "aws_kms_key" "soc2" {
+  description             = "${var.project}-${var.environment} SOC 2 encryption key"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-soc2-kms"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC6.1"
+  }
+}
+
+resource "aws_kms_alias" "soc2" {
+  name          = "alias/${var.project}-${var.environment}-soc2"
+  target_key_id = aws_kms_key.soc2.key_id
+}
+
+## CC6.7: Security Group Rules Documentation
+resource "aws_security_group" "documented_rules" {
+  name        = "${var.project}-${var.environment}-documented-sg"
+  description = "SOC 2 CC6.7: Documented security group rules"
+  vpc_id      = "vpc-12345678"  ## Replace with actual VPC ID
+
+  ## Documented ingress rule with business justification
+  ingress {
+    description = "HTTPS from internet - Public web application (Approved: CHANGE-123)"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ## Documented egress rule
+  egress {
+    description = "All outbound traffic - Required for application function"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name         = "${var.project}-${var.environment}-documented-sg"
+    Project      = var.project
+    Environment  = var.environment
+    SOC2         = "CC6.7"
+    ChangeTicket = "CHANGE-123"
+    Approver     = var.change_management_approvers[0]
+  }
+}
+
+## CC8.1: Automated Compliance Reporting
+resource "aws_cloudwatch_event_rule" "compliance_report" {
+  name                = "${var.project}-${var.environment}-compliance-report"
+  description         = "SOC 2 CC8.1: Generate compliance reports"
+  schedule_expression = "cron(0 9 1 * ? *)"  ## Monthly on 1st at 9 AM UTC
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-compliance-report"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC8.1"
+  }
+}
+
+resource "aws_cloudwatch_event_target" "compliance_report" {
+  rule      = aws_cloudwatch_event_rule.compliance_report.name
+  target_id = "ComplianceReportLambda"
+  arn       = aws_lambda_function.compliance_report.arn
+}
+
+## Lambda function for compliance reporting
+resource "aws_lambda_function" "compliance_report" {
+  filename      = "compliance_report.zip"
+  function_name = "${var.project}-${var.environment}-compliance-report"
+  role          = aws_iam_role.compliance_report.arn
+  handler       = "index.handler"
+  runtime       = "python3.11"
+  timeout       = 900  ## 15 minutes
+
+  environment {
+    variables = {
+      S3_BUCKET = aws_s3_bucket.audit_logs.id
+      PROJECT   = var.project
+    }
+  }
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-compliance-report"
+    Project     = var.project
+    Environment = var.environment
+    SOC2        = "CC8.1"
+  }
+}
+
+## IAM role for compliance reporting Lambda
+resource "aws_iam_role" "compliance_report" {
+  name = "${var.project}-${var.environment}-compliance-report"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-compliance-report"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+resource "aws_iam_role_policy" "compliance_report" {
+  name = "${var.project}-${var.environment}-compliance-report-policy"
+  role = aws_iam_role.compliance_report.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "CloudWatchLogs"
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.project}-${var.environment}-compliance-report:*"
+      },
+      {
+        Sid    = "S3WriteReports"
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject"
+        ]
+        Resource = "${aws_s3_bucket.audit_logs.arn}/compliance-reports/*"
+      },
+      {
+        Sid    = "ReadComplianceData"
+        Effect = "Allow"
+        Action = [
+          "config:DescribeComplianceByConfigRule",
+          "config:GetComplianceDetailsByConfigRule",
+          "securityhub:GetFindings",
+          "cloudtrail:LookupEvents",
+          "backup:ListBackupJobs"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+## Lambda permission for EventBridge
+resource "aws_lambda_permission" "compliance_report" {
+  statement_id  = "AllowExecutionFromEventBridge"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.compliance_report.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.compliance_report.arn
+}
+
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+```
+
+```hcl
+## modules/soc2-compliance/outputs.tf
+
+output "cloudtrail_arn" {
+  description = "ARN of the change management CloudTrail"
+  value       = aws_cloudtrail.change_management.arn
+}
+
+output "soc2_alerts_topic_arn" {
+  description = "ARN of the SOC 2 alerts SNS topic"
+  value       = aws_sns_topic.soc2_alerts.arn
+}
+
+output "backup_vault_arn" {
+  description = "ARN of the SOC 2 backup vault"
+  value       = aws_backup_vault.soc2.arn
+}
+
+output "access_analyzer_arn" {
+  description = "ARN of the IAM Access Analyzer"
+  value       = aws_accessanalyzer_analyzer.main.arn
+}
+
+output "kms_key_arn" {
+  description = "ARN of the SOC 2 encryption KMS key"
+  value       = aws_kms_key.soc2.arn
+}
+```
+
+---
+
 ## Common Pitfalls
 
 ### State File Locking Issues
@@ -3971,9 +7058,11 @@ func TestVPCModuleParallelDeployment(t *testing.T) {
 }
 ```
 
-#### EKS Cluster Terratest Examples
+### EKS Cluster Terratest Examples
 
-Comprehensive Terratest suite for EKS cluster module testing including cluster creation, OIDC provider validation, node group scaling, security group rules, and IRSA (IAM Roles for Service Accounts) configuration.
+Comprehensive Terratest suite for EKS cluster module testing including cluster creation,
+OIDC provider validation, node group scaling, security group rules,
+and IRSA (IAM Roles for Service Accounts) configuration.
 
 ```go
 // test/eks_cluster_test.go
@@ -12482,8 +15571,6 @@ variable "vpc_cidr" {
 - [Terraform AWS Modules](https://github.com/terraform-aws-modules)
 - [Gruntwork Infrastructure as Code Library](https://gruntwork.io/infrastructure-as-code-library/)
 - [Terraform Up & Running (Book)](https://www.terraformupandrunning.com/)
-
-```
 
 ---
 
