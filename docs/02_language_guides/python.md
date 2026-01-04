@@ -36,6 +36,32 @@ web services.
 - Performance optimization patterns
 - Tool configuration (Black, Flake8, mypy, pytest)
 
+## Supported Versions
+
+| Version | Support Status | EOL Date | Recommended      |
+|---------|----------------|----------|------------------|
+| 3.13.x  | Active         | 2029-10  | ✅ Yes           |
+| 3.12.x  | Active         | 2028-10  | ✅ Yes           |
+| 3.11.x  | Active         | 2027-10  | ✅ Yes           |
+| 3.10.x  | Security       | 2026-10  | ⚠️  Maintenance  |
+| 3.9.x   | Security       | 2025-10  | ❌ EOL Soon      |
+| 3.8.x   | EOL            | 2024-10  | ❌ No            |
+
+**Recommendation**: Use **Python 3.11+** for new projects.
+Python 3.10+ is supported but consider upgrading to get the latest
+performance improvements and features.
+
+**EOL Policy**: We recommend upgrading before the EOL date to continue
+receiving security updates. Once a version reaches EOL, it will no longer
+receive security patches from the Python core team.
+
+**Version Features**:
+
+- **Python 3.13**: Performance improvements, better error messages, experimental JIT compiler
+- **Python 3.12**: Improved error messages, performance enhancements, typing improvements
+- **Python 3.11**: 10-25% faster than 3.10, better error locations, exception groups
+- **Python 3.10**: Pattern matching (match/case), better error messages, union types with `|`
+
 ## Quick Reference
 
 | **Category** | **Convention** | **Example** | **Notes** |
