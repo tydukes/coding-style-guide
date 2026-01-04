@@ -14,14 +14,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6.0.1
 
+      - name: Load versions
+        id: versions
+        uses: ./actions/load-versions
+
       - name: Install UV
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        run: curl -LsSf ${{ steps.versions.outputs.uv-install-script }} | sh
 
       - name: Add UV to PATH
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Cache UV dependencies
-        uses: actions/cache@v5
+        uses: actions/cache@${{ steps.versions.outputs.cache-version }}
         with:
           path: |
             ~/.cache/uv
@@ -44,7 +48,7 @@ jobs:
         run: uv run mkdocs build --strict
 
       - name: Upload docs artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@${{ steps.versions.outputs.upload-artifact-version }}
         with:
           name: documentation
           path: site/
