@@ -1,0 +1,27 @@
+---
+name: Test Version Loading
+
+'on':
+  push:
+    branches: [hotfix/**]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Load versions
+        id: versions
+        uses: ./.github/actions/load-versions
+
+      - name: Print versions
+        run: |
+          echo "Python: ${{ steps.versions.outputs.python-version }}"
+          echo "Checkout: ${{ steps.versions.outputs.checkout-version }}"
+          echo "UV Script: ${{ steps.versions.outputs.uv-install-script }}"
