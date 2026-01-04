@@ -620,6 +620,35 @@ Per `SECURITY.md`:
   - `scripts/check_docker_versions.sh` - Docker image version checker
   - `scripts/validate_versions.py` - versions.yml validator
 
+**language-tracker.yml** (Language Release Tracker):
+
+- Triggers: Monthly on 1st at 9 AM UTC, manual workflow dispatch
+- **Purpose**: Monitor all 19 supported languages for new releases
+- **Workflow**:
+  1. Runs `scripts/check_language_releases.py` to detect new versions
+  2. Runs `scripts/create_release_issues.py` to create GitHub issues
+  3. Creates individual issues for each language with new releases
+- **Detection Strategy**:
+  - **EndOfLife.date API**: Python, Terraform, Kubernetes, PowerShell, GitLab
+  - **GitHub API**: Bash, Groovy, Terragrunt, Docker Compose
+  - **npm registry**: TypeScript, AWS CDK
+  - **PyPI**: Ansible
+  - **Spec-based**: YAML, JSON, SQL (stable specifications)
+- **Issue Creation**:
+  - One issue per language per new release
+  - Comprehensive 40+ item update checklist
+  - Labels: `type:maintenance`, `scope:language-guide`, `{language}`
+  - Priority labels added if EOL approaching
+- **Supported Versions Documentation**:
+  - All language guides include "Supported Versions" section
+  - Version table with support status and EOL dates
+  - Recommendation badges (✅ Yes, ⚠️ Maintenance, ❌ EOL Soon)
+  - Version features and breaking changes documented
+- **Supporting scripts**:
+  - `scripts/check_language_releases.py` - Multi-source version detector
+  - `scripts/create_release_issues.py` - GitHub issue generator
+- **Example**: See `docs/02_language_guides/python.md` and `docs/02_language_guides/terraform.md` for version table format
+
 ### Pre-commit Hooks
 
 **Hooks that run on every commit**:
