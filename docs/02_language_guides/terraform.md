@@ -31,6 +31,39 @@ Language).
 - CI/CD pipeline infrastructure
 - Monitoring and observability stack deployment
 
+## Supported Versions
+
+| Version | Support Status | EOL Date | Recommended      |
+|---------|----------------|----------|------------------|
+| 1.10.x  | Active         | TBD      | ✅ Yes           |
+| 1.9.x   | Active         | TBD      | ✅ Yes           |
+| 1.8.x   | Active         | TBD      | ✅ Yes           |
+| 1.7.x   | Active         | TBD      | ⚠️  Maintenance  |
+| 1.6.x   | Active         | TBD      | ⚠️  Maintenance  |
+| 1.5.x   | EOL Soon       | TBD      | ❌ EOL Soon      |
+
+**Recommendation**: Use **Terraform 1.8+** for new projects.
+Terraform 1.6+ is supported but consider upgrading to get the latest
+features and bug fixes.
+
+**EOL Policy**: HashiCorp supports the latest minor version and typically
+maintains security fixes for N-2 releases. We recommend staying within
+2 minor versions of the latest release.
+
+**Version Features**:
+
+- **Terraform 1.10**: Enhanced provider protocol, improved testing
+  framework
+- **Terraform 1.9**: Input variable validations, improved state
+  encryption
+- **Terraform 1.8**: Provider-defined functions, improved error messages
+- **Terraform 1.7**: Removed block support, test framework improvements
+- **Terraform 1.6**: Testing framework, config-driven import
+
+**Breaking Changes**: Terraform follows semantic versioning. Major
+version changes (e.g., 1.x to 2.x) may introduce breaking changes.
+Minor versions (e.g., 1.8 to 1.9) maintain backward compatibility.
+
 ---
 
 ## Quick Reference
