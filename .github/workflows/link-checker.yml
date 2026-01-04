@@ -19,16 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6.0.1
-
-      - name: Load versions
-        id: versions
-        uses: ./.github/actions/load-versions
+        uses: actions/checkout@v6
 
       - name: Check links in Markdown files
         id: link-check
         continue-on-error: true
-        uses: gaurav-nelson/github-action-markdown-link-check@${{ steps.versions.outputs.markdown-link-check-version }}
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
           use-quiet-mode: 'yes'
           use-verbose-mode: 'yes'
@@ -37,7 +33,7 @@ jobs:
 
       - name: Create issue on failure
         if: steps.link-check.outcome == 'failure' && github.event_name != 'pull_request'
-        uses: actions/github-script@${{ steps.versions.outputs.github-script-version }}
+        uses: actions/github-script@v8
         with:
           script: |
             const title = '🔗 Broken links detected in documentation';

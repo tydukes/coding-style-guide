@@ -19,14 +19,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6.0.1
 
-      - name: Load versions
-        id: versions
-        uses: ./.github/actions/load-versions
-
       - name: Set up Python
         uses: actions/setup-python@v6.1.0
         with:
-          python-version: ${{ steps.versions.outputs.python-version }}
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
