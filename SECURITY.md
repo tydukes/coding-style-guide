@@ -91,6 +91,70 @@ This project provides style guidelines and documentation. However, when implemen
 - **CI/CD Pipelines**: Secure pipeline credentials and use secret management tools
 - **Python/TypeScript**: Keep dependencies updated and scan for vulnerabilities
 
+### GitHub Actions Versioning Policy
+
+This project uses **version tags** for GitHub Actions to balance security with readability and maintainability.
+
+#### Versioning Guidelines
+
+##### Preferred: Version Tags
+
+- Use semantic version tags (e.g., `actions/checkout@v4`, `actions/setup-python@v5`)
+- Easier to read and understand in workflow files
+- Compatible with Dependabot auto-updates
+- Provides reasonable security through trusted action publishers
+
+**Example**:
+
+```yaml
+- uses: actions/checkout@v4
+- uses: actions/setup-python@v5
+  with:
+    python-version: '3.11'
+```
+
+##### Acceptable: SHA Pinning
+
+Use SHA pinning for security-critical actions when:
+
+- Action is from third-party or less-trusted source
+- Action has elevated permissions (repository write, secrets access)
+- Compliance requirements mandate immutable references
+- Action history shows security issues
+
+**Example**:
+
+```yaml
+# Third-party action with elevated permissions
+- uses: third-party/privileged-action@8f4d7e2c1a3b9f5e7d6c8a4b2e1f3d5c7a9b8e6f
+  with:
+    token: ${{ secrets.PRIVILEGED_TOKEN }}
+```
+
+#### Rationale
+
+1. **Readability**: Version tags are human-readable and easier to review
+2. **Maintenance**: Dependabot can automatically update version tags
+3. **Trust**: Official GitHub actions (actions/*) are well-maintained and trustworthy
+4. **Balance**: Provides security while maintaining workflow clarity
+
+#### Exceptions
+
+The following actions should use SHA pinning:
+
+- Actions with repository write permissions
+- Actions deploying to production environments
+- Actions handling sensitive secrets (beyond standard GITHUB_TOKEN)
+- Third-party actions not from trusted organizations
+
+#### Verification
+
+All workflows are validated by:
+
+- Dependabot weekly scans for outdated actions
+- Automated version outdated detection (`.github/workflows/dependencies.yml`)
+- Manual security reviews for new third-party actions
+
 ### Known Security Considerations
 
 - This project uses third-party dependencies (MkDocs, Material theme, etc.)

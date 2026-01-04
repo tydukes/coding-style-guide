@@ -523,6 +523,15 @@ runtimes:
 
 All workflows using `${{ steps.versions.outputs.python-version }}` will now use Python 3.12.
 
+### GitHub Actions Version Policy
+
+Per `SECURITY.md`:
+
+- Use **version tags** (e.g., `@v4`) for official GitHub actions
+- Use **SHA pinning** for security-critical third-party actions
+- Dependabot handles automatic updates for version-tagged actions
+- See `SECURITY.md` for full policy and exceptions
+
 ### GitHub Workflows
 
 **ci.yml** (Main CI Pipeline):
