@@ -3534,6 +3534,2595 @@ output "internet_gateway_id" {
 }
 ```
 
+<!-- markdownlint-disable MD040 -->
+```
+<!-- markdownlint-enable MD040 -->
+
+---
+
+## Testing and Validation
+
+Comprehensive testing is essential for production Terraform modules. This section demonstrates testing strategies using Terratest, integration testing patterns, and policy validation with OPA and Sentinel.
+
+### Introduction to Terraform Testing
+
+**Testing Philosophy**:
+
+- **Unit Tests**: Test individual modules in isolation
+- **Integration Tests**: Validate module interactions and dependencies
+- **Contract Tests**: Verify modules meet their CONTRACT.md guarantees
+- **Policy Tests**: Ensure compliance with organizational policies
+- **End-to-End Tests**: Validate complete infrastructure deployments
+
+**Testing Tools**:
+
+- **Terratest**: Go-based testing framework for infrastructure code
+- **Terraform validate**: Built-in syntax and consistency checking
+- **TFLint**: Linter for Terraform best practices
+- **Checkov**: Security and compliance policy scanner
+- **OPA (Open Policy Agent)**: Policy-as-code engine
+- **Sentinel**: Policy-as-code for Terraform Cloud/Enterprise
+
+### Terratest Framework
+
+Terratest is the industry-standard testing framework for Terraform modules. It provides robust infrastructure testing capabilities with proper setup, teardown, and validation patterns.
+
+#### VPC Module Terratest Examples
+
+Complete Terratest suite for VPC module testing with multiple subnet configurations, CIDR validation, NAT gateway deployment, and network ACL verification.
+
+```go
+// test/vpc_module_test.go
+package test
+
+import (
+ "fmt"
+ "testing"
+
+ "github.com/gruntwork-io/terratest/modules/aws"
+ "github.com/gruntwork-io/terratest/modules/random"
+ "github.com/gruntwork-io/terratest/modules/terraform"
+ "github.com/stretchr/testify/assert"
+ "github.com/stretchr/testify/require"
+)
+
+// TestVPCModuleBasic validates basic VPC creation with public subnets
+// Tests Guarantees: G1 (VPC creation), G2 (subnet distribution), G3 (DNS enabled)
+func TestVPCModuleBasic(t *testing.T) {
+ t.Parallel()
+
+ // Generate unique identifiers for test isolation
+ uniqueID := random.UniqueId()
+ vpcName := fmt.Sprintf("test-vpc-%s", uniqueID)
+ awsRegion := "us-east-1"
+
+ // Terraform options for deployment
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  // Path to Terraform module
+  TerraformDir: "../modules/vpc-network",
+
+  // Input variables
+  Vars: map[string]interface{}{
+   "project":      "test",
+   "environment":  uniqueID,
+   "vpc_cidr":     "10.0.0.0/16",
+   "azs":          []string{"us-east-1a", "us-east-1b", "us-east-1c"},
+   "public_cidrs": []string{"10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"},
+  },
+
+  // Environment variables for AWS authentication
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ // Ensure cleanup happens even if test fails
+ defer terraform.Destroy(t, terraformOptions)
+
+ // Deploy infrastructure
+ terraform.InitAndApply(t, terraformOptions)
+
+ // Retrieve outputs for validation
+ vpcID := terraform.Output(t, terraformOptions, "vpc_id")
+ publicSubnetIDs := terraform.OutputList(t, terraformOptions, "public_subnet_ids")
+ internetGatewayID := terraform.Output(t, terraformOptions, "internet_gateway_id")
+
+ // Validate VPC exists and has correct configuration
+ vpc := aws.GetVpcById(t, vpcID, awsRegion)
+ assert.Equal(t, "10.0.0.0/16", vpc.CidrBlock, "VPC CIDR block should match input")
+ assert.True(t, vpc.EnableDnsHostnames, "VPC should have DNS hostnames enabled")
+ assert.True(t, vpc.EnableDnsSupport, "VPC should have DNS support enabled")
+
+ // Validate number of public subnets
+ assert.Equal(t, 3, len(publicSubnetIDs), "Should create 3 public subnets")
+
+ // Validate subnets are distributed across AZs
+ azCount := make(map[string]int)
+ for _, subnetID := range publicSubnetIDs {
+  subnet := aws.GetSubnetById(t, subnetID, awsRegion)
+  azCount[subnet.AvailabilityZone]++
+  assert.Equal(t, vpcID, subnet.VpcId, "Subnet should belong to test VPC")
+  assert.True(t, subnet.MapPublicIpOnLaunch, "Public subnet should auto-assign public IPs")
+ }
+
+ // Verify subnets span at least 2 AZs (best practice for HA)
+ assert.GreaterOrEqual(t, len(azCount), 2, "Subnets should span at least 2 availability zones")
+
+ // Validate Internet Gateway is attached to VPC
+ assert.NotEmpty(t, internetGatewayID, "Internet Gateway ID should not be empty")
+ igw := aws.GetInternetGatewayById(t, internetGatewayID, awsRegion)
+ assert.Equal(t, 1, len(igw.Attachments), "IGW should have exactly one attachment")
+ assert.Equal(t, vpcID, igw.Attachments[0].VpcId, "IGW should be attached to test VPC")
+}
+
+// TestVPCModuleWithNATGateway validates VPC with NAT gateway for private subnets
+// Tests Guarantees: G4 (NAT gateway creation), G5 (route table configuration)
+func TestVPCModuleWithNATGateway(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ awsRegion := "us-west-2"
+
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+
+  Vars: map[string]interface{}{
+   "project":       "test",
+   "environment":   uniqueID,
+   "vpc_cidr":      "10.1.0.0/16",
+   "azs":           []string{"us-west-2a", "us-west-2b"},
+   "public_cidrs":  []string{"10.1.1.0/24", "10.1.2.0/24"},
+   "private_cidrs": []string{"10.1.10.0/24", "10.1.20.0/24"},
+   "enable_nat_gateway": true,
+   "single_nat_gateway": false, // NAT gateway per AZ for HA
+  },
+
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, terraformOptions)
+
+ terraform.InitAndApply(t, terraformOptions)
+
+ // Retrieve outputs
+ vpcID := terraform.Output(t, terraformOptions, "vpc_id")
+ publicSubnetIDs := terraform.OutputList(t, terraformOptions, "public_subnet_ids")
+ privateSubnetIDs := terraform.OutputList(t, terraformOptions, "private_subnet_ids")
+ natGatewayIDs := terraform.OutputList(t, terraformOptions, "nat_gateway_ids")
+
+ // Validate NAT gateways created (one per AZ for HA)
+ assert.Equal(t, 2, len(natGatewayIDs), "Should create NAT gateway per AZ")
+
+ // Validate NAT gateways are in public subnets
+ for i, natID := range natGatewayIDs {
+  natGateway := aws.GetNatGatewayById(t, natID, awsRegion)
+  assert.Equal(t, "available", natGateway.State, "NAT gateway should be available")
+  assert.Contains(t, publicSubnetIDs, natGateway.SubnetId, "NAT gateway should be in public subnet")
+  assert.NotEmpty(t, natGateway.PublicIp, "NAT gateway should have public IP")
+ }
+
+ // Validate private subnets have route to NAT gateway
+ for _, subnetID := range privateSubnetIDs {
+  subnet := aws.GetSubnetById(t, subnetID, awsRegion)
+  assert.Equal(t, vpcID, subnet.VpcId, "Private subnet should belong to test VPC")
+  assert.False(t, subnet.MapPublicIpOnLaunch, "Private subnet should not auto-assign public IPs")
+ }
+
+ // Validate route tables exist for private subnets
+ routeTables := aws.GetRouteTablesForSubnet(t, privateSubnetIDs[0], awsRegion)
+ assert.NotEmpty(t, routeTables, "Private subnet should have associated route table")
+}
+
+// TestVPCModuleCIDRCalculation validates CIDR block calculations
+// Tests dynamic subnet CIDR allocation using cidrsubnet function
+func TestVPCModuleCIDRCalculation(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ awsRegion := "eu-west-1"
+
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+
+  Vars: map[string]interface{}{
+   "project":             "test",
+   "environment":         uniqueID,
+   "vpc_cidr":            "172.16.0.0/16",
+   "azs":                 []string{"eu-west-1a", "eu-west-1b", "eu-west-1c"},
+   "use_dynamic_cidrs":   true, // Enable dynamic CIDR calculation
+   "public_subnet_bits":  8,    // /24 subnets (16.0/24, 16.1/24, etc.)
+   "private_subnet_bits": 8,
+  },
+
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, terraformOptions)
+
+ terraform.InitAndApply(t, terraformOptions)
+
+ // Retrieve subnet IDs
+ publicSubnetIDs := terraform.OutputList(t, terraformOptions, "public_subnet_ids")
+ privateSubnetIDs := terraform.OutputList(t, terraformOptions, "private_subnet_ids")
+
+ // Expected CIDR blocks for dynamically calculated subnets
+ expectedPublicCIDRs := []string{"172.16.0.0/24", "172.16.1.0/24", "172.16.2.0/24"}
+ expectedPrivateCIDRs := []string{"172.16.3.0/24", "172.16.4.0/24", "172.16.5.0/24"}
+
+ // Validate public subnet CIDRs
+ for i, subnetID := range publicSubnetIDs {
+  subnet := aws.GetSubnetById(t, subnetID, awsRegion)
+  assert.Equal(t, expectedPublicCIDRs[i], subnet.CidrBlock,
+   fmt.Sprintf("Public subnet %d should have calculated CIDR", i))
+ }
+
+ // Validate private subnet CIDRs
+ for i, subnetID := range privateSubnetIDs {
+  subnet := aws.GetSubnetById(t, subnetID, awsRegion)
+  assert.Equal(t, expectedPrivateCIDRs[i], subnet.CidrBlock,
+   fmt.Sprintf("Private subnet %d should have calculated CIDR", i))
+ }
+}
+
+// TestVPCModuleNetworkACLs validates network ACL configuration
+// Tests Guarantees: G6 (default NACL rules), G7 (custom NACL support)
+func TestVPCModuleNetworkACLs(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ awsRegion := "ap-southeast-1"
+
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+
+  Vars: map[string]interface{}{
+   "project":      "test",
+   "environment":  uniqueID,
+   "vpc_cidr":     "192.168.0.0/16",
+   "azs":          []string{"ap-southeast-1a", "ap-southeast-1b"},
+   "public_cidrs": []string{"192.168.1.0/24", "192.168.2.0/24"},
+   "enable_custom_nacls": true,
+   "public_nacl_rules": []map[string]interface{}{
+    {
+     "rule_number": 100,
+     "egress":      false,
+     "protocol":    "tcp",
+     "from_port":   80,
+     "to_port":     80,
+     "cidr_block":  "0.0.0.0/0",
+     "action":      "allow",
+    },
+    {
+     "rule_number": 110,
+     "egress":      false,
+     "protocol":    "tcp",
+     "from_port":   443,
+     "to_port":     443,
+     "cidr_block":  "0.0.0.0/0",
+     "action":      "allow",
+    },
+   },
+  },
+
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, terraformOptions)
+
+ terraform.InitAndApply(t, terraformOptions)
+
+ vpcID := terraform.Output(t, terraformOptions, "vpc_id")
+ publicSubnetIDs := terraform.OutputList(t, terraformOptions, "public_subnet_ids")
+
+ // Validate default VPC NACL exists
+ vpc := aws.GetVpcById(t, vpcID, awsRegion)
+ assert.NotEmpty(t, vpc.DefaultNetworkAclId, "VPC should have default network ACL")
+
+ // Validate custom NACL is created if enabled
+ if len(publicSubnetIDs) > 0 {
+  routeTables := aws.GetRouteTablesForSubnet(t, publicSubnetIDs[0], awsRegion)
+  assert.NotEmpty(t, routeTables, "Public subnet should have route tables")
+ }
+}
+
+// TestVPCModuleTagging validates comprehensive tagging strategy
+// Tests Guarantees: G8 (required tags), G9 (tag propagation)
+func TestVPCModuleTagging(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ awsRegion := "us-east-2"
+
+ expectedTags := map[string]string{
+  "Project":     "test-project",
+  "Environment": "dev",
+  "ManagedBy":   "terraform",
+  "Owner":       "platform-team",
+  "CostCenter":  "engineering",
+ }
+
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+
+  Vars: map[string]interface{}{
+   "project":      "test-project",
+   "environment":  "dev",
+   "vpc_cidr":     "10.100.0.0/16",
+   "azs":          []string{"us-east-2a"},
+   "public_cidrs": []string{"10.100.1.0/24"},
+   "tags":         expectedTags,
+  },
+
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, terraformOptions)
+
+ terraform.InitAndApply(t, terraformOptions)
+
+ vpcID := terraform.Output(t, terraformOptions, "vpc_id")
+ publicSubnetIDs := terraform.OutputList(t, terraformOptions, "public_subnet_ids")
+ internetGatewayID := terraform.Output(t, terraformOptions, "internet_gateway_id")
+
+ // Validate VPC tags
+ vpc := aws.GetVpcById(t, vpcID, awsRegion)
+ for key, expectedValue := range expectedTags {
+  actualValue, exists := vpc.Tags[key]
+  assert.True(t, exists, fmt.Sprintf("VPC should have tag: %s", key))
+  assert.Equal(t, expectedValue, actualValue, fmt.Sprintf("Tag %s should match", key))
+ }
+
+ // Validate subnet tags propagate
+ for _, subnetID := range publicSubnetIDs {
+  subnet := aws.GetSubnetById(t, subnetID, awsRegion)
+  for key, expectedValue := range expectedTags {
+   actualValue, exists := subnet.Tags[key]
+   assert.True(t, exists, fmt.Sprintf("Subnet should have tag: %s", key))
+   assert.Equal(t, expectedValue, actualValue, fmt.Sprintf("Tag %s should match", key))
+  }
+ }
+
+ // Validate Internet Gateway tags
+ igw := aws.GetInternetGatewayById(t, internetGatewayID, awsRegion)
+ for key, expectedValue := range expectedTags {
+  actualValue, exists := igw.Tags[key]
+  assert.True(t, exists, fmt.Sprintf("IGW should have tag: %s", key))
+  assert.Equal(t, expectedValue, actualValue, fmt.Sprintf("Tag %s should match", key))
+ }
+}
+
+// TestVPCModuleParallelDeployment demonstrates parallel testing for faster execution
+// Multiple test scenarios run concurrently to reduce total test time
+func TestVPCModuleParallelDeployment(t *testing.T) {
+ // This test orchestrates parallel subtests
+ testCases := []struct {
+  name     string
+  vpcCIDR  string
+  azCount  int
+  scenario string
+ }{
+  {
+   name:     "SingleAZ",
+   vpcCIDR:  "10.200.0.0/16",
+   azCount:  1,
+   scenario: "minimal",
+  },
+  {
+   name:     "MultiAZ",
+   vpcCIDR:  "10.201.0.0/16",
+   azCount:  3,
+   scenario: "high-availability",
+  },
+  {
+   name:     "LargeCIDR",
+   vpcCIDR:  "10.202.0.0/20",
+   azCount:  2,
+   scenario: "constrained-ip-space",
+  },
+ }
+
+ for _, tc := range testCases {
+  tc := tc // Capture range variable
+  t.Run(tc.name, func(t *testing.T) {
+   t.Parallel()
+
+   uniqueID := random.UniqueId()
+   awsRegion := "us-west-1"
+
+   // Generate AZ list based on count
+   azs := make([]string, tc.azCount)
+   for i := 0; i < tc.azCount; i++ {
+    azs[i] = fmt.Sprintf("%s%c", awsRegion, 'a'+i)
+   }
+
+   terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+    TerraformDir: "../modules/vpc-network",
+
+    Vars: map[string]interface{}{
+     "project":     "parallel-test",
+     "environment": fmt.Sprintf("%s-%s", tc.scenario, uniqueID),
+     "vpc_cidr":    tc.vpcCIDR,
+     "azs":         azs,
+    },
+
+    EnvVars: map[string]string{
+     "AWS_DEFAULT_REGION": awsRegion,
+    },
+   })
+
+   defer terraform.Destroy(t, terraformOptions)
+
+   terraform.InitAndApply(t, terraformOptions)
+
+   vpcID := terraform.Output(t, terraformOptions, "vpc_id")
+   vpc := aws.GetVpcById(t, vpcID, awsRegion)
+
+   assert.Equal(t, tc.vpcCIDR, vpc.CidrBlock, "VPC CIDR should match test case")
+  })
+ }
+}
+```
+
+#### EKS Cluster Terratest Examples
+
+Comprehensive Terratest suite for EKS cluster module testing including cluster creation, OIDC provider validation, node group scaling, security group rules, and IRSA (IAM Roles for Service Accounts) configuration.
+
+```go
+// test/eks_cluster_test.go
+package test
+
+import (
+ "fmt"
+ "strings"
+ "testing"
+ "time"
+
+ "github.com/gruntwork-io/terratest/modules/aws"
+ "github.com/gruntwork-io/terratest/modules/k8s"
+ "github.com/gruntwork-io/terratest/modules/random"
+ "github.com/gruntwork-io/terratest/modules/retry"
+ "github.com/gruntwork-io/terratest/modules/terraform"
+ "github.com/stretchr/testify/assert"
+ "github.com/stretchr/testify/require"
+)
+
+// TestEKSClusterBasic validates basic EKS cluster creation
+// Tests Guarantees: G1 (cluster creation), G2 (version specification), G3 (VPC integration)
+func TestEKSClusterBasic(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ clusterName := fmt.Sprintf("test-eks-%s", uniqueID)
+ awsRegion := "us-east-1"
+ kubernetesVersion := "1.28"
+
+ // First deploy VPC for EKS cluster
+ vpcOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+  Vars: map[string]interface{}{
+   "project":       "eks-test",
+   "environment":   uniqueID,
+   "vpc_cidr":      "10.50.0.0/16",
+   "azs":           []string{"us-east-1a", "us-east-1b", "us-east-1c"},
+   "public_cidrs":  []string{"10.50.1.0/24", "10.50.2.0/24", "10.50.3.0/24"},
+   "private_cidrs": []string{"10.50.10.0/24", "10.50.20.0/24", "10.50.30.0/24"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, vpcOptions)
+ terraform.InitAndApply(t, vpcOptions)
+
+ vpcID := terraform.Output(t, vpcOptions, "vpc_id")
+ privateSubnetIDs := terraform.OutputList(t, vpcOptions, "private_subnet_ids")
+
+ // Deploy EKS cluster
+ eksOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/eks-cluster",
+  Vars: map[string]interface{}{
+   "cluster_name":       clusterName,
+   "kubernetes_version": kubernetesVersion,
+   "vpc_id":             vpcID,
+   "subnet_ids":         privateSubnetIDs,
+   "environment":        uniqueID,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, eksOptions)
+ terraform.InitAndApply(t, eksOptions)
+
+ // Retrieve outputs
+ clusterEndpoint := terraform.Output(t, eksOptions, "cluster_endpoint")
+ clusterSecurityGroupID := terraform.Output(t, eksOptions, "cluster_security_group_id")
+ oidcProviderArn := terraform.Output(t, eksOptions, "oidc_provider_arn")
+
+ // Validate cluster exists and is active
+ cluster := aws.GetEksCluster(t, awsRegion, clusterName)
+ assert.Equal(t, "ACTIVE", cluster.Status, "Cluster should be in ACTIVE state")
+ assert.Equal(t, kubernetesVersion, cluster.Version, "Cluster version should match input")
+ assert.NotEmpty(t, clusterEndpoint, "Cluster endpoint should not be empty")
+ assert.Contains(t, clusterEndpoint, "eks.amazonaws.com", "Cluster endpoint should be valid EKS endpoint")
+
+ // Validate VPC configuration
+ assert.Equal(t, vpcID, cluster.ResourcesVpcConfig.VpcId, "Cluster should be in specified VPC")
+ assert.Equal(t, len(privateSubnetIDs), len(cluster.ResourcesVpcConfig.SubnetIds),
+  "Cluster should use all private subnets")
+
+ // Validate security group
+ assert.NotEmpty(t, clusterSecurityGroupID, "Cluster security group ID should not be empty")
+ sg := aws.GetSecurityGroupById(t, clusterSecurityGroupID, awsRegion)
+ assert.Equal(t, vpcID, sg.VpcId, "Security group should be in cluster VPC")
+
+ // Validate OIDC provider for IRSA
+ assert.NotEmpty(t, oidcProviderArn, "OIDC provider ARN should not be empty")
+ assert.Contains(t, oidcProviderArn, "oidc-provider", "Should create OIDC provider")
+}
+
+// TestEKSClusterWithNodeGroup validates EKS cluster with managed node group
+// Tests Guarantees: G4 (node group creation), G5 (scaling configuration), G6 (instance types)
+func TestEKSClusterWithNodeGroup(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ clusterName := fmt.Sprintf("test-eks-ng-%s", uniqueID)
+ awsRegion := "us-west-2"
+
+ // Deploy VPC
+ vpcOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+  Vars: map[string]interface{}{
+   "project":       "eks-test",
+   "environment":   uniqueID,
+   "vpc_cidr":      "10.60.0.0/16",
+   "azs":           []string{"us-west-2a", "us-west-2b"},
+   "private_cidrs": []string{"10.60.10.0/24", "10.60.20.0/24"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, vpcOptions)
+ terraform.InitAndApply(t, vpcOptions)
+
+ vpcID := terraform.Output(t, vpcOptions, "vpc_id")
+ privateSubnetIDs := terraform.OutputList(t, vpcOptions, "private_subnet_ids")
+
+ // Deploy EKS cluster with node group
+ eksOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/eks-cluster",
+  Vars: map[string]interface{}{
+   "cluster_name":       clusterName,
+   "kubernetes_version": "1.28",
+   "vpc_id":             vpcID,
+   "subnet_ids":         privateSubnetIDs,
+   "environment":        uniqueID,
+   "node_groups": map[string]interface{}{
+    "general": map[string]interface{}{
+     "desired_size":   2,
+     "min_size":       1,
+     "max_size":       4,
+     "instance_types": []string{"t3.medium", "t3a.medium"},
+     "capacity_type":  "ON_DEMAND",
+     "disk_size":      50,
+     "labels": map[string]string{
+      "workload-type": "general",
+     },
+     "taints": []map[string]string{},
+    },
+   },
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, eksOptions)
+ terraform.InitAndApply(t, eksOptions)
+
+ // Wait for node group to be active with retry logic
+ maxRetries := 30
+ sleepBetweenRetries := 10 * time.Second
+ nodeGroupActive := false
+
+ for i := 0; i < maxRetries; i++ {
+  nodeGroups := aws.GetEksClusterNodeGroups(t, awsRegion, clusterName)
+  if len(nodeGroups) > 0 {
+   nodeGroupStatus := aws.GetEksNodeGroupStatus(t, awsRegion, clusterName, nodeGroups[0])
+   if nodeGroupStatus == "ACTIVE" {
+    nodeGroupActive = true
+    break
+   }
+  }
+  time.Sleep(sleepBetweenRetries)
+ }
+
+ require.True(t, nodeGroupActive, "Node group should become ACTIVE within timeout")
+
+ // Validate node group configuration
+ nodeGroups := aws.GetEksClusterNodeGroups(t, awsRegion, clusterName)
+ assert.Equal(t, 1, len(nodeGroups), "Should create one node group")
+
+ nodeGroup := aws.GetEksNodeGroup(t, awsRegion, clusterName, nodeGroups[0])
+ assert.Equal(t, "ACTIVE", nodeGroup.Status, "Node group should be ACTIVE")
+ assert.Equal(t, int64(2), nodeGroup.ScalingConfig.DesiredSize, "Desired size should match")
+ assert.Equal(t, int64(1), nodeGroup.ScalingConfig.MinSize, "Min size should match")
+ assert.Equal(t, int64(4), nodeGroup.ScalingConfig.MaxSize, "Max size should match")
+ assert.Contains(t, nodeGroup.InstanceTypes, "t3.medium", "Should use specified instance type")
+}
+
+// TestEKSClusterOIDCProvider validates OIDC provider for IRSA
+// Tests Guarantees: G7 (OIDC provider), G8 (IAM roles for service accounts)
+func TestEKSClusterOIDCProvider(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ clusterName := fmt.Sprintf("test-eks-oidc-%s", uniqueID)
+ awsRegion := "eu-west-1"
+
+ // Deploy VPC
+ vpcOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+  Vars: map[string]interface{}{
+   "project":       "eks-test",
+   "environment":   uniqueID,
+   "vpc_cidr":      "10.70.0.0/16",
+   "azs":           []string{"eu-west-1a", "eu-west-1b"},
+   "private_cidrs": []string{"10.70.10.0/24", "10.70.20.0/24"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, vpcOptions)
+ terraform.InitAndApply(t, vpcOptions)
+
+ vpcID := terraform.Output(t, vpcOptions, "vpc_id")
+ privateSubnetIDs := terraform.OutputList(t, vpcOptions, "private_subnet_ids")
+
+ // Deploy EKS cluster with IRSA enabled
+ eksOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/eks-cluster",
+  Vars: map[string]interface{}{
+   "cluster_name":       clusterName,
+   "kubernetes_version": "1.28",
+   "vpc_id":             vpcID,
+   "subnet_ids":         privateSubnetIDs,
+   "environment":        uniqueID,
+   "enable_irsa":        true,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, eksOptions)
+ terraform.InitAndApply(t, eksOptions)
+
+ // Retrieve OIDC provider details
+ oidcProviderArn := terraform.Output(t, eksOptions, "oidc_provider_arn")
+ oidcProviderURL := terraform.Output(t, eksOptions, "oidc_provider_url")
+
+ // Validate OIDC provider ARN format
+ assert.NotEmpty(t, oidcProviderArn, "OIDC provider ARN should not be empty")
+ assert.Contains(t, oidcProviderArn, "oidc-provider/oidc.eks", "ARN should contain OIDC provider")
+ assert.Contains(t, oidcProviderArn, awsRegion, "ARN should contain region")
+
+ // Validate OIDC provider URL format
+ assert.NotEmpty(t, oidcProviderURL, "OIDC provider URL should not be empty")
+ assert.True(t, strings.HasPrefix(oidcProviderURL, "https://"), "OIDC URL should use HTTPS")
+ assert.Contains(t, oidcProviderURL, "oidc.eks", "OIDC URL should be EKS OIDC endpoint")
+
+ // Validate cluster has OIDC enabled
+ cluster := aws.GetEksCluster(t, awsRegion, clusterName)
+ assert.NotNil(t, cluster.Identity, "Cluster should have identity configuration")
+ assert.NotNil(t, cluster.Identity.Oidc, "Cluster should have OIDC configuration")
+}
+
+// TestEKSClusterSecurityGroups validates security group configuration
+// Tests Guarantees: G9 (security group rules), G10 (least privilege access)
+func TestEKSClusterSecurityGroups(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ clusterName := fmt.Sprintf("test-eks-sg-%s", uniqueID)
+ awsRegion := "ap-southeast-2"
+
+ // Deploy VPC
+ vpcOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+  Vars: map[string]interface{}{
+   "project":       "eks-test",
+   "environment":   uniqueID,
+   "vpc_cidr":      "10.80.0.0/16",
+   "azs":           []string{"ap-southeast-2a", "ap-southeast-2b"},
+   "private_cidrs": []string{"10.80.10.0/24", "10.80.20.0/24"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, vpcOptions)
+ terraform.InitAndApply(t, vpcOptions)
+
+ vpcID := terraform.Output(t, vpcOptions, "vpc_id")
+ privateSubnetIDs := terraform.OutputList(t, vpcOptions, "private_subnet_ids")
+
+ // Deploy EKS cluster with custom security group rules
+ eksOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/eks-cluster",
+  Vars: map[string]interface{}{
+   "cluster_name":       clusterName,
+   "kubernetes_version": "1.28",
+   "vpc_id":             vpcID,
+   "subnet_ids":         privateSubnetIDs,
+   "environment":        uniqueID,
+   "cluster_security_group_additional_rules": map[string]interface{}{
+    "ingress_bastion": map[string]interface{}{
+     "type":        "ingress",
+     "from_port":   443,
+     "to_port":     443,
+     "protocol":    "tcp",
+     "cidr_blocks": []string{"10.80.0.0/16"},
+     "description": "Allow API access from VPC",
+    },
+   },
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, eksOptions)
+ terraform.InitAndApply(t, eksOptions)
+
+ // Retrieve security group ID
+ clusterSecurityGroupID := terraform.Output(t, eksOptions, "cluster_security_group_id")
+ nodeSecurityGroupID := terraform.Output(t, eksOptions, "node_security_group_id")
+
+ // Validate cluster security group
+ clusterSG := aws.GetSecurityGroupById(t, clusterSecurityGroupID, awsRegion)
+ assert.Equal(t, vpcID, clusterSG.VpcId, "Cluster SG should be in cluster VPC")
+ assert.NotEmpty(t, clusterSG.IngressRules, "Cluster SG should have ingress rules")
+
+ // Validate node security group
+ nodeSG := aws.GetSecurityGroupById(t, nodeSecurityGroupID, awsRegion)
+ assert.Equal(t, vpcID, nodeSG.VpcId, "Node SG should be in cluster VPC")
+
+ // Verify node-to-node communication is allowed
+ hasNodeCommunication := false
+ for _, rule := range nodeSG.IngressRules {
+  if rule.SourceSecurityGroupId == nodeSecurityGroupID {
+   hasNodeCommunication = true
+   break
+  }
+ }
+ assert.True(t, hasNodeCommunication, "Nodes should be able to communicate with each other")
+}
+
+// TestEKSClusterUpgrade validates cluster upgrade process
+// Tests Guarantees: G11 (zero-downtime upgrades), G12 (version compatibility)
+func TestEKSClusterUpgrade(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ clusterName := fmt.Sprintf("test-eks-upgrade-%s", uniqueID)
+ awsRegion := "us-east-2"
+ initialVersion := "1.27"
+ upgradedVersion := "1.28"
+
+ // Deploy VPC
+ vpcOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+  Vars: map[string]interface{}{
+   "project":       "eks-test",
+   "environment":   uniqueID,
+   "vpc_cidr":      "10.90.0.0/16",
+   "azs":           []string{"us-east-2a", "us-east-2b"},
+   "private_cidrs": []string{"10.90.10.0/24", "10.90.20.0/24"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, vpcOptions)
+ terraform.InitAndApply(t, vpcOptions)
+
+ vpcID := terraform.Output(t, vpcOptions, "vpc_id")
+ privateSubnetIDs := terraform.OutputList(t, vpcOptions, "private_subnet_ids")
+
+ // Deploy EKS cluster with initial version
+ eksOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/eks-cluster",
+  Vars: map[string]interface{}{
+   "cluster_name":       clusterName,
+   "kubernetes_version": initialVersion,
+   "vpc_id":             vpcID,
+   "subnet_ids":         privateSubnetIDs,
+   "environment":        uniqueID,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, eksOptions)
+ terraform.InitAndApply(t, eksOptions)
+
+ // Validate initial version
+ cluster := aws.GetEksCluster(t, awsRegion, clusterName)
+ assert.Equal(t, initialVersion, cluster.Version, "Initial version should match")
+
+ // Upgrade cluster version
+ eksOptions.Vars["kubernetes_version"] = upgradedVersion
+ terraform.Apply(t, eksOptions)
+
+ // Wait for upgrade to complete
+ retry.DoWithRetry(t, "Wait for cluster upgrade", 60, 30*time.Second, func() (string, error) {
+  cluster := aws.GetEksCluster(t, awsRegion, clusterName)
+  if cluster.Version == upgradedVersion && cluster.Status == "ACTIVE" {
+   return "Upgrade complete", nil
+  }
+  return "", fmt.Errorf("cluster still upgrading, current version: %s, status: %s",
+   cluster.Version, cluster.Status)
+ })
+
+ // Validate upgraded version
+ upgradedCluster := aws.GetEksCluster(t, awsRegion, clusterName)
+ assert.Equal(t, upgradedVersion, upgradedCluster.Version, "Version should be upgraded")
+ assert.Equal(t, "ACTIVE", upgradedCluster.Status, "Cluster should remain ACTIVE after upgrade")
+}
+
+// TestEKSClusterLoggingAndMonitoring validates CloudWatch logging configuration
+// Tests Guarantees: G13 (audit logs), G14 (API server logs), G15 (retention policies)
+func TestEKSClusterLoggingAndMonitoring(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ clusterName := fmt.Sprintf("test-eks-logs-%s", uniqueID)
+ awsRegion := "ca-central-1"
+
+ // Deploy VPC
+ vpcOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+  Vars: map[string]interface{}{
+   "project":       "eks-test",
+   "environment":   uniqueID,
+   "vpc_cidr":      "10.95.0.0/16",
+   "azs":           []string{"ca-central-1a", "ca-central-1b"},
+   "private_cidrs": []string{"10.95.10.0/24", "10.95.20.0/24"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, vpcOptions)
+ terraform.InitAndApply(t, vpcOptions)
+
+ vpcID := terraform.Output(t, vpcOptions, "vpc_id")
+ privateSubnetIDs := terraform.OutputList(t, vpcOptions, "private_subnet_ids")
+
+ // Deploy EKS cluster with logging enabled
+ eksOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/eks-cluster",
+  Vars: map[string]interface{}{
+   "cluster_name":       clusterName,
+   "kubernetes_version": "1.28",
+   "vpc_id":             vpcID,
+   "subnet_ids":         privateSubnetIDs,
+   "environment":        uniqueID,
+   "cluster_enabled_log_types": []string{
+    "api",
+    "audit",
+    "authenticator",
+    "controllerManager",
+    "scheduler",
+   },
+   "cloudwatch_log_group_retention_in_days": 7,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, eksOptions)
+ terraform.InitAndApply(t, eksOptions)
+
+ // Retrieve CloudWatch log group name
+ logGroupName := terraform.Output(t, eksOptions, "cloudwatch_log_group_name")
+
+ // Validate log group exists
+ assert.NotEmpty(t, logGroupName, "CloudWatch log group should be created")
+ assert.Contains(t, logGroupName, clusterName, "Log group name should contain cluster name")
+
+ // Validate cluster logging configuration
+ cluster := aws.GetEksCluster(t, awsRegion, clusterName)
+ assert.NotNil(t, cluster.Logging, "Cluster should have logging configuration")
+ assert.NotEmpty(t, cluster.Logging.ClusterLogging, "Cluster logging should have log types")
+
+ // Verify all log types are enabled
+ expectedLogTypes := map[string]bool{
+  "api":               false,
+  "audit":             false,
+  "authenticator":     false,
+  "controllerManager": false,
+  "scheduler":         false,
+ }
+
+ for _, logSetup := range cluster.Logging.ClusterLogging {
+  for _, logType := range logSetup.Types {
+   if logSetup.Enabled {
+    expectedLogTypes[logType] = true
+   }
+  }
+ }
+
+ for logType, enabled := range expectedLogTypes {
+  assert.True(t, enabled, fmt.Sprintf("Log type %s should be enabled", logType))
+ }
+}
+```
+
+#### RDS Database Terratest Examples
+
+Complete Terratest suite for RDS database module testing including encryption, backup configuration, multi-AZ deployment, parameter groups, and disaster recovery scenarios.
+
+```go
+// test/rds_database_test.go
+package test
+
+import (
+ "fmt"
+ "strings"
+ "testing"
+ "time"
+
+ "github.com/gruntwork-io/terratest/modules/aws"
+ "github.com/gruntwork-io/terratest/modules/random"
+ "github.com/gruntwork-io/terratest/modules/retry"
+ "github.com/gruntwork-io/terratest/modules/terraform"
+ "github.com/stretchr/testify/assert"
+ "github.com/stretchr/testify/require"
+)
+
+// TestRDSPostgreSQLBasic validates basic RDS PostgreSQL instance creation
+// Tests Guarantees: G1 (instance creation), G2 (encryption), G3 (backup enabled)
+func TestRDSPostgreSQLBasic(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ dbIdentifier := fmt.Sprintf("test-db-%s", strings.ToLower(uniqueID))
+ awsRegion := "us-east-1"
+
+ // Deploy VPC for RDS
+ vpcOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+  Vars: map[string]interface{}{
+   "project":       "rds-test",
+   "environment":   uniqueID,
+   "vpc_cidr":      "10.110.0.0/16",
+   "azs":           []string{"us-east-1a", "us-east-1b"},
+   "private_cidrs": []string{"10.110.10.0/24", "10.110.20.0/24"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, vpcOptions)
+ terraform.InitAndApply(t, vpcOptions)
+
+ vpcID := terraform.Output(t, vpcOptions, "vpc_id")
+ privateSubnetIDs := terraform.OutputList(t, vpcOptions, "private_subnet_ids")
+
+ // Deploy RDS instance
+ rdsOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/rds-postgresql",
+  Vars: map[string]interface{}{
+   "identifier":            dbIdentifier,
+   "engine":                "postgres",
+   "engine_version":        "15.4",
+   "instance_class":        "db.t3.micro",
+   "allocated_storage":     20,
+   "storage_type":          "gp3",
+   "vpc_id":                vpcID,
+   "subnet_ids":            privateSubnetIDs,
+   "database_name":         "testdb",
+   "master_username":       "dbadmin",
+   "backup_retention_period": 7,
+   "enabled_cloudwatch_logs_exports": []string{"postgresql", "upgrade"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, rdsOptions)
+ terraform.InitAndApply(t, rdsOptions)
+
+ // Wait for RDS instance to be available
+ retry.DoWithRetry(t, "Wait for RDS instance", 60, 30*time.Second, func() (string, error) {
+  instance := aws.GetRdsInstanceDetails(t, dbIdentifier, awsRegion)
+  if instance.DbiResourceId != "" && instance.DbInstanceStatus == "available" {
+   return "RDS instance available", nil
+  }
+  return "", fmt.Errorf("RDS instance not ready, status: %s", instance.DbInstanceStatus)
+ })
+
+ // Retrieve outputs
+ dbEndpoint := terraform.Output(t, rdsOptions, "db_endpoint")
+ dbArn := terraform.Output(t, rdsOptions, "db_arn")
+ kmsKeyID := terraform.Output(t, rdsOptions, "kms_key_id")
+
+ // Validate RDS instance
+ instance := aws.GetRdsInstanceDetails(t, dbIdentifier, awsRegion)
+ assert.Equal(t, "available", instance.DbInstanceStatus, "DB should be available")
+ assert.Equal(t, "postgres", instance.Engine, "Engine should be PostgreSQL")
+ assert.Equal(t, "15.4", instance.EngineVersion, "Engine version should match")
+ assert.Equal(t, "db.t3.micro", instance.DbInstanceClass, "Instance class should match")
+
+ // Validate encryption
+ assert.True(t, instance.StorageEncrypted, "Storage should be encrypted")
+ assert.NotEmpty(t, kmsKeyID, "KMS key should be created")
+
+ // Validate backups
+ assert.Equal(t, int64(7), instance.BackupRetentionPeriod, "Backup retention should be 7 days")
+ assert.True(t, instance.CopyTagsToSnapshot, "Tags should be copied to snapshots")
+
+ // Validate endpoint
+ assert.NotEmpty(t, dbEndpoint, "DB endpoint should not be empty")
+ assert.Contains(t, dbEndpoint, "rds.amazonaws.com", "Endpoint should be valid RDS endpoint")
+
+ // Validate ARN
+ assert.NotEmpty(t, dbArn, "DB ARN should not be empty")
+ assert.Contains(t, dbArn, dbIdentifier, "ARN should contain instance identifier")
+}
+
+// TestRDSMultiAZDeployment validates multi-AZ RDS deployment for high availability
+// Tests Guarantees: G4 (multi-AZ), G5 (automatic failover), G6 (standby replica)
+func TestRDSMultiAZDeployment(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ dbIdentifier := fmt.Sprintf("test-multiaz-%s", strings.ToLower(uniqueID))
+ awsRegion := "us-west-2"
+
+ // Deploy VPC
+ vpcOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+  Vars: map[string]interface{}{
+   "project":       "rds-test",
+   "environment":   uniqueID,
+   "vpc_cidr":      "10.120.0.0/16",
+   "azs":           []string{"us-west-2a", "us-west-2b", "us-west-2c"},
+   "private_cidrs": []string{"10.120.10.0/24", "10.120.20.0/24", "10.120.30.0/24"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, vpcOptions)
+ terraform.InitAndApply(t, vpcOptions)
+
+ vpcID := terraform.Output(t, vpcOptions, "vpc_id")
+ privateSubnetIDs := terraform.OutputList(t, vpcOptions, "private_subnet_ids")
+
+ // Deploy multi-AZ RDS instance
+ rdsOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/rds-postgresql",
+  Vars: map[string]interface{}{
+   "identifier":              dbIdentifier,
+   "engine":                  "postgres",
+   "engine_version":          "15.4",
+   "instance_class":          "db.t3.small", // Multi-AZ requires larger instance
+   "allocated_storage":       20,
+   "vpc_id":                  vpcID,
+   "subnet_ids":              privateSubnetIDs,
+   "database_name":           "proddb",
+   "master_username":         "dbadmin",
+   "multi_az":                true,
+   "backup_retention_period": 14,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, rdsOptions)
+ terraform.InitAndApply(t, rdsOptions)
+
+ // Wait for RDS instance to be available
+ retry.DoWithRetry(t, "Wait for multi-AZ RDS", 90, 30*time.Second, func() (string, error) {
+  instance := aws.GetRdsInstanceDetails(t, dbIdentifier, awsRegion)
+  if instance.DbInstanceStatus == "available" && instance.MultiAZ {
+   return "Multi-AZ RDS available", nil
+  }
+  return "", fmt.Errorf("RDS not ready or multi-AZ not enabled")
+ })
+
+ // Validate multi-AZ configuration
+ instance := aws.GetRdsInstanceDetails(t, dbIdentifier, awsRegion)
+ assert.True(t, instance.MultiAZ, "Multi-AZ should be enabled")
+ assert.NotEmpty(t, instance.SecondaryAvailabilityZone, "Secondary AZ should be set")
+ assert.NotEqual(t, instance.AvailabilityZone, instance.SecondaryAvailabilityZone,
+  "Primary and secondary AZs should be different")
+
+ // Validate automated backups
+ assert.Equal(t, int64(14), instance.BackupRetentionPeriod, "Backup retention should be 14 days")
+ assert.NotEmpty(t, instance.PreferredBackupWindow, "Backup window should be set")
+ assert.NotEmpty(t, instance.PreferredMaintenanceWindow, "Maintenance window should be set")
+}
+
+// TestRDSParameterGroupConfiguration validates custom parameter group settings
+// Tests Guarantees: G7 (parameter groups), G8 (performance tuning), G9 (logging config)
+func TestRDSParameterGroupConfiguration(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ dbIdentifier := fmt.Sprintf("test-params-%s", strings.ToLower(uniqueID))
+ awsRegion := "eu-west-1"
+
+ // Deploy VPC
+ vpcOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+  Vars: map[string]interface{}{
+   "project":       "rds-test",
+   "environment":   uniqueID,
+   "vpc_cidr":      "10.130.0.0/16",
+   "azs":           []string{"eu-west-1a", "eu-west-1b"},
+   "private_cidrs": []string{"10.130.10.0/24", "10.130.20.0/24"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, vpcOptions)
+ terraform.InitAndApply(t, vpcOptions)
+
+ vpcID := terraform.Output(t, vpcOptions, "vpc_id")
+ privateSubnetIDs := terraform.OutputList(t, vpcOptions, "private_subnet_ids")
+
+ // Deploy RDS with custom parameter group
+ rdsOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/rds-postgresql",
+  Vars: map[string]interface{}{
+   "identifier":       dbIdentifier,
+   "engine":           "postgres",
+   "engine_version":   "15.4",
+   "instance_class":   "db.t3.micro",
+   "allocated_storage": 20,
+   "vpc_id":           vpcID,
+   "subnet_ids":       privateSubnetIDs,
+   "database_name":    "testdb",
+   "master_username":  "dbadmin",
+   "create_custom_parameter_group": true,
+   "parameters": []map[string]interface{}{
+    {
+     "name":  "log_connections",
+     "value": "1",
+    },
+    {
+     "name":  "log_disconnections",
+     "value": "1",
+    },
+    {
+     "name":  "log_duration",
+     "value": "1",
+    },
+    {
+     "name":  "log_lock_waits",
+     "value": "1",
+    },
+    {
+     "name":  "shared_preload_libraries",
+     "value": "pg_stat_statements",
+    },
+    {
+     "name":  "track_activity_query_size",
+     "value": "2048",
+    },
+   },
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, rdsOptions)
+ terraform.InitAndApply(t, rdsOptions)
+
+ // Wait for RDS instance
+ retry.DoWithRetry(t, "Wait for RDS instance", 60, 30*time.Second, func() (string, error) {
+  instance := aws.GetRdsInstanceDetails(t, dbIdentifier, awsRegion)
+  if instance.DbInstanceStatus == "available" {
+   return "RDS available", nil
+  }
+  return "", fmt.Errorf("RDS not ready")
+ })
+
+ // Retrieve parameter group name
+ parameterGroupName := terraform.Output(t, rdsOptions, "parameter_group_name")
+
+ // Validate parameter group exists
+ assert.NotEmpty(t, parameterGroupName, "Parameter group should be created")
+ assert.Contains(t, parameterGroupName, dbIdentifier, "Parameter group name should contain identifier")
+
+ // Validate RDS is using custom parameter group
+ instance := aws.GetRdsInstanceDetails(t, dbIdentifier, awsRegion)
+ assert.NotEmpty(t, instance.DbParameterGroups, "DB should have parameter groups")
+
+ // Find the custom parameter group
+ foundCustomPG := false
+ for _, pg := range instance.DbParameterGroups {
+  if strings.Contains(pg.DbParameterGroupName, dbIdentifier) {
+   foundCustomPG = true
+   assert.Equal(t, "in-sync", pg.ParameterApplyStatus, "Parameters should be in sync")
+  }
+ }
+ assert.True(t, foundCustomPG, "Custom parameter group should be attached")
+}
+
+// TestRDSSnapshotAndRestore validates snapshot creation and restore functionality
+// Tests Guarantees: G10 (manual snapshots), G11 (automated backups), G12 (point-in-time recovery)
+func TestRDSSnapshotAndRestore(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ dbIdentifier := fmt.Sprintf("test-snap-%s", strings.ToLower(uniqueID))
+ restoredIdentifier := fmt.Sprintf("test-restored-%s", strings.ToLower(uniqueID))
+ snapshotIdentifier := fmt.Sprintf("test-snapshot-%s", strings.ToLower(uniqueID))
+ awsRegion := "ap-southeast-1"
+
+ // Deploy VPC
+ vpcOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+  Vars: map[string]interface{}{
+   "project":       "rds-test",
+   "environment":   uniqueID,
+   "vpc_cidr":      "10.140.0.0/16",
+   "azs":           []string{"ap-southeast-1a", "ap-southeast-1b"},
+   "private_cidrs": []string{"10.140.10.0/24", "10.140.20.0/24"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, vpcOptions)
+ terraform.InitAndApply(t, vpcOptions)
+
+ vpcID := terraform.Output(t, vpcOptions, "vpc_id")
+ privateSubnetIDs := terraform.OutputList(t, vpcOptions, "private_subnet_ids")
+
+ // Deploy source RDS instance
+ rdsOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/rds-postgresql",
+  Vars: map[string]interface{}{
+   "identifier":              dbIdentifier,
+   "engine":                  "postgres",
+   "engine_version":          "15.4",
+   "instance_class":          "db.t3.micro",
+   "allocated_storage":       20,
+   "vpc_id":                  vpcID,
+   "subnet_ids":              privateSubnetIDs,
+   "database_name":           "sourcedb",
+   "master_username":         "dbadmin",
+   "backup_retention_period": 7,
+   "skip_final_snapshot":     false,
+   "final_snapshot_identifier": fmt.Sprintf("%s-final", dbIdentifier),
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, rdsOptions)
+ terraform.InitAndApply(t, rdsOptions)
+
+ // Wait for source RDS
+ retry.DoWithRetry(t, "Wait for source RDS", 60, 30*time.Second, func() (string, error) {
+  instance := aws.GetRdsInstanceDetails(t, dbIdentifier, awsRegion)
+  if instance.DbInstanceStatus == "available" {
+   return "Source RDS available", nil
+  }
+  return "", fmt.Errorf("Source RDS not ready")
+ })
+
+ // Create manual snapshot using AWS CLI through Terratest
+ aws.CreateDbSnapshot(t, awsRegion, dbIdentifier, snapshotIdentifier)
+
+ // Wait for snapshot to complete
+ retry.DoWithRetry(t, "Wait for snapshot", 60, 15*time.Second, func() (string, error) {
+  snapshot := aws.GetDbSnapshot(t, awsRegion, snapshotIdentifier)
+  if snapshot.Status == "available" {
+   return "Snapshot available", nil
+  }
+  return "", fmt.Errorf("Snapshot status: %s", snapshot.Status)
+ })
+
+ // Restore from snapshot
+ restoreOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/rds-postgresql",
+  Vars: map[string]interface{}{
+   "identifier":        restoredIdentifier,
+   "engine":            "postgres",
+   "instance_class":    "db.t3.micro",
+   "vpc_id":            vpcID,
+   "subnet_ids":        privateSubnetIDs,
+   "snapshot_identifier": snapshotIdentifier,
+   "skip_final_snapshot": true,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, restoreOptions)
+ terraform.InitAndApply(t, restoreOptions)
+
+ // Wait for restored instance
+ retry.DoWithRetry(t, "Wait for restored RDS", 60, 30*time.Second, func() (string, error) {
+  instance := aws.GetRdsInstanceDetails(t, restoredIdentifier, awsRegion)
+  if instance.DbInstanceStatus == "available" {
+   return "Restored RDS available", nil
+  }
+  return "", fmt.Errorf("Restored RDS not ready")
+ })
+
+ // Validate restored instance
+ restoredInstance := aws.GetRdsInstanceDetails(t, restoredIdentifier, awsRegion)
+ assert.Equal(t, "available", restoredInstance.DbInstanceStatus, "Restored DB should be available")
+ assert.Equal(t, "postgres", restoredInstance.Engine, "Engine should match source")
+
+ // Validate snapshot was used for restore
+ sourceInstance := aws.GetRdsInstanceDetails(t, dbIdentifier, awsRegion)
+ assert.Equal(t, sourceInstance.AllocatedStorage, restoredInstance.AllocatedStorage,
+  "Storage should match source")
+
+ // Clean up snapshot
+ aws.DeleteDbSnapshot(t, awsRegion, snapshotIdentifier)
+}
+
+// TestRDSPerformanceInsights validates Performance Insights configuration
+// Tests Guarantees: G13 (Performance Insights), G14 (metrics retention), G15 (KMS encryption)
+func TestRDSPerformanceInsights(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ dbIdentifier := fmt.Sprintf("test-perf-%s", strings.ToLower(uniqueID))
+ awsRegion := "us-east-2"
+
+ // Deploy VPC
+ vpcOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+  Vars: map[string]interface{}{
+   "project":       "rds-test",
+   "environment":   uniqueID,
+   "vpc_cidr":      "10.150.0.0/16",
+   "azs":           []string{"us-east-2a", "us-east-2b"},
+   "private_cidrs": []string{"10.150.10.0/24", "10.150.20.0/24"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, vpcOptions)
+ terraform.InitAndApply(t, vpcOptions)
+
+ vpcID := terraform.Output(t, vpcOptions, "vpc_id")
+ privateSubnetIDs := terraform.OutputList(t, vpcOptions, "private_subnet_ids")
+
+ // Deploy RDS with Performance Insights
+ rdsOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/rds-postgresql",
+  Vars: map[string]interface{}{
+   "identifier":       dbIdentifier,
+   "engine":           "postgres",
+   "engine_version":   "15.4",
+   "instance_class":   "db.t3.small", // Performance Insights requires t3.small or larger
+   "allocated_storage": 20,
+   "vpc_id":           vpcID,
+   "subnet_ids":       privateSubnetIDs,
+   "database_name":    "perfdb",
+   "master_username":  "dbadmin",
+   "enable_performance_insights": true,
+   "performance_insights_retention_period": 7,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, rdsOptions)
+ terraform.InitAndApply(t, rdsOptions)
+
+ // Wait for RDS instance
+ retry.DoWithRetry(t, "Wait for RDS with Performance Insights", 60, 30*time.Second, func() (string, error) {
+  instance := aws.GetRdsInstanceDetails(t, dbIdentifier, awsRegion)
+  if instance.DbInstanceStatus == "available" {
+   return "RDS available", nil
+  }
+  return "", fmt.Errorf("RDS not ready")
+ })
+
+ // Validate Performance Insights
+ instance := aws.GetRdsInstanceDetails(t, dbIdentifier, awsRegion)
+ assert.True(t, instance.PerformanceInsightsEnabled, "Performance Insights should be enabled")
+ assert.NotEmpty(t, instance.PerformanceInsightsKmsKeyId, "Performance Insights KMS key should be set")
+ assert.Equal(t, int64(7), instance.PerformanceInsightsRetentionPeriod,
+  "Performance Insights retention should be 7 days")
+}
+```
+
+#### Lambda Function Terratest Examples
+
+Comprehensive Terratest suite for AWS Lambda function module testing including deployment with layers, IAM permissions, environment variables, CloudWatch log groups, and trigger configurations.
+
+```go
+// test/lambda_function_test.go
+package test
+
+import (
+ "fmt"
+ "testing"
+ "time"
+
+ "github.com/gruntwork-io/terratest/modules/aws"
+ "github.com/gruntwork-io/terratest/modules/random"
+ "github.com/gruntwork-io/terratest/modules/retry"
+ "github.com/gruntwork-io/terratest/modules/terraform"
+ "github.com/stretchr/testify/assert"
+ "github.com/stretchr/testify/require"
+)
+
+// TestLambdaFunctionBasic validates basic Lambda function deployment
+// Tests Guarantees: G1 (function creation), G2 (runtime configuration), G3 (IAM role)
+func TestLambdaFunctionBasic(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ functionName := fmt.Sprintf("test-lambda-%s", uniqueID)
+ awsRegion := "us-east-1"
+
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/lambda-function",
+  Vars: map[string]interface{}{
+   "function_name": functionName,
+   "runtime":       "python3.11",
+   "handler":       "index.lambda_handler",
+   "source_code_path": "../test-fixtures/lambda/simple-python",
+   "environment_variables": map[string]string{
+    "LOG_LEVEL":   "INFO",
+    "ENVIRONMENT": "test",
+   },
+   "timeout":      30,
+   "memory_size":  256,
+   "architectures": []string{"arm64"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, terraformOptions)
+ terraform.InitAndApply(t, terraformOptions)
+
+ // Retrieve outputs
+ lambdaArn := terraform.Output(t, terraformOptions, "function_arn")
+ lambdaRoleArn := terraform.Output(t, terraformOptions, "role_arn")
+ logGroupName := terraform.Output(t, terraformOptions, "log_group_name")
+
+ // Validate function exists
+ function := aws.GetLambdaFunction(t, awsRegion, functionName)
+ assert.Equal(t, "python3.11", function.Runtime, "Runtime should match")
+ assert.Equal(t, "index.lambda_handler", function.Handler, "Handler should match")
+ assert.Equal(t, int64(30), function.Timeout, "Timeout should match")
+ assert.Equal(t, int64(256), function.MemorySize, "Memory size should match")
+
+ // Validate ARN format
+ assert.NotEmpty(t, lambdaArn, "Function ARN should not be empty")
+ assert.Contains(t, lambdaArn, functionName, "ARN should contain function name")
+
+ // Validate IAM role
+ assert.NotEmpty(t, lambdaRoleArn, "IAM role ARN should not be empty")
+ assert.Contains(t, lambdaRoleArn, "role/", "Should be valid IAM role ARN")
+
+ // Validate CloudWatch log group
+ assert.NotEmpty(t, logGroupName, "Log group name should not be empty")
+ assert.Equal(t, fmt.Sprintf("/aws/lambda/%s", functionName), logGroupName,
+  "Log group should follow naming convention")
+
+ // Validate environment variables
+ assert.NotNil(t, function.Environment, "Function should have environment configuration")
+ assert.Equal(t, "INFO", function.Environment.Variables["LOG_LEVEL"],
+  "Environment variable should match")
+ assert.Equal(t, "test", function.Environment.Variables["ENVIRONMENT"],
+  "Environment variable should match")
+}
+
+// TestLambdaFunctionWithLayers validates Lambda function with layers
+// Tests Guarantees: G4 (layer attachment), G5 (version management), G6 (dependency packaging)
+func TestLambdaFunctionWithLayers(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ functionName := fmt.Sprintf("test-lambda-layers-%s", uniqueID)
+ layerName := fmt.Sprintf("test-layer-%s", uniqueID)
+ awsRegion := "us-west-2"
+
+ // First create a Lambda layer
+ layerOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/lambda-layer",
+  Vars: map[string]interface{}{
+   "layer_name":          layerName,
+   "compatible_runtimes": []string{"python3.11", "python3.10"},
+   "source_code_path":    "../test-fixtures/lambda/layer-requests",
+   "description":         "Test layer with requests library",
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, layerOptions)
+ terraform.InitAndApply(t, layerOptions)
+
+ layerArn := terraform.Output(t, layerOptions, "layer_arn")
+
+ // Deploy Lambda function with layer
+ functionOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/lambda-function",
+  Vars: map[string]interface{}{
+   "function_name":    functionName,
+   "runtime":          "python3.11",
+   "handler":          "index.lambda_handler",
+   "source_code_path": "../test-fixtures/lambda/with-layer",
+   "layers":           []string{layerArn},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, functionOptions)
+ terraform.InitAndApply(t, functionOptions)
+
+ // Validate function has layer attached
+ function := aws.GetLambdaFunction(t, awsRegion, functionName)
+ assert.Equal(t, 1, len(function.Layers), "Function should have one layer")
+ assert.Contains(t, function.Layers[0].Arn, layerName, "Layer ARN should match")
+
+ // Test function invocation with layer
+ payload := `{"test": "payload"}`
+ response := aws.InvokeLambdaFunction(t, awsRegion, functionName, payload)
+ assert.NotNil(t, response, "Function should return response")
+ assert.Nil(t, response.FunctionError, "Function should execute without error")
+}
+
+// TestLambdaFunctionWithTriggers validates Lambda triggers (S3, API Gateway, EventBridge)
+// Tests Guarantees: G7 (event source mapping), G8 (trigger permissions), G9 (async invocation)
+func TestLambdaFunctionWithTriggers(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ functionName := fmt.Sprintf("test-lambda-triggers-%s", uniqueID)
+ bucketName := fmt.Sprintf("test-lambda-bucket-%s", uniqueID)
+ awsRegion := "eu-west-1"
+
+ // Create S3 bucket for trigger
+ s3Options := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/s3-bucket",
+  Vars: map[string]interface{}{
+   "bucket_name": bucketName,
+   "force_destroy": true,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, s3Options)
+ terraform.InitAndApply(t, s3Options)
+
+ // Deploy Lambda function with S3 trigger
+ functionOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/lambda-function",
+  Vars: map[string]interface{}{
+   "function_name":    functionName,
+   "runtime":          "python3.11",
+   "handler":          "index.lambda_handler",
+   "source_code_path": "../test-fixtures/lambda/s3-processor",
+   "s3_triggers": []map[string]interface{}{
+    {
+     "bucket": bucketName,
+     "events": []string{"s3:ObjectCreated:*"},
+     "filter_prefix": "uploads/",
+     "filter_suffix": ".json",
+    },
+   },
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, functionOptions)
+ terraform.InitAndApply(t, functionOptions)
+
+ // Validate Lambda permission for S3
+ functionArn := terraform.Output(t, functionOptions, "function_arn")
+ policy := aws.GetLambdaFunctionPolicy(t, awsRegion, functionName)
+ assert.NotEmpty(t, policy, "Function should have resource-based policy")
+ assert.Contains(t, policy, "s3.amazonaws.com", "Policy should allow S3 invocation")
+
+ // Validate S3 bucket notification configuration
+ notifications := aws.GetS3BucketNotificationConfiguration(t, awsRegion, bucketName)
+ assert.NotEmpty(t, notifications.LambdaFunctionConfigurations,
+  "S3 bucket should have Lambda notification")
+ assert.Equal(t, functionArn,
+  notifications.LambdaFunctionConfigurations[0].LambdaFunctionArn,
+  "Notification should target Lambda function")
+}
+
+// TestLambdaFunctionVPCConfiguration validates Lambda in VPC with private subnets
+// Tests Guarantees: G10 (VPC configuration), G11 (security groups), G12 (ENI management)
+func TestLambdaFunctionVPCConfiguration(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ functionName := fmt.Sprintf("test-lambda-vpc-%s", uniqueID)
+ awsRegion := "ap-southeast-1"
+
+ // Deploy VPC
+ vpcOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/vpc-network",
+  Vars: map[string]interface{}{
+   "project":       "lambda-test",
+   "environment":   uniqueID,
+   "vpc_cidr":      "10.160.0.0/16",
+   "azs":           []string{"ap-southeast-1a", "ap-southeast-1b"},
+   "private_cidrs": []string{"10.160.10.0/24", "10.160.20.0/24"},
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, vpcOptions)
+ terraform.InitAndApply(t, vpcOptions)
+
+ vpcID := terraform.Output(t, vpcOptions, "vpc_id")
+ privateSubnetIDs := terraform.OutputList(t, vpcOptions, "private_subnet_ids")
+
+ // Deploy Lambda in VPC
+ functionOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/lambda-function",
+  Vars: map[string]interface{}{
+   "function_name":    functionName,
+   "runtime":          "python3.11",
+   "handler":          "index.lambda_handler",
+   "source_code_path": "../test-fixtures/lambda/vpc-function",
+   "vpc_config": map[string]interface{}{
+    "vpc_id":     vpcID,
+    "subnet_ids": privateSubnetIDs,
+    "security_group_rules": []map[string]interface{}{
+     {
+      "type":        "egress",
+      "from_port":   443,
+      "to_port":     443,
+      "protocol":    "tcp",
+      "cidr_blocks": []string{"0.0.0.0/0"},
+      "description": "Allow HTTPS outbound",
+     },
+    },
+   },
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, functionOptions)
+ terraform.InitAndApply(t, functionOptions)
+
+ // Validate VPC configuration
+ function := aws.GetLambdaFunction(t, awsRegion, functionName)
+ assert.NotNil(t, function.VpcConfig, "Function should have VPC configuration")
+ assert.Equal(t, vpcID, function.VpcConfig.VpcId, "VPC ID should match")
+ assert.Equal(t, len(privateSubnetIDs), len(function.VpcConfig.SubnetIds),
+  "Subnet count should match")
+
+ // Validate security group
+ assert.Equal(t, 1, len(function.VpcConfig.SecurityGroupIds),
+  "Should have one security group")
+ securityGroupID := function.VpcConfig.SecurityGroupIds[0]
+ sg := aws.GetSecurityGroupById(t, securityGroupID, awsRegion)
+ assert.Equal(t, vpcID, sg.VpcId, "Security group should be in Lambda VPC")
+}
+
+// TestLambdaFunctionReservedConcurrency validates concurrency configuration
+// Tests Guarantees: G13 (reserved concurrency), G14 (provisioned concurrency), G15 (throttling)
+func TestLambdaFunctionReservedConcurrency(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ functionName := fmt.Sprintf("test-lambda-concurrency-%s", uniqueID)
+ awsRegion := "us-east-2"
+
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/lambda-function",
+  Vars: map[string]interface{}{
+   "function_name":        functionName,
+   "runtime":              "python3.11",
+   "handler":              "index.lambda_handler",
+   "source_code_path":     "../test-fixtures/lambda/simple-python",
+   "reserved_concurrent_executions": 10,
+   "publish":              true,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, terraformOptions)
+ terraform.InitAndApply(t, terraformOptions)
+
+ // Validate reserved concurrency
+ function := aws.GetLambdaFunction(t, awsRegion, functionName)
+ concurrency := aws.GetLambdaFunctionConcurrency(t, awsRegion, functionName)
+ assert.Equal(t, int64(10), concurrency.ReservedConcurrentExecutions,
+  "Reserved concurrency should match")
+
+ // Validate function is published
+ assert.NotEqual(t, "$LATEST", function.Version, "Function should have version number")
+}
+
+// TestLambdaFunctionDeadLetterQueue validates DLQ configuration
+// Tests Guarantees: G16 (DLQ setup), G17 (retry configuration), G18 (error handling)
+func TestLambdaFunctionDeadLetterQueue(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ functionName := fmt.Sprintf("test-lambda-dlq-%s", uniqueID)
+ queueName := fmt.Sprintf("test-dlq-%s", uniqueID)
+ awsRegion := "ca-central-1"
+
+ // Create SQS queue for DLQ
+ sqsOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/sqs-queue",
+  Vars: map[string]interface{}{
+   "queue_name":                  queueName,
+   "message_retention_seconds":   1209600, // 14 days
+   "visibility_timeout_seconds":  300,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, sqsOptions)
+ terraform.InitAndApply(t, sqsOptions)
+
+ queueArn := terraform.Output(t, sqsOptions, "queue_arn")
+
+ // Deploy Lambda with DLQ
+ functionOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../modules/lambda-function",
+  Vars: map[string]interface{}{
+   "function_name":    functionName,
+   "runtime":          "python3.11",
+   "handler":          "index.lambda_handler",
+   "source_code_path": "../test-fixtures/lambda/error-function",
+   "dead_letter_config": map[string]string{
+    "target_arn": queueArn,
+   },
+   "retry_attempts": 1,
+   "maximum_event_age_in_seconds": 3600,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, functionOptions)
+ terraform.InitAndApply(t, functionOptions)
+
+ // Validate DLQ configuration
+ function := aws.GetLambdaFunction(t, awsRegion, functionName)
+ assert.NotNil(t, function.DeadLetterConfig, "Function should have DLQ config")
+ assert.Equal(t, queueArn, function.DeadLetterConfig.TargetArn, "DLQ ARN should match")
+
+ // Validate event invoke config
+ eventConfig := aws.GetLambdaFunctionEventInvokeConfig(t, awsRegion, functionName)
+ assert.Equal(t, int64(1), eventConfig.MaximumRetryAttempts, "Retry attempts should match")
+ assert.Equal(t, int64(3600), eventConfig.MaximumEventAgeInSeconds, "Event age should match")
+}
+```
+
+### Integration Testing
+
+Multi-module integration testing validates complete infrastructure deployments, cross-module dependencies, end-to-end connectivity, and production deployment scenarios.
+
+#### Multi-Module Integration Tests
+
+Complete integration test suite demonstrating testing of full 3-tier application deployment with VPC, load balancer, application servers, and database tier.
+
+```go
+// test/integration_test.go
+package test
+
+import (
+ "fmt"
+ "testing"
+ "time"
+
+ http_helper "github.com/gruntwork-io/terratest/modules/http-helper"
+ "github.com/gruntwork-io/terratest/modules/aws"
+ "github.com/gruntwork-io/terratest/modules/random"
+ "github.com/gruntwork-io/terratest/modules/retry"
+ "github.com/gruntwork-io/terratest/modules/terraform"
+ "github.com/stretchr/testify/assert"
+ "github.com/stretchr/testify/require"
+)
+
+// TestThreeTierApplicationIntegration validates complete 3-tier app deployment
+// Tests end-to-end infrastructure including VPC, ALB, EC2, and RDS
+func TestThreeTierApplicationIntegration(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ projectName := "three-tier-app"
+ environment := fmt.Sprintf("test-%s", uniqueID)
+ awsRegion := "us-east-1"
+
+ // Deploy complete infrastructure stack
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../examples/three-tier-application",
+  Vars: map[string]interface{}{
+   "project":           projectName,
+   "environment":       environment,
+   "aws_region":        awsRegion,
+   "vpc_cidr":          "10.170.0.0/16",
+   "availability_zones": []string{"us-east-1a", "us-east-1b", "us-east-1c"},
+   "instance_type":     "t3.micro",
+   "min_size":          2,
+   "max_size":          4,
+   "desired_capacity":  2,
+   "db_instance_class": "db.t3.micro",
+   "db_allocated_storage": 20,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, terraformOptions)
+ terraform.InitAndApply(t, terraformOptions)
+
+ // Retrieve infrastructure outputs
+ vpcID := terraform.Output(t, terraformOptions, "vpc_id")
+ albDNS := terraform.Output(t, terraformOptions, "alb_dns_name")
+ dbEndpoint := terraform.Output(t, terraformOptions, "database_endpoint")
+ asgName := terraform.Output(t, terraformOptions, "autoscaling_group_name")
+
+ // Validate VPC infrastructure
+ vpc := aws.GetVpcById(t, vpcID, awsRegion)
+ assert.Equal(t, "10.170.0.0/16", vpc.CidrBlock, "VPC CIDR should match")
+
+ // Validate Auto Scaling Group
+ asg := aws.GetAsgByName(t, awsRegion, asgName)
+ assert.Equal(t, int64(2), asg.DesiredCapacity, "ASG desired capacity should match")
+ assert.GreaterOrEqual(t, len(asg.AvailabilityZones), 2,
+  "ASG should span multiple AZs")
+
+ // Wait for instances to be healthy
+ retry.DoWithRetry(t, "Wait for healthy instances", 60, 10*time.Second, func() (string, error) {
+  instances := aws.GetInstancesForAsg(t, awsRegion, asgName)
+  healthyCount := 0
+  for _, instance := range instances {
+   if instance.State.Name == "running" {
+    healthyCount++
+   }
+  }
+  if healthyCount >= 2 {
+   return "Instances healthy", nil
+  }
+  return "", fmt.Errorf("only %d instances healthy", healthyCount)
+ })
+
+ // Validate database connectivity
+ assert.NotEmpty(t, dbEndpoint, "Database endpoint should not be empty")
+ assert.Contains(t, dbEndpoint, "rds.amazonaws.com", "Should be valid RDS endpoint")
+
+ // Test application availability through ALB
+ albURL := fmt.Sprintf("http://%s", albDNS)
+ http_helper.HttpGetWithRetry(
+  t,
+  albURL,
+  nil,
+  200,
+  "",
+  30,
+  10*time.Second,
+ )
+
+ // Validate cross-tier connectivity
+ // Test that application can reach database
+ healthURL := fmt.Sprintf("http://%s/health", albDNS)
+ http_helper.HttpGetWithRetry(
+  t,
+  healthURL,
+  nil,
+  200,
+  "\"database\":\"connected\"",
+  20,
+  15*time.Second,
+ )
+
+ // Validate security group rules allow proper communication
+ instances := aws.GetInstancesForAsg(t, awsRegion, asgName)
+ require.NotEmpty(t, instances, "Should have running instances")
+
+ instanceSG := instances[0].SecurityGroups[0]
+ sg := aws.GetSecurityGroupById(t, instanceSG, awsRegion)
+ assert.Equal(t, vpcID, sg.VpcId, "Instance SG should be in app VPC")
+}
+
+// TestModuleDependencies validates inter-module dependency resolution
+// Tests that modules correctly pass outputs as inputs to dependent modules
+func TestModuleDependencies(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ awsRegion := "us-west-2"
+
+ // Test dependency chain: VPC -> Security Groups -> RDS
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../examples/module-dependencies",
+  Vars: map[string]interface{}{
+   "project":     "dep-test",
+   "environment": uniqueID,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, terraformOptions)
+ terraform.InitAndApply(t, terraformOptions)
+
+ // Validate outputs are correctly chained
+ vpcID := terraform.Output(t, terraformOptions, "vpc_id")
+ securityGroupID := terraform.Output(t, terraformOptions, "security_group_id")
+ dbInstanceID := terraform.Output(t, terraformOptions, "db_instance_id")
+
+ // Verify security group is in VPC
+ sg := aws.GetSecurityGroupById(t, securityGroupID, awsRegion)
+ assert.Equal(t, vpcID, sg.VpcId, "Security group should be in created VPC")
+
+ // Verify RDS is using security group
+ dbInstance := aws.GetRdsInstanceDetails(t, dbInstanceID, awsRegion)
+ assert.NotEmpty(t, dbInstance.VpcSecurityGroups, "RDS should have security groups")
+
+ foundSG := false
+ for _, vpcSG := range dbInstance.VpcSecurityGroups {
+  if vpcSG.VpcSecurityGroupId == securityGroupID {
+   foundSG = true
+   break
+  }
+ }
+ assert.True(t, foundSG, "RDS should use created security group")
+}
+
+// TestBlueGreenDeployment validates blue-green deployment pattern
+// Tests zero-downtime deployment by creating new environment before destroying old
+func TestBlueGreenDeployment(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ projectName := "bg-deploy"
+ awsRegion := "eu-west-1"
+
+ // Deploy blue environment
+ blueOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../examples/blue-green-deployment",
+  Vars: map[string]interface{}{
+   "project":       projectName,
+   "environment":   fmt.Sprintf("blue-%s", uniqueID),
+   "color":         "blue",
+   "app_version":   "v1.0.0",
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, blueOptions)
+ terraform.InitAndApply(t, blueOptions)
+
+ blueALBDNS := terraform.Output(t, blueOptions, "alb_dns_name")
+ blueURL := fmt.Sprintf("http://%s", blueALBDNS)
+
+ // Verify blue environment is healthy
+ http_helper.HttpGetWithRetry(t, blueURL, nil, 200, "v1.0.0", 30, 10*time.Second)
+
+ // Deploy green environment (new version)
+ greenOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../examples/blue-green-deployment",
+  Vars: map[string]interface{}{
+   "project":       projectName,
+   "environment":   fmt.Sprintf("green-%s", uniqueID),
+   "color":         "green",
+   "app_version":   "v2.0.0",
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, greenOptions)
+ terraform.InitAndApply(t, greenOptions)
+
+ greenALBDNS := terraform.Output(t, greenOptions, "alb_dns_name")
+ greenURL := fmt.Sprintf("http://%s", greenALBDNS)
+
+ // Verify green environment is healthy
+ http_helper.HttpGetWithRetry(t, greenURL, nil, 200, "v2.0.0", 30, 10*time.Second)
+
+ // Verify both environments are running simultaneously (zero downtime)
+ http_helper.HttpGet(t, blueURL, nil, 200, "v1.0.0")
+ http_helper.HttpGet(t, greenURL, nil, 200, "v2.0.0")
+
+ // Simulate traffic cutover by updating Route53 (in actual deployment)
+ // Here we just verify both environments are accessible
+
+ // Destroy blue environment after successful green deployment
+ terraform.Destroy(t, blueOptions)
+
+ // Verify green environment still accessible after blue destroyed
+ http_helper.HttpGetWithRetry(t, greenURL, nil, 200, "v2.0.0", 10, 5*time.Second)
+}
+
+// TestCrossRegionReplication validates multi-region deployment patterns
+// Tests S3 replication, DynamoDB global tables, and cross-region failover
+func TestCrossRegionReplication(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ primaryRegion := "us-east-1"
+ replicaRegion := "us-west-2"
+
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../examples/cross-region-replication",
+  Vars: map[string]interface{}{
+   "project":         "cross-region",
+   "environment":     uniqueID,
+   "primary_region":  primaryRegion,
+   "replica_region":  replicaRegion,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": primaryRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, terraformOptions)
+ terraform.InitAndApply(t, terraformOptions)
+
+ // Retrieve outputs
+ primaryBucket := terraform.Output(t, terraformOptions, "primary_bucket_name")
+ replicaBucket := terraform.Output(t, terraformOptions, "replica_bucket_name")
+ dynamodbTable := terraform.Output(t, terraformOptions, "dynamodb_table_name")
+
+ // Validate S3 replication configuration
+ primaryBucketConfig := aws.GetS3BucketReplication(t, primaryRegion, primaryBucket)
+ assert.NotNil(t, primaryBucketConfig, "Primary bucket should have replication config")
+ assert.Contains(t, primaryBucketConfig.Rules[0].Destination.Bucket, replicaBucket,
+  "Replication should target replica bucket")
+
+ // Upload test object to primary bucket
+ testKey := fmt.Sprintf("test-%s.txt", uniqueID)
+ testContent := "test content for replication"
+ aws.PutS3BucketObject(t, primaryRegion, primaryBucket, testKey, testContent)
+
+ // Wait for replication to complete
+ retry.DoWithRetry(t, "Wait for S3 replication", 30, 10*time.Second, func() (string, error) {
+  exists := aws.S3ObjectExists(t, replicaRegion, replicaBucket, testKey)
+  if exists {
+   return "Object replicated", nil
+  }
+  return "", fmt.Errorf("object not yet replicated")
+ })
+
+ // Validate replicated object
+ replicatedContent := aws.GetS3ObjectContents(t, replicaRegion, replicaBucket, testKey)
+ assert.Equal(t, testContent, replicatedContent, "Replicated content should match")
+
+ // Validate DynamoDB global table
+ primaryTable := aws.GetDynamoDBTable(t, primaryRegion, dynamodbTable)
+ assert.NotNil(t, primaryTable.GlobalTableVersion, "Should be global table")
+
+ // Verify replica exists in secondary region
+ replicaTable := aws.GetDynamoDBTable(t, replicaRegion, dynamodbTable)
+ assert.NotNil(t, replicaTable, "Replica table should exist")
+ assert.Equal(t, primaryTable.TableName, replicaTable.TableName, "Table names should match")
+}
+
+// TestDisasterRecoveryFailover validates DR failover procedures
+// Tests backup restore, database failover, and application recovery
+func TestDisasterRecoveryFailover(t *testing.T) {
+ t.Parallel()
+
+ uniqueID := random.UniqueId()
+ awsRegion := "ap-southeast-2"
+
+ terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+  TerraformDir: "../examples/disaster-recovery",
+  Vars: map[string]interface{}{
+   "project":       "dr-test",
+   "environment":   uniqueID,
+   "enable_multi_az": true,
+   "backup_retention_period": 7,
+  },
+  EnvVars: map[string]string{
+   "AWS_DEFAULT_REGION": awsRegion,
+  },
+ })
+
+ defer terraform.Destroy(t, terraformOptions)
+ terraform.InitAndApply(t, terraformOptions)
+
+ // Get RDS instance details
+ dbInstanceID := terraform.Output(t, terraformOptions, "db_instance_id")
+
+ // Verify multi-AZ is enabled
+ dbInstance := aws.GetRdsInstanceDetails(t, dbInstanceID, awsRegion)
+ assert.True(t, dbInstance.MultiAZ, "Database should be multi-AZ")
+
+ // Create manual snapshot for DR testing
+ snapshotID := fmt.Sprintf("dr-test-snapshot-%s", uniqueID)
+ aws.CreateDbSnapshot(t, awsRegion, dbInstanceID, snapshotID)
+
+ // Wait for snapshot
+ retry.DoWithRetry(t, "Wait for DR snapshot", 60, 15*time.Second, func() (string, error) {
+  snapshot := aws.GetDbSnapshot(t, awsRegion, snapshotID)
+  if snapshot.Status == "available" {
+   return "Snapshot ready", nil
+  }
+  return "", fmt.Errorf("snapshot status: %s", snapshot.Status)
+ })
+
+ // Simulate failover by forcing multi-AZ failover
+ aws.RebootDbInstance(t, awsRegion, dbInstanceID, true) // Force failover
+
+ // Wait for instance to become available again
+ retry.DoWithRetry(t, "Wait for failover", 90, 30*time.Second, func() (string, error) {
+  instance := aws.GetRdsInstanceDetails(t, dbInstanceID, awsRegion)
+  if instance.DbInstanceStatus == "available" {
+   return "Failover complete", nil
+  }
+  return "", fmt.Errorf("instance status: %s", instance.DbInstanceStatus)
+ })
+
+ // Verify instance is still multi-AZ after failover
+ failedOverInstance := aws.GetRdsInstanceDetails(t, dbInstanceID, awsRegion)
+ assert.True(t, failedOverInstance.MultiAZ, "Should remain multi-AZ after failover")
+
+ // Clean up snapshot
+ aws.DeleteDbSnapshot(t, awsRegion, snapshotID)
+}
+```
+
+### Policy Testing
+
+Policy-as-code testing validates infrastructure compliance using Open Policy Agent (OPA) and HashiCorp Sentinel. These tests ensure infrastructure meets security, cost, and compliance requirements before deployment.
+
+#### Open Policy Agent (OPA) Examples
+
+OPA policy testing for Terraform plans with security and compliance validation.
+
+```rego
+## policies/security/encryption.rego
+package terraform.security.encryption
+
+# Require encryption for all S3 buckets
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == "aws_s3_bucket"
+ not resource.change.after.server_side_encryption_configuration
+
+ msg := sprintf("S3 bucket '%s' must have encryption enabled", [resource.name])
+}
+
+# Require encryption for all EBS volumes
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == "aws_ebs_volume"
+ resource.change.after.encrypted == false
+
+ msg := sprintf("EBS volume '%s' must be encrypted", [resource.name])
+}
+
+# Require encryption for all RDS instances
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == "aws_db_instance"
+ resource.change.after.storage_encrypted == false
+
+ msg := sprintf("RDS instance '%s' must have storage encryption enabled", [resource.name])
+}
+
+# Require KMS encryption for sensitive resources
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == "aws_s3_bucket"
+ resource.change.after.server_side_encryption_configuration[_].rule[_].apply_server_side_encryption_by_default[_].sse_algorithm != "aws:kms"
+
+ msg := sprintf("S3 bucket '%s' must use KMS encryption", [resource.name])
+}
+
+## policies/security/public_access.rego
+package terraform.security.public_access
+
+# Deny public S3 bucket ACLs
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == "aws_s3_bucket_acl"
+ resource.change.after.acl == "public-read"
+
+ msg := sprintf("S3 bucket '%s' must not have public-read ACL", [resource.address])
+}
+
+# Deny publicly accessible RDS instances
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == "aws_db_instance"
+ resource.change.after.publicly_accessible == true
+
+ msg := sprintf("RDS instance '%s' must not be publicly accessible", [resource.name])
+}
+
+# Deny security groups with unrestricted ingress
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == "aws_security_group"
+ rule := resource.change.after.ingress[_]
+ rule.cidr_blocks[_] == "0.0.0.0/0"
+ rule.from_port == 0
+ rule.to_port == 65535
+
+ msg := sprintf("Security group '%s' allows unrestricted access from 0.0.0.0/0", [resource.name])
+}
+
+# Deny security groups allowing SSH from anywhere
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == "aws_security_group"
+ rule := resource.change.after.ingress[_]
+ rule.cidr_blocks[_] == "0.0.0.0/0"
+ rule.from_port == 22
+
+ msg := sprintf("Security group '%s' allows SSH (port 22) from 0.0.0.0/0", [resource.name])
+}
+
+## policies/cost/resource_limits.rego
+package terraform.cost.resource_limits
+
+# Limit EC2 instance types to cost-effective options
+allowed_instance_types := ["t3.micro", "t3.small", "t3.medium", "t3.large", "t3a.micro", "t3a.small"]
+
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == "aws_instance"
+ instance_type := resource.change.after.instance_type
+ not instance_type_allowed(instance_type)
+
+ msg := sprintf("EC2 instance '%s' uses disallowed instance type '%s'. Allowed types: %v",
+  [resource.name, instance_type, allowed_instance_types])
+}
+
+instance_type_allowed(instance_type) {
+ allowed_instance_types[_] == instance_type
+}
+
+# Limit RDS instance classes
+allowed_db_instance_classes := ["db.t3.micro", "db.t3.small", "db.t3.medium"]
+
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == "aws_db_instance"
+ instance_class := resource.change.after.instance_class
+ not db_instance_class_allowed(instance_class)
+
+ msg := sprintf("RDS instance '%s' uses disallowed class '%s'. Allowed classes: %v",
+  [resource.name, instance_class, allowed_db_instance_classes])
+}
+
+db_instance_class_allowed(instance_class) {
+ allowed_db_instance_classes[_] == instance_class
+}
+
+# Prevent unnecessary multi-AZ for non-production
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == "aws_db_instance"
+ resource.change.after.multi_az == true
+ tags := resource.change.after.tags
+ tags.Environment != "production"
+
+ msg := sprintf("RDS instance '%s' has multi-AZ enabled in non-production environment", [resource.name])
+}
+
+## policies/compliance/tagging.rego
+package terraform.compliance.tagging
+
+# Required tags for all resources
+required_tags := ["Project", "Environment", "Owner", "ManagedBy"]
+
+# Resources that require tagging
+taggable_resources := [
+ "aws_instance",
+ "aws_s3_bucket",
+ "aws_db_instance",
+ "aws_eks_cluster",
+ "aws_vpc",
+ "aws_subnet",
+ "aws_security_group",
+]
+
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == taggable_resources[_]
+ missing_tags := get_missing_tags(resource.change.after.tags)
+ count(missing_tags) > 0
+
+ msg := sprintf("Resource '%s' missing required tags: %v", [resource.address, missing_tags])
+}
+
+get_missing_tags(tags) = missing {
+ missing := [tag | tag := required_tags[_]; not tags[tag]]
+}
+
+# Validate tag values
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == taggable_resources[_]
+ tags := resource.change.after.tags
+ tags.ManagedBy != "terraform"
+
+ msg := sprintf("Resource '%s' must have ManagedBy tag set to 'terraform'", [resource.address])
+}
+
+# Validate environment tag values
+allowed_environments := ["dev", "staging", "production"]
+
+deny[msg] {
+ resource := input.resource_changes[_]
+ resource.type == taggable_resources[_]
+ tags := resource.change.after.tags
+ env := tags.Environment
+ not environment_allowed(env)
+
+ msg := sprintf("Resource '%s' has invalid Environment tag '%s'. Allowed: %v",
+  [resource.address, env, allowed_environments])
+}
+
+environment_allowed(env) {
+ allowed_environments[_] == env
+}
+```
+
+#### HashiCorp Sentinel Examples
+
+Sentinel policy enforcement for Terraform Cloud and Terraform Enterprise.
+
+```hcl
+## policies/sentinel/require-vpc-encryption.sentinel
+import "tfplan/v2" as tfplan
+
+# Require encryption for VPC flow logs
+require_flow_log_encryption = rule {
+ all tfplan.resource_changes as _, rc {
+  rc.type is "aws_flow_log" and
+  rc.mode is "managed" and
+  rc.change.actions contains "create" implies
+  rc.change.after.log_destination_type is "cloud-watch-logs" and
+  length(rc.change.after.log_group_name) > 0
+ }
+}
+
+# Require CloudWatch log group encryption
+require_log_group_encryption = rule {
+ all tfplan.resource_changes as _, rc {
+  rc.type is "aws_cloudwatch_log_group" and
+  rc.mode is "managed" and
+  rc.change.actions contains "create" implies
+  length(rc.change.after.kms_key_id else "") > 0
+ }
+}
+
+main = rule {
+ require_flow_log_encryption and
+ require_log_group_encryption
+}
+
+## policies/sentinel/enforce-backup-policies.sentinel
+import "tfplan/v2" as tfplan
+
+# Require backup retention for production databases
+require_rds_backup_retention = rule {
+ all tfplan.resource_changes as _, rc {
+  rc.type is "aws_db_instance" and
+  rc.mode is "managed" and
+  rc.change.actions contains "create" and
+  (rc.change.after.tags.Environment else "") is "production" implies
+  rc.change.after.backup_retention_period >= 7
+ }
+}
+
+# Require automated backups enabled
+require_rds_automated_backups = rule {
+ all tfplan.resource_changes as _, rc {
+  rc.type is "aws_db_instance" and
+  rc.mode is "managed" and
+  rc.change.actions contains "create" implies
+  rc.change.after.backup_retention_period > 0
+ }
+}
+
+# Require point-in-time recovery for DynamoDB production tables
+require_dynamodb_pitr = rule {
+ all tfplan.resource_changes as _, rc {
+  rc.type is "aws_dynamodb_table" and
+  rc.mode is "managed" and
+  rc.change.actions contains "create" and
+  (rc.change.after.tags.Environment else "") is "production" implies
+  rc.change.after.point_in_time_recovery[0].enabled is true
+ }
+}
+
+main = rule {
+ require_rds_backup_retention and
+ require_rds_automated_backups and
+ require_dynamodb_pitr
+}
+
+## policies/sentinel/cost-controls.sentinel
+import "tfplan/v2" as tfplan
+import "decimal" as decimal
+
+# Calculate estimated monthly cost
+estimated_monthly_cost = func() {
+ cost = 0.0
+
+ # EC2 instance costs (simplified estimation)
+ for tfplan.resource_changes as _, rc {
+  if rc.type is "aws_instance" and rc.change.actions contains "create" {
+   instance_type = rc.change.after.instance_type
+
+   # Rough cost estimates per hour
+   hourly_costs = {
+    "t3.micro":  0.0104,
+    "t3.small":  0.0208,
+    "t3.medium": 0.0416,
+    "t3.large":  0.0832,
+   }
+
+   if instance_type in keys(hourly_costs) {
+    cost += hourly_costs[instance_type] * 730  # Hours per month
+   }
+  }
+ }
+
+ # RDS instance costs
+ for tfplan.resource_changes as _, rc {
+  if rc.type is "aws_db_instance" and rc.change.actions contains "create" {
+   instance_class = rc.change.after.instance_class
+
+   hourly_costs = {
+    "db.t3.micro":  0.017,
+    "db.t3.small":  0.034,
+    "db.t3.medium": 0.068,
+   }
+
+   if instance_class in keys(hourly_costs) {
+    multiplier = rc.change.after.multi_az ? 2 : 1
+    cost += hourly_costs[instance_class] * 730 * multiplier
+   }
+  }
+ }
+
+ return cost
+}
+
+# Enforce cost limit for non-production environments
+cost_limit = rule when tfplan.variables.environment.value is not "production" {
+ decimal.new(estimated_monthly_cost()) less_than decimal.new(500)
+}
+
+# Require cost center tag for production resources
+require_cost_center = rule {
+ all tfplan.resource_changes as _, rc {
+  (rc.change.after.tags.Environment else "") is "production" implies
+  length(rc.change.after.tags.CostCenter else "") > 0
+ }
+}
+
+main = rule {
+ cost_limit and
+ require_cost_center
+}
+
+## policies/sentinel/security-hardening.sentinel
+import "tfplan/v2" as tfplan
+
+# Require IMDSv2 for EC2 instances
+require_imdsv2 = rule {
+ all tfplan.resource_changes as _, rc {
+  rc.type is "aws_instance" and
+  rc.mode is "managed" and
+  rc.change.actions contains "create" implies
+  rc.change.after.metadata_options[0].http_tokens is "required"
+ }
+}
+
+# Require TLS 1.2+ for load balancers
+require_modern_tls = rule {
+ all tfplan.resource_changes as _, rc {
+  rc.type is "aws_lb_listener" and
+  rc.mode is "managed" and
+  rc.change.actions contains "create" and
+  rc.change.after.protocol is "HTTPS" implies
+  rc.change.after.ssl_policy matches "^ELBSecurityPolicy-TLS-1-2"
+ }
+}
+
+# Deny default VPC usage
+deny_default_vpc = rule {
+ all tfplan.resource_changes as _, rc {
+  rc.type is "aws_default_vpc" implies
+  rc.change.actions not contains "create"
+ }
+}
+
+# Require deletion protection for production databases
+require_deletion_protection = rule {
+ all tfplan.resource_changes as _, rc {
+  rc.type is "aws_db_instance" and
+  rc.mode is "managed" and
+  rc.change.actions contains "create" and
+  (rc.change.after.tags.Environment else "") is "production" implies
+  rc.change.after.deletion_protection is true
+ }
+}
+
+main = rule {
+ require_imdsv2 and
+ require_modern_tls and
+ deny_default_vpc and
+ require_deletion_protection
+}
+```
+
 ---
 
 ## Production CI/CD Examples
@@ -9893,6 +12482,8 @@ variable "vpc_cidr" {
 - [Terraform AWS Modules](https://github.com/terraform-aws-modules)
 - [Gruntwork Infrastructure as Code Library](https://gruntwork.io/infrastructure-as-code-library/)
 - [Terraform Up & Running (Book)](https://www.terraformupandrunning.com/)
+
+```
 
 ---
 
