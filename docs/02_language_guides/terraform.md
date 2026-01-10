@@ -2670,8 +2670,6 @@ variable "enable_logging" {
   type        = bool
   default     = true
 }
-```
-
 ```hcl
 ## modules/aws-waf/main.tf
 
@@ -3021,8 +3019,6 @@ resource "aws_cloudwatch_metric_alarm" "waf_rate_limited_requests" {
 }
 
 data "aws_region" "current" {}
-```
-
 ```hcl
 ## modules/aws-waf/outputs.tf
 
@@ -3123,8 +3119,6 @@ variable "admin_email" {
   description = "Email address for security notifications"
   type        = string
 }
-```
-
 ```hcl
 ## modules/security-monitoring/main.tf
 
@@ -3461,8 +3455,6 @@ resource "aws_cloudwatch_metric_alarm" "guardduty_critical" {
 
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
-```
-
 ```hcl
 ## modules/security-monitoring/outputs.tf
 
@@ -3528,8 +3520,6 @@ variable "allowed_account_ids" {
   type        = list(string)
   default     = []
 }
-```
-
 ```hcl
 ## modules/secrets-manager/main.tf
 
@@ -3925,8 +3915,6 @@ resource "aws_iam_role" "ecs_task" {
 
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
-```
-
 ```hcl
 ## modules/secrets-manager/outputs.tf
 
@@ -3995,8 +3983,6 @@ variable "sns_topic_arn" {
   description = "SNS topic ARN for compliance notifications"
   type        = string
 }
-```
-
 ```hcl
 ## modules/cis-compliance/main.tf
 
@@ -4432,8 +4418,6 @@ resource "aws_config_config_rule" "encrypted_volumes" {
 
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
-```
-
 ```hcl
 ## modules/cis-compliance/outputs.tf
 
@@ -4499,8 +4483,6 @@ variable "multi_az" {
   type        = bool
   default     = true
 }
-```
-
 ```hcl
 ## modules/hipaa-compliance/main.tf
 
@@ -5046,8 +5028,6 @@ resource "aws_iam_role_policy" "vpc_flow_log" {
 
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
-```
-
 ```hcl
 ## modules/hipaa-compliance/outputs.tf
 
@@ -5111,8 +5091,6 @@ variable "backup_retention_days" {
   type        = number
   default     = 90
 }
-```
-
 ```hcl
 ## modules/soc2-compliance/main.tf
 
@@ -5673,8 +5651,6 @@ resource "aws_lambda_permission" "compliance_report" {
 
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
-```
-
 ```hcl
 ## modules/soc2-compliance/outputs.tf
 
@@ -5701,6 +5677,762 @@ output "access_analyzer_arn" {
 output "kms_key_arn" {
   description = "ARN of the SOC 2 encryption KMS key"
   value       = aws_kms_key.soc2.arn
+}
+```
+
+## Advanced Networking Patterns
+
+### Transit Gateway Hub-and-Spoke
+
+```hcl
+resource "aws_ec2_transit_gateway" "main" {
+  description                     = "${var.project}-${var.environment}-tgw"
+  amazon_side_asn                 = var.amazon_side_asn
+  default_route_table_association = "disable"
+  default_route_table_propagation = "disable"
+  dns_support                     = "enable"
+  vpn_ecmp_support               = "enable"
+  multicast_support              = "disable"
+  auto_accept_shared_attachments = "disable"
+  transit_gateway_cidr_blocks    = [var.transit_gateway_cidr]
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-tgw"
+  })
+}
+
+resource "aws_ec2_transit_gateway_route_table" "production" {
+  transit_gateway_id = aws_ec2_transit_gateway.main.id
+  tags = merge(var.tags, {
+    Name        = "${var.project}-${var.environment}-tgw-rt-production"
+    Environment = "production"
+  })
+}
+
+resource "aws_ec2_transit_gateway_route_table" "development" {
+  transit_gateway_id = aws_ec2_transit_gateway.main.id
+  tags = merge(var.tags, {
+    Name        = "${var.project}-${var.environment}-tgw-rt-development"
+    Environment = "development"
+  })
+}
+
+resource "aws_ec2_transit_gateway_route_table" "shared_services" {
+  transit_gateway_id = aws_ec2_transit_gateway.main.id
+  tags = merge(var.tags, {
+    Name        = "${var.project}-${var.environment}-tgw-rt-shared"
+    Environment = "shared"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "production" {
+  subnet_ids         = var.production_subnet_ids
+  transit_gateway_id = aws_ec2_transit_gateway.main.id
+  vpc_id             = var.production_vpc_id
+  dns_support        = "enable"
+  ipv6_support       = "disable"
+  appliance_mode_support = "disable"
+  transit_gateway_default_route_table_association = false
+  transit_gateway_default_route_table_propagation = false
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-tgw-attach-prod"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "development" {
+  subnet_ids         = var.development_subnet_ids
+  transit_gateway_id = aws_ec2_transit_gateway.main.id
+  vpc_id             = var.development_vpc_id
+  dns_support        = "enable"
+  ipv6_support       = "disable"
+  appliance_mode_support = "disable"
+  transit_gateway_default_route_table_association = false
+  transit_gateway_default_route_table_propagation = false
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-tgw-attach-dev"
+  })
+}
+
+resource "aws_ec2_transit_gateway_vpc_attachment" "shared_services" {
+  subnet_ids         = var.shared_services_subnet_ids
+  transit_gateway_id = aws_ec2_transit_gateway.main.id
+  vpc_id             = var.shared_services_vpc_id
+  dns_support        = "enable"
+  ipv6_support       = "disable"
+  appliance_mode_support = "disable"
+  transit_gateway_default_route_table_association = false
+  transit_gateway_default_route_table_propagation = false
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-tgw-attach-shared"
+  })
+}
+
+resource "aws_ec2_transit_gateway_route_table_association" "production" {
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.production.id
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.production.id
+}
+
+resource "aws_ec2_transit_gateway_route_table_association" "development" {
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.development.id
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.development.id
+}
+
+resource "aws_ec2_transit_gateway_route_table_association" "shared_services" {
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.shared_services.id
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_services.id
+}
+
+resource "aws_ec2_transit_gateway_route" "production_to_shared" {
+  destination_cidr_block         = var.shared_services_cidr
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.shared_services.id
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.production.id
+}
+
+resource "aws_ec2_transit_gateway_route" "development_to_shared" {
+  destination_cidr_block         = var.shared_services_cidr
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.shared_services.id
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.development.id
+}
+
+resource "aws_ec2_transit_gateway_route" "shared_to_production" {
+  destination_cidr_block         = var.production_cidr
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.production.id
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_services.id
+}
+
+resource "aws_ec2_transit_gateway_route" "shared_to_development" {
+  destination_cidr_block         = var.development_cidr
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.development.id
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shared_services.id
+}
+
+resource "aws_vpn_connection" "onprem" {
+  customer_gateway_id = aws_customer_gateway.main.id
+  transit_gateway_id  = aws_ec2_transit_gateway.main.id
+  type                = "ipsec.1"
+  static_routes_only  = false
+  enable_acceleration = true
+  local_ipv4_network_cidr  = "0.0.0.0/0"
+  remote_ipv4_network_cidr = var.onprem_cidr
+  tunnel1_inside_cidr      = "169.254.10.0/30"
+  tunnel2_inside_cidr      = "169.254.11.0/30"
+  tunnel1_preshared_key    = var.vpn_tunnel1_psk
+  tunnel2_preshared_key    = var.vpn_tunnel2_psk
+  tunnel1_dpd_timeout_action     = "restart"
+  tunnel2_dpd_timeout_action     = "restart"
+  tunnel1_ike_versions           = ["ikev2"]
+  tunnel2_ike_versions           = ["ikev2"]
+  tunnel1_phase1_dh_group_numbers    = [14, 15, 16, 17, 18, 19, 20, 21]
+  tunnel2_phase1_dh_group_numbers    = [14, 15, 16, 17, 18, 19, 20, 21]
+  tunnel1_phase2_dh_group_numbers    = [14, 15, 16, 17, 18, 19, 20, 21]
+  tunnel2_phase2_dh_group_numbers    = [14, 15, 16, 17, 18, 19, 20, 21]
+  tunnel1_phase1_encryption_algorithms = ["AES256", "AES128"]
+  tunnel2_phase1_encryption_algorithms = ["AES256", "AES128"]
+  tunnel1_phase2_encryption_algorithms = ["AES256", "AES128"]
+  tunnel2_phase2_encryption_algorithms = ["AES256", "AES128"]
+  tunnel1_phase1_integrity_algorithms  = ["SHA2-256", "SHA2-384", "SHA2-512"]
+  tunnel2_phase1_integrity_algorithms  = ["SHA2-256", "SHA2-384", "SHA2-512"]
+  tunnel1_phase2_integrity_algorithms  = ["SHA2-256", "SHA2-384", "SHA2-512"]
+  tunnel2_phase2_integrity_algorithms  = ["SHA2-256", "SHA2-384", "SHA2-512"]
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-vpn-onprem"
+  })
+}
+
+resource "aws_customer_gateway" "main" {
+  bgp_asn    = var.customer_gateway_asn
+  ip_address = var.customer_gateway_ip
+  type       = "ipsec.1"
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-cgw"
+  })
+}
+
+resource "aws_ram_resource_share" "tgw" {
+  name                      = "${var.project}-${var.environment}-tgw-share"
+  allow_external_principals = false
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-tgw-share"
+  })
+}
+
+resource "aws_ram_resource_association" "tgw" {
+  resource_arn       = aws_ec2_transit_gateway.main.arn
+  resource_share_arn = aws_ram_resource_share.tgw.arn
+}
+
+resource "aws_ram_principal_association" "tgw" {
+  for_each           = toset(var.shared_account_ids)
+  principal          = each.value
+  resource_share_arn = aws_ram_resource_share.tgw.arn
+}
+
+resource "aws_cloudwatch_metric_alarm" "tgw_packet_drop" {
+  alarm_name          = "${var.project}-${var.environment}-tgw-packet-drop"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 2
+  metric_name         = "PacketDropCountBlackhole"
+  namespace           = "AWS/TransitGateway"
+  period              = 300
+  statistic           = "Sum"
+  threshold           = 100
+  alarm_description   = "Transit Gateway dropping packets"
+  alarm_actions       = [var.sns_topic_arn]
+  dimensions = {
+    TransitGateway = aws_ec2_transit_gateway.main.id
+  }
+}
+```
+
+### VPC Peering
+
+```hcl
+resource "aws_vpc_peering_connection" "prod_to_shared" {
+  vpc_id        = var.production_vpc_id
+  peer_vpc_id   = var.shared_services_vpc_id
+  peer_owner_id = var.shared_services_account_id
+  peer_region   = var.region
+  auto_accept   = false
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-peer-prod-shared"
+    Side = "requester"
+  })
+}
+
+resource "aws_vpc_peering_connection_accepter" "prod_to_shared" {
+  provider                  = aws.shared_services
+  vpc_peering_connection_id = aws_vpc_peering_connection.prod_to_shared.id
+  auto_accept               = true
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-peer-prod-shared"
+    Side = "accepter"
+  })
+}
+
+resource "aws_vpc_peering_connection_options" "prod_to_shared_requester" {
+  vpc_peering_connection_id = aws_vpc_peering_connection.prod_to_shared.id
+  requester {
+    allow_remote_vpc_dns_resolution = true
+  }
+}
+
+resource "aws_vpc_peering_connection_options" "prod_to_shared_accepter" {
+  provider                  = aws.shared_services
+  vpc_peering_connection_id = aws_vpc_peering_connection.prod_to_shared.id
+  accepter {
+    allow_remote_vpc_dns_resolution = true
+  }
+}
+
+resource "aws_route" "prod_to_shared" {
+  for_each                  = toset(var.production_route_table_ids)
+  route_table_id            = each.value
+  destination_cidr_block    = var.shared_services_cidr
+  vpc_peering_connection_id = aws_vpc_peering_connection.prod_to_shared.id
+}
+
+resource "aws_route" "shared_to_prod" {
+  provider                  = aws.shared_services
+  for_each                  = toset(var.shared_services_route_table_ids)
+  route_table_id            = each.value
+  destination_cidr_block    = var.production_cidr
+  vpc_peering_connection_id = aws_vpc_peering_connection.prod_to_shared.id
+}
+
+resource "aws_vpc_peering_connection" "dev_to_shared" {
+  vpc_id        = var.development_vpc_id
+  peer_vpc_id   = var.shared_services_vpc_id
+  peer_owner_id = var.shared_services_account_id
+  peer_region   = var.region
+  auto_accept   = false
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-peer-dev-shared"
+    Side = "requester"
+  })
+}
+
+resource "aws_vpc_peering_connection_accepter" "dev_to_shared" {
+  provider                  = aws.shared_services
+  vpc_peering_connection_id = aws_vpc_peering_connection.dev_to_shared.id
+  auto_accept               = true
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-peer-dev-shared"
+    Side = "accepter"
+  })
+}
+
+resource "aws_vpc_peering_connection_options" "dev_to_shared_requester" {
+  vpc_peering_connection_id = aws_vpc_peering_connection.dev_to_shared.id
+  requester {
+    allow_remote_vpc_dns_resolution = true
+  }
+}
+
+resource "aws_vpc_peering_connection_options" "dev_to_shared_accepter" {
+  provider                  = aws.shared_services
+  vpc_peering_connection_id = aws_vpc_peering_connection.dev_to_shared.id
+  accepter {
+    allow_remote_vpc_dns_resolution = true
+  }
+}
+
+resource "aws_route" "dev_to_shared" {
+  for_each                  = toset(var.development_route_table_ids)
+  route_table_id            = each.value
+  destination_cidr_block    = var.shared_services_cidr
+  vpc_peering_connection_id = aws_vpc_peering_connection.dev_to_shared.id
+}
+
+resource "aws_route" "shared_to_dev" {
+  provider                  = aws.shared_services
+  for_each                  = toset(var.shared_services_route_table_ids)
+  route_table_id            = each.value
+  destination_cidr_block    = var.development_cidr
+  vpc_peering_connection_id = aws_vpc_peering_connection.dev_to_shared.id
+}
+```
+
+### VPC Endpoints
+
+```hcl
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = var.route_table_ids
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = ["s3:GetObject", "s3:PutObject", "s3:ListBucket"]
+        Resource  = ["arn:aws:s3:::${var.bucket_name}/*", "arn:aws:s3:::${var.bucket_name}"]
+      }
+    ]
+  })
+  tags = merge(var.tags, {
+    Name = "${var.environment}-s3-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "dynamodb" {
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region}.dynamodb"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = var.route_table_ids
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:Query", "dynamodb:Scan"]
+        Resource  = "*"
+      }
+    ]
+  })
+  tags = merge(var.tags, {
+    Name = "${var.environment}-dynamodb-endpoint"
+  })
+}
+
+resource "aws_security_group" "vpc_endpoints" {
+  name        = "${var.environment}-vpc-endpoints-sg"
+  description = "Security group for VPC endpoints"
+  vpc_id      = var.vpc_id
+  ingress {
+    description = "HTTPS from VPC"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+  }
+  egress {
+    description = "All outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = merge(var.tags, {
+    Name = "${var.environment}-vpc-endpoints-sg"
+  })
+}
+
+resource "aws_vpc_endpoint" "ec2" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.${var.region}.ec2"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.subnet_ids
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+  tags = merge(var.tags, {
+    Name = "${var.environment}-ec2-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "ssm" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.${var.region}.ssm"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.subnet_ids
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+  tags = merge(var.tags, {
+    Name = "${var.environment}-ssm-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "ec2messages" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.${var.region}.ec2messages"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.subnet_ids
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+  tags = merge(var.tags, {
+    Name = "${var.environment}-ec2messages-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "ssmmessages" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.${var.region}.ssmmessages"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.subnet_ids
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+  tags = merge(var.tags, {
+    Name = "${var.environment}-ssmmessages-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "logs" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.${var.region}.logs"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.subnet_ids
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+  tags = merge(var.tags, {
+    Name = "${var.environment}-logs-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "kms" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.${var.region}.kms"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.subnet_ids
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+  tags = merge(var.tags, {
+    Name = "${var.environment}-kms-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "ecr_api" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.${var.region}.ecr.api"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.subnet_ids
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+  tags = merge(var.tags, {
+    Name = "${var.environment}-ecr-api-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "ecr_dkr" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.${var.region}.ecr.dkr"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.subnet_ids
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+  tags = merge(var.tags, {
+    Name = "${var.environment}-ecr-dkr-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "ecs" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.${var.region}.ecs"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.subnet_ids
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+  tags = merge(var.tags, {
+    Name = "${var.environment}-ecs-endpoint"
+  })
+}
+```
+
+### AWS Direct Connect
+
+```hcl
+resource "aws_dx_connection" "main" {
+  name      = "${var.project}-${var.environment}-dx"
+  bandwidth = var.bandwidth
+  location  = var.dx_location
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-dx"
+  })
+}
+
+resource "aws_dx_lag" "main" {
+  name              = "${var.project}-${var.environment}-dx-lag"
+  connections_bandwidth = var.bandwidth
+  location              = var.dx_location
+  number_of_connections = 2
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-dx-lag"
+  })
+}
+
+resource "aws_dx_connection_association" "lag" {
+  connection_id = aws_dx_connection.main.id
+  lag_id        = aws_dx_lag.main.id
+}
+
+resource "aws_dx_gateway" "main" {
+  name            = "${var.project}-${var.environment}-dx-gw"
+  amazon_side_asn = var.dx_gateway_asn
+}
+
+resource "aws_dx_private_virtual_interface" "main" {
+  connection_id    = aws_dx_connection.main.id
+  name             = "${var.project}-${var.environment}-dx-vif-private"
+  vlan             = var.vlan_id
+  address_family   = "ipv4"
+  bgp_asn          = var.customer_bgp_asn
+  bgp_auth_key     = var.bgp_auth_key
+  amazon_address   = var.amazon_bgp_address
+  customer_address = var.customer_bgp_address
+  dx_gateway_id    = aws_dx_gateway.main.id
+  mtu              = 1500
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-dx-vif-private"
+  })
+}
+
+resource "aws_dx_transit_virtual_interface" "main" {
+  connection_id    = aws_dx_connection.main.id
+  dx_gateway_id    = aws_dx_gateway.main.id
+  name             = "${var.project}-${var.environment}-dx-vif-transit"
+  vlan             = var.transit_vlan_id
+  address_family   = "ipv4"
+  bgp_asn          = var.customer_bgp_asn
+  bgp_auth_key     = var.bgp_auth_key
+  amazon_address   = var.transit_amazon_bgp_address
+  customer_address = var.transit_customer_bgp_address
+  mtu              = 8500
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-dx-vif-transit"
+  })
+}
+
+resource "aws_dx_gateway_association" "tgw" {
+  dx_gateway_id         = aws_dx_gateway.main.id
+  associated_gateway_id = var.transit_gateway_id
+  allowed_prefixes      = var.allowed_prefixes
+}
+
+resource "aws_cloudwatch_metric_alarm" "dx_connection_state" {
+  alarm_name          = "${var.project}-${var.environment}-dx-connection-state"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "ConnectionState"
+  namespace           = "AWS/DX"
+  period              = 60
+  statistic           = "Minimum"
+  threshold           = 1
+  alarm_description   = "Direct Connect connection is down"
+  alarm_actions       = [var.sns_topic_arn]
+  dimensions = {
+    ConnectionId = aws_dx_connection.main.id
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "dx_vif_state" {
+  alarm_name          = "${var.project}-${var.environment}-dx-vif-state"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "VirtualInterfaceState"
+  namespace           = "AWS/DX"
+  period              = 60
+  statistic           = "Minimum"
+  threshold           = 1
+  alarm_description   = "Direct Connect virtual interface is down"
+  alarm_actions       = [var.sns_topic_arn]
+  dimensions = {
+    VirtualInterfaceId = aws_dx_private_virtual_interface.main.id
+  }
+}
+```
+
+### Multi-Region Networking
+
+```hcl
+resource "aws_globalaccelerator_accelerator" "main" {
+  name            = "${var.project}-${var.environment}-accelerator"
+  ip_address_type = "IPV4"
+  enabled         = true
+  attributes {
+    flow_logs_enabled   = true
+    flow_logs_s3_bucket = var.flow_logs_bucket
+    flow_logs_s3_prefix = "globalaccelerator/"
+  }
+  tags = merge(var.tags, {
+    Name = "${var.project}-${var.environment}-accelerator"
+  })
+}
+
+resource "aws_globalaccelerator_listener" "https" {
+  accelerator_arn = aws_globalaccelerator_accelerator.main.id
+  protocol        = "TCP"
+  port_range {
+    from_port = 443
+    to_port   = 443
+  }
+}
+
+resource "aws_globalaccelerator_endpoint_group" "us_east_1" {
+  listener_arn                  = aws_globalaccelerator_listener.https.id
+  endpoint_group_region         = "us-east-1"
+  traffic_dial_percentage       = 100
+  health_check_interval_seconds = 30
+  health_check_path             = "/health"
+  health_check_port             = 443
+  health_check_protocol         = "HTTPS"
+  threshold_count               = 3
+  endpoint_configuration {
+    endpoint_id                    = var.us_east_1_alb_arn
+    weight                         = 100
+    client_ip_preservation_enabled = true
+  }
+}
+
+resource "aws_globalaccelerator_endpoint_group" "eu_west_1" {
+  listener_arn                  = aws_globalaccelerator_listener.https.id
+  endpoint_group_region         = "eu-west-1"
+  traffic_dial_percentage       = 100
+  health_check_interval_seconds = 30
+  health_check_path             = "/health"
+  health_check_port             = 443
+  health_check_protocol         = "HTTPS"
+  threshold_count               = 3
+  endpoint_configuration {
+    endpoint_id                    = var.eu_west_1_alb_arn
+    weight                         = 100
+    client_ip_preservation_enabled = true
+  }
+}
+
+resource "aws_globalaccelerator_endpoint_group" "ap_southeast_1" {
+  listener_arn                  = aws_globalaccelerator_listener.https.id
+  endpoint_group_region         = "ap-southeast-1"
+  traffic_dial_percentage       = 100
+  health_check_interval_seconds = 30
+  health_check_path             = "/health"
+  health_check_port             = 443
+  health_check_protocol         = "HTTPS"
+  threshold_count               = 3
+  endpoint_configuration {
+    endpoint_id                    = var.ap_southeast_1_alb_arn
+    weight                         = 100
+    client_ip_preservation_enabled = true
+  }
+}
+
+resource "aws_route53_health_check" "us_east_1" {
+  fqdn              = var.us_east_1_alb_dns
+  port              = 443
+  type              = "HTTPS"
+  resource_path     = "/health"
+  failure_threshold = 3
+  request_interval  = 30
+  measure_latency   = true
+  tags = merge(var.tags, {
+    Name   = "${var.project}-${var.environment}-health-us-east-1"
+    Region = "us-east-1"
+  })
+}
+
+resource "aws_route53_health_check" "eu_west_1" {
+  fqdn              = var.eu_west_1_alb_dns
+  port              = 443
+  type              = "HTTPS"
+  resource_path     = "/health"
+  failure_threshold = 3
+  request_interval  = 30
+  measure_latency   = true
+  tags = merge(var.tags, {
+    Name   = "${var.project}-${var.environment}-health-eu-west-1"
+    Region = "eu-west-1"
+  })
+}
+
+resource "aws_route53_health_check" "ap_southeast_1" {
+  fqdn              = var.ap_southeast_1_alb_dns
+  port              = 443
+  type              = "HTTPS"
+  resource_path     = "/health"
+  failure_threshold = 3
+  request_interval  = 30
+  measure_latency   = true
+  tags = merge(var.tags, {
+    Name   = "${var.project}-${var.environment}-health-ap-southeast-1"
+    Region = "ap-southeast-1"
+  })
+}
+
+resource "aws_route53_record" "primary" {
+  zone_id = var.route53_zone_id
+  name    = var.domain_name
+  type    = "A"
+  set_identifier = "us-east-1"
+  latency_routing_policy {
+    region = "us-east-1"
+  }
+  alias {
+    name                   = var.us_east_1_alb_dns
+    zone_id                = var.us_east_1_alb_zone_id
+    evaluate_target_health = true
+  }
+  health_check_id = aws_route53_health_check.us_east_1.id
+}
+
+resource "aws_route53_record" "secondary" {
+  zone_id = var.route53_zone_id
+  name    = var.domain_name
+  type    = "A"
+  set_identifier = "eu-west-1"
+  latency_routing_policy {
+    region = "eu-west-1"
+  }
+  alias {
+    name                   = var.eu_west_1_alb_dns
+    zone_id                = var.eu_west_1_alb_zone_id
+    evaluate_target_health = true
+  }
+  health_check_id = aws_route53_health_check.eu_west_1.id
+}
+
+resource "aws_route53_record" "tertiary" {
+  zone_id = var.route53_zone_id
+  name    = var.domain_name
+  type    = "A"
+  set_identifier = "ap-southeast-1"
+  latency_routing_policy {
+    region = "ap-southeast-1"
+  }
+  alias {
+    name                   = var.ap_southeast_1_alb_dns
+    zone_id                = var.ap_southeast_1_alb_zone_id
+    evaluate_target_health = true
+  }
+  health_check_id = aws_route53_health_check.ap_southeast_1.id
 }
 ```
 
@@ -6557,8 +7289,6 @@ resource "aws_route_table_association" "public" {
   subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
 }
-```
-
 ```hcl
 ## modules/vpc-network/variables.tf
 variable "project" {
@@ -6596,8 +7326,6 @@ variable "common_tags" {
   description = "Common tags to apply to all resources"
   default     = {}
 }
-```
-
 ```hcl
 ## modules/vpc-network/outputs.tf
 output "vpc_id" {
@@ -6629,7 +7357,8 @@ output "internet_gateway_id" {
 
 ## Testing and Validation
 
-Comprehensive testing is essential for production Terraform modules. This section demonstrates testing strategies using Terratest, integration testing patterns, and policy validation with OPA and Sentinel.
+Comprehensive testing is essential for production Terraform modules. This section demonstrates testing strategies using
+Terratest, integration testing patterns, and policy validation with OPA and Sentinel.
 
 ### Introduction to Terraform Testing
 
@@ -6652,11 +7381,13 @@ Comprehensive testing is essential for production Terraform modules. This sectio
 
 ### Terratest Framework
 
-Terratest is the industry-standard testing framework for Terraform modules. It provides robust infrastructure testing capabilities with proper setup, teardown, and validation patterns.
+Terratest is the industry-standard testing framework for Terraform modules. It provides robust infrastructure testing
+capabilities with proper setup, teardown, and validation patterns.
 
 #### VPC Module Terratest Examples
 
-Complete Terratest suite for VPC module testing with multiple subnet configurations, CIDR validation, NAT gateway deployment, and network ACL verification.
+Complete Terratest suite for VPC module testing with multiple subnet configurations, CIDR validation, NAT gateway
+deployment, and network ACL verification.
 
 ```go
 // test/vpc_module_test.go
@@ -7571,7 +8302,8 @@ func TestEKSClusterLoggingAndMonitoring(t *testing.T) {
 
 #### RDS Database Terratest Examples
 
-Complete Terratest suite for RDS database module testing including encryption, backup configuration, multi-AZ deployment, parameter groups, and disaster recovery scenarios.
+Complete Terratest suite for RDS database module testing including encryption, backup configuration, multi-AZ
+deployment, parameter groups, and disaster recovery scenarios.
 
 ```go
 // test/rds_database_test.go
@@ -8065,7 +8797,8 @@ func TestRDSPerformanceInsights(t *testing.T) {
 
 #### Lambda Function Terratest Examples
 
-Comprehensive Terratest suite for AWS Lambda function module testing including deployment with layers, IAM permissions, environment variables, CloudWatch log groups, and trigger configurations.
+Comprehensive Terratest suite for AWS Lambda function module testing including deployment with layers, IAM permissions,
+environment variables, CloudWatch log groups, and trigger configurations.
 
 ```go
 // test/lambda_function_test.go
@@ -8450,11 +9183,13 @@ func TestLambdaFunctionDeadLetterQueue(t *testing.T) {
 
 ### Integration Testing
 
-Multi-module integration testing validates complete infrastructure deployments, cross-module dependencies, end-to-end connectivity, and production deployment scenarios.
+Multi-module integration testing validates complete infrastructure deployments, cross-module dependencies, end-to-end
+connectivity, and production deployment scenarios.
 
 #### Multi-Module Integration Tests
 
-Complete integration test suite demonstrating testing of full 3-tier application deployment with VPC, load balancer, application servers, and database tier.
+Complete integration test suite demonstrating testing of full 3-tier application deployment with VPC, load balancer,
+application servers, and database tier.
 
 ```go
 // test/integration_test.go
@@ -8823,7 +9558,8 @@ func TestDisasterRecoveryFailover(t *testing.T) {
 
 ### Policy Testing
 
-Policy-as-code testing validates infrastructure compliance using Open Policy Agent (OPA) and HashiCorp Sentinel. These tests ensure infrastructure meets security, cost, and compliance requirements before deployment.
+Policy-as-code testing validates infrastructure compliance using Open Policy Agent (OPA) and HashiCorp Sentinel. These
+tests ensure infrastructure meets security, cost, and compliance requirements before deployment.
 
 #### Open Policy Agent (OPA) Examples
 
@@ -8864,7 +9600,8 @@ deny[msg] {
 deny[msg] {
  resource := input.resource_changes[_]
  resource.type == "aws_s3_bucket"
- resource.change.after.server_side_encryption_configuration[_].rule[_].apply_server_side_encryption_by_default[_].sse_algorithm != "aws:kms"
+ resource.change.after.server_side_encryption_configuration[_].rule[_].apply_server_side_encryption_by_default[_].sse_alg
+orithm != "aws:kms"
 
  msg := sprintf("S3 bucket '%s' must use KMS encryption", [resource.name])
 }
