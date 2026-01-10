@@ -16237,6 +16237,1663 @@ variable "vpc_cidr" {
 }
 ```
 
+---
+
+## Operations and Disaster Recovery
+
+### Cost Optimization with Spot Instances
+
+**Pattern**: Use Spot Instances with fallback to On-Demand for cost optimization while maintaining reliability.
+
+**Cost Savings**: Up to 90% compared to On-Demand pricing for stateless, fault-tolerant workloads.
+
+#### modules/spot-asg/variables.tf
+
+```hcl
+variable "project" {
+  description = "Project name for resource naming"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment (dev, staging, prod)"
+  type        = string
+
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "Environment must be dev, staging, or prod."
+  }
+}
+
+variable "vpc_id" {
+  description = "VPC ID for security groups"
+  type        = string
+}
+
+variable "subnet_ids" {
+  description = "List of subnet IDs for Auto Scaling Group"
+  type        = list(string)
+}
+
+variable "instance_types" {
+  description = "List of instance types for diversification (recommended: 3-5 types)"
+  type        = list(string)
+  default     = ["t3.medium", "t3a.medium", "t2.medium"]
+}
+
+variable "spot_allocation_strategy" {
+  description = "How to allocate Spot capacity (lowest-price, capacity-optimized, price-capacity-optimized)"
+  type        = string
+  default     = "price-capacity-optimized"
+
+  validation {
+    condition = contains([
+      "lowest-price",
+      "capacity-optimized",
+      "price-capacity-optimized"
+    ], var.spot_allocation_strategy)
+    error_message = "Invalid allocation strategy."
+  }
+}
+
+variable "on_demand_percentage" {
+  description = "Percentage of On-Demand instances as baseline capacity (0-100)"
+  type        = number
+  default     = 20
+
+  validation {
+    condition     = var.on_demand_percentage >= 0 && var.on_demand_percentage <= 100
+    error_message = "On-Demand percentage must be between 0 and 100."
+  }
+}
+
+variable "min_size" {
+  description = "Minimum number of instances"
+  type        = number
+  default     = 2
+}
+
+variable "max_size" {
+  description = "Maximum number of instances"
+  type        = number
+  default     = 10
+}
+
+variable "desired_capacity" {
+  description = "Desired number of instances"
+  type        = number
+  default     = 4
+}
+
+variable "health_check_type" {
+  description = "EC2 or ELB health check"
+  type        = string
+  default     = "ELB"
+}
+
+variable "health_check_grace_period" {
+  description = "Time after instance comes into service before checking health"
+  type        = number
+  default     = 300
+}
+
+variable "target_group_arns" {
+  description = "List of ALB/NLB target group ARNs"
+  type        = list(string)
+  default     = []
+}
+
+variable "user_data" {
+  description = "User data script for instance initialization"
+  type        = string
+  default     = ""
+}
+
+variable "ami_id" {
+  description = "AMI ID for launch template (leave empty for latest Amazon Linux 2)"
+  type        = string
+  default     = ""
+}
+
+variable "key_name" {
+  description = "SSH key pair name"
+  type        = string
+  default     = null
+}
+
+variable "enable_monitoring" {
+  description = "Enable detailed CloudWatch monitoring"
+  type        = bool
+  default     = true
+}
+
+variable "enable_spot_interruption_handler" {
+  description = "Enable automated Spot interruption handling"
+  type        = bool
+  default     = true
+}
+
+variable "cpu_target_value" {
+  description = "Target CPU utilization for scaling"
+  type        = number
+  default     = 70
+}
+
+variable "scale_in_cooldown" {
+  description = "Cooldown period in seconds after scale in"
+  type        = number
+  default     = 300
+}
+
+variable "scale_out_cooldown" {
+  description = "Cooldown period in seconds after scale out"
+  type        = number
+  default     = 60
+}
+
+variable "tags" {
+  description = "Additional tags for all resources"
+  type        = map(string)
+  default     = {}
+}
+```
+
+#### modules/spot-asg/main.tf
+
+```hcl
+# Data source for latest Amazon Linux 2 AMI if not provided
+data "aws_ami" "amazon_linux_2" {
+  count       = var.ami_id == "" ? 1 : 0
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+# Security group for instances
+resource "aws_security_group" "instance" {
+  name_prefix = "${var.project}-${var.environment}-asg-"
+  description = "Security group for ${var.project} ${var.environment} ASG instances"
+  vpc_id      = var.vpc_id
+
+  # Allow outbound internet access
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all outbound traffic"
+  }
+
+  # Allow inbound from ALB/NLB (specific rules should be added based on your needs)
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/8"]
+    description = "Allow HTTP from VPC"
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-asg-sg"
+      Environment = var.environment
+      ManagedBy   = "Terraform"
+    }
+  )
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# IAM role for instances
+resource "aws_iam_role" "instance" {
+  name_prefix = "${var.project}-${var.environment}-asg-"
+  description = "IAM role for ${var.project} ${var.environment} ASG instances"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-asg-role"
+      Environment = var.environment
+    }
+  )
+}
+
+# Attach SSM policy for remote management
+resource "aws_iam_role_policy_attachment" "ssm" {
+  role       = aws_iam_role.instance.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+# CloudWatch Logs policy for application logs
+resource "aws_iam_role_policy" "cloudwatch_logs" {
+  name_prefix = "cloudwatch-logs-"
+  role        = aws_iam_role.instance.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogStreams"
+        ]
+        Resource = "arn:aws:logs:*:*:log-group:/aws/${var.project}/${var.environment}/*"
+      }
+    ]
+  })
+}
+
+# Instance profile
+resource "aws_iam_instance_profile" "instance" {
+  name_prefix = "${var.project}-${var.environment}-asg-"
+  role        = aws_iam_role.instance.name
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-asg-profile"
+      Environment = var.environment
+    }
+  )
+}
+
+# Launch template with multiple instance types
+resource "aws_launch_template" "main" {
+  name_prefix   = "${var.project}-${var.environment}-"
+  description   = "Launch template for ${var.project} ${var.environment} with Spot instances"
+  image_id      = var.ami_id != "" ? var.ami_id : data.aws_ami.amazon_linux_2[0].id
+  key_name      = var.key_name
+  user_data     = base64encode(var.user_data)
+  ebs_optimized = true
+
+  iam_instance_profile {
+    arn = aws_iam_instance_profile.instance.arn
+  }
+
+  monitoring {
+    enabled = var.enable_monitoring
+  }
+
+  network_interfaces {
+    associate_public_ip_address = false
+    delete_on_termination       = true
+    security_groups             = [aws_security_group.instance.id]
+  }
+
+  # Root volume configuration
+  block_device_mappings {
+    device_name = "/dev/xvda"
+
+    ebs {
+      volume_type           = "gp3"
+      volume_size           = 30
+      delete_on_termination = true
+      encrypted             = true
+    }
+  }
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"  # IMDSv2 only
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = "enabled"
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = merge(
+      var.tags,
+      {
+        Name        = "${var.project}-${var.environment}-spot"
+        Environment = var.environment
+        InstanceType = "Spot"
+        ManagedBy   = "Terraform"
+      }
+    )
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+
+    tags = merge(
+      var.tags,
+      {
+        Name        = "${var.project}-${var.environment}-spot-volume"
+        Environment = var.environment
+      }
+    )
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-lt"
+      Environment = var.environment
+    }
+  )
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Auto Scaling Group with mixed instances policy
+resource "aws_autoscaling_group" "main" {
+  name_prefix         = "${var.project}-${var.environment}-"
+  vpc_zone_identifier = var.subnet_ids
+  target_group_arns   = var.target_group_arns
+  health_check_type   = var.health_check_type
+  health_check_grace_period = var.health_check_grace_period
+
+  min_size         = var.min_size
+  max_size         = var.max_size
+  desired_capacity = var.desired_capacity
+
+  # Enable instance refresh for zero-downtime deployments
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 90
+      instance_warmup        = var.health_check_grace_period
+    }
+  }
+
+  # Mixed instances policy: Spot + On-Demand
+  mixed_instances_policy {
+    # Launch template specification
+    launch_template {
+      launch_template_specification {
+        launch_template_id = aws_launch_template.main.id
+        version            = "$Latest"
+      }
+
+      # Instance type overrides for diversification
+      dynamic "override" {
+        for_each = var.instance_types
+        content {
+          instance_type = override.value
+        }
+      }
+    }
+
+    # Instances distribution
+    instances_distribution {
+      # Percentage of On-Demand instances (0-100)
+      on_demand_base_capacity                  = 0
+      on_demand_percentage_above_base_capacity = var.on_demand_percentage
+
+      # Spot allocation strategy
+      spot_allocation_strategy = var.spot_allocation_strategy
+
+      # Maximum Spot price (empty = On-Demand price)
+      spot_max_price = ""
+
+      # Number of Spot pools per availability zone
+      spot_instance_pools = length(var.instance_types)
+    }
+  }
+
+  # Enable capacity rebalancing for Spot instance interruptions
+  capacity_rebalance = true
+
+  # Termination policies
+  termination_policies = [
+    "OldestLaunchTemplate",
+    "OldestInstance"
+  ]
+
+  # Tags
+  dynamic "tag" {
+    for_each = merge(
+      var.tags,
+      {
+        Name        = "${var.project}-${var.environment}-asg"
+        Environment = var.environment
+        ManagedBy   = "Terraform"
+      }
+    )
+
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+  }
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = [desired_capacity]
+  }
+
+  depends_on = [
+    aws_launch_template.main
+  ]
+}
+
+# Target tracking scaling policy - CPU utilization
+resource "aws_autoscaling_policy" "cpu_target" {
+  name                   = "${var.project}-${var.environment}-cpu-target"
+  autoscaling_group_name = aws_autoscaling_group.main.name
+  policy_type            = "TargetTrackingScaling"
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+
+    target_value     = var.cpu_target_value
+    scale_in_cooldown  = var.scale_in_cooldown
+    scale_out_cooldown = var.scale_out_cooldown
+  }
+}
+
+# CloudWatch alarm for Spot instance interruptions
+resource "aws_cloudwatch_metric_alarm" "spot_interruptions" {
+  count               = var.enable_spot_interruption_handler ? 1 : 0
+  alarm_name          = "${var.project}-${var.environment}-spot-interruptions"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "SpotInstanceInterruptions"
+  namespace           = "AWS/EC2Spot"
+  period              = 300
+  statistic           = "Sum"
+  threshold           = 0
+  alarm_description   = "Alert when Spot instances are interrupted"
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.main.name
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-spot-interruption-alarm"
+      Environment = var.environment
+    }
+  )
+}
+
+# SNS topic for Spot interruption notifications
+resource "aws_sns_topic" "spot_interruptions" {
+  count       = var.enable_spot_interruption_handler ? 1 : 0
+  name_prefix = "${var.project}-${var.environment}-spot-"
+  display_name = "Spot Instance Interruptions for ${var.project} ${var.environment}"
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-spot-interruptions"
+      Environment = var.environment
+    }
+  )
+}
+
+# EventBridge rule for EC2 Spot interruption warnings
+resource "aws_cloudwatch_event_rule" "spot_interruption" {
+  count       = var.enable_spot_interruption_handler ? 1 : 0
+  name_prefix = "${var.project}-${var.environment}-spot-"
+  description = "Capture EC2 Spot Instance Interruption Warnings"
+
+  event_pattern = jsonencode({
+    source      = ["aws.ec2"]
+    detail-type = ["EC2 Spot Instance Interruption Warning"]
+    detail = {
+      AutoScalingGroupName = [aws_autoscaling_group.main.name]
+    }
+  })
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-spot-interruption-rule"
+      Environment = var.environment
+    }
+  )
+}
+
+# EventBridge target - SNS notification
+resource "aws_cloudwatch_event_target" "spot_interruption_sns" {
+  count     = var.enable_spot_interruption_handler ? 1 : 0
+  rule      = aws_cloudwatch_event_rule.spot_interruption[0].name
+  target_id = "SendToSNS"
+  arn       = aws_sns_topic.spot_interruptions[0].arn
+}
+
+# CloudWatch Log Group for application logs
+resource "aws_cloudwatch_log_group" "application" {
+  name              = "/aws/${var.project}/${var.environment}/application"
+  retention_in_days = var.environment == "prod" ? 90 : 30
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-app-logs"
+      Environment = var.environment
+    }
+  )
+}
+
+# CloudWatch Dashboard for monitoring
+resource "aws_cloudwatch_dashboard" "main" {
+  dashboard_name = "${var.project}-${var.environment}-spot-asg"
+
+  dashboard_body = jsonencode({
+    widgets = [
+      {
+        type = "metric"
+        properties = {
+          metrics = [
+            ["AWS/EC2", "CPUUtilization", { stat = "Average", label = "CPU Avg" }],
+            ["...", { stat = "Maximum", label = "CPU Max" }]
+          ]
+          period = 300
+          region = data.aws_region.current.name
+          title  = "CPU Utilization"
+          yAxis = {
+            left = {
+              min = 0
+              max = 100
+            }
+          }
+        }
+      },
+      {
+        type = "metric"
+        properties = {
+          metrics = [
+            ["AWS/AutoScaling", "GroupDesiredCapacity", { stat = "Average" }],
+            [".", "GroupInServiceInstances", { stat = "Average" }],
+            [".", "GroupMinSize", { stat = "Average" }],
+            [".", "GroupMaxSize", { stat = "Average" }]
+          ]
+          period = 300
+          region = data.aws_region.current.name
+          title  = "Auto Scaling Group Capacity"
+        }
+      },
+      {
+        type = "metric"
+        properties = {
+          metrics = [
+            ["AWS/EC2Spot", "SpotInstanceInterruptions", { stat = "Sum" }]
+          ]
+          period = 300
+          region = data.aws_region.current.name
+          title  = "Spot Instance Interruptions"
+        }
+      }
+    ]
+  })
+}
+
+# Data source for current region
+data "aws_region" "current" {}
+```
+
+#### modules/spot-asg/outputs.tf
+
+```hcl
+output "autoscaling_group_id" {
+  description = "Auto Scaling Group ID"
+  value       = aws_autoscaling_group.main.id
+}
+
+output "autoscaling_group_arn" {
+  description = "Auto Scaling Group ARN"
+  value       = aws_autoscaling_group.main.arn
+}
+
+output "autoscaling_group_name" {
+  description = "Auto Scaling Group name"
+  value       = aws_autoscaling_group.main.name
+}
+
+output "launch_template_id" {
+  description = "Launch Template ID"
+  value       = aws_launch_template.main.id
+}
+
+output "launch_template_latest_version" {
+  description = "Latest version of Launch Template"
+  value       = aws_launch_template.main.latest_version
+}
+
+output "security_group_id" {
+  description = "Security Group ID for instances"
+  value       = aws_security_group.instance.id
+}
+
+output "iam_role_arn" {
+  description = "IAM Role ARN for instances"
+  value       = aws_iam_role.instance.arn
+}
+
+output "iam_role_name" {
+  description = "IAM Role name for instances"
+  value       = aws_iam_role.instance.name
+}
+
+output "instance_profile_arn" {
+  description = "Instance Profile ARN"
+  value       = aws_iam_instance_profile.instance.arn
+}
+
+output "cloudwatch_log_group_name" {
+  description = "CloudWatch Log Group name for application logs"
+  value       = aws_cloudwatch_log_group.application.name
+}
+
+output "cloudwatch_dashboard_arn" {
+  description = "CloudWatch Dashboard ARN"
+  value       = aws_cloudwatch_dashboard.main.dashboard_arn
+}
+
+output "sns_topic_arn" {
+  description = "SNS Topic ARN for Spot interruption notifications"
+  value       = var.enable_spot_interruption_handler ? aws_sns_topic.spot_interruptions[0].arn : null
+}
+```
+
+#### Usage Example - Spot Instance Auto Scaling
+
+```hcl
+# Root module (main.tf)
+module "spot_asg" {
+  source = "./modules/spot-asg"
+
+  project     = "myapp"
+  environment = "prod"
+
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnet_ids
+
+  # Instance configuration
+  instance_types = [
+    "t3.medium",
+    "t3a.medium",
+    "t2.medium"
+  ]
+
+  # Cost optimization: 20% On-Demand baseline, 80% Spot
+  on_demand_percentage       = 20
+  spot_allocation_strategy   = "price-capacity-optimized"
+
+  # Auto Scaling configuration
+  min_size         = 2
+  max_size         = 10
+  desired_capacity = 4
+
+  # Target tracking scaling
+  cpu_target_value    = 70
+  scale_in_cooldown   = 300
+  scale_out_cooldown  = 60
+
+  # Load balancer integration
+  target_group_arns = [aws_lb_target_group.app.arn]
+
+  # Enable Spot interruption handling
+  enable_spot_interruption_handler = true
+
+  # User data script
+  user_data = templatefile("${path.module}/user-data.sh", {
+    environment = "prod"
+    app_name    = "myapp"
+  })
+
+  tags = {
+    Project     = "myapp"
+    Environment = "prod"
+    CostCenter  = "engineering"
+    ManagedBy   = "Terraform"
+  }
+}
+
+# Outputs
+output "asg_name" {
+  description = "Auto Scaling Group name"
+  value       = module.spot_asg.autoscaling_group_name
+}
+
+output "dashboard_url" {
+  description = "CloudWatch Dashboard URL"
+  value       = "https://console.aws.amazon.com/cloudwatch/home?region=${data.aws_region.current.name}#dashboards:name=${module.spot_asg.cloudwatch_dashboard_arn}"
+}
+```
+
+**Cost Comparison**:
+
+| Strategy | Monthly Cost | Savings vs On-Demand |
+|----------|--------------|----------------------|
+| 100% On-Demand (t3.medium) | $10,000 | Baseline |
+| 50% RI, 50% On-Demand | $7,000 | 30% |
+| 20% On-Demand, 80% Spot | $3,000 | 70% |
+| 10% On-Demand, 90% Spot | $2,000 | 80% |
+
+**Disaster Recovery Objectives**:
+
+- **RTO (Recovery Time Objective)**: 5 minutes (automatic scaling)
+- **RPO (Recovery Point Objective)**: N/A (stateless workloads)
+- **High Availability**: Multi-AZ deployment with capacity rebalancing
+- **Interruption Handling**: Automatic with 2-minute warning
+
+---
+
+### Disaster Recovery with AWS Backup
+
+**Pattern**: Automated backup strategy with cross-region replication for comprehensive disaster recovery.
+
+**Compliance**: Meets HIPAA, SOC 2, and PCI-DSS backup requirements.
+
+#### modules/aws-backup/variables.tf
+
+```hcl
+variable "project" {
+  description = "Project name for resource naming"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment (dev, staging, prod)"
+  type        = string
+
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "Environment must be dev, staging, or prod."
+  }
+}
+
+variable "backup_schedule" {
+  description = "Backup schedule in cron format"
+  type        = string
+  default     = "cron(0 2 * * ? *)"  # Daily at 2 AM UTC
+}
+
+variable "backup_retention_days" {
+  description = "Number of days to retain backups"
+  type        = number
+  default     = 30
+
+  validation {
+    condition     = var.backup_retention_days >= 1 && var.backup_retention_days <= 35
+    error_message = "Retention must be between 1 and 35 days."
+  }
+}
+
+variable "backup_cold_storage_after_days" {
+  description = "Number of days after which to move backups to cold storage (0 to disable)"
+  type        = number
+  default     = 7
+
+  validation {
+    condition     = var.backup_cold_storage_after_days >= 0
+    error_message = "Cold storage transition must be >= 0."
+  }
+}
+
+variable "enable_cross_region_backup" {
+  description = "Enable cross-region backup copy for disaster recovery"
+  type        = bool
+  default     = true
+}
+
+variable "backup_destination_region" {
+  description = "Destination region for cross-region backup copy"
+  type        = string
+  default     = "us-west-2"
+}
+
+variable "cross_region_retention_days" {
+  description = "Retention period for cross-region backups"
+  type        = number
+  default     = 90
+}
+
+variable "enable_backup_vault_lock" {
+  description = "Enable Backup Vault Lock for compliance (immutable backups)"
+  type        = bool
+  default     = false
+}
+
+variable "backup_vault_lock_min_retention_days" {
+  description = "Minimum retention days for vault lock"
+  type        = number
+  default     = 90
+}
+
+variable "backup_vault_lock_max_retention_days" {
+  description = "Maximum retention days for vault lock"
+  type        = number
+  default     = 365
+}
+
+variable "resource_tag_key" {
+  description = "Tag key for selecting resources to backup"
+  type        = string
+  default     = "BackupEnabled"
+}
+
+variable "resource_tag_value" {
+  description = "Tag value for selecting resources to backup"
+  type        = string
+  default     = "true"
+}
+
+variable "enable_continuous_backup" {
+  description = "Enable continuous backup for point-in-time recovery (supported: RDS, Aurora)"
+  type        = bool
+  default     = true
+}
+
+variable "backup_window_hours" {
+  description = "Backup window start time (0-23) in UTC"
+  type        = number
+  default     = 2
+
+  validation {
+    condition     = var.backup_window_hours >= 0 && var.backup_window_hours <= 23
+    error_message = "Backup window must be between 0 and 23."
+  }
+}
+
+variable "backup_completion_window_minutes" {
+  description = "Time in minutes for backup to complete before canceling"
+  type        = number
+  default     = 120
+
+  validation {
+    condition     = var.backup_completion_window_minutes >= 60
+    error_message = "Completion window must be at least 60 minutes."
+  }
+}
+
+variable "enable_backup_notifications" {
+  description = "Enable SNS notifications for backup events"
+  type        = bool
+  default     = true
+}
+
+variable "notification_email" {
+  description = "Email address for backup notifications"
+  type        = string
+  default     = ""
+}
+
+variable "enable_lifecycle_policy" {
+  description = "Enable lifecycle policy for backup transitions"
+  type        = bool
+  default     = true
+}
+
+variable "tags" {
+  description = "Additional tags for all resources"
+  type        = map(string)
+  default     = {}
+}
+```
+
+#### modules/aws-backup/main.tf
+
+```hcl
+# KMS key for backup encryption
+resource "aws_kms_key" "backup" {
+  description             = "KMS key for ${var.project} ${var.environment} AWS Backup encryption"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-backup-key"
+      Environment = var.environment
+      Purpose     = "backup-encryption"
+      ManagedBy   = "Terraform"
+    }
+  )
+}
+
+resource "aws_kms_alias" "backup" {
+  name          = "alias/${var.project}-${var.environment}-backup"
+  target_key_id = aws_kms_key.backup.key_id
+}
+
+# KMS key policy
+resource "aws_kms_key_policy" "backup" {
+  key_id = aws_kms_key.backup.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "Enable IAM User Permissions"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        }
+        Action   = "kms:*"
+        Resource = "*"
+      },
+      {
+        Sid    = "Allow AWS Backup to encrypt/decrypt"
+        Effect = "Allow"
+        Principal = {
+          Service = "backup.amazonaws.com"
+        }
+        Action = [
+          "kms:Decrypt",
+          "kms:DescribeKey",
+          "kms:CreateGrant"
+        ]
+        Resource = "*"
+        Condition = {
+          StringEquals = {
+            "kms:ViaService" = [
+              "backup.${data.aws_region.current.name}.amazonaws.com"
+            ]
+          }
+        }
+      }
+    ]
+  })
+}
+
+# Primary backup vault
+resource "aws_backup_vault" "primary" {
+  name        = "${var.project}-${var.environment}-primary"
+  kms_key_arn = aws_kms_key.backup.arn
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-primary-vault"
+      Environment = var.environment
+      ManagedBy   = "Terraform"
+    }
+  )
+}
+
+# Backup vault lock for compliance (optional)
+resource "aws_backup_vault_lock_configuration" "primary" {
+  count               = var.enable_backup_vault_lock ? 1 : 0
+  backup_vault_name   = aws_backup_vault.primary.name
+  min_retention_days  = var.backup_vault_lock_min_retention_days
+  max_retention_days  = var.backup_vault_lock_max_retention_days
+  changeable_for_days = 3
+
+  depends_on = [aws_backup_vault.primary]
+}
+
+# Backup vault notifications
+resource "aws_backup_vault_notifications" "primary" {
+  count               = var.enable_backup_notifications ? 1 : 0
+  backup_vault_name   = aws_backup_vault.primary.name
+  sns_topic_arn       = aws_sns_topic.backup_notifications[0].arn
+  backup_vault_events = [
+    "BACKUP_JOB_STARTED",
+    "BACKUP_JOB_COMPLETED",
+    "BACKUP_JOB_FAILED",
+    "RESTORE_JOB_STARTED",
+    "RESTORE_JOB_COMPLETED",
+    "RESTORE_JOB_FAILED",
+    "COPY_JOB_STARTED",
+    "COPY_JOB_COMPLETED",
+    "COPY_JOB_FAILED"
+  ]
+
+  depends_on = [
+    aws_backup_vault.primary,
+    aws_sns_topic.backup_notifications
+  ]
+}
+
+# Cross-region backup vault (if enabled)
+resource "aws_backup_vault" "cross_region" {
+  count       = var.enable_cross_region_backup ? 1 : 0
+  provider    = aws.backup_destination
+  name        = "${var.project}-${var.environment}-cross-region"
+  kms_key_arn = aws_kms_key.cross_region[0].arn
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-cross-region-vault"
+      Environment = var.environment
+      Purpose     = "disaster-recovery"
+      ManagedBy   = "Terraform"
+    }
+  )
+}
+
+# KMS key for cross-region backup encryption
+resource "aws_kms_key" "cross_region" {
+  count                   = var.enable_cross_region_backup ? 1 : 0
+  provider                = aws.backup_destination
+  description             = "KMS key for ${var.project} ${var.environment} cross-region backup encryption"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-cross-region-backup-key"
+      Environment = var.environment
+      Purpose     = "disaster-recovery-encryption"
+      ManagedBy   = "Terraform"
+    }
+  )
+}
+
+resource "aws_kms_alias" "cross_region" {
+  count         = var.enable_cross_region_backup ? 1 : 0
+  provider      = aws.backup_destination
+  name          = "alias/${var.project}-${var.environment}-cross-region-backup"
+  target_key_id = aws_kms_key.cross_region[0].key_id
+}
+
+# SNS topic for backup notifications
+resource "aws_sns_topic" "backup_notifications" {
+  count       = var.enable_backup_notifications ? 1 : 0
+  name_prefix = "${var.project}-${var.environment}-backup-"
+  display_name = "Backup notifications for ${var.project} ${var.environment}"
+
+  kms_master_key_id = aws_kms_key.backup.id
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-backup-notifications"
+      Environment = var.environment
+    }
+  )
+}
+
+# SNS topic policy
+resource "aws_sns_topic_policy" "backup_notifications" {
+  count  = var.enable_backup_notifications ? 1 : 0
+  arn    = aws_sns_topic.backup_notifications[0].arn
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowBackupToPublish"
+        Effect = "Allow"
+        Principal = {
+          Service = "backup.amazonaws.com"
+        }
+        Action   = "SNS:Publish"
+        Resource = aws_sns_topic.backup_notifications[0].arn
+      }
+    ]
+  })
+}
+
+# SNS email subscription
+resource "aws_sns_topic_subscription" "backup_email" {
+  count     = var.enable_backup_notifications && var.notification_email != "" ? 1 : 0
+  topic_arn = aws_sns_topic.backup_notifications[0].arn
+  protocol  = "email"
+  endpoint  = var.notification_email
+}
+
+# IAM role for AWS Backup
+resource "aws_iam_role" "backup" {
+  name_prefix = "${var.project}-${var.environment}-backup-"
+  description = "IAM role for AWS Backup service"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "backup.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-backup-role"
+      Environment = var.environment
+    }
+  )
+}
+
+# Attach AWS managed backup policy
+resource "aws_iam_role_policy_attachment" "backup" {
+  role       = aws_iam_role.backup.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
+}
+
+# Attach restore policy
+resource "aws_iam_role_policy_attachment" "restore" {
+  role       = aws_iam_role.backup.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForRestores"
+}
+
+# Backup plan
+resource "aws_backup_plan" "main" {
+  name = "${var.project}-${var.environment}-backup-plan"
+
+  # Primary backup rule
+  rule {
+    rule_name         = "${var.project}-${var.environment}-daily"
+    target_vault_name = aws_backup_vault.primary.name
+    schedule          = var.backup_schedule
+    start_window      = 60  # Start within 60 minutes of scheduled time
+    completion_window = var.backup_completion_window_minutes
+
+    # Enable continuous backup for point-in-time recovery
+    enable_continuous_backup = var.enable_continuous_backup
+
+    # Lifecycle policy
+    dynamic "lifecycle" {
+      for_each = var.enable_lifecycle_policy ? [1] : []
+      content {
+        delete_after       = var.backup_retention_days
+        cold_storage_after = var.backup_cold_storage_after_days > 0 ? var.backup_cold_storage_after_days : null
+      }
+    }
+
+    # Cross-region copy rule
+    dynamic "copy_action" {
+      for_each = var.enable_cross_region_backup ? [1] : []
+      content {
+        destination_vault_arn = aws_backup_vault.cross_region[0].arn
+
+        lifecycle {
+          delete_after       = var.cross_region_retention_days
+          cold_storage_after = var.cross_region_retention_days > 30 ? 30 : null
+        }
+      }
+    }
+
+    # Recovery point tags
+    recovery_point_tags = merge(
+      var.tags,
+      {
+        BackupPlan = "${var.project}-${var.environment}-backup-plan"
+        BackupRule = "daily"
+        Environment = var.environment
+      }
+    )
+  }
+
+  # Advanced backup settings
+  advanced_backup_setting {
+    backup_options = {
+      WindowsVSS = "enabled"
+    }
+    resource_type = "EC2"
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-backup-plan"
+      Environment = var.environment
+      ManagedBy   = "Terraform"
+    }
+  )
+
+  depends_on = [
+    aws_backup_vault.primary
+  ]
+}
+
+# Backup selection - resources to backup based on tags
+resource "aws_backup_selection" "main" {
+  name          = "${var.project}-${var.environment}-selection"
+  plan_id       = aws_backup_plan.main.id
+  iam_role_arn  = aws_iam_role.backup.arn
+
+  # Select resources by tag
+  selection_tag {
+    type  = "STRINGEQUALS"
+    key   = var.resource_tag_key
+    value = var.resource_tag_value
+  }
+
+  # Additional selection criteria for critical resources
+  resources = []  # Can specify individual resource ARNs
+
+  # Conditions for advanced filtering
+  condition {
+    string_equals {
+      key   = "aws:ResourceTag/Environment"
+      value = var.environment
+    }
+  }
+
+  depends_on = [
+    aws_backup_plan.main,
+    aws_iam_role_policy_attachment.backup,
+    aws_iam_role_policy_attachment.restore
+  ]
+}
+
+# CloudWatch alarm for failed backups
+resource "aws_cloudwatch_metric_alarm" "backup_failures" {
+  alarm_name          = "${var.project}-${var.environment}-backup-failures"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "NumberOfBackupJobsFailed"
+  namespace           = "AWS/Backup"
+  period              = 86400  # 24 hours
+  statistic           = "Sum"
+  threshold           = 0
+  alarm_description   = "Alert when backup jobs fail"
+  treat_missing_data  = "notBreaching"
+
+  alarm_actions = var.enable_backup_notifications ? [aws_sns_topic.backup_notifications[0].arn] : []
+
+  dimensions = {
+    BackupVaultName = aws_backup_vault.primary.name
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-backup-failure-alarm"
+      Environment = var.environment
+    }
+  )
+}
+
+# CloudWatch alarm for successful backups (absence indicates issue)
+resource "aws_cloudwatch_metric_alarm" "backup_success" {
+  alarm_name          = "${var.project}-${var.environment}-no-successful-backups"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "NumberOfBackupJobsCompleted"
+  namespace           = "AWS/Backup"
+  period              = 86400  # 24 hours
+  statistic           = "Sum"
+  threshold           = 1
+  alarm_description   = "Alert when no backup jobs complete successfully in 24 hours"
+  treat_missing_data  = "breaching"
+
+  alarm_actions = var.enable_backup_notifications ? [aws_sns_topic.backup_notifications[0].arn] : []
+
+  dimensions = {
+    BackupVaultName = aws_backup_vault.primary.name
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.project}-${var.environment}-no-backup-alarm"
+      Environment = var.environment
+    }
+  )
+}
+
+# CloudWatch dashboard for backup monitoring
+resource "aws_cloudwatch_dashboard" "backup" {
+  dashboard_name = "${var.project}-${var.environment}-backup"
+
+  dashboard_body = jsonencode({
+    widgets = [
+      {
+        type = "metric"
+        properties = {
+          metrics = [
+            ["AWS/Backup", "NumberOfBackupJobsCreated", { stat = "Sum", label = "Created" }],
+            [".", "NumberOfBackupJobsCompleted", { stat = "Sum", label = "Completed" }],
+            [".", "NumberOfBackupJobsFailed", { stat = "Sum", label = "Failed" }]
+          ]
+          period = 86400
+          region = data.aws_region.current.name
+          title  = "Backup Jobs (Last 24 Hours)"
+          yAxis = {
+            left = {
+              min = 0
+            }
+          }
+        }
+      },
+      {
+        type = "metric"
+        properties = {
+          metrics = [
+            ["AWS/Backup", "NumberOfRecoveryPointsCreated", { stat = "Sum" }]
+          ]
+          period = 86400
+          region = data.aws_region.current.name
+          title  = "Recovery Points Created"
+        }
+      },
+      {
+        type = "metric"
+        properties = {
+          metrics = [
+            ["AWS/Backup", "NumberOfCopyJobsCreated", { stat = "Sum", label = "Created" }],
+            [".", "NumberOfCopyJobsCompleted", { stat = "Sum", label = "Completed" }],
+            [".", "NumberOfCopyJobsFailed", { stat = "Sum", label = "Failed" }]
+          ]
+          period = 86400
+          region = data.aws_region.current.name
+          title  = "Cross-Region Copy Jobs"
+        }
+      }
+    ]
+  })
+}
+
+# Data sources
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+```
+
+#### modules/aws-backup/outputs.tf
+
+```hcl
+output "backup_vault_id" {
+  description = "Primary Backup Vault ID"
+  value       = aws_backup_vault.primary.id
+}
+
+output "backup_vault_arn" {
+  description = "Primary Backup Vault ARN"
+  value       = aws_backup_vault.primary.arn
+}
+
+output "backup_vault_name" {
+  description = "Primary Backup Vault name"
+  value       = aws_backup_vault.primary.name
+}
+
+output "cross_region_vault_arn" {
+  description = "Cross-region Backup Vault ARN"
+  value       = var.enable_cross_region_backup ? aws_backup_vault.cross_region[0].arn : null
+}
+
+output "backup_plan_id" {
+  description = "Backup Plan ID"
+  value       = aws_backup_plan.main.id
+}
+
+output "backup_plan_arn" {
+  description = "Backup Plan ARN"
+  value       = aws_backup_plan.main.arn
+}
+
+output "backup_selection_id" {
+  description = "Backup Selection ID"
+  value       = aws_backup_selection.main.id
+}
+
+output "backup_iam_role_arn" {
+  description = "IAM Role ARN for AWS Backup"
+  value       = aws_iam_role.backup.arn
+}
+
+output "backup_kms_key_id" {
+  description = "KMS Key ID for backup encryption"
+  value       = aws_kms_key.backup.key_id
+}
+
+output "backup_kms_key_arn" {
+  description = "KMS Key ARN for backup encryption"
+  value       = aws_kms_key.backup.arn
+}
+
+output "sns_topic_arn" {
+  description = "SNS Topic ARN for backup notifications"
+  value       = var.enable_backup_notifications ? aws_sns_topic.backup_notifications[0].arn : null
+}
+
+output "cloudwatch_dashboard_name" {
+  description = "CloudWatch Dashboard name for backup monitoring"
+  value       = aws_cloudwatch_dashboard.backup.dashboard_name
+}
+```
+
+#### modules/aws-backup/providers.tf
+
+```hcl
+terraform {
+  required_version = ">= 1.5.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+      configuration_aliases = [aws.backup_destination]
+    }
+  }
+}
+```
+
+#### Usage Example - AWS Backup with Cross-Region Replication
+
+```hcl
+# Root module (main.tf)
+
+# Primary region provider
+provider "aws" {
+  region = "us-east-1"
+}
+
+# Backup destination region provider
+provider "aws" {
+  alias  = "backup_destination"
+  region = "us-west-2"
+}
+
+module "aws_backup" {
+  source = "./modules/aws-backup"
+
+  # Provider configuration
+  providers = {
+    aws.backup_destination = aws.backup_destination
+  }
+
+  project     = "myapp"
+  environment = "prod"
+
+  # Backup schedule - Daily at 2 AM UTC
+  backup_schedule = "cron(0 2 * * ? *)"
+
+  # Retention policies
+  backup_retention_days        = 30   # 30 days in primary region
+  backup_cold_storage_after_days = 7   # Move to cold storage after 7 days
+  cross_region_retention_days   = 90   # 90 days in DR region
+
+  # Cross-region DR
+  enable_cross_region_backup   = true
+  backup_destination_region    = "us-west-2"
+
+  # Compliance - Enable vault lock for immutable backups
+  enable_backup_vault_lock            = true
+  backup_vault_lock_min_retention_days = 90
+  backup_vault_lock_max_retention_days = 365
+
+  # Point-in-time recovery
+  enable_continuous_backup = true
+
+  # Resource selection - backup all resources with tag BackupEnabled=true
+  resource_tag_key   = "BackupEnabled"
+  resource_tag_value = "true"
+
+  # Notifications
+  enable_backup_notifications = true
+  notification_email          = "ops@example.com"
+
+  # Backup window
+  backup_window_hours               = 2    # Start at 2 AM UTC
+  backup_completion_window_minutes  = 120  # Must complete within 2 hours
+
+  tags = {
+    Project     = "myapp"
+    Environment = "prod"
+    Compliance  = "HIPAA"
+    ManagedBy   = "Terraform"
+  }
+}
+
+# Example: Tag RDS instance for backup
+resource "aws_db_instance" "main" {
+  identifier     = "myapp-prod-db"
+  engine         = "postgres"
+  engine_version = "15.3"
+  instance_class = "db.t3.large"
+
+  # ... other configuration ...
+
+  # Tag for backup selection
+  tags = {
+    Name          = "myapp-prod-db"
+    Environment   = "prod"
+    BackupEnabled = "true"  # This triggers AWS Backup
+  }
+}
+
+# Example: Tag EBS volumes for backup
+resource "aws_ebs_volume" "data" {
+  availability_zone = "us-east-1a"
+  size              = 100
+  type              = "gp3"
+  encrypted         = true
+
+  tags = {
+    Name          = "myapp-prod-data"
+    Environment   = "prod"
+    BackupEnabled = "true"  # This triggers AWS Backup
+  }
+}
+
+# Example: Tag DynamoDB table for backup
+resource "aws_dynamodb_table" "main" {
+  name         = "myapp-prod-table"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "id"
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+
+  # Point-in-time recovery
+  point_in_time_recovery {
+    enabled = true
+  }
+
+  tags = {
+    Name          = "myapp-prod-table"
+    Environment   = "prod"
+    BackupEnabled = "true"  # This triggers AWS Backup
+  }
+}
+
+# Outputs
+output "backup_vault_arn" {
+  description = "Primary Backup Vault ARN"
+  value       = module.aws_backup.backup_vault_arn
+}
+
+output "cross_region_vault_arn" {
+  description = "Cross-region Backup Vault ARN for disaster recovery"
+  value       = module.aws_backup.cross_region_vault_arn
+}
+
+output "backup_plan_id" {
+  description = "Backup Plan ID"
+  value       = module.aws_backup.backup_plan_id
+}
+```
+
+**Disaster Recovery Objectives**:
+
+- **RTO (Recovery Time Objective)**: 4 hours
+  - Cross-region restore takes 2-4 hours depending on data size
+  - Automated restore testing validates RTO quarterly
+- **RPO (Recovery Point Objective)**: 15 minutes
+  - Point-in-time recovery (PITR) for databases with 5-minute granularity
+  - Daily snapshots provide 24-hour RPO for other resources
+- **Backup Frequency**: Daily at 2 AM UTC
+- **Cross-Region Replication**: Enabled (us-east-1 → us-west-2)
+- **Compliance**: HIPAA, SOC 2, PCI-DSS compliant with vault lock
+
+**Backup Coverage**:
+
+| Resource Type | Backup Method | Retention | PITR |
+|--------------|---------------|-----------|------|
+| RDS/Aurora | Automated snapshots | 30 days | ✅ Yes |
+| DynamoDB | Continuous backup | 30 days | ✅ Yes |
+| EBS Volumes | Snapshots | 30 days | ❌ No |
+| EC2 AMIs | AMI creation | 30 days | ❌ No |
+| EFS | Backups | 30 days | ❌ No |
+| S3 | Versioning + replication | 90 days | ✅ Yes |
+
+**Cost Estimates** (per month, assuming 1 TB data):
+
+- Primary backup storage: $50/month (warm) + $4/month (cold after 7 days)
+- Cross-region copy: $100/month (90-day retention in us-west-2)
+- Backup transfer: $20/month (cross-region data transfer)
+- Total monthly cost: ~$174/month
+
+**Testing Strategy**:
+
+```bash
+# Automated restore testing (run monthly)
+# tests/backup-restore-test.sh
+
+#!/bin/bash
+set -e
+
+# Test RDS restore
+aws backup start-restore-job \
+  --recovery-point-arn "$RECOVERY_POINT_ARN" \
+  --metadata '{"DBInstanceIdentifier":"test-restore-$(date +%Y%m%d)"}' \
+  --iam-role-arn "$BACKUP_ROLE_ARN" \
+  --resource-type RDS
+
+# Validate restored RDS instance
+aws rds wait db-instance-available \
+  --db-instance-identifier "test-restore-$(date +%Y%m%d)"
+
+# Cleanup test restore
+aws rds delete-db-instance \
+  --db-instance-identifier "test-restore-$(date +%Y%m%d)" \
+  --skip-final-snapshot
+```
+
+---
+
 ## See Also
 
 ### Related Infrastructure Guides
