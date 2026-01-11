@@ -156,12 +156,20 @@ Automatically prompts users to install required extensions.
     "DavidAnson.vscode-markdownlint",
     "timonwong.shellcheck",
     "hashicorp.terraform",
+    "hashicorp.hcl",
     "ms-azuretools.vscode-docker",
     "esbenp.prettier-vscode",
     "ms-vscode.powershell",
     "eamodio.gitlens",
     "EditorConfig.EditorConfig",
-    "sonarsource.sonarlint-vscode"
+    "sonarsource.sonarlint-vscode",
+    "redhat.ansible",
+    "dbaeumer.vscode-eslint",
+    "aws-scripting-guy.cdk-snippets",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "tim-koehler.helm-intellisense",
+    "github.vscode-github-actions",
+    "gitlab.gitlab-workflow"
   ]
 }
 ```
@@ -451,6 +459,210 @@ trim_trailing_whitespace = false
 ```ini
 [Makefile]
 indent_style = tab
+```
+
+### Ansible
+
+**VS Code:**
+
+```json
+{
+  "[ansible]": {
+    "editor.defaultFormatter": "redhat.ansible",
+    "editor.formatOnSave": true,
+    "editor.rulers": [120],
+    "editor.tabSize": 2
+  },
+  "ansible.ansible.useFullyQualifiedCollectionNames": true,
+  "ansible.validation.enabled": true,
+  "ansible.validation.lint.enabled": true,
+  "ansible.validation.lint.path": "ansible-lint"
+}
+```
+
+**EditorConfig:**
+
+```ini
+[*.{yaml,yml}]
+indent_size = 2
+max_line_length = 120
+```
+
+### AWS CDK
+
+**VS Code:**
+
+```json
+{
+  "[typescript]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+  "eslint.validate": ["typescript"],
+  "cdk.autoSuggest": true
+}
+```
+
+**EditorConfig:**
+
+```ini
+[*.{ts,tsx}]
+indent_size = 2
+max_line_length = 100
+```
+
+### Kubernetes/Helm
+
+**VS Code:**
+
+```json
+{
+  "vs-kubernetes": {
+    "vs-kubernetes.helm-path": "helm",
+    "vs-kubernetes.kubectl-path": "kubectl"
+  },
+  "yaml.schemas": {
+    "kubernetes": ["k8s/**/*.yaml", "manifests/**/*.yaml"],
+    "https://json.schemastore.org/helmfile": "helmfile.yaml",
+    "https://json.schemastore.org/kustomization": "kustomization.yaml"
+  },
+  "files.associations": {
+    "**/k8s/**/*.yaml": "yaml",
+    "**/manifests/**/*.yaml": "yaml",
+    "**/charts/**/*.yaml": "helm"
+  }
+}
+```
+
+**EditorConfig:**
+
+```ini
+[{k8s,manifests}/**/*.{yaml,yml}]
+indent_size = 2
+max_line_length = 120
+```
+
+### Terragrunt
+
+**VS Code:**
+
+```json
+{
+  "files.associations": {
+    "terragrunt.hcl": "terraform",
+    "**/terragrunt.hcl": "terraform"
+  },
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.rulers": [120]
+  }
+}
+```
+
+**EditorConfig:**
+
+```ini
+[terragrunt.hcl]
+indent_size = 2
+max_line_length = 120
+```
+
+### GitHub Actions
+
+**VS Code:**
+
+```json
+{
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow": ".github/workflows/*.{yml,yaml}",
+    "https://json.schemastore.org/github-action": "action.{yml,yaml}"
+  },
+  "github.actions.languageServer": {
+    "enable": true
+  }
+}
+```
+
+**EditorConfig:**
+
+```ini
+[.github/workflows/*.{yml,yaml}]
+indent_size = 2
+```
+
+### GitLab CI
+
+**VS Code:**
+
+```json
+{
+  "yaml.schemas": {
+    "https://json.schemastore.org/gitlab-ci": ".gitlab-ci.yml"
+  }
+}
+```
+
+**EditorConfig:**
+
+```ini
+[.gitlab-ci.yml]
+indent_size = 2
+```
+
+### Docker Compose
+
+**VS Code:**
+
+```json
+{
+  "yaml.schemas": {
+    "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": [
+      "docker-compose*.{yml,yaml}",
+      "compose*.{yml,yaml}"
+    ]
+  },
+  "files.associations": {
+    "docker-compose*.yml": "yaml",
+    "compose*.yml": "yaml"
+  }
+}
+```
+
+**EditorConfig:**
+
+```ini
+[docker-compose*.{yml,yaml}]
+indent_size = 2
+```
+
+### HCL
+
+**VS Code:**
+
+```json
+{
+  "files.associations": {
+    ".terraformrc": "hcl",
+    "terraform.rc": "hcl"
+  },
+  "[hcl]": {
+    "editor.defaultFormatter": "hashicorp.hcl",
+    "editor.formatOnSave": true,
+    "editor.rulers": [120],
+    "editor.tabSize": 2
+  }
+}
+```
+
+**EditorConfig:**
+
+```ini
+[{.terraformrc,terraform.rc}]
+indent_size = 2
+max_line_length = 120
 ```
 
 ## Verification & Testing

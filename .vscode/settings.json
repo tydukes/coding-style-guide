@@ -40,6 +40,21 @@
   "yaml.format.bracketSpacing": true,
   "yaml.validate": true,
   "yaml.customTags": ["!Ref", "!GetAtt", "!Join", "!Sub", "!If"],
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow": ".github/workflows/*.{yml,yaml}",
+    "https://json.schemastore.org/github-action": "action.{yml,yaml}",
+    "https://json.schemastore.org/gitlab-ci": ".gitlab-ci.yml",
+    "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": [
+      "docker-compose*.{yml,yaml}",
+      "compose*.{yml,yaml}"
+    ],
+    "kubernetes": [
+      "k8s/**/*.yaml",
+      "manifests/**/*.yaml"
+    ],
+    "https://json.schemastore.org/helmfile": "helmfile.yaml",
+    "https://json.schemastore.org/kustomization": "kustomization.yaml"
+  },
   "[markdown]": {
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
     "editor.formatOnSave": true,
@@ -137,6 +152,34 @@
     "editor.tabSize": 2,
     "editor.insertSpaces": true
   },
+  "[ansible]": {
+    "editor.defaultFormatter": "redhat.ansible",
+    "editor.formatOnSave": true,
+    "editor.rulers": [120],
+    "editor.tabSize": 2
+  },
+  "ansible.ansible.useFullyQualifiedCollectionNames": true,
+  "ansible.validation.enabled": true,
+  "ansible.validation.lint.enabled": true,
+  "ansible.validation.lint.path": "ansible-lint",
+  "eslint.validate": ["typescript"],
+  "cdk.autoSuggest": true,
+  "vs-kubernetes": {
+    "vs-kubernetes.helm-path": "helm",
+    "vs-kubernetes.kubectl-path": "kubectl",
+    "vs-kubernetes.draft-path": "draft",
+    "vs-kubernetes.kubeconfig": "",
+    "vscode-kubernetes.minikube-path": "minikube"
+  },
+  "github.actions.languageServer": {
+    "enable": true
+  },
+  "[hcl]": {
+    "editor.defaultFormatter": "hashicorp.hcl",
+    "editor.formatOnSave": true,
+    "editor.rulers": [120],
+    "editor.tabSize": 2
+  },
   "git.enableSmartCommit": false,
   "git.confirmSync": false,
   "git.autofetch": true,
@@ -147,9 +190,20 @@
     "*.groovy": "groovy",
     ".terraformrc": "hcl",
     "terraform.rc": "hcl",
+    "terragrunt.hcl": "terraform",
+    "**/terragrunt.hcl": "terraform",
     "*.yaml": "yaml",
     "*.yml": "yaml",
-    ".yamllint": "yaml"
+    ".yamllint": "yaml",
+    "**/k8s/**/*.yaml": "yaml",
+    "**/manifests/**/*.yaml": "yaml",
+    "**/charts/**/*.yaml": "helm",
+    "helmfile.yaml": "yaml",
+    "kustomization.yaml": "yaml",
+    "docker-compose*.yml": "yaml",
+    "docker-compose*.yaml": "yaml",
+    "compose*.yml": "yaml",
+    "compose*.yaml": "yaml"
   },
   "files.watcherExclude": {
     "**/.git/objects/**": true,
