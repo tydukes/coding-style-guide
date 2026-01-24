@@ -1,8 +1,8 @@
 ---
-title: "Distributed Tracing and Structured Logging Guide"
-description: "Comprehensive guide to distributed tracing with OpenTelemetry, structured logging with JSON, log aggregation patterns, and observability best practices"
+title: "Observability Standards Guide"
+description: "Comprehensive guide to OpenTelemetry tracing/metrics, Prometheus metrics, Grafana dashboards, structured logging, and observability best practices"
 author: "Tyler Dukes"
-tags: [observability, tracing, logging, opentelemetry, jaeger, zipkin, structlog, elk, loki, cloudwatch]
+tags: [observability, tracing, logging, metrics, opentelemetry, prometheus, grafana, jaeger, zipkin, structlog, elk, loki, cloudwatch, dashboards, alerting]
 category: "CI/CD"
 status: "active"
 ---
@@ -19,13 +19,17 @@ patterns, log aggregation strategies, and observability best practices.
 
 1. [Observability Philosophy](#observability-philosophy)
 2. [Distributed Tracing](#distributed-tracing)
-3. [Structured Logging](#structured-logging)
-4. [Log Aggregation](#log-aggregation)
-5. [Correlation and Context](#correlation-and-context)
-6. [Error Tracking](#error-tracking)
-7. [Metrics Integration](#metrics-integration)
-8. [CI/CD Integration](#cicd-integration)
-9. [Best Practices](#best-practices)
+3. [Trace Sampling Strategies](#trace-sampling-strategies)
+4. [Structured Logging](#structured-logging)
+5. [Log Aggregation](#log-aggregation)
+6. [Correlation and Context](#correlation-and-context)
+7. [Error Tracking](#error-tracking)
+8. [Metrics Integration](#metrics-integration)
+9. [Metric Naming Conventions](#metric-naming-conventions)
+10. [Label and Tag Standards](#label-and-tag-standards)
+11. [Grafana Dashboards](#grafana-dashboards)
+12. [CI/CD Integration](#cicd-integration)
+13. [Best Practices](#best-practices)
 
 ---
 
@@ -875,6 +879,504 @@ SAMPLING_CONFIG = {
         "max_rate": 0.1,
     },
 }
+```
+
+---
+
+## Trace Sampling Strategies
+
+### Sampling Overview
+
+```text
+┌─────────────────────────────────────────────────────────────────────┐
+│                     Trace Sampling Decision Tree                     │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  Request Arrives                                                    │
+│       │                                                             │
+│       ▼                                                             │
+│  ┌─────────────┐    Yes    ┌─────────────┐                         │
+│  │ Error/High  │ ────────► │ Always      │                         │
+│  │ Priority?   │           │ Sample      │                         │
+│  └──────┬──────┘           └─────────────┘                         │
+│         │ No                                                        │
+│         ▼                                                           │
+│  ┌─────────────┐    Yes    ┌─────────────┐                         │
+│  │ Debug/Test  │ ────────► │ Sample      │                         │
+│  │ Header?     │           │ 100%        │                         │
+│  └──────┬──────┘           └─────────────┘                         │
+│         │ No                                                        │
+│         ▼                                                           │
+│  ┌─────────────┐           ┌─────────────┐                         │
+│  │ Apply Rate  │ ────────► │ Probabilis- │                         │
+│  │ Limiting    │           │ tic Sample  │                         │
+│  └─────────────┘           └─────────────┘                         │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Sampling Strategy Comparison
+
+```text
+┌──────────────────┬────────────────┬────────────────┬───────────────┐
+│ Strategy         │ Use Case       │ Pros           │ Cons          │
+├──────────────────┼────────────────┼────────────────┼───────────────┤
+│ Always On        │ Development    │ Full visibility│ High overhead │
+│ (100%)           │ Debugging      │ Easy debugging │ Not scalable  │
+├──────────────────┼────────────────┼────────────────┼───────────────┤
+│ Ratio-Based      │ Staging        │ Predictable    │ May miss edge │
+│ (fixed %)        │ Low traffic    │ cost control   │ cases         │
+├──────────────────┼────────────────┼────────────────┼───────────────┤
+│ Rate-Limited     │ Production     │ Cost control   │ May miss      │
+│ (traces/sec)     │ High traffic   │ Consistent     │ bursts        │
+├──────────────────┼────────────────┼────────────────┼───────────────┤
+│ Adaptive         │ Variable       │ Self-adjusting │ Complex to    │
+│ (dynamic)        │ traffic        │ Cost efficient │ configure     │
+├──────────────────┼────────────────┼────────────────┼───────────────┤
+│ Priority-Based   │ Mixed          │ Important      │ Requires      │
+│ (rules)          │ workloads      │ traces kept    │ maintenance   │
+└──────────────────┴────────────────┴────────────────┴───────────────┘
+```
+
+### Head-Based Sampling
+
+**Decision made at trace start:**
+
+```python
+# src/observability/sampling/head_based.py
+from opentelemetry.sdk.trace.sampling import (
+    Sampler,
+    SamplingResult,
+    Decision,
+    ParentBased,
+    TraceIdRatioBased,
+)
+from opentelemetry.trace import Link, SpanKind
+from opentelemetry.util.types import Attributes
+from typing import Optional, Sequence
+import hashlib
+
+
+class PriorityBasedSampler(Sampler):
+    """
+    Head-based sampler with priority rules.
+
+    Samples traces based on configurable priority rules:
+    - Error/exception traces: Always sampled
+    - Slow requests: Always sampled
+    - High-value operations: Higher sample rate
+    - Normal operations: Base sample rate
+    """
+
+    def __init__(
+        self,
+        base_rate: float = 0.1,
+        high_priority_rate: float = 1.0,
+        slow_threshold_ms: float = 1000.0,
+    ):
+        self.base_rate = base_rate
+        self.high_priority_rate = high_priority_rate
+        self.slow_threshold_ms = slow_threshold_ms
+        self._high_priority_operations = {
+            "payment.process",
+            "order.create",
+            "user.authenticate",
+            "checkout.complete",
+        }
+
+    def should_sample(
+        self,
+        parent_context: Optional["Context"],
+        trace_id: int,
+        name: str,
+        kind: Optional[SpanKind] = None,
+        attributes: Attributes = None,
+        links: Optional[Sequence[Link]] = None,
+    ) -> SamplingResult:
+        attributes = attributes or {}
+
+        # Always sample errors
+        if attributes.get("error", False):
+            return SamplingResult(
+                decision=Decision.RECORD_AND_SAMPLE,
+                attributes={"sampling.reason": "error"},
+            )
+
+        # Always sample high-priority operations
+        if name in self._high_priority_operations:
+            return SamplingResult(
+                decision=Decision.RECORD_AND_SAMPLE,
+                attributes={"sampling.reason": "high_priority"},
+            )
+
+        # Always sample debug requests
+        if attributes.get("debug", False):
+            return SamplingResult(
+                decision=Decision.RECORD_AND_SAMPLE,
+                attributes={"sampling.reason": "debug"},
+            )
+
+        # Apply probabilistic sampling for normal requests
+        trace_id_bytes = trace_id.to_bytes(16, byteorder="big")
+        hash_value = int(hashlib.md5(trace_id_bytes).hexdigest(), 16)
+        threshold = int(self.base_rate * (2**128 - 1))
+
+        if hash_value < threshold:
+            return SamplingResult(
+                decision=Decision.RECORD_AND_SAMPLE,
+                attributes={"sampling.reason": "probabilistic"},
+            )
+
+        return SamplingResult(decision=Decision.DROP)
+
+    def get_description(self) -> str:
+        return f"PriorityBasedSampler(base_rate={self.base_rate})"
+
+
+def create_parent_based_sampler(
+    root_sampler: Sampler,
+    remote_parent_sampled: Optional[Sampler] = None,
+    remote_parent_not_sampled: Optional[Sampler] = None,
+) -> ParentBased:
+    """
+    Create a parent-based sampler that respects parent sampling decisions.
+
+    This ensures trace continuity across service boundaries.
+    """
+    return ParentBased(
+        root=root_sampler,
+        remote_parent_sampled=remote_parent_sampled or TraceIdRatioBased(1.0),
+        remote_parent_not_sampled=remote_parent_not_sampled or TraceIdRatioBased(0.0),
+    )
+```
+
+### Tail-Based Sampling
+
+**Decision made after trace completion:**
+
+```python
+# src/observability/sampling/tail_based.py
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Any
+from enum import Enum
+import time
+import threading
+from collections import defaultdict
+
+
+class SamplingDecision(Enum):
+    SAMPLE = "sample"
+    DROP = "drop"
+    PENDING = "pending"
+
+
+@dataclass
+class SpanData:
+    """Represents a span waiting for sampling decision."""
+    trace_id: str
+    span_id: str
+    parent_span_id: Optional[str]
+    name: str
+    start_time: float
+    end_time: Optional[float] = None
+    status: str = "OK"
+    attributes: Dict[str, Any] = field(default_factory=dict)
+    events: List[Dict[str, Any]] = field(default_factory=list)
+
+
+@dataclass
+class TraceBuffer:
+    """Buffer for collecting spans before sampling decision."""
+    trace_id: str
+    spans: List[SpanData] = field(default_factory=list)
+    created_at: float = field(default_factory=time.time)
+    decision: SamplingDecision = SamplingDecision.PENDING
+
+
+class TailBasedSampler:
+    """
+    Tail-based sampler that makes decisions after trace completion.
+
+    Benefits:
+    - Can sample based on full trace context
+    - Captures error traces that started normally
+    - Better for debugging intermittent issues
+
+    Tradeoffs:
+    - Higher memory usage (must buffer spans)
+    - Higher latency (wait for trace completion)
+    - More complex implementation
+    """
+
+    def __init__(
+        self,
+        buffer_timeout_seconds: float = 30.0,
+        max_traces_in_buffer: int = 10000,
+        base_sample_rate: float = 0.1,
+        error_sample_rate: float = 1.0,
+        slow_trace_threshold_ms: float = 5000.0,
+    ):
+        self.buffer_timeout = buffer_timeout_seconds
+        self.max_traces = max_traces_in_buffer
+        self.base_rate = base_sample_rate
+        self.error_rate = error_sample_rate
+        self.slow_threshold = slow_trace_threshold_ms
+
+        self._trace_buffers: Dict[str, TraceBuffer] = {}
+        self._lock = threading.Lock()
+
+        # Start cleanup thread
+        self._cleanup_thread = threading.Thread(
+            target=self._cleanup_expired_traces,
+            daemon=True,
+        )
+        self._cleanup_thread.start()
+
+    def add_span(self, span: SpanData) -> None:
+        """Add a span to the trace buffer."""
+        with self._lock:
+            if span.trace_id not in self._trace_buffers:
+                if len(self._trace_buffers) >= self.max_traces:
+                    self._evict_oldest_trace()
+                self._trace_buffers[span.trace_id] = TraceBuffer(
+                    trace_id=span.trace_id
+                )
+
+            self._trace_buffers[span.trace_id].spans.append(span)
+
+            # Check if trace is complete (root span ended)
+            if self._is_trace_complete(span.trace_id):
+                self._make_sampling_decision(span.trace_id)
+
+    def _is_trace_complete(self, trace_id: str) -> bool:
+        """Check if all spans in trace have ended."""
+        buffer = self._trace_buffers.get(trace_id)
+        if not buffer:
+            return False
+
+        # Find root span (no parent)
+        root_spans = [s for s in buffer.spans if s.parent_span_id is None]
+        if not root_spans:
+            return False
+
+        return all(s.end_time is not None for s in root_spans)
+
+    def _make_sampling_decision(self, trace_id: str) -> SamplingDecision:
+        """Make final sampling decision for a complete trace."""
+        buffer = self._trace_buffers.get(trace_id)
+        if not buffer:
+            return SamplingDecision.DROP
+
+        # Always sample traces with errors
+        has_error = any(
+            s.status == "ERROR" or s.attributes.get("error", False)
+            for s in buffer.spans
+        )
+        if has_error:
+            buffer.decision = SamplingDecision.SAMPLE
+            self._export_trace(buffer)
+            return SamplingDecision.SAMPLE
+
+        # Always sample slow traces
+        trace_duration = self._calculate_trace_duration(buffer)
+        if trace_duration > self.slow_threshold:
+            buffer.decision = SamplingDecision.SAMPLE
+            self._export_trace(buffer)
+            return SamplingDecision.SAMPLE
+
+        # Apply probabilistic sampling
+        import random
+        if random.random() < self.base_rate:
+            buffer.decision = SamplingDecision.SAMPLE
+            self._export_trace(buffer)
+            return SamplingDecision.SAMPLE
+
+        buffer.decision = SamplingDecision.DROP
+        del self._trace_buffers[trace_id]
+        return SamplingDecision.DROP
+
+    def _calculate_trace_duration(self, buffer: TraceBuffer) -> float:
+        """Calculate total trace duration in milliseconds."""
+        if not buffer.spans:
+            return 0.0
+
+        start_times = [s.start_time for s in buffer.spans]
+        end_times = [s.end_time for s in buffer.spans if s.end_time]
+
+        if not end_times:
+            return 0.0
+
+        return (max(end_times) - min(start_times)) * 1000
+
+    def _export_trace(self, buffer: TraceBuffer) -> None:
+        """Export sampled trace to backend."""
+        # Implementation depends on export destination
+        # This is where you would send to Jaeger, Zipkin, etc.
+        pass
+
+    def _evict_oldest_trace(self) -> None:
+        """Evict oldest trace when buffer is full."""
+        if not self._trace_buffers:
+            return
+
+        oldest_id = min(
+            self._trace_buffers.keys(),
+            key=lambda tid: self._trace_buffers[tid].created_at,
+        )
+        del self._trace_buffers[oldest_id]
+
+    def _cleanup_expired_traces(self) -> None:
+        """Background thread to clean up expired trace buffers."""
+        while True:
+            time.sleep(5.0)
+            now = time.time()
+
+            with self._lock:
+                expired = [
+                    tid for tid, buf in self._trace_buffers.items()
+                    if now - buf.created_at > self.buffer_timeout
+                ]
+
+                for tid in expired:
+                    # Make decision on expired traces
+                    self._make_sampling_decision(tid)
+```
+
+### Sampling Configuration by Environment
+
+```yaml
+# config/sampling.yaml
+environments:
+  development:
+    strategy: always_on
+    rate: 1.0
+    description: "Sample all traces for debugging"
+
+  staging:
+    strategy: ratio_based
+    rate: 0.5
+    priority_rules:
+      - name: errors
+        condition: "status == ERROR"
+        rate: 1.0
+      - name: slow_requests
+        condition: "duration > 2000ms"
+        rate: 1.0
+      - name: auth_operations
+        condition: "operation.name contains 'auth'"
+        rate: 1.0
+    description: "50% base rate with priority overrides"
+
+  production:
+    strategy: adaptive
+    target_traces_per_second: 100
+    min_rate: 0.001
+    max_rate: 0.1
+    priority_rules:
+      - name: errors
+        condition: "status == ERROR"
+        rate: 1.0
+      - name: slow_requests
+        condition: "duration > 5000ms"
+        rate: 1.0
+      - name: payments
+        condition: "operation.name starts_with 'payment'"
+        rate: 0.5
+      - name: health_checks
+        condition: "operation.name == 'health_check'"
+        rate: 0.0
+    tail_sampling:
+      enabled: true
+      buffer_timeout_seconds: 30
+      policies:
+        - name: error_traces
+          type: status_code
+          status_codes: [ERROR]
+          sample_rate: 1.0
+        - name: latency_traces
+          type: latency
+          threshold_ms: 3000
+          sample_rate: 1.0
+    description: "Adaptive rate with tail sampling for errors"
+```
+
+### OpenTelemetry Collector Sampling
+
+```yaml
+# otel-collector-config.yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  # Probabilistic sampling
+  probabilistic_sampler:
+    hash_seed: 22
+    sampling_percentage: 10
+
+  # Tail-based sampling
+  tail_sampling:
+    decision_wait: 10s
+    num_traces: 100000
+    expected_new_traces_per_sec: 1000
+    policies:
+      # Always sample error traces
+      - name: error-policy
+        type: status_code
+        status_code:
+          status_codes: [ERROR]
+
+      # Always sample slow traces
+      - name: latency-policy
+        type: latency
+        latency:
+          threshold_ms: 5000
+
+      # Sample specific operations at higher rate
+      - name: high-value-policy
+        type: string_attribute
+        string_attribute:
+          key: http.route
+          values:
+            - /api/v1/checkout
+            - /api/v1/payment
+          enabled_regex_matching: true
+
+      # Rate limit normal traces
+      - name: rate-limiting-policy
+        type: rate_limiting
+        rate_limiting:
+          spans_per_second: 500
+
+      # Probabilistic fallback
+      - name: probabilistic-policy
+        type: probabilistic
+        probabilistic:
+          sampling_percentage: 10
+
+exporters:
+  jaeger:
+    endpoint: jaeger:14250
+    tls:
+      insecure: true
+
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [tail_sampling]
+      exporters: [jaeger]
+    metrics:
+      receivers: [otlp]
+      processors: []
+      exporters: [prometheus]
 ```
 
 ---
@@ -2768,6 +3270,1637 @@ def get_metrics():
 
 ---
 
+## Metric Naming Conventions
+
+### Prometheus Metric Naming Rules
+
+```text
+┌─────────────────────────────────────────────────────────────────────┐
+│                    Prometheus Metric Naming Format                   │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  Format: <namespace>_<subsystem>_<name>_<unit>                     │
+│                                                                     │
+│  Examples:                                                          │
+│  ├── http_server_requests_total                                    │
+│  ├── http_server_request_duration_seconds                          │
+│  ├── database_connections_active                                    │
+│  ├── cache_hits_total                                              │
+│  └── queue_messages_pending                                         │
+│                                                                     │
+│  Rules:                                                             │
+│  ├── Use snake_case (lowercase with underscores)                   │
+│  ├── Start with a letter (a-z)                                     │
+│  ├── Use only [a-zA-Z0-9_]                                         │
+│  ├── End with unit suffix (_seconds, _bytes, _total)               │
+│  └── Use _total suffix for counters                                │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Metric Type Guidelines
+
+```python
+# src/observability/metrics/naming.py
+"""
+Prometheus metric naming conventions and examples.
+
+@module prometheus_naming
+@description Standards for Prometheus metric naming
+@version 1.0.0
+@author Tyler Dukes
+"""
+
+from prometheus_client import Counter, Histogram, Gauge, Summary, Info
+
+# ============================================================================
+# COUNTERS - Cumulative values that only increase
+# ============================================================================
+# Naming: <noun>_<verb>_total or <noun>_total
+
+# Good - Clear noun + action + _total suffix
+http_requests_total = Counter(
+    "http_requests_total",
+    "Total HTTP requests processed",
+    ["method", "endpoint", "status_code"],
+)
+
+# Good - Specific subsystem prefix
+database_queries_total = Counter(
+    "database_queries_total",
+    "Total database queries executed",
+    ["operation", "table"],
+)
+
+# Good - Error counter
+errors_total = Counter(
+    "errors_total",
+    "Total errors encountered",
+    ["error_type", "service"],
+)
+
+# Bad - Missing _total suffix
+# http_requests = Counter(...)  # Don't do this
+
+# Bad - Using verb form instead of noun
+# request_count = Counter(...)  # Don't do this
+
+# ============================================================================
+# GAUGES - Values that can increase or decrease
+# ============================================================================
+# Naming: <noun>_<state> or <noun>_<measurement>
+
+# Good - Current state
+http_requests_in_flight = Gauge(
+    "http_requests_in_flight",
+    "Number of HTTP requests currently being processed",
+    ["method"],
+)
+
+# Good - Resource capacity
+database_connections_active = Gauge(
+    "database_connections_active",
+    "Number of active database connections",
+    ["pool_name"],
+)
+
+database_connections_max = Gauge(
+    "database_connections_max",
+    "Maximum database connections allowed",
+    ["pool_name"],
+)
+
+# Good - Memory/resource usage
+memory_usage_bytes = Gauge(
+    "memory_usage_bytes",
+    "Current memory usage in bytes",
+    ["process"],
+)
+
+# Good - Queue depth
+queue_messages_pending = Gauge(
+    "queue_messages_pending",
+    "Number of messages waiting in queue",
+    ["queue_name"],
+)
+
+# ============================================================================
+# HISTOGRAMS - Distributions of values
+# ============================================================================
+# Naming: <noun>_<unit> (generates _bucket, _sum, _count)
+
+# Good - Duration in seconds
+http_request_duration_seconds = Histogram(
+    "http_request_duration_seconds",
+    "HTTP request duration in seconds",
+    ["method", "endpoint"],
+    buckets=[0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0],
+)
+
+# Good - Size in bytes
+http_request_size_bytes = Histogram(
+    "http_request_size_bytes",
+    "HTTP request body size in bytes",
+    ["method", "endpoint"],
+    buckets=[100, 1000, 10000, 100000, 1000000, 10000000],
+)
+
+# Good - Database query latency
+database_query_duration_seconds = Histogram(
+    "database_query_duration_seconds",
+    "Database query duration in seconds",
+    ["operation", "table"],
+    buckets=[0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0],
+)
+
+# ============================================================================
+# SUMMARIES - Quantile distributions
+# ============================================================================
+# Naming: Same as histograms
+
+# Good - Response time with quantiles
+http_response_time_seconds = Summary(
+    "http_response_time_seconds",
+    "HTTP response time in seconds",
+    ["method", "endpoint"],
+)
+
+# ============================================================================
+# INFO - Static metadata
+# ============================================================================
+# Naming: <noun>_info
+
+# Good - Application metadata
+app_info = Info(
+    "app",
+    "Application information",
+)
+app_info.info({
+    "version": "1.2.3",
+    "environment": "production",
+    "commit": "abc123",
+})
+
+# Good - Build information
+build_info = Info(
+    "build",
+    "Build information",
+)
+```
+
+### Unit Suffixes
+
+```text
+┌────────────────┬─────────────────────┬─────────────────────────────┐
+│ Unit           │ Suffix              │ Example                     │
+├────────────────┼─────────────────────┼─────────────────────────────┤
+│ Time           │ _seconds            │ request_duration_seconds    │
+│ Bytes          │ _bytes              │ response_size_bytes         │
+│ Ratio/Percent  │ _ratio or _percent  │ cache_hit_ratio             │
+│ Count (total)  │ _total              │ requests_total              │
+│ Temperature    │ _celsius            │ cpu_temperature_celsius     │
+│ Timestamp      │ _timestamp_seconds  │ last_success_timestamp_sec  │
+│ No unit        │ (none)              │ queue_length                │
+└────────────────┴─────────────────────┴─────────────────────────────┘
+```
+
+### Naming Anti-Patterns
+
+```python
+# ============================================================================
+# ANTI-PATTERNS - Don't do these
+# ============================================================================
+
+# ❌ Bad: Inconsistent casing
+# HttpRequestsTotal = Counter(...)  # Use snake_case
+# HTTP_REQUESTS_TOTAL = Counter(...)  # Use lowercase
+
+# ❌ Bad: Missing unit suffix
+# request_duration = Histogram(...)  # Use _seconds
+
+# ❌ Bad: Wrong metric type
+# request_count = Gauge(...)  # Counters should use Counter type
+# current_requests = Counter(...)  # Gauges should use Gauge type
+
+# ❌ Bad: Redundant labels
+# requests_total with labels ["method", "http_method"]  # Duplicated
+
+# ❌ Bad: High-cardinality labels
+# requests_total with labels ["user_id"]  # Unbounded values
+
+# ❌ Bad: Inconsistent naming across metrics
+# http_requests_total vs http_request_duration_seconds
+# ^^^^ plural                ^^^^^^^ singular - pick one
+
+# ❌ Bad: Using verbs instead of nouns
+# process_requests_total  # Use noun: requests_processed_total
+
+# ❌ Bad: Abbreviations
+# req_total  # Use full words: requests_total
+# db_conn  # Use full words: database_connections
+
+# ✅ Good: Consistent naming pattern
+http_server_requests_total = Counter(...)
+http_server_request_duration_seconds = Histogram(...)
+http_server_request_size_bytes = Histogram(...)
+http_server_response_size_bytes = Histogram(...)
+```
+
+---
+
+## Label and Tag Standards
+
+### Label Best Practices
+
+```text
+┌─────────────────────────────────────────────────────────────────────┐
+│                     Label Cardinality Guidelines                     │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  Low Cardinality (GOOD):                                           │
+│  ├── method: GET, POST, PUT, DELETE (~10 values)                   │
+│  ├── status_code: 200, 201, 400, 404, 500 (~20 values)            │
+│  ├── environment: dev, staging, prod (3 values)                    │
+│  └── service: api, worker, scheduler (~10 values)                  │
+│                                                                     │
+│  High Cardinality (BAD):                                           │
+│  ├── user_id: Unbounded (millions of values)                       │
+│  ├── request_id: Unique per request (infinite)                     │
+│  ├── email: Unbounded (millions of values)                         │
+│  └── timestamp: Unique per event (infinite)                        │
+│                                                                     │
+│  Cardinality Impact:                                               │
+│  ├── 10 labels × 10 values = 100 time series                       │
+│  ├── 10 labels × 100 values = 1,000 time series                    │
+│  ├── 10 labels × 1000 values = 10,000 time series                  │
+│  └── Memory usage grows linearly with time series count            │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Standard Label Definitions
+
+```python
+# src/observability/metrics/labels.py
+"""
+Standard label definitions for consistent metrics.
+
+@module prometheus_labels
+@description Standardized label names and values
+@version 1.0.0
+@author Tyler Dukes
+"""
+
+from enum import Enum
+from typing import Dict, List, Optional
+from dataclasses import dataclass
+
+
+class HttpMethod(Enum):
+    """Standard HTTP method labels."""
+    GET = "GET"
+    POST = "POST"
+    PUT = "PUT"
+    PATCH = "PATCH"
+    DELETE = "DELETE"
+    HEAD = "HEAD"
+    OPTIONS = "OPTIONS"
+
+
+class HttpStatusCategory(Enum):
+    """HTTP status code categories for reduced cardinality."""
+    SUCCESS = "2xx"
+    REDIRECT = "3xx"
+    CLIENT_ERROR = "4xx"
+    SERVER_ERROR = "5xx"
+
+
+class Environment(Enum):
+    """Standard environment labels."""
+    DEVELOPMENT = "development"
+    STAGING = "staging"
+    PRODUCTION = "production"
+
+
+class DatabaseOperation(Enum):
+    """Standard database operation labels."""
+    SELECT = "select"
+    INSERT = "insert"
+    UPDATE = "update"
+    DELETE = "delete"
+    TRANSACTION = "transaction"
+
+
+class CacheOperation(Enum):
+    """Standard cache operation labels."""
+    GET = "get"
+    SET = "set"
+    DELETE = "delete"
+    EXPIRE = "expire"
+
+
+class CacheResult(Enum):
+    """Standard cache result labels."""
+    HIT = "hit"
+    MISS = "miss"
+    ERROR = "error"
+
+
+@dataclass
+class LabelConfig:
+    """Configuration for a metric label."""
+    name: str
+    description: str
+    allowed_values: Optional[List[str]] = None
+    max_cardinality: int = 100
+
+
+# Standard label configurations
+STANDARD_LABELS: Dict[str, LabelConfig] = {
+    "method": LabelConfig(
+        name="method",
+        description="HTTP method (GET, POST, PUT, DELETE, etc.)",
+        allowed_values=["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
+        max_cardinality=10,
+    ),
+    "status_code": LabelConfig(
+        name="status_code",
+        description="HTTP status code (200, 201, 400, 404, 500, etc.)",
+        max_cardinality=50,
+    ),
+    "status_category": LabelConfig(
+        name="status_category",
+        description="HTTP status category (2xx, 3xx, 4xx, 5xx)",
+        allowed_values=["2xx", "3xx", "4xx", "5xx"],
+        max_cardinality=4,
+    ),
+    "endpoint": LabelConfig(
+        name="endpoint",
+        description="API endpoint path (normalized, no IDs)",
+        max_cardinality=100,
+    ),
+    "service": LabelConfig(
+        name="service",
+        description="Service name",
+        max_cardinality=50,
+    ),
+    "environment": LabelConfig(
+        name="environment",
+        description="Deployment environment",
+        allowed_values=["development", "staging", "production"],
+        max_cardinality=5,
+    ),
+    "error_type": LabelConfig(
+        name="error_type",
+        description="Error classification",
+        max_cardinality=50,
+    ),
+    "database": LabelConfig(
+        name="database",
+        description="Database name",
+        max_cardinality=20,
+    ),
+    "table": LabelConfig(
+        name="table",
+        description="Database table name",
+        max_cardinality=100,
+    ),
+    "operation": LabelConfig(
+        name="operation",
+        description="Operation type (select, insert, update, delete)",
+        allowed_values=["select", "insert", "update", "delete", "transaction"],
+        max_cardinality=10,
+    ),
+    "cache": LabelConfig(
+        name="cache",
+        description="Cache instance name",
+        max_cardinality=20,
+    ),
+    "result": LabelConfig(
+        name="result",
+        description="Operation result (hit, miss, error)",
+        allowed_values=["hit", "miss", "error", "success", "failure"],
+        max_cardinality=10,
+    ),
+    "queue": LabelConfig(
+        name="queue",
+        description="Message queue name",
+        max_cardinality=50,
+    ),
+}
+
+
+def normalize_endpoint(path: str) -> str:
+    """
+    Normalize endpoint path to reduce cardinality.
+
+    Examples:
+        /users/123 -> /users/{id}
+        /orders/abc-def-ghi/items/456 -> /orders/{id}/items/{id}
+    """
+    import re
+
+    # Replace UUIDs
+    path = re.sub(
+        r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
+        '{uuid}',
+        path,
+        flags=re.IGNORECASE,
+    )
+
+    # Replace numeric IDs
+    path = re.sub(r'/\d+(?=/|$)', '/{id}', path)
+
+    # Replace alphanumeric IDs (common patterns)
+    path = re.sub(r'/[a-zA-Z0-9]{20,}(?=/|$)', '/{id}', path)
+
+    return path
+
+
+def normalize_status_code(status_code: int) -> str:
+    """
+    Normalize status code to category for reduced cardinality.
+
+    Examples:
+        200, 201, 204 -> "2xx"
+        400, 401, 404 -> "4xx"
+        500, 502, 503 -> "5xx"
+    """
+    category = status_code // 100
+    return f"{category}xx"
+
+
+def validate_label_value(label_name: str, value: str) -> bool:
+    """
+    Validate that a label value is within expected bounds.
+    """
+    config = STANDARD_LABELS.get(label_name)
+    if not config:
+        return True
+
+    if config.allowed_values:
+        return value in config.allowed_values
+
+    return True
+```
+
+### Label Usage Examples
+
+```python
+# src/observability/metrics/usage_examples.py
+"""
+Examples of proper label usage in metrics.
+"""
+
+from prometheus_client import Counter, Histogram, Gauge
+from .labels import normalize_endpoint, normalize_status_code
+
+
+# ============================================================================
+# GOOD: Proper label usage
+# ============================================================================
+
+# Good: Low-cardinality labels only
+http_requests = Counter(
+    "http_requests_total",
+    "Total HTTP requests",
+    ["method", "endpoint", "status_category"],
+)
+
+# Usage with normalized values
+def record_request(method: str, path: str, status_code: int):
+    http_requests.labels(
+        method=method.upper(),
+        endpoint=normalize_endpoint(path),  # /users/123 -> /users/{id}
+        status_category=normalize_status_code(status_code),  # 200 -> 2xx
+    ).inc()
+
+
+# Good: Bounded set of label values
+cache_operations = Counter(
+    "cache_operations_total",
+    "Cache operations",
+    ["operation", "result"],
+)
+
+# Usage
+def record_cache_operation(operation: str, hit: bool):
+    cache_operations.labels(
+        operation=operation,  # get, set, delete
+        result="hit" if hit else "miss",
+    ).inc()
+
+
+# Good: Database metrics with bounded labels
+db_queries = Histogram(
+    "database_query_duration_seconds",
+    "Database query duration",
+    ["operation", "table"],
+    buckets=[0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0],
+)
+
+
+# ============================================================================
+# BAD: Anti-patterns to avoid
+# ============================================================================
+
+# ❌ Bad: User ID as label (high cardinality)
+# user_requests = Counter(
+#     "user_requests_total",
+#     "Requests per user",
+#     ["user_id"],  # Unbounded! Could be millions of users
+# )
+
+# ❌ Bad: Request ID as label (infinite cardinality)
+# request_latency = Histogram(
+#     "request_latency_seconds",
+#     "Request latency",
+#     ["request_id"],  # Every request is unique!
+# )
+
+# ❌ Bad: Full URL path as label (high cardinality)
+# url_requests = Counter(
+#     "url_requests_total",
+#     "Requests per URL",
+#     ["url"],  # /users/1, /users/2, /users/3... unbounded!
+# )
+
+# ❌ Bad: Timestamp as label
+# events = Counter(
+#     "events_total",
+#     "Events",
+#     ["timestamp"],  # Every second is unique!
+# )
+
+# ❌ Bad: Error message as label
+# errors = Counter(
+#     "errors_total",
+#     "Errors",
+#     ["message"],  # Error messages vary widely!
+# )
+
+# ✅ Instead, use error types:
+errors = Counter(
+    "errors_total",
+    "Errors by type",
+    ["error_type", "service"],  # Bounded set of error types
+)
+```
+
+### Cardinality Monitoring
+
+```python
+# src/observability/metrics/cardinality.py
+"""
+Tools for monitoring and controlling metric cardinality.
+"""
+
+from prometheus_client import Gauge, REGISTRY
+from typing import Dict, List, Tuple
+import logging
+
+logger = logging.getLogger(__name__)
+
+# Metric to track cardinality
+metric_cardinality = Gauge(
+    "prometheus_metric_cardinality",
+    "Number of time series per metric",
+    ["metric_name"],
+)
+
+
+def get_metric_cardinality() -> Dict[str, int]:
+    """
+    Get the cardinality (number of time series) for each metric.
+    """
+    cardinality: Dict[str, int] = {}
+
+    for metric in REGISTRY.collect():
+        count = len(list(metric.samples))
+        cardinality[metric.name] = count
+
+    return cardinality
+
+
+def check_cardinality_limits(
+    limits: Dict[str, int],
+    action: str = "warn",
+) -> List[Tuple[str, int, int]]:
+    """
+    Check if any metrics exceed their cardinality limits.
+
+    Args:
+        limits: Dict mapping metric names to max cardinality
+        action: "warn" to log warning, "error" to raise exception
+
+    Returns:
+        List of (metric_name, current_cardinality, limit) for violations
+    """
+    cardinality = get_metric_cardinality()
+    violations = []
+
+    for metric_name, limit in limits.items():
+        current = cardinality.get(metric_name, 0)
+        if current > limit:
+            violations.append((metric_name, current, limit))
+
+            if action == "warn":
+                logger.warning(
+                    "Metric cardinality exceeded",
+                    extra={
+                        "metric": metric_name,
+                        "current": current,
+                        "limit": limit,
+                    },
+                )
+            elif action == "error":
+                raise ValueError(
+                    f"Metric {metric_name} cardinality {current} exceeds limit {limit}"
+                )
+
+    return violations
+
+
+# Recommended cardinality limits
+CARDINALITY_LIMITS = {
+    "http_requests_total": 1000,
+    "http_request_duration_seconds": 1000,
+    "database_queries_total": 500,
+    "cache_operations_total": 100,
+    "errors_total": 200,
+}
+```
+
+---
+
+## Grafana Dashboards
+
+### Dashboard Structure Standards
+
+```text
+┌─────────────────────────────────────────────────────────────────────┐
+│                    Dashboard Organization                            │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  Row 1: Overview / Key Metrics                                      │
+│  ├── Total Requests (stat panel)                                   │
+│  ├── Error Rate (stat panel)                                       │
+│  ├── P99 Latency (stat panel)                                      │
+│  └── Active Users (stat panel)                                     │
+│                                                                     │
+│  Row 2: Request Metrics                                             │
+│  ├── Requests per Second (time series)                             │
+│  ├── Request Duration (heatmap)                                    │
+│  └── Status Code Distribution (pie chart)                          │
+│                                                                     │
+│  Row 3: Error Analysis                                              │
+│  ├── Error Rate by Endpoint (time series)                          │
+│  ├── Error Types (bar chart)                                       │
+│  └── Recent Errors (table)                                         │
+│                                                                     │
+│  Row 4: Infrastructure                                              │
+│  ├── CPU Usage (time series)                                       │
+│  ├── Memory Usage (time series)                                    │
+│  └── Database Connections (gauge)                                  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Dashboard Template (JSON)
+
+```json
+{
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "Prometheus data source",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      },
+      {
+        "datasource": "${DS_PROMETHEUS}",
+        "enable": true,
+        "expr": "ALERTS{alertstate=\"firing\", service=\"$service\"}",
+        "iconColor": "red",
+        "name": "Alerts",
+        "step": "60s",
+        "tagKeys": "alertname",
+        "textFormat": "{{alertname}}: {{message}}",
+        "titleFormat": "Alert"
+      }
+    ]
+  },
+  "description": "Service overview dashboard with key metrics",
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 1,
+  "id": null,
+  "iteration": 1700000000000,
+  "links": [
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": ["service"],
+      "targetBlank": true,
+      "title": "Related Dashboards",
+      "type": "dashboards"
+    }
+  ],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 1,
+      "panels": [],
+      "title": "Overview",
+      "type": "row"
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          },
+          "unit": "reqps"
+        }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total{service=\"$service\"}[$__rate_interval]))",
+          "legendFormat": "Requests/sec",
+          "refId": "A"
+        }
+      ],
+      "title": "Request Rate",
+      "type": "stat"
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 5 }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total{service=\"$service\", status_code=~\"5..\"}[$__rate_interval])) / sum(rate(http_requests_total{service=\"$service\"}[$__rate_interval])) * 100",
+          "legendFormat": "Error Rate",
+          "refId": "A"
+        }
+      ],
+      "title": "Error Rate",
+      "type": "stat"
+    },
+    {
+      "datasource": "${DS_PROMETHEUS}",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.5 },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 1 },
+      "id": 4,
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{service=\"$service\"}[$__rate_interval])) by (le))",
+          "legendFormat": "P99 Latency",
+          "refId": "A"
+        }
+      ],
+      "title": "P99 Latency",
+      "type": "stat"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["service", "overview", "prometheus"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": "${DS_PROMETHEUS}",
+        "definition": "label_values(http_requests_total, service)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Service",
+        "multi": false,
+        "name": "service",
+        "options": [],
+        "query": {
+          "query": "label_values(http_requests_total, service)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": "${DS_PROMETHEUS}",
+        "definition": "label_values(http_requests_total{service=\"$service\"}, environment)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Environment",
+        "multi": true,
+        "name": "environment",
+        "options": [],
+        "query": {
+          "query": "label_values(http_requests_total{service=\"$service\"}, environment)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": {
+    "refresh_intervals": ["5s", "10s", "30s", "1m", "5m", "15m", "30m", "1h"],
+    "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
+  },
+  "timezone": "browser",
+  "title": "Service Overview",
+  "uid": "service-overview",
+  "version": 1
+}
+```
+
+### Dashboard Variables
+
+```yaml
+# grafana/provisioning/dashboards/variables.yaml
+# Standard variables for all dashboards
+
+variables:
+  # Service selector
+  - name: service
+    type: query
+    datasource: prometheus
+    query: "label_values(up, service)"
+    refresh: 2  # On time range change
+    sort: 1  # Alphabetical ascending
+    multi: false
+    includeAll: false
+
+  # Environment selector
+  - name: environment
+    type: query
+    datasource: prometheus
+    query: "label_values(up{service=\"$service\"}, environment)"
+    refresh: 2
+    sort: 1
+    multi: true
+    includeAll: true
+    allValue: ".*"
+
+  # Instance selector
+  - name: instance
+    type: query
+    datasource: prometheus
+    query: "label_values(up{service=\"$service\", environment=~\"$environment\"}, instance)"
+    refresh: 2
+    sort: 1
+    multi: true
+    includeAll: true
+
+  # Rate interval (for rate() functions)
+  - name: rate_interval
+    type: interval
+    auto: true
+    auto_min: "1m"
+    options:
+      - "1m"
+      - "5m"
+      - "10m"
+      - "30m"
+      - "1h"
+
+  # Custom interval for aggregations
+  - name: interval
+    type: custom
+    options:
+      - value: "1m"
+        text: "1 minute"
+      - value: "5m"
+        text: "5 minutes"
+      - value: "1h"
+        text: "1 hour"
+    default: "5m"
+```
+
+### Alert Rules
+
+```yaml
+# grafana/provisioning/alerting/rules.yaml
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: Service Alerts
+    folder: Alerts
+    interval: 1m
+    rules:
+      # High Error Rate Alert
+      - uid: high-error-rate
+        title: High Error Rate
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: |
+                sum(rate(http_requests_total{status_code=~"5.."}[5m])) by (service)
+                /
+                sum(rate(http_requests_total[5m])) by (service)
+                * 100
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - B
+                  reducer:
+                    type: last
+              refId: B
+              type: reduce
+              reducer: last
+              expression: A
+          - refId: C
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 5  # 5% error rate threshold
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+              refId: C
+              type: threshold
+              expression: B
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          summary: "High error rate for {{ $labels.service }}"
+          description: |
+            Error rate is {{ $values.B.Value | printf "%.2f" }}% for service {{ $labels.service }}.
+            This exceeds the 5% threshold.
+          runbook_url: "https://runbooks.example.com/high-error-rate"
+        labels:
+          severity: critical
+          team: platform
+
+      # High Latency Alert
+      - uid: high-latency
+        title: High P99 Latency
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            model:
+              expr: |
+                histogram_quantile(0.99,
+                  sum(rate(http_request_duration_seconds_bucket[5m])) by (le, service)
+                )
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              refId: B
+              type: reduce
+              reducer: last
+              expression: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              refId: C
+              type: threshold
+              expression: B
+              conditions:
+                - evaluator:
+                    params:
+                      - 2  # 2 second threshold
+                    type: gt
+        for: 5m
+        annotations:
+          summary: "High latency for {{ $labels.service }}"
+          description: |
+            P99 latency is {{ $values.B.Value | printf "%.3f" }}s for service {{ $labels.service }}.
+        labels:
+          severity: warning
+          team: platform
+
+      # Low Request Rate (potential outage)
+      - uid: low-request-rate
+        title: Abnormally Low Request Rate
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            model:
+              expr: |
+                sum(rate(http_requests_total[5m])) by (service)
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              type: reduce
+              reducer: last
+              expression: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              expression: B
+              conditions:
+                - evaluator:
+                    params:
+                      - 1  # Less than 1 req/s
+                    type: lt
+        for: 10m
+        annotations:
+          summary: "Low request rate for {{ $labels.service }}"
+          description: |
+            Request rate is {{ $values.B.Value | printf "%.2f" }} req/s for {{ $labels.service }}.
+            This may indicate an outage or routing issue.
+        labels:
+          severity: warning
+          team: platform
+
+      # Database Connection Pool Exhaustion
+      - uid: db-connections-high
+        title: Database Connections Near Limit
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            model:
+              expr: |
+                database_connections_active / database_connections_max * 100
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              type: reduce
+              reducer: last
+              expression: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              expression: B
+              conditions:
+                - evaluator:
+                    params:
+                      - 80  # 80% threshold
+                    type: gt
+        for: 5m
+        annotations:
+          summary: "Database connection pool near exhaustion"
+          description: |
+            {{ $values.B.Value | printf "%.1f" }}% of database connections are in use.
+        labels:
+          severity: warning
+          team: database
+```
+
+### Dashboard Provisioning
+
+```yaml
+# grafana/provisioning/dashboards/dashboards.yaml
+apiVersion: 1
+
+providers:
+  - name: 'default'
+    orgId: 1
+    folder: 'Services'
+    folderUid: 'services'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/services
+
+  - name: 'infrastructure'
+    orgId: 1
+    folder: 'Infrastructure'
+    folderUid: 'infrastructure'
+    type: file
+    disableDeletion: false
+    options:
+      path: /var/lib/grafana/dashboards/infrastructure
+
+  - name: 'alerts'
+    orgId: 1
+    folder: 'Alerts'
+    folderUid: 'alerts'
+    type: file
+    disableDeletion: false
+    options:
+      path: /var/lib/grafana/dashboards/alerts
+```
+
+### Dashboard Design Patterns
+
+```python
+# scripts/grafana/dashboard_generator.py
+"""
+Dashboard generator following design patterns.
+
+@module dashboard_generator
+@description Generate consistent Grafana dashboards
+@version 1.0.0
+@author Tyler Dukes
+"""
+
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Any
+from enum import Enum
+import json
+
+
+class PanelType(Enum):
+    STAT = "stat"
+    TIMESERIES = "timeseries"
+    TABLE = "table"
+    GAUGE = "gauge"
+    HEATMAP = "heatmap"
+    PIECHART = "piechart"
+    BARGAUGE = "bargauge"
+    TEXT = "text"
+
+
+@dataclass
+class Panel:
+    """Dashboard panel configuration."""
+    title: str
+    type: PanelType
+    query: str
+    grid_pos: Dict[str, int]
+    unit: str = ""
+    thresholds: List[Dict[str, Any]] = field(default_factory=list)
+    legend_format: str = ""
+    description: str = ""
+
+
+@dataclass
+class Row:
+    """Dashboard row configuration."""
+    title: str
+    panels: List[Panel]
+    collapsed: bool = False
+
+
+@dataclass
+class DashboardConfig:
+    """Dashboard configuration."""
+    title: str
+    uid: str
+    description: str
+    tags: List[str]
+    refresh: str = "30s"
+    rows: List[Row] = field(default_factory=list)
+    variables: List[Dict[str, Any]] = field(default_factory=list)
+
+
+class DashboardGenerator:
+    """Generate Grafana dashboards from configuration."""
+
+    # Standard color schemes
+    COLORS = {
+        "green": "#73BF69",
+        "yellow": "#FADE2A",
+        "orange": "#FF9830",
+        "red": "#F2495C",
+        "blue": "#5794F2",
+        "purple": "#B877D9",
+    }
+
+    # Standard thresholds
+    ERROR_RATE_THRESHOLDS = [
+        {"color": "green", "value": None},
+        {"color": "yellow", "value": 1},
+        {"color": "orange", "value": 3},
+        {"color": "red", "value": 5},
+    ]
+
+    LATENCY_THRESHOLDS = [
+        {"color": "green", "value": None},
+        {"color": "yellow", "value": 0.5},
+        {"color": "orange", "value": 1},
+        {"color": "red", "value": 2},
+    ]
+
+    def __init__(self, config: DashboardConfig):
+        self.config = config
+        self._panel_id = 0
+
+    def _next_panel_id(self) -> int:
+        self._panel_id += 1
+        return self._panel_id
+
+    def generate(self) -> Dict[str, Any]:
+        """Generate complete dashboard JSON."""
+        dashboard = {
+            "annotations": self._generate_annotations(),
+            "description": self.config.description,
+            "editable": True,
+            "gnetId": None,
+            "graphTooltip": 1,  # Shared crosshair
+            "id": None,
+            "links": [],
+            "panels": self._generate_panels(),
+            "refresh": self.config.refresh,
+            "schemaVersion": 38,
+            "style": "dark",
+            "tags": self.config.tags,
+            "templating": {"list": self._generate_variables()},
+            "time": {"from": "now-1h", "to": "now"},
+            "timepicker": self._generate_timepicker(),
+            "timezone": "browser",
+            "title": self.config.title,
+            "uid": self.config.uid,
+            "version": 1,
+        }
+        return dashboard
+
+    def _generate_annotations(self) -> Dict[str, List]:
+        return {
+            "list": [
+                {
+                    "builtIn": 1,
+                    "datasource": "-- Grafana --",
+                    "enable": True,
+                    "hide": True,
+                    "iconColor": "rgba(0, 211, 255, 1)",
+                    "name": "Annotations & Alerts",
+                    "type": "dashboard",
+                }
+            ]
+        }
+
+    def _generate_panels(self) -> List[Dict]:
+        panels = []
+        y_pos = 0
+
+        for row in self.config.rows:
+            # Add row panel
+            panels.append({
+                "collapsed": row.collapsed,
+                "gridPos": {"h": 1, "w": 24, "x": 0, "y": y_pos},
+                "id": self._next_panel_id(),
+                "panels": [],
+                "title": row.title,
+                "type": "row",
+            })
+            y_pos += 1
+
+            # Add panels in row
+            for panel in row.panels:
+                panels.append(self._generate_panel(panel, y_pos))
+
+            # Calculate next row position
+            if row.panels:
+                max_height = max(p.grid_pos.get("h", 8) for p in row.panels)
+                y_pos += max_height
+
+        return panels
+
+    def _generate_panel(self, panel: Panel, base_y: int) -> Dict:
+        grid_pos = panel.grid_pos.copy()
+        grid_pos["y"] = base_y
+
+        return {
+            "datasource": "${DS_PROMETHEUS}",
+            "description": panel.description,
+            "fieldConfig": self._generate_field_config(panel),
+            "gridPos": grid_pos,
+            "id": self._next_panel_id(),
+            "options": self._generate_panel_options(panel),
+            "pluginVersion": "10.0.0",
+            "targets": [
+                {
+                    "expr": panel.query,
+                    "legendFormat": panel.legend_format,
+                    "refId": "A",
+                }
+            ],
+            "title": panel.title,
+            "type": panel.type.value,
+        }
+
+    def _generate_field_config(self, panel: Panel) -> Dict:
+        return {
+            "defaults": {
+                "color": {"mode": "thresholds"},
+                "mappings": [],
+                "thresholds": {
+                    "mode": "absolute",
+                    "steps": panel.thresholds or [{"color": "green", "value": None}],
+                },
+                "unit": panel.unit,
+            },
+            "overrides": [],
+        }
+
+    def _generate_panel_options(self, panel: Panel) -> Dict:
+        if panel.type == PanelType.STAT:
+            return {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": ["lastNotNull"],
+                    "fields": "",
+                    "values": False,
+                },
+                "textMode": "auto",
+            }
+        elif panel.type == PanelType.TIMESERIES:
+            return {
+                "legend": {"displayMode": "list", "placement": "bottom"},
+                "tooltip": {"mode": "multi", "sort": "desc"},
+            }
+        return {}
+
+    def _generate_variables(self) -> List[Dict]:
+        variables = [
+            {
+                "current": {},
+                "datasource": "${DS_PROMETHEUS}",
+                "definition": "label_values(up, service)",
+                "hide": 0,
+                "includeAll": False,
+                "label": "Service",
+                "multi": False,
+                "name": "service",
+                "options": [],
+                "query": {"query": "label_values(up, service)"},
+                "refresh": 2,
+                "sort": 1,
+                "type": "query",
+            },
+            {
+                "current": {},
+                "datasource": "${DS_PROMETHEUS}",
+                "definition": "label_values(up{service=\"$service\"}, environment)",
+                "hide": 0,
+                "includeAll": True,
+                "label": "Environment",
+                "multi": True,
+                "name": "environment",
+                "options": [],
+                "query": {"query": "label_values(up{service=\"$service\"}, environment)"},
+                "refresh": 2,
+                "sort": 1,
+                "type": "query",
+            },
+        ]
+        return variables + self.config.variables
+
+    def _generate_timepicker(self) -> Dict:
+        return {
+            "refresh_intervals": ["5s", "10s", "30s", "1m", "5m", "15m"],
+            "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d"],
+        }
+
+
+def create_service_dashboard(service_name: str) -> Dict:
+    """Create a standard service dashboard."""
+    config = DashboardConfig(
+        title=f"{service_name} Service Dashboard",
+        uid=f"{service_name.lower()}-service",
+        description=f"Overview dashboard for {service_name} service",
+        tags=["service", service_name.lower(), "prometheus"],
+        rows=[
+            Row(
+                title="Overview",
+                panels=[
+                    Panel(
+                        title="Request Rate",
+                        type=PanelType.STAT,
+                        query=f'sum(rate(http_requests_total{{service="{service_name}"}}[$__rate_interval]))',
+                        grid_pos={"h": 4, "w": 6, "x": 0},
+                        unit="reqps",
+                        legend_format="Requests/sec",
+                    ),
+                    Panel(
+                        title="Error Rate",
+                        type=PanelType.STAT,
+                        query=(
+                            f'sum(rate(http_requests_total{{service="{service_name}",'
+                            f' status_code=~"5.."}}[$__rate_interval])) / '
+                            f'sum(rate(http_requests_total{{service="{service_name}"}}[$__rate_interval])) * 100'
+                        ),
+                        grid_pos={"h": 4, "w": 6, "x": 6},
+                        unit="percent",
+                        thresholds=DashboardGenerator.ERROR_RATE_THRESHOLDS,
+                        legend_format="Error Rate",
+                    ),
+                    Panel(
+                        title="P99 Latency",
+                        type=PanelType.STAT,
+                        query=f'histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{{service="{service_name}"}}[$__rate_interval])) by (le))',
+                        grid_pos={"h": 4, "w": 6, "x": 12},
+                        unit="s",
+                        thresholds=DashboardGenerator.LATENCY_THRESHOLDS,
+                        legend_format="P99",
+                    ),
+                ],
+            ),
+            Row(
+                title="Request Metrics",
+                panels=[
+                    Panel(
+                        title="Requests per Second",
+                        type=PanelType.TIMESERIES,
+                        query=f'sum(rate(http_requests_total{{service="{service_name}"}}[$__rate_interval])) by (endpoint)',
+                        grid_pos={"h": 8, "w": 12, "x": 0},
+                        unit="reqps",
+                        legend_format="{{endpoint}}",
+                    ),
+                    Panel(
+                        title="Request Duration",
+                        type=PanelType.HEATMAP,
+                        query=f'sum(rate(http_request_duration_seconds_bucket{{service="{service_name}"}}[$__rate_interval])) by (le)',
+                        grid_pos={"h": 8, "w": 12, "x": 12},
+                        unit="s",
+                    ),
+                ],
+            ),
+        ],
+    )
+
+    generator = DashboardGenerator(config)
+    return generator.generate()
+
+
+if __name__ == "__main__":
+    dashboard = create_service_dashboard("api-gateway")
+    print(json.dumps(dashboard, indent=2))
+```
+
+### Dashboard Versioning
+
+```yaml
+# grafana/dashboards/README.md
+# Dashboard Version Management
+
+## Versioning Strategy
+
+1. **Git-based versioning**: All dashboards stored as JSON in version control
+2. **Semantic versioning**: Major.Minor.Patch for dashboard changes
+   - Major: Breaking changes (removed panels, renamed variables)
+   - Minor: New panels or features
+   - Patch: Bug fixes, query optimizations
+
+## Directory Structure
+
+```text
+grafana/dashboards/
+├── services/
+│   ├── api-gateway.json
+│   ├── user-service.json
+│   └── payment-service.json
+├── infrastructure/
+│   ├── kubernetes.json
+│   ├── database.json
+│   └── cache.json
+├── alerts/
+│   └── alert-overview.json
+└── README.md
+```
+
+## Change Process
+
+1. Export dashboard from Grafana UI
+2. Run `./scripts/format-dashboard.sh <file>` to normalize JSON
+3. Update version in dashboard JSON
+4. Commit with message: `dashboard(<name>): <description>`
+5. CI/CD automatically syncs to Grafana
+
+## Rollback
+
+```bash
+# Rollback to previous version
+git checkout HEAD~1 -- grafana/dashboards/services/api-gateway.json
+kubectl apply -k grafana/
+```
+
+---
+
 ## CI/CD Integration
 
 ### GitHub Actions Observability Validation
@@ -3013,13 +5146,36 @@ except Exception as e:
 
 ## Resources
 
+### Tracing and Instrumentation
+
 - [OpenTelemetry Documentation](https://opentelemetry.io/docs/)
+- [OpenTelemetry Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/)
+- [Jaeger Documentation](https://www.jaegertracing.io/docs/)
+- [Zipkin Documentation](https://zipkin.io/pages/documentation.html)
+
+### Metrics and Monitoring
+
+- [Prometheus Documentation](https://prometheus.io/docs/)
+- [Prometheus Best Practices](https://prometheus.io/docs/practices/)
+- [Prometheus Naming Conventions](https://prometheus.io/docs/practices/naming/)
+- [PromQL Documentation](https://prometheus.io/docs/prometheus/latest/querying/basics/)
+
+### Dashboards and Visualization
+
+- [Grafana Documentation](https://grafana.com/docs/grafana/latest/)
+- [Grafana Dashboard Best Practices](https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/best-practices/)
+- [Grafana Alerting](https://grafana.com/docs/grafana/latest/alerting/)
+- [Grafana Loki Documentation](https://grafana.com/docs/loki/)
+
+### Logging
+
 - [Structlog Documentation](https://www.structlog.org/)
 - [Pino Documentation](https://getpino.io/)
-- [Jaeger Documentation](https://www.jaegertracing.io/docs/)
-- [Grafana Loki Documentation](https://grafana.com/docs/loki/)
 - [ELK Stack Documentation](https://www.elastic.co/guide/)
 - [AWS CloudWatch Logs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/)
+
+### Error Monitoring and APM
+
 - [Sentry Documentation](https://docs.sentry.io/)
 
 ---
