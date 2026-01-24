@@ -1,8 +1,8 @@
 ---
 title: "Security Scanning Guide"
-description: "Comprehensive guide to security scanning tools, vulnerability detection, secret scanning, dependency analysis, and security best practices for DevOps pipelines"
+description: "Comprehensive guide to SAST, DAST, SCA security testing with tool selection, severity classification, false positive handling, security gates, and remediation SLAs"
 author: "Tyler Dukes"
-tags: [security, scanning, sast, dast, sca, secrets, vulnerabilities, compliance]
+tags: [security, scanning, sast, dast, sca, secrets, vulnerabilities, compliance, semgrep, bandit, gosec, zap, nuclei, trivy, devsecops]
 category: "CI/CD"
 status: "active"
 ---
@@ -19,13 +19,19 @@ container scanning, infrastructure scanning, and compliance validation.
 
 1. [Secret Detection](#secret-detection)
 2. [Static Application Security Testing (SAST)](#static-application-security-testing-sast)
-3. [Software Composition Analysis (SCA)](#software-composition-analysis-sca)
-4. [Container Security](#container-security)
-5. [Infrastructure Security](#infrastructure-security)
-6. [Dynamic Application Security Testing (DAST)](#dynamic-application-security-testing-dast)
-7. [Compliance Scanning](#compliance-scanning)
-8. [CI/CD Integration](#cicd-integration)
-9. [Security Policies](#security-policies)
+3. [SAST Tool Selection by Language](#sast-tool-selection-by-language)
+4. [Software Composition Analysis (SCA)](#software-composition-analysis-sca)
+5. [Container Security](#container-security)
+6. [Infrastructure Security](#infrastructure-security)
+7. [Dynamic Application Security Testing (DAST)](#dynamic-application-security-testing-dast)
+8. [Compliance Scanning](#compliance-scanning)
+9. [Severity Classification](#severity-classification)
+10. [False Positive Management](#false-positive-management)
+11. [Security Gate Policies](#security-gate-policies)
+12. [Remediation SLAs](#remediation-slas)
+13. [Issue Tracker Integration](#issue-tracker-integration)
+14. [CI/CD Integration](#cicd-integration)
+15. [Security Policies](#security-policies)
 
 ---
 
@@ -468,6 +474,439 @@ npm install --save-dev \
     "xss/no-mixed-html": "error"
   }
 }
+```
+
+### gosec (Go)
+
+**Installation**:
+
+```bash
+## Go install
+go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+## Verify
+gosec --version
+```
+
+**Configuration (.gosec.json)**:
+
+```json
+{
+  "global": {
+    "audit": "enabled",
+    "nosec": "enabled",
+    "showignored": false
+  },
+  "rules": {
+    "G101": "enabled",
+    "G102": "enabled",
+    "G103": "enabled",
+    "G104": "enabled",
+    "G106": "enabled",
+    "G107": "enabled",
+    "G108": "enabled",
+    "G109": "enabled",
+    "G110": "enabled",
+    "G201": "enabled",
+    "G202": "enabled",
+    "G203": "enabled",
+    "G204": "enabled",
+    "G301": "enabled",
+    "G302": "enabled",
+    "G303": "enabled",
+    "G304": "enabled",
+    "G305": "enabled",
+    "G306": "enabled",
+    "G307": "enabled",
+    "G401": "enabled",
+    "G402": "enabled",
+    "G403": "enabled",
+    "G404": "enabled",
+    "G501": "enabled",
+    "G502": "enabled",
+    "G503": "enabled",
+    "G504": "enabled",
+    "G505": "enabled",
+    "G601": "enabled"
+  }
+}
+```
+
+**Scanning**:
+
+```bash
+## Scan current directory
+gosec ./...
+
+## Scan with specific rules
+gosec -include=G101,G102,G103 ./...
+
+## Exclude rules
+gosec -exclude=G104 ./...
+
+## Generate reports
+gosec -fmt=json -out=gosec-report.json ./...
+gosec -fmt=sarif -out=gosec.sarif ./...
+gosec -fmt=html -out=gosec-report.html ./...
+
+## Scan with confidence level
+gosec -confidence=medium ./...
+
+## Scan with severity level
+gosec -severity=high ./...
+```
+
+**gosec rules reference**:
+
+```text
+┌───────┬───────────────────────────────────────────────────────────────┐
+│ Rule  │ Description                                                   │
+├───────┼───────────────────────────────────────────────────────────────┤
+│ G101  │ Look for hard coded credentials                               │
+│ G102  │ Bind to all interfaces                                        │
+│ G103  │ Audit the use of unsafe block                                 │
+│ G104  │ Audit errors not checked                                      │
+│ G106  │ Audit the use of ssh.InsecureIgnoreHostKey                    │
+│ G107  │ Url provided to HTTP request as taint input                   │
+│ G108  │ Profiling endpoint automatically exposed on /debug/pprof      │
+│ G109  │ Potential Integer overflow made by strconv.Atoi               │
+│ G110  │ Potential DoS via decompression bomb                          │
+│ G201  │ SQL query construction using format string                    │
+│ G202  │ SQL query construction using string concatenation             │
+│ G203  │ Use of unescaped data in HTML templates                       │
+│ G204  │ Audit use of command execution                                │
+│ G301  │ Poor file permissions used when creating a directory          │
+│ G302  │ Poor file permissions used with chmod                         │
+│ G303  │ Creating tempfile using a predictable path                    │
+│ G304  │ File path provided as taint input                             │
+│ G305  │ File traversal when extracting zip/tar archive                │
+│ G306  │ Poor file permissions used when writing to a new file         │
+│ G307  │ Deferring a method which returns an error                     │
+│ G401  │ Detect the usage of DES, RC4, MD5 or SHA1                     │
+│ G402  │ Look for bad TLS connection settings                          │
+│ G403  │ Ensure minimum RSA key length of 2048 bits                    │
+│ G404  │ Insecure random number source (rand)                          │
+│ G501  │ Import blocklist: crypto/md5                                  │
+│ G502  │ Import blocklist: crypto/des                                  │
+│ G503  │ Import blocklist: crypto/rc4                                  │
+│ G504  │ Import blocklist: net/http/cgi                                │
+│ G505  │ Import blocklist: crypto/sha1                                 │
+│ G601  │ Implicit memory aliasing of items from a range statement      │
+└───────┴───────────────────────────────────────────────────────────────┘
+```
+
+**Pre-commit integration**:
+
+```yaml
+repos:
+  - repo: https://github.com/securego/gosec
+    rev: v2.18.2
+    hooks:
+      - id: gosec
+        args: ['-exclude=G104', './...']
+```
+
+**CI/CD integration**:
+
+```yaml
+## GitHub Actions
+- name: Run gosec
+  uses: securego/gosec@master
+  with:
+    args: '-no-fail -fmt sarif -out gosec.sarif ./...'
+
+- name: Upload gosec results
+  uses: github/codeql-action/upload-sarif@v2
+  with:
+    sarif_file: gosec.sarif
+```
+
+---
+
+## SAST Tool Selection by Language
+
+### Tool Recommendation Matrix
+
+```text
+┌─────────────────┬────────────────────────────────────────────────────────────┐
+│ Language        │ Recommended Tools (Primary → Secondary)                    │
+├─────────────────┼────────────────────────────────────────────────────────────┤
+│ Python          │ Bandit → Semgrep → SonarQube                               │
+│ JavaScript/TS   │ ESLint Security → Semgrep → SonarQube                      │
+│ Go              │ gosec → Semgrep → SonarQube                                │
+│ Java            │ SpotBugs + FindSecBugs → Semgrep → SonarQube               │
+│ C/C++           │ Flawfinder → cppcheck → SonarQube                          │
+│ Ruby            │ Brakeman → Semgrep → SonarQube                             │
+│ PHP             │ PHPStan + Psalm → Semgrep → SonarQube                      │
+│ C#/.NET         │ Security Code Scan → Semgrep → SonarQube                   │
+│ Kotlin          │ detekt → Semgrep → SonarQube                               │
+│ Swift           │ SwiftLint → Semgrep                                        │
+│ Rust            │ cargo-audit → Semgrep                                      │
+│ Terraform       │ tfsec → Checkov → Terrascan                                │
+│ CloudFormation  │ cfn-lint → Checkov                                         │
+│ Kubernetes      │ kubesec → Checkov → Trivy                                  │
+│ Dockerfile      │ Hadolint → Trivy                                           │
+│ Shell/Bash      │ ShellCheck → Semgrep                                       │
+│ SQL             │ sqlfluff → Semgrep                                         │
+└─────────────────┴────────────────────────────────────────────────────────────┘
+```
+
+### Multi-Language Projects Configuration
+
+```yaml
+# .security-scan.yml - Unified security scanning configuration
+version: "1.0"
+
+languages:
+  python:
+    enabled: true
+    tools:
+      - name: bandit
+        config: .bandit
+        severity_threshold: medium
+        fail_on_error: true
+      - name: semgrep
+        config: p/python
+        fail_on_error: true
+
+  javascript:
+    enabled: true
+    tools:
+      - name: eslint-security
+        config: .eslintrc.json
+        fail_on_error: true
+      - name: semgrep
+        config: p/javascript
+        fail_on_error: true
+
+  typescript:
+    enabled: true
+    tools:
+      - name: eslint-security
+        config: .eslintrc.json
+        fail_on_error: true
+      - name: semgrep
+        config: p/typescript
+        fail_on_error: true
+
+  go:
+    enabled: true
+    tools:
+      - name: gosec
+        config: .gosec.json
+        severity_threshold: medium
+        fail_on_error: true
+      - name: semgrep
+        config: p/golang
+        fail_on_error: true
+
+  java:
+    enabled: true
+    tools:
+      - name: spotbugs
+        config: spotbugs-exclude.xml
+        fail_on_error: true
+      - name: semgrep
+        config: p/java
+        fail_on_error: true
+
+global:
+  semgrep:
+    configs:
+      - p/security-audit
+      - p/owasp-top-ten
+      - p/secrets
+    exclude_paths:
+      - "**/test/**"
+      - "**/tests/**"
+      - "**/vendor/**"
+      - "**/node_modules/**"
+
+  sonarqube:
+    enabled: true
+    quality_gate: true
+    server: ${SONAR_HOST_URL}
+```
+
+### Language-Specific Semgrep Rulesets
+
+```yaml
+# .semgrep/rules/python-security.yml
+rules:
+  - id: python-sql-injection-format-string
+    languages: [python]
+    message: |
+      Potential SQL injection using format string.
+      Use parameterized queries instead.
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      owasp: "A03:2021 - Injection"
+      category: security
+    patterns:
+      - pattern-either:
+          - pattern: cursor.execute(f"...")
+          - pattern: cursor.execute("..." % ...)
+          - pattern: cursor.execute("..." + ...)
+          - pattern: $DB.execute(f"...")
+          - pattern: $DB.raw(f"...")
+    fix: |
+      Use parameterized queries: cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+
+  - id: python-dangerous-deserialization
+    languages: [python]
+    message: |
+      Dangerous deserialization detected. pickle/marshal can execute arbitrary code.
+    severity: ERROR
+    metadata:
+      cwe: "CWE-502"
+      owasp: "A08:2021 - Software and Data Integrity Failures"
+    pattern-either:
+      - pattern: pickle.loads(...)
+      - pattern: pickle.load(...)
+      - pattern: marshal.loads(...)
+      - pattern: yaml.load(..., Loader=yaml.Loader)
+      - pattern: yaml.load(..., Loader=yaml.UnsafeLoader)
+
+  - id: python-command-injection
+    languages: [python]
+    message: |
+      Potential command injection. Use subprocess with shell=False.
+    severity: ERROR
+    metadata:
+      cwe: "CWE-78"
+      owasp: "A03:2021 - Injection"
+    pattern-either:
+      - pattern: os.system($CMD)
+      - pattern: os.popen($CMD)
+      - pattern: subprocess.call($CMD, shell=True, ...)
+      - pattern: subprocess.run($CMD, shell=True, ...)
+      - pattern: subprocess.Popen($CMD, shell=True, ...)
+
+  - id: python-weak-cryptography
+    languages: [python]
+    message: |
+      Weak cryptographic algorithm detected. Use SHA-256 or stronger.
+    severity: WARNING
+    metadata:
+      cwe: "CWE-327"
+    pattern-either:
+      - pattern: hashlib.md5(...)
+      - pattern: hashlib.sha1(...)
+      - pattern: Crypto.Hash.MD5.new(...)
+      - pattern: Crypto.Hash.SHA.new(...)
+```
+
+```yaml
+# .semgrep/rules/javascript-security.yml
+rules:
+  - id: js-xss-innerhtml
+    languages: [javascript, typescript]
+    message: |
+      Potential XSS via innerHTML. Use textContent or sanitize input.
+    severity: ERROR
+    metadata:
+      cwe: "CWE-79"
+      owasp: "A03:2021 - Injection"
+    pattern-either:
+      - pattern: $EL.innerHTML = $INPUT
+      - pattern: document.write($INPUT)
+      - pattern: document.writeln($INPUT)
+
+  - id: js-prototype-pollution
+    languages: [javascript, typescript]
+    message: |
+      Potential prototype pollution vulnerability.
+    severity: ERROR
+    metadata:
+      cwe: "CWE-1321"
+    pattern-either:
+      - pattern: $OBJ[...][...] = ...
+      - pattern: Object.assign($OBJ, $INPUT)
+      - pattern: _.merge($OBJ, $INPUT)
+      - pattern: $.extend(true, $OBJ, $INPUT)
+
+  - id: js-insecure-randomness
+    languages: [javascript, typescript]
+    message: |
+      Math.random() is not cryptographically secure.
+      Use crypto.randomBytes() or crypto.getRandomValues().
+    severity: WARNING
+    metadata:
+      cwe: "CWE-338"
+    patterns:
+      - pattern: Math.random()
+      - pattern-not-inside: |
+          // nosec
+          ...
+
+  - id: js-hardcoded-jwt-secret
+    languages: [javascript, typescript]
+    message: |
+      Hardcoded JWT secret detected. Use environment variables.
+    severity: ERROR
+    metadata:
+      cwe: "CWE-798"
+    pattern-either:
+      - pattern: jwt.sign($PAYLOAD, "...", ...)
+      - pattern: jwt.verify($TOKEN, "...", ...)
+      - pattern: |
+          const secret = "..."
+          ...
+          jwt.sign($PAYLOAD, secret, ...)
+```
+
+```yaml
+# .semgrep/rules/go-security.yml
+rules:
+  - id: go-sql-injection
+    languages: [go]
+    message: |
+      Potential SQL injection. Use parameterized queries.
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      owasp: "A03:2021 - Injection"
+    pattern-either:
+      - pattern: $DB.Query(fmt.Sprintf(...))
+      - pattern: $DB.Exec(fmt.Sprintf(...))
+      - pattern: $DB.QueryRow(fmt.Sprintf(...))
+      - pattern: $DB.Query($QUERY + ...)
+      - pattern: $DB.Exec($QUERY + ...)
+
+  - id: go-path-traversal
+    languages: [go]
+    message: |
+      Potential path traversal vulnerability. Validate file paths.
+    severity: ERROR
+    metadata:
+      cwe: "CWE-22"
+    patterns:
+      - pattern-either:
+          - pattern: os.Open($PATH)
+          - pattern: os.ReadFile($PATH)
+          - pattern: ioutil.ReadFile($PATH)
+      - pattern-not-inside: |
+          if !strings.Contains($PATH, "..") {
+            ...
+          }
+
+  - id: go-ssrf
+    languages: [go]
+    message: |
+      Potential SSRF vulnerability. Validate and allowlist URLs.
+    severity: ERROR
+    metadata:
+      cwe: "CWE-918"
+    patterns:
+      - pattern-either:
+          - pattern: http.Get($URL)
+          - pattern: http.Post($URL, ...)
+          - pattern: $CLIENT.Get($URL)
+          - pattern: $CLIENT.Post($URL, ...)
+      - metavariable-regex:
+          metavariable: $URL
+          regex: '.*\$.*'
 ```
 
 ---
@@ -1090,6 +1529,1482 @@ inspec exec /path/to/profile -t ssh://user@host
 
 ---
 
+## Severity Classification
+
+### Severity Levels
+
+```text
+┌──────────┬─────────────────────────────────────────────────────────────┐
+│ Severity │ Description                                                 │
+├──────────┼─────────────────────────────────────────────────────────────┤
+│ CRITICAL │ Actively exploited, remote code execution, data breach risk │
+│          │ CVSS: 9.0-10.0 | Requires immediate action                  │
+├──────────┼─────────────────────────────────────────────────────────────┤
+│ HIGH     │ Easily exploitable, significant impact potential            │
+│          │ CVSS: 7.0-8.9 | Fix within 7 days                           │
+├──────────┼─────────────────────────────────────────────────────────────┤
+│ MEDIUM   │ Requires specific conditions, moderate impact               │
+│          │ CVSS: 4.0-6.9 | Fix within 30 days                          │
+├──────────┼─────────────────────────────────────────────────────────────┤
+│ LOW      │ Difficult to exploit, minimal impact                        │
+│          │ CVSS: 0.1-3.9 | Fix within 90 days                          │
+├──────────┼─────────────────────────────────────────────────────────────┤
+│ INFO     │ Best practice recommendations, no immediate risk            │
+│          │ CVSS: N/A | Address during regular maintenance              │
+└──────────┴─────────────────────────────────────────────────────────────┘
+```
+
+### Severity Classification by Finding Type
+
+```yaml
+# severity-classification.yml
+classification:
+  # Authentication & Authorization
+  authentication_bypass:
+    severity: CRITICAL
+    category: "A07:2021 - Identification and Authentication Failures"
+  broken_access_control:
+    severity: CRITICAL
+    category: "A01:2021 - Broken Access Control"
+  privilege_escalation:
+    severity: CRITICAL
+    category: "A01:2021 - Broken Access Control"
+
+  # Injection
+  sql_injection:
+    severity: CRITICAL
+    category: "A03:2021 - Injection"
+  command_injection:
+    severity: CRITICAL
+    category: "A03:2021 - Injection"
+  code_injection:
+    severity: CRITICAL
+    category: "A03:2021 - Injection"
+  xss_stored:
+    severity: HIGH
+    category: "A03:2021 - Injection"
+  xss_reflected:
+    severity: MEDIUM
+    category: "A03:2021 - Injection"
+  ldap_injection:
+    severity: HIGH
+    category: "A03:2021 - Injection"
+  xpath_injection:
+    severity: HIGH
+    category: "A03:2021 - Injection"
+
+  # Cryptography
+  hardcoded_secrets:
+    severity: CRITICAL
+    category: "A02:2021 - Cryptographic Failures"
+  weak_encryption:
+    severity: HIGH
+    category: "A02:2021 - Cryptographic Failures"
+  insecure_random:
+    severity: MEDIUM
+    category: "A02:2021 - Cryptographic Failures"
+  missing_encryption:
+    severity: HIGH
+    category: "A02:2021 - Cryptographic Failures"
+
+  # Data Exposure
+  sensitive_data_exposure:
+    severity: HIGH
+    category: "A02:2021 - Cryptographic Failures"
+  pii_exposure:
+    severity: HIGH
+    category: "A02:2021 - Cryptographic Failures"
+  debug_info_exposure:
+    severity: MEDIUM
+    category: "A05:2021 - Security Misconfiguration"
+
+  # Configuration
+  security_misconfiguration:
+    severity: MEDIUM
+    category: "A05:2021 - Security Misconfiguration"
+  default_credentials:
+    severity: CRITICAL
+    category: "A07:2021 - Identification and Authentication Failures"
+  verbose_errors:
+    severity: LOW
+    category: "A05:2021 - Security Misconfiguration"
+
+  # Dependencies
+  vulnerable_dependency_critical:
+    severity: CRITICAL
+    category: "A06:2021 - Vulnerable and Outdated Components"
+  vulnerable_dependency_high:
+    severity: HIGH
+    category: "A06:2021 - Vulnerable and Outdated Components"
+  vulnerable_dependency_medium:
+    severity: MEDIUM
+    category: "A06:2021 - Vulnerable and Outdated Components"
+  outdated_dependency:
+    severity: LOW
+    category: "A06:2021 - Vulnerable and Outdated Components"
+
+  # SSRF & Path Traversal
+  ssrf:
+    severity: HIGH
+    category: "A10:2021 - Server-Side Request Forgery"
+  path_traversal:
+    severity: HIGH
+    category: "A01:2021 - Broken Access Control"
+
+  # Deserialization
+  insecure_deserialization:
+    severity: CRITICAL
+    category: "A08:2021 - Software and Data Integrity Failures"
+```
+
+### Automated Severity Assignment
+
+```python
+# scripts/security/severity_classifier.py
+"""
+Automated severity classification for security findings.
+
+@module severity_classifier
+@description Classify security findings by severity
+@version 1.0.0
+@author Tyler Dukes
+"""
+
+from dataclasses import dataclass
+from enum import Enum
+from typing import Dict, List, Optional
+import re
+
+
+class Severity(Enum):
+    CRITICAL = "CRITICAL"
+    HIGH = "HIGH"
+    MEDIUM = "MEDIUM"
+    LOW = "LOW"
+    INFO = "INFO"
+
+
+@dataclass
+class SecurityFinding:
+    """Represents a security finding."""
+    id: str
+    title: str
+    description: str
+    tool: str
+    file_path: str
+    line_number: int
+    cwe: Optional[str] = None
+    cvss: Optional[float] = None
+    severity: Optional[Severity] = None
+
+
+class SeverityClassifier:
+    """Classify security findings by severity."""
+
+    # Keywords indicating critical severity
+    CRITICAL_KEYWORDS = [
+        "remote code execution", "rce", "sql injection", "command injection",
+        "authentication bypass", "privilege escalation", "hardcoded secret",
+        "hardcoded password", "hardcoded credential", "insecure deserialization",
+        "arbitrary file write", "arbitrary file read", "path traversal",
+    ]
+
+    # Keywords indicating high severity
+    HIGH_KEYWORDS = [
+        "xss", "cross-site scripting", "ssrf", "server-side request forgery",
+        "weak encryption", "broken access control", "sensitive data exposure",
+        "ldap injection", "xpath injection", "xml injection", "missing auth",
+    ]
+
+    # CVSS to severity mapping
+    CVSS_THRESHOLDS = {
+        9.0: Severity.CRITICAL,
+        7.0: Severity.HIGH,
+        4.0: Severity.MEDIUM,
+        0.1: Severity.LOW,
+        0.0: Severity.INFO,
+    }
+
+    def classify(self, finding: SecurityFinding) -> Severity:
+        """Classify a finding's severity."""
+        # If CVSS is provided, use it
+        if finding.cvss is not None:
+            return self._classify_by_cvss(finding.cvss)
+
+        # Check for critical keywords
+        text = f"{finding.title} {finding.description}".lower()
+        for keyword in self.CRITICAL_KEYWORDS:
+            if keyword in text:
+                return Severity.CRITICAL
+
+        # Check for high keywords
+        for keyword in self.HIGH_KEYWORDS:
+            if keyword in text:
+                return Severity.HIGH
+
+        # Default to medium for unclassified security issues
+        return Severity.MEDIUM
+
+    def _classify_by_cvss(self, cvss: float) -> Severity:
+        """Classify severity based on CVSS score."""
+        for threshold, severity in sorted(
+            self.CVSS_THRESHOLDS.items(), reverse=True
+        ):
+            if cvss >= threshold:
+                return severity
+        return Severity.INFO
+
+
+def classify_findings(findings: List[SecurityFinding]) -> Dict[Severity, List[SecurityFinding]]:
+    """Classify and group findings by severity."""
+    classifier = SeverityClassifier()
+    classified: Dict[Severity, List[SecurityFinding]] = {
+        s: [] for s in Severity
+    }
+
+    for finding in findings:
+        severity = classifier.classify(finding)
+        finding.severity = severity
+        classified[severity].append(finding)
+
+    return classified
+```
+
+---
+
+## False Positive Management
+
+### False Positive Handling Workflow
+
+```text
+┌─────────────────────────────────────────────────────────────────────┐
+│                   False Positive Handling Workflow                   │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  1. Finding Identified                                              │
+│         │                                                           │
+│         ▼                                                           │
+│  2. Developer Reviews                                               │
+│         │                                                           │
+│         ├──► Confirmed Vulnerability ──► Fix Required               │
+│         │                                                           │
+│         ▼                                                           │
+│  3. False Positive?                                                 │
+│         │                                                           │
+│         ├──► Create Suppression Request                             │
+│         │                                                           │
+│         ▼                                                           │
+│  4. Security Team Reviews                                           │
+│         │                                                           │
+│         ├──► Approve ──► Add to Baseline/Suppression                │
+│         │                                                           │
+│         └──► Reject ──► Developer Must Fix                          │
+│                                                                     │
+│  5. Document Decision                                               │
+│         │                                                           │
+│         ▼                                                           │
+│  6. Update Suppression Files                                        │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Unified Suppression Configuration
+
+```yaml
+# .security/suppressions.yml
+version: "1.0"
+last_updated: "2025-01-24"
+
+suppressions:
+  # Semgrep suppressions
+  - tool: semgrep
+    rule_id: python-sql-injection
+    file: src/legacy/reports.py
+    line: 45
+    reason: "Legacy code with input validation at controller level"
+    approved_by: "security-team"
+    approved_date: "2025-01-15"
+    expires: "2025-07-15"
+    jira_ticket: "SEC-123"
+
+  # Bandit suppressions
+  - tool: bandit
+    rule_id: B608
+    file: src/utils/shell.py
+    reason: "Input sanitized via allowlist pattern"
+    approved_by: "security-team"
+    approved_date: "2025-01-10"
+    expires: "2025-07-10"
+    jira_ticket: "SEC-120"
+
+  # gosec suppressions
+  - tool: gosec
+    rule_id: G104
+    file: internal/logger/logger.go
+    reason: "Error is logged, not returned - design decision"
+    approved_by: "security-team"
+    approved_date: "2025-01-12"
+    expires: null  # Permanent suppression
+    jira_ticket: "SEC-121"
+
+  # Trivy suppressions
+  - tool: trivy
+    cve: CVE-2023-12345
+    package: lodash
+    version: "4.17.21"
+    reason: "Vulnerability not exploitable in our usage context"
+    approved_by: "security-team"
+    approved_date: "2025-01-05"
+    expires: "2025-04-05"
+    jira_ticket: "SEC-115"
+
+# Global policies
+policies:
+  max_suppression_duration_days: 180
+  require_jira_ticket: true
+  require_security_approval: true
+  auto_expire_on_file_change: true
+```
+
+### Inline Suppression Standards
+
+```python
+# Python - Bandit suppression
+def execute_command(cmd: str) -> str:
+    """Execute shell command with proper sanitization."""
+    sanitized = sanitize_command(cmd)
+    # nosec B602 - Input sanitized via allowlist pattern
+    # Approved: SEC-123, Expires: 2025-07-15
+    return subprocess.check_output(sanitized, shell=True)  # nosec B602
+
+
+# Python - Semgrep suppression
+def build_query(table: str, conditions: dict) -> str:
+    """Build parameterized query."""
+    # nosemgrep: python-sql-injection
+    # Reason: Using parameterized query builder, not string concatenation
+    return QueryBuilder(table).where(conditions).build()
+```
+
+```go
+// Go - gosec suppression
+func processFile(path string) error {
+    // #nosec G304 - Path validated against allowlist
+    // Approved: SEC-121, Expires: 2025-06-01
+    data, err := os.ReadFile(path)
+    if err != nil {
+        return err
+    }
+    return process(data)
+}
+```
+
+```javascript
+// JavaScript - ESLint suppression
+function executeUserCode(code) {
+  // eslint-disable-next-line security/detect-eval-with-expression
+  // Reason: Code is sandboxed via VM2 with strict timeout
+  // Approved: SEC-130, Expires: 2025-08-01
+  return sandbox.run(code);
+}
+```
+
+### False Positive Tracking Script
+
+```python
+# scripts/security/track_suppressions.py
+"""
+Track and validate security suppressions.
+
+@module track_suppressions
+@description Manage and audit security suppressions
+@version 1.0.0
+@author Tyler Dukes
+"""
+
+import yaml
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import List, Dict, Any
+from dataclasses import dataclass
+
+
+@dataclass
+class Suppression:
+    """Represents a security suppression."""
+    tool: str
+    rule_id: str
+    file: str
+    reason: str
+    approved_by: str
+    approved_date: str
+    expires: str | None
+    jira_ticket: str
+
+
+def load_suppressions(config_path: str = ".security/suppressions.yml") -> List[Suppression]:
+    """Load suppressions from configuration file."""
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+
+    return [
+        Suppression(**s) for s in config.get("suppressions", [])
+    ]
+
+
+def check_expired_suppressions(suppressions: List[Suppression]) -> List[Suppression]:
+    """Find expired suppressions."""
+    today = datetime.now().date()
+    expired = []
+
+    for s in suppressions:
+        if s.expires:
+            expires_date = datetime.strptime(s.expires, "%Y-%m-%d").date()
+            if expires_date < today:
+                expired.append(s)
+
+    return expired
+
+
+def check_expiring_soon(
+    suppressions: List[Suppression],
+    days: int = 30
+) -> List[Suppression]:
+    """Find suppressions expiring within specified days."""
+    today = datetime.now().date()
+    threshold = today + timedelta(days=days)
+    expiring = []
+
+    for s in suppressions:
+        if s.expires:
+            expires_date = datetime.strptime(s.expires, "%Y-%m-%d").date()
+            if today <= expires_date <= threshold:
+                expiring.append(s)
+
+    return expiring
+
+
+def generate_report(suppressions: List[Suppression]) -> Dict[str, Any]:
+    """Generate suppression audit report."""
+    expired = check_expired_suppressions(suppressions)
+    expiring_soon = check_expiring_soon(suppressions)
+
+    by_tool = {}
+    for s in suppressions:
+        by_tool.setdefault(s.tool, []).append(s)
+
+    return {
+        "total_suppressions": len(suppressions),
+        "expired": len(expired),
+        "expiring_in_30_days": len(expiring_soon),
+        "by_tool": {tool: len(items) for tool, items in by_tool.items()},
+        "expired_details": [
+            {"tool": s.tool, "rule": s.rule_id, "file": s.file, "expires": s.expires}
+            for s in expired
+        ],
+        "expiring_details": [
+            {"tool": s.tool, "rule": s.rule_id, "file": s.file, "expires": s.expires}
+            for s in expiring_soon
+        ],
+    }
+
+
+if __name__ == "__main__":
+    suppressions = load_suppressions()
+    report = generate_report(suppressions)
+
+    print(f"Total suppressions: {report['total_suppressions']}")
+    print(f"Expired: {report['expired']}")
+    print(f"Expiring in 30 days: {report['expiring_in_30_days']}")
+
+    if report['expired_details']:
+        print("\n⚠️  Expired suppressions:")
+        for item in report['expired_details']:
+            print(f"  - {item['tool']}/{item['rule']}: {item['file']}")
+```
+
+---
+
+## Security Gate Policies
+
+### Gate Configuration
+
+```yaml
+# .security/gates.yml
+version: "1.0"
+
+gates:
+  # Pre-commit gate (local development)
+  pre_commit:
+    enabled: true
+    blocking: false  # Warn only
+    checks:
+      - secret_detection
+      - sast_quick
+    thresholds:
+      critical: 0
+      high: 0
+
+  # Pull request gate
+  pull_request:
+    enabled: true
+    blocking: true
+    checks:
+      - secret_detection
+      - sast_full
+      - dependency_scan
+      - container_scan
+    thresholds:
+      critical: 0
+      high: 0
+      medium: 10
+    exceptions:
+      - path: "docs/**"
+        skip: [sast_full, container_scan]
+      - path: "tests/**"
+        thresholds:
+          medium: 50
+
+  # Main branch gate
+  main_branch:
+    enabled: true
+    blocking: true
+    checks:
+      - secret_detection
+      - sast_full
+      - dependency_scan
+      - container_scan
+      - infrastructure_scan
+      - dast_baseline
+    thresholds:
+      critical: 0
+      high: 0
+      medium: 5
+      low: 50
+
+  # Release gate
+  release:
+    enabled: true
+    blocking: true
+    checks:
+      - secret_detection
+      - sast_full
+      - dependency_scan
+      - container_scan
+      - infrastructure_scan
+      - dast_full
+      - compliance_scan
+    thresholds:
+      critical: 0
+      high: 0
+      medium: 0
+      low: 20
+    require_manual_approval: true
+
+# Check definitions
+checks:
+  secret_detection:
+    tools: [gitleaks, trufflehog]
+    fail_on_any: true
+
+  sast_quick:
+    tools: [semgrep]
+    configs: [p/security-audit]
+    timeout: 300
+
+  sast_full:
+    tools: [semgrep, bandit, eslint-security, gosec]
+    configs:
+      semgrep: [p/security-audit, p/owasp-top-ten]
+    timeout: 900
+
+  dependency_scan:
+    tools: [snyk, trivy]
+    severity_threshold: high
+
+  container_scan:
+    tools: [trivy]
+    severity_threshold: high
+    ignore_unfixed: true
+
+  infrastructure_scan:
+    tools: [checkov, tfsec]
+    frameworks: [terraform, kubernetes, dockerfile]
+
+  dast_baseline:
+    tools: [zap]
+    scan_type: baseline
+    target: staging
+
+  dast_full:
+    tools: [zap, nuclei]
+    scan_type: full
+    target: staging
+
+  compliance_scan:
+    tools: [inspec]
+    profiles: [cis-benchmark, pci-dss]
+```
+
+### Gate Implementation
+
+```python
+# scripts/security/gate_checker.py
+"""
+Security gate checker for CI/CD pipelines.
+
+@module gate_checker
+@description Enforce security gates in pipelines
+@version 1.0.0
+@author Tyler Dukes
+"""
+
+import yaml
+import json
+import sys
+from dataclasses import dataclass
+from typing import Dict, List, Optional
+from enum import Enum
+
+
+class GateResult(Enum):
+    PASS = "pass"
+    WARN = "warn"
+    FAIL = "fail"
+
+
+@dataclass
+class Finding:
+    severity: str
+    tool: str
+    rule_id: str
+    message: str
+    file: str
+
+
+@dataclass
+class GateCheckResult:
+    gate_name: str
+    result: GateResult
+    findings_count: Dict[str, int]
+    thresholds: Dict[str, int]
+    violations: List[str]
+
+
+def load_gate_config(config_path: str = ".security/gates.yml") -> dict:
+    """Load gate configuration."""
+    with open(config_path) as f:
+        return yaml.safe_load(f)
+
+
+def count_findings_by_severity(findings: List[Finding]) -> Dict[str, int]:
+    """Count findings by severity level."""
+    counts = {"critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0}
+    for finding in findings:
+        severity = finding.severity.lower()
+        if severity in counts:
+            counts[severity] += 1
+    return counts
+
+
+def check_gate(
+    gate_name: str,
+    findings: List[Finding],
+    config: dict
+) -> GateCheckResult:
+    """Check if findings pass the specified gate."""
+    gate_config = config["gates"].get(gate_name)
+    if not gate_config:
+        raise ValueError(f"Unknown gate: {gate_name}")
+
+    if not gate_config.get("enabled", True):
+        return GateCheckResult(
+            gate_name=gate_name,
+            result=GateResult.PASS,
+            findings_count={},
+            thresholds={},
+            violations=["Gate disabled"],
+        )
+
+    counts = count_findings_by_severity(findings)
+    thresholds = gate_config.get("thresholds", {})
+    violations = []
+
+    for severity, threshold in thresholds.items():
+        actual = counts.get(severity, 0)
+        if actual > threshold:
+            violations.append(
+                f"{severity.upper()}: {actual} findings exceed threshold of {threshold}"
+            )
+
+    if violations:
+        result = GateResult.FAIL if gate_config.get("blocking", True) else GateResult.WARN
+    else:
+        result = GateResult.PASS
+
+    return GateCheckResult(
+        gate_name=gate_name,
+        result=result,
+        findings_count=counts,
+        thresholds=thresholds,
+        violations=violations,
+    )
+
+
+def main():
+    """Main entry point for gate checker."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Security gate checker")
+    parser.add_argument("--gate", required=True, help="Gate to check")
+    parser.add_argument("--findings", required=True, help="Findings JSON file")
+    parser.add_argument("--config", default=".security/gates.yml", help="Gate config")
+    args = parser.parse_args()
+
+    config = load_gate_config(args.config)
+
+    with open(args.findings) as f:
+        findings_data = json.load(f)
+
+    findings = [Finding(**f) for f in findings_data]
+    result = check_gate(args.gate, findings, config)
+
+    print(f"\n{'='*60}")
+    print(f"Security Gate: {result.gate_name}")
+    print(f"Result: {result.result.value.upper()}")
+    print(f"{'='*60}")
+    print(f"\nFindings by severity:")
+    for severity, count in result.findings_count.items():
+        threshold = result.thresholds.get(severity, "N/A")
+        status = "✓" if count <= (threshold if isinstance(threshold, int) else 999) else "✗"
+        print(f"  {status} {severity.upper()}: {count} (threshold: {threshold})")
+
+    if result.violations:
+        print(f"\n⚠️  Violations:")
+        for v in result.violations:
+            print(f"  - {v}")
+
+    sys.exit(0 if result.result == GateResult.PASS else 1)
+
+
+if __name__ == "__main__":
+    main()
+```
+
+### GitHub Actions Gate Integration
+
+```yaml
+# .github/workflows/security-gate.yml
+name: Security Gate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    outputs:
+      findings_file: ${{ steps.aggregate.outputs.findings_file }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Secret Detection
+        uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
+
+      - name: SAST - Semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/security-audit p/owasp-top-ten
+          generateSarif: true
+        continue-on-error: true
+
+      - name: SAST - Bandit
+        run: |
+          pip install bandit
+          bandit -r src/ -f json -o bandit-results.json || true
+        continue-on-error: true
+
+      - name: Dependency Scan
+        uses: snyk/actions/python@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --json-file-output=snyk-results.json
+        continue-on-error: true
+
+      - name: Aggregate Results
+        id: aggregate
+        run: |
+          python scripts/security/aggregate_findings.py \
+            --semgrep semgrep.sarif \
+            --bandit bandit-results.json \
+            --snyk snyk-results.json \
+            --output findings.json
+          echo "findings_file=findings.json" >> $GITHUB_OUTPUT
+
+      - name: Upload Findings
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-findings
+          path: findings.json
+
+  gate-check:
+    needs: security-scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Findings
+        uses: actions/download-artifact@v4
+        with:
+          name: security-findings
+
+      - name: Determine Gate
+        id: gate
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "gate=pull_request" >> $GITHUB_OUTPUT
+          else
+            echo "gate=main_branch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check Security Gate
+        run: |
+          python scripts/security/gate_checker.py \
+            --gate ${{ steps.gate.outputs.gate }} \
+            --findings findings.json \
+            --config .security/gates.yml
+```
+
+---
+
+## Remediation SLAs
+
+### SLA Definitions
+
+```text
+┌──────────┬─────────────┬─────────────────────────────────────────────────┐
+│ Severity │ SLA         │ Requirements                                    │
+├──────────┼─────────────┼─────────────────────────────────────────────────┤
+│ CRITICAL │ 24 hours    │ - Immediate notification to security team       │
+│          │             │ - Incident response activation if needed        │
+│          │             │ - Hotfix deployment within SLA                  │
+│          │             │ - Post-incident review required                 │
+├──────────┼─────────────┼─────────────────────────────────────────────────┤
+│ HIGH     │ 7 days      │ - Security team notification within 24h        │
+│          │             │ - Assigned owner within 48h                     │
+│          │             │ - Fix in next sprint or hotfix                  │
+│          │             │ - Testing required before deployment            │
+├──────────┼─────────────┼─────────────────────────────────────────────────┤
+│ MEDIUM   │ 30 days     │ - Tracked in issue tracker                      │
+│          │             │ - Assigned owner within 1 week                  │
+│          │             │ - Scheduled for regular release                 │
+│          │             │ - Standard review process                       │
+├──────────┼─────────────┼─────────────────────────────────────────────────┤
+│ LOW      │ 90 days     │ - Tracked in backlog                            │
+│          │             │ - Addressed during regular maintenance          │
+│          │             │ - Can be grouped with related fixes             │
+│          │             │ - May be deprioritized if resources limited     │
+├──────────┼─────────────┼─────────────────────────────────────────────────┤
+│ INFO     │ Best effort │ - Tracked for awareness                         │
+│          │             │ - Addressed opportunistically                   │
+│          │             │ - No SLA enforcement                            │
+└──────────┴─────────────┴─────────────────────────────────────────────────┘
+```
+
+### SLA Configuration
+
+```yaml
+# .security/sla.yml
+version: "1.0"
+
+sla_definitions:
+  critical:
+    response_time: 1h
+    resolution_time: 24h
+    escalation_path:
+      - security-team
+      - engineering-leads
+      - cto
+    notifications:
+      - channel: slack
+        target: "#security-alerts"
+      - channel: pagerduty
+        target: security-oncall
+      - channel: email
+        target: security@example.com
+
+  high:
+    response_time: 24h
+    resolution_time: 7d
+    escalation_path:
+      - security-team
+      - engineering-leads
+    notifications:
+      - channel: slack
+        target: "#security-alerts"
+      - channel: email
+        target: security@example.com
+
+  medium:
+    response_time: 1w
+    resolution_time: 30d
+    escalation_path:
+      - security-team
+    notifications:
+      - channel: slack
+        target: "#security-findings"
+
+  low:
+    response_time: 2w
+    resolution_time: 90d
+    notifications:
+      - channel: slack
+        target: "#security-findings"
+
+# Escalation rules
+escalation:
+  # Escalate if SLA is 75% expired
+  warning_threshold: 0.75
+  # Escalate if SLA is 100% expired
+  breach_threshold: 1.0
+
+  actions:
+    warning:
+      - notify_owner
+      - notify_team_lead
+    breach:
+      - notify_security_team
+      - create_incident
+      - block_deployments  # For critical/high only
+```
+
+### SLA Tracking Script
+
+```python
+# scripts/security/sla_tracker.py
+"""
+Track and enforce security SLAs.
+
+@module sla_tracker
+@description Monitor and report on security finding SLAs
+@version 1.0.0
+@author Tyler Dukes
+"""
+
+import yaml
+from datetime import datetime, timedelta
+from dataclasses import dataclass
+from typing import Dict, List, Optional
+from enum import Enum
+
+
+class SLAStatus(Enum):
+    ON_TRACK = "on_track"
+    WARNING = "warning"
+    BREACHED = "breached"
+
+
+@dataclass
+class SLAConfig:
+    response_time: timedelta
+    resolution_time: timedelta
+
+
+@dataclass
+class TrackedFinding:
+    id: str
+    severity: str
+    title: str
+    created_at: datetime
+    response_at: Optional[datetime]
+    resolved_at: Optional[datetime]
+    owner: Optional[str]
+
+
+def parse_duration(duration_str: str) -> timedelta:
+    """Parse duration string (e.g., '24h', '7d') to timedelta."""
+    if duration_str.endswith('h'):
+        return timedelta(hours=int(duration_str[:-1]))
+    elif duration_str.endswith('d'):
+        return timedelta(days=int(duration_str[:-1]))
+    elif duration_str.endswith('w'):
+        return timedelta(weeks=int(duration_str[:-1]))
+    raise ValueError(f"Unknown duration format: {duration_str}")
+
+
+def load_sla_config(config_path: str = ".security/sla.yml") -> Dict[str, SLAConfig]:
+    """Load SLA configuration."""
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+
+    sla_configs = {}
+    for severity, sla_def in config["sla_definitions"].items():
+        sla_configs[severity] = SLAConfig(
+            response_time=parse_duration(sla_def["response_time"]),
+            resolution_time=parse_duration(sla_def["resolution_time"]),
+        )
+    return sla_configs
+
+
+def check_sla_status(
+    finding: TrackedFinding,
+    sla_config: SLAConfig,
+    warning_threshold: float = 0.75
+) -> Dict[str, any]:
+    """Check SLA status for a finding."""
+    now = datetime.now()
+    elapsed = now - finding.created_at
+
+    # Check response SLA
+    response_status = SLAStatus.ON_TRACK
+    if finding.response_at is None:
+        response_elapsed_ratio = elapsed / sla_config.response_time
+        if response_elapsed_ratio >= 1.0:
+            response_status = SLAStatus.BREACHED
+        elif response_elapsed_ratio >= warning_threshold:
+            response_status = SLAStatus.WARNING
+    else:
+        response_time = finding.response_at - finding.created_at
+        if response_time > sla_config.response_time:
+            response_status = SLAStatus.BREACHED
+
+    # Check resolution SLA
+    resolution_status = SLAStatus.ON_TRACK
+    if finding.resolved_at is None:
+        resolution_elapsed_ratio = elapsed / sla_config.resolution_time
+        if resolution_elapsed_ratio >= 1.0:
+            resolution_status = SLAStatus.BREACHED
+        elif resolution_elapsed_ratio >= warning_threshold:
+            resolution_status = SLAStatus.WARNING
+    else:
+        resolution_time = finding.resolved_at - finding.created_at
+        if resolution_time > sla_config.resolution_time:
+            resolution_status = SLAStatus.BREACHED
+
+    return {
+        "finding_id": finding.id,
+        "severity": finding.severity,
+        "response_sla": {
+            "status": response_status.value,
+            "deadline": (finding.created_at + sla_config.response_time).isoformat(),
+            "met": finding.response_at is not None,
+        },
+        "resolution_sla": {
+            "status": resolution_status.value,
+            "deadline": (finding.created_at + sla_config.resolution_time).isoformat(),
+            "met": finding.resolved_at is not None,
+        },
+    }
+
+
+def generate_sla_report(findings: List[TrackedFinding]) -> Dict:
+    """Generate SLA compliance report."""
+    sla_configs = load_sla_config()
+
+    report = {
+        "generated_at": datetime.now().isoformat(),
+        "summary": {
+            "total_findings": len(findings),
+            "open_findings": 0,
+            "sla_breaches": 0,
+            "sla_warnings": 0,
+        },
+        "by_severity": {},
+        "findings": [],
+    }
+
+    for finding in findings:
+        if finding.severity.lower() not in sla_configs:
+            continue
+
+        sla_config = sla_configs[finding.severity.lower()]
+        status = check_sla_status(finding, sla_config)
+        report["findings"].append(status)
+
+        if finding.resolved_at is None:
+            report["summary"]["open_findings"] += 1
+
+        if status["resolution_sla"]["status"] == "breached":
+            report["summary"]["sla_breaches"] += 1
+        elif status["resolution_sla"]["status"] == "warning":
+            report["summary"]["sla_warnings"] += 1
+
+    return report
+```
+
+---
+
+## Issue Tracker Integration
+
+### Jira Integration
+
+```python
+# scripts/security/jira_integration.py
+"""
+Jira integration for security findings.
+
+@module jira_integration
+@description Create and manage Jira issues for security findings
+@version 1.0.0
+@author Tyler Dukes
+"""
+
+import os
+from dataclasses import dataclass
+from typing import Dict, List, Optional
+from jira import JIRA
+
+
+@dataclass
+class SecurityFinding:
+    id: str
+    severity: str
+    title: str
+    description: str
+    tool: str
+    file_path: str
+    line_number: int
+    cwe: Optional[str] = None
+    recommendation: Optional[str] = None
+
+
+class JiraSecurityIntegration:
+    """Manage security findings in Jira."""
+
+    SEVERITY_TO_PRIORITY = {
+        "critical": "Highest",
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low",
+        "info": "Lowest",
+    }
+
+    def __init__(
+        self,
+        server: str,
+        username: str,
+        api_token: str,
+        project_key: str,
+    ):
+        self.jira = JIRA(
+            server=server,
+            basic_auth=(username, api_token),
+        )
+        self.project_key = project_key
+
+    def create_issue(
+        self,
+        finding: SecurityFinding,
+        labels: Optional[List[str]] = None,
+        components: Optional[List[str]] = None,
+    ) -> str:
+        """Create a Jira issue for a security finding."""
+        labels = labels or ["security", finding.tool, finding.severity.lower()]
+        priority = self.SEVERITY_TO_PRIORITY.get(finding.severity.lower(), "Medium")
+
+        description = self._format_description(finding)
+
+        issue_dict = {
+            "project": {"key": self.project_key},
+            "summary": f"[{finding.severity.upper()}] {finding.title}",
+            "description": description,
+            "issuetype": {"name": "Bug"},
+            "priority": {"name": priority},
+            "labels": labels,
+        }
+
+        if components:
+            issue_dict["components"] = [{"name": c} for c in components]
+
+        issue = self.jira.create_issue(fields=issue_dict)
+        return issue.key
+
+    def _format_description(self, finding: SecurityFinding) -> str:
+        """Format finding details for Jira description."""
+        description = f"""
+h2. Security Finding Details
+
+||Field||Value||
+|Severity|{finding.severity.upper()}|
+|Tool|{finding.tool}|
+|File|{finding.file_path}:{finding.line_number}|
+|CWE|{finding.cwe or 'N/A'}|
+
+h2. Description
+{finding.description}
+
+h2. Location
+{{code}}
+File: {finding.file_path}
+Line: {finding.line_number}
+{{code}}
+"""
+
+        if finding.recommendation:
+            description += f"""
+h2. Recommendation
+{finding.recommendation}
+"""
+
+        return description
+
+    def find_existing_issue(self, finding: SecurityFinding) -> Optional[str]:
+        """Find existing issue for a finding."""
+        jql = (
+            f'project = {self.project_key} AND '
+            f'labels = "security" AND '
+            f'labels = "{finding.tool}" AND '
+            f'text ~ "{finding.file_path}" AND '
+            f'status not in (Done, Closed)'
+        )
+
+        issues = self.jira.search_issues(jql, maxResults=1)
+        return issues[0].key if issues else None
+
+    def create_or_update(self, finding: SecurityFinding) -> Dict[str, str]:
+        """Create new issue or update existing one."""
+        existing_key = self.find_existing_issue(finding)
+
+        if existing_key:
+            # Add comment to existing issue
+            comment = f"Finding still present in latest scan:\n{finding.description}"
+            self.jira.add_comment(existing_key, comment)
+            return {"action": "updated", "key": existing_key}
+
+        new_key = self.create_issue(finding)
+        return {"action": "created", "key": new_key}
+
+
+def sync_findings_to_jira(findings: List[SecurityFinding]) -> List[Dict]:
+    """Sync security findings to Jira."""
+    integration = JiraSecurityIntegration(
+        server=os.environ["JIRA_SERVER"],
+        username=os.environ["JIRA_USERNAME"],
+        api_token=os.environ["JIRA_API_TOKEN"],
+        project_key=os.environ["JIRA_PROJECT_KEY"],
+    )
+
+    results = []
+    for finding in findings:
+        result = integration.create_or_update(finding)
+        result["finding_id"] = finding.id
+        results.append(result)
+
+    return results
+```
+
+### GitHub Issues Integration
+
+```python
+# scripts/security/github_issues.py
+"""
+GitHub Issues integration for security findings.
+
+@module github_issues
+@description Create and manage GitHub issues for security findings
+@version 1.0.0
+@author Tyler Dukes
+"""
+
+import os
+from dataclasses import dataclass
+from typing import Dict, List, Optional
+from github import Github
+
+
+@dataclass
+class SecurityFinding:
+    id: str
+    severity: str
+    title: str
+    description: str
+    tool: str
+    file_path: str
+    line_number: int
+    cwe: Optional[str] = None
+    recommendation: Optional[str] = None
+
+
+class GitHubSecurityIntegration:
+    """Manage security findings in GitHub Issues."""
+
+    SEVERITY_TO_LABELS = {
+        "critical": ["security", "priority:critical", "severity:critical"],
+        "high": ["security", "priority:high", "severity:high"],
+        "medium": ["security", "priority:medium", "severity:medium"],
+        "low": ["security", "priority:low", "severity:low"],
+        "info": ["security", "severity:info"],
+    }
+
+    def __init__(self, token: str, repo: str):
+        self.github = Github(token)
+        self.repo = self.github.get_repo(repo)
+
+    def create_issue(
+        self,
+        finding: SecurityFinding,
+        additional_labels: Optional[List[str]] = None,
+    ) -> int:
+        """Create a GitHub issue for a security finding."""
+        labels = self.SEVERITY_TO_LABELS.get(
+            finding.severity.lower(),
+            ["security"]
+        ).copy()
+        labels.append(finding.tool)
+
+        if additional_labels:
+            labels.extend(additional_labels)
+
+        body = self._format_body(finding)
+        title = f"[{finding.severity.upper()}] {finding.title}"
+
+        issue = self.repo.create_issue(
+            title=title,
+            body=body,
+            labels=labels,
+        )
+
+        return issue.number
+
+    def _format_body(self, finding: SecurityFinding) -> str:
+        """Format finding details for issue body."""
+        lines = [
+            "## Security Finding Details",
+            "",
+            "| Field | Value |",
+            "|-------|-------|",
+            f"| **Severity** | {finding.severity.upper()} |",
+            f"| **Tool** | {finding.tool} |",
+            f"| **File** | `{finding.file_path}:{finding.line_number}` |",
+            f"| **CWE** | {finding.cwe or 'N/A'} |",
+            "",
+            "## Description",
+            "",
+            finding.description,
+            "",
+            "## Location",
+            "",
+            "```",
+            f"File: {finding.file_path}",
+            f"Line: {finding.line_number}",
+            "```",
+        ]
+
+        if finding.recommendation:
+            lines.extend([
+                "",
+                "## Recommendation",
+                "",
+                finding.recommendation,
+            ])
+
+        lines.extend([
+            "",
+            "---",
+            "*This issue was automatically created by the security scanning pipeline.*",
+        ])
+
+        return "\n".join(lines)
+
+    def find_existing_issue(self, finding: SecurityFinding) -> Optional[int]:
+        """Find existing open issue for a finding."""
+        query = (
+            f'repo:{self.repo.full_name} '
+            f'is:issue is:open '
+            f'label:security label:{finding.tool} '
+            f'"{finding.file_path}" in:body'
+        )
+
+        issues = self.github.search_issues(query)
+        for issue in issues:
+            return issue.number
+
+        return None
+
+    def create_or_update(self, finding: SecurityFinding) -> Dict[str, any]:
+        """Create new issue or update existing one."""
+        existing_number = self.find_existing_issue(finding)
+
+        if existing_number:
+            issue = self.repo.get_issue(existing_number)
+            comment = (
+                f"Finding still present in latest scan:\n\n"
+                f"**Tool:** {finding.tool}\n"
+                f"**File:** `{finding.file_path}:{finding.line_number}`\n\n"
+                f"{finding.description}"
+            )
+            issue.create_comment(comment)
+            return {"action": "updated", "number": existing_number}
+
+        new_number = self.create_issue(finding)
+        return {"action": "created", "number": new_number}
+
+def sync_findings_to_github(findings: List[SecurityFinding]) -> List[Dict]:
+    """Sync security findings to GitHub Issues."""
+    integration = GitHubSecurityIntegration(
+        token=os.environ["GITHUB_TOKEN"],
+        repo=os.environ["GITHUB_REPOSITORY"],
+    )
+
+    results = []
+    for finding in findings:
+        result = integration.create_or_update(finding)
+        result["finding_id"] = finding.id
+        results.append(result)
+
+    return results
+```
+
+### CI/CD Issue Creation
+
+```yaml
+# .github/workflows/security-issues.yml
+name: Security Issue Management
+
+on:
+  workflow_run:
+    workflows: ["Security Gate"]
+    types: [completed]
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Findings
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: security-gate.yml
+          name: security-findings
+
+      - name: Create Issues for New Findings
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python scripts/security/github_issues.py \
+            --findings findings.json \
+            --severity-threshold medium
+
+      - name: Post Summary
+        run: |
+          echo "## Security Issues Created" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat issue-summary.md >> $GITHUB_STEP_SUMMARY
+```
+
+---
+
 ## CI/CD Integration
 
 ### GitHub Actions
@@ -1341,10 +3256,35 @@ We will not pursue legal action against researchers who:
 
 ## Resources
 
+### Standards and Guidelines
+
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- [OWASP SAST Tools](https://owasp.org/www-community/Source_Code_Analysis_Tools)
+- [OWASP DAST Tools](https://owasp.org/www-community/Vulnerability_Scanning_Tools)
 - [CWE Top 25](https://cwe.mitre.org/top25/)
 - [NIST Security Guidelines](https://www.nist.gov/cybersecurity)
 - [Cloud Security Alliance](https://cloudsecurityalliance.org/)
+- [CVSS Calculator](https://www.first.org/cvss/calculator/3.1)
+
+### SAST Tools
+
+- [Semgrep Documentation](https://semgrep.dev/docs/)
+- [Bandit Documentation](https://bandit.readthedocs.io/)
+- [gosec Documentation](https://securego.io/)
+- [SonarQube Documentation](https://docs.sonarsource.com/sonarqube/)
+- [ESLint Security Plugin](https://github.com/eslint-community/eslint-plugin-security)
+
+### DAST Tools
+
+- [OWASP ZAP Documentation](https://www.zaproxy.org/docs/)
+- [Nuclei Documentation](https://docs.projectdiscovery.io/tools/nuclei/)
+- [Burp Suite Documentation](https://portswigger.net/burp/documentation)
+
+### Container and Infrastructure Security
+
+- [Trivy Documentation](https://aquasecurity.github.io/trivy/)
+- [Checkov Documentation](https://www.checkov.io/1.Welcome/What%20is%20Checkov.html)
+- [tfsec Documentation](https://aquasecurity.github.io/tfsec/)
 
 ---
 
@@ -1353,3 +3293,4 @@ We will not pursue legal action against researchers who:
 - Review the [AI Validation Pipeline](ai_validation_pipeline.md) for complete CI/CD security integration
 - See [Pre-commit Hooks Guide](precommit_hooks_guide.md) for local security checks
 - Check [GitHub Actions Guide](github_actions_guide.md) for security workflows
+- Explore [Observability Guide](observability_guide.md) for security monitoring integration
