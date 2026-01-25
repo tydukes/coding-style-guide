@@ -1,8 +1,8 @@
 ---
 title: "Security Scanning Guide"
-description: "Comprehensive guide to SAST, DAST, SCA security testing with tool selection, severity classification, false positive handling, security gates, and remediation SLAs"
+description: "Comprehensive guide to SAST, DAST, SCA, policy-as-code security testing with multi-tool strategy, CIS benchmarks, OPA/Rego policies, and centralized security dashboards"
 author: "Tyler Dukes"
-tags: [security, scanning, sast, dast, sca, secrets, vulnerabilities, compliance, semgrep, bandit, gosec, zap, nuclei, trivy, devsecops]
+tags: [security, scanning, sast, dast, sca, secrets, vulnerabilities, compliance, semgrep, bandit, gosec, zap, nuclei, trivy, snyk, sonarqube, gitguardian, burpsuite, opa, rego, cis, devsecops, policy-as-code]
 category: "CI/CD"
 status: "active"
 ---
@@ -17,21 +17,383 @@ container scanning, infrastructure scanning, and compliance validation.
 
 ## Table of Contents
 
-1. [Secret Detection](#secret-detection)
-2. [Static Application Security Testing (SAST)](#static-application-security-testing-sast)
-3. [SAST Tool Selection by Language](#sast-tool-selection-by-language)
-4. [Software Composition Analysis (SCA)](#software-composition-analysis-sca)
-5. [Container Security](#container-security)
-6. [Infrastructure Security](#infrastructure-security)
-7. [Dynamic Application Security Testing (DAST)](#dynamic-application-security-testing-dast)
-8. [Compliance Scanning](#compliance-scanning)
-9. [Severity Classification](#severity-classification)
-10. [False Positive Management](#false-positive-management)
-11. [Security Gate Policies](#security-gate-policies)
-12. [Remediation SLAs](#remediation-slas)
-13. [Issue Tracker Integration](#issue-tracker-integration)
-14. [CI/CD Integration](#cicd-integration)
-15. [Security Policies](#security-policies)
+1. [Multi-tool Security Strategy](#multi-tool-security-strategy)
+2. [Secret Detection](#secret-detection)
+3. [Static Application Security Testing (SAST)](#static-application-security-testing-sast)
+4. [SAST Tool Selection by Language](#sast-tool-selection-by-language)
+5. [Software Composition Analysis (SCA)](#software-composition-analysis-sca)
+6. [Container Security](#container-security)
+7. [Infrastructure Security](#infrastructure-security)
+8. [Dynamic Application Security Testing (DAST)](#dynamic-application-security-testing-dast)
+9. [Compliance Scanning](#compliance-scanning)
+10. [Policy as Code (OPA/Rego)](#policy-as-code-oparego)
+11. [Severity Classification](#severity-classification)
+12. [False Positive Management](#false-positive-management)
+13. [Security Gate Policies](#security-gate-policies)
+14. [Remediation SLAs](#remediation-slas)
+15. [Issue Tracker Integration](#issue-tracker-integration)
+16. [Security Dashboards](#security-dashboards)
+17. [CI/CD Integration](#cicd-integration)
+18. [Security Policies](#security-policies)
+
+---
+
+## Multi-tool Security Strategy
+
+Effective security scanning requires a layered approach with specialized tools for each
+security domain. This section provides guidance on tool selection and integration strategies.
+
+### Tool Selection by Category
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│                          Security Scanning Tool Categories                              │
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│ Category              │ Primary Tool    │ Secondary Tool  │ CI/CD Integration          │
+├───────────────────────┼─────────────────┼─────────────────┼────────────────────────────┤
+│ Secret Detection      │ TruffleHog      │ GitGuardian     │ Pre-commit + PR gates      │
+│ SAST                  │ Semgrep         │ SonarQube       │ PR checks + quality gates  │
+│ Dependency (SCA)      │ Snyk            │ Dependabot      │ PR + scheduled scans       │
+│ Container             │ Trivy           │ Grype (Anchore) │ Build pipeline + registry  │
+│ IaC                   │ Checkov         │ tfsec           │ PR + plan stage            │
+│ DAST                  │ OWASP ZAP       │ Nuclei          │ Post-deployment            │
+│ Compliance            │ InSpec          │ OpenSCAP        │ Scheduled + audit          │
+│ Policy                │ OPA             │ Conftest        │ Admission control + CI     │
+└───────────────────────┴─────────────────┴─────────────────┴────────────────────────────┘
+```
+
+### Defense in Depth Strategy
+
+```yaml
+# security-strategy.yml
+defense_in_depth:
+  # Layer 1: Developer Workstation
+  local:
+    pre_commit:
+      - detect-secrets  # Secrets baseline
+      - gitleaks        # Git history scan
+      - semgrep         # Quick SAST rules
+    ide_integration:
+      - snyk            # Real-time dependency alerts
+      - sonarLint       # Code quality feedback
+
+  # Layer 2: Pull Request Gates
+  pull_request:
+    blocking:
+      - secret_detection   # Zero tolerance for secrets
+      - critical_sast      # Critical vulnerabilities only
+      - dependency_critical # Known exploited vulnerabilities
+    non_blocking:
+      - full_sast          # All severity levels
+      - container_scan     # Image vulnerabilities
+      - iac_scan           # Infrastructure misconfigurations
+
+  # Layer 3: Main Branch Protection
+  main_branch:
+    blocking:
+      - all_sast_high      # High+ severity
+      - dependency_high    # High+ CVEs
+      - container_high     # High+ container vulns
+      - iac_high           # High+ misconfigurations
+    reporting:
+      - full_compliance    # Compliance baseline
+      - sbom_generation    # Software bill of materials
+
+  # Layer 4: Pre-Release Gates
+  release:
+    blocking:
+      - penetration_test   # Manual or automated pentest
+      - dast_scan          # Dynamic analysis
+      - compliance_audit   # Full compliance check
+    attestation:
+      - sbom_signed        # Signed SBOM
+      - vulnerability_attestation
+      - compliance_attestation
+
+  # Layer 5: Runtime Protection
+  runtime:
+    continuous:
+      - container_registry_scan  # Scheduled image scans
+      - dependency_monitoring    # CVE feed monitoring
+      - runtime_protection       # RASP/WAF
+    alerting:
+      - new_cve_notification
+      - compliance_drift
+      - anomaly_detection
+```
+
+### Tool Integration Matrix
+
+```python
+#!/usr/bin/env python3
+"""Security tool integration configuration generator."""
+
+from dataclasses import dataclass
+from enum import Enum
+from typing import Optional
+
+
+class ScanPhase(Enum):
+    """CI/CD pipeline phases for security scanning."""
+
+    PRE_COMMIT = "pre_commit"
+    PULL_REQUEST = "pull_request"
+    MAIN_BRANCH = "main_branch"
+    RELEASE = "release"
+    RUNTIME = "runtime"
+
+
+class ToolCategory(Enum):
+    """Security tool categories."""
+
+    SECRETS = "secrets"
+    SAST = "sast"
+    SCA = "sca"
+    CONTAINER = "container"
+    IAC = "iac"
+    DAST = "dast"
+    COMPLIANCE = "compliance"
+    POLICY = "policy"
+
+
+@dataclass
+class SecurityTool:
+    """Security tool configuration."""
+
+    name: str
+    category: ToolCategory
+    phases: list[ScanPhase]
+    blocking: bool
+    severity_threshold: str
+    timeout_minutes: int
+    config_file: Optional[str] = None
+
+
+SECURITY_TOOLS: list[SecurityTool] = [
+    SecurityTool(
+        name="trufflehog",
+        category=ToolCategory.SECRETS,
+        phases=[ScanPhase.PRE_COMMIT, ScanPhase.PULL_REQUEST],
+        blocking=True,
+        severity_threshold="any",
+        timeout_minutes=5,
+        config_file=".trufflehog-exclude.txt",
+    ),
+    SecurityTool(
+        name="gitguardian",
+        category=ToolCategory.SECRETS,
+        phases=[ScanPhase.PULL_REQUEST, ScanPhase.MAIN_BRANCH],
+        blocking=True,
+        severity_threshold="any",
+        timeout_minutes=3,
+        config_file=".gitguardian.yml",
+    ),
+    SecurityTool(
+        name="semgrep",
+        category=ToolCategory.SAST,
+        phases=[ScanPhase.PRE_COMMIT, ScanPhase.PULL_REQUEST, ScanPhase.MAIN_BRANCH],
+        blocking=True,
+        severity_threshold="high",
+        timeout_minutes=10,
+        config_file=".semgrep.yml",
+    ),
+    SecurityTool(
+        name="sonarqube",
+        category=ToolCategory.SAST,
+        phases=[ScanPhase.PULL_REQUEST, ScanPhase.MAIN_BRANCH],
+        blocking=True,
+        severity_threshold="high",
+        timeout_minutes=15,
+        config_file="sonar-project.properties",
+    ),
+    SecurityTool(
+        name="snyk",
+        category=ToolCategory.SCA,
+        phases=[ScanPhase.PULL_REQUEST, ScanPhase.MAIN_BRANCH, ScanPhase.RUNTIME],
+        blocking=True,
+        severity_threshold="high",
+        timeout_minutes=5,
+        config_file=".snyk",
+    ),
+    SecurityTool(
+        name="trivy",
+        category=ToolCategory.CONTAINER,
+        phases=[ScanPhase.PULL_REQUEST, ScanPhase.MAIN_BRANCH, ScanPhase.RELEASE],
+        blocking=True,
+        severity_threshold="critical",
+        timeout_minutes=10,
+        config_file="trivy.yaml",
+    ),
+    SecurityTool(
+        name="checkov",
+        category=ToolCategory.IAC,
+        phases=[ScanPhase.PULL_REQUEST, ScanPhase.MAIN_BRANCH],
+        blocking=True,
+        severity_threshold="high",
+        timeout_minutes=10,
+        config_file=".checkov.yaml",
+    ),
+    SecurityTool(
+        name="zap",
+        category=ToolCategory.DAST,
+        phases=[ScanPhase.RELEASE, ScanPhase.RUNTIME],
+        blocking=True,
+        severity_threshold="high",
+        timeout_minutes=30,
+        config_file="zap-config.yml",
+    ),
+    SecurityTool(
+        name="opa",
+        category=ToolCategory.POLICY,
+        phases=[ScanPhase.PULL_REQUEST, ScanPhase.MAIN_BRANCH, ScanPhase.RUNTIME],
+        blocking=True,
+        severity_threshold="any",
+        timeout_minutes=2,
+        config_file="policy/",
+    ),
+]
+
+
+def get_tools_for_phase(phase: ScanPhase) -> list[SecurityTool]:
+    """Get all security tools configured for a specific phase."""
+    return [tool for tool in SECURITY_TOOLS if phase in tool.phases]
+
+
+def generate_ci_config(phase: ScanPhase) -> dict:
+    """Generate CI configuration for a specific phase."""
+    tools = get_tools_for_phase(phase)
+    return {
+        "phase": phase.value,
+        "tools": [
+            {
+                "name": tool.name,
+                "category": tool.category.value,
+                "blocking": tool.blocking,
+                "severity_threshold": tool.severity_threshold,
+                "timeout_minutes": tool.timeout_minutes,
+                "config_file": tool.config_file,
+            }
+            for tool in tools
+        ],
+    }
+```
+
+### Unified Configuration Schema
+
+```yaml
+# .security-scanning.yml - Unified security scanning configuration
+version: "1.0"
+
+global:
+  fail_on_error: true
+  report_format: sarif
+  upload_results: true
+  notification:
+    slack_channel: "#security-alerts"
+    email: security@example.com
+
+tools:
+  secrets:
+    enabled: true
+    tools:
+      - name: trufflehog
+        config: .trufflehog-exclude.txt
+      - name: gitguardian
+        config: .gitguardian.yml
+    blocking: true
+    phases: [pre_commit, pull_request]
+
+  sast:
+    enabled: true
+    tools:
+      - name: semgrep
+        config: .semgrep.yml
+        rulesets:
+          - p/security-audit
+          - p/owasp-top-ten
+      - name: sonarqube
+        config: sonar-project.properties
+    severity_threshold: high
+    blocking: true
+    phases: [pull_request, main_branch]
+
+  sca:
+    enabled: true
+    tools:
+      - name: snyk
+        config: .snyk
+      - name: dependabot
+        config: .github/dependabot.yml
+    severity_threshold: high
+    blocking: true
+    phases: [pull_request, main_branch, runtime]
+
+  container:
+    enabled: true
+    tools:
+      - name: trivy
+        config: trivy.yaml
+      - name: grype
+        config: .grype.yaml
+    severity_threshold: critical
+    blocking: true
+    phases: [pull_request, release]
+
+  iac:
+    enabled: true
+    tools:
+      - name: checkov
+        config: .checkov.yaml
+      - name: tfsec
+        config: tfsec.json
+    severity_threshold: high
+    blocking: true
+    phases: [pull_request, main_branch]
+
+  dast:
+    enabled: true
+    tools:
+      - name: zap
+        config: zap-config.yml
+      - name: nuclei
+        config: nuclei-config.yml
+    severity_threshold: high
+    blocking: true
+    phases: [release, runtime]
+
+  compliance:
+    enabled: true
+    tools:
+      - name: inspec
+        profiles:
+          - cis-benchmark
+          - pci-dss
+      - name: openscap
+        profiles:
+          - xccdf_org.ssgproject.content_profile_pci-dss
+    phases: [release, scheduled]
+
+  policy:
+    enabled: true
+    tools:
+      - name: opa
+        policy_dir: policy/
+      - name: conftest
+        policy_dir: policy/
+    blocking: true
+    phases: [pull_request, main_branch, runtime]
+
+reporting:
+  consolidate: true
+  formats:
+    - sarif
+    - json
+    - html
+  retention_days: 90
+  dashboard:
+    enabled: true
+    provider: grafana
+```
 
 ---
 
@@ -216,7 +578,7 @@ tags = ["aws", "credentials"]
 [[rules]]
 id = "private-key"
 description = "Private Key"
-regex = '''-----BEGIN (RSA|EC|DSA|OPENSSH) PRIVATE KEY-----'''
+regex = '''-----BEGIN (RSA|EC|DSA|OPENSSH) PRIV[A]TE KEY-----'''
 tags = ["private-key"]
 
 [allowlist]
@@ -251,6 +613,277 @@ gitleaks protect --staged
 
 ## Generate report
 gitleaks detect --report-path gitleaks-report.json --report-format json
+```
+
+### GitGuardian
+
+GitGuardian provides real-time secret detection with policy management and incident response.
+
+**Installation**:
+
+```bash
+## Using pip
+pip install ggshield
+
+## Using pipx
+pipx install ggshield
+
+## Verify
+ggshield --version
+```
+
+**Authentication**:
+
+```bash
+## Authenticate with GitGuardian
+ggshield auth login
+
+## Or use API key
+export GITGUARDIAN_API_KEY="your-api-key"
+```
+
+**Scanning**:
+
+```bash
+## Scan current directory
+ggshield secret scan path .
+
+## Scan specific files
+ggshield secret scan path src/ tests/
+
+## Scan git history
+ggshield secret scan repo .
+
+## Scan pre-commit
+ggshield secret scan pre-commit
+
+## Scan CI commit range
+ggshield secret scan ci
+```
+
+**Configuration (.gitguardian.yml)**:
+
+```yaml
+## GitGuardian configuration
+version: 2
+
+secret:
+  ## Paths to ignore
+  ignored_paths:
+    - "**/node_modules/**"
+    - "**/.venv/**"
+    - "**/vendor/**"
+    - "**/*.lock"
+    - "**/package-lock.json"
+
+  ## Detectors to ignore
+  ignored_detectors:
+    - generic_high_entropy_secret
+
+  ## Match patterns to ignore (allowlist)
+  ignored_matches:
+    - name: "Example API key in documentation"
+      match: "EXAMPLE_API_KEY_12345"
+    - name: "Test credentials"
+      match: "test_secret_*"
+
+  ## Show secrets in output (for debugging only)
+  show_secrets: false
+
+  ## Exit code on secret found
+  exit_zero: false
+
+## Incident management
+incident:
+  ## Auto-assign incidents
+  default_assignee: security-team
+
+  ## Severity overrides
+  severity_overrides:
+    - detector: slack_bot_token
+      severity: critical
+    - detector: aws_iam
+      severity: critical
+```
+
+**Pre-commit integration**:
+
+```yaml
+repos:
+  - repo: https://github.com/gitguardian/ggshield
+    rev: v1.25.0
+    hooks:
+      - id: ggshield
+        language_version: python3
+        stages: [commit]
+```
+
+**GitHub Actions integration**:
+
+```yaml
+name: GitGuardian Secret Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  gitguardian:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: GitGuardian Scan
+        uses: GitGuardian/ggshield-action@v1
+        env:
+          GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}
+          GITHUB_PUSH_BASE_SHA: ${{ github.event.base_ref }}
+          GITHUB_PULL_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+```
+
+**Incident response workflow**:
+
+```python
+#!/usr/bin/env python3
+"""GitGuardian incident response automation."""
+
+import json
+import os
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Optional
+
+import requests
+
+
+@dataclass
+class SecretIncident:
+    """Represents a GitGuardian incident."""
+
+    incident_id: str
+    detector_name: str
+    file_path: str
+    commit_sha: str
+    author_email: str
+    severity: str
+    status: str
+    detected_at: datetime
+
+
+class GitGuardianClient:
+    """Client for GitGuardian API."""
+
+    def __init__(self, api_key: Optional[str] = None):
+        self.api_key = api_key or os.environ.get("GITGUARDIAN_API_KEY")
+        self.base_url = "https://api.gitguardian.com/v1"
+        self.headers = {
+            "Authorization": f"Token {self.api_key}",
+            "Content-Type": "application/json",
+        }
+
+    def get_incidents(
+        self, status: str = "triggered", severity: Optional[str] = None
+    ) -> list[SecretIncident]:
+        """Fetch incidents from GitGuardian."""
+        params = {"status": status}
+        if severity:
+            params["severity"] = severity
+
+        response = requests.get(
+            f"{self.base_url}/incidents", headers=self.headers, params=params
+        )
+        response.raise_for_status()
+
+        incidents = []
+        for item in response.json():
+            incidents.append(
+                SecretIncident(
+                    incident_id=item["id"],
+                    detector_name=item["detector"]["name"],
+                    file_path=item["occurrences"][0]["filename"],
+                    commit_sha=item["occurrences"][0]["commit_sha"],
+                    author_email=item["occurrences"][0]["author_email"],
+                    severity=item["severity"],
+                    status=item["status"],
+                    detected_at=datetime.fromisoformat(
+                        item["date"].replace("Z", "+00:00")
+                    ),
+                )
+            )
+        return incidents
+
+    def resolve_incident(self, incident_id: str, resolution: str) -> bool:
+        """Resolve an incident with given resolution."""
+        valid_resolutions = [
+            "false_positive",
+            "test_credential",
+            "revoked",
+            "will_not_fix",
+        ]
+        if resolution not in valid_resolutions:
+            raise ValueError(f"Invalid resolution. Must be one of: {valid_resolutions}")
+
+        response = requests.post(
+            f"{self.base_url}/incidents/{incident_id}/resolve",
+            headers=self.headers,
+            json={"resolution": resolution},
+        )
+        return response.status_code == 200
+
+    def create_remediation_pr(self, incident: SecretIncident) -> str:
+        """Generate remediation instructions for an incident."""
+        remediation_steps = [
+            f"## Secret Detected: {incident.detector_name}",
+            "",
+            f"**File:** `{incident.file_path}`",
+            f"**Commit:** `{incident.commit_sha}`",
+            f"**Author:** {incident.author_email}",
+            f"**Severity:** {incident.severity}",
+            "",
+            "### Remediation Steps",
+            "",
+            "1. **Revoke the secret immediately**",
+            "   - Rotate credentials in the source system",
+            "   - Update any dependent services",
+            "",
+            "2. **Remove from git history**",
+            "   ```bash",
+            "   # Use git-filter-repo to remove sensitive data",
+            f"   git filter-repo --path {incident.file_path} --invert-paths",
+            "   ```",
+            "",
+            "3. **Add to .gitignore or use secrets manager**",
+            "   - Use environment variables",
+            "   - Use a secrets manager (Vault, AWS Secrets Manager)",
+            "",
+            "4. **Force push and notify team**",
+            "   ```bash",
+            "   git push --force-with-lease",
+            "   ```",
+        ]
+        return "\n".join(remediation_steps)
+
+
+def main():
+    """Process GitGuardian incidents."""
+    client = GitGuardianClient()
+
+    ## Get critical incidents
+    incidents = client.get_incidents(status="triggered", severity="critical")
+
+    for incident in incidents:
+        print(f"Processing incident: {incident.incident_id}")
+        print(client.create_remediation_pr(incident))
+
+
+if __name__ == "__main__":
+    main()
 ```
 
 ---
@@ -1458,6 +2091,290 @@ nuclei -u https://example.com -t cves/ -t vulnerabilities/
 nuclei -u https://example.com -json -o nuclei-report.json
 ```
 
+### Burp Suite
+
+Burp Suite Professional provides comprehensive web application security testing with
+automated scanning and manual testing capabilities.
+
+**Headless scanning with Burp Suite Enterprise/Pro**:
+
+```bash
+## Run headless scan using Burp Suite CLI
+java -jar burpsuite_pro.jar \
+  --unpause-spider-and-scanner \
+  --project-file=project.burp \
+  --config-file=burp-config.json \
+  --user-config-file=user-config.json
+
+## Export results
+java -jar burpsuite_pro.jar \
+  --project-file=project.burp \
+  --export-report \
+  --report-type=HTML \
+  --output-file=burp-report.html
+```
+
+**Burp Suite REST API integration**:
+
+```python
+#!/usr/bin/env python3
+"""Burp Suite Enterprise API integration for CI/CD pipelines."""
+
+import json
+import os
+import time
+from dataclasses import dataclass
+from typing import Optional
+
+import requests
+
+
+@dataclass
+class ScanConfig:
+    """Configuration for a Burp Suite scan."""
+
+    name: str
+    target_url: str
+    scan_config_id: str
+    schedule: str = "now"
+    credential_config_id: Optional[str] = None
+
+
+@dataclass
+class ScanResult:
+    """Result from a Burp Suite scan."""
+
+    scan_id: str
+    status: str
+    issue_count: int
+    high_count: int
+    medium_count: int
+    low_count: int
+    info_count: int
+
+
+class BurpSuiteClient:
+    """Client for Burp Suite Enterprise REST API."""
+
+    def __init__(
+        self,
+        base_url: Optional[str] = None,
+        api_key: Optional[str] = None,
+    ):
+        self.base_url = base_url or os.environ.get(
+            "BURP_ENTERPRISE_URL", "https://burp.example.com/api"
+        )
+        self.api_key = api_key or os.environ.get("BURP_API_KEY")
+        self.headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+
+    def create_scan(self, config: ScanConfig) -> str:
+        """Create a new scan and return scan ID."""
+        payload = {
+            "name": config.name,
+            "scan_configurations": [{"id": config.scan_config_id}],
+            "scope": {
+                "include": [{"rule": config.target_url, "type": "SimpleScopeDef"}]
+            },
+            "urls": [config.target_url],
+        }
+
+        if config.credential_config_id:
+            payload["application_logins"] = [{"id": config.credential_config_id}]
+
+        response = requests.post(
+            f"{self.base_url}/scans", headers=self.headers, json=payload
+        )
+        response.raise_for_status()
+        return response.json()["id"]
+
+    def get_scan_status(self, scan_id: str) -> str:
+        """Get current scan status."""
+        response = requests.get(
+            f"{self.base_url}/scans/{scan_id}", headers=self.headers
+        )
+        response.raise_for_status()
+        return response.json()["status"]
+
+    def wait_for_scan(self, scan_id: str, timeout: int = 3600) -> bool:
+        """Wait for scan to complete."""
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            status = self.get_scan_status(scan_id)
+            if status == "succeeded":
+                return True
+            if status in ("failed", "cancelled"):
+                return False
+            time.sleep(30)
+        return False
+
+    def get_issues(self, scan_id: str) -> list[dict]:
+        """Get all issues from a scan."""
+        response = requests.get(
+            f"{self.base_url}/scans/{scan_id}/issues", headers=self.headers
+        )
+        response.raise_for_status()
+        return response.json()["issues"]
+
+    def get_scan_result(self, scan_id: str) -> ScanResult:
+        """Get summarized scan results."""
+        issues = self.get_issues(scan_id)
+
+        severity_counts = {"high": 0, "medium": 0, "low": 0, "info": 0}
+        for issue in issues:
+            severity = issue.get("severity", "info").lower()
+            if severity in severity_counts:
+                severity_counts[severity] += 1
+
+        return ScanResult(
+            scan_id=scan_id,
+            status=self.get_scan_status(scan_id),
+            issue_count=len(issues),
+            high_count=severity_counts["high"],
+            medium_count=severity_counts["medium"],
+            low_count=severity_counts["low"],
+            info_count=severity_counts["info"],
+        )
+
+    def export_report(
+        self, scan_id: str, format_type: str = "html", output_path: str = "report.html"
+    ) -> str:
+        """Export scan report to file."""
+        response = requests.get(
+            f"{self.base_url}/scans/{scan_id}/report",
+            headers=self.headers,
+            params={"report_type": format_type},
+        )
+        response.raise_for_status()
+
+        with open(output_path, "wb") as f:
+            f.write(response.content)
+        return output_path
+
+
+def run_ci_scan(target_url: str, threshold_high: int = 0) -> bool:
+    """Run Burp scan in CI pipeline and enforce quality gates."""
+    client = BurpSuiteClient()
+
+    config = ScanConfig(
+        name=f"CI Scan - {target_url}",
+        target_url=target_url,
+        scan_config_id=os.environ.get("BURP_SCAN_CONFIG_ID", "default"),
+    )
+
+    print(f"Starting scan for {target_url}")
+    scan_id = client.create_scan(config)
+
+    print(f"Waiting for scan {scan_id} to complete...")
+    if not client.wait_for_scan(scan_id):
+        print("Scan failed or timed out")
+        return False
+
+    result = client.get_scan_result(scan_id)
+    print(f"Scan complete: {result.issue_count} issues found")
+    print(f"  High: {result.high_count}")
+    print(f"  Medium: {result.medium_count}")
+    print(f"  Low: {result.low_count}")
+
+    ## Export report
+    client.export_report(scan_id, "html", "burp-report.html")
+    client.export_report(scan_id, "xml", "burp-report.xml")
+
+    ## Check thresholds
+    if result.high_count > threshold_high:
+        print(f"FAILED: {result.high_count} high severity issues exceed threshold")
+        return False
+
+    print("PASSED: Security scan within acceptable thresholds")
+    return True
+
+
+if __name__ == "__main__":
+    import sys
+
+    target = sys.argv[1] if len(sys.argv) > 1 else "https://staging.example.com"
+    success = run_ci_scan(target)
+    sys.exit(0 if success else 1)
+```
+
+**CI/CD integration (GitHub Actions)**:
+
+```yaml
+name: DAST Security Scan
+
+on:
+  deployment_status:
+    types: [created]
+
+jobs:
+  burp-scan:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Burp Suite Scan
+        env:
+          BURP_ENTERPRISE_URL: ${{ secrets.BURP_ENTERPRISE_URL }}
+          BURP_API_KEY: ${{ secrets.BURP_API_KEY }}
+          BURP_SCAN_CONFIG_ID: ${{ secrets.BURP_SCAN_CONFIG_ID }}
+        run: |
+          python scripts/burp_scan.py ${{ github.event.deployment.payload.target_url }}
+
+      - name: Upload Burp Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: burp-report
+          path: |
+            burp-report.html
+            burp-report.xml
+```
+
+**Burp Suite scan configuration (burp-config.json)**:
+
+```json
+{
+  "scanner": {
+    "audit_optimization": {
+      "consolidate_passive_issues": true,
+      "follow_redirections": true,
+      "skip_audit_checks_unlikely_to_have_issues": true
+    },
+    "error_handling": {
+      "consecutive_audit_check_failures": {
+        "action": "skip_remaining_checks_for_insertion_point"
+      },
+      "number_of_consecutive_insertion_point_failures": 3
+    },
+    "issues_reported": {
+      "scan_type_intrusive_active": true,
+      "scan_type_light_active": true,
+      "scan_type_medium_active": true,
+      "scan_type_passive": true
+    }
+  },
+  "crawl": {
+    "crawl_limits": {
+      "max_crawl_depth": 10,
+      "max_request_count": 5000
+    },
+    "crawl_optimization": {
+      "avoid_duplicate_content": true
+    }
+  }
+}
+```
+
 ---
 
 ## Compliance Scanning
@@ -1525,6 +2442,563 @@ inspec exec /path/to/profile --reporter json:inspec-report.json
 
 ## Run remote
 inspec exec /path/to/profile -t ssh://user@host
+```
+
+### CIS Benchmarks
+
+CIS (Center for Internet Security) Benchmarks provide prescriptive security
+configuration guidelines for hardening systems and infrastructure.
+
+**Using CIS-CAT Pro**:
+
+```bash
+## Download CIS-CAT Pro from CIS SecureSuite
+## https://www.cisecurity.org/cis-securesuite
+
+## Run assessment
+./Assessor-CLI.sh \
+  -b benchmarks/CIS_Ubuntu_Linux_22.04_LTS_Benchmark_v1.0.0-xccdf.xml \
+  -p "Level 1 - Server" \
+  -rd /reports
+
+## Generate HTML report
+./Assessor-CLI.sh \
+  -b benchmarks/CIS_Ubuntu_Linux_22.04_LTS_Benchmark_v1.0.0-xccdf.xml \
+  -p "Level 1 - Server" \
+  -html -rd /reports
+```
+
+**Using InSpec with CIS Profiles**:
+
+```bash
+## Install CIS profile from Chef Supermarket
+inspec supermarket exec dev-sec/linux-baseline
+
+## Run CIS benchmark profile
+inspec exec https://github.com/dev-sec/linux-baseline \
+  --reporter json:cis-report.json html:cis-report.html
+
+## Run against remote target
+inspec exec https://github.com/dev-sec/linux-baseline \
+  -t ssh://user@hostname \
+  --sudo
+```
+
+**Available CIS InSpec Profiles**:
+
+```yaml
+# Available CIS compliance profiles
+cis_profiles:
+  operating_systems:
+    - name: linux-baseline
+      url: https://github.com/dev-sec/linux-baseline
+      description: Linux security baseline (CIS Level 1)
+
+    - name: windows-baseline
+      url: https://github.com/dev-sec/windows-baseline
+      description: Windows security baseline
+
+  containers:
+    - name: cis-docker-benchmark
+      url: https://github.com/dev-sec/cis-docker-benchmark
+      description: CIS Docker Benchmark
+
+    - name: cis-kubernetes-benchmark
+      url: https://github.com/dev-sec/cis-kubernetes-benchmark
+      description: CIS Kubernetes Benchmark
+
+  cloud:
+    - name: aws-foundations-benchmark
+      url: https://github.com/mitre/aws-foundations-cis-baseline
+      description: CIS AWS Foundations Benchmark
+
+    - name: azure-foundations-benchmark
+      url: https://github.com/mitre/microsoft-azure-cis-foundations-baseline
+      description: CIS Azure Foundations Benchmark
+```
+
+**Kubernetes CIS Benchmark with kube-bench**:
+
+```bash
+## Install kube-bench
+go install github.com/aquasecurity/kube-bench@latest
+
+## Run CIS benchmark
+kube-bench run --targets master,node
+
+## Run specific version
+kube-bench run --benchmark cis-1.8
+
+## Generate JSON report
+kube-bench run --json --outputfile kube-bench-report.json
+
+## Run as Kubernetes Job
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job.yaml
+```
+
+**kube-bench Job manifest**:
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kube-bench
+  namespace: security
+spec:
+  template:
+    spec:
+      hostPID: true
+      containers:
+        - name: kube-bench
+          image: aquasec/kube-bench:latest
+          command: ["kube-bench"]
+          args: ["run", "--json", "--outputfile", "/results/report.json"]
+          volumeMounts:
+            - name: var-lib-kubelet
+              mountPath: /var/lib/kubelet
+              readOnly: true
+            - name: etc-kubernetes
+              mountPath: /etc/kubernetes
+              readOnly: true
+            - name: results
+              mountPath: /results
+      restartPolicy: Never
+      volumes:
+        - name: var-lib-kubelet
+          hostPath:
+            path: /var/lib/kubelet
+        - name: etc-kubernetes
+          hostPath:
+            path: /etc/kubernetes
+        - name: results
+          emptyDir: {}
+```
+
+**AWS CIS Benchmark with Prowler**:
+
+```bash
+## Install Prowler
+pip install prowler
+
+## Run AWS CIS Benchmark
+prowler aws --compliance cis_1.5_aws
+
+## Run specific checks
+prowler aws -c cis_1.5_aws -M json-ocsf
+
+## Generate multiple report formats
+prowler aws --compliance cis_1.5_aws -M csv json html
+```
+
+**CI/CD integration for CIS compliance**:
+
+```yaml
+name: CIS Compliance Scan
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly
+  workflow_dispatch:
+
+jobs:
+  cis-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install InSpec
+        run: gem install inspec-bin
+
+      - name: Run Linux Baseline
+        run: |
+          inspec exec https://github.com/dev-sec/linux-baseline \
+            --reporter json:linux-baseline.json cli
+
+      - name: Run Docker Benchmark
+        run: |
+          inspec exec https://github.com/dev-sec/cis-docker-benchmark \
+            --reporter json:docker-benchmark.json cli
+
+      - name: Upload Compliance Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: cis-compliance-reports
+          path: |
+            linux-baseline.json
+            docker-benchmark.json
+
+  kubernetes-cis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Run kube-bench
+        run: |
+          kubectl apply -f kube-bench-job.yaml
+          kubectl wait --for=condition=complete job/kube-bench -n security --timeout=300s
+          kubectl logs job/kube-bench -n security > kube-bench-report.txt
+
+      - name: Upload kube-bench Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: kube-bench-report
+          path: kube-bench-report.txt
+```
+
+---
+
+## Policy as Code (OPA/Rego)
+
+Open Policy Agent (OPA) enables policy as code for authorization, admission control,
+and security policy enforcement across the software delivery lifecycle.
+
+### OPA Installation
+
+```bash
+## macOS
+brew install opa
+
+## Linux
+curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64_static
+chmod +x opa
+sudo mv opa /usr/local/bin/
+
+## Verify
+opa version
+```
+
+### Rego Policy Basics
+
+```rego
+# policy/security/secrets.rego
+package security.secrets
+
+# Deny commits containing hardcoded secrets
+deny[msg] {
+    input.file.extension == "py"
+    contains(input.file.content, "password")
+    contains(input.file.content, "=")
+    not contains(input.file.content, "os.environ")
+    msg := sprintf("Hardcoded password detected in %s", [input.file.path])
+}
+
+# Deny AWS credentials in code
+deny[msg] {
+    regex.match("AKIA[A-Z0-9]{16}", input.file.content)
+    msg := sprintf("AWS Access Key ID detected in %s", [input.file.path])
+}
+
+# Deny private keys
+deny[msg] {
+    contains(input.file.content, "-----BEGIN RSA PRIV" + "ATE KEY-----")
+    msg := sprintf("Private key detected in %s", [input.file.path])
+}
+```
+
+### Kubernetes Admission Control
+
+```rego
+# policy/kubernetes/pod_security.rego
+package kubernetes.admission
+
+# Deny containers running as root
+deny[msg] {
+    input.request.kind.kind == "Pod"
+    container := input.request.object.spec.containers[_]
+    container.securityContext.runAsUser == 0
+    msg := sprintf("Container '%s' cannot run as root", [container.name])
+}
+
+# Deny privileged containers
+deny[msg] {
+    input.request.kind.kind == "Pod"
+    container := input.request.object.spec.containers[_]
+    container.securityContext.privileged == true
+    msg := sprintf("Container '%s' cannot be privileged", [container.name])
+}
+
+# Require resource limits
+deny[msg] {
+    input.request.kind.kind == "Pod"
+    container := input.request.object.spec.containers[_]
+    not container.resources.limits.memory
+    msg := sprintf("Container '%s' must have memory limits", [container.name])
+}
+
+# Deny latest tag
+deny[msg] {
+    input.request.kind.kind == "Pod"
+    container := input.request.object.spec.containers[_]
+    endswith(container.image, ":latest")
+    msg := sprintf("Container '%s' cannot use :latest tag", [container.name])
+}
+
+# Require approved registries
+approved_registries := ["gcr.io/my-project", "ghcr.io/my-org"]
+
+deny[msg] {
+    input.request.kind.kind == "Pod"
+    container := input.request.object.spec.containers[_]
+    not any_approved_registry(container.image)
+    msg := sprintf("Container '%s' uses unapproved registry", [container.name])
+}
+
+any_approved_registry(image) {
+    registry := approved_registries[_]
+    startswith(image, registry)
+}
+```
+
+### Terraform Policy Enforcement
+
+```rego
+# policy/terraform/aws_security.rego
+package terraform.aws
+
+# Deny S3 buckets without encryption
+deny[msg] {
+    resource := input.resource_changes[_]
+    resource.type == "aws_s3_bucket"
+    resource.change.after.server_side_encryption_configuration == null
+    msg := sprintf("S3 bucket '%s' must have encryption enabled", [resource.address])
+}
+
+# Deny public S3 buckets
+deny[msg] {
+    resource := input.resource_changes[_]
+    resource.type == "aws_s3_bucket_public_access_block"
+    not resource.change.after.block_public_acls
+    msg := sprintf("S3 bucket '%s' must block public ACLs", [resource.address])
+}
+
+# Deny security groups with 0.0.0.0/0 ingress
+deny[msg] {
+    resource := input.resource_changes[_]
+    resource.type == "aws_security_group_rule"
+    resource.change.after.type == "ingress"
+    resource.change.after.cidr_blocks[_] == "0.0.0.0/0"
+    resource.change.after.from_port != 443
+    resource.change.after.from_port != 80
+    msg := sprintf(
+        "Security group rule '%s' allows unrestricted ingress on port %d",
+        [resource.address, resource.change.after.from_port]
+    )
+}
+
+# Require tags on all resources
+required_tags := ["Environment", "Owner", "Project"]
+
+deny[msg] {
+    resource := input.resource_changes[_]
+    resource.change.after.tags != null
+    missing_tags := [tag | tag := required_tags[_]; not resource.change.after.tags[tag]]
+    count(missing_tags) > 0
+    msg := sprintf("Resource '%s' missing required tags: %v", [resource.address, missing_tags])
+}
+```
+
+### Conftest for Policy Testing
+
+```bash
+## Install Conftest
+brew install conftest
+
+## Test Terraform plan
+terraform plan -out=tfplan
+terraform show -json tfplan > tfplan.json
+conftest test tfplan.json -p policy/terraform/
+
+## Test Kubernetes manifests
+conftest test deployment.yaml -p policy/kubernetes/
+
+## Test Dockerfile
+conftest test Dockerfile -p policy/docker/
+
+## Pull policies from OCI registry
+conftest pull oci://ghcr.io/my-org/policies:latest
+conftest test --update oci://ghcr.io/my-org/policies:latest deployment.yaml
+```
+
+### Dockerfile Policies
+
+```rego
+# policy/docker/dockerfile.rego
+package docker.security
+
+# Deny running as root
+deny[msg] {
+    input.Cmd == "user"
+    input.Value[0] == "root"
+    msg := "Dockerfile should not run as root user"
+}
+
+# Require USER instruction
+deny[msg] {
+    not has_user_instruction
+    msg := "Dockerfile must include USER instruction"
+}
+
+has_user_instruction {
+    input[_].Cmd == "user"
+}
+
+# Deny ADD instruction (prefer COPY)
+warn[msg] {
+    input[_].Cmd == "add"
+    msg := "Use COPY instead of ADD unless extracting archives"
+}
+
+# Require specific base image versions
+deny[msg] {
+    input.Cmd == "from"
+    endswith(input.Value[0], ":latest")
+    msg := "Base image must use specific version tag, not :latest"
+}
+
+# Deny curl/wget piped to shell
+deny[msg] {
+    input.Cmd == "run"
+    cmd := input.Value[_]
+    contains(cmd, "curl")
+    contains(cmd, "| sh")
+    msg := "Do not pipe curl output directly to shell"
+}
+```
+
+### Policy Validation in CI/CD
+
+```yaml
+name: Policy Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  terraform-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Convert Plan to JSON
+        run: terraform show -json tfplan > tfplan.json
+
+      - name: Install Conftest
+        run: |
+          wget https://github.com/open-policy-agent/conftest/releases/download/v0.50.0/conftest_0.50.0_Linux_x86_64.tar.gz
+          tar xzf conftest_0.50.0_Linux_x86_64.tar.gz
+          sudo mv conftest /usr/local/bin/
+
+      - name: Run Policy Tests
+        run: conftest test tfplan.json -p policy/terraform/
+
+  kubernetes-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Conftest
+        run: |
+          wget https://github.com/open-policy-agent/conftest/releases/download/v0.50.0/conftest_0.50.0_Linux_x86_64.tar.gz
+          tar xzf conftest_0.50.0_Linux_x86_64.tar.gz
+          sudo mv conftest /usr/local/bin/
+
+      - name: Test Kubernetes Manifests
+        run: |
+          conftest test k8s/*.yaml -p policy/kubernetes/
+
+  dockerfile-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Conftest
+        run: |
+          wget https://github.com/open-policy-agent/conftest/releases/download/v0.50.0/conftest_0.50.0_Linux_x86_64.tar.gz
+          tar xzf conftest_0.50.0_Linux_x86_64.tar.gz
+          sudo mv conftest /usr/local/bin/
+
+      - name: Parse Dockerfile
+        run: |
+          docker run --rm -i hadolint/hadolint hadolint --format json - < Dockerfile > dockerfile.json
+
+      - name: Test Dockerfile Policies
+        run: conftest test Dockerfile -p policy/docker/
+```
+
+### Gatekeeper for Kubernetes
+
+```yaml
+# Install Gatekeeper
+# kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/deploy/gatekeeper.yaml
+
+# Constraint Template for required labels
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequiredlabels
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredLabels
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            labels:
+              type: array
+              items:
+                type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8srequiredlabels
+
+        violation[{"msg": msg, "details": {"missing_labels": missing}}] {
+          provided := {label | input.review.object.metadata.labels[label]}
+          required := {label | label := input.parameters.labels[_]}
+          missing := required - provided
+          count(missing) > 0
+          msg := sprintf("Missing required labels: %v", [missing])
+        }
+---
+# Constraint to enforce required labels
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: require-app-labels
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet"]
+  parameters:
+    labels:
+      - "app.kubernetes.io/name"
+      - "app.kubernetes.io/version"
+      - "app.kubernetes.io/managed-by"
 ```
 
 ---
@@ -3005,6 +4479,662 @@ jobs:
 
 ---
 
+## Security Dashboards
+
+Centralized security dashboards provide visibility into vulnerability trends,
+compliance status, and remediation progress across all security tools.
+
+### Grafana Security Dashboard
+
+**Dashboard configuration**:
+
+```json
+{
+  "dashboard": {
+    "title": "Security Scanning Dashboard",
+    "uid": "security-overview",
+    "tags": ["security", "vulnerabilities", "compliance"],
+    "timezone": "browser",
+    "refresh": "5m",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Critical Vulnerabilities (Last 30 Days)",
+        "type": "stat",
+        "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+        "targets": [
+          {
+            "expr": "sum(security_vulnerabilities_total{severity=\"critical\"})",
+            "legendFormat": "Critical"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1 },
+                { "color": "red", "value": 5 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Vulnerabilities by Severity",
+        "type": "piechart",
+        "gridPos": { "x": 6, "y": 0, "w": 6, "h": 8 },
+        "targets": [
+          {
+            "expr": "sum by (severity) (security_vulnerabilities_total)",
+            "legendFormat": "{{severity}}"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Vulnerability Trend",
+        "type": "timeseries",
+        "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "sum by (severity) (security_vulnerabilities_total)",
+            "legendFormat": "{{severity}}"
+          }
+        ],
+        "options": {
+          "tooltip": { "mode": "multi" }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Mean Time to Remediation",
+        "type": "gauge",
+        "gridPos": { "x": 0, "y": 4, "w": 6, "h": 4 },
+        "targets": [
+          {
+            "expr": "avg(security_remediation_time_hours)",
+            "legendFormat": "MTTR (hours)"
+          }
+        ],
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "h",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 24 },
+                { "color": "orange", "value": 72 },
+                { "color": "red", "value": 168 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Vulnerabilities by Tool",
+        "type": "barchart",
+        "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "sum by (tool, severity) (security_vulnerabilities_total)",
+            "legendFormat": "{{tool}} - {{severity}}"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Compliance Score",
+        "type": "gauge",
+        "gridPos": { "x": 12, "y": 8, "w": 6, "h": 8 },
+        "targets": [
+          {
+            "expr": "security_compliance_score",
+            "legendFormat": "Compliance"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "red", "value": null },
+                { "color": "orange", "value": 70 },
+                { "color": "yellow", "value": 85 },
+                { "color": "green", "value": 95 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "SLA Compliance",
+        "type": "table",
+        "gridPos": { "x": 18, "y": 8, "w": 6, "h": 8 },
+        "targets": [
+          {
+            "expr": "security_sla_compliance",
+            "format": "table"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Prometheus Metrics Exporter
+
+```python
+#!/usr/bin/env python3
+"""Security metrics exporter for Prometheus."""
+
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Optional
+
+from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram, start_http_server
+
+
+@dataclass
+class SecurityMetrics:
+    """Container for security metrics."""
+
+    registry: CollectorRegistry
+
+    def __post_init__(self):
+        """Initialize Prometheus metrics."""
+        self.vulnerabilities_total = Counter(
+            "security_vulnerabilities_total",
+            "Total number of vulnerabilities detected",
+            ["tool", "severity", "category"],
+            registry=self.registry,
+        )
+
+        self.vulnerabilities_open = Gauge(
+            "security_vulnerabilities_open",
+            "Number of open vulnerabilities",
+            ["tool", "severity"],
+            registry=self.registry,
+        )
+
+        self.remediation_time = Histogram(
+            "security_remediation_time_hours",
+            "Time to remediate vulnerabilities in hours",
+            ["severity"],
+            buckets=[1, 4, 8, 24, 48, 72, 168, 336, 720],
+            registry=self.registry,
+        )
+
+        self.scan_duration = Histogram(
+            "security_scan_duration_seconds",
+            "Duration of security scans",
+            ["tool"],
+            buckets=[10, 30, 60, 120, 300, 600, 1200, 1800],
+            registry=self.registry,
+        )
+
+        self.compliance_score = Gauge(
+            "security_compliance_score",
+            "Compliance score percentage",
+            ["framework"],
+            registry=self.registry,
+        )
+
+        self.sla_compliance = Gauge(
+            "security_sla_compliance",
+            "SLA compliance status (1=compliant, 0=non-compliant)",
+            ["severity"],
+            registry=self.registry,
+        )
+
+        self.false_positive_rate = Gauge(
+            "security_false_positive_rate",
+            "False positive rate percentage",
+            ["tool"],
+            registry=self.registry,
+        )
+
+
+def record_vulnerability(
+    metrics: SecurityMetrics,
+    tool: str,
+    severity: str,
+    category: str,
+    remediation_hours: Optional[float] = None,
+):
+    """Record a vulnerability finding."""
+    metrics.vulnerabilities_total.labels(
+        tool=tool, severity=severity, category=category
+    ).inc()
+
+    if remediation_hours:
+        metrics.remediation_time.labels(severity=severity).observe(remediation_hours)
+
+
+def update_open_vulnerabilities(
+    metrics: SecurityMetrics,
+    tool: str,
+    severity: str,
+    count: int,
+):
+    """Update open vulnerability count."""
+    metrics.vulnerabilities_open.labels(tool=tool, severity=severity).set(count)
+
+
+def record_scan(
+    metrics: SecurityMetrics,
+    tool: str,
+    duration_seconds: float,
+):
+    """Record a security scan execution."""
+    metrics.scan_duration.labels(tool=tool).observe(duration_seconds)
+
+
+def update_compliance(
+    metrics: SecurityMetrics,
+    framework: str,
+    score: float,
+):
+    """Update compliance score."""
+    metrics.compliance_score.labels(framework=framework).set(score)
+
+
+def main():
+    """Start metrics server."""
+    registry = CollectorRegistry()
+    metrics = SecurityMetrics(registry=registry)
+
+    ## Start HTTP server for Prometheus scraping
+    start_http_server(8000, registry=registry)
+    print("Security metrics server started on :8000")
+
+    ## Example metrics updates
+    record_vulnerability(metrics, "trivy", "critical", "container", 4.5)
+    record_vulnerability(metrics, "snyk", "high", "dependency", 24.0)
+    update_open_vulnerabilities(metrics, "semgrep", "medium", 15)
+    record_scan(metrics, "trivy", 45.3)
+    update_compliance(metrics, "cis", 92.5)
+    update_compliance(metrics, "pci-dss", 88.0)
+
+    ## Keep server running
+    import time
+
+    while True:
+        time.sleep(60)
+
+
+if __name__ == "__main__":
+    main()
+```
+
+### DefectDojo Integration
+
+DefectDojo provides a comprehensive vulnerability management platform for
+aggregating findings from multiple security tools.
+
+**Import scan results**:
+
+```python
+#!/usr/bin/env python3
+"""DefectDojo API integration for security scan imports."""
+
+import json
+import os
+from pathlib import Path
+from typing import Optional
+
+import requests
+
+
+class DefectDojoClient:
+    """Client for DefectDojo REST API."""
+
+    SCAN_TYPES = {
+        "trivy": "Trivy Scan",
+        "snyk": "Snyk Scan",
+        "semgrep": "Semgrep JSON Report",
+        "bandit": "Bandit Scan",
+        "zap": "ZAP Scan",
+        "checkov": "Checkov Scan",
+        "gitleaks": "Gitleaks Scan",
+        "sonarqube": "SonarQube Scan",
+    }
+
+    def __init__(
+        self,
+        base_url: Optional[str] = None,
+        api_key: Optional[str] = None,
+    ):
+        self.base_url = base_url or os.environ.get(
+            "DEFECTDOJO_URL", "https://defectdojo.example.com"
+        )
+        self.api_key = api_key or os.environ.get("DEFECTDOJO_API_KEY")
+        self.headers = {
+            "Authorization": f"Token {self.api_key}",
+        }
+
+    def get_or_create_product(self, name: str, prod_type: int = 1) -> int:
+        """Get or create a product and return its ID."""
+        response = requests.get(
+            f"{self.base_url}/api/v2/products/",
+            headers=self.headers,
+            params={"name": name},
+        )
+        response.raise_for_status()
+
+        results = response.json()["results"]
+        if results:
+            return results[0]["id"]
+
+        response = requests.post(
+            f"{self.base_url}/api/v2/products/",
+            headers=self.headers,
+            json={"name": name, "prod_type": prod_type, "description": f"Product: {name}"},
+        )
+        response.raise_for_status()
+        return response.json()["id"]
+
+    def get_or_create_engagement(
+        self, product_id: int, name: str, target_start: str, target_end: str
+    ) -> int:
+        """Get or create an engagement and return its ID."""
+        response = requests.get(
+            f"{self.base_url}/api/v2/engagements/",
+            headers=self.headers,
+            params={"product": product_id, "name": name},
+        )
+        response.raise_for_status()
+
+        results = response.json()["results"]
+        if results:
+            return results[0]["id"]
+
+        response = requests.post(
+            f"{self.base_url}/api/v2/engagements/",
+            headers=self.headers,
+            json={
+                "product": product_id,
+                "name": name,
+                "target_start": target_start,
+                "target_end": target_end,
+                "engagement_type": "CI/CD",
+                "status": "In Progress",
+            },
+        )
+        response.raise_for_status()
+        return response.json()["id"]
+
+    def import_scan(
+        self,
+        engagement_id: int,
+        scan_type: str,
+        file_path: str,
+        verified: bool = False,
+        active: bool = True,
+    ) -> dict:
+        """Import scan results to DefectDojo."""
+        scan_type_name = self.SCAN_TYPES.get(scan_type.lower(), scan_type)
+
+        with open(file_path, "rb") as f:
+            response = requests.post(
+                f"{self.base_url}/api/v2/import-scan/",
+                headers={"Authorization": f"Token {self.api_key}"},
+                data={
+                    "engagement": engagement_id,
+                    "scan_type": scan_type_name,
+                    "verified": verified,
+                    "active": active,
+                    "close_old_findings": True,
+                    "push_to_jira": False,
+                },
+                files={"file": f},
+            )
+
+        response.raise_for_status()
+        return response.json()
+
+
+def upload_scan_results(
+    product_name: str,
+    engagement_name: str,
+    scan_type: str,
+    report_path: str,
+):
+    """Upload security scan results to DefectDojo."""
+    client = DefectDojoClient()
+
+    from datetime import date, timedelta
+
+    today = date.today().isoformat()
+    end_date = (date.today() + timedelta(days=30)).isoformat()
+
+    product_id = client.get_or_create_product(product_name)
+    engagement_id = client.get_or_create_engagement(
+        product_id, engagement_name, today, end_date
+    )
+
+    result = client.import_scan(engagement_id, scan_type, report_path)
+    print(f"Imported {result.get('test_count', 0)} tests")
+    print(f"Found {result.get('findings_count', 0)} findings")
+    return result
+
+
+if __name__ == "__main__":
+    import sys
+
+    if len(sys.argv) < 4:
+        print("Usage: defectdojo_import.py <product> <scan_type> <report_path>")
+        sys.exit(1)
+
+    upload_scan_results(
+        product_name=sys.argv[1],
+        engagement_name="CI/CD Security Scans",
+        scan_type=sys.argv[2],
+        report_path=sys.argv[3],
+    )
+```
+
+**CI/CD integration for DefectDojo**:
+
+```yaml
+name: Security Scan with DefectDojo
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Trivy Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'json'
+          output: 'trivy-results.json'
+
+      - name: Run Semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/security-audit
+          generateSarif: false
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+
+      - name: Upload to DefectDojo
+        env:
+          DEFECTDOJO_URL: ${{ secrets.DEFECTDOJO_URL }}
+          DEFECTDOJO_API_KEY: ${{ secrets.DEFECTDOJO_API_KEY }}
+        run: |
+          pip install requests
+
+          python scripts/defectdojo_import.py \
+            "${{ github.repository }}" \
+            "trivy" \
+            "trivy-results.json"
+
+          if [ -f semgrep.json ]; then
+            python scripts/defectdojo_import.py \
+              "${{ github.repository }}" \
+              "semgrep" \
+              "semgrep.json"
+          fi
+```
+
+### Consolidated SARIF Reporting
+
+```python
+#!/usr/bin/env python3
+"""Consolidate SARIF reports from multiple security tools."""
+
+import json
+from pathlib import Path
+
+
+def merge_sarif_reports(report_paths: list[str], output_path: str) -> dict:
+    """Merge multiple SARIF reports into a single report."""
+    merged = {
+        "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+        "version": "2.1.0",
+        "runs": [],
+    }
+
+    for report_path in report_paths:
+        with open(report_path) as f:
+            report = json.load(f)
+            merged["runs"].extend(report.get("runs", []))
+
+    with open(output_path, "w") as f:
+        json.dump(merged, f, indent=2)
+
+    return merged
+
+
+def generate_summary(sarif_report: dict) -> dict:
+    """Generate summary statistics from SARIF report."""
+    summary = {
+        "total_findings": 0,
+        "by_severity": {"error": 0, "warning": 0, "note": 0, "none": 0},
+        "by_tool": {},
+        "by_rule": {},
+    }
+
+    for run in sarif_report.get("runs", []):
+        tool_name = run.get("tool", {}).get("driver", {}).get("name", "unknown")
+        summary["by_tool"][tool_name] = {"total": 0, "by_severity": {}}
+
+        for result in run.get("results", []):
+            summary["total_findings"] += 1
+            severity = result.get("level", "none")
+            rule_id = result.get("ruleId", "unknown")
+
+            summary["by_severity"][severity] = summary["by_severity"].get(severity, 0) + 1
+            summary["by_tool"][tool_name]["total"] += 1
+            summary["by_tool"][tool_name]["by_severity"][severity] = (
+                summary["by_tool"][tool_name]["by_severity"].get(severity, 0) + 1
+            )
+
+            if rule_id not in summary["by_rule"]:
+                summary["by_rule"][rule_id] = 0
+            summary["by_rule"][rule_id] += 1
+
+    return summary
+
+
+def generate_markdown_report(summary: dict) -> str:
+    """Generate markdown summary report."""
+    lines = [
+        "# Security Scan Summary",
+        "",
+        f"**Total Findings:** {summary['total_findings']}",
+        "",
+        "## Findings by Severity",
+        "",
+        "| Severity | Count |",
+        "|----------|-------|",
+    ]
+
+    for severity, count in summary["by_severity"].items():
+        if count > 0:
+            lines.append(f"| {severity.capitalize()} | {count} |")
+
+    lines.extend(
+        [
+            "",
+            "## Findings by Tool",
+            "",
+            "| Tool | Total | Errors | Warnings |",
+            "|------|-------|--------|----------|",
+        ]
+    )
+
+    for tool, data in summary["by_tool"].items():
+        errors = data["by_severity"].get("error", 0)
+        warnings = data["by_severity"].get("warning", 0)
+        lines.append(f"| {tool} | {data['total']} | {errors} | {warnings} |")
+
+    lines.extend(
+        [
+            "",
+            "## Top 10 Rules Triggered",
+            "",
+            "| Rule ID | Count |",
+            "|---------|-------|",
+        ]
+    )
+
+    sorted_rules = sorted(summary["by_rule"].items(), key=lambda x: x[1], reverse=True)[:10]
+    for rule_id, count in sorted_rules:
+        lines.append(f"| {rule_id} | {count} |")
+
+    return "\n".join(lines)
+
+
+if __name__ == "__main__":
+    import sys
+
+    if len(sys.argv) < 3:
+        print("Usage: sarif_consolidate.py <output.sarif> <input1.sarif> [input2.sarif ...]")
+        sys.exit(1)
+
+    output_path = sys.argv[1]
+    input_paths = sys.argv[2:]
+
+    merged = merge_sarif_reports(input_paths, output_path)
+    summary = generate_summary(merged)
+    markdown = generate_markdown_report(summary)
+
+    print(markdown)
+
+    with open("security-summary.md", "w") as f:
+        f.write(markdown)
+```
+
+---
+
 ## CI/CD Integration
 
 ### GitHub Actions
@@ -3265,6 +5395,14 @@ We will not pursue legal action against researchers who:
 - [NIST Security Guidelines](https://www.nist.gov/cybersecurity)
 - [Cloud Security Alliance](https://cloudsecurityalliance.org/)
 - [CVSS Calculator](https://www.first.org/cvss/calculator/3.1)
+- [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks)
+
+### Secret Detection Tools
+
+- [TruffleHog Documentation](https://github.com/trufflesecurity/trufflehog)
+- [Gitleaks Documentation](https://github.com/gitleaks/gitleaks)
+- [GitGuardian Documentation](https://docs.gitguardian.com/)
+- [detect-secrets Documentation](https://github.com/Yelp/detect-secrets)
 
 ### SAST Tools
 
@@ -3280,11 +5418,37 @@ We will not pursue legal action against researchers who:
 - [Nuclei Documentation](https://docs.projectdiscovery.io/tools/nuclei/)
 - [Burp Suite Documentation](https://portswigger.net/burp/documentation)
 
+### Dependency Scanning (SCA)
+
+- [Snyk Documentation](https://docs.snyk.io/)
+- [OWASP Dependency-Check](https://owasp.org/www-project-dependency-check/)
+- [Grype Documentation](https://github.com/anchore/grype)
+
 ### Container and Infrastructure Security
 
 - [Trivy Documentation](https://aquasecurity.github.io/trivy/)
 - [Checkov Documentation](https://www.checkov.io/1.Welcome/What%20is%20Checkov.html)
 - [tfsec Documentation](https://aquasecurity.github.io/tfsec/)
+- [kube-bench Documentation](https://github.com/aquasecurity/kube-bench)
+
+### Policy as Code
+
+- [Open Policy Agent (OPA)](https://www.openpolicyagent.org/docs/latest/)
+- [Rego Policy Language](https://www.openpolicyagent.org/docs/latest/policy-language/)
+- [Conftest Documentation](https://www.conftest.dev/)
+- [Gatekeeper Documentation](https://open-policy-agent.github.io/gatekeeper/)
+
+### Compliance and Benchmarks
+
+- [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks)
+- [Chef InSpec](https://docs.chef.io/inspec/)
+- [OpenSCAP Documentation](https://www.open-scap.org/tools/openscap-base/)
+- [Prowler Documentation](https://github.com/prowler-cloud/prowler)
+
+### Security Dashboards and Management
+
+- [DefectDojo Documentation](https://defectdojo.github.io/django-DefectDojo/)
+- [SARIF Specification](https://sarifweb.azurewebsites.net/)
 
 ---
 
