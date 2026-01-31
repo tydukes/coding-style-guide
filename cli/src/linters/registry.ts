@@ -116,6 +116,59 @@ async function getVersion(
 }
 
 /**
+ * Parse "file:line:col:" prefix from a line.
+ * Returns parsed values or null if format doesn't match.
+ */
+function parseFileLineCol(line: string): { lineNum: number; col: number; rest: string } | null {
+  const firstColon = line.indexOf(":");
+  if (firstColon === -1) return null;
+
+  const afterFile = line.slice(firstColon + 1);
+  const secondColon = afterFile.indexOf(":");
+  if (secondColon === -1) return null;
+
+  const lineNum = parseInt(afterFile.slice(0, secondColon), 10);
+  if (isNaN(lineNum)) return null;
+
+  const afterLine = afterFile.slice(secondColon + 1);
+  const thirdColon = afterLine.indexOf(":");
+  if (thirdColon === -1) return null;
+
+  const col = parseInt(afterLine.slice(0, thirdColon), 10);
+  if (isNaN(col)) return null;
+
+  const rest = afterLine.slice(thirdColon + 1).trim();
+  return { lineNum, col, rest };
+}
+
+/**
+ * Create a standard "fixed" result for a list of files.
+ */
+function createFixedResults(files: string[], language: Language): LintResult[] {
+  return files.map((file) => ({
+    file,
+    language,
+    issues: [],
+    fixable: 0,
+    fixed: 1,
+  }));
+}
+
+/**
+ * Create a "would be reformatted" issue.
+ */
+function createReformatIssue(rule: string): LintIssue {
+  return {
+    line: 1,
+    column: 1,
+    message: "File would be reformatted",
+    rule,
+    severity: "warning" as const,
+    fixable: true,
+  };
+}
+
+/**
  * Parse flake8 output into lint issues.
  * Format: file:line:col: code message
  */
@@ -124,26 +177,10 @@ function parseFlake8Output(output: string): LintIssue[] {
   const lines = output.split("\n").filter(Boolean);
 
   for (const line of lines) {
-    // Parse without complex regex to avoid ReDoS
-    // Format: "path:line:col: CODE message"
-    const firstColon = line.indexOf(":");
-    if (firstColon === -1) continue;
+    const parsed = parseFileLineCol(line);
+    if (!parsed) continue;
 
-    const afterFile = line.slice(firstColon + 1);
-    const secondColon = afterFile.indexOf(":");
-    if (secondColon === -1) continue;
-
-    const lineNum = parseInt(afterFile.slice(0, secondColon), 10);
-    if (isNaN(lineNum)) continue;
-
-    const afterLine = afterFile.slice(secondColon + 1);
-    const thirdColon = afterLine.indexOf(":");
-    if (thirdColon === -1) continue;
-
-    const col = parseInt(afterLine.slice(0, thirdColon), 10);
-    if (isNaN(col)) continue;
-
-    const rest = afterLine.slice(thirdColon + 1).trim();
+    const { lineNum, col, rest } = parsed;
     const spaceIdx = rest.indexOf(" ");
     if (spaceIdx === -1) continue;
 
@@ -264,26 +301,10 @@ function parseYamllintOutput(output: string): LintIssue[] {
   const lines = output.split("\n").filter(Boolean);
 
   for (const line of lines) {
-    // Parse without complex regex to avoid ReDoS
-    // Format: "path:line:col: [level] message (rule)"
-    const firstColon = line.indexOf(":");
-    if (firstColon === -1) continue;
+    const parsed = parseFileLineCol(line);
+    if (!parsed) continue;
 
-    const afterFile = line.slice(firstColon + 1);
-    const secondColon = afterFile.indexOf(":");
-    if (secondColon === -1) continue;
-
-    const lineNum = parseInt(afterFile.slice(0, secondColon), 10);
-    if (isNaN(lineNum)) continue;
-
-    const afterLine = afterFile.slice(secondColon + 1);
-    const thirdColon = afterLine.indexOf(":");
-    if (thirdColon === -1) continue;
-
-    const col = parseInt(afterLine.slice(0, thirdColon), 10);
-    if (isNaN(col)) continue;
-
-    const rest = afterLine.slice(thirdColon + 1).trim();
+    const { lineNum, col, rest } = parsed;
 
     // Extract [level]
     const levelStart = rest.indexOf("[");
@@ -392,24 +413,13 @@ linters.set("black", {
     if (config.configFile) args.push("--config", config.configFile);
 
     const result = await execCommand(config.command || "black", args);
+    const needsFormat = result.exitCode !== 0;
 
     return files.map((file) => ({
       file,
       language: "python" as Language,
-      issues:
-        result.exitCode !== 0
-          ? [
-              {
-                line: 1,
-                column: 1,
-                message: "File would be reformatted",
-                rule: "black/format",
-                severity: "warning" as const,
-                fixable: true,
-              },
-            ]
-          : [],
-      fixable: result.exitCode !== 0 ? 1 : 0,
+      issues: needsFormat ? [createReformatIssue("black/format")] : [],
+      fixable: needsFormat ? 1 : 0,
     }));
   },
   async fix(files, config) {
@@ -417,14 +427,7 @@ linters.set("black", {
     if (config.configFile) args.push("--config", config.configFile);
 
     await execCommand(config.command || "black", args);
-
-    return files.map((file) => ({
-      file,
-      language: "python" as Language,
-      issues: [],
-      fixable: 0,
-      fixed: 1,
-    }));
+    return createFixedResults(files, "python");
   },
 });
 
@@ -510,37 +513,22 @@ linters.set("prettier", {
       .map((line) => line.replace("Checking formatting...", "").trim())
       .filter(Boolean);
 
-    return files.map((file) => ({
-      file,
-      language: "typescript" as Language,
-      issues: notFormatted.includes(file)
-        ? [
-            {
-              line: 1,
-              column: 1,
-              message: "File is not formatted",
-              rule: "prettier/format",
-              severity: "warning" as const,
-              fixable: true,
-            },
-          ]
-        : [],
-      fixable: notFormatted.includes(file) ? 1 : 0,
-    }));
+    return files.map((file) => {
+      const needsFormat = notFormatted.includes(file);
+      return {
+        file,
+        language: "typescript" as Language,
+        issues: needsFormat ? [createReformatIssue("prettier/format")] : [],
+        fixable: needsFormat ? 1 : 0,
+      };
+    });
   },
   async fix(files, config) {
     const args = ["--write", ...files];
     if (config.configFile) args.push("--config", config.configFile);
 
     await execCommand(config.command || "prettier", args);
-
-    return files.map((file) => ({
-      file,
-      language: "typescript" as Language,
-      issues: [],
-      fixable: 0,
-      fixed: 1,
-    }));
+    return createFixedResults(files, "typescript");
   },
 });
 
@@ -633,14 +621,7 @@ linters.set("markdownlint", {
     if (config.configFile) args.push("--config", config.configFile);
 
     await execCommand(config.command || "markdownlint", args);
-
-    return files.map((file) => ({
-      file,
-      language: "markdown" as Language,
-      issues: [],
-      fixable: 0,
-      fixed: 1,
-    }));
+    return createFixedResults(files, "markdown");
   },
 });
 
@@ -663,24 +644,13 @@ linters.set("terraform-fmt", {
     for (const file of files) {
       const args = ["fmt", "-check", "-diff", file];
       const result = await execCommand(config.command || "terraform", args);
+      const needsFormat = result.exitCode !== 0;
 
       results.push({
         file,
         language: "terraform" as Language,
-        issues:
-          result.exitCode !== 0
-            ? [
-                {
-                  line: 1,
-                  column: 1,
-                  message: "File would be reformatted",
-                  rule: "terraform/fmt",
-                  severity: "warning" as const,
-                  fixable: true,
-                },
-              ]
-            : [],
-        fixable: result.exitCode !== 0 ? 1 : 0,
+        issues: needsFormat ? [createReformatIssue("terraform/fmt")] : [],
+        fixable: needsFormat ? 1 : 0,
       });
     }
 
@@ -690,14 +660,7 @@ linters.set("terraform-fmt", {
     for (const file of files) {
       await execCommand(config.command || "terraform", ["fmt", file]);
     }
-
-    return files.map((file) => ({
-      file,
-      language: "terraform" as Language,
-      issues: [],
-      fixable: 0,
-      fixed: 1,
-    }));
+    return createFixedResults(files, "terraform");
   },
 });
 
