@@ -30,10 +30,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.1
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
 
@@ -73,7 +73,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.1
 
       - name: Check for diagram files
         id: check-diagrams
@@ -93,7 +93,7 @@ jobs:
 
       - name: Setup Node.js (for Mermaid)
         if: steps.check-diagrams.outputs.has_mmd == 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
 
@@ -127,7 +127,7 @@ jobs:
 
       - name: Setup Python and validate Python diagrams
         if: steps.check-diagrams.outputs.has_py_diagrams == 'true'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.1.0
         with:
           python-version: '3.11'
 
