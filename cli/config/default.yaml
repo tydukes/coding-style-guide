@@ -1,0 +1,145 @@
+# Dukes Style Guide CLI - Default Configuration
+# https://tydukes.github.io/coding-style-guide/
+#
+# This is the default configuration used when no configuration file is found.
+# Copy this file to your project root and customize as needed.
+#
+# Supported config files (searched in order):
+# - .dukestylerc
+# - .dukestylerc.json
+# - .dukestylerc.yaml
+# - .dukestylerc.yml
+# - dukestyle.config.js
+# - .dukes-style.json
+# - .dukes-style.yaml
+# - package.json (under "dukestyle" key)
+
+# Language-specific configurations
+languages:
+  # Python configuration
+  python:
+    enabled: true
+    extensions:
+      - .py
+      - .pyi
+    linters:
+      black:
+        enabled: true
+        # configFile: pyproject.toml
+      flake8:
+        enabled: true
+        # configFile: .flake8
+    formatters:
+      - black
+
+  # TypeScript/JavaScript configuration
+  typescript:
+    enabled: true
+    extensions:
+      - .ts
+      - .tsx
+      - .js
+      - .jsx
+    linters:
+      eslint:
+        enabled: true
+        # configFile: .eslintrc.js
+      prettier:
+        enabled: true
+        # configFile: .prettierrc
+    formatters:
+      - prettier
+
+  # Bash/Shell configuration
+  bash:
+    enabled: true
+    extensions:
+      - .sh
+      - .bash
+    linters:
+      shellcheck:
+        enabled: true
+        # configFile: .shellcheckrc
+
+  # YAML configuration
+  yaml:
+    enabled: true
+    extensions:
+      - .yml
+      - .yaml
+    linters:
+      yamllint:
+        enabled: true
+        # configFile: .yamllint.yaml
+
+  # JSON configuration
+  json:
+    enabled: true
+    extensions:
+      - .json
+    linters:
+      prettier:
+        enabled: true
+    formatters:
+      - prettier
+
+  # Markdown configuration
+  markdown:
+    enabled: true
+    extensions:
+      - .md
+      - .mdx
+    linters:
+      markdownlint:
+        enabled: true
+        # configFile: .markdownlint.json
+
+  # Terraform configuration
+  terraform:
+    enabled: true
+    extensions:
+      - .tf
+      - .tfvars
+    linters:
+      terraform-fmt:
+        enabled: true
+      terraform-validate:
+        enabled: true
+      tflint:
+        enabled: false  # Optional, requires tflint installation
+    formatters:
+      - terraform-fmt
+
+  # Dockerfile configuration
+  dockerfile:
+    enabled: true
+    extensions:
+      - Dockerfile
+    linters:
+      hadolint:
+        enabled: true
+        # configFile: .hadolint.yaml
+
+# Files and directories to ignore
+ignore:
+  - "**/node_modules/**"
+  - "**/.git/**"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/__pycache__/**"
+  - "**/.venv/**"
+  - "**/venv/**"
+  - "**/.terraform/**"
+  - "**/vendor/**"
+  - "**/.cache/**"
+
+# Enable caching for faster subsequent runs
+cache: true
+cacheLocation: .dukestyle-cache
+
+# Custom plugins (optional)
+# plugins:
+#   - name: my-custom-plugin
+#     path: ./plugins/my-plugin.js
+#     options:
+#       key: value
