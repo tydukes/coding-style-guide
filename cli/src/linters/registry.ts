@@ -15,17 +15,51 @@ export interface LinterRunner {
 }
 
 /**
- * Execute a command and return stdout/stderr
+ * Allowlist of known safe linter commands.
+ * Only commands in this list can be executed.
+ */
+const ALLOWED_COMMANDS = new Set([
+  "black",
+  "flake8",
+  "eslint",
+  "prettier",
+  "shellcheck",
+  "yamllint",
+  "markdownlint",
+  "terraform",
+  "hadolint",
+  "which",
+]);
+
+/**
+ * Validate that a command is in the allowlist
+ */
+function validateCommand(command: string): void {
+  // Extract base command (handle paths like /usr/bin/black)
+  const baseCommand = command.split("/").pop() || command;
+  if (!ALLOWED_COMMANDS.has(baseCommand)) {
+    throw new Error(`Command not allowed: ${command}. Only allowlisted linter commands can be executed.`);
+  }
+}
+
+/**
+ * Execute a command and return stdout/stderr.
+ * Security: Only allowlisted commands can be executed, and shell is disabled
+ * to prevent command injection.
  */
 async function execCommand(
   command: string,
   args: string[],
   options?: { cwd?: string }
 ): Promise<{ stdout: string; stderr: string; exitCode: number }> {
+  // Validate command against allowlist
+  validateCommand(command);
+
   return new Promise((resolve) => {
+    // Security: shell: false prevents command injection via arguments
     const proc = spawn(command, args, {
       cwd: options?.cwd || process.cwd(),
-      shell: true,
+      shell: false,
       stdio: ["pipe", "pipe", "pipe"],
     });
 
@@ -82,7 +116,7 @@ async function getVersion(
 /**
  * Parse flake8 output into lint issues
  */
-function parseFlake8Output(output: string, file: string): LintIssue[] {
+function parseFlake8Output(output: string): LintIssue[] {
   const issues: LintIssue[] = [];
   const lines = output.split("\n").filter(Boolean);
 
@@ -328,7 +362,7 @@ linters.set("flake8", {
     return files.map((file) => ({
       file,
       language: "python" as Language,
-      issues: parseFlake8Output(result.stdout, file),
+      issues: parseFlake8Output(result.stdout),
       fixable: 0,
     }));
   },
@@ -444,7 +478,7 @@ linters.set("shellcheck", {
     return files.map((file) => ({
       file,
       language: "bash" as Language,
-      issues: issues.filter(() => true), // All issues for now
+      issues,
       fixable: issues.filter((i) => i.fixable).length,
     }));
   },
