@@ -593,6 +593,85 @@ max_line_length = 120
 indent_size = 2
 ```
 
+### Diagram as Code
+
+Diagram-as-code tools enable version-controlled, text-based diagrams. Configure your IDE
+for Mermaid, PlantUML, D2, Graphviz, and Structurizr support.
+
+**VS Code Extensions:**
+
+```json
+{
+  "recommendations": [
+    "bierner.markdown-mermaid",
+    "jebbs.plantuml",
+    "terrastruct.d2",
+    "joaompinto.vscode-graphviz",
+    "tintinweb.graphviz-interactive-preview",
+    "systemticks.c4-dsl-extension"
+  ]
+}
+```
+
+**VS Code Settings:**
+
+```json
+{
+  "[mermaid]": {
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  "[plantuml]": {
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  "[d2]": {
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  "[dot]": {
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  "plantuml.server": "https://www.plantuml.com/plantuml",
+  "plantuml.render": "PlantUMLServer",
+  "plantuml.exportFormat": "svg",
+  "files.associations": {
+    "*.mmd": "mermaid",
+    "*.puml": "plantuml",
+    "*.plantuml": "plantuml",
+    "*.d2": "d2",
+    "*.dot": "dot",
+    "*.gv": "dot",
+    "*.dsl": "structurizr"
+  }
+}
+```
+
+**EditorConfig:**
+
+```ini
+[*.{mmd,puml,plantuml,d2,dot,gv,dsl}]
+indent_size = 2
+indent_style = space
+```
+
+**Supported Tools:**
+
+| Tool | Extension | File Types | Use Case |
+|------|-----------|------------|----------|
+| Mermaid | `bierner.markdown-mermaid` | `.mmd`, inline in `.md` | Flowcharts, sequences, ER diagrams |
+| PlantUML | `jebbs.plantuml` | `.puml`, `.plantuml` | UML, deployment, component diagrams |
+| D2 | `terrastruct.d2` | `.d2` | Modern architecture diagrams |
+| Graphviz | `joaompinto.vscode-graphviz` | `.dot`, `.gv` | Dependency graphs, state machines |
+| Structurizr | `systemticks.c4-dsl-extension` | `.dsl` | C4 model architecture |
+
+See the [Diagram as Code Style Guide](../02_language_guides/diagram_as_code.md) for comprehensive standards.
+
 ### GitLab CI
 
 **VS Code:**

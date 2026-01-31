@@ -1,0 +1,140 @@
+# Diagram Validation Workflow
+# Validates diagram syntax and generates diagram artifacts
+#
+# This workflow validates Mermaid diagrams embedded in Markdown files
+# and can be extended to support PlantUML, D2, Graphviz, and Python Diagrams.
+
+name: Validate Diagrams
+
+"on":
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**/*.md'
+      - 'diagrams/**'
+      - '.github/workflows/diagrams.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/**/*.md'
+      - 'diagrams/**'
+      - '.github/workflows/diagrams.yml'
+  workflow_dispatch: {}
+
+jobs:
+  validate-mermaid:
+    name: Validate Mermaid Diagrams
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+
+      - name: Install Mermaid CLI
+        run: npm install -g @mermaid-js/mermaid-cli
+
+      - name: Find Markdown files with Mermaid diagrams
+        id: find-mermaid
+        run: |
+          files=$(find docs -name '*.md' -exec grep -l '```mermaid' {} \; 2>/dev/null || true)
+          if [ -z "$files" ]; then
+            echo "No Mermaid diagrams found"
+            echo "has_diagrams=false" >> $GITHUB_OUTPUT
+          else
+            echo "Found Mermaid diagrams in:"
+            echo "$files"
+            echo "has_diagrams=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate Mermaid syntax in Markdown
+        if: steps.find-mermaid.outputs.has_diagrams == 'true'
+        run: |
+          exit_code=0
+          find docs -name '*.md' -exec grep -l '```mermaid' {} \; 2>/dev/null | while read -r file; do
+            echo "Validating Mermaid in: $file"
+            # Extract mermaid blocks and validate each
+            if ! mmdc -i "$file" -o /tmp/output.svg 2>&1; then
+              echo "::error file=$file::Mermaid validation failed"
+              exit_code=1
+            fi
+          done
+          exit $exit_code
+
+  validate-standalone-diagrams:
+    name: Validate Standalone Diagram Files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.1
+
+      - name: Check for diagram files
+        id: check-diagrams
+        run: |
+          # Check for various diagram file types
+          mmd_files=$(find . -name '*.mmd' 2>/dev/null | head -1)
+          puml_files=$(find . -name '*.puml' -o -name '*.plantuml' 2>/dev/null | head -1)
+          d2_files=$(find . -name '*.d2' 2>/dev/null | head -1)
+          dot_files=$(find . -name '*.dot' -o -name '*.gv' 2>/dev/null | head -1)
+          py_diagram_files=$(find diagrams -name '*.py' 2>/dev/null | head -1)
+
+          echo "has_mmd=$([[ -n "$mmd_files" ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "has_puml=$([[ -n "$puml_files" ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "has_d2=$([[ -n "$d2_files" ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "has_dot=$([[ -n "$dot_files" ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "has_py_diagrams=$([[ -n "$py_diagram_files" ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+
+      - name: Setup Node.js (for Mermaid)
+        if: steps.check-diagrams.outputs.has_mmd == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+
+      - name: Validate standalone Mermaid files
+        if: steps.check-diagrams.outputs.has_mmd == 'true'
+        run: |
+          npm install -g @mermaid-js/mermaid-cli
+          find . -name '*.mmd' -exec sh -c 'echo "Validating: $1" && mmdc -i "$1" -o /tmp/output.svg' _ {} \;
+
+      - name: Validate PlantUML files
+        if: steps.check-diagrams.outputs.has_puml == 'true'
+        run: |
+          for file in $(find . -name '*.puml' -o -name '*.plantuml'); do
+            echo "Validating: $file"
+            docker run --rm -v "$(pwd):/data" plantuml/plantuml:latest -checkonly "/data/$file"
+          done
+
+      - name: Install D2 and validate
+        if: steps.check-diagrams.outputs.has_d2 == 'true'
+        run: |
+          curl -fsSL https://d2lang.com/install.sh | sh -s --
+          export PATH="$HOME/.local/bin:$PATH"
+          find . -name '*.d2' -exec sh -c 'echo "Validating: $1" && d2 fmt --check "$1"' _ {} \;
+
+      - name: Install Graphviz and validate DOT files
+        if: steps.check-diagrams.outputs.has_dot == 'true'
+        run: |
+          sudo apt-get update && sudo apt-get install -y graphviz
+          find . \( -name '*.dot' -o -name '*.gv' \) -exec sh -c \
+            'echo "Validating: $1" && dot -Tsvg "$1" -o /dev/null' _ {} \;
+
+      - name: Setup Python and validate Python diagrams
+        if: steps.check-diagrams.outputs.has_py_diagrams == 'true'
+        uses: actions/setup-python@v6.1.0
+        with:
+          python-version: '3.11'
+
+      - name: Validate Python diagram syntax
+        if: steps.check-diagrams.outputs.has_py_diagrams == 'true'
+        run: |
+          sudo apt-get update && sudo apt-get install -y graphviz
+          pip install diagrams
+          find diagrams -name '*.py' -exec sh -c \
+            'echo "Checking syntax: $1" && python -m py_compile "$1"' _ {} \;
