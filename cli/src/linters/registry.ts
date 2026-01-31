@@ -97,7 +97,8 @@ async function commandExists(command: string): Promise<boolean> {
 }
 
 /**
- * Get version of a command
+ * Get version of a command.
+ * Extracts semantic version (X.Y.Z) from command output.
  */
 async function getVersion(
   command: string,
@@ -106,29 +107,32 @@ async function getVersion(
   try {
     const result = await execCommand(command, [versionFlag]);
     const output = result.stdout || result.stderr;
-    const match = output.match(/(\d+\.\d+\.\d+)/);
-    return match ? match[1] : undefined;
+    // Safe regex: only matches digits and dots, no backtracking risk
+    const match = output.match(/\b(\d{1,4})\.(\d{1,4})\.(\d{1,4})\b/);
+    return match ? `${match[1]}.${match[2]}.${match[3]}` : undefined;
   } catch {
     return undefined;
   }
 }
 
 /**
- * Parse flake8 output into lint issues
+ * Parse flake8 output into lint issues.
+ * Format: file:line:col: code message
  */
 function parseFlake8Output(output: string): LintIssue[] {
   const issues: LintIssue[] = [];
   const lines = output.split("\n").filter(Boolean);
 
   for (const line of lines) {
-    // Format: file:line:col: code message
-    const match = line.match(/^(.+?):(\d+):(\d+):\s*(\w+)\s+(.+)$/);
+    // Use negated character class [^:] instead of .+? to prevent ReDoS
+    // This safely matches "file:line:col: code message" format
+    const match = line.match(/^([^:]+):(\d+):(\d+):\s*(\w+)\s+(.*)$/);
     if (match) {
       const [, , lineNum, col, code, message] = match;
       issues.push({
         line: parseInt(lineNum, 10),
         column: parseInt(col, 10),
-        message,
+        message: message.trim(),
         rule: code,
         severity: code.startsWith("E") ? "error" : "warning",
         fixable: false,
@@ -230,24 +234,26 @@ function parseShellcheckOutput(output: string): LintIssue[] {
 }
 
 /**
- * Parse yamllint output
+ * Parse yamllint output.
+ * Format: file:line:col: [level] message (rule)
  */
 function parseYamllintOutput(output: string): LintIssue[] {
   const issues: LintIssue[] = [];
   const lines = output.split("\n").filter(Boolean);
 
   for (const line of lines) {
-    // Format: file:line:col: [level] message (rule)
+    // Use negated character classes to prevent ReDoS:
+    // [^:]+ for filename, [^[\]]+ for level, [^()]+ for message/rule
     const match = line.match(
-      /^.+?:(\d+):(\d+):\s*\[(\w+)\]\s*(.+?)\s*\((.+?)\)$/
+      /^([^:]+):(\d+):(\d+):\s*\[(\w+)\]\s*([^(]+)\(([^)]+)\)$/
     );
     if (match) {
-      const [, lineNum, col, level, message, rule] = match;
+      const [, , lineNum, col, level, message, rule] = match;
       issues.push({
         line: parseInt(lineNum, 10),
         column: parseInt(col, 10),
-        message,
-        rule,
+        message: message.trim(),
+        rule: rule.trim(),
         severity: level === "error" ? "error" : "warning",
         fixable: false,
       });
@@ -258,21 +264,22 @@ function parseYamllintOutput(output: string): LintIssue[] {
 }
 
 /**
- * Parse markdownlint output
+ * Parse markdownlint output.
+ * Format: file:line rule/alias message
  */
 function parseMarkdownlintOutput(output: string): LintIssue[] {
   const issues: LintIssue[] = [];
   const lines = output.split("\n").filter(Boolean);
 
   for (const line of lines) {
-    // Format: file:line rule/alias message
-    const match = line.match(/^.+?:(\d+)\s+(MD\d+)\/(\S+)\s+(.+)$/);
+    // Use negated character class [^:] instead of .+? to prevent ReDoS
+    const match = line.match(/^([^:]+):(\d+)\s+(MD\d+)\/(\S+)\s+(.*)$/);
     if (match) {
-      const [, lineNum, rule, , message] = match;
+      const [, , lineNum, rule, , message] = match;
       issues.push({
         line: parseInt(lineNum, 10),
         column: 1,
-        message,
+        message: message.trim(),
         rule,
         severity: "warning",
         fixable: rule === "MD009" || rule === "MD010" || rule === "MD047",
