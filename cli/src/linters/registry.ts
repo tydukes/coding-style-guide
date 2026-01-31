@@ -124,15 +124,37 @@ function parseFlake8Output(output: string): LintIssue[] {
   const lines = output.split("\n").filter(Boolean);
 
   for (const line of lines) {
-    // Use negated character class [^:] instead of .+? to prevent ReDoS
-    // This safely matches "file:line:col: code message" format
-    const match = line.match(/^([^:]+):(\d+):(\d+):\s*(\w+)\s+(.*)$/);
-    if (match) {
-      const [, , lineNum, col, code, message] = match;
+    // Parse without complex regex to avoid ReDoS
+    // Format: "path:line:col: CODE message"
+    const firstColon = line.indexOf(":");
+    if (firstColon === -1) continue;
+
+    const afterFile = line.slice(firstColon + 1);
+    const secondColon = afterFile.indexOf(":");
+    if (secondColon === -1) continue;
+
+    const lineNum = parseInt(afterFile.slice(0, secondColon), 10);
+    if (isNaN(lineNum)) continue;
+
+    const afterLine = afterFile.slice(secondColon + 1);
+    const thirdColon = afterLine.indexOf(":");
+    if (thirdColon === -1) continue;
+
+    const col = parseInt(afterLine.slice(0, thirdColon), 10);
+    if (isNaN(col)) continue;
+
+    const rest = afterLine.slice(thirdColon + 1).trim();
+    const spaceIdx = rest.indexOf(" ");
+    if (spaceIdx === -1) continue;
+
+    const code = rest.slice(0, spaceIdx);
+    const message = rest.slice(spaceIdx + 1).trim();
+
+    if (code && message) {
       issues.push({
-        line: parseInt(lineNum, 10),
-        column: parseInt(col, 10),
-        message: message.trim(),
+        line: lineNum,
+        column: col,
+        message,
         rule: code,
         severity: code.startsWith("E") ? "error" : "warning",
         fixable: false,
@@ -242,18 +264,50 @@ function parseYamllintOutput(output: string): LintIssue[] {
   const lines = output.split("\n").filter(Boolean);
 
   for (const line of lines) {
-    // Use negated character classes to prevent ReDoS:
-    // [^:]+ for filename, [^[\]]+ for level, [^()]+ for message/rule
-    const match = line.match(
-      /^([^:]+):(\d+):(\d+):\s*\[(\w+)\]\s*([^(]+)\(([^)]+)\)$/
-    );
-    if (match) {
-      const [, , lineNum, col, level, message, rule] = match;
+    // Parse without complex regex to avoid ReDoS
+    // Format: "path:line:col: [level] message (rule)"
+    const firstColon = line.indexOf(":");
+    if (firstColon === -1) continue;
+
+    const afterFile = line.slice(firstColon + 1);
+    const secondColon = afterFile.indexOf(":");
+    if (secondColon === -1) continue;
+
+    const lineNum = parseInt(afterFile.slice(0, secondColon), 10);
+    if (isNaN(lineNum)) continue;
+
+    const afterLine = afterFile.slice(secondColon + 1);
+    const thirdColon = afterLine.indexOf(":");
+    if (thirdColon === -1) continue;
+
+    const col = parseInt(afterLine.slice(0, thirdColon), 10);
+    if (isNaN(col)) continue;
+
+    const rest = afterLine.slice(thirdColon + 1).trim();
+
+    // Extract [level]
+    const levelStart = rest.indexOf("[");
+    const levelEnd = rest.indexOf("]");
+    if (levelStart === -1 || levelEnd === -1 || levelEnd <= levelStart) continue;
+
+    const level = rest.slice(levelStart + 1, levelEnd);
+
+    // Extract message and (rule)
+    const afterLevel = rest.slice(levelEnd + 1).trim();
+    const ruleStart = afterLevel.lastIndexOf("(");
+    const ruleEnd = afterLevel.lastIndexOf(")");
+
+    if (ruleStart === -1 || ruleEnd === -1 || ruleEnd <= ruleStart) continue;
+
+    const message = afterLevel.slice(0, ruleStart).trim();
+    const rule = afterLevel.slice(ruleStart + 1, ruleEnd).trim();
+
+    if (level && message && rule) {
       issues.push({
-        line: parseInt(lineNum, 10),
-        column: parseInt(col, 10),
-        message: message.trim(),
-        rule: rule.trim(),
+        line: lineNum,
+        column: col,
+        message,
+        rule,
         severity: level === "error" ? "error" : "warning",
         fixable: false,
       });
@@ -272,14 +326,41 @@ function parseMarkdownlintOutput(output: string): LintIssue[] {
   const lines = output.split("\n").filter(Boolean);
 
   for (const line of lines) {
-    // Use negated character class [^:] instead of .+? to prevent ReDoS
-    const match = line.match(/^([^:]+):(\d+)\s+(MD\d+)\/(\S+)\s+(.*)$/);
-    if (match) {
-      const [, , lineNum, rule, , message] = match;
+    // Parse without complex regex to avoid ReDoS
+    // Format: "path:line MDxxx/alias message"
+    const colonIdx = line.indexOf(":");
+    if (colonIdx === -1) continue;
+
+    const afterFile = line.slice(colonIdx + 1);
+
+    // Find where line number ends (first space after colon)
+    const spaceIdx = afterFile.indexOf(" ");
+    if (spaceIdx === -1) continue;
+
+    const lineNum = parseInt(afterFile.slice(0, spaceIdx), 10);
+    if (isNaN(lineNum)) continue;
+
+    const rest = afterFile.slice(spaceIdx + 1).trim();
+
+    // Find the rule (MDxxx format)
+    const slashIdx = rest.indexOf("/");
+    if (slashIdx === -1) continue;
+
+    const rule = rest.slice(0, slashIdx);
+    if (!rule.startsWith("MD")) continue;
+
+    // Find end of alias (next space)
+    const afterSlash = rest.slice(slashIdx + 1);
+    const aliasEndIdx = afterSlash.indexOf(" ");
+    if (aliasEndIdx === -1) continue;
+
+    const message = afterSlash.slice(aliasEndIdx + 1).trim();
+
+    if (rule && message) {
       issues.push({
-        line: parseInt(lineNum, 10),
+        line: lineNum,
         column: 1,
-        message: message.trim(),
+        message,
         rule,
         severity: "warning",
         fixable: rule === "MD009" || rule === "MD010" || rule === "MD047",
