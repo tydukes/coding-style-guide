@@ -2175,4 +2175,4 @@ false
 - [Bash Style Guide](bash.md)
 - [SQL Style Guide](sql.md)
 - [Terraform Style Guide](terraform.md)
-- [Kubernetes/Helm Style Guide](kubernetes_helm.md)
+- [Kubernetes Style Guide](kubernetes.md)
