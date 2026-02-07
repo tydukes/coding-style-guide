@@ -256,7 +256,8 @@ for instant compliance.
 ```text
 .vscode/
 ├── settings.json           # Comprehensive VS Code settings for all languages
-└── extensions.json         # Recommended extension list
+├── extensions.json         # Recommended extension list
+└── launch.json             # Debug configuration templates
 
 .idea/
 ├── codeStyles/
@@ -316,7 +317,8 @@ See `docs/04_templates/ide_settings_template.md` for comprehensive documentation
 coding-style-guide/
 ├── .vscode/                        # VS Code IDE settings
 │   ├── settings.json              # Language-specific formatting/linting
-│   └── extensions.json            # Recommended extensions
+│   ├── extensions.json            # Recommended extensions
+│   └── launch.json               # Debug configuration templates
 ├── .idea/                         # IntelliJ/PyCharm IDE settings
 │   ├── codeStyles/                # Code style configurations
 │   └── inspectionProfiles/        # Inspection rules
