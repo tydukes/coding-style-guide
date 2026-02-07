@@ -66,7 +66,8 @@ Create each file as documented below in your project root.
 your-project/
 ├── .vscode/
 │   ├── settings.json          # VS Code settings
-│   └── extensions.json        # Extension recommendations
+│   ├── extensions.json        # Extension recommendations
+│   └── launch.json            # Debug configurations
 ├── .idea/
 │   ├── codeStyles/
 │   │   ├── Project.xml        # IntelliJ code styles
@@ -940,6 +941,7 @@ See the actual configuration files in this repository on GitHub:
 
 - [.vscode/settings.json](https://github.com/tydukes/coding-style-guide/blob/main/.vscode/settings.json)
 - [.vscode/extensions.json](https://github.com/tydukes/coding-style-guide/blob/main/.vscode/extensions.json)
+- [.vscode/launch.json](https://github.com/tydukes/coding-style-guide/blob/main/.vscode/launch.json)
 - [.idea/codeStyles/Project.xml](https://github.com/tydukes/coding-style-guide/blob/main/.idea/codeStyles/Project.xml)
 - [.idea/inspectionProfiles/Project.xml](https://github.com/tydukes/coding-style-guide/blob/main/.idea/inspectionProfiles/Project.xml)
 - [.editorconfig](https://github.com/tydukes/coding-style-guide/blob/main/.editorconfig)
@@ -951,6 +953,7 @@ See the actual configuration files in this repository on GitHub:
 - [YAML Style Guide](../02_language_guides/yaml.md)
 - [Bash Style Guide](../02_language_guides/bash.md)
 - [Pre-commit Hooks Documentation](../05_ci_cd/precommit_hooks_guide.md)
+- [Debug Configuration Templates](debug_config_template.md)
 
 ### External Resources
 
