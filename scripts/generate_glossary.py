@@ -50,6 +50,15 @@ NON_TERM_SECTIONS = {
     "Tool Names Quick Reference",
 }
 
+
+def _strip_trailing_rules(text: str) -> str:
+    """Remove trailing '---' horizontal rule separators from text."""
+    result = text.strip()
+    while result.endswith("---"):
+        result = result[:-3].strip()
+    return result
+
+
 FRONTMATTER = """---
 title: "Glossary"
 description: "Comprehensive glossary of terms used in the Dukes Engineering Style Guide"
@@ -98,7 +107,7 @@ def parse_existing_glossary(glossary_path: Path) -> Dict[str, GlossaryTerm]:
             # Save previous term if exists
             if current_term and not in_non_term_section:
                 definition = "\n".join(current_definition_lines).strip()
-                definition = re.sub(r"(\n*---\s*)+$", "", definition).strip()
+                definition = _strip_trailing_rules(definition)
                 terms[current_term.lower()] = GlossaryTerm(
                     name=current_term,
                     definition=definition,
@@ -116,7 +125,7 @@ def parse_existing_glossary(glossary_path: Path) -> Dict[str, GlossaryTerm]:
             # Save previous term
             if current_term and not in_non_term_section:
                 definition = "\n".join(current_definition_lines).strip()
-                definition = re.sub(r"(\n*---\s*)+$", "", definition).strip()
+                definition = _strip_trailing_rules(definition)
                 terms[current_term.lower()] = GlossaryTerm(
                     name=current_term,
                     definition=definition,
@@ -139,7 +148,7 @@ def parse_existing_glossary(glossary_path: Path) -> Dict[str, GlossaryTerm]:
             if current_term:
                 definition = "\n".join(current_definition_lines).strip()
                 # Strip trailing horizontal rules from definitions
-                definition = re.sub(r"(\n*---\s*)+$", "", definition).strip()
+                definition = _strip_trailing_rules(definition)
                 terms[current_term.lower()] = GlossaryTerm(
                     name=current_term,
                     definition=definition,
@@ -156,7 +165,7 @@ def parse_existing_glossary(glossary_path: Path) -> Dict[str, GlossaryTerm]:
     # Save last term
     if current_term and not in_non_term_section:
         definition = "\n".join(current_definition_lines).strip()
-        definition = re.sub(r"(\n*---\s*)+$", "", definition).strip()
+        definition = _strip_trailing_rules(definition)
         terms[current_term.lower()] = GlossaryTerm(
             name=current_term,
             definition=definition,
