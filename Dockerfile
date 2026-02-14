@@ -1,5 +1,5 @@
 # Multi-stage build for coding style guide validator
-FROM python:3.15.0-slim AS base
+FROM python:3.14.3-slim AS base
 
 # Install system dependencies and UV
 RUN apt-get update && apt-get install -y --no-install-recommends \
