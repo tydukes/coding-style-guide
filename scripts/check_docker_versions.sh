@@ -23,6 +23,7 @@ echo ""
 # Function to get latest tag from Docker Hub
 get_latest_tag() {
     local image="$1"
+    local current_tag="$2"
     local repo
     local tag_api_url
 
@@ -36,22 +37,34 @@ get_latest_tag() {
         tag_api_url="https://hub.docker.com/v2/repositories/${repo}/tags/?page_size=100"
     fi
 
+    # Determine tag suffix to match (e.g., "-slim" from "3.14.3-slim")
+    local suffix=""
+    local version_part
+    version_part=$(echo "$current_tag" | grep -oE '^[0-9]+\.[0-9]+(\.[0-9]+)?')
+    if [[ -n "$version_part" ]] && [[ "$current_tag" != "$version_part" ]]; then
+        suffix="${current_tag#"$version_part"}"
+    fi
+
     # Fetch tags from Docker Hub API
     local response
     response=$(curl -s "$tag_api_url")
 
-    # Extract the latest semantic version tag (not 'latest')
-    # Filter for tags that match semantic versioning pattern
+    # Extract tags, filter for:
+    #   1. Semantic version pattern (MAJOR.MINOR or MAJOR.MINOR.PATCH)
+    #   2. Same suffix as the current tag (e.g., -slim, -alpine)
+    #   3. No pre-release identifiers (rc, beta, alpha, a1-a99, b1-b99)
+    # Then sort by version and take the highest
     local latest_tag
     latest_tag=$(echo "$response" | \
         grep -o '"name":"[^"]*"' | \
         sed 's/"name":"//g' | \
         sed 's/"//g' | \
-        grep -E '^[0-9]+\.[0-9]+' | \
-        grep -v 'rc' | \
+        grep -E "^[0-9]+\.[0-9]+(\.[0-9]+)?${suffix}$" | \
+        grep -vE '[0-9](a|b|rc)[0-9]' | \
         grep -v 'beta' | \
         grep -v 'alpha' | \
-        head -n 1)
+        sort -V | \
+        tail -n 1)
 
     echo "$latest_tag"
     return 0
@@ -106,8 +119,8 @@ for from_line in "${from_lines[@]}"; do
 
     echo "Checking: ${image_name}:${current_tag}"
 
-    # Get latest tag from Docker Hub
-    latest_tag=$(get_latest_tag "$image_name")
+    # Get latest tag from Docker Hub (pass current tag for suffix matching)
+    latest_tag=$(get_latest_tag "$image_name" "$current_tag")
 
     if [[ -z "$latest_tag" ]]; then
         echo -e "${YELLOW}⚠️  Could not determine latest version for ${image_name}${NC}"
