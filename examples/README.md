@@ -152,6 +152,22 @@ Available modes:
 - `STRICT=true` - Fail on warnings
 - `DEBUG=true` - Enable debug output
 
+## Complete Example Repositories
+
+For full, production-ready example repositories demonstrating all style guide patterns,
+see the [Examples section](https://tydukes.github.io/coding-style-guide/05_examples/)
+of the documentation:
+
+- **[Python Package](../docs/05_examples/python_package_example.md)** - Modern Python library with testing and CI/CD
+- **[Python Flask API](../docs/05_examples/flask_api_example.md)** - REST API with Flask, SQLAlchemy, Docker Compose
+- **[Terraform Module](../docs/05_examples/terraform_module_example.md)** - AWS module with CONTRACT.md and Terratest
+- **[Ansible Role](../docs/05_examples/ansible_role_example.md)** - Server role with Molecule tests and CONTRACT.md
+- **[TypeScript Library](../docs/05_examples/typescript_library_example.md)** - NPM package with Vitest and ESLint
+- **[TypeScript React App](../docs/05_examples/react_app_example.md)** - React frontend with Vite, Vitest, ESLint
+- **[Monorepo Full-Stack](../docs/05_examples/monorepo_fullstack_example.md)** - Python + TypeScript + Terraform
+- **[MkDocs Documentation Site](../docs/05_examples/mkdocs_site_example.md)** - Docs with versioning and deployment
+- **[GitHub Actions Workflows](../docs/05_examples/github_actions_example.md)** - Reusable workflow template library
+
 ## More Information
 
 - **Full Documentation**: [Container Usage Guide](../docs/06_container/usage.md)
