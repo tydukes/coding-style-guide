@@ -1,0 +1,52 @@
+@media print {
+  /* Hide navigation, search, footer, and other non-content elements */
+  .md-header,
+  .md-tabs,
+  .md-sidebar,
+  .md-footer,
+  .md-search,
+  .md-top,
+  .md-source,
+  .md-clipboard {
+    display: none !important;
+  }
+
+  /* Full-width content area */
+  .md-content {
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .md-main__inner {
+    max-width: 100% !important;
+  }
+
+  /* Prevent code blocks from breaking across pages */
+  pre,
+  code {
+    page-break-inside: avoid;
+  }
+
+  /* Keep headings with their content */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+
+  /* Prevent tables from breaking across pages when possible */
+  table {
+    page-break-inside: avoid;
+  }
+
+  /* Show link URLs in print */
+  .md-content a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  /* Don't show URLs for anchor links or javascript links */
+  .md-content a[href^="#"]::after,
+  .md-content a[href^="javascript"]::after {
+    content: "";
+  }
+}
