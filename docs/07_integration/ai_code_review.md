@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [ai, code-review, github-copilot, coderabbit, automation, integration]
 category: "Integration"
 status: "active"
+search_keywords: [ai code review, automated review, claude, copilot, code quality, pull request]
 ---
 
 ## Overview

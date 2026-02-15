@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [aws-cdk, cdk, aws, infrastructure, typescript, iac]
 category: "Language Guides"
 status: "active"
+search_keywords: [aws cdk, cloud development kit, infrastructure as code, typescript, python, constructs, stacks, synthesize]
 ---
 
 ## Language Overview

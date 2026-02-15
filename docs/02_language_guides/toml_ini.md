@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [toml, ini, configuration, config, settings]
 category: "Language Guides"
 status: "active"
+search_keywords: [toml, ini, configuration, settings, pyproject.toml, config files]
 ---
 
 ## Language Overview

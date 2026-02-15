@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [terraform, module, example, aws, vpc, best-practices]
 category: "Examples"
 status: "active"
+search_keywords: [terraform, module example, iac, aws, vpc, sample, infrastructure]
 ---
 <!-- markdownlint-disable MD013 -->
 

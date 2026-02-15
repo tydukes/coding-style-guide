@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [code-ratio, achievement, phase-6, terraform]
 category: "Project Status"
 status: "active"
+search_keywords: [issue tracking, closure, summary, project management]
 ---
 
 ## Achievement Recognition

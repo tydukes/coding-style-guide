@@ -6,6 +6,7 @@ author: "Tyler Dukes"
 tags: [anti-patterns, best-practices, refactoring, code-quality]
 category: "Anti-Patterns"
 status: "active"
+search_keywords: [anti-patterns, code smells, bad practices, common mistakes, pitfalls, what not to do]
 ---
 
 ## Overview

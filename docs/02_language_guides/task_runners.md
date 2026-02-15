@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [task, just, taskfile, command-runner, automation, devops]
 category: "Language Guides"
 status: "active"
+search_keywords: [task, just, task runners, build automation, taskfile, justfile, make alternative]
 ---
 
 ## Language Overview

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [gitignore, git, templates, version-control]
 category: "Templates"
 status: "active"
+search_keywords: [gitignore, template, ignore patterns, git, exclusions, file filtering]
 ---
 
 ## Overview

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [style-guide, devops, infrastructure-as-code, best-practices, ai-optimized]
 category: "Home"
 status: "active"
+search_keywords: [style guide, devops, coding standards, best practices, getting started, overview]
 ---
 
 ## Introduction

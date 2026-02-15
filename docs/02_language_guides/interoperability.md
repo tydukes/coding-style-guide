@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [interoperability, cross-language, integration, multi-language, data-exchange, devops]
 category: "Language Guides"
 status: "active"
+search_keywords: [interoperability, cross-language, integration, polyglot, multi-language, compatibility]
 ---
 
 <!--

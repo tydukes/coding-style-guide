@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [standards, documentation, code-blocks, markdown, syntax-highlighting]
 category: "Standards"
 status: "active"
+search_keywords: [code blocks, language tags, syntax highlighting, markdown, fenced code]
 ---
 
 ## Purpose

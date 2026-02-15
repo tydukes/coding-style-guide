@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [documentation, versioning, mike, mkdocs, deployment, gh-pages]
 category: "CI/CD"
 status: "active"
+search_keywords: [documentation, versioning, mike, mkdocs, multi-version, releases]
 ---
 
 ## Overview

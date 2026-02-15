@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [template, operations, runbook, playbook, postmortem, sre, incident-response]
 category: "Templates"
 status: "active"
+search_keywords: [operational, runbook, incident response, sop, playbook, operations]
 ---
 
 This document provides standardized templates for operational documentation: service runbooks, incident

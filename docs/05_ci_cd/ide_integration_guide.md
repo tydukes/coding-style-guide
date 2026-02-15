@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [ide, editor, integration, vscode, jetbrains, vim, neovim, development-tools]
 category: "CI/CD"
 status: "active"
+search_keywords: [ide integration, vscode, intellij, editor, linting, formatting, extensions]
 ---
 
 ## Introduction

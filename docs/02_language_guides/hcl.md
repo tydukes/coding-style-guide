@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [hcl, hashicorp, terraform, packer, nomad, configuration]
 category: "Language Guides"
 status: "active"
+search_keywords: [hcl, hashicorp configuration language, syntax, expressions, blocks, attributes]
 ---
 
 ## Language Overview

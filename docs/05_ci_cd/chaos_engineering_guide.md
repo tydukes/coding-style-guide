@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [chaos-engineering, synthetic-monitoring, resilience, chaos-mesh, litmus, datadog, checkly, sre, reliability, kubernetes, observability]
 category: "CI/CD"
 status: "active"
+search_keywords: [chaos engineering, resilience, fault injection, chaos monkey, reliability, failure testing]
 ---
 
 ## Introduction

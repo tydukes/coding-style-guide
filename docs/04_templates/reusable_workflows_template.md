@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [github-actions, reusable-workflows, ci-cd, automation, devops]
 category: "Templates"
 status: "active"
+search_keywords: [reusable workflows, github actions, composite actions, ci cd, template]
 ---
 <!-- markdownlint-disable MD013 MD024 -->
 

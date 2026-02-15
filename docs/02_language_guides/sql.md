@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [sql, database, queries, data, standards]
 category: "Language Guides"
 status: "active"
+search_keywords: [sql, database, queries, tables, joins, indexes, stored procedures, migrations, schema]
 ---
 
 ## Language Overview

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [json-schema, validation, api, configuration, documentation, contracts]
 category: "Language Guides"
 status: "active"
+search_keywords: [json schema, validation, data format, types, constraints, api contract]
 ---
 
 ## Language Overview

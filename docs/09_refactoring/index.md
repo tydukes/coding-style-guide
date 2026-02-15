@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [refactoring, code-improvement, best-practices, examples]
 category: "Refactoring"
 status: "active"
+search_keywords: [refactoring, code improvement, restructuring, maintainability, clean code, overview]
 ---
 
 This directory contains real-world refactoring examples demonstrating how to improve code quality,

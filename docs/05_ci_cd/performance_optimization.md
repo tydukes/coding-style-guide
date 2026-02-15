@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [cicd, performance, optimization, caching, github-actions, gitlab]
 category: "CI/CD"
 status: "active"
+search_keywords: [performance, optimization, ci cd, caching, parallelization, build speed]
 ---
 
 ## Overview

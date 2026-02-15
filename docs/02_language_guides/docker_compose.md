@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [docker-compose, docker, containers, orchestration, devops]
 category: "Language Guides"
 status: "active"
+search_keywords: [docker compose, containers, services, networking, volumes, orchestration, yaml]
 ---
 
 ## Language Overview

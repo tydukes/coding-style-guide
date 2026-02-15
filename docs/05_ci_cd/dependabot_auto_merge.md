@@ -6,6 +6,7 @@ author: "Tyler Dukes"
 tags: [dependabot, automation, dependencies, github-actions, security]
 category: "CI/CD"
 status: "active"
+search_keywords: [dependabot, auto merge, dependency updates, github, automation, security patches]
 ---
 
 ## Overview

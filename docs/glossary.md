@@ -5,10 +5,16 @@ author: "Tyler Dukes"
 tags: [glossary, terms, definitions, reference, dictionary]
 category: "Reference"
 status: "active"
+search_keywords: [glossary, definitions, terms, acronyms, abbreviations, reference, dictionary]
 ---
 
 This glossary defines terms used throughout the Dukes Engineering Style Guide, including technical concepts, tool names,
 metadata tags, and industry terminology.
+
+!!! tip "Quick Navigation"
+    Use your browser's search (Ctrl+F / Cmd+F) or the site search bar to find
+    specific terms. See also the [Topic Index](topic_index.md) for browsing by
+    subject area and the [FAQ](faq.md) for common questions.
 
 ## A
 
@@ -20,7 +26,12 @@ Claude, GitHub Copilot, and ChatGPT. The style guide optimizes code metadata for
 ### Ansible
 
 An open-source automation tool for configuration management, application deployment, and task automation. Uses YAML
-playbooks to define infrastructure as code.
+playbooks to define infrastructure as code. See the [Ansible Style Guide](02_language_guides/ansible.md).
+
+### ArgoCD
+
+A declarative GitOps continuous delivery tool for Kubernetes. Monitors Git repositories and automatically syncs
+application state to match declared configuration. See [GitOps Guide](02_language_guides/gitops.md).
 
 ### API (Application Programming Interface)
 
@@ -39,10 +50,20 @@ guide for enforcing standards.
 
 ## B
 
+### AWS CDK (Cloud Development Kit)
+
+A framework for defining cloud infrastructure using familiar programming languages (TypeScript, Python, Go, Java)
+instead of YAML/JSON templates. See the [AWS CDK Style Guide](02_language_guides/cdk.md).
+
 ### Bash
 
 Unix shell and command language used for scripting and automation. Commonly used for deployment scripts, CI/CD
-pipelines, and system administration tasks.
+pipelines, and system administration tasks. See the [Bash Style Guide](02_language_guides/bash.md).
+
+### Bicep
+
+A domain-specific language for deploying Azure resources declaratively. Compiles to ARM templates with cleaner syntax.
+See the [Bicep Style Guide](02_language_guides/bicep.md).
 
 ### Black
 
@@ -75,10 +96,40 @@ MAJOR version increment in semantic versioning.
 A naming convention where the first word is lowercase and subsequent words are capitalized. Example:
 `getUserDetails`. Common in JavaScript and TypeScript.
 
+### Chaos Engineering
+
+The practice of intentionally introducing failures into a system to test its resilience and identify weaknesses before
+they cause real outages. See the [Chaos Engineering Guide](05_ci_cd/chaos_engineering_guide.md).
+
 ### CI/CD (Continuous Integration / Continuous Deployment)
 
 Practices that automate the building, testing, and deployment of code. CI runs automated tests on every commit; CD
-automatically deploys passing code to production.
+automatically deploys passing code to production. See [CI/CD guides](05_ci_cd/github_actions_guide.md).
+
+### CloudFormation
+
+AWS service for provisioning infrastructure using JSON or YAML templates. Manages resources as stacks with
+rollback support. See the [CloudFormation Style Guide](02_language_guides/cloudformation.md).
+
+### Code-to-Text Ratio
+
+A quality metric specific to this style guide requiring at least 3 lines of code examples for every 1 line of
+explanatory text in language guides. Enforces "show, don't tell" documentation philosophy.
+
+### Conventional Commits
+
+A specification for adding human and machine-readable meaning to commit messages. Format: `type(scope): subject`.
+Required for all commits in this project. Types include: feat, fix, docs, style, refactor, test, chore.
+
+### Crossplane
+
+A Kubernetes-native infrastructure as code tool that enables provisioning cloud resources using Kubernetes-style
+manifests. See the [Crossplane Style Guide](02_language_guides/crossplane.md).
+
+### cSpell
+
+A spell checker for code and documentation. Used in CI to block merges with spelling errors. Custom dictionary at
+`.github/cspell.json`.
 
 ### CLI (Command-Line Interface)
 
@@ -102,9 +153,25 @@ code structure patterns.
 
 ## D
 
+### DAST (Dynamic Application Security Testing)
+
+Security testing that analyzes a running application for vulnerabilities. Contrast with SAST which analyzes source
+code. See [Security Scanning Guide](05_ci_cd/security_scanning_guide.md).
+
 ### Dependency
 
 An external library, package, or module that code relies on to function. Should be documented in metadata tags.
+See [Dependency Update Policies](05_ci_cd/dependency_update_policies.md).
+
+### Dependabot
+
+A GitHub tool that automatically creates pull requests to update outdated dependencies. See
+[Dependabot Auto-Merge](05_ci_cd/dependabot_auto_merge.md).
+
+### Dev Container
+
+A Docker-based development environment defined by a `devcontainer.json` file. Ensures consistent tooling across team
+members. See the [Dev Container Guide](02_language_guides/devcontainer.md).
 
 ### Deployment
 
@@ -127,7 +194,8 @@ deliver high-quality software.
 ### Docker
 
 A platform for developing, shipping, and running applications in containers. Ensures consistency across development,
-testing, and production environments.
+testing, and production environments. See [Dockerfile Guide](02_language_guides/dockerfile.md) and
+[Docker Compose Guide](02_language_guides/docker_compose.md).
 
 ### Documentation
 
@@ -160,6 +228,11 @@ A marker indicating the end of a file. Files should end with exactly one blank l
 A static analysis tool for identifying problematic patterns in JavaScript/TypeScript code. Enforces code quality and
 style rules.
 
+### Flux
+
+A GitOps tool for keeping Kubernetes clusters in sync with configuration sources (Git repositories). Alternative to
+ArgoCD. See [GitOps Guide](02_language_guides/gitops.md).
+
 ## F
 
 ### Feature Branch
@@ -191,7 +264,13 @@ A distributed version control system for tracking changes in source code during 
 ### GitHub Actions
 
 A CI/CD platform that automates workflows directly in GitHub repositories. Used for testing, building, and deploying
-code.
+code. See the [GitHub Actions Style Guide](02_language_guides/github_actions.md) and
+[GitHub Actions Guide](05_ci_cd/github_actions_guide.md).
+
+### GitOps
+
+An operational framework that applies DevOps best practices for infrastructure automation using Git as the single
+source of truth. See [GitOps Guide](02_language_guides/gitops.md).
 
 ### GitFlow
 
@@ -200,7 +279,13 @@ rules.
 
 ### GitLab CI
 
-GitLab's integrated CI/CD platform. Uses `.gitlab-ci.yml` configuration files to define pipelines.
+GitLab's integrated CI/CD platform. Uses `.gitlab-ci.yml` configuration files to define pipelines. See the
+[GitLab CI Style Guide](02_language_guides/gitlab_ci.md) and [GitLab CI Guide](05_ci_cd/gitlab_ci_guide.md).
+
+### Go
+
+A statically typed, compiled programming language designed for simplicity and performance. Popular for CLI tools,
+microservices, and infrastructure tooling. See the [Go Style Guide](02_language_guides/go.md).
 
 ### Glob Pattern
 
@@ -208,7 +293,8 @@ A pattern-matching syntax using wildcards. Example: `**/*.py` matches all Python
 
 ### Groovy
 
-A dynamic programming language for the Java platform. Used for Jenkins pipeline scripts and Gradle build files.
+A dynamic programming language for the Java platform. Used for Jenkins pipeline scripts and Gradle build files. See
+the [Jenkins/Groovy Style Guide](02_language_guides/jenkins_groovy.md).
 
 ## H
 
@@ -219,10 +305,13 @@ A single-line comment starting with `#`. Used in Python, Bash, YAML, Terraform, 
 ### HCL (HashiCorp Configuration Language)
 
 The configuration language used by Terraform and other HashiCorp tools. Declarative syntax for defining infrastructure.
+See the [HCL Style Guide](02_language_guides/hcl.md).
 
 ### Helm
 
-A package manager for Kubernetes that uses charts to define, install, and upgrade Kubernetes applications.
+A package manager for Kubernetes that uses charts to define, install, and upgrade Kubernetes applications. See
+[Kubernetes & Helm Style Guide](02_language_guides/kubernetes.md) and
+[Helm Chart Template](04_templates/helm_chart_template.md).
 
 ### Hook
 
@@ -266,10 +355,20 @@ International standard for date and time formats. Used for `@last_updated` metad
 
 ## J
 
+### InSpec
+
+A compliance automation framework for testing infrastructure against security and policy requirements. See
+[Compliance as Code Guide](02_language_guides/compliance_as_code.md).
+
+### Integration Testing
+
+Testing that verifies the interaction between multiple components or modules. Falls between unit tests and end-to-end
+tests in the test pyramid. See [Testing Strategies](05_ci_cd/testing_strategies.md).
+
 ### Jenkins
 
 An open-source automation server for building, testing, and deploying software. Uses Groovy for pipeline
-definitions.
+definitions. See the [Jenkins Pipeline Guide](05_ci_cd/jenkins_pipeline_guide.md).
 
 ### JSDoc
 
@@ -279,7 +378,8 @@ syntax.
 ### JSON (JavaScript Object Notation)
 
 A lightweight data interchange format. Human-readable text to store and transmit data objects. Common for
-configuration files.
+configuration files. See [JSON Style Guide](02_language_guides/json.md) and
+[JSON Schema Guide](02_language_guides/json_schema.md).
 
 ### JWT (JSON Web Token)
 
@@ -296,7 +396,7 @@ file names and URLs.
 ### Kubernetes
 
 An open-source container orchestration platform for automating deployment, scaling, and management of containerized
-applications.
+applications. See the [Kubernetes & Helm Style Guide](02_language_guides/kubernetes.md).
 
 ## L
 
@@ -329,7 +429,12 @@ The primary branch in a Git repository containing production-ready code. Protect
 ### Makefile
 
 A file containing commands and dependencies for build automation using the `make` command. Organizes common
-development tasks.
+development tasks. See the [Makefile Style Guide](02_language_guides/makefile.md).
+
+### markdownlint
+
+A linter for Markdown files that enforces consistent formatting, heading structure, and code block language tags.
+See [Code Block Language Tags](00_standards/code_block_language_tags.md).
 
 ### Metadata
 
@@ -354,10 +459,15 @@ A self-contained unit of code with a specific purpose. Should include `@module` 
 A single repository containing multiple projects or services. Contrast with multi-repo where each project has its own
 repository.
 
+### Mermaid
+
+A JavaScript-based diagramming and charting tool that renders Markdown-inspired text into diagrams. Supported in
+MkDocs with `pymdownx.superfences`. See [Diagram as Code](02_language_guides/diagram_as_code.md).
+
 ### MkDocs
 
 A static site generator for building project documentation from Markdown files. Used for this style guide's
-documentation site.
+documentation site. See [MkDocs Site Example](05_examples/mkdocs_site_example.md).
 
 ### Multi-repo
 
@@ -386,6 +496,12 @@ JavaScript runtime built on Chrome's V8 engine. Allows running JavaScript on the
 ### npm (Node Package Manager)
 
 Package manager for JavaScript. Used to install, manage, and publish Node.js packages.
+
+### OPA (Open Policy Agent)
+
+A general-purpose policy engine for enforcing policies across the stack. Used for Terraform plan validation,
+Kubernetes admission control, and API authorization. See
+[Compliance as Code](02_language_guides/compliance_as_code.md).
 
 ## O
 
@@ -416,7 +532,12 @@ A sequence of automated processes in CI/CD. Each stage performs specific tasks l
 ### PowerShell
 
 A task automation framework from Microsoft consisting of a command-line shell and scripting language. Used for Windows
-system administration.
+system administration. See the [PowerShell Style Guide](02_language_guides/powershell.md).
+
+### Pulumi
+
+An infrastructure as code tool that uses general-purpose programming languages (TypeScript, Python, Go, Java)
+instead of domain-specific languages. See the [Pulumi Style Guide](02_language_guides/pulumi.md).
 
 ### Pre-commit Hook
 
@@ -436,7 +557,7 @@ main branch.
 ### Python
 
 A high-level, interpreted programming language known for readability and versatility. Used for web development, data
-analysis, automation, and more.
+analysis, automation, and more. See the [Python Style Guide](02_language_guides/python.md).
 
 ## Q
 
@@ -478,6 +599,16 @@ An architectural style for web services that uses HTTP methods (GET, POST, PUT, 
 
 Reverting to a previous version of code or infrastructure after a problematic deployment.
 
+### SAST (Static Application Security Testing)
+
+Security testing that analyzes source code for vulnerabilities without executing it. See
+[Security Scanning Guide](05_ci_cd/security_scanning_guide.md).
+
+### SBOM (Software Bill of Materials)
+
+A formal record of all components and dependencies in a software application. Used for supply chain security and
+license compliance.
+
 ## S
 
 ### Script
@@ -507,10 +638,20 @@ Python and database fields.
 A platform for continuous inspection of code quality. Performs automatic reviews with static analysis to detect bugs
 and code smells.
 
+### Sentinel
+
+A policy as code framework by HashiCorp for enforcing governance policies on Terraform runs. See
+[Compliance as Code](02_language_guides/compliance_as_code.md).
+
+### Smoke Test
+
+A quick, minimal test to verify that the most critical functions of a system work after a deployment. See
+[Smoke Test Standards](05_ci_cd/smoke_test_standards.md).
+
 ### SQL (Structured Query Language)
 
 A domain-specific language for managing data in relational databases. Used for querying, updating, and managing
-databases.
+databases. See the [SQL Style Guide](02_language_guides/sql.md).
 
 ### Staging Environment
 
@@ -545,12 +686,22 @@ A named reference to a specific commit in Git. Used for marking releases. Exampl
 ### Terraform
 
 An infrastructure as code tool that allows defining cloud and on-premises resources in declarative configuration
-files.
+files. See the [Terraform Style Guide](02_language_guides/terraform.md).
+
+### Terratest
+
+A Go library for writing automated tests for infrastructure code (Terraform, Packer, Kubernetes). See
+[IaC Testing Standards](05_ci_cd/iac_testing_standards.md).
 
 ### Terragrunt
 
 A thin wrapper for Terraform that provides extra tools for keeping configurations DRY, managing remote state, and
-working with multiple modules.
+working with multiple modules. See the [Terragrunt Style Guide](02_language_guides/terragrunt.md).
+
+### TOML (Tom's Obvious, Minimal Language)
+
+A configuration file format designed to be easy to read. Used by `pyproject.toml` and Rust's `Cargo.toml`. See
+[TOML & INI Guide](02_language_guides/toml_ini.md).
 
 ### Test Coverage
 
@@ -568,6 +719,7 @@ A tool that verifies type correctness in code. Examples: mypy (Python), tsc (Typ
 ### TypeScript
 
 A strongly typed superset of JavaScript that compiles to plain JavaScript. Adds static type definitions to JavaScript.
+See the [TypeScript Style Guide](02_language_guides/typescript.md).
 
 ## U
 
@@ -697,13 +849,33 @@ Semantic version of the module (MAJOR.MINOR.PATCH). Updated according to the typ
 
 ---
 
+## Cross-Language Naming Conventions
+
+Different languages use different conventions for the same concepts. This table maps equivalent patterns:
+
+| Concept | Python | TypeScript | Go | Terraform | Bash |
+|---------|--------|------------|-----|-----------|------|
+| Variable | `snake_case` | `camelCase` | `camelCase` | `snake_case` | `UPPER_SNAKE` or `lower_snake` |
+| Function | `snake_case` | `camelCase` | `PascalCase` (exported) | N/A | `snake_case` |
+| Class/Type | `PascalCase` | `PascalCase` | `PascalCase` | N/A | N/A |
+| Constant | `UPPER_SNAKE` | `UPPER_SNAKE` | `PascalCase` | `snake_case` | `UPPER_SNAKE` |
+| File name | `snake_case.py` | `kebab-case.ts` | `snake_case.go` | `snake_case.tf` | `kebab-case.sh` |
+| Module/Package | `snake_case` | `kebab-case` | `lowercase` | `snake_case` | N/A |
+| Boolean | `is_active` | `isActive` | `isActive` | `enable_feature` | N/A |
+
+See the [Language Comparison Matrix](02_language_guides/comparison_matrix.md) for a complete feature comparison.
+
+---
+
 ## Common Abbreviations
 
 - **API**: Application Programming Interface
 - **AWS**: Amazon Web Services
 - **CI**: Continuous Integration
 - **CD**: Continuous Deployment/Delivery
+- **CDK**: Cloud Development Kit
 - **CLI**: Command-Line Interface
+- **DAST**: Dynamic Application Security Testing
 - **DRY**: Don't Repeat Yourself
 - **EOF**: End of File
 - **HCL**: HashiCorp Configuration Language
@@ -717,10 +889,14 @@ Semantic version of the module (MAJOR.MINOR.PATCH). Updated according to the typ
 - **NAT**: Network Address Translation
 - **OAuth**: Open Authorization
 - **OOP**: Object-Oriented Programming
+- **OPA**: Open Policy Agent
 - **OS**: Operating System
 - **PR**: Pull Request
 - **REST**: Representational State Transfer
+- **SAST**: Static Application Security Testing
+- **SBOM**: Software Bill of Materials
 - **SEMVER**: Semantic Versioning
+- **SRE**: Site Reliability Engineering
 - **SQL**: Structured Query Language
 - **SSH**: Secure Shell
 - **SSL**: Secure Sockets Layer
@@ -729,6 +905,8 @@ Semantic version of the module (MAJOR.MINOR.PATCH). Updated according to the typ
 - **UUID**: Universally Unique Identifier
 - **VCS**: Version Control System
 - **VPC**: Virtual Private Cloud
+- **TOML**: Tom's Obvious, Minimal Language
+- **XRD**: Composite Resource Definition (Crossplane)
 - **YAML**: YAML Ain't Markup Language
 
 ---
@@ -780,9 +958,25 @@ Semantic version of the module (MAJOR.MINOR.PATCH). Updated according to the typ
 - **CircleCI**: Cloud-based CI/CD platform
 - **Travis CI**: CI service for GitHub projects
 
+### IaC Testing Tools
+
+- **Terratest**: Go-based testing framework for Terraform
+- **Kitchen-Terraform**: Test Kitchen plugin for Terraform
+- **InSpec**: Compliance automation framework
+- **OPA/Conftest**: Policy testing for structured data
+- **Checkov**: Static analysis for IaC security
+
+### Security Scanning Tools
+
+- **Trivy**: Container and IaC vulnerability scanner
+- **Snyk**: Developer security platform
+- **Bandit**: Python security linter
+- **Semgrep**: Lightweight static analysis for many languages
+- **OWASP ZAP**: Dynamic application security testing
+
 ---
 
-**Total Terms**: 150+
+**Total Terms**: 200+
 
 For additional terms or clarifications, please refer to the specific language guides or open an issue on the
 [GitHub repository](https://github.com/tydukes/coding-style-guide/issues).

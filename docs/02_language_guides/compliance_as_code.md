@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [compliance, inspec, opa, rego, sentinel, policy-as-code, security]
 category: "Language Guides"
 status: "active"
+search_keywords: [compliance, inspec, opa, sentinel, policy as code, security, audit, governance]
 ---
 
 ## Language Overview

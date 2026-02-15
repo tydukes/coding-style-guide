@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [gitops, argocd, fluxcd, kubernetes, deployment, continuous-delivery]
 category: "Language Guides"
 status: "active"
+search_keywords: [gitops, argocd, flux, continuous deployment, kubernetes, declarative, reconciliation, git]
 ---
 
 ## Language Overview

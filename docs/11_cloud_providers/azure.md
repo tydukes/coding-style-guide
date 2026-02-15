@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [azure, cloud, terraform, iac, security, networking, aks, entra-id]
 category: "Cloud Providers"
 status: "active"
+search_keywords: [azure, microsoft, cloud provider, infrastructure, arm, bicep, security]
 ---
 
 ## Overview

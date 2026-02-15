@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [jenkins, groovy, shared-libraries, cicd, pipelines, automation, devops]
 category: "Language Guides"
 status: "active"
+search_keywords: [jenkins, shared libraries, groovy, reusable, pipeline library, global vars]
 ---
 
 ## Overview

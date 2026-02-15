@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [standards, documentation, headings, structure, consistency]
 category: "Standards"
 status: "active"
+search_keywords: [headings, document structure, markdown, formatting, hierarchy, h1, h2, h3]
 ---
 
 ## Purpose

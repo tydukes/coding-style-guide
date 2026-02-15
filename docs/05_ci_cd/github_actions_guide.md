@@ -6,6 +6,7 @@ author: "Tyler Dukes"
 tags: [github-actions, cicd, deployment, automation, devops, pipelines]
 category: "CI/CD"
 status: "active"
+search_keywords: [github actions, ci cd, workflows, automation, deployment, testing]
 ---
 
 ## Overview

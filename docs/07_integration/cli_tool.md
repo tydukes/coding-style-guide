@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [cli, tool, validation, automation]
 category: "Integration"
 status: "active"
+search_keywords: [cli tool, command line, validation, linting, automation, developer tools]
 ---
 
 The Dukes Style Guide provides a standalone CLI tool (`dukes-style`) for

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [ansible, refactoring, best-practices, examples, automation]
 category: "Refactoring"
 status: "active"
+search_keywords: [ansible, refactoring, roles, playbooks, restructuring, improvement]
 ---
 
 Real-world examples of refactoring Ansible playbooks and roles to improve maintainability, reusability, and adherence

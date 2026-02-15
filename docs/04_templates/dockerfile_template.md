@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [docker, dockerfile, containers, multi-stage, security]
 category: "Templates"
 status: "active"
+search_keywords: [dockerfile, template, container, docker, multi-stage, best practices]
 ---
 <!-- markdownlint-disable MD024 -->
 

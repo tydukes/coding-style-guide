@@ -6,6 +6,7 @@ author: "Tyler Dukes"
 tags: [cicd, ai, validation, automation, pipeline, code-review]
 category: "CI/CD"
 status: "active"
+search_keywords: [ai validation, pipeline, automated review, code quality, ci cd, machine learning]
 ---
 
 ## Overview

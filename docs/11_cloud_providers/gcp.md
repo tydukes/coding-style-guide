@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [gcp, google-cloud, terraform, iac, security, networking, gke, cloud-run]
 category: "Cloud Providers"
 status: "active"
+search_keywords: [gcp, google cloud, cloud provider, infrastructure, terraform, security]
 ---
 
 ## Overview

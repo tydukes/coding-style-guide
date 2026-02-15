@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [tutorial, terraform, migration, iac, contract, terratest, vpc, compliance]
 category: "Tutorials"
 status: "active"
+search_keywords: [tutorial, terraform, migration, module, existing project, step by step]
 ---
 
 <!-- markdownlint-disable MD013 -->

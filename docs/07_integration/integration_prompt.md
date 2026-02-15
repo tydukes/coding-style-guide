@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [integration, ai, claude, workflow, automation]
 category: "Integration"
 status: "active"
+search_keywords: [integration, ai, prompt, code review, style guide, automation]
 ---
 
 Use this prompt to quickly integrate the coding style guide validator into any codebase.

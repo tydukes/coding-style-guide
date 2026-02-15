@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [maturity-model, roadmap, progressive-enhancement, adoption, best-practices]
 category: "Overview"
 status: "active"
+search_keywords: [maturity model, progressive enhancement, adoption, roadmap, levels, assessment]
 ---
 
 This guide defines a progressive enhancement roadmap that teams can follow to gradually improve their

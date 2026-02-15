@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [monorepo, fullstack, python, typescript, terraform, example, best-practices]
 category: "Examples"
 status: "active"
+search_keywords: [monorepo, full stack, example, frontend, backend, turborepo, nx]
 ---
 
 <!-- markdownlint-disable MD013 -->

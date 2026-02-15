@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [helm, kubernetes, k8s, charts, deployment]
 category: "Templates"
 status: "active"
+search_keywords: [helm, chart template, kubernetes, k8s, deployment, values.yaml]
 ---
 <!-- markdownlint-disable MD013 -->
 

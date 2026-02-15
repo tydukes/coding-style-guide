@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [tutorial, python, flask, testing, ci-cd, validation, beginner, uv, pre-commit]
 category: "Tutorials"
 status: "active"
+search_keywords: [tutorial, python project, setup, validation, testing, beginner, step by step]
 ---
 
 <!-- markdownlint-disable MD013 -->

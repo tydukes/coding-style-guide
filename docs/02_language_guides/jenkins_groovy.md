@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [jenkins, groovy, cicd, pipelines, automation, devops]
 category: "Language Guides"
 status: "active"
+search_keywords: [jenkins, groovy, pipeline, jenkinsfile, declarative, scripted, stages, steps]
 ---
 
 ## Language Overview

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [repl, interactive, debugging, python, nodejs, terraform, kubernetes, database]
 category: "Language Guides"
 status: "active"
+search_keywords: [repl, interactive shell, ipython, node repl, python repl, debugging, exploration]
 ---
 
 ## Language Overview

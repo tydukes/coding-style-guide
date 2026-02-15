@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [cloudformation, aws, infrastructure, iac, yaml, json]
 category: "Language Guides"
 status: "active"
+search_keywords: [cloudformation, aws, cfn, stacks, templates, yaml, infrastructure as code, nested stacks]
 ---
 
 ## Language Overview

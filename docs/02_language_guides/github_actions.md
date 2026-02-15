@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [github-actions, cicd, automation, workflows, devops]
 category: "Language Guides"
 status: "active"
+search_keywords: [github actions, workflows, ci cd, yaml, jobs, steps, runners, actions marketplace]
 ---
 
 ## Language Overview

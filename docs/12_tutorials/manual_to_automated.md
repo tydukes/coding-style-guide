@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [tutorials, automation, ci-cd, pre-commit, github-actions, quality-gates, linting]
 category: "Tutorials"
 status: "active"
+search_keywords: [tutorial, automation, manual to automated, ci cd, pre-commit, step by step]
 ---
 
 <!-- markdownlint-disable MD013 -->

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [typescript, refactoring, best-practices, react, nodejs]
 category: "Refactoring"
 status: "active"
+search_keywords: [typescript, refactoring, clean code, patterns, before after, improvement]
 ---
 
 Real-world examples of refactoring TypeScript code to improve type safety, maintainability, and modern best practices.

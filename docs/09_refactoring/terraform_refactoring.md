@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [terraform, refactoring, best-practices, examples, iac]
 category: "Refactoring"
 status: "active"
+search_keywords: [terraform, refactoring, modules, iac, restructuring, improvement]
 ---
 
 Real-world examples of refactoring Terraform code to improve maintainability, reusability, and adherence to best practices.

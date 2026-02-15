@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [docker, containers, validation, cicd, integration]
 category: "Container"
 status: "active"
+search_keywords: [container, docker, usage, validation, linting, formatting, cli]
 ---
 
 The Coding Style Guide Validator is available as a containerized tool, making it easy to

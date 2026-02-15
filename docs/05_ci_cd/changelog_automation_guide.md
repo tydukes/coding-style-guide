@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [changelog, release-notes, automation, conventional-commits, semver, github-actions]
 category: "CI/CD"
 status: "active"
+search_keywords: [changelog, automation, release notes, conventional commits, versioning]
 ---
 
 ## Overview

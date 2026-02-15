@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [template, architecture, adr, documentation, decisions]
 category: "Templates"
 status: "active"
+search_keywords: [adr, architecture decision record, design decisions, documentation, rationale]
 ---
 
 This document provides a standardized template and organizational guidelines for Architecture Decision

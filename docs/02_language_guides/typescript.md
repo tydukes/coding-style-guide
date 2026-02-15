@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [typescript, javascript, react, nextjs, nodejs]
 category: "Language Guides"
 status: "active"
+search_keywords: [typescript, javascript, react, nodejs, eslint, prettier, types, interfaces, npm, jest]
 ---
 
 ## Language Overview

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [kubernetes, helm, containers, orchestration, k8s]
 category: "Language Guides"
 status: "active"
+search_keywords: [kubernetes, k8s, helm, containers, pods, deployments, services, manifests, kubectl, orchestration]
 ---
 
 ## Language Overview

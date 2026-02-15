@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [testing, unit-tests, integration-tests, e2e, performance, automation, tdd, bdd]
 category: "CI/CD"
 status: "active"
+search_keywords: [testing, strategies, unit tests, integration tests, e2e, test pyramid, coverage]
 ---
 
 ## Introduction

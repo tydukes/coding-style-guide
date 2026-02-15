@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [ansible, configuration-management, automation, devops, collections]
 category: "Language Guides"
 status: "active"
+search_keywords: [ansible, playbooks, roles, tasks, inventory, configuration management, automation, yaml, idempotent]
 ---
 
 ## Language Overview

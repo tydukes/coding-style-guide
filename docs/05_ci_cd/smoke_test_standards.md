@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [smoke-testing, post-deployment, verification, health-checks, ci-cd, testing]
 category: "CI/CD"
 status: "active"
+search_keywords: [smoke tests, sanity checks, deployment verification, health checks, quick validation]
 ---
 
 ## Overview

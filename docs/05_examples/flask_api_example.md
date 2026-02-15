@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [python, flask, api, rest, example, best-practices, complete]
 category: "Examples"
 status: "active"
+search_keywords: [flask, api, python, rest api, web service, example, endpoints]
 ---
 
 <!-- markdownlint-disable MD013 -->

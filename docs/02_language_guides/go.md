@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [go, golang, programming, cloud-native, microservices, devops, testing]
 category: "Language Guides"
 status: "active"
+search_keywords: [go, golang, gofmt, goroutines, modules, testing, error handling, interfaces]
 ---
 
 ## Language Overview

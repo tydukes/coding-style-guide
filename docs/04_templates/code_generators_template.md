@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [code-generation, plop, copier, yeoman, scaffolding, automation]
 category: "Templates"
 status: "active"
+search_keywords: [code generators, scaffolding, boilerplate, cookiecutter, yeoman, template]
 ---
 <!-- markdownlint-disable MD013 MD024 -->
 
