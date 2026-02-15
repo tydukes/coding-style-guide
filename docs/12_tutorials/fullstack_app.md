@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [tutorial, fullstack, python, typescript, terraform, monorepo, docker, ci-cd, fastapi, react]
 category: "Tutorials"
 status: "active"
+search_keywords: [tutorial, full stack, multi-language, frontend, backend, integration, step by step]
 ---
 
 <!-- markdownlint-disable MD013 -->

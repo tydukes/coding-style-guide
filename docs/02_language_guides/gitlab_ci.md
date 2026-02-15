@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [gitlab-ci, gitlab, cicd, pipelines, automation, devops]
 category: "Language Guides"
 status: "active"
+search_keywords: [gitlab ci, gitlab, pipeline, yaml, stages, jobs, runners, ci cd]
 ---
 
 ## Language Overview

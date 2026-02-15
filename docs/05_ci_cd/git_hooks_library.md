@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [git, hooks, automation, ci-cd, development-workflow, bash]
 category: "CI/CD"
 status: "active"
+search_keywords: [git hooks, pre-commit, pre-push, commit-msg, automation, scripts]
 ---
 
 ## Overview

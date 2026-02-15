@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [principles, foundations, automation, metadata, standards]
 category: "Overview"
 status: "active"
+search_keywords: [principles, philosophy, core values, design decisions, best practices]
 ---
 
 <!-- markdownlint-disable MD024 -->

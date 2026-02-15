@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [security, scanning, sast, dast, sca, secrets, vulnerabilities, compliance, semgrep, bandit, gosec, zap, nuclei, trivy, snyk, sonarqube, gitguardian, burpsuite, opa, rego, cis, devsecops, policy-as-code]
 category: "CI/CD"
 status: "active"
+search_keywords: [security scanning, sast, dast, vulnerability, trivy, snyk, code security]
 ---
 
 ## Introduction

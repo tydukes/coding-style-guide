@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [pre-commit, hooks, code-quality, automation, linting, formatting, security]
 category: "CI/CD"
 status: "active"
+search_keywords: [pre-commit, hooks, linting, formatting, git hooks, automation, quality]
 ---
 
 ## Introduction

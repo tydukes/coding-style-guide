@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [typescript, library, validation, npm, testing, bundling]
 category: "Examples"
 status: "active"
+search_keywords: [typescript, library example, npm, package, jest, sample project]
 ---
 
 ## Overview

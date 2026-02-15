@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [template, readme, documentation, standards]
 category: "Templates"
 status: "active"
+search_keywords: [readme, template, project documentation, getting started, installation, usage]
 ---
 
 ## Purpose

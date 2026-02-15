@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [decision-trees, flowcharts, navigation, guides]
 category: "Overview"
 status: "active"
+search_keywords: [decision tree, tool selection, choosing, comparison, which tool, flowchart]
 ---
 
 Need help finding the right guide or making a decision? Use these interactive

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [governance, gitflow, branching, pr-process, change-management]
 category: "Overview"
 status: "active"
+search_keywords: [governance, contribution, decision making, maintainers, process]
 ---
 
 This document defines how the Dukes Engineering Style Guide is governed, including branching strategies, pull request

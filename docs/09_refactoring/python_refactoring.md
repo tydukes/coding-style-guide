@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [python, refactoring, best-practices, examples]
 category: "Refactoring"
 status: "active"
+search_keywords: [python, refactoring, clean code, patterns, before after, improvement]
 ---
 
 Real-world examples of refactoring Python code to improve readability, maintainability, and adherence to best practices.

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [security, signing, gpg, sigstore, cosign, commits, containers, artifacts, cryptography, verification]
 category: "CI/CD"
 status: "active"
+search_keywords: [code signing, gpg, signatures, verification, trust, security, commits]
 ---
 
 ## Introduction

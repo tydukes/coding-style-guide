@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [getting-started, quickstart, installation, setup, tutorial, integration]
 category: "Overview"
 status: "active"
+search_keywords: [getting started, setup, installation, quickstart, onboarding, first steps]
 ---
 
 Welcome to the Dukes Engineering Style Guide! This comprehensive tutorial will walk you through integrating
@@ -922,7 +923,7 @@ func TestResourceTags(t *testing.T)
 - **Issues**: <https://github.com/your-org/terraform-aws-vpc/issues>
 - **Updates**: Monthly or on critical bugs
 
-```
+```text
 
 #### Step 5: Set Up Terratest (5 min)
 
@@ -1006,7 +1007,7 @@ cd test
 go test -v -timeout 30m
 ```
 
-#### Step 6: CI/CD Integration (3 min)
+### Step 6: CI/CD Integration (3 min)
 
 Create `.github/workflows/terraform.yml`:
 
@@ -1902,7 +1903,7 @@ await client.users.delete(user.id);
 3. View code examples
 4. Read best practices
 
-```
+```text
 
 **docs/api/reference.md**:
 
@@ -2085,9 +2086,9 @@ All error responses follow this structure:
 | `rate_limit_exceeded` | 429 | Too many requests |
 | `internal_error` | 500 | Server error |
 
-```
+```text
 
-#### Step 3: Check Links (2 min)
+### Step 3: Check Links (2 min)
 
 Create `.github/markdown-link-check-config.json`:
 
@@ -2130,7 +2131,7 @@ npm install -g markdown-link-check
 find docs -name "*.md" -exec markdown-link-check {} \;
 ```
 
-#### Step 4: Build with MkDocs (2 min)
+### Step 4: Build with MkDocs (2 min)
 
 Create `mkdocs.yml`:
 

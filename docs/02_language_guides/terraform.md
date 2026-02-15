@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [terraform, iac, infrastructure-as-code, hashicorp, devops]
 category: "Language Guides"
 status: "active"
+search_keywords: [terraform, hcl, hashicorp, infrastructure as code, iac, modules, providers, state, plan, apply, tfvars]
 ---
 
 ## Language Overview

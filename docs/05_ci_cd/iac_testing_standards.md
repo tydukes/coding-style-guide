@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [iac, testing, terraform, ansible, ci-cd, quality-gates]
 category: "CI/CD"
 status: "active"
+search_keywords: [iac testing, terratest, kitchen, inspec, infrastructure testing, compliance]
 ---
 
 This document defines the organization-wide testing philosophy and standards for Infrastructure as Code (IaC).

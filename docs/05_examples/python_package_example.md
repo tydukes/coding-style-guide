@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [python, package, example, best-practices, complete]
 category: "Examples"
 status: "active"
+search_keywords: [python, package example, library, pyproject.toml, pytest, sample project]
 ---
 
 ## Overview
@@ -923,7 +924,8 @@ This complete example demonstrates:
 7. **Configuration** with pyproject.toml for all tools
 8. **Best practices** for error handling, validation, and user feedback
 
-The package is fully functional and can be installed, tested, and used as a real-world example of Python packaging best practices.
+The package is fully functional and can be installed, tested, and used as a real-world example of Python
+packaging best practices.
 
 ---
 

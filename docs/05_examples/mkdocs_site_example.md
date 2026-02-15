@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [mkdocs, documentation, material, github-pages, example, best-practices, complete]
 category: "Examples"
 status: "active"
+search_keywords: [mkdocs, documentation site, example, material theme, markdown, static site]
 ---
 
 <!-- markdownlint-disable MD013 -->

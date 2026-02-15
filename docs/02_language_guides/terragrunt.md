@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [terragrunt, terraform, iac, dry, devops, infrastructure]
 category: "Language Guides"
 status: "active"
+search_keywords: [terragrunt, terraform wrapper, dry, remote state, dependencies, hcl, live infrastructure]
 ---
 
 ## Language Overview

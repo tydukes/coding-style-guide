@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [makefile, make, build, automation, devops]
 category: "Language Guides"
 status: "active"
+search_keywords: [makefile, make, build automation, targets, recipes, dependencies, phony]
 ---
 
 ## Language Overview

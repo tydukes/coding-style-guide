@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [bash, shell, scripting, posix, automation]
 category: "Language Guides"
 status: "active"
+search_keywords: [bash, shell, scripting, posix, shellcheck, shebang, functions, variables, automation]
 ---
 
 ## Language Overview

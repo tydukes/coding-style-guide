@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [pre-commit, git-hooks, quality, automation, linting]
 category: "Templates"
 status: "active"
+search_keywords: [pre-commit, hooks, template, linting, formatting, automation, git hooks]
 ---
 
 ## Overview

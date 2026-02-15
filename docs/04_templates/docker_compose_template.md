@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [docker-compose, containers, orchestration, microservices]
 category: "Templates"
 status: "active"
+search_keywords: [docker compose, template, services, container orchestration, yaml]
 ---
 <!-- markdownlint-disable MD024 -->
 

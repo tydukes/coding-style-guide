@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [devcontainer, codespaces, docker, vscode, development-environment]
 category: "Language Guides"
 status: "active"
+search_keywords: [devcontainer, dev container, vscode, remote development, codespaces, development environment]
 ---
 
 ## Language Overview

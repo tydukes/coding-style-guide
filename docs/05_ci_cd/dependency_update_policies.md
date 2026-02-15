@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [dependencies, renovate, dependabot, automation, security, updates]
 category: "CI/CD"
 status: "active"
+search_keywords: [dependencies, updates, dependabot, renovate, version management, security]
 ---
 
 ## Introduction

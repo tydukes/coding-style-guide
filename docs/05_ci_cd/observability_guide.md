@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [observability, tracing, logging, metrics, opentelemetry, prometheus, grafana, jaeger, zipkin, structlog, elk, loki, cloudwatch, dashboards, alerting]
 category: "CI/CD"
 status: "active"
+search_keywords: [observability, monitoring, logging, tracing, metrics, alerting, dashboards]
 ---
 
 ## Introduction

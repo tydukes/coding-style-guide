@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [typescript, react, frontend, vite, example, best-practices, complete]
 category: "Examples"
 status: "active"
+search_keywords: [react, typescript, app example, frontend, components, testing, sample]
 ---
 
 <!-- markdownlint-disable MD013 -->

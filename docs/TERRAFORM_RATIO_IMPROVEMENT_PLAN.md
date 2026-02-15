@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [terraform, code-ratio, improvement-plan, phase-6]
 category: "Planning"
 status: "active"
+search_keywords: [terraform, code ratio, improvement, planning]
 ---
 
 ## Executive Summary

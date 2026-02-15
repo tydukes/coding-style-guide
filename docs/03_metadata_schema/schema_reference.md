@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [metadata, schema, annotations, ai, validation]
 category: "Metadata Schema"
 status: "active"
+search_keywords: [metadata, schema, tags, module, version, description, annotations, documentation]
 ---
 
 ## Overview

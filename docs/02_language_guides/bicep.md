@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [bicep, azure, infrastructure, iac, arm, modules]
 category: "Language Guides"
 status: "active"
+search_keywords: [bicep, azure, arm templates, infrastructure as code, microsoft, azure resource manager]
 ---
 
 ## Language Overview

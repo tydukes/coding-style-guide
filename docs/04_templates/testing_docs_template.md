@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [template, testing, iac, terraform, ansible, ci-cd]
 category: "Templates"
 status: "active"
+search_keywords: [testing, documentation template, test plan, test cases, coverage, quality]
 ---
 
 This template provides a standardized format for documenting the testing approach, coverage,

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [bash, shell, aliases, functions, productivity, devops, git, docker, kubernetes]
 category: "Language Guides"
 status: "active"
+search_keywords: [shell aliases, functions, bashrc, zshrc, shortcuts, productivity, dotfiles]
 ---
 
 ## Language Overview

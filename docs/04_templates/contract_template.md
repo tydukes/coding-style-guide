@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [template, iac, testing, contracts, terraform, ansible]
 category: "Templates"
 status: "active"
+search_keywords: [contract, template, guarantees, testing, iac, module contract, api contract]
 ---
 
 This template provides a standardized format for documenting explicit guarantees and promises for

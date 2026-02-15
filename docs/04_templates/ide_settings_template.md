@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [template, ide, vscode, intellij, editorconfig, tooling]
 category: "Templates"
 status: "active"
+search_keywords: [ide, settings, vscode, intellij, editor config, formatting, linting]
 ---
 
 This template provides pre-configured IDE settings files that automatically

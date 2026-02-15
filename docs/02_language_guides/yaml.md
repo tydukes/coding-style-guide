@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [yaml, configuration, data, serialization, kubernetes]
 category: "Language Guides"
 status: "active"
+search_keywords: [yaml, configuration, data format, yamllint, anchors, aliases, indentation]
 ---
 
 ## Language Overview

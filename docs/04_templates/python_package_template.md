@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [python, package, template, pyproject]
 category: "Templates"
 status: "active"
+search_keywords: [python, package template, pyproject.toml, setup, boilerplate, library]
 ---
 
 ## Overview

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [diagrams, mermaid, plantuml, d2, graphviz, structurizr, architecture, documentation]
 category: "Language Guides"
 status: "active"
+search_keywords: [diagram as code, mermaid, plantuml, d2, architecture diagrams, flowcharts, visualization]
 ---
 
 ## Language Overview

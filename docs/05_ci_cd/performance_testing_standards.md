@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [performance-testing, k6, jmeter, gatling, load-testing, stress-testing]
 category: "CI/CD"
 status: "active"
+search_keywords: [performance testing, load testing, benchmarks, k6, jmeter, latency, throughput]
 ---
 
 ## Overview

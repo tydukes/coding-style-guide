@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [structure, organization, repository-layout, monorepo, multi-repo, best-practices]
 category: "Overview"
 status: "active"
+search_keywords: [project structure, directory layout, organization, file structure, architecture]
 ---
 
 ## This Style Guide's Structure (Monorepo)

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [powershell, scripting, cross-platform, automation, windows, infrastructure]
 category: "Language Guides"
 status: "active"
+search_keywords: [powershell, windows, cmdlet, scripting, automation, microsoft, pester, modules]
 ---
 
 ## Language Overview

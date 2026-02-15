@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [json, configuration, data, serialization, api]
 category: "Language Guides"
 status: "active"
+search_keywords: [json, data format, configuration, schema, parsing, serialization, api]
 ---
 
 ## Language Overview

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [pulumi, iac, infrastructure-as-code, typescript, python, go, multi-cloud]
 category: "Language Guides"
 status: "active"
+search_keywords: [pulumi, infrastructure as code, typescript, python, go, stacks, state, providers]
 ---
 
 ## Language Overview

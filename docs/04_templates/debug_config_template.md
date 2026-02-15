@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [template, ide, vscode, debugging, launch-json]
 category: "Templates"
 status: "active"
+search_keywords: [debug, configuration, launch.json, breakpoints, vscode, debugging]
 ---
 
 This template provides production-ready VS Code `launch.json` debug

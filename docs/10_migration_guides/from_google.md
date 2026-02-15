@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [migration, google-style-guide, python, style-guide, upgrade, transition]
 category: "Migration Guides"
 status: "active"
+search_keywords: [migration, google style guide, transition, differences, upgrade, comparison]
 ---
 
 ## Overview

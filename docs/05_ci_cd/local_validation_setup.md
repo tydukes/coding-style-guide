@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [local-development, validation, setup, tooling, linters, formatters, testing]
 category: "CI/CD"
 status: "active"
+search_keywords: [local validation, setup, development environment, linting, testing, pre-commit]
 ---
 
 ## Introduction

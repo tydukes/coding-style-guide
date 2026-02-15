@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [crossplane, kubernetes, iac, infrastructure-as-code, multi-cloud]
 category: "Language Guides"
 status: "active"
+search_keywords: [crossplane, kubernetes, infrastructure as code, compositions, providers, claims, xrd]
 ---
 
 ## Language Overview

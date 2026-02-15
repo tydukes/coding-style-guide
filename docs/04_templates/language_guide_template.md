@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [language-name, style-guide, best-practices, standards]
 category: "Language Guides"
 status: "active"
+search_keywords: [language guide, template, style guide, documentation, structure]
 ---
 
 <!-- This is a template for creating new language-specific style guides. -->

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [comparison, cross-reference, multi-language, patterns, best-practices]
 category: "Language Guides"
 status: "active"
+search_keywords: [comparison, matrix, language comparison, feature comparison, tool selection, overview]
 ---
 
 <!--

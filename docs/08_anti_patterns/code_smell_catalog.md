@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [code-smells, anti-patterns, refactoring, code-quality, best-practices]
 category: "Anti-Patterns"
 status: "active"
+search_keywords: [code smells, refactoring, technical debt, complexity, duplication, catalog]
 ---
 
 ## Overview

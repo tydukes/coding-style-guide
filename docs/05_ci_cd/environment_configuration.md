@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [configuration, environment, env-vars, profiles, dotenv, config-management, twelve-factor]
 category: "CI/CD"
 status: "active"
+search_keywords: [environment, configuration, env vars, secrets, staging, production, dev]
 ---
 
 ## Introduction

@@ -6,6 +6,7 @@ author: "Tyler Dukes"
 tags: [gitlab-ci, cicd, deployment, automation, devops, pipelines]
 category: "CI/CD"
 status: "active"
+search_keywords: [gitlab ci, pipeline, ci cd, yaml, deployment, runners, stages]
 ---
 
 ## Overview

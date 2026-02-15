@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [tutorial, onboarding, team, getting-started, setup, pre-commit, editor]
 category: "Tutorials"
 status: "active"
+search_keywords: [tutorial, team onboarding, adoption, rollout, training, getting started]
 ---
 
 <!-- markdownlint-disable MD013 -->

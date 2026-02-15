@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [python, programming, devops, automation, testing, pep8, type-hints]
 category: "Language Guides"
 status: "active"
+search_keywords: [python, pytest, black, flake8, pip, virtual environment, type hints, mypy, pep8, formatting]
 ---
 
 ## Language Overview

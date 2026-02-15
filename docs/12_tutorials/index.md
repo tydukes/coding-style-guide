@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [tutorials, getting-started, walkthrough, hands-on, learning]
 category: "Tutorials"
 status: "active"
+search_keywords: [tutorials, overview, learning, hands-on, step by step, guide]
 ---
 
 <!-- markdownlint-disable MD013 -->

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [ansible, role, example, nginx, best-practices, complete]
 category: "Examples"
 status: "active"
+search_keywords: [ansible, role example, playbook, automation, configuration, sample]
 ---
 
 ## Overview

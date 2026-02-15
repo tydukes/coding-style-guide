@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [changelog, history, releases, versions]
 category: "Project"
 status: "active"
+search_keywords: [changelog, release notes, version history, updates, changes]
 ---
 
 <!-- markdownlint-disable MD024 -->

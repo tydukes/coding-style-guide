@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [migration, pep8, python, style-guide, upgrade, transition]
 category: "Migration Guides"
 status: "active"
+search_keywords: [migration, pep8, python, style guide, transition, upgrade, differences]
 ---
 
 ## Overview
@@ -204,7 +205,8 @@ from fastapi import HTTPException
 **PEP 8/257**: Basic docstring format
 **Our Guide**: Structured docstrings with Args, Returns, Raises, Examples
 
-**Why**: Consistent structured docstrings improve API documentation, enable automated doc generation, and provide usage examples.
+**Why**: Consistent structured docstrings improve API documentation, enable automated doc generation,
+and provide usage examples.
 
 **Migration**:
 

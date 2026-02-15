@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [bash, refactoring, best-practices, examples, shell-scripting]
 category: "Refactoring"
 status: "active"
+search_keywords: [bash, refactoring, shell scripts, clean code, functions, improvement]
 ---
 
 Real-world examples of refactoring Bash scripts to improve reliability, maintainability, and adherence to best practices.

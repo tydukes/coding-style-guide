@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [github-actions, ci-cd, workflows, automation, devops]
 category: "Templates"
 status: "active"
+search_keywords: [github actions, workflow template, ci cd, pipeline, automation, yaml]
 ---
 <!-- markdownlint-disable MD013 MD024 -->
 

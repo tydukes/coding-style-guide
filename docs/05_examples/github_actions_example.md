@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [github-actions, ci-cd, workflows, reusable, composite, example, best-practices, complete]
 category: "Examples"
 status: "active"
+search_keywords: [github actions, workflow example, ci cd, pipeline, automation, sample]
 ---
 
 <!-- markdownlint-disable MD013 -->

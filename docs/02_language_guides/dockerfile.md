@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [docker, dockerfile, containers, devops, security]
 category: "Language Guides"
 status: "active"
+search_keywords: [dockerfile, docker, containers, images, multi-stage, layers, build, best practices]
 ---
 
 ## Language Overview

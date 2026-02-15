@@ -6,6 +6,7 @@ author: "Tyler Dukes"
 tags: [migration, airbnb-style-guide, javascript, typescript, react, style-guide, upgrade, transition]
 category: "Migration Guides"
 status: "active"
+search_keywords: [migration, airbnb style guide, javascript, transition, differences, upgrade]
 ---
 
 ## Overview

@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [terraform, module, template, infrastructure]
 category: "Templates"
 status: "active"
+search_keywords: [terraform, module template, iac, boilerplate, starter, inputs, outputs]
 ---
 
 ## Overview

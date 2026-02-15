@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [azure, anti-patterns, terraform, security, cost-optimization, networking]
 category: "Anti-Patterns"
 status: "active"
+search_keywords: [azure, anti-patterns, cloud, microsoft, common mistakes, best practices]
 ---
 
 ## Overview

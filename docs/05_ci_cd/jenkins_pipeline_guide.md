@@ -5,6 +5,7 @@ author: "Tyler Dukes"
 tags: [jenkins, ci-cd, groovy, pipeline, automation, deployment, devops, shared-libraries]
 category: "CI/CD"
 status: "active"
+search_keywords: [jenkins, pipeline, ci cd, groovy, jenkinsfile, stages, deployment]
 ---
 
 ## Introduction
