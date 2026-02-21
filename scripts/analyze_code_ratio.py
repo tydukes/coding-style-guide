@@ -3,6 +3,7 @@
 Analyze code-to-text ratio in language guide markdown files.
 Target: 3:1 code-to-text ratio
 """
+
 import sys
 from pathlib import Path
 from typing import Dict, Tuple

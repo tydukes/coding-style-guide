@@ -19,7 +19,6 @@ import re
 from packaging import version
 from typing import Dict, Optional, Any
 
-
 # Language configuration
 LANGUAGES = {
     "python": {

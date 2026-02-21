@@ -2,6 +2,7 @@
 """
 Remove hardcoded version information from document footers.
 """
+
 import re
 from pathlib import Path
 

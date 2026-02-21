@@ -9,6 +9,7 @@
 @status stable
 @python_version >= 3.8
 """
+
 import argparse
 import json
 import pathlib
