@@ -45,7 +45,7 @@ web services.
 | 3.12.x  | Active         | 2028-10  | ✅ Yes           |
 | 3.11.x  | Active         | 2027-10  | ✅ Yes           |
 | 3.10.x  | Security       | 2026-10  | ⚠️  Maintenance  |
-| 3.9.x   | Security       | 2025-10  | ❌ EOL Soon      |
+| 3.9.x   | EOL            | 2025-10  | ❌ No            |
 | 3.8.x   | EOL            | 2024-10  | ❌ No            |
 
 **Recommendation**: Use **Python 3.11+** for new projects.
