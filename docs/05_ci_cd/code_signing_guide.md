@@ -1621,7 +1621,7 @@ EOF
 ### Learning Resources
 
 - [Sigstore The Hard Way](https://github.com/lukehinds/sigstore-the-hard-way)
-- [Software Supply Chain Security](https://www.cncf.io/blog/2021/12/14/improving-software-supply-chain-security/)
+- [Software Supply Chain Security Best Practices v2](https://tag-security.cncf.io/blog/software-supply-chain-security-best-practices-v2/)
 - [SLSA Framework](https://slsa.dev/)
 - [Supply-chain Levels for Software Artifacts](https://github.com/slsa-framework/slsa)
 
