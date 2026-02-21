@@ -3027,7 +3027,7 @@ repos:
 ### Official Documentation
 
 - [Pulumi Documentation](https://www.pulumi.com/docs/)
-- [Pulumi API Reference](https://www.pulumi.com/docs/reference/pkg/)
+- [Pulumi Registry](https://www.pulumi.com/registry/)
 - [Pulumi Examples](https://github.com/pulumi/examples)
 - [Pulumi Blog](https://www.pulumi.com/blog/)
 

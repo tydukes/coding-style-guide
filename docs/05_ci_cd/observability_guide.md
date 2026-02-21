@@ -5152,7 +5152,7 @@ except Exception as e:
 - [OpenTelemetry Documentation](https://opentelemetry.io/docs/)
 - [OpenTelemetry Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/)
 - [Jaeger Documentation](https://www.jaegertracing.io/docs/)
-- [Zipkin Documentation](https://zipkin.io/pages/documentation.html)
+- [Zipkin Documentation](https://zipkin.io/)
 
 ### Metrics and Monitoring
 

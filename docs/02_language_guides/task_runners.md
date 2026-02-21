@@ -2012,7 +2012,7 @@ deploy:
 
 - [Just Official Documentation](https://just.systems/man/en/)
 - [Just GitHub Repository](https://github.com/casey/just)
-- [Just Language Reference](https://just.systems/man/en/chapter_1.html)
+- [Just Language Reference](https://just.systems/man/en/)
 
 ### Related Guides
 

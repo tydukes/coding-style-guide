@@ -2157,7 +2157,7 @@ false
 - [kubectl exec Documentation](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_exec/)
 - [kubectl debug Documentation](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_debug/)
 - [PostgreSQL psql Documentation](https://www.postgresql.org/docs/current/app-psql.html)
-- [Redis CLI Documentation](https://redis.io/docs/connect/cli/)
+- [Redis CLI Documentation](https://redis.io/docs/latest/develop/tools/cli/)
 - [MySQL Client Documentation](https://dev.mysql.com/doc/refman/8.0/en/mysql.html)
 
 ### Enhanced REPL Tools
