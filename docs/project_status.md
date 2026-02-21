@@ -8,7 +8,7 @@ status: "active"
 search_keywords: [project status, health, dashboard, metrics, progress]
 ---
 
-> **Last Updated**: 2025-12-28 (Auto-generated)
+> **Last Updated**: 2026-02-20
 
 ## Quick Status
 
@@ -105,8 +105,8 @@ search_keywords: [project status, health, dashboard, metrics, progress]
 
 ### Release Information
 
-- **Current Version**: 1.7.0
-- **Latest Release**: v1.3.0 (2025-12-21)
+- **Current Version**: 1.8.0
+- **Latest Release**: v1.8.0 (2026-02-20)
 - **Total Releases**: 6
 - **License**: MIT
 - **Repository**: [tydukes/coding-style-guide](
@@ -139,13 +139,17 @@ All quality gates must pass before merging to main branch.
 
 ## Recent Achievements
 
-### Version 1.7.0 Highlights
+### Version 1.8.0 Highlights
 
-- Comprehensive IaC testing framework documentation
-- Enhanced Terraform guide with advanced patterns
-- GitLab CI tiered pipeline architecture
-- Interactive decision trees guide
-- Multiple dependency updates
+- Tutorial series: five hands-on step-by-step walkthroughs
+- Progressive enhancement maturity model and adoption roadmap
+- Language interoperability guide
+- Developer experience: shell aliases, REPL guide, git hooks library
+- Dark mode, print styles, copy code buttons, improved search
+- Related pages suggestions and bookmarks system
+- CI/CD performance optimization guide
+- Documentation versioning and changelog automation guides
+- Multiple dependency updates and broken link fixes
 
 [View Full Changelog →](changelog.md)
 
@@ -226,16 +230,16 @@ All quality gates must pass before merging to main branch.
 
 **Active Issues by Label**:
 
-- `phase-6` - Enhancement and polish phase
-- `documentation` - Documentation improvements
-- `enhancement` - Feature additions
-- `tooling` - Automation and validation
+- `type:docs` — Documentation improvements
+- `type:feature` — Feature additions
+- `type:maintenance` — Automation and tooling
+- `scope:language-guide` — Language guide updates
 
 [View All Open Issues →](https://github.com/tydukes/coding-style-guide/issues)
 
 ### Upcoming Milestones
 
-**Phase 6 - Enhancement & Polish**:
+**Ongoing — Quality & Coverage**:
 
 - Achieve 3:1 code-to-text ratio across all applicable guides
 - Add more real-world examples
