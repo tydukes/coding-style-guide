@@ -532,7 +532,7 @@ Pipfile.lock
 ```yaml
 ## GitHub Actions
 - name: TruffleHog Secret Scan
-  uses: trufflesecurity/trufflehog@main
+  uses: trufflesecurity/trufflehog@v3.93.4
   with:
     path: ./
     base: ${{ github.event.repository.default_branch }}
@@ -1245,7 +1245,7 @@ repos:
 ```yaml
 ## GitHub Actions
 - name: Run gosec
-  uses: securego/gosec@master
+  uses: securego/gosec@v2.23.0
   with:
     args: '-no-fail -fmt sarif -out gosec.sarif ./...'
 
@@ -4970,7 +4970,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run Trivy Scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.34.1
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -5160,7 +5160,7 @@ jobs:
           fetch-depth: 0
 
       - name: TruffleHog Secret Scan
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@v3.93.4
         with:
           path: ./
           base: ${{ github.event.repository.default_branch }}
@@ -5199,7 +5199,7 @@ jobs:
         run: docker build -t myapp:${{ github.sha }} .
 
       - name: Trivy scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.34.1
         with:
           image-ref: myapp:${{ github.sha }}
           format: 'sarif'
@@ -5217,7 +5217,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Checkov
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@v12
         with:
           directory: terraform/
           framework: terraform

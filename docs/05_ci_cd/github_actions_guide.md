@@ -196,7 +196,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.34.1
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -410,7 +410,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
 
       - name: Scan image with Trivy
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.34.1
         with:
           image-ref: ${{ steps.meta.outputs.tags }}
           format: 'sarif'
@@ -922,14 +922,14 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [18, 20, 21]
+        node-version: [20, 22]
         include:
           - os: ubuntu-latest
             node-version: 20
             coverage: true
         exclude:
           - os: macos-latest
-            node-version: 18
+            node-version: 22
 
     steps:
       - uses: actions/checkout@v4

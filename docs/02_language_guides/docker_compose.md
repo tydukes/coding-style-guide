@@ -1215,13 +1215,13 @@ services:
 ## Bad - Default root user
 services:
   app:
-    image: node:18
+    image: node:22-alpine
     command: npm start
 
 ## Good - Specify non-root user
 services:
   app:
-    image: node:18
+    image: node:22-alpine
     user: "node"
     command: npm start
 ```

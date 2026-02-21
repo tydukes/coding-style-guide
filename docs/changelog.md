@@ -25,6 +25,15 @@ This changelog is automatically generated from GitHub releases. Each release inc
 
 Changes that are in the main branch but not yet released.
 
+### 🐛 Bug Fixes / Accuracy
+
+* fix(docs): replace floating `@master`/`@main` GitHub Action pins with versioned tags across 21 files — `trivy-action@v0.34.1`, `trufflehog@v3.93.4`, `checkov-action@v12`, `gosec@v2.23.0`, `flux2/action@v2.7.5`
+* fix(docs): update Node.js 18 (EOL April 2025) references to Node.js 22 LTS across all language guides and templates
+* fix(docs): update `golang:1.21` to `golang:1.24` (current stable) in Terraform and GitLab CI guides
+* fix(docs): update Node version matrices from `[16, 18, 20]`/`[18, 20, 21]` to `[20, 22]`
+* fix(docs): update `nodejs18.x` Lambda runtime to `nodejs20.x` in Pulumi guide
+* fix(docs): correct anti-patterns job names to match updated Node versions
+
 **Full Changelog**: <https://github.com/tydukes/coding-style-guide/compare/v1.8.1...HEAD>
 
 ## [v1.8.1] - 2026-02-21

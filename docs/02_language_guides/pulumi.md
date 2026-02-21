@@ -1841,7 +1841,7 @@ def create_lambda_with_secret(secret_arn: pulumi.Output[str]):
     return aws.lambda_.Function(
         "api-handler",
         function_name=f"{pulumi.get_project()}-{pulumi.get_stack()}-api",
-        runtime="nodejs18.x",
+        runtime="nodejs20.x",
         handler="index.handler",
         role=lambda_role.arn,
         code=pulumi.AssetArchive({".": pulumi.FileArchive("./lambda")}),
