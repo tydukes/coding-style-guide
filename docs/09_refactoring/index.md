@@ -88,42 +88,42 @@ This directory includes language-specific refactoring examples:
 ### Python Refactoring
 
 - [Extract function from long method](python_refactoring.md#extract-function)
-- [Replace magic numbers with constants](python_refactoring.md#magic-numbers)
-- [Simplify complex conditionals](python_refactoring.md#conditionals)
-- [Use comprehensions effectively](python_refactoring.md#comprehensions)
-- [Apply type hints](python_refactoring.md#type-hints)
+- [Replace magic numbers with constants](python_refactoring.md#replace-magic-numbers)
+- [Simplify complex conditionals](python_refactoring.md#simplify-complex-conditionals)
+- [Use comprehensions effectively](python_refactoring.md#use-list-comprehensions-effectively)
+- [Apply type hints](python_refactoring.md#apply-type-hints)
 
 ### TypeScript Refactoring
 
-- [Extract components from monolithic files](typescript_refactoring.md#extract-components)
-- [Replace any with proper types](typescript_refactoring.md#replace-any)
-- [Simplify async/await chains](typescript_refactoring.md#async-await)
-- [Use modern ES6+ features](typescript_refactoring.md#es6-features)
-- [Apply functional programming patterns](typescript_refactoring.md#functional)
+- [Extract components from monolithic files](typescript_refactoring.md#extract-components-from-monolithic-files)
+- [Replace any with proper types](typescript_refactoring.md#replace-any-with-proper-types)
+- [Simplify async/await chains](typescript_refactoring.md#simplify-asyncawait-chains)
+- [Use modern ES6+ features](typescript_refactoring.md#use-modern-es6-features)
+- [Apply functional programming patterns](typescript_refactoring.md#apply-functional-programming-patterns)
 
 ### Terraform Refactoring
 
-- [Extract reusable modules](terraform_refactoring.md#extract-modules)
-- [Simplify variable structures](terraform_refactoring.md#variables)
-- [Use for_each instead of count](terraform_refactoring.md#for-each)
-- [Apply locals for DRY](terraform_refactoring.md#locals)
-- [Improve resource naming](terraform_refactoring.md#naming)
+- [Extract reusable modules](terraform_refactoring.md#extract-reusable-module)
+- [Simplify variable structures](terraform_refactoring.md#simplify-variable-structures)
+- [Use for_each instead of count](terraform_refactoring.md#use-for_each-instead-of-count)
+- [Apply locals for DRY](terraform_refactoring.md#apply-locals-for-dry)
+- [Improve resource naming](terraform_refactoring.md#improve-resource-naming)
 
 ### Ansible Refactoring
 
-- [Extract roles from playbooks](ansible_refactoring.md#extract-roles)
-- [Use blocks for error handling](ansible_refactoring.md#blocks)
-- [Apply handlers effectively](ansible_refactoring.md#handlers)
-- [Simplify conditionals](ansible_refactoring.md#conditionals)
-- [Use collections](ansible_refactoring.md#collections)
+- [Extract roles from playbooks](ansible_refactoring.md#extract-roles-from-playbooks)
+- [Use blocks for error handling](ansible_refactoring.md#use-blocks-for-error-handling)
+- [Apply handlers effectively](ansible_refactoring.md#apply-handlers-effectively)
+- [Simplify conditionals](ansible_refactoring.md#simplify-conditionals)
+- [Use collections](ansible_refactoring.md#use-collections)
 
 ### Bash Refactoring
 
-- [Extract functions from scripts](bash_refactoring.md#extract-functions)
-- [Add error handling](bash_refactoring.md#error-handling)
-- [Use arrays instead of strings](bash_refactoring.md#arrays)
-- [Apply POSIX compliance](bash_refactoring.md#posix)
-- [Improve variable quoting](bash_refactoring.md#quoting)
+- [Extract functions from scripts](bash_refactoring.md#extract-functions-from-scripts)
+- [Add error handling](bash_refactoring.md#add-error-handling)
+- [Use arrays instead of strings](bash_refactoring.md#use-arrays-instead-of-strings)
+- [Apply POSIX compliance](bash_refactoring.md#apply-posix-compliance)
+- [Improve variable quoting](bash_refactoring.md#improve-variable-quoting)
 
 ## Refactoring Workflow
 
