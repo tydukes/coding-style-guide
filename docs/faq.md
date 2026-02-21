@@ -1,6 +1,6 @@
 ---
 title: "Frequently Asked Questions"
-description: "Common questions about using the Dukes Engineering Style Guide"
+description: "Common questions about using the DevOps Engineering Style Guide"
 author: "Tyler Dukes"
 tags: [faq, help, questions, troubleshooting, getting-started]
 category: "Reference"

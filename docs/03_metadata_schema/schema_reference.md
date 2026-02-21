@@ -10,7 +10,7 @@ search_keywords: [metadata, schema, tags, module, version, description, annotati
 
 ## Overview
 
-The Dukes Engineering Style Guide uses structured metadata tags embedded as inline comments to provide context about
+DevOps Engineering Style Guide uses structured metadata tags embedded as inline comments to provide context about
 code modules, functions, and infrastructure components. This metadata serves three critical purposes:
 
 1. **AI Assistant Integration**: Helps AI understand code intent, dependencies, and usage patterns

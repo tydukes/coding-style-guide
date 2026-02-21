@@ -1,6 +1,6 @@
 ---
 title: "Tutorial 4: Team Onboarding"
-description: "Get your entire team up and running with the Dukes Engineering Style Guide in 20 minutes"
+description: "Get your entire team up and running with the DevOps Engineering Style Guide in 20 minutes"
 author: "Tyler Dukes"
 tags: [tutorial, onboarding, team, getting-started, setup, pre-commit, editor]
 category: "Tutorials"
@@ -604,7 +604,7 @@ class user_manager:
 ```
 
 ```python
-# AFTER: Compliant with Dukes Style Guide
+# AFTER: Compliant with DevOps Engineering Style Guide
 """
 @module user_data
 @description User data retrieval and management
@@ -663,7 +663,7 @@ variable "bucketName" {
 ```
 
 ```hcl
-# AFTER: Compliant with Dukes Style Guide
+# AFTER: Compliant with DevOps Engineering Style Guide
 # @module s3_storage
 # @description S3 bucket for application assets
 # @version 1.0.0
@@ -708,7 +708,7 @@ echo "done"
 ```
 
 ```bash
-# AFTER: Compliant with Dukes Style Guide
+# AFTER: Compliant with DevOps Engineering Style Guide
 #!/usr/bin/env bash
 # @module deploy_app
 # @description Build and deploy frontend application
@@ -1162,7 +1162,7 @@ Standards:
 cat > setup-style-guide.sh << 'BASH'
 #!/usr/bin/env bash
 # @module setup_style_guide
-# @description One-command team onboarding for Dukes Engineering Style Guide
+# @description One-command team onboarding for DevOps Engineering Style Guide
 # @version 1.0.0
 # @author Tyler Dukes
 # @last_updated 2025-06-15
@@ -1170,7 +1170,7 @@ cat > setup-style-guide.sh << 'BASH'
 
 set -euo pipefail
 
-echo "=== Dukes Engineering Style Guide Setup ==="
+echo "=== DevOps Engineering Style Guide Setup ==="
 
 # Install pre-commit
 if ! command -v pre-commit &> /dev/null; then

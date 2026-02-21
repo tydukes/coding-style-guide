@@ -8,7 +8,7 @@ status: "active"
 search_keywords: [cli tool, command line, validation, linting, automation, developer tools]
 ---
 
-The Dukes Style Guide provides a standalone CLI tool (`dukes-style`) for
+DevOps Engineering Style Guide provides a standalone CLI tool (`devops-style`) for
 checking and enforcing style standards across your codebase.
 
 ## Overview
@@ -25,10 +25,10 @@ The CLI wraps multiple linters and formatters into a single, consistent interfac
 
 ```bash
 # Install globally via npm
-npm install -g @dukes/style-guide-cli
+npm install -g devops-engineering-style-guide
 
 # Or use with npx (no installation)
-npx @dukes/style-guide-cli check
+npx devops-engineering-style-guide check
 
 # Or use via Docker
 docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest validate
@@ -38,16 +38,16 @@ docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest v
 
 ```bash
 # Initialize configuration
-dukes-style init
+devops-style init
 
 # Check all files
-dukes-style check
+devops-style check
 
 # Auto-fix issues
-dukes-style fix
+devops-style fix
 
 # Check specific files
-dukes-style check "src/**/*.py"
+devops-style check "src/**/*.py"
 ```
 
 ## Commands
@@ -58,28 +58,28 @@ Validates files against style guide standards.
 
 ```bash
 # Check all files
-dukes-style check
+devops-style check
 
 # Check specific patterns
-dukes-style check "src/**/*.ts" "lib/**/*.py"
+devops-style check "src/**/*.ts" "lib/**/*.py"
 
 # Filter by language
-dukes-style check --language python
+devops-style check --language python
 
 # Output as JSON for tooling
-dukes-style check --format json
+devops-style check --format json
 
 # Output as SARIF for GitHub Code Scanning
-dukes-style check --format sarif > results.sarif
+devops-style check --format sarif > results.sarif
 
 # Strict mode (warnings become errors)
-dukes-style check --strict
+devops-style check --strict
 
 # Quiet mode (errors only)
-dukes-style check --quiet
+devops-style check --quiet
 
 # Check and fix in one command
-dukes-style check --fix
+devops-style check --fix
 ```
 
 ### Fix Command
@@ -88,16 +88,16 @@ Auto-fixes style violations where possible.
 
 ```bash
 # Fix all files
-dukes-style fix
+devops-style fix
 
 # Preview changes without modifying files
-dukes-style fix --dry-run
+devops-style fix --dry-run
 
 # Fix specific language
-dukes-style fix --language typescript
+devops-style fix --language typescript
 
 # Output fix results as JSON
-dukes-style fix --format json
+devops-style fix --format json
 ```
 
 ### Init Command
@@ -106,16 +106,16 @@ Creates a configuration file in your project.
 
 ```bash
 # Standard configuration
-dukes-style init
+devops-style init
 
 # Minimal configuration
-dukes-style init --template minimal
+devops-style init --template minimal
 
 # Strict configuration (all linters enabled)
-dukes-style init --template strict
+devops-style init --template strict
 
 # Overwrite existing
-dukes-style init --force
+devops-style init --force
 ```
 
 ### List Command
@@ -124,13 +124,13 @@ Shows available linters and their status.
 
 ```bash
 # List all linters
-dukes-style list
+devops-style list
 
 # Filter by language
-dukes-style list --language python
+devops-style list --language python
 
 # JSON output
-dukes-style list --format json
+devops-style list --format json
 ```
 
 ## Configuration
@@ -144,8 +144,8 @@ The CLI searches for configuration in this order:
 3. `.dukestylerc.yaml`
 4. `.dukestylerc.yml`
 5. `dukestyle.config.js`
-6. `.dukes-style.json`
-7. `.dukes-style.yaml`
+6. `.devops-style.json`
+7. `.devops-style.yaml`
 8. `package.json` (`dukestyle` key)
 
 ### Configuration Schema
@@ -155,7 +155,7 @@ The CLI searches for configuration in this order:
 
 # Extends another configuration (optional)
 extends:
-  - "@dukes/style-guide-cli/config/strict"
+  - "devops-engineering-style-guide/config/strict"
 
 # Language configurations
 languages:
@@ -293,10 +293,10 @@ jobs:
           node-version: '20'
 
       - name: Install CLI
-        run: npm install -g @dukes/style-guide-cli
+        run: npm install -g devops-engineering-style-guide
 
       - name: Run style check
-        run: dukes-style check --format sarif > style-results.sarif
+        run: devops-style check --format sarif > style-results.sarif
 
       - name: Upload SARIF results
         uses: github/codeql-action/upload-sarif@v3
@@ -312,8 +312,8 @@ style-check:
   image: node:20-alpine
   stage: test
   script:
-    - npm install -g @dukes/style-guide-cli
-    - dukes-style check --format json > gl-code-quality-report.json
+    - npm install -g devops-engineering-style-guide
+    - devops-style check --format json > gl-code-quality-report.json
   artifacts:
     reports:
       codequality: gl-code-quality-report.json
@@ -329,9 +329,9 @@ style-check:
 repos:
   - repo: local
     hooks:
-      - id: dukes-style
+      - id: devops-style
         name: Dukes Style Check
-        entry: dukes-style check
+        entry: devops-style check
         language: system
         pass_filenames: false
 ```
@@ -472,7 +472,7 @@ Machine-readable format for CI/CD integration.
 GitHub Code Scanning compatible format.
 
 ```bash
-dukes-style check --format sarif > results.sarif
+devops-style check --format sarif > results.sarif
 ```
 
 ## Exit Codes
@@ -513,7 +513,7 @@ Use Docker for:
 
 ```bash
 # Check linter availability
-dukes-style list
+devops-style list
 
 # Install missing linters
 pip install black flake8
@@ -524,14 +524,14 @@ npm install -g eslint prettier
 
 ```bash
 # Debug configuration discovery
-dukes-style check --debug
+devops-style check --debug
 ```
 
 ### Slow Performance
 
 ```bash
 # Enable caching
-dukes-style check  # Cache enabled by default
+devops-style check  # Cache enabled by default
 
 # Clear cache if needed
 rm -rf .dukestyle-cache

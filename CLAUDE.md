@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**The Dukes Engineering Style Guide** is a comprehensive, multi-language coding
+**DevOps Engineering Style Guide** is a comprehensive, multi-language coding
 style guide that defines consistent, secure, and AI-optimized standards for
 DevOps and software engineering practices.
 

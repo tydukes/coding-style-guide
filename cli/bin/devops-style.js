@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * @module dukes-style-cli
- * @description CLI entry point for The Dukes Engineering Style Guide
+ * @module devops-style-cli
+ * @description CLI entry point for DevOps Engineering Style Guide
  * @version 1.0.0
  * @author Tyler Dukes
  */

@@ -1,4 +1,4 @@
-# The Dukes Engineering Style Guide
+# DevOps Engineering Style Guide
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Documentation](https://img.shields.io/badge/docs-mkdocs-blue.svg)](https://tydukes.github.io/coding-style-guide/)
@@ -25,7 +25,7 @@
 
 ## What Is This?
 
-The Dukes Engineering Style Guide is a production-ready coding standards framework designed for
+DevOps Engineering Style Guide is a production-ready coding standards framework designed for
 **DevOps engineers, platform teams, and software development organizations** who need consistent,
 secure, and AI-optimized code across multiple languages and tools.
 

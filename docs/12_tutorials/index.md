@@ -1,6 +1,6 @@
 ---
 title: "Tutorial Series"
-description: "Step-by-step tutorials covering common real-world scenarios with the Dukes Engineering Style Guide"
+description: "Step-by-step tutorials covering common real-world scenarios with the DevOps Engineering Style Guide"
 author: "Tyler Dukes"
 tags: [tutorials, getting-started, walkthrough, hands-on, learning]
 category: "Tutorials"
@@ -13,7 +13,7 @@ search_keywords: [tutorials, overview, learning, hands-on, step by step, guide]
 ## Overview
 
 This tutorial series provides hands-on, step-by-step walkthroughs for the most common real-world
-scenarios you will encounter when adopting the Dukes Engineering Style Guide. Each tutorial builds a
+scenarios you will encounter when adopting the DevOps Engineering Style Guide. Each tutorial builds a
 complete, working example from scratch.
 
 ---

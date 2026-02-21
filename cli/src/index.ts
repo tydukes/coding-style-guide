@@ -1,6 +1,6 @@
 /**
- * @module dukes-style-cli
- * @description Main CLI entry point for The Dukes Engineering Style Guide
+ * @module devops-style-cli
+ * @description Main CLI entry point for DevOps Engineering Style Guide
  * @version 1.0.0
  * @author Tyler Dukes
  */
@@ -16,9 +16,9 @@ import { VERSION } from "./version.js";
 const program = new Command();
 
 program
-  .name("dukes-style")
+  .name("devops-style")
   .description(
-    "CLI tool for enforcing The Dukes Engineering Style Guide standards"
+    "CLI tool for enforcing DevOps Engineering Style Guide standards"
   )
   .version(VERSION, "-v, --version", "Output the current version")
   .option("-c, --config <path>", "Path to configuration file")

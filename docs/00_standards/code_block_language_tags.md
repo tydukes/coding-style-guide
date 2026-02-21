@@ -10,7 +10,7 @@ search_keywords: [code blocks, language tags, syntax highlighting, markdown, fen
 
 ## Purpose
 
-This document defines the standardized language tags for all code blocks in the Dukes Engineering Style Guide
+This document defines the standardized language tags for all code blocks in the DevOps Engineering Style Guide
 documentation. Consistent language tags enable proper syntax highlighting, improve readability, and ensure a
 professional presentation of code examples.
 

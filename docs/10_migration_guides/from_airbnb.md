@@ -1,5 +1,5 @@
 ---
-title: "Migrating from Airbnb Style Guide to Dukes Engineering Style Guide"
+title: "Migrating from Airbnb Style Guide to DevOps Engineering Style Guide"
 description: "Step-by-step migration guide from Airbnb JavaScript/React Style Guide to the Dukes Engineering
 TypeScript style guide"
 author: "Tyler Dukes"
@@ -12,7 +12,7 @@ search_keywords: [migration, airbnb style guide, javascript, transition, differe
 ## Overview
 
 This guide helps JavaScript and React developers transition from the **Airbnb JavaScript Style Guide** to
-the **Dukes Engineering Style Guide** with a focus on **TypeScript adoption**. While Airbnb's guide is
+the **DevOps Engineering Style Guide** with a focus on **TypeScript adoption**. While Airbnb's guide is
 excellent for JavaScript, our guide adds TypeScript type safety, DevOps-oriented enhancements, and
 infrastructure automation requirements.
 

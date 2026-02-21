@@ -119,10 +119,10 @@ export async function loadConfig(
       `${MODULE_NAME}.config.js`,
       `${MODULE_NAME}.config.cjs`,
       `${MODULE_NAME}.config.mjs`,
-      ".dukes-style.json",
-      ".dukes-style.yaml",
-      ".dukes-style.yml",
-      "dukes-style.config.js",
+      ".devops-style.json",
+      ".devops-style.yaml",
+      ".devops-style.yml",
+      "devops-style.config.js",
     ],
   });
 

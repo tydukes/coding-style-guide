@@ -155,12 +155,12 @@ export async function initCommand(options: InitOptions): Promise<void> {
  * Generate YAML configuration with comments
  */
 function generateYamlConfig(config: Partial<StyleGuideConfig>): string {
-  const header = `# Dukes Style Guide Configuration
+  const header = `# DevOps Engineering Style Guide Configuration
 # https://tydukes.github.io/coding-style-guide/
 #
-# Run 'dukes-style check' to validate your code
-# Run 'dukes-style fix' to auto-fix issues
-# Run 'dukes-style list' to see available linters
+# Run 'devops-style check' to validate your code
+# Run 'devops-style fix' to auto-fix issues
+# Run 'devops-style list' to see available linters
 
 `;
 

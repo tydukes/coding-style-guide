@@ -12,7 +12,7 @@ search_keywords: [principles, philosophy, core values, design decisions, best pr
 
 ## Core Principles
 
-The Dukes Engineering Style Guide is built on core principles that prioritize automation, AI integration, consistency,
+DevOps Engineering Style Guide is built on core principles that prioritize automation, AI integration, consistency,
 and maintainability. These principles guide every decision in the style guide and shape how teams write, review, and
 maintain code.
 

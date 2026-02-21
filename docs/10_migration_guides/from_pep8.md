@@ -1,5 +1,5 @@
 ---
-title: "Migrating from PEP 8 to Dukes Engineering Style Guide"
+title: "Migrating from PEP 8 to DevOps Engineering Style Guide"
 description: "Step-by-step migration guide from standard PEP 8 to the enhanced Dukes Engineering Python style guide"
 author: "Tyler Dukes"
 tags: [migration, pep8, python, style-guide, upgrade, transition]
@@ -11,7 +11,7 @@ search_keywords: [migration, pep8, python, style guide, transition, upgrade, dif
 ## Overview
 
 This guide helps Python developers transition from **PEP 8** (the standard Python style guide) to
-the **Dukes Engineering Style Guide**. Our guide builds on PEP 8's foundation while adding modern
+the **DevOps Engineering Style Guide**. Our guide builds on PEP 8's foundation while adding modern
 DevOps-oriented enhancements for infrastructure automation, type safety, and security.
 
 ### What This Guide Covers
@@ -51,7 +51,7 @@ graph LR
 
 ## What Stays the Same
 
-The Dukes Engineering Style Guide maintains **full compatibility** with PEP 8 core conventions.
+DevOps Engineering Style Guide maintains **full compatibility** with PEP 8 core conventions.
 If your code follows PEP 8, these aspects require **no changes**:
 
 ### Naming Conventions ✅
@@ -578,7 +578,7 @@ pre-commit run --all-files
 
 ## Migration Checklist
 
-Use this checklist to systematically migrate your Python project from PEP 8 to the Dukes Engineering Style Guide.
+Use this checklist to systematically migrate your Python project from PEP 8 to the DevOps Engineering Style Guide.
 
 ### Phase 1: Setup and Configuration
 
@@ -795,7 +795,7 @@ Use this checklist to systematically migrate your Python project from PEP 8 to t
   - Document development workflow
 
 - [ ] **Create CONTRIBUTING guide**
-  - Reference Dukes Engineering Style Guide
+  - Reference DevOps Engineering Style Guide
   - Explain pre-commit hook usage
   - Provide testing guidelines
 
@@ -982,7 +982,7 @@ Track these metrics to measure migration progress:
 
 ## Conclusion
 
-Migrating from PEP 8 to the Dukes Engineering Style Guide enhances your Python codebase with:
+Migrating from PEP 8 to the DevOps Engineering Style Guide enhances your Python codebase with:
 
 ✅ **Type Safety** - Catch errors before runtime with mypy
 ✅ **Consistency** - Automated formatting with Black

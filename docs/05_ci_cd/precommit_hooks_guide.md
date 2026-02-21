@@ -12,7 +12,7 @@ search_keywords: [pre-commit, hooks, linting, formatting, git hooks, automation,
 
 Pre-commit hooks are automated checks that run before each Git commit, ensuring code quality, consistency,
 and security across your entire codebase. This guide covers installation, configuration, and best practices
-for all languages in the Dukes Engineering Style Guide.
+for all languages in the DevOps Engineering Style Guide.
 
 ---
 

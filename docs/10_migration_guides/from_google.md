@@ -1,5 +1,5 @@
 ---
-title: "Migrating from Google Python Style Guide to Dukes Engineering Style Guide"
+title: "Migrating from Google Python Style Guide to DevOps Engineering Style Guide"
 description: "Step-by-step migration guide from Google Python Style Guide to the Dukes Engineering Python style guide"
 author: "Tyler Dukes"
 tags: [migration, google-style-guide, python, style-guide, upgrade, transition]
@@ -812,7 +812,7 @@ pre-commit run --all-files
   - Provide setup instructions
 
 - [ ] **Create CONTRIBUTING guide**
-  - Reference Dukes Engineering Style Guide
+  - Reference DevOps Engineering Style Guide
   - Explain pre-commit hooks
   - Provide testing guidelines
 
@@ -981,7 +981,7 @@ Track these metrics to measure migration progress:
 
 ## Side-by-Side Comparison: Google vs. Dukes Engineering
 
-| Aspect | Google Python Style Guide | Dukes Engineering Style Guide |
+| Aspect | Google Python Style Guide | DevOps Engineering Style Guide |
 |--------|--------------------------|------------------------------|
 | **Base Standard** | PEP 8 | PEP 8 |
 | **Indentation** | 2 spaces | 4 spaces (PEP 8 standard) |
@@ -1028,7 +1028,7 @@ Track these metrics to measure migration progress:
 
 ## Conclusion
 
-Migrating from Google Python Style Guide to Dukes Engineering Style Guide brings:
+Migrating from Google Python Style Guide to DevOps Engineering Style Guide brings:
 
 ✅ **PEP 8 Alignment** - 4-space indentation matches Python ecosystem standard
 ✅ **Modern Tooling** - Black, mypy, pytest provide superior developer experience

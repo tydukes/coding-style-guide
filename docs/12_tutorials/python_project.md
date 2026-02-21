@@ -88,7 +88,7 @@ mkdir -p src/my_flask_api tests .github/workflows
 [project]
 name = "my-flask-api"
 version = "0.1.0"
-description = "A production-ready Flask REST API following Dukes Engineering Style Guide"
+description = "A production-ready Flask REST API following DevOps Engineering Style Guide"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [
@@ -615,7 +615,7 @@ kill %1
 
 ## Step 3: Add Metadata (3 min)
 
-Every source file already includes the `@module` metadata block in its docstring. This is the standard format required by the Dukes Engineering Style Guide.
+Every source file already includes the `@module` metadata block in its docstring. This is the standard format required by the DevOps Engineering Style Guide.
 
 ### Metadata Format Reference
 
