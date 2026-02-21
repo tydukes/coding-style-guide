@@ -25,6 +25,22 @@ This changelog is automatically generated from GitHub releases. Each release inc
 
 Changes that are in the main branch but not yet released.
 
+**Full Changelog**: <https://github.com/tydukes/coding-style-guide/compare/v1.8.1...HEAD>
+
+## [v1.8.1] - 2026-02-21
+
+### 🐛 Bug Fixes
+
+* fix(docs): resolve broken links detected in issue #358 — links to v1.8.0 release and compare URL are now valid
+
+### 📖 Documentation
+
+* docs: full site audit — refresh overview pages, refactor Getting Started, fix governance (closes #359) by @tydukes in <https://github.com/tydukes/coding-style-guide/pull/360>
+
+**Full Changelog**: <https://github.com/tydukes/coding-style-guide/compare/v1.8.0...v1.8.1>
+
+[View Release](https://github.com/tydukes/coding-style-guide/releases/tag/v1.8.1)
+
 ## [v1.8.0] - 2026-02-21
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
