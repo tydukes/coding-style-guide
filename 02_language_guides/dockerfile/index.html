@@ -8827,7 +8827,7 @@ best practices for creating secure, efficient, and maintainable container images
 <div class="highlight"><pre><span></span><code><span class="c">## Syntax version (optional but recommended)</span>
 <span class="c">## syntax=docker/dockerfile:1</span>
 
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
@@ -8845,15 +8845,15 @@ best practices for creating secure, efficient, and maintainable container images
 <h2 id="from-instruction">FROM Instruction<a class="headerlink" href="#from-instruction" title="Permanent link">&para;</a></h2>
 <h3 id="always-pin-base-image-versions">Always Pin Base Image Versions<a class="headerlink" href="#always-pin-base-image-versions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## Good - Pinned to specific version</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18.19-alpine3.19</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 
 <span class="c">## Avoid - Using latest or unpinned versions</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:latest</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 </code></pre></div>
 <h3 id="multi-stage-builds">Multi-Stage Builds<a class="headerlink" href="#multi-stage-builds" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## Build stage</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci
@@ -8861,7 +8861,7 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
 
 <span class="c">## Production stage</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production
@@ -8965,7 +8965,7 @@ best practices for creating secure, efficient, and maintainable container images
 <div class="highlight"><pre><span></span><code><span class="c">## syntax=docker/dockerfile:1</span>
 
 <span class="c">## Build stage</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci
@@ -8974,7 +8974,7 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="w">    </span>npm<span class="w"> </span>prune<span class="w"> </span>--production
 
 <span class="c">## Production stage</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
 <span class="c">## Create non-root user</span>
@@ -9048,7 +9048,7 @@ best practices for creating secure, efficient, and maintainable container images
 <div class="highlight"><pre><span></span><code><span class="c">## syntax=docker/dockerfile:1</span>
 
 <span class="c">## Build stage</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.21-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.24-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
 <span class="c">## Install build dependencies</span>
@@ -9362,7 +9362,7 @@ teardown<span class="o">()</span><span class="w"> </span><span class="o">{</span
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker build -t myapp:test .</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Trivy vulnerability scan</span>
-<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aquasecurity/trivy-action@master</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aquasecurity/trivy-action@v0.34.1</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">image-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:test</span>
 <span class="w">          </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sarif</span>
@@ -9507,13 +9507,13 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 </code></pre></div>
 <h3 id="use-minimal-base-images">Use Minimal Base Images<a class="headerlink" href="#use-minimal-base-images" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## Good - Minimal alpine image</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 
 <span class="c">## Good - Distroless image (even smaller, no shell)</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">gcr.io/distroless/nodejs18-debian11</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">gcr.io/distroless/nodejs20-debian12</span>
 
 <span class="c">## Avoid - Full Debian/Ubuntu images</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:22.04</span>
 </code></pre></div>
 <h3 id="dont-store-secrets-in-images">Don't Store Secrets in Images<a class="headerlink" href="#dont-store-secrets-in-images" title="Permanent link">&para;</a></h3>
@@ -9706,12 +9706,12 @@ docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"
 <h2 id="anti-patterns">Anti-Patterns<a class="headerlink" href="#anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="avoid-running-as-root">❌ Avoid: Running as Root<a class="headerlink" href="#avoid-running-as-root" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## Bad - Running as root</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;index.js&quot;</span><span class="p">]</span>
 
 <span class="c">## Good - Non-root user</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 <span class="k">RUN</span><span class="w"> </span>adduser<span class="w"> </span>-D<span class="w"> </span>appuser
 <span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
@@ -9722,7 +9722,7 @@ docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:latest</span>
 
 <span class="c">## Good - Pinned version</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18.19-alpine3.19</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 </code></pre></div>
 <h3 id="avoid-installing-unnecessary-packages">❌ Avoid: Installing Unnecessary Packages<a class="headerlink" href="#avoid-installing-unnecessary-packages" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## Bad - Installing unnecessary packages</span>
@@ -9755,7 +9755,7 @@ docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"
 </code></pre></div>
 <h3 id="avoid-copying-entire-context">❌ Avoid: Copying Entire Context<a class="headerlink" href="#avoid-copying-entire-context" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## Bad - Copies everything including .git, node_modules, etc.</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
 
 <span class="c">## Good - Use .dockerignore and copy selectively</span>
@@ -9765,7 +9765,7 @@ docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"
 <span class="c">## .env</span>
 <span class="c">## *.md</span>
 
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production
@@ -9774,7 +9774,7 @@ docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"
 </code></pre></div>
 <h3 id="avoid-not-using-multi-stage-builds">❌ Avoid: Not Using Multi-Stage Builds<a class="headerlink" href="#avoid-not-using-multi-stage-builds" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## Bad - Build tools remain in final image</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>install<span class="w">  </span>#<span class="w"> </span>Includes<span class="w"> </span>dev<span class="w"> </span>dependencies
@@ -9783,14 +9783,14 @@ docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"
 <span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;start&quot;</span><span class="p">]</span>
 
 <span class="c">## Good - Multi-stage build</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
 
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/dist<span class="w"> </span>./dist
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/package*.json<span class="w"> </span>./
@@ -9800,14 +9800,14 @@ docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"
 </code></pre></div>
 <h3 id="avoid-exposing-secrets-in-build">❌ Avoid: Exposing Secrets in Build<a class="headerlink" href="#avoid-exposing-secrets-in-build" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## Bad - Secrets in image layers</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>.env<span class="w"> </span>.env<span class="w">  </span>#<span class="w"> </span>❌<span class="w"> </span>Secret<span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span>image!
 <span class="k">RUN</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;API_KEY=secret123&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>config.txt<span class="w">  </span>#<span class="w"> </span>❌<span class="w"> </span>In<span class="w"> </span>layer<span class="w"> </span>history!
 
 <span class="c">## Good - Use build secrets (Docker BuildKit)</span>
 <span class="c">## syntax=docker/dockerfile:1</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">RUN</span><span class="w"> </span>--mount<span class="o">=</span><span class="nv">type</span><span class="o">=</span>secret,id<span class="o">=</span>npmrc,target<span class="o">=</span>/root/.npmrc<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>npm<span class="w"> </span>install<span class="w"> </span>private-package
@@ -10082,7 +10082,7 @@ docker-compose*.yml
 <span class="w">    </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production
 
 <span class="c"># Go - cache modules</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.21-alpine</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.24-alpine</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>go.*<span class="w"> </span>./
 <span class="k">RUN</span><span class="w"> </span>--mount<span class="o">=</span><span class="nv">type</span><span class="o">=</span>cache,target<span class="o">=</span>/go/pkg/mod<span class="w"> </span><span class="se">\</span>

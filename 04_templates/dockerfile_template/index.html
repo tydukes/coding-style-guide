@@ -7417,7 +7417,7 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 <hr />
 <h2 id="go-application">Go Application<a class="headerlink" href="#go-application" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c">## Multi-stage build for Go application</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.21-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.24-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 
 <span class="c">## Install build dependencies</span>
 <span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>--no-cache<span class="w"> </span>git<span class="w"> </span>ca-certificates
@@ -7859,7 +7859,7 @@ docker-compose*.yml
 <h2 id="advanced-patterns">Advanced Patterns<a class="headerlink" href="#advanced-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="multi-architecture-build">Multi-Architecture Build<a class="headerlink" href="#multi-architecture-build" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## Build for multiple architectures</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">--platform=$BUILDPLATFORM</span><span class="w"> </span>golang:1.21-alpine<span class="w"> </span>AS<span class="w"> </span>builder
+<span class="k">FROM</span><span class="w"> </span><span class="s">--platform=$BUILDPLATFORM</span><span class="w"> </span>golang:1.24-alpine<span class="w"> </span>AS<span class="w"> </span>builder
 
 <span class="k">ARG</span><span class="w"> </span>TARGETPLATFORM
 <span class="k">ARG</span><span class="w"> </span>BUILDPLATFORM
@@ -7885,7 +7885,7 @@ docker-compose*.yml
 <span class="c">## Build with: docker buildx build --platform linux/amd64,linux/arm64 -t myapp .</span>
 </code></pre></div>
 <h3 id="using-cache-mounts">Using Cache Mounts<a class="headerlink" href="#using-cache-mounts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.21-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.24-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 
