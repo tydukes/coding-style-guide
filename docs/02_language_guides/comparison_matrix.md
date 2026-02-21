@@ -30,12 +30,12 @@ languages or transitioning between them.
 - [Testing Frameworks](#testing-frameworks)
 - [Security Best Practices](#security-best-practices)
 - [Code Organization](#code-organization)
-- [Line Length & Formatting](#line-length--formatting)
+- [Line Length and Formatting](#line-length-and-formatting)
 - [Documentation Standards](#documentation-standards)
 - [Dependency Management](#dependency-management)
 - [Common Anti-Patterns](#common-anti-patterns)
 - [CI/CD Integration](#cicd-integration)
-- [Linting & Validation](#linting--validation)
+- [Linting and Validation](#linting-and-validation)
 
 ## Naming Conventions
 
@@ -200,7 +200,7 @@ languages or transitioning between them.
 | Terraform | Module blocks | ```hcl<br>module "vpc" {<br>  source = "./modules/vpc"<br>}<br>``` |
 | Ansible | Roles | ```yaml<br>roles:<br>  - role: common<br>    vars:<br>      foo: bar<br>``` |
 
-## Line Length & Formatting
+## Line Length and Formatting
 
 | Language | Max Line Length | Formatter | Config |
 |----------|----------------|-----------|--------|
@@ -324,7 +324,7 @@ languages or transitioning between them.
 | TypeScript | test, build, deploy | `node_modules/` |
 | Terraform | validate, plan, apply | `.terraform/` |
 
-## Linting & Validation
+## Linting and Validation
 
 ### Linters by Language
 
