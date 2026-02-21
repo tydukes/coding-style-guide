@@ -23,37 +23,86 @@ in a single repository. This approach enables:
 ```text
 coding-style-guide/
 ├── docs/                           # MkDocs documentation source
-│   ├── 01_overview/               # General principles and governance
+│   ├── 00_standards/              # Documentation standards
+│   │   ├── code_block_language_tags.md
+│   │   └── heading_structure.md
+│   ├── 01_overview/               # Principles, governance, and structure
+│   │   ├── getting_started.md     # Quickstart guide
 │   │   ├── principles.md          # Core principles
-│   │   ├── governance.md          # GitFlow and versioning
-│   │   └── structure.md           # This file
-│   ├── 02_language_guides/        # Language-specific style guides
+│   │   ├── governance.md          # Branching strategy and versioning
+│   │   ├── structure.md           # This file
+│   │   ├── decision_trees.md      # Decision trees for common choices
+│   │   └── maturity_model.md      # Progressive adoption roadmap
+│   ├── 02_language_guides/        # Language-specific style guides (35+)
 │   │   ├── python.md
 │   │   ├── terraform.md
 │   │   ├── bash.md
 │   │   ├── typescript.md
 │   │   └── ...
-│   ├── 03_metadata_schema/        # Schema documentation
-│   ├── 04_templates/              # Document templates
-│   ├── 05_ci_cd/                  # CI/CD patterns
-│   ├── 06_container/              # Container usage
+│   ├── 03_metadata_schema/        # Universal @module annotation schema
+│   │   └── schema_reference.md
+│   ├── 04_templates/              # Ready-to-use document templates
+│   │   ├── README_template.md
+│   │   ├── contract_template.md
+│   │   └── ...
+│   ├── 05_ci_cd/                  # CI/CD patterns and guides
+│   │   ├── github_actions_guide.md
+│   │   ├── testing_strategies.md
+│   │   └── ...
+│   ├── 05_examples/               # Full reference implementations
+│   │   ├── python_package_example.md
+│   │   └── ...
+│   ├── 06_container/              # Container usage documentation
+│   │   └── usage.md
 │   ├── 07_integration/            # Integration guides
-│   └── index.md                   # Documentation home
+│   │   ├── integration_prompt.md
+│   │   ├── ai_code_review.md
+│   │   └── cli_tool.md
+│   ├── 08_anti_patterns/          # Common anti-patterns and code smells
+│   │   ├── index.md
+│   │   └── code_smell_catalog.md
+│   ├── 09_refactoring/            # Before/after refactoring examples
+│   │   ├── index.md
+│   │   └── ...
+│   ├── 10_migration_guides/       # Migrating from other style guides
+│   │   ├── from_pep8.md
+│   │   ├── from_google.md
+│   │   └── from_airbnb.md
+│   ├── 11_cloud_providers/        # Cloud provider-specific guidance
+│   │   ├── azure.md
+│   │   └── gcp.md
+│   ├── 12_tutorials/              # Hands-on step-by-step tutorials
+│   │   ├── index.md
+│   │   ├── python_project.md
+│   │   ├── terraform_migration.md
+│   │   ├── fullstack_app.md
+│   │   ├── team_onboarding.md
+│   │   └── manual_to_automated.md
+│   ├── changelog.md               # Project changelog
+│   ├── faq.md                     # Frequently asked questions
+│   ├── glossary.md                # Terminology and definitions
+│   ├── index.md                   # Documentation home
+│   ├── project_status.md          # Health dashboard and metrics
+│   └── topic_index.md             # Comprehensive topic index
 ├── .github/                        # GitHub workflows and actions
 │   ├── workflows/                 # CI/CD workflows
-│   │   ├── ci.yml
-│   │   ├── deploy.yml
-│   │   └── container.yml
+│   │   ├── ci.yml                 # Main CI pipeline
+│   │   ├── deploy.yml             # Documentation deployment
+│   │   ├── container.yml          # Container build/publish
+│   │   ├── release.yml            # Automated release
+│   │   └── spell-checker.yml      # Spelling quality gate
 │   └── actions/                   # Custom GitHub actions
 │       └── validate/              # Validation action
 ├── scripts/                        # Validation and automation scripts
 │   ├── validate_metadata.py       # Metadata validation
+│   ├── analyze_code_ratio.py      # 3:1 code-to-text enforcement
+│   ├── generate_changelog.py      # Changelog generation
 │   └── ...
-├── Dockerfile                      # Container definition
-├── docker-compose.yml             # Local development
+├── Dockerfile                      # Multi-stage container definition
+├── docker-compose.yml             # Local development services
 ├── docker-entrypoint.sh           # Container entry point
 ├── mkdocs.yml                     # Documentation configuration
-├── pyproject.toml                 # Python project config
+├── pyproject.toml                 # Python project config (version source of truth)
 └── README.md                      # Repository overview
 ```
 
@@ -66,8 +115,9 @@ graph TD
     Root --> Scripts[scripts/]
     Root --> Config[Configuration Files]
 
+    Docs --> Standards[00_standards/]
     Docs --> Overview[01_overview/]
-    Docs --> Languages[02_language_guides/]
+    Docs --> Languages[02_language_guides/<br/>35+ guides]
     Docs --> Schema[03_metadata_schema/]
     Docs --> Templates[04_templates/]
     Docs --> CICD[05_ci_cd/]
@@ -76,34 +126,33 @@ graph TD
     Docs --> Integration[07_integration/]
     Docs --> AntiPatterns[08_anti_patterns/]
     Docs --> Refactoring[09_refactoring/]
+    Docs --> Migration[10_migration_guides/]
+    Docs --> Cloud[11_cloud_providers/]
+    Docs --> Tutorials[12_tutorials/]
+    Docs --> TopLevel[index.md / faq.md<br/>glossary.md / topic_index.md]
 
+    Overview --> GettingStarted[getting_started.md]
     Overview --> Principles[principles.md]
     Overview --> Governance[governance.md]
     Overview --> Structure[structure.md]
-
-    Languages --> Python[python.md]
-    Languages --> Terraform[terraform.md]
-    Languages --> TypeScript[typescript.md]
-    Languages --> Bash[bash.md]
-    Languages --> MoreLangs[...]
+    Overview --> DecisionTrees[decision_trees.md]
+    Overview --> Maturity[maturity_model.md]
 
     GitHub --> Workflows[workflows/]
     GitHub --> Actions[actions/]
 
-    Workflows --> CI[ci.yml]
-    Workflows --> Deploy[deploy.yml]
-    Workflows --> ContainerBuild[container.yml]
-
     Config --> MkDocs[mkdocs.yml]
     Config --> PyProject[pyproject.toml]
     Config --> Docker[Dockerfile]
-    Config --> Compose[docker-compose.yml]
 
     style Root fill:#e3f2fd
     style Docs fill:#f3e5f5
     style GitHub fill:#e8f5e9
     style Scripts fill:#fff3e0
     style Config fill:#fce4ec
+    style Migration fill:#e8f5e9
+    style Cloud fill:#e8f5e9
+    style Tutorials fill:#e8f5e9
 ```
 
 ### Why Monorepo for This Project?
@@ -576,8 +625,9 @@ deploy:
 
 The style guide provides examples and templates under:
 
-- **Templates**: `docs/04_templates/` - README templates, module templates
-- **Examples**: Future section for reference implementations
+- **Templates**: `docs/04_templates/` — README, Terraform, Helm, Dockerfile, ADR, and more
+- **Examples**: `docs/05_examples/` — Python package, Flask API, Terraform module, React app, monorepo
+- **Tutorials**: `docs/12_tutorials/` — Hands-on step-by-step guides for common scenarios
 
 ## References
 

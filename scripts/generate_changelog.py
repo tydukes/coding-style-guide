@@ -85,7 +85,17 @@ def generate_markdown(releases: List[Dict[str, Any]]) -> str:
     Returns:
         Markdown-formatted changelog string
     """
-    changelog = "# Changelog\n\n"
+    changelog = "---\n"
+    changelog += 'title: "Changelog"\n'
+    changelog += 'description: "Project changelog tracking all notable changes"\n'
+    changelog += 'author: "Tyler Dukes"\n'
+    changelog += "tags: [changelog, history, releases, versions]\n"
+    changelog += 'category: "Project"\n'
+    changelog += 'status: "active"\n'
+    changelog += "search_keywords: [changelog, release notes, version history, updates, changes]\n"
+    changelog += "---\n\n"
+    changelog += "<!-- markdownlint-disable MD013 MD022 MD024 MD032 -->\n\n"
+    changelog += "## Changelog\n\n"
     changelog += (
         "All notable changes to this project will be documented in this file.\n\n"
     )
@@ -98,8 +108,8 @@ def generate_markdown(releases: List[Dict[str, Any]]) -> str:
         "(https://semver.org/spec/v2.0.0.html).\n\n"
     )
     changelog += "## About This Changelog\n\n"
-    changelog += "This changelog is automatically generated from GitHub releases. "
     changelog += (
+        "This changelog is automatically generated from GitHub releases. "
         "Each release includes auto-generated release notes based on "
         "pull requests and commits.\n\n"
     )
