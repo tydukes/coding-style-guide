@@ -1,4 +1,4 @@
-# The Dukes Engineering Style Guide
+# DevOps Engineering Style Guide
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Documentation](https://img.shields.io/badge/docs-mkdocs-blue.svg)](https://tydukes.github.io/coding-style-guide/)
@@ -10,7 +10,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Code-to-Text Ratio](https://img.shields.io/badge/code--to--text%20ratio-2.38:1-yellow.svg)](https://tydukes.github.io/coding-style-guide/project_status/)
-[![Guides Passing](https://img.shields.io/badge/guides%20passing-18%2F20%20(90.0%25)-success.svg)](https://tydukes.github.io/coding-style-guide/project_status/)
+[![Guides Passing](https://img.shields.io/badge/guides%20passing-18%2F19-success.svg)](https://tydukes.github.io/coding-style-guide/project_status/)
 [![Documentation Pages](https://img.shields.io/badge/docs%20pages-73-blue.svg)](https://tydukes.github.io/coding-style-guide/)
 [![Version](https://img.shields.io/github/v/release/tydukes/coding-style-guide)](https://github.com/tydukes/coding-style-guide/releases)
 [![Last Commit](https://img.shields.io/github/last-commit/tydukes/coding-style-guide)](https://github.com/tydukes/coding-style-guide/commits/main)
@@ -25,7 +25,7 @@
 
 ## What Is This?
 
-The Dukes Engineering Style Guide is a production-ready coding standards framework designed for
+The DevOps Engineering Style Guide is a production-ready coding standards framework designed for
 **DevOps engineers, platform teams, and software development organizations** who need consistent,
 secure, and AI-optimized code across multiple languages and tools.
 
