@@ -2717,7 +2717,7 @@ trim_trailing_whitespace = false
 - [Bicep VS Code Extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep)
 - [PSRule for Azure](https://azure.github.io/PSRule.Rules.Azure/)
 - [Azure CLI](https://learn.microsoft.com/cli/azure/)
-- [Bicep Playground](https://bicepdemo.z22.web.core.windows.net/)
+- [Bicep Playground](https://azure.github.io/bicep/)
 
 ### Related Guides
 

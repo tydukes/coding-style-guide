@@ -2983,7 +2983,7 @@ spec:
 - [Crossplane Documentation](https://docs.crossplane.io/)
 - [Crossplane GitHub Repository](https://github.com/crossplane/crossplane)
 - [Upbound Marketplace](https://marketplace.upbound.io/)
-- [Composition Functions](https://docs.crossplane.io/latest/concepts/composition-functions/)
+- [Composition Functions](https://docs.crossplane.io/latest/composition/compositions/)
 - [Crossplane CLI Reference](https://docs.crossplane.io/latest/cli/)
 
 ### Related Guides
