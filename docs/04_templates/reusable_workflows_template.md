@@ -588,7 +588,7 @@ jobs:
 
       - name: Run Trivy vulnerability scanner
         if: inputs.scan-image
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.34.1
         with:
           image-ref: ${{ inputs.registry }}/${{ inputs.image-name }}:${{ github.sha }}
           format: 'sarif'
@@ -1079,7 +1079,7 @@ jobs:
           fetch-depth: 0
 
       - name: TruffleHog Secret Scan
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@v3.93.4
         with:
           path: ./
           base: ${{ github.event.repository.default_branch }}
@@ -1124,7 +1124,7 @@ jobs:
 
     steps:
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.34.1
         with:
           image-ref: ${{ inputs.container-image }}
           format: 'sarif'

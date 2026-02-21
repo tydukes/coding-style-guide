@@ -2569,7 +2569,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Flux CLI
-        uses: fluxcd/flux2/action@main
+        uses: fluxcd/flux2/action@v2.7.5
 
       - name: Setup kubeconform
         run: |

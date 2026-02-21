@@ -74,7 +74,7 @@ variables:
 
 build_job:
   stage: build
-  image: node:18-alpine
+  image: node:22-alpine
   script:
     - npm ci
     - npm run build
@@ -85,7 +85,7 @@ build_job:
 
 test_job:
   stage: test
-  image: node:18-alpine
+  image: node:22-alpine
   script:
     - npm ci
     - npm test
@@ -129,7 +129,7 @@ stages:
 ```yaml
 job_name:
   stage: build
-  image: node:18-alpine
+  image: node:22-alpine
   tags:
     - docker
   before_script:
@@ -391,7 +391,7 @@ include:
 
 ```yaml
 .job_template: &job_definition
-  image: node:18-alpine
+  image: node:22-alpine
   before_script:
     - npm ci
   retry:
@@ -414,7 +414,7 @@ build:
 
 ```yaml
 .base_job:
-  image: node:18-alpine
+  image: node:22-alpine
   before_script:
     - npm ci
   retry:
@@ -471,7 +471,7 @@ test:
 ```yaml
 test:
   stage: test
-  image: node:18-alpine
+  image: node:22-alpine
   services:
     - postgres:15-alpine
   variables:
@@ -565,7 +565,7 @@ variables:
 
 ## Reusable templates
 .node_base:
-  image: node:18-alpine
+  image: node:22-alpine
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -724,7 +724,7 @@ gitlab-runner exec docker test
 gitlab-runner exec docker build
 
 ## Test with specific Docker image
-gitlab-runner exec docker --docker-image node:18-alpine test
+gitlab-runner exec docker --docker-image node:22-alpine test
 ```
 
 ### Validating CI Configuration
@@ -782,7 +782,7 @@ validate:dockerfile:
 ```yaml
 test:unit:
   stage: test
-  image: node:18-alpine
+  image: node:22-alpine
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -812,7 +812,7 @@ test:unit:
 ```yaml
 test:integration:
   stage: test
-  image: node:18-alpine
+  image: node:22-alpine
   services:
     - name: postgres:15-alpine
       alias: postgres
@@ -926,7 +926,7 @@ Speed up tests with parallel execution:
 ```yaml
 test:unit:parallel:
   stage: test
-  image: node:18-alpine
+  image: node:22-alpine
   parallel: 4
   cache:
     key: ${CI_COMMIT_REF_SLUG}
@@ -948,7 +948,7 @@ test:unit:parallel:
 ```yaml
 test:coverage:
   stage: test
-  image: node:18-alpine
+  image: node:22-alpine
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -970,7 +970,7 @@ test:coverage:
 ## Enforce coverage threshold
 check:coverage:
   stage: test
-  image: node:18-alpine
+  image: node:22-alpine
   needs: [test:coverage]
   script:
     - |
@@ -1043,14 +1043,14 @@ stages:
 
 unit:tests:
   stage: unit
-  image: node:18-alpine
+  image: node:22-alpine
   script:
     - npm ci
     - npm run test:unit
 
 integration:tests:
   stage: integration
-  image: node:18-alpine
+  image: node:22-alpine
   services:
     - postgres:15-alpine
   script:
@@ -1084,7 +1084,7 @@ test:backend:
 
 test:frontend:
   stage: test
-  image: node:18-alpine
+  image: node:22-alpine
   script:
     - npm ci
     - npm test
@@ -1210,7 +1210,7 @@ Module-level testing that runs on pull requests:
 # Tier 2: Unit Tests - Run on merge requests
 test:terraform:
   stage: test
-  image: golang:1.21
+  image: golang:1.24
   services:
     - docker:dind
   variables:
@@ -1257,7 +1257,7 @@ test:ansible:
 
 test:unit:parallel:
   stage: test
-  image: node:18-alpine
+  image: node:22-alpine
   parallel:
     matrix:
       - PLATFORM: [ubuntu-22.04, debian-11, rhel-9]
@@ -1282,7 +1282,7 @@ Full-stack testing that runs nightly or pre-release:
 # Tier 3: Integration Tests - Nightly or on main branch
 integration:full-stack:
   stage: integration
-  image: golang:1.21
+  image: golang:1.24
   services:
     - docker:dind
   variables:
@@ -1399,7 +1399,7 @@ lint:terraform:advisory:
 
 coverage:advisory:
   stage: test
-  image: node:18-alpine
+  image: node:22-alpine
   needs: [test:unit]
   script:
     - |
@@ -1453,7 +1453,7 @@ security:scan:strict:
 
 coverage:strict:
   stage: test
-  image: node:18-alpine
+  image: node:22-alpine
   needs: [test:unit]
   script:
     - |
@@ -1655,7 +1655,7 @@ test:multi-platform:
 # Parallel Terraform module testing
 test:terraform:modules:
   stage: test
-  image: golang:1.21
+  image: golang:1.24
   parallel:
     matrix:
       - MODULE: [vpc, rds, eks, s3]
@@ -1675,7 +1675,7 @@ test:terraform:modules:
 # Split large test suite across multiple runners
 test:sharded:
   stage: test
-  image: node:18-alpine
+  image: node:22-alpine
   parallel: 8  # Split into 8 shards
   before_script:
     - npm ci
@@ -1695,7 +1695,7 @@ test:sharded:
 # Merge coverage from all shards
 coverage:merge:
   stage: .post
-  image: node:18-alpine
+  image: node:22-alpine
   needs:
     - test:sharded
   script:
@@ -1898,7 +1898,7 @@ Enhance MR visibility with pipeline integration:
 # Generate coverage badge
 coverage:badge:
   stage: .post
-  image: node:18-alpine
+  image: node:22-alpine
   needs: [test:coverage]
   script:
     - |
@@ -2324,14 +2324,14 @@ deploy-prod:
 ```yaml
 ## Bad - Duplicated configuration
 test-unit:
-  image: node:18
+  image: node:22-alpine
   before_script:
     - npm ci
   script:
     - npm run test:unit
 
 test-integration:
-  image: node:18
+  image: node:22-alpine
   before_script:
     - npm ci
   script:
@@ -2339,7 +2339,7 @@ test-integration:
 
 ## Good - Use extends
 .node-base:
-  image: node:18
+  image: node:22-alpine
   before_script:
     - npm ci
 

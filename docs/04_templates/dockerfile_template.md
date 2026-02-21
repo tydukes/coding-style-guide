@@ -141,7 +141,7 @@ CMD ["node", "dist/index.js"]
 
 ```dockerfile
 ## Multi-stage build for Go application
-FROM golang:1.21-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 ## Install build dependencies
 RUN apk add --no-cache git ca-certificates
@@ -634,7 +634,7 @@ docker-compose*.yml
 
 ```dockerfile
 ## Build for multiple architectures
-FROM --platform=$BUILDPLATFORM golang:1.21-alpine AS builder
+FROM --platform=$BUILDPLATFORM golang:1.24-alpine AS builder
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
@@ -663,7 +663,7 @@ ENTRYPOINT ["/server"]
 ### Using Cache Mounts
 
 ```dockerfile
-FROM golang:1.21-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 

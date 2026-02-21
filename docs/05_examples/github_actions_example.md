@@ -468,7 +468,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.34.1
         with:
           scan-type: fs
           scan-ref: ${{ inputs.working-directory }}

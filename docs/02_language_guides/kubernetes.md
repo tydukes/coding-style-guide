@@ -18,7 +18,7 @@ install, and upgrade applications.
 
 - **Paradigm**: Declarative infrastructure as code
 - **Language**: YAML manifests
-- **Version Support**: Kubernetes 1.28.x through 1.31.x
+- **Version Support**: Kubernetes 1.31.x through 1.33.x
 - **Package Manager**: Helm 3.x (chartless installation)
 - **Modern Approach**: Helm charts for reusable application definitions
 
@@ -877,7 +877,7 @@ kubeval deployment.yaml
 kubeval manifests/*.yaml
 
 ## Validate against specific Kubernetes version
-kubeval --kubernetes-version 1.28.0 deployment.yaml
+kubeval --kubernetes-version 1.32.0 deployment.yaml
 
 ## Strict mode (fail on warnings)
 kubeval --strict deployment.yaml

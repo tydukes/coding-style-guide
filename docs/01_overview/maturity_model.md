@@ -409,7 +409,7 @@ jobs:
           bandit -r src/ -f json -o bandit-report.json
 
       - name: Run Trivy
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.34.1
         with:
           scan-type: fs
           security-checks: vuln,config

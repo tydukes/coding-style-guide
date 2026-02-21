@@ -81,7 +81,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -233,7 +233,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node-version: [16, 18, 20]
+        node-version: [20, 22]
 
     steps:
       - uses: actions/checkout@v4
@@ -256,10 +256,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        node-version: [16, 18, 20]
+        node-version: [20, 22]
         include:
           - os: ubuntu-latest
-            node-version: 18
+            node-version: 22
             experimental: true
         exclude:
           - os: macos-latest
@@ -327,7 +327,7 @@ steps:
   - name: Setup Node.js
     uses: actions/setup-node@v4
     with:
-      node-version: '18'
+      node-version: '22'
       cache: 'npm'
 
   - run: npm ci
@@ -482,7 +482,7 @@ jobs:
   call-test-workflow:
     uses: ./.github/workflows/test.yml
     with:
-      node-version: '18'
+      node-version: '22'
     secrets: inherit
 ```
 
@@ -562,7 +562,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-app
         with:
-          node-version: '18'
+          node-version: '22'
 ```
 
 ---
@@ -654,7 +654,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node-version: [18, 20]
+        node-version: [20, 22]
     steps:
       - uses: actions/checkout@v4
 
@@ -1344,7 +1344,7 @@ deploy:
 test:
   strategy:
     matrix:
-      node-version: [16, 18, 20, 22]
+      node-version: [20, 22]
       # No fail-fast or continue-on-error
   runs-on: ubuntu-latest
   steps:
@@ -1359,7 +1359,7 @@ test:
   strategy:
     fail-fast: false  # ✅ Continue on failures
     matrix:
-      node-version: [16, 18, 20, 22]
+      node-version: [20, 22]
   runs-on: ubuntu-latest
   steps:
     - uses: actions/checkout@v4
@@ -1478,7 +1478,7 @@ on:
 ## Good - With caching
 - uses: actions/setup-node@v4
   with:
-    node-version: '18'
+    node-version: '22'
     cache: 'npm'
 - run: npm ci
 ```
@@ -1934,14 +1934,14 @@ jobs:
       fail-fast: false  # Run all combinations
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node-version: [18, 20, 22]
+        node-version: [20, 22]
         include:
           - os: ubuntu-latest
             node-version: 22
             experimental: true
         exclude:
           - os: macos-latest
-            node-version: 18  # Skip old Node on macOS
+            node-version: 22  # Skip old Node on macOS
 
     steps:
       - uses: actions/checkout@v4
@@ -2093,7 +2093,7 @@ jobs:
   test-node-18:
     uses: ./.github/workflows/reusable-test.yml
     with:
-      node-version: '18'
+      node-version: '22'
     secrets: inherit
 
   test-node-20:

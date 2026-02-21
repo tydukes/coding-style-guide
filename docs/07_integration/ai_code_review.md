@@ -912,7 +912,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Trivy scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.34.1
         with:
           scan-type: fs
           severity: HIGH,CRITICAL

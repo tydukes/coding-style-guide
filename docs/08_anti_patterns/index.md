@@ -1037,20 +1037,20 @@ steps:
 
 ```yaml
 jobs:
-  test-node-18:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - run: npm test
-
   test-node-20:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - run: npm test
+
+  test-node-22:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - run: npm test
 ```
 
@@ -1063,7 +1063,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18, 20, 21]
+        node-version: [20, 22]
 
     steps:
       - uses: actions/checkout@v4

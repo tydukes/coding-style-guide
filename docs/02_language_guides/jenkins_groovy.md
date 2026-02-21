@@ -137,7 +137,7 @@ pipeline {
     // Run in Docker container
     agent {
         docker {
-            image 'node:18-alpine'
+            image 'node:22-alpine'
             args '-v /tmp:/tmp'
         }
     }
@@ -1340,7 +1340,7 @@ pipeline {
 pipeline {
     agent {
         docker {
-            image 'node:18-alpine'
+            image 'node:22-alpine'
             args '-u root:root --read-only --tmpfs /tmp'  // Security constraints
         }
     }
