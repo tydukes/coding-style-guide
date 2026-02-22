@@ -25,6 +25,12 @@ This changelog is automatically generated from GitHub releases. Each release inc
 
 Changes that are in the main branch but not yet released.
 
+## [v1.8.19] - 2026-02-22
+
+## What's Changed
+### New Features
+* docs(aws): add IAM and security sections to aws.md (#395)
+
 ## [v1.8.18] - 2026-02-22
 
 ## What's Changed
