@@ -9370,15 +9370,28 @@ httpClient.py  # camelCase
 <li><strong>Flake8</strong>: Style guide enforcement</li>
 <li>Installation: <code>pip install flake8</code></li>
 <li>Configuration: <code>.flake8</code> or <code>setup.cfg</code></li>
-<li>
-<p>Run: <code>flake8 .</code></p>
-</li>
-<li>
-<p><strong>Pylint</strong>: Comprehensive code analysis</p>
-</li>
+<li>Run: <code>flake8 .</code></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># .flake8</span>
+<span class="k">[flake8]</span>
+<span class="na">max-line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100</span>
+<span class="na">extend-ignore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">E203, W503</span>
+<span class="na">exclude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">.git, __pycache__, .venv, dist, build</span>
+<span class="na">per-file-ignores</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">tests/*</span><span class="o">:</span><span class="w"> </span><span class="s">S101</span>
+</code></pre></div>
+<ul>
+<li><strong>Pylint</strong>: Comprehensive code analysis</li>
 <li>Installation: <code>pip install pylint</code></li>
 <li>Run: <code>pylint src/</code></li>
 </ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># .pylintrc (generate full file: pylint --generate-rcfile &gt; .pylintrc)</span>
+<span class="k">[MESSAGES CONTROL]</span>
+<span class="na">disable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">C0114, C0115, C0116</span>
+
+<span class="k">[FORMAT]</span>
+<span class="na">max-line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">100</span>
+</code></pre></div>
 <h3 id="type-checkers">Type Checkers<a class="headerlink" href="#type-checkers" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>mypy</strong>: Static type checker</li>
@@ -9386,6 +9399,14 @@ httpClient.py  # camelCase
 <li>Configuration: <code>mypy.ini</code></li>
 <li>Run: <code>mypy src/</code></li>
 </ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># mypy.ini</span>
+<span class="k">[mypy]</span>
+<span class="na">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3.11</span>
+<span class="na">warn_return_any</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">warn_unused_configs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">disallow_untyped_defs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<span class="na">ignore_missing_imports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+</code></pre></div>
 <h3 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>pytest</strong>: Testing framework</li>
