@@ -45,7 +45,7 @@ web services.
 | 3.12.x  | Active         | 2028-10  | ✅ Yes           |
 | 3.11.x  | Active         | 2027-10  | ✅ Yes           |
 | 3.10.x  | Security       | 2026-10  | ⚠️  Maintenance  |
-| 3.9.x   | Security       | 2025-10  | ❌ EOL Soon      |
+| 3.9.x   | EOL            | 2025-10  | ❌ No            |
 | 3.8.x   | EOL            | 2024-10  | ❌ No            |
 
 **Recommendation**: Use **Python 3.11+** for new projects.
@@ -652,9 +652,28 @@ API_KEY = "sk_live_abc123xyz..."  # Committed to git!
   - Configuration: `.flake8` or `setup.cfg`
   - Run: `flake8 .`
 
+```ini
+# .flake8
+[flake8]
+max-line-length = 100
+extend-ignore = E203, W503
+exclude = .git, __pycache__, .venv, dist, build
+per-file-ignores =
+    tests/*: S101
+```
+
 - **Pylint**: Comprehensive code analysis
   - Installation: `pip install pylint`
   - Run: `pylint src/`
+
+```ini
+# .pylintrc (generate full file: pylint --generate-rcfile > .pylintrc)
+[MESSAGES CONTROL]
+disable = C0114, C0115, C0116
+
+[FORMAT]
+max-line-length = 100
+```
 
 ### Type Checkers
 
@@ -662,6 +681,16 @@ API_KEY = "sk_live_abc123xyz..."  # Committed to git!
   - Installation: `pip install mypy`
   - Configuration: `mypy.ini`
   - Run: `mypy src/`
+
+```ini
+# mypy.ini
+[mypy]
+python_version = 3.11
+warn_return_any = True
+warn_unused_configs = True
+disallow_untyped_defs = True
+ignore_missing_imports = True
+```
 
 ### Testing
 

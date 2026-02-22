@@ -59,7 +59,7 @@ best practices for creating secure, efficient, and maintainable container images
 ## Syntax version (optional but recommended)
 ## syntax=docker/dockerfile:1
 
-FROM node:18-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
@@ -82,18 +82,18 @@ CMD ["node", "index.js"]
 
 ```dockerfile
 ## Good - Pinned to specific version
-FROM node:18.19-alpine3.19
+FROM node:22-alpine
 
 ## Avoid - Using latest or unpinned versions
 FROM node:latest
-FROM node:18
+FROM node:22-alpine
 ```
 
 ### Multi-Stage Builds
 
 ```dockerfile
 ## Build stage
-FROM node:18-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
@@ -101,7 +101,7 @@ COPY . .
 RUN npm run build
 
 ## Production stage
-FROM node:18-alpine AS production
+FROM node:22-alpine AS production
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
@@ -244,7 +244,7 @@ USER nodejs
 ## syntax=docker/dockerfile:1
 
 ## Build stage
-FROM node:18-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
@@ -253,7 +253,7 @@ RUN npm run build && \
     npm prune --production
 
 ## Production stage
-FROM node:18-alpine AS production
+FROM node:22-alpine AS production
 WORKDIR /app
 
 ## Create non-root user
@@ -333,7 +333,7 @@ CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000
 ## syntax=docker/dockerfile:1
 
 ## Build stage
-FROM golang:1.21-alpine AS builder
+FROM golang:1.24-alpine AS builder
 WORKDIR /app
 
 ## Install build dependencies
@@ -687,7 +687,7 @@ jobs:
         run: docker build -t myapp:test .
 
       - name: Run Trivy vulnerability scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.34.1
         with:
           image-ref: myapp:test
           format: sarif
@@ -852,13 +852,13 @@ docker scout cves myapp:latest
 
 ```dockerfile
 ## Good - Minimal alpine image
-FROM node:18-alpine
+FROM node:22-alpine
 
 ## Good - Distroless image (even smaller, no shell)
-FROM gcr.io/distroless/nodejs18-debian11
+FROM gcr.io/distroless/nodejs20-debian12
 
 ## Avoid - Full Debian/Ubuntu images
-FROM node:18
+FROM node:22-alpine
 FROM ubuntu:22.04
 ```
 
@@ -1113,12 +1113,12 @@ docker buildx build --secret id=npmrc,src=.npmrc -t myapp .
 
 ```dockerfile
 ## Bad - Running as root
-FROM node:18-alpine
+FROM node:22-alpine
 COPY . /app
 CMD ["node", "index.js"]
 
 ## Good - Non-root user
-FROM node:18-alpine
+FROM node:22-alpine
 RUN adduser -D appuser
 USER appuser
 COPY . /app
@@ -1132,7 +1132,7 @@ CMD ["node", "index.js"]
 FROM node:latest
 
 ## Good - Pinned version
-FROM node:18.19-alpine3.19
+FROM node:22-alpine
 ```
 
 ### ❌ Avoid: Installing Unnecessary Packages
@@ -1174,7 +1174,7 @@ RUN apt-get update && \
 
 ```dockerfile
 ## Bad - Copies everything including .git, node_modules, etc.
-FROM node:18-alpine
+FROM node:22-alpine
 COPY . /app
 
 ## Good - Use .dockerignore and copy selectively
@@ -1184,7 +1184,7 @@ COPY . /app
 ## .env
 ## *.md
 
-FROM node:18-alpine
+FROM node:22-alpine
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
@@ -1196,7 +1196,7 @@ COPY public/ ./public/
 
 ```dockerfile
 ## Bad - Build tools remain in final image
-FROM node:18
+FROM node:22-alpine
 WORKDIR /app
 COPY package*.json ./
 RUN npm install  # Includes dev dependencies
@@ -1205,14 +1205,14 @@ RUN npm run build
 CMD ["npm", "start"]
 
 ## Good - Multi-stage build
-FROM node:18 AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM node:18-alpine
+FROM node:22-alpine
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
@@ -1225,14 +1225,14 @@ CMD ["node", "dist/index.js"]
 
 ```dockerfile
 ## Bad - Secrets in image layers
-FROM node:18-alpine
+FROM node:22-alpine
 WORKDIR /app
 COPY .env .env  # ❌ Secret file in image!
 RUN echo "API_KEY=secret123" > config.txt  # ❌ In layer history!
 
 ## Good - Use build secrets (Docker BuildKit)
 ## syntax=docker/dockerfile:1
-FROM node:18-alpine
+FROM node:22-alpine
 WORKDIR /app
 RUN --mount=type=secret,id=npmrc,target=/root/.npmrc \
     npm install private-package
@@ -1569,7 +1569,7 @@ RUN --mount=type=cache,target=/root/.npm \
     npm ci --only=production
 
 # Go - cache modules
-FROM golang:1.21-alpine
+FROM golang:1.24-alpine
 WORKDIR /app
 COPY go.* ./
 RUN --mount=type=cache,target=/go/pkg/mod \

@@ -19,7 +19,7 @@ over standalone roles.
 - **Paradigm**: Declarative configuration management
 - **Language**: YAML with Jinja2 templating
 - **Architecture**: Agentless (SSH/WinRM)
-- **Version Support**: Ansible 2.15.x through 2.17.x
+- **Version Support**: Ansible 2.17.x through 2.19.x
 - **Modern Approach**: Collections-first (not standalone roles)
 
 ### Primary Use Cases
@@ -384,7 +384,7 @@ nginx_worker_processes: auto
 galaxy_info:
   author: Tyler Dukes
   description: Configure nginx web server
-  min_ansible_version: "2.15"
+  min_ansible_version: "2.17"
   platforms:
     - name: Ubuntu
       versions:
@@ -1352,7 +1352,7 @@ on:
 
 env:
   PYTHON_VERSION: '3.11'
-  ANSIBLE_VERSION: '2.16'
+  ANSIBLE_VERSION: '2.18'
 
 jobs:
   # Tier 1: Fast Static Analysis
@@ -1457,7 +1457,7 @@ stages:
 
 variables:
   PYTHON_VERSION: "3.11"
-  ANSIBLE_VERSION: "2.16"
+  ANSIBLE_VERSION: "2.18"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
 
 cache:

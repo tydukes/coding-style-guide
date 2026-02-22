@@ -57,6 +57,14 @@ def analyze_markdown_file(file_path: Path) -> Tuple[int, int, float]:
     return code_lines, text_lines, ratio
 
 
+# Guides exempt from the 3:1 ratio requirement.
+# These are reference/comparison pages whose value is in structured tables,
+# not code examples, so the ratio metric is not meaningful for them.
+EXEMPT_GUIDES = {
+    "comparison_matrix",
+}
+
+
 def main():
     """Main analysis function."""
     guides_dir = Path("docs/02_language_guides")
@@ -83,18 +91,22 @@ def main():
     total_code = 0
     total_text = 0
     below_target = []
+    exempt_count = 0
 
     for guide_file in guide_files:
         guide_name = guide_file.stem
         code_lines, text_lines, ratio = analyze_markdown_file(guide_file)
         results[guide_name] = (code_lines, text_lines, ratio)
 
-        total_code += code_lines
-        total_text += text_lines
-
-        status = "✅ PASS" if ratio >= 3.0 else "❌ FAIL"
-        if ratio < 3.0:
-            below_target.append((guide_name, ratio))
+        if guide_name in EXEMPT_GUIDES:
+            status = "⬜ EXEMPT"
+            exempt_count += 1
+        else:
+            total_code += code_lines
+            total_text += text_lines
+            status = "✅ PASS" if ratio >= 3.0 else "❌ FAIL"
+            if ratio < 3.0:
+                below_target.append((guide_name, ratio, code_lines, text_lines))
 
         print(
             f"{guide_name:<30} {code_lines:>12} {text_lines:>12} {ratio:>10.2f} {status:>10}"
@@ -111,16 +123,20 @@ def main():
 
     if below_target:
         print(f"\n{len(below_target)} guides below 3:1 target ratio:")
-        for guide_name, ratio in sorted(below_target, key=lambda x: x[1]):
+        for guide_name, ratio, code_lines, text_lines in sorted(
+            below_target, key=lambda x: x[1]
+        ):
             needed_code = (text_lines * 3) - code_lines
             print(
                 f"  - {guide_name}: {ratio:.2f} (needs ~{needed_code} more code lines)"
             )
 
+    eligible = len(guide_files) - exempt_count
+    passing = eligible - len(below_target)
     print("\nTarget: 3:1 code-to-text ratio")
-    print(
-        f"Achievement: {len(guide_files) - len(below_target)}/{len(guide_files)} guides pass"
-    )
+    if exempt_count:
+        print(f"Exempt:  {exempt_count} guide(s) — {', '.join(sorted(EXEMPT_GUIDES))}")
+    print(f"Achievement: {passing}/{eligible} guides pass")
 
     return 0 if not below_target else 1
 

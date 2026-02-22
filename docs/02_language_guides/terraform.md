@@ -2191,7 +2191,7 @@ jobs:
           soft_fail: false
 
       - name: Run Checkov
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@v12
         with:
           directory: .
           framework: terraform
@@ -2338,7 +2338,7 @@ terraform-test:
 
 terratest-unit:
   stage: test-unit
-  image: golang:1.21
+  image: golang:1.24
   script:
     - cd tests/unit
     - go test -v -timeout 20m ./... | tee test-output.log
@@ -2349,7 +2349,7 @@ terratest-unit:
 # Tier 3: Integration Tests
 terratest-integration:
   stage: test-integration
-  image: golang:1.21
+  image: golang:1.24
   only:
     - main
     - tags
@@ -2363,7 +2363,7 @@ terratest-integration:
 # Generate Coverage Report
 test-coverage:
   stage: report
-  image: golang:1.21
+  image: golang:1.24
   script:
     - go test -coverprofile=coverage.out ./...
     - go tool cover -html=coverage.out -o coverage.html
@@ -10461,7 +10461,7 @@ terraform-test:
 
 terratest:
   stage: test
-  image: golang:1.21
+  image: golang:1.24
   before_script:
     - apt-get update && apt-get install -y wget unzip
     - wget -q https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip

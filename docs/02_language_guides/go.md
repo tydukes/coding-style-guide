@@ -43,12 +43,12 @@ applications, microservices, CLI tools, and infrastructure automation.
 
 | Version | Support Status | EOL Date   | Recommended      |
 |---------|----------------|------------|------------------|
-| 1.23.x  | Active         | 2025-08    | ✅ Yes           |
-| 1.22.x  | Active         | 2025-02    | ✅ Yes           |
-| 1.21.x  | Security       | 2024-08    | ⚠️  Maintenance  |
-| 1.20.x  | EOL            | 2024-02    | ❌ No            |
+| 1.25.x  | Active         | 2026-08    | ✅ Yes           |
+| 1.24.x  | Active         | 2026-02    | ✅ Yes           |
+| 1.23.x  | EOL            | 2025-08    | ❌ No            |
+| 1.22.x  | EOL            | 2025-02    | ❌ No            |
 
-**Recommendation**: Use **Go 1.22+** for new projects.
+**Recommendation**: Use **Go 1.24+** for new projects.
 Go maintains backward compatibility, so newer versions typically work with existing code.
 
 **EOL Policy**: Go supports the two most recent major versions with security patches.
@@ -56,10 +56,10 @@ Upgrade promptly when new versions are released.
 
 **Version Features**:
 
+- **Go 1.25**: Range function improvements, enhanced toolchain, performance gains
+- **Go 1.24**: Generic type aliases, improved `go tool` integration, weak pointers
 - **Go 1.23**: Enhanced iterators, improved tooling, performance optimizations
 - **Go 1.22**: Range over integers, improved HTTP routing, enhanced tooling
-- **Go 1.21**: Built-in min/max/clear, structured logging (slog), improved WASI support
-- **Go 1.20**: Profile-guided optimization, improved error wrapping
 
 ## Quick Reference
 
@@ -138,7 +138,7 @@ myproject/
 // go.mod
 module github.com/myorg/myproject
 
-go 1.22
+go 1.24
 
 require (
     github.com/gin-gonic/gin v1.9.1
