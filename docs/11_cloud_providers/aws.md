@@ -1851,3 +1851,573 @@ resource "aws_cloudwatch_metric_alarm" "root_login" {
 
   tags = local.common_tags
 }
+
+---
+
+## Networking
+
+Networking follows a hub-and-spoke model: a shared network account hosts Transit Gateway and
+centralized egress; spoke VPCs in workload accounts attach via TGW and route all egress through
+the hub. Each workload VPC is divided into three subnet tiers (public, private, intra) across
+three Availability Zones.
+
+### VPC Design
+
+```hcl
+# locals.tf — shared networking locals used throughout the VPC module
+locals {
+  azs = slice(data.aws_availability_zones.available.names, 0, 3)
+
+  # /16 base divided into /18 blocks per tier, then /20 per AZ
+  vpc_cidr = var.vpc_cidr # e.g. "10.20.0.0/16"
+
+  public_subnets  = [for i, az in local.azs : cidrsubnet(local.vpc_cidr, 4, i)]
+  private_subnets = [for i, az in local.azs : cidrsubnet(local.vpc_cidr, 4, i + 4)]
+  intra_subnets   = [for i, az in local.azs : cidrsubnet(local.vpc_cidr, 4, i + 8)]
+}
+
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+resource "aws_vpc" "this" {
+  cidr_block           = local.vpc_cidr
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-vpc"
+  })
+}
+
+resource "aws_internet_gateway" "this" {
+  vpc_id = aws_vpc.this.id
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-igw"
+  })
+}
+```
+
+### Subnet Layout
+
+```hcl
+# Public subnets — one per AZ, map_public_ip_on_launch for load balancers only
+resource "aws_subnet" "public" {
+  count = length(local.azs)
+
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = local.public_subnets[count.index]
+  availability_zone       = local.azs[count.index]
+  map_public_ip_on_launch = false # ALBs use ENIs; only enable if required
+
+  tags = merge(local.common_tags, {
+    Name                     = "${var.workload}-${var.environment}-public-${local.azs[count.index]}"
+    "kubernetes.io/role/elb" = "1" # required if EKS public ALBs used
+  })
+}
+
+# Private subnets — for compute (EKS nodes, ECS tasks, Lambda VPC)
+resource "aws_subnet" "private" {
+  count = length(local.azs)
+
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = local.private_subnets[count.index]
+  availability_zone = local.azs[count.index]
+
+  tags = merge(local.common_tags, {
+    Name                              = "${var.workload}-${var.environment}-private-${local.azs[count.index]}"
+    "kubernetes.io/role/internal-elb" = "1" # required for EKS internal ALBs
+  })
+}
+
+# Intra subnets — isolated (no NAT route), for RDS, ElastiCache, VPC endpoints
+resource "aws_subnet" "intra" {
+  count = length(local.azs)
+
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = local.intra_subnets[count.index]
+  availability_zone = local.azs[count.index]
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-intra-${local.azs[count.index]}"
+  })
+}
+
+# Route tables
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.this.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.this.id
+  }
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-public-rt"
+  })
+}
+
+resource "aws_route_table_association" "public" {
+  count          = length(local.azs)
+  subnet_id      = aws_subnet.public[count.index].id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table" "private" {
+  count  = length(local.azs)
+  vpc_id = aws_vpc.this.id
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-private-rt-${local.azs[count.index]}"
+  })
+}
+
+resource "aws_route_table_association" "private" {
+  count          = length(local.azs)
+  subnet_id      = aws_subnet.private[count.index].id
+  route_table_id = aws_route_table.private[count.index].id
+}
+
+resource "aws_route_table" "intra" {
+  vpc_id = aws_vpc.this.id
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-intra-rt"
+  })
+}
+
+resource "aws_route_table_association" "intra" {
+  count          = length(local.azs)
+  subnet_id      = aws_subnet.intra[count.index].id
+  route_table_id = aws_route_table.intra.id
+}
+```
+
+### NAT Gateway
+
+One NAT Gateway per AZ for high availability. Single-AZ NAT is acceptable for
+non-production environments to reduce cost.
+
+```hcl
+resource "aws_eip" "nat" {
+  count  = length(local.azs)
+  domain = "vpc"
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-nat-eip-${local.azs[count.index]}"
+  })
+}
+
+resource "aws_nat_gateway" "this" {
+  count = length(local.azs)
+
+  allocation_id = aws_eip.nat[count.index].id
+  subnet_id     = aws_subnet.public[count.index].id
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-nat-${local.azs[count.index]}"
+  })
+
+  depends_on = [aws_internet_gateway.this]
+}
+
+# Default route for private subnets — route through AZ-local NAT GW
+resource "aws_route" "private_nat" {
+  count = length(local.azs)
+
+  route_table_id         = aws_route_table.private[count.index].id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.this[count.index].id
+}
+```
+
+### Security Groups
+
+```hcl
+# ALB security group — accepts HTTPS from internet, allows health checks
+resource "aws_security_group" "alb" {
+  name        = "${var.workload}-${var.environment}-alb-sg"
+  description = "External ALB — HTTPS inbound only"
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    description = "HTTPS from internet"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "All outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-alb-sg"
+  })
+}
+
+# Application security group — accepts traffic from ALB only
+resource "aws_security_group" "app" {
+  name        = "${var.workload}-${var.environment}-app-sg"
+  description = "Application tier — traffic from ALB only"
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    description     = "HTTP from ALB"
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb.id]
+  }
+
+  egress {
+    description = "All outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-app-sg"
+  })
+}
+
+# Database security group — accepts traffic from app tier only
+resource "aws_security_group" "db" {
+  name        = "${var.workload}-${var.environment}-db-sg"
+  description = "Database tier — app tier only"
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    description     = "PostgreSQL from app"
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [aws_security_group.app.id]
+  }
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-db-sg"
+  })
+}
+
+# VPC endpoint security group — accepts HTTPS from within VPC
+resource "aws_security_group" "vpc_endpoints" {
+  name        = "${var.workload}-${var.environment}-vpce-sg"
+  description = "VPC interface endpoints — HTTPS from VPC CIDR"
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    description = "HTTPS from VPC"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.this.cidr_block]
+  }
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-vpce-sg"
+  })
+}
+```
+
+### VPC Endpoints
+
+Use VPC endpoints to keep AWS API traffic off the internet. Gateway endpoints
+(S3, DynamoDB) are free; interface endpoints (ECR, Secrets Manager, SSM) incur
+hourly charges per AZ.
+
+```hcl
+# Gateway endpoints — no cost, no security group required
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id            = aws_vpc.this.id
+  service_name      = "com.amazonaws.${var.aws_region}.s3"
+  vpc_endpoint_type = "Gateway"
+
+  route_table_ids = concat(
+    aws_route_table.private[*].id,
+    [aws_route_table.intra.id]
+  )
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-s3-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "dynamodb" {
+  vpc_id            = aws_vpc.this.id
+  service_name      = "com.amazonaws.${var.aws_region}.dynamodb"
+  vpc_endpoint_type = "Gateway"
+
+  route_table_ids = concat(
+    aws_route_table.private[*].id,
+    [aws_route_table.intra.id]
+  )
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-dynamodb-endpoint"
+  })
+}
+
+# Interface endpoints — required for private EKS nodes pulling images
+resource "aws_vpc_endpoint" "ecr_api" {
+  vpc_id              = aws_vpc.this.id
+  service_name        = "com.amazonaws.${var.aws_region}.ecr.api"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.intra[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-ecr-api-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "ecr_dkr" {
+  vpc_id              = aws_vpc.this.id
+  service_name        = "com.amazonaws.${var.aws_region}.ecr.dkr"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.intra[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-ecr-dkr-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "secretsmanager" {
+  vpc_id              = aws_vpc.this.id
+  service_name        = "com.amazonaws.${var.aws_region}.secretsmanager"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.intra[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-secretsmanager-endpoint"
+  })
+}
+
+resource "aws_vpc_endpoint" "ssm" {
+  vpc_id              = aws_vpc.this.id
+  service_name        = "com.amazonaws.${var.aws_region}.ssm"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.intra[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-ssm-endpoint"
+  })
+}
+```
+
+### Transit Gateway
+
+Transit Gateway provides org-wide hub-and-spoke routing. The TGW lives in the
+shared network account and is shared to workload accounts via AWS RAM.
+
+```hcl
+# network account — create the TGW
+resource "aws_ec2_transit_gateway" "this" {
+  description                     = "Organization Transit Gateway"
+  amazon_side_asn                 = 64512
+  auto_accept_shared_attachments  = "disable"
+  default_route_table_association = "disable"
+  default_route_table_propagation = "disable"
+  dns_support                     = "enable"
+  vpn_ecmp_support                = "enable"
+
+  tags = merge(local.common_tags, {
+    Name = "org-tgw"
+  })
+}
+
+# Share TGW to the entire organization via RAM
+resource "aws_ram_resource_share" "tgw" {
+  name                      = "org-tgw-share"
+  allow_external_principals = false
+
+  tags = local.common_tags
+}
+
+resource "aws_ram_resource_association" "tgw" {
+  resource_arn       = aws_ec2_transit_gateway.this.arn
+  resource_share_arn = aws_ram_resource_share.tgw.arn
+}
+
+resource "aws_ram_principal_association" "org" {
+  principal          = data.aws_organizations_organization.this.arn
+  resource_share_arn = aws_ram_resource_share.tgw.arn
+}
+
+# Separate route tables for prod and non-prod isolation
+resource "aws_ec2_transit_gateway_route_table" "prod" {
+  transit_gateway_id = aws_ec2_transit_gateway.this.id
+
+  tags = merge(local.common_tags, {
+    Name = "tgw-rt-prod"
+  })
+}
+
+resource "aws_ec2_transit_gateway_route_table" "nonprod" {
+  transit_gateway_id = aws_ec2_transit_gateway.this.id
+
+  tags = merge(local.common_tags, {
+    Name = "tgw-rt-nonprod"
+  })
+}
+
+# workload account — attach the spoke VPC to TGW
+resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
+  transit_gateway_id = var.transit_gateway_id # passed from network account output
+  vpc_id             = aws_vpc.this.id
+  subnet_ids         = aws_subnet.private[*].id
+
+  dns_support                                     = "enable"
+  transit_gateway_default_route_table_association = false
+  transit_gateway_default_route_table_propagation = false
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-tgw-attachment"
+  })
+}
+
+# Add TGW route to private route tables for RFC 1918 ranges
+resource "aws_route" "private_tgw" {
+  count = length(local.azs)
+
+  route_table_id         = aws_route_table.private[count.index].id
+  destination_cidr_block = "10.0.0.0/8"
+  transit_gateway_id     = var.transit_gateway_id
+}
+```
+
+### Network ACLs
+
+Security groups are stateful and the primary control plane. NACLs provide a
+stateless secondary layer — use them for intra subnets to explicitly deny
+unexpected traffic.
+
+```hcl
+resource "aws_network_acl" "intra" {
+  vpc_id     = aws_vpc.this.id
+  subnet_ids = aws_subnet.intra[*].id
+
+  # Allow return traffic from ephemeral ports
+  ingress {
+    rule_no    = 100
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = aws_vpc.this.cidr_block
+    from_port  = 0
+    to_port    = 65535
+  }
+
+  # Allow all outbound within VPC
+  egress {
+    rule_no    = 100
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = aws_vpc.this.cidr_block
+    from_port  = 0
+    to_port    = 65535
+  }
+
+  # Explicit deny-all fallthrough (NACLs end with implicit deny)
+  ingress {
+    rule_no    = 32766
+    protocol   = "-1"
+    action     = "deny"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  egress {
+    rule_no    = 32766
+    protocol   = "-1"
+    action     = "deny"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-intra-nacl"
+  })
+}
+```
+
+### VPC Flow Logs
+
+Enable flow logs for all VPCs. Store in CloudWatch for short-term analysis and
+optionally replicate to S3 in the log-archive account for long-term retention.
+
+```hcl
+resource "aws_cloudwatch_log_group" "flow_logs" {
+  name              = "/aws/vpc/flow-logs/${var.workload}-${var.environment}"
+  retention_in_days = 90
+  kms_key_id        = aws_kms_key.main.arn
+
+  tags = local.common_tags
+}
+
+resource "aws_iam_role" "flow_logs" {
+  name = "${var.workload}-${var.environment}-vpc-flow-logs"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "vpc-flow-logs.amazonaws.com" }
+      Action    = "sts:AssumeRole"
+      Condition = {
+        StringEquals = {
+          "aws:SourceAccount" = data.aws_caller_identity.current.account_id
+        }
+      }
+    }]
+  })
+
+  tags = local.common_tags
+}
+
+resource "aws_iam_role_policy" "flow_logs" {
+  name = "vpc-flow-logs-cw"
+  role = aws_iam_role.flow_logs.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Action = [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams"
+      ]
+      Resource = "${aws_cloudwatch_log_group.flow_logs.arn}:*"
+    }]
+  })
+}
+
+resource "aws_flow_log" "this" {
+  vpc_id          = aws_vpc.this.id
+  traffic_type    = "ALL"
+  iam_role_arn    = aws_iam_role.flow_logs.arn
+  log_destination = aws_cloudwatch_log_group.flow_logs.arn
+
+  tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-vpc-flow-logs"
+  })
+}
