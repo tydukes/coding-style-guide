@@ -25,6 +25,19 @@ This changelog is automatically generated from GitHub releases. Each release inc
 
 Changes that are in the main branch but not yet released.
 
+## [v1.8.6] - 2026-02-22
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+## What's Changed
+### Other Changes
+* docs(meta): rewrite CLAUDE.md — fix stale data, reduce to 237 lines by @tydukes in https://github.com/tydukes/coding-style-guide/pull/374
+
+
+**Full Changelog**: https://github.com/tydukes/coding-style-guide/compare/v1.8.5...v1.8.6
+
+[View Release](https://github.com/tydukes/coding-style-guide/releases/tag/v1.8.6)
+
 ## [v1.8.5] - 2026-02-22
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -395,4 +408,4 @@ This release adds comprehensive repository documentation and community files to 
 
 ---
 
-*This changelog was automatically generated on 2026-02-22 00:19:38 UTC*
+*This changelog was automatically generated on 2026-02-22 00:59:21 UTC*
