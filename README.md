@@ -9,8 +9,8 @@
 [![Link Checker](https://github.com/tydukes/coding-style-guide/actions/workflows/link-checker.yml/badge.svg)](https://github.com/tydukes/coding-style-guide/actions/workflows/link-checker.yml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Code-to-Text Ratio](https://img.shields.io/badge/code--to--text%20ratio-2.38:1-yellow.svg)](https://tydukes.github.io/coding-style-guide/project_status/)
-[![Guides Passing](https://img.shields.io/badge/guides%20passing-18%2F19-success.svg)](https://tydukes.github.io/coding-style-guide/project_status/)
+[![Code-to-Text Ratio](https://img.shields.io/badge/code--to--text%20ratio-7.76:1-brightgreen.svg)](https://tydukes.github.io/coding-style-guide/project_status/)
+[![Guides Passing](https://img.shields.io/badge/guides%20passing-34%2F36-success.svg)](https://tydukes.github.io/coding-style-guide/project_status/)
 [![Documentation Pages](https://img.shields.io/badge/docs%20pages-73-blue.svg)](https://tydukes.github.io/coding-style-guide/)
 [![Version](https://img.shields.io/github/v/release/tydukes/coding-style-guide)](https://github.com/tydukes/coding-style-guide/releases)
 [![Last Commit](https://img.shields.io/github/last-commit/tydukes/coding-style-guide)](https://github.com/tydukes/coding-style-guide/commits/main)
@@ -31,7 +31,7 @@ secure, and AI-optimized code across multiple languages and tools.
 
 ### Key Benefits
 
-- **Multi-Language Coverage**: 19 language-specific guides (Terraform, Python, Ansible, TypeScript, Bash, and more)
+- **Multi-Language Coverage**: 36 language-specific guides (Terraform, Python, Ansible, TypeScript, Bash, and more)
 - **Automated Validation**: Containerized tools for linting, formatting, and metadata validation
 - **Zero Local Setup**: Run validation via Docker without installing dependencies
 - **CI/CD Ready**: GitHub Actions, GitLab CI, and Jenkins integration examples
@@ -208,22 +208,31 @@ docker-compose run --rm format
 
 ## What's Included
 
-### 19 Language Guides
+### 36 Language Guides
 
 **Infrastructure as Code:**
 
 - Terraform
 - Terragrunt
+- HCL
 - AWS CDK (TypeScript)
+- AWS CloudFormation
+- Azure Bicep
+- Crossplane
+- Pulumi
 - Kubernetes/Helm (YAML)
 - Ansible
+- GitOps
+- Compliance as Code
 - Docker (Dockerfile)
 - Docker Compose (YAML)
+- DevContainer
 
 **Programming Languages:**
 
 - Python
 - TypeScript
+- Go
 - Bash
 - PowerShell
 - SQL
@@ -233,15 +242,22 @@ docker-compose run --rm format
 
 - YAML
 - JSON
+- JSON Schema
+- TOML/INI
 
 **CI/CD:**
 
 - GitHub Actions (YAML)
 - GitLab CI/CD (YAML)
+- Jenkins Shared Libraries
 
-**Build Tools:**
+**Build & Tooling:**
 
 - Makefile
+- Task Runners
+- Shell Aliases
+- Diagram as Code
+- Interoperability
 
 ### Validation Tools Included
 
@@ -466,7 +482,7 @@ Comprehensive documentation is available at:
 ### Key Documentation Sections
 
 - **[Language Guides](https://tydukes.github.io/coding-style-guide/02_language_guides/)**:
-  In-depth guides for all 19 languages
+  In-depth guides for all 36 languages
 - **[Container Usage](https://tydukes.github.io/coding-style-guide/06_container/usage/)**:
   Advanced container integration patterns
 - **[CI/CD Integration](https://tydukes.github.io/coding-style-guide/05_ci_cd/)**:
