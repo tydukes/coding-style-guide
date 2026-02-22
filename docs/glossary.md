@@ -1,6 +1,6 @@
 ---
 title: "Glossary"
-description: "Comprehensive glossary of terms used in the Dukes Engineering Style Guide"
+description: "Comprehensive glossary of terms used in the DevOps Engineering Style Guide"
 author: "Tyler Dukes"
 tags: [glossary, terms, definitions, reference, dictionary]
 category: "Reference"
@@ -8,7 +8,7 @@ status: "active"
 search_keywords: [glossary, definitions, terms, acronyms, abbreviations, reference, dictionary]
 ---
 
-This glossary defines terms used throughout the Dukes Engineering Style Guide, including technical concepts, tool names,
+This glossary defines terms used throughout the DevOps Engineering Style Guide, including technical concepts, tool names,
 metadata tags, and industry terminology.
 
 !!! tip "Quick Navigation"

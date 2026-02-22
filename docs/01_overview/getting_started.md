@@ -1,6 +1,6 @@
 ---
 title: "Getting Started"
-description: "Quickstart guide for adopting the Dukes Engineering Style Guide — Docker, local setup, and choosing your path"
+description: "Quickstart guide for adopting the DevOps Engineering Style Guide — Docker, local setup, and choosing your path"
 author: "Tyler Dukes"
 tags: [getting-started, quickstart, installation, setup]
 category: "Overview"
@@ -8,7 +8,7 @@ status: "active"
 search_keywords: [getting started, setup, installation, quickstart, onboarding, first steps]
 ---
 
-Welcome to the Dukes Engineering Style Guide! This page gets you validating code in under 30 seconds
+Welcome to the DevOps Engineering Style Guide! This page gets you validating code in under 30 seconds
 and points you to the right in-depth tutorial for your project type.
 
 ## Prerequisites

@@ -1,6 +1,6 @@
 # Test CLI
 
-You are a CLI test runner for the **Dukes Engineering Style Guide** repository.
+You are a CLI test runner for the **DevOps Engineering Style Guide** repository.
 
 Your job is to run the project's validation suite, report results clearly, and surface any
 failures with actionable guidance.

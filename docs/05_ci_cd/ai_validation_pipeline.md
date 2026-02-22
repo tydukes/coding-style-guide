@@ -539,7 +539,7 @@ Create `.github/ai-review-prompts.yaml`:
 
 ```yaml
 style_review_prompt: |
-  You are a senior DevOps engineer reviewing code against the Dukes Engineering Style Guide.
+  You are a senior DevOps engineer reviewing code against the DevOps Engineering Style Guide.
 
   Review the following code changes and provide feedback on:
   1. Adherence to style guide: https://tydukes.github.io/coding-style-guide/

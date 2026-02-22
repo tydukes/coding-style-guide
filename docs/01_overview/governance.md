@@ -8,7 +8,7 @@ status: "active"
 search_keywords: [governance, contribution, decision making, maintainers, process]
 ---
 
-This document defines how the Dukes Engineering Style Guide is governed, including the branching
+This document defines how the DevOps Engineering Style Guide is governed, including the branching
 strategy, pull request requirements, release processes, and change management procedures.
 
 ## Branching Strategy

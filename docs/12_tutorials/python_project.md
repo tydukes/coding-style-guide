@@ -88,7 +88,7 @@ mkdir -p src/my_flask_api tests .github/workflows
 [project]
 name = "my-flask-api"
 version = "0.1.0"
-description = "A production-ready Flask REST API following Dukes Engineering Style Guide"
+description = "A production-ready Flask REST API following DevOps Engineering Style Guide"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [
@@ -615,7 +615,7 @@ kill %1
 
 ## Step 3: Add Metadata (3 min)
 
-Every source file already includes the `@module` metadata block in its docstring. This is the standard format required by the Dukes Engineering Style Guide.
+Every source file already includes the `@module` metadata block in its docstring. This is the standard format required by the DevOps Engineering Style Guide.
 
 ### Metadata Format Reference
 
@@ -634,7 +634,7 @@ Every source file already includes the `@module` metadata block in its docstring
 ### Validate Metadata
 
 ```bash
-# If you have the Dukes style guide tools available:
+# If you have the DevOps style guide tools available:
 # python scripts/validate_metadata.py src/
 
 # Quick manual check - ensure all files have @module tags
@@ -1428,7 +1428,7 @@ git commit -m "feat: your commit message"
 
 After completing this tutorial, continue your learning path:
 
-- **[Tutorial 2: Migrating Existing Terraform Module](terraform_migration.md)** -- Apply the Dukes style to infrastructure code with CONTRACT.md and automated testing.
+- **[Tutorial 2: Migrating Existing Terraform Module](terraform_migration.md)** -- Apply the DevOps style to infrastructure code with CONTRACT.md and automated testing.
 - **[Tutorial 3: Full-Stack App with Multiple Languages](fullstack_app.md)** -- Combine Python, TypeScript, and Terraform in a single validated project.
 - **[Python Style Guide](../02_language_guides/python.md)** -- Deep dive into all Python standards including type hints, docstrings, and advanced patterns.
 - **[CONTRACT.md Template](../04_templates/contract_template.md)** -- Learn contract-based development for reusable modules.

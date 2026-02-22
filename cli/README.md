@@ -1,7 +1,7 @@
-# Dukes Style Guide CLI
+# DevOps Engineering Style Guide CLI
 
 A standalone CLI tool for enforcing
-[The Dukes Engineering Style Guide](https://tydukes.github.io/coding-style-guide/)
+[DevOps Engineering Style Guide](https://tydukes.github.io/coding-style-guide/)
 standards across your codebase.
 
 ## Features
@@ -16,112 +16,112 @@ standards across your codebase.
 
 ```bash
 # Install globally
-npm install -g @dukes/style-guide-cli
+npm install -g devops-engineering-style-guide
 
 # Or use with npx
-npx @dukes/style-guide-cli check
+npx devops-engineering-style-guide check
 ```
 
 ## Quick Start
 
 ```bash
 # Initialize configuration in your project
-dukes-style init
+devops-style init
 
 # Check all files
-dukes-style check
+devops-style check
 
 # Auto-fix issues
-dukes-style fix
+devops-style fix
 
 # Check specific files
-dukes-style check "src/**/*.py"
+devops-style check "src/**/*.py"
 
 # Output as JSON (for CI/CD)
-dukes-style check --format json
+devops-style check --format json
 
 # Check only specific language
-dukes-style check --language python
+devops-style check --language python
 ```
 
 ## Commands
 
-### `dukes-style check [files...]`
+### `devops-style check [files...]`
 
 Check files for style violations.
 
 ```bash
 # Check all files
-dukes-style check
+devops-style check
 
 # Check specific glob patterns
-dukes-style check "src/**/*.ts" "lib/**/*.js"
+devops-style check "src/**/*.ts" "lib/**/*.js"
 
 # Check with specific language filter
-dukes-style check --language python
+devops-style check --language python
 
 # Output as JSON
-dukes-style check --format json
+devops-style check --format json
 
 # Output as SARIF (for GitHub Code Scanning)
-dukes-style check --format sarif > results.sarif
+devops-style check --format sarif > results.sarif
 
 # Treat warnings as errors
-dukes-style check --strict
+devops-style check --strict
 
 # Show only errors (no warnings)
-dukes-style check --quiet
+devops-style check --quiet
 
 # Also fix issues
-dukes-style check --fix
+devops-style check --fix
 ```
 
-### `dukes-style fix [files...]`
+### `devops-style fix [files...]`
 
 Auto-fix style violations where possible.
 
 ```bash
 # Fix all files
-dukes-style fix
+devops-style fix
 
 # Preview what would be changed
-dukes-style fix --dry-run
+devops-style fix --dry-run
 
 # Fix specific language
-dukes-style fix --language typescript
+devops-style fix --language typescript
 ```
 
-### `dukes-style init`
+### `devops-style init`
 
 Initialize configuration in the current project.
 
 ```bash
 # Create standard configuration
-dukes-style init
+devops-style init
 
 # Use minimal configuration
-dukes-style init --template minimal
+devops-style init --template minimal
 
 # Use strict configuration
-dukes-style init --template strict
+devops-style init --template strict
 
 # Overwrite existing configuration
-dukes-style init --force
+devops-style init --force
 ```
 
-### `dukes-style list`
+### `devops-style list`
 
 List available linters and their installation status.
 
 ```bash
 # List all linters
-dukes-style list
+devops-style list
 
 # List linters for specific language
-dukes-style list --language python
+devops-style list --language python
 
 # Output as JSON
-dukes-style list --format json
+devops-style list --format json
 ```
 
 ## Configuration
@@ -133,8 +133,8 @@ The CLI looks for configuration in the following locations (in order):
 3. `.dukestylerc.yaml`
 4. `.dukestylerc.yml`
 5. `dukestyle.config.js`
-6. `.dukes-style.json`
-7. `.dukes-style.yaml`
+6. `.devops-style.json`
+7. `.devops-style.yaml`
 8. `package.json` (`dukestyle` key)
 
 ### Example Configuration
@@ -239,10 +239,10 @@ jobs:
           node-version: '20'
 
       - name: Install CLI
-        run: npm install -g @dukes/style-guide-cli
+        run: npm install -g devops-engineering-style-guide
 
       - name: Check style
-        run: dukes-style check --format sarif > results.sarif
+        run: devops-style check --format sarif > results.sarif
 
       - name: Upload SARIF
         uses: github/codeql-action/upload-sarif@v3
@@ -256,8 +256,8 @@ jobs:
 style-check:
   image: node:20
   script:
-    - npm install -g @dukes/style-guide-cli
-    - dukes-style check --format json > style-report.json
+    - npm install -g devops-engineering-style-guide
+    - devops-style check --format json > style-report.json
   artifacts:
     reports:
       codequality: style-report.json
@@ -326,7 +326,7 @@ plugins:
 
 ## Related
 
-- [The Dukes Engineering Style Guide](https://tydukes.github.io/coding-style-guide/)
+- [DevOps Engineering Style Guide](https://tydukes.github.io/coding-style-guide/)
 - [Docker Container](https://github.com/tydukes/coding-style-guide/pkgs/container/coding-style-guide)
 
 ## License

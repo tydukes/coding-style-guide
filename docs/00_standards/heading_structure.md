@@ -10,7 +10,7 @@ search_keywords: [headings, document structure, markdown, formatting, hierarchy,
 
 ## Purpose
 
-This document defines the standardized heading structure for all documentation in the Dukes Engineering Style Guide.
+This document defines the standardized heading structure for all documentation in the DevOps Engineering Style Guide.
 Consistent heading hierarchies improve navigation, readability, and maintainability.
 
 ## General Heading Principles

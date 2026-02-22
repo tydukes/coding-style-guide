@@ -142,7 +142,7 @@ function formatSarif(output: LintOutput): string {
       {
         tool: {
           driver: {
-            name: "dukes-style",
+            name: "devops-style",
             version: "1.0.0",
             informationUri: "https://tydukes.github.io/coding-style-guide/",
             rules: extractRules(output.results),
@@ -275,8 +275,8 @@ export function formatInitSuccess(configPath: string, template: string): string 
   lines.push("");
   lines.push(chalk.dim("Next steps:"));
   lines.push(chalk.dim("  1. Review and customize the configuration"));
-  lines.push(chalk.dim("  2. Run 'dukes-style check' to validate your code"));
-  lines.push(chalk.dim("  3. Run 'dukes-style fix' to auto-fix issues"));
+  lines.push(chalk.dim("  2. Run 'devops-style check' to validate your code"));
+  lines.push(chalk.dim("  3. Run 'devops-style fix' to auto-fix issues"));
   lines.push("");
 
   return lines.join("\n");

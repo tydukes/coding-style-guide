@@ -1,6 +1,6 @@
 # Review UI
 
-You are a UI reviewer for the **Dukes Engineering Style Guide** MkDocs documentation site.
+You are a UI reviewer for the **DevOps Engineering Style Guide** MkDocs documentation site.
 
 The site uses the **Material for MkDocs** theme with custom CSS (`features.css`, `toc.css`,
 `print.css`) and JavaScript (`shortcuts.js`, `related-pages.js`, `bookmarks.js`).

@@ -1,6 +1,6 @@
 ---
-title: "Migrating from Airbnb Style Guide to Dukes Engineering Style Guide"
-description: "Step-by-step migration guide from Airbnb JavaScript/React Style Guide to the Dukes Engineering
+title: "Migrating from Airbnb Style Guide to DevOps Engineering Style Guide"
+description: "Step-by-step migration guide from Airbnb JavaScript/React Style Guide to the DevOps Engineering
 TypeScript style guide"
 author: "Tyler Dukes"
 tags: [migration, airbnb-style-guide, javascript, typescript, react, style-guide, upgrade, transition]
@@ -12,14 +12,14 @@ search_keywords: [migration, airbnb style guide, javascript, transition, differe
 ## Overview
 
 This guide helps JavaScript and React developers transition from the **Airbnb JavaScript Style Guide** to
-the **Dukes Engineering Style Guide** with a focus on **TypeScript adoption**. While Airbnb's guide is
+the **DevOps Engineering Style Guide** with a focus on **TypeScript adoption**. While Airbnb's guide is
 excellent for JavaScript, our guide adds TypeScript type safety, DevOps-oriented enhancements, and
 infrastructure automation requirements.
 
 ### What This Guide Covers
 
 - JavaScript → TypeScript migration path
-- Airbnb conventions vs. Dukes Engineering standards
+- Airbnb conventions vs. DevOps Engineering standards
 - Type safety and static analysis requirements
 - Modern tooling updates (ESLint, Prettier, TypeScript)
 - React best practices alignment
@@ -44,7 +44,7 @@ graph LR
     TypeScript --> Migration
     DevOps --> Migration
 
-    Migration --> Dukes[Dukes Engineering<br/>TypeScript Guide]
+    Migration --> Dukes[DevOps Engineering<br/>TypeScript Guide]
 
     style JavaScript fill:#e8f5e9
     style TypeScript fill:#fff3e0
@@ -54,7 +54,7 @@ graph LR
 
 ## What Stays the Same
 
-Both Airbnb and Dukes Engineering guides share these JavaScript best practices:
+Both Airbnb and DevOps Engineering guides share these JavaScript best practices:
 
 ### Core Principles ✅
 
@@ -862,9 +862,9 @@ Button.propTypes = {
 | PropTypes Removed | 100% | No `prop-types` in deps |
 | Test Coverage | 80%+ | Jest with types |
 
-## Side-by-Side Comparison: Airbnb vs. Dukes Engineering
+## Side-by-Side Comparison: Airbnb vs. DevOps Engineering
 
-| Aspect | Airbnb JavaScript | Dukes Engineering TypeScript |
+| Aspect | Airbnb JavaScript | DevOps Engineering TypeScript |
 |--------|------------------|------------------------------|
 | **Language** | JavaScript (ES6+) | **TypeScript** |
 | **Type System** | None (JSDoc comments) | **Static types required** |
@@ -884,7 +884,7 @@ Button.propTypes = {
 
 ### Documentation References
 
-- [TypeScript Style Guide](../02_language_guides/typescript.md) - Full Dukes Engineering TypeScript standards
+- [TypeScript Style Guide](../02_language_guides/typescript.md) - Full DevOps Engineering TypeScript standards
 - [Testing Strategies](../05_ci_cd/testing_strategies.md) - TypeScript testing patterns
 - [IDE Integration Guide](../05_ci_cd/ide_integration_guide.md) - VS Code TypeScript setup
 - [GitHub Actions Guide](../05_ci_cd/github_actions_guide.md) - TypeScript CI/CD workflows
@@ -905,7 +905,7 @@ Official migration docs
 
 ## Conclusion
 
-Migrating from Airbnb JavaScript Style Guide to Dukes Engineering TypeScript Style Guide brings:
+Migrating from Airbnb JavaScript Style Guide to DevOps Engineering TypeScript Style Guide brings:
 
 ✅ **Type Safety** - Catch errors at compile-time instead of runtime
 ✅ **Better IDE Support** - Enhanced autocomplete, refactoring, and navigation

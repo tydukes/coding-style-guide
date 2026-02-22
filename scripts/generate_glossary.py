@@ -61,7 +61,7 @@ def _strip_trailing_rules(text: str) -> str:
 
 FRONTMATTER = """---
 title: "Glossary"
-description: "Comprehensive glossary of terms used in the Dukes Engineering Style Guide"
+description: "Comprehensive glossary of terms used in the DevOps Engineering Style Guide"
 author: "Tyler Dukes"
 tags: [glossary, terms, definitions, reference, dictionary]
 category: "Reference"
@@ -346,7 +346,7 @@ def generate_glossary_content(
 
     lines = [FRONTMATTER, ""]
     lines.append(
-        "This glossary defines terms used throughout the Dukes Engineering "
+        "This glossary defines terms used throughout the DevOps Engineering "
         "Style Guide, including technical concepts, tool names,"
     )
     lines.append("metadata tags, and industry terminology.")

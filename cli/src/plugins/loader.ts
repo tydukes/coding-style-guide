@@ -197,7 +197,7 @@ export function createPluginTemplate(name: string): string {
 
 /**
  * Plugin definition
- * @type {import('@dukes/style-guide-cli').Plugin}
+ * @type {import('devops-engineering-style-guide').Plugin}
  */
 export default {
   name: '${name}',
@@ -215,7 +215,7 @@ export default {
        * Check files for issues
        * @param {string[]} files - Files to check
        * @param {object} config - Linter configuration
-       * @returns {Promise<import('@dukes/style-guide-cli').LintResult[]>}
+       * @returns {Promise<import('devops-engineering-style-guide').LintResult[]>}
        */
       async check(files, config) {
         const results = [];
@@ -237,7 +237,7 @@ export default {
        * Fix issues in files (optional)
        * @param {string[]} files - Files to fix
        * @param {object} config - Linter configuration
-       * @returns {Promise<import('@dukes/style-guide-cli').LintResult[]>}
+       * @returns {Promise<import('devops-engineering-style-guide').LintResult[]>}
        */
       async fix(files, config) {
         const results = [];
@@ -271,7 +271,7 @@ export default {
        * Check content for rule violations
        * @param {string} content - File content
        * @param {string} file - File path
-       * @returns {import('@dukes/style-guide-cli').LintIssue[]}
+       * @returns {import('devops-engineering-style-guide').LintIssue[]}
        */
       check(content, file) {
         const issues = [];

@@ -9,7 +9,7 @@ search_keywords: [ide, settings, vscode, intellij, editor config, formatting, li
 ---
 
 This template provides pre-configured IDE settings files that automatically
-enforce the Dukes Engineering Style Guide standards across all supported
+enforce the DevOps Engineering Style Guide standards across all supported
 languages and editors.
 
 ## Overview

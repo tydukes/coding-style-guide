@@ -1,6 +1,6 @@
 ---
 title: "Tutorial 3: Full-Stack App with Multiple Languages"
-description: "Build a monorepo with Python backend, TypeScript frontend, and Terraform infrastructure following the Dukes Engineering Style Guide"
+description: "Build a monorepo with Python backend, TypeScript frontend, and Terraform infrastructure following the DevOps Engineering Style Guide"
 author: "Tyler Dukes"
 tags: [tutorial, fullstack, python, typescript, terraform, monorepo, docker, ci-cd, fastapi, react]
 category: "Tutorials"
@@ -12,7 +12,7 @@ search_keywords: [tutorial, full stack, multi-language, frontend, backend, integ
 
 ## Overview
 
-In this tutorial you will build a **task management application** as a monorepo containing three major components, each following the Dukes Engineering Style Guide conventions for its respective language.
+In this tutorial you will build a **task management application** as a monorepo containing three major components, each following the DevOps Engineering Style Guide conventions for its respective language.
 
 ```text
 What You Will Build
@@ -680,7 +680,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
 app = FastAPI(
     title="TaskFlow API",
-    description="Task management API built with the Dukes Engineering Style Guide",
+    description="Task management API built with the DevOps Engineering Style Guide",
     version="1.0.0",
     lifespan=lifespan,
     docs_url="/docs",
@@ -1889,7 +1889,7 @@ export default function App(): JSX.Element {
     <div className="app">
       <header className="app-header">
         <h1>TaskFlow</h1>
-        <p className="app-subtitle">Task Management - Dukes Style Guide Demo</p>
+        <p className="app-subtitle">Task Management - DevOps Engineering Style Guide Demo</p>
       </header>
 
       <main className="app-main">

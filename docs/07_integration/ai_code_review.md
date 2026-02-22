@@ -37,7 +37,7 @@ Create `.github/copilot-instructions.md` to provide repository-specific context:
 
 ## Coding Standards
 
-This repository follows The Dukes Engineering Style Guide:
+This repository follows DevOps Engineering Style Guide:
 - Reference: https://tydukes.github.io/coding-style-guide/
 - Python: Black formatting (100 char line), flake8 linting
 - TypeScript: Prettier + ESLint with strict mode
@@ -488,7 +488,7 @@ name: Style Guide Review Prompt
 version: 1.0.0
 
 prompt: |
-  You are a code reviewer enforcing The Dukes Engineering Style Guide.
+  You are a code reviewer enforcing DevOps Engineering Style Guide.
   Reference: https://tydukes.github.io/coding-style-guide/
 
   ## Review Focus Areas
@@ -1191,6 +1191,6 @@ reviews:
 
 ### Style Guide Reference
 
-- [The Dukes Engineering Style Guide](https://tydukes.github.io/coding-style-guide/)
+- [DevOps Engineering Style Guide](https://tydukes.github.io/coding-style-guide/)
 
 ---
