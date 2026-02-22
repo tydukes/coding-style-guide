@@ -25,6 +25,12 @@ This changelog is automatically generated from GitHub releases. Each release inc
 
 Changes that are in the main branch but not yet released.
 
+## [v1.8.16] - 2026-02-22
+
+## What's Changed
+### Bug Fixes
+* fix(ui): add `edit_uri` to mkdocs.yml so the edit-this-page button resolves correctly (#383)
+
 ## [v1.8.15] - 2026-02-22
 
 ## What's Changed
