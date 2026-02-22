@@ -3338,3 +3338,737 @@ resource "aws_ecr_repository_policy" "cross_account" {
     }]
   })
 }
+
+---
+
+## Monitoring and Observability
+
+### CloudWatch Alarms and Dashboards
+
+Alarm on actionable signals only. Use composite alarms to reduce alert noise —
+a composite alarm fires only when multiple component alarms are in ALARM state
+simultaneously, preventing pager fatigue from correlated events.
+
+```hcl
+# Metric alarm — CPU utilization on ECS service
+resource "aws_cloudwatch_metric_alarm" "ecs_cpu_high" {
+  alarm_name          = "${var.workload}-${var.environment}-ecs-cpu-high"
+  alarm_description   = "ECS service CPU utilization > 80% for 5 minutes"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 3
+  datapoints_to_alarm = 2 # 2 of 3 periods must breach
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/ECS"
+  period              = 60
+  statistic           = "Average"
+  threshold           = 80
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    ClusterName = aws_ecs_cluster.this.name
+    ServiceName = aws_ecs_service.app.name
+  }
+
+  alarm_actions = [aws_sns_topic.alerts.arn]
+  ok_actions    = [aws_sns_topic.alerts.arn]
+
+  tags = local.common_tags
+}
+
+resource "aws_cloudwatch_metric_alarm" "ecs_memory_high" {
+  alarm_name          = "${var.workload}-${var.environment}-ecs-memory-high"
+  alarm_description   = "ECS service memory utilization > 80%"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 3
+  datapoints_to_alarm = 2
+  metric_name         = "MemoryUtilization"
+  namespace           = "AWS/ECS"
+  period              = 60
+  statistic           = "Average"
+  threshold           = 80
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    ClusterName = aws_ecs_cluster.this.name
+    ServiceName = aws_ecs_service.app.name
+  }
+
+  alarm_actions = [aws_sns_topic.alerts.arn]
+
+  tags = local.common_tags
+}
+
+# Composite alarm — only page when both CPU and memory are high
+resource "aws_cloudwatch_composite_alarm" "ecs_resource_pressure" {
+  alarm_name        = "${var.workload}-${var.environment}-ecs-resource-pressure"
+  alarm_description = "Both CPU and memory are high — likely need to scale"
+  alarm_rule        = "ALARM(${aws_cloudwatch_metric_alarm.ecs_cpu_high.alarm_name}) AND ALARM(${aws_cloudwatch_metric_alarm.ecs_memory_high.alarm_name})"
+  alarm_actions     = [aws_sns_topic.pagerduty.arn]
+
+  tags = local.common_tags
+}
+
+# SNS topic with KMS encryption for alarm notifications
+resource "aws_sns_topic" "alerts" {
+  name              = "${var.workload}-${var.environment}-alerts"
+  kms_master_key_id = aws_kms_key.main.arn
+
+  tags = local.common_tags
+}
+
+# CloudWatch dashboard
+resource "aws_cloudwatch_dashboard" "main" {
+  dashboard_name = "${var.workload}-${var.environment}"
+
+  dashboard_body = jsonencode({
+    widgets = [
+      {
+        type   = "metric"
+        x      = 0
+        y      = 0
+        width  = 12
+        height = 6
+        properties = {
+          title  = "ECS CPU and Memory"
+          period = 60
+          stat   = "Average"
+          metrics = [
+            ["AWS/ECS", "CPUUtilization", "ClusterName", aws_ecs_cluster.this.name, "ServiceName", aws_ecs_service.app.name],
+            ["AWS/ECS", "MemoryUtilization", "ClusterName", aws_ecs_cluster.this.name, "ServiceName", aws_ecs_service.app.name]
+          ]
+        }
+      },
+      {
+        type   = "metric"
+        x      = 12
+        y      = 0
+        width  = 12
+        height = 6
+        properties = {
+          title  = "ALB Request Count and Latency"
+          period = 60
+          metrics = [
+            ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", aws_lb.this.arn_suffix, { stat = "Sum" }],
+            ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", aws_lb.this.arn_suffix, { stat = "p99", yAxis = "right" }]
+          ]
+        }
+      }
+    ]
+  })
+}
+```
+
+### CloudWatch Logs Metric Filters
+
+```hcl
+# Extract HTTP 5xx errors from application logs
+resource "aws_cloudwatch_log_metric_filter" "app_errors" {
+  name           = "${var.workload}-${var.environment}-5xx-errors"
+  log_group_name = aws_cloudwatch_log_group.ecs_app.name
+  pattern        = "[timestamp, requestId, level=\"ERROR\", ...]"
+
+  metric_transformation {
+    name          = "App5xxErrors"
+    namespace     = "${var.workload}/${var.environment}"
+    value         = "1"
+    default_value = "0"
+    unit          = "Count"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "app_error_rate" {
+  alarm_name          = "${var.workload}-${var.environment}-app-error-rate"
+  alarm_description   = "Application error rate elevated"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 2
+  metric_name         = "App5xxErrors"
+  namespace           = "${var.workload}/${var.environment}"
+  period              = 60
+  statistic           = "Sum"
+  threshold           = 10
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.alerts.arn]
+
+  tags = local.common_tags
+}
+```
+
+### AWS X-Ray
+
+```hcl
+# X-Ray group for service-level filtering
+resource "aws_xray_group" "app" {
+  group_name        = "${var.workload}-${var.environment}"
+  filter_expression = "service(\"${var.workload}-app\") AND responsetime > 1"
+
+  insights_configuration {
+    insights_enabled      = true
+    notifications_enabled = true
+  }
+
+  tags = local.common_tags
+}
+
+# Sampling rule — capture 5% of requests plus reservoir minimum
+resource "aws_xray_sampling_rule" "app" {
+  rule_name      = "${var.workload}-${var.environment}-default"
+  priority       = 9000
+  reservoir_size = 5    # minimum TPS always sampled
+  fixed_rate     = 0.05 # 5% of remaining traffic
+  url_path       = "*"
+  host           = "*"
+  http_method    = "*"
+  service_type   = "*"
+  service_name   = "${var.workload}-app"
+  resource_arn   = "*"
+  version        = 1
+
+  tags = local.common_tags
+}
+```
+
+---
+
+## CI/CD Integration
+
+### GitHub Actions with OIDC
+
+Never store long-lived AWS credentials in GitHub secrets. Use OIDC federation to
+allow GitHub Actions workflows to assume an IAM role directly. The role trust
+policy restricts assumption to a specific repository and optionally a specific
+branch for apply operations.
+
+```hcl
+# Create the OIDC provider for GitHub Actions (once per account)
+resource "aws_iam_openid_connect_provider" "github_actions" {
+  url             = "https://token.actions.githubusercontent.com"
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
+
+  tags = local.common_tags
+}
+
+# IAM role for Terraform plan — any branch in the repo can plan
+resource "aws_iam_role" "github_terraform_plan" {
+  name = "${var.workload}-${var.environment}-github-tf-plan"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Federated = aws_iam_openid_connect_provider.github_actions.arn }
+      Action    = "sts:AssumeRoleWithWebIdentity"
+      Condition = {
+        StringEquals = {
+          "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
+        }
+        StringLike = {
+          "token.actions.githubusercontent.com:sub" = "repo:${var.github_org}/${var.github_repo}:*"
+        }
+      }
+    }]
+  })
+
+  tags = local.common_tags
+}
+
+# IAM role for Terraform apply — main branch only
+resource "aws_iam_role" "github_terraform_apply" {
+  name = "${var.workload}-${var.environment}-github-tf-apply"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Federated = aws_iam_openid_connect_provider.github_actions.arn }
+      Action    = "sts:AssumeRoleWithWebIdentity"
+      Condition = {
+        StringEquals = {
+          "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
+          "token.actions.githubusercontent.com:sub" = "repo:${var.github_org}/${var.github_repo}:ref:refs/heads/main"
+        }
+      }
+    }]
+  })
+
+  tags = local.common_tags
+}
+```
+
+```yaml
+# .github/workflows/terraform.yml
+name: Terraform
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write   # required for OIDC token
+  contents: read
+  pull-requests: write
+
+env:
+  TF_VERSION: "1.12.0"
+  AWS_REGION: us-east-1
+
+jobs:
+  plan:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.TF_PLAN_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        run: terraform init -backend-config="environments/${{ vars.ENVIRONMENT }}.hcl"
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan \
+            -var-file="environments/${{ vars.ENVIRONMENT }}.tfvars" \
+            -out=tfplan \
+            -no-color 2>&1 | tee plan_output.txt
+
+      - name: Post Plan to PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const plan = fs.readFileSync('plan_output.txt', 'utf8');
+            const truncated = plan.length > 60000 ? plan.slice(-60000) : plan;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## Terraform Plan\n\`\`\`\n${truncated}\n\`\`\``
+            });
+
+  apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production   # requires manual approval in GitHub Environments
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.TF_APPLY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        run: terraform init -backend-config="environments/${{ vars.ENVIRONMENT }}.hcl"
+
+      - name: Terraform Apply
+        run: |
+          terraform apply \
+            -var-file="environments/${{ vars.ENVIRONMENT }}.tfvars" \
+            -auto-approve
+```
+
+---
+
+## Terraform State Management
+
+Store Terraform state in S3 with DynamoDB locking. Use a dedicated bootstrap
+module (or the management account) to create state infrastructure outside the
+modules it will manage — never store state in the same account it provisions
+critical production resources for.
+
+```hcl
+# State bucket — bootstrapped once per account/region
+resource "aws_s3_bucket" "terraform_state" {
+  bucket = "${var.org_prefix}-terraform-state-${data.aws_caller_identity.current.account_id}-${var.aws_region}"
+
+  tags = merge(local.common_tags, { Purpose = "terraform-state" })
+}
+
+resource "aws_s3_bucket_versioning" "terraform_state" {
+  bucket = aws_s3_bucket.terraform_state.id
+  versioning_configuration { status = "Enabled" }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state" {
+  bucket = aws_s3_bucket.terraform_state.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.terraform_state.arn
+    }
+    bucket_key_enabled = true
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "terraform_state" {
+  bucket                  = aws_s3_bucket.terraform_state.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_policy" "terraform_state" {
+  bucket = aws_s3_bucket.terraform_state.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "DenyHTTP"
+        Effect    = "Deny"
+        Principal = "*"
+        Action    = "s3:*"
+        Resource  = ["${aws_s3_bucket.terraform_state.arn}", "${aws_s3_bucket.terraform_state.arn}/*"]
+        Condition = { Bool = { "aws:SecureTransport" = "false" } }
+      },
+      {
+        Sid       = "DenyDeleteWithoutMFA"
+        Effect    = "Deny"
+        Principal = "*"
+        Action    = ["s3:DeleteObject", "s3:DeleteObjectVersion"]
+        Resource  = "${aws_s3_bucket.terraform_state.arn}/*"
+        Condition = { BoolIfExists = { "aws:MultiFactorAuthPresent" = "false" } }
+      }
+    ]
+  })
+}
+
+resource "aws_dynamodb_table" "terraform_locks" {
+  name         = "${var.org_prefix}-terraform-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+
+  point_in_time_recovery { enabled = true }
+
+  server_side_encryption {
+    enabled     = true
+    kms_key_arn = aws_kms_key.terraform_state.arn
+  }
+
+  tags = local.common_tags
+}
+```
+
+```hcl
+# backend.tf — per-environment backend configuration
+terraform {
+  backend "s3" {
+    bucket         = "acme-terraform-state-123456789012-us-east-1"
+    key            = "workloads/myapp/prod/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    kms_key_id     = "arn:aws:kms:us-east-1:123456789012:key/mrk-abc123"
+    dynamodb_table = "acme-terraform-locks"
+  }
+}
+
+# Cross-stack reference — read outputs from another state file
+data "terraform_remote_state" "network" {
+  backend = "s3"
+  config = {
+    bucket = "acme-terraform-state-123456789012-us-east-1"
+    key    = "shared/network/prod/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
+locals {
+  vpc_id          = data.terraform_remote_state.network.outputs.vpc_id
+  private_subnets = data.terraform_remote_state.network.outputs.private_subnet_ids
+}
+```
+
+---
+
+## Cost Optimization
+
+### AWS Budgets
+
+Set budgets at the account level and per-workload tag. Alert at 80% forecasted
+and 100% actual spend.
+
+```hcl
+resource "aws_budgets_budget" "monthly" {
+  name         = "${var.workload}-${var.environment}-monthly"
+  budget_type  = "COST"
+  limit_amount = var.monthly_budget_usd
+  limit_unit   = "USD"
+  time_unit    = "MONTHLY"
+
+  cost_filter {
+    name   = "TagKeyValue"
+    values = ["user:Workload$${var.workload}"]
+  }
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 80
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "FORECASTED"
+    subscriber_email_addresses = var.budget_alert_emails
+  }
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 100
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "ACTUAL"
+    subscriber_email_addresses = var.budget_alert_emails
+    subscriber_sns_topic_arns  = [aws_sns_topic.alerts.arn]
+  }
+}
+
+# Anomaly detector — catch unexpected spending spikes
+resource "aws_ce_anomaly_monitor" "workload" {
+  name              = "${var.workload}-${var.environment}-anomaly"
+  monitor_type      = "DIMENSIONAL"
+  monitor_dimension = "SERVICE"
+}
+
+resource "aws_ce_anomaly_subscription" "workload" {
+  name      = "${var.workload}-${var.environment}-anomaly-alert"
+  frequency = "IMMEDIATE"
+
+  monitor_arn_list = [aws_ce_anomaly_monitor.workload.arn]
+
+  subscriber {
+    address = aws_sns_topic.alerts.arn
+    type    = "SNS"
+  }
+
+  threshold_expression {
+    dimension {
+      key           = "ANOMALY_TOTAL_IMPACT_ABSOLUTE"
+      values        = ["100"]
+      match_options = ["GREATER_THAN_OR_EQUAL"]
+    }
+  }
+}
+```
+
+### Spot Instances for Scale-Out
+
+```hcl
+# Mixed instance policy — on-demand base with Spot for scale-out
+resource "aws_autoscaling_group" "spot_mixed" {
+  name                = "${var.workload}-${var.environment}-mixed-asg"
+  vpc_zone_identifier = aws_subnet.private[*].id
+  min_size            = 2
+  max_size            = 20
+  desired_capacity    = 4
+
+  mixed_instances_policy {
+    launch_template {
+      launch_template_specification {
+        launch_template_id = aws_launch_template.app.id
+        version            = "$Latest"
+      }
+
+      override { instance_type = "m7i.xlarge" }
+      override { instance_type = "m6i.xlarge" }
+      override { instance_type = "m5.xlarge" }
+    }
+
+    instances_distribution {
+      on_demand_base_capacity                  = 2
+      on_demand_percentage_above_base_capacity = 0   # all scale-out uses Spot
+      spot_allocation_strategy                 = "price-capacity-optimized"
+    }
+  }
+
+  dynamic "tag" {
+    for_each = local.common_tags
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+  }
+}
+```
+
+---
+
+## Terragrunt Patterns
+
+Terragrunt manages multi-account, multi-environment deployments without
+duplicating backend and provider configuration across every module directory.
+
+### Root Configuration
+
+```hcl
+# terragrunt.hcl — repository root
+locals {
+  org_vars     = read_terragrunt_config(find_in_parent_folders("org.hcl"))
+  account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
+  region_vars  = read_terragrunt_config(find_in_parent_folders("region.hcl"))
+
+  org_prefix  = local.org_vars.locals.org_prefix
+  account_id  = local.account_vars.locals.account_id
+  aws_region  = local.region_vars.locals.aws_region
+  environment = local.account_vars.locals.environment
+}
+
+remote_state {
+  backend = "s3"
+  generate = {
+    path      = "backend.tf"
+    if_exists = "overwrite_terragrunt"
+  }
+  config = {
+    bucket         = "${local.org_prefix}-terraform-state-${local.account_id}-${local.aws_region}"
+    key            = "${path_relative_to_include()}/terraform.tfstate"
+    region         = local.aws_region
+    encrypt        = true
+    dynamodb_table = "${local.org_prefix}-terraform-locks"
+    kms_key_id     = "alias/${local.org_prefix}-terraform-state"
+  }
+}
+
+generate "provider" {
+  path      = "provider.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = <<-EOF
+    provider "aws" {
+      region = "${local.aws_region}"
+      default_tags {
+        tags = {
+          ManagedBy   = "terraform"
+          Environment = "${local.environment}"
+          OrgPrefix   = "${local.org_prefix}"
+        }
+      }
+      assume_role {
+        role_arn     = "arn:aws:iam::${local.account_id}:role/TerraformExecutionRole"
+        session_name = "terragrunt-${local.environment}"
+      }
+    }
+  EOF
+}
+```
+
+### Account and Environment Configuration
+
+```hcl
+# live/prod/account.hcl
+locals {
+  account_id  = "123456789012"
+  environment = "prod"
+}
+
+# live/prod/us-east-1/region.hcl
+locals {
+  aws_region = "us-east-1"
+}
+
+# org.hcl — repository root
+locals {
+  org_prefix = "acme"
+}
+```
+
+### Module Configuration with Dependencies
+
+```hcl
+# live/prod/us-east-1/workloads/myapp/terragrunt.hcl
+include "root" {
+  path = find_in_parent_folders()
+}
+
+terraform {
+  source = "git::https://github.com/acme/terraform-modules.git//modules/ecs-service?ref=v2.3.0"
+}
+
+dependency "network" {
+  config_path = "../../shared/network"
+  mock_outputs = {
+    vpc_id             = "vpc-00000000"
+    private_subnet_ids = ["subnet-00000001", "subnet-00000002", "subnet-00000003"]
+  }
+  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
+}
+
+dependency "cluster" {
+  config_path = "../ecs-cluster"
+  mock_outputs = {
+    cluster_arn  = "arn:aws:ecs:us-east-1:123456789012:cluster/mock"
+    cluster_name = "mock-cluster"
+  }
+  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
+}
+
+inputs = {
+  workload     = "myapp"
+  environment  = "prod"
+  aws_region   = "us-east-1"
+
+  vpc_id             = dependency.network.outputs.vpc_id
+  private_subnet_ids = dependency.network.outputs.private_subnet_ids
+  cluster_arn        = dependency.cluster.outputs.cluster_arn
+  cluster_name       = dependency.cluster.outputs.cluster_name
+
+  task_cpu    = 1024
+  task_memory = 2048
+  image_tag   = "v1.4.2"
+}
+```
+
+```bash
+# Apply all modules in dependency order
+terragrunt run-all apply --terragrunt-working-dir live/prod/us-east-1
+
+# Plan a single module
+terragrunt plan --terragrunt-working-dir live/prod/us-east-1/workloads/myapp
+
+# Destroy in reverse dependency order (workloads before shared infra)
+terragrunt run-all destroy --terragrunt-working-dir live/prod/us-east-1/workloads
+```
+
+---
+
+## References
+
+### AWS Documentation
+
+- [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html)
+- [AWS Security Best Practices](https://docs.aws.amazon.com/security/latest/userguide/security-best-practices.html)
+- [AWS Organizations User Guide](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html)
+- [IAM Best Practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+- [VPC User Guide](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)
+- [EKS Best Practices Guide](https://aws.github.io/aws-eks-best-practices/)
+- [AWS Prescriptive Guidance — Landing Zone](https://docs.aws.amazon.com/prescriptive-guidance/latest/migration-aws-environment/building-landing-zones.html)
+- [Terraform AWS Provider Docs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+- [Terragrunt Documentation](https://terragrunt.gruntwork.io/docs/)
+
+### Related Guides in This Style Guide
+
+- [Terraform and Terragrunt](../02_language_guides/terraform.md) — module structure, variable patterns, testing
+- [Terragrunt (live)](../02_language_guides/terragrunt.md) — live configuration patterns
+- [AWS CloudFormation](../02_language_guides/cloudformation.md) — CloudFormation alternative to Terraform
+- [AWS CDK](../02_language_guides/cdk.md) — TypeScript CDK as alternative to HCL
+- [Kubernetes and Helm](../02_language_guides/kubernetes.md) — workloads deployed into EKS clusters
+- [GitOps (ArgoCD and Flux)](../02_language_guides/gitops.md) — continuous delivery into EKS
+- [GitHub Actions](../02_language_guides/github_actions.md) — CI/CD workflow patterns
+- [Microsoft Azure](azure.md) — equivalent patterns for Azure
+- [Google Cloud Platform](gcp.md) — equivalent patterns for GCP
