@@ -10,7 +10,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Code-to-Text Ratio](https://img.shields.io/badge/code--to--text%20ratio-7.76:1-brightgreen.svg)](https://tydukes.github.io/coding-style-guide/project_status/)
-[![Guides Passing](https://img.shields.io/badge/guides%20passing-34%2F36-success.svg)](https://tydukes.github.io/coding-style-guide/project_status/)
+[![Guides Passing](https://img.shields.io/badge/guides%20passing-35%2F35-success.svg)](https://tydukes.github.io/coding-style-guide/project_status/)
 [![Documentation Pages](https://img.shields.io/badge/docs%20pages-73-blue.svg)](https://tydukes.github.io/coding-style-guide/)
 [![Version](https://img.shields.io/github/v/release/tydukes/coding-style-guide)](https://github.com/tydukes/coding-style-guide/releases)
 [![Last Commit](https://img.shields.io/github/last-commit/tydukes/coding-style-guide)](https://github.com/tydukes/coding-style-guide/commits/main)
