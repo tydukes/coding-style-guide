@@ -25,6 +25,20 @@ This changelog is automatically generated from GitHub releases. Each release inc
 
 Changes that are in the main branch but not yet released.
 
+## [v1.8.4] - 2026-02-21
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+## What's Changed
+### Other Changes
+* fix(docs): repair 25 broken anchor deep-links in refactoring index by @tydukes in https://github.com/tydukes/coding-style-guide/pull/371
+* fix(docs): repair broken self-referential anchors in comparison_matrix.md by @tydukes in https://github.com/tydukes/coding-style-guide/pull/372
+
+
+**Full Changelog**: https://github.com/tydukes/coding-style-guide/compare/v1.8.3...v1.8.4
+
+[View Release](https://github.com/tydukes/coding-style-guide/releases/tag/v1.8.4)
+
 ## [v1.8.3] - 2026-02-21
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -368,4 +382,4 @@ This release adds comprehensive repository documentation and community files to 
 
 ---
 
-*This changelog was automatically generated on 2026-02-21 23:26:06 UTC*
+*This changelog was automatically generated on 2026-02-21 23:59:13 UTC*
