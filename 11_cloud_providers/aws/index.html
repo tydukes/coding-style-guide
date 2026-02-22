@@ -6814,6 +6814,205 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#identity-and-access-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity and Access Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Identity and Access Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#iam-roles-with-least-privilege" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Roles with Least Privilege
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permission-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oidc-federation-for-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OIDC Federation for GitHub Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iam-roles-for-service-accounts-irsa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Roles for Service Accounts (IRSA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-iam-identity-center" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS IAM Identity Center
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-and-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security and Compliance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security and Compliance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-kms-customer-managed-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS KMS Customer-Managed Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-secrets-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Secrets Manager
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-guardduty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon GuardDuty
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-security-hub" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Security Hub
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-cloudtrail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS CloudTrail
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#securitycloudtrailtf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        security/cloudtrail.tf
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#organization-trail-single-trail-covering-all-accounts-and-regions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Organization trail — single trail covering all accounts and regions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloudtrail-log-bucket-with-strict-security-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudTrail log bucket with strict security controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-on-root-account-usage-via-cloudtrail-cloudwatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert on root account usage via CloudTrail + CloudWatch
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -6846,8 +7045,6 @@
   
   
 
-
-  <h1>Amazon Web Services Best Practices Guide</h1>
 
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p><strong>Amazon Web Services (AWS)</strong> is the world's most broadly adopted cloud platform, offering 200+
@@ -7710,6 +7907,974 @@ Terraform and Terragrunt deployments.</p>
 <span class="c1"># Usage — merge with resource-specific tags:</span>
 <span class="c1"># tags = merge(local.common_tags, { Name = &quot;my-resource&quot; })</span>
 </code></pre></div>
+<hr />
+<h2 id="identity-and-access-management">Identity and Access Management<a class="headerlink" href="#identity-and-access-management" title="Permanent link">&para;</a></h2>
+<h3 id="iam-roles-with-least-privilege">IAM Roles with Least Privilege<a class="headerlink" href="#iam-roles-with-least-privilege" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># iam/roles.tf</span>
+<span class="c1"># Never attach policies directly to users — always use roles</span>
+
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_iam_policy_document&quot;</span><span class="w"> </span><span class="nv">&quot;assume_lambda&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">effect</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sts:AssumeRole&quot;</span><span class="p">]</span>
+
+<span class="w">    </span><span class="nb">principals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Service&quot;</span>
+<span class="w">      </span><span class="na">identifiers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;lambda.amazonaws.com&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_role&quot;</span><span class="w"> </span><span class="nv">&quot;lambda&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-lambda-role&quot;</span>
+<span class="w">  </span><span class="na">assume_role_policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_iam_policy_document.assume_lambda.json</span>
+<span class="w">  </span><span class="na">description</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Execution role for ${var.workload} Lambda functions&quot;</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="c1"># Scope permissions to the minimum required — no wildcards on actions</span>
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_iam_policy_document&quot;</span><span class="w"> </span><span class="nv">&quot;lambda_s3&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ReadInputBucket&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;s3:GetObject&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;s3:ListBucket&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="nv">aws_s3_bucket.input.arn</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;${aws_s3_bucket.input.arn}/*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;WriteOutputBucket&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;s3:PutObject&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;s3:PutObjectAcl&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;${aws_s3_bucket.output.arn}/*&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CloudWatchLogs&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;logs:CreateLogGroup&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;logs:CreateLogStream&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;logs:PutLogEvents&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.workload}-${var.environment}-*&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_policy&quot;</span><span class="w"> </span><span class="nv">&quot;lambda_s3&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-lambda-s3-policy&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;S3 and CloudWatch access for ${var.workload} Lambda&quot;</span>
+<span class="w">  </span><span class="na">policy</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_iam_policy_document.lambda_s3.json</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_role_policy_attachment&quot;</span><span class="w"> </span><span class="nv">&quot;lambda_s3&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">role</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_role.lambda.name</span>
+<span class="w">  </span><span class="na">policy_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_policy.lambda_s3.arn</span>
+<span class="p">}</span>
+
+<span class="c1"># Attach AWS-managed policy for VPC networking only when needed</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_role_policy_attachment&quot;</span><span class="w"> </span><span class="nv">&quot;lambda_vpc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">var.lambda_in_vpc</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span>
+<span class="w">  </span><span class="na">role</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_role.lambda.name</span>
+<span class="w">  </span><span class="na">policy_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="permission-boundaries">Permission Boundaries<a class="headerlink" href="#permission-boundaries" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># iam/permission-boundary.tf</span>
+<span class="c1"># Permission boundaries cap the maximum permissions any role in a workload account can have</span>
+
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_iam_policy_document&quot;</span><span class="w"> </span><span class="nv">&quot;workload_boundary&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">  # Allow only the services this workload uses</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AllowWorkloadServices&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;s3:*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;dynamodb:*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;lambda:*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;logs:*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;cloudwatch:*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;xray:*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;secretsmanager:GetSecretValue&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;secretsmanager:DescribeSecret&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:Decrypt&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:GenerateDataKey&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;sqs:*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;sns:Publish&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="c1">  # Explicitly deny IAM privilege escalation</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DenyIAMEscalation&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;iam:CreateUser&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;iam:AttachUserPolicy&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;iam:PutUserPolicy&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;iam:CreateAccessKey&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;iam:CreateLoginProfile&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;iam:DeleteRolePermissionsBoundary&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="c1">  # Deny modifying the boundary itself</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DenyBoundaryModification&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;iam:PutRolePermissionsBoundary&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;iam:DeleteRolePermissionsBoundary&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="nb">condition</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">test</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;StringNotEquals&quot;</span>
+<span class="w">      </span><span class="na">variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;iam:PermissionsBoundary&quot;</span>
+<span class="w">      </span><span class="na">values</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/workload-permission-boundary&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_policy&quot;</span><span class="w"> </span><span class="nv">&quot;workload_boundary&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;workload-permission-boundary&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Permission boundary for all workload roles — caps maximum permissions&quot;</span>
+<span class="w">  </span><span class="na">policy</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_iam_policy_document.workload_boundary.json</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="c1"># Apply boundary to every role created by Terraform</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_role&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-app-role&quot;</span>
+<span class="w">  </span><span class="na">assume_role_policy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_iam_policy_document.assume_ecs_task.json</span>
+<span class="w">  </span><span class="na">permissions_boundary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_policy.workload_boundary.arn</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="oidc-federation-for-github-actions">OIDC Federation for GitHub Actions<a class="headerlink" href="#oidc-federation-for-github-actions" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># iam/github-oidc.tf</span>
+<span class="c1"># Replace long-lived AWS credentials with short-lived OIDC tokens</span>
+
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;tls_certificate&quot;</span><span class="w"> </span><span class="nv">&quot;github&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://token.actions.githubusercontent.com/.well-known/openid-configuration&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_openid_connect_provider&quot;</span><span class="w"> </span><span class="nv">&quot;github&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">url</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://token.actions.githubusercontent.com&quot;</span>
+<span class="w">  </span><span class="na">client_id_list</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sts.amazonaws.com&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">thumbprint_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">data.tls_certificate.github.certificates[0].sha1_fingerprint</span><span class="p">]</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_iam_policy_document&quot;</span><span class="w"> </span><span class="nv">&quot;assume_github_actions&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">effect</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sts:AssumeRoleWithWebIdentity&quot;</span><span class="p">]</span>
+
+<span class="w">    </span><span class="nb">principals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Federated&quot;</span>
+<span class="w">      </span><span class="na">identifiers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_iam_openid_connect_provider.github.arn</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="c1">    # Scope to a specific repo and environment — never use &quot;*&quot;</span>
+<span class="w">    </span><span class="nb">condition</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">test</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;StringEquals&quot;</span>
+<span class="w">      </span><span class="na">variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;token.actions.githubusercontent.com:aud&quot;</span>
+<span class="w">      </span><span class="na">values</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sts.amazonaws.com&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nb">condition</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">test</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;StringLike&quot;</span>
+<span class="w">      </span><span class="na">variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;token.actions.githubusercontent.com:sub&quot;</span>
+<span class="w">      </span><span class="na">values</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;repo:${var.github_org}/${var.github_repo}:environment:${var.environment}&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_role&quot;</span><span class="w"> </span><span class="nv">&quot;github_actions_deploy&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-github-oidc-role&quot;</span>
+<span class="w">  </span><span class="na">assume_role_policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_iam_policy_document.assume_github_actions.json</span>
+<span class="w">  </span><span class="na">max_session_duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3600</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_iam_policy_document&quot;</span><span class="w"> </span><span class="nv">&quot;github_actions_deploy&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;EKSDeploy&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;eks:DescribeCluster&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;eks:ListClusters&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_eks_cluster.main.arn</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ECRPush&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;ecr:GetAuthorizationToken&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;ecr:BatchCheckLayerAvailability&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;ecr:PutImage&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;ecr:InitiateLayerUpload&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;ecr:UploadLayerPart&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;ecr:CompleteLayerUpload&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_ecr_repository.app.arn</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ECRAuth&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;ecr:GetAuthorizationToken&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_role_policy&quot;</span><span class="w"> </span><span class="nv">&quot;github_actions_deploy&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;deploy-policy&quot;</span>
+<span class="w">  </span><span class="na">role</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_role.github_actions_deploy.name</span>
+<span class="w">  </span><span class="na">policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_iam_policy_document.github_actions_deploy.json</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/deploy.yml</span>
+<span class="c1"># Authenticate to AWS using OIDC — no secrets stored in GitHub</span>
+
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
+
+<span class="nt">permissions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">id-token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span><span class="w">  </span><span class="c1"># Required for OIDC</span>
+<span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod</span>
+
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure AWS credentials via OIDC</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-actions/configure-aws-credentials@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">role-to-assume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:iam::123456789012:role/payments-prod-github-oidc-role</span>
+<span class="w">          </span><span class="nt">aws-region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Login to ECR</span>
+<span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">login-ecr</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-actions/amazon-ecr-login@v2</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build and push image</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">REGISTRY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ steps.login-ecr.outputs.registry }}</span>
+<span class="w">          </span><span class="nt">IMAGE_TAG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.sha }}</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">docker build -t $REGISTRY/payments:$IMAGE_TAG .</span>
+<span class="w">          </span><span class="no">docker push $REGISTRY/payments:$IMAGE_TAG</span>
+</code></pre></div>
+<h3 id="iam-roles-for-service-accounts-irsa">IAM Roles for Service Accounts (IRSA)<a class="headerlink" href="#iam-roles-for-service-accounts-irsa" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># iam/irsa.tf</span>
+<span class="c1"># Pod-level IAM permissions for EKS — replaces kube2iam and node-level permissions</span>
+
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_iam_policy_document&quot;</span><span class="w"> </span><span class="nv">&quot;assume_irsa&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">effect</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sts:AssumeRoleWithWebIdentity&quot;</span><span class="p">]</span>
+
+<span class="w">    </span><span class="nb">principals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Federated&quot;</span>
+<span class="w">      </span><span class="na">identifiers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_iam_openid_connect_provider.eks.arn</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nb">condition</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">test</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;StringEquals&quot;</span>
+<span class="w">      </span><span class="na">variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${replace(aws_iam_openid_connect_provider.eks.url, &quot;https://&quot;, &quot;&quot;)}:sub&quot;</span>
+<span class="w">      </span><span class="na">values</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;system:serviceaccount:${var.k8s_namespace}:${var.k8s_service_account}&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nb">condition</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">test</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;StringEquals&quot;</span>
+<span class="w">      </span><span class="na">variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${replace(aws_iam_openid_connect_provider.eks.url, &quot;https://&quot;, &quot;&quot;)}:aud&quot;</span>
+<span class="w">      </span><span class="na">values</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sts.amazonaws.com&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_openid_connect_provider&quot;</span><span class="w"> </span><span class="nv">&quot;eks&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">url</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_eks_cluster.main.identity[0].oidc[0].issuer</span>
+<span class="w">  </span><span class="na">client_id_list</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sts.amazonaws.com&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">thumbprint_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">data.tls_certificate.eks.certificates[0].sha1_fingerprint</span><span class="p">]</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_role&quot;</span><span class="w"> </span><span class="nv">&quot;app_pod&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-eks-pod-role&quot;</span>
+<span class="w">  </span><span class="na">assume_role_policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_iam_policy_document.assume_irsa.json</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_iam_policy_document&quot;</span><span class="w"> </span><span class="nv">&quot;app_pod&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SecretsAccess&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;secretsmanager:GetSecretValue&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;secretsmanager:DescribeSecret&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;arn:aws:secretsmanager:${var.region}:${data.aws_caller_identity.current.account_id}:secret:${var.workload}/${var.environment}/*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;KMSDecrypt&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;kms:Decrypt&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:GenerateDataKey&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_kms_key.app.arn</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_role_policy&quot;</span><span class="w"> </span><span class="nv">&quot;app_pod&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;app-pod-policy&quot;</span>
+<span class="w">  </span><span class="na">role</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_role.app_pod.name</span>
+<span class="w">  </span><span class="na">policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_iam_policy_document.app_pod.json</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># kubernetes/service-account.yaml</span>
+<span class="c1"># Annotate the ServiceAccount to link it to the IAM role</span>
+
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payments-app</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payments</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">eks.amazonaws.com/role-arn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:iam::123456789012:role/payments-prod-eks-pod-role</span>
+<span class="w">    </span><span class="nt">eks.amazonaws.com/token-expiration</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3600&quot;</span>
+</code></pre></div>
+<h3 id="aws-iam-identity-center">AWS IAM Identity Center<a class="headerlink" href="#aws-iam-identity-center" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># iam/sso.tf</span>
+<span class="c1"># Centralized human access via IAM Identity Center — no IAM users in member accounts</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_ssoadmin_permission_set&quot;</span><span class="w"> </span><span class="nv">&quot;platform_engineer&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PlatformEngineer&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Read/write access to platform infrastructure&quot;</span>
+<span class="w">  </span><span class="na">instance_arn</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">tolist</span><span class="p">(</span><span class="nv">data.aws_ssoadmin_instances.main.arns</span><span class="p">)[</span><span class="m">0</span><span class="p">]</span>
+<span class="w">  </span><span class="na">session_duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PT8H&quot;</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_ssoadmin_managed_policy_attachment&quot;</span><span class="w"> </span><span class="nv">&quot;platform_engineer_readonly&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">instance_arn</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nf">tolist</span><span class="p">(</span><span class="nv">data.aws_ssoadmin_instances.main.arns</span><span class="p">)[</span><span class="m">0</span><span class="p">]</span>
+<span class="w">  </span><span class="na">managed_policy_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::aws:policy/ReadOnlyAccess&quot;</span>
+<span class="w">  </span><span class="na">permission_set_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_ssoadmin_permission_set.platform_engineer.arn</span>
+<span class="p">}</span>
+
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_iam_policy_document&quot;</span><span class="w"> </span><span class="nv">&quot;platform_engineer_inline&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AllowEKSAccess&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;eks:AccessKubernetesApi&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;eks:DescribeCluster&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;eks:ListClusters&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AllowSSMSessionManager&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;ssm:StartSession&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;ssm:TerminateSession&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;ssm:ResumeSession&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;ssm:DescribeSessions&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;ssm:GetConnectionStatus&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_ssoadmin_permission_set_inline_policy&quot;</span><span class="w"> </span><span class="nv">&quot;platform_engineer&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">instance_arn</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nf">tolist</span><span class="p">(</span><span class="nv">data.aws_ssoadmin_instances.main.arns</span><span class="p">)[</span><span class="m">0</span><span class="p">]</span>
+<span class="w">  </span><span class="na">inline_policy</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_iam_policy_document.platform_engineer_inline.json</span>
+<span class="w">  </span><span class="na">permission_set_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_ssoadmin_permission_set.platform_engineer.arn</span>
+<span class="p">}</span>
+
+<span class="c1"># Assign permission set to a group in the identity store</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_ssoadmin_account_assignment&quot;</span><span class="w"> </span><span class="nv">&quot;platform_engineers&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">instance_arn</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nf">tolist</span><span class="p">(</span><span class="nv">data.aws_ssoadmin_instances.main.arns</span><span class="p">)[</span><span class="m">0</span><span class="p">]</span>
+<span class="w">  </span><span class="na">permission_set_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_ssoadmin_permission_set.platform_engineer.arn</span>
+<span class="w">  </span><span class="na">principal_id</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">var.platform_engineers_group_id</span>
+<span class="w">  </span><span class="na">principal_type</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GROUP&quot;</span>
+<span class="w">  </span><span class="na">target_id</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">var.workload_account_id</span>
+<span class="w">  </span><span class="na">target_type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS_ACCOUNT&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="security-and-compliance">Security and Compliance<a class="headerlink" href="#security-and-compliance" title="Permanent link">&para;</a></h2>
+<h3 id="aws-kms-customer-managed-keys">AWS KMS Customer-Managed Keys<a class="headerlink" href="#aws-kms-customer-managed-keys" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/kms.tf</span>
+<span class="c1"># Customer-managed keys with automatic rotation and least-privilege key policies</span>
+
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_iam_policy_document&quot;</span><span class="w"> </span><span class="nv">&quot;kms_app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">  # Key administrators — full key management</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;KeyAdministration&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="nb">principals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS&quot;</span>
+<span class="w">      </span><span class="na">identifiers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.workload}-${var.environment}-terraform-role&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;kms:Create*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:Describe*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:Enable*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:List*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:Put*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:Update*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:Revoke*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:Disable*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:Get*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:Delete*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:ScheduleKeyDeletion&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:CancelKeyDeletion&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="c1">  # Application roles — encrypt/decrypt only</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;KeyUsage&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="nb">principals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS&quot;</span>
+<span class="w">      </span><span class="na">identifiers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="nv">aws_iam_role.app_pod.arn</span><span class="p">,</span>
+<span class="w">        </span><span class="nv">aws_iam_role.lambda.arn</span><span class="p">,</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;kms:Decrypt&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:Encrypt&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:GenerateDataKey&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:GenerateDataKeyWithoutPlaintext&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:DescribeKey&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="c1">  # Allow CloudWatch to use the key for log encryption</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CloudWatchLogs&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">    </span><span class="nb">principals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Service&quot;</span>
+<span class="w">      </span><span class="na">identifiers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;logs.${var.region}.amazonaws.com&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;kms:Encrypt&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:Decrypt&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:ReEncrypt*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:GenerateDataKey*&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;kms:DescribeKey&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="nb">condition</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">test</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ArnLike&quot;</span>
+<span class="w">      </span><span class="na">variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;kms:EncryptionContext:aws:logs:arn&quot;</span>
+<span class="w">      </span><span class="na">values</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:*&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_kms_key&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CMK for ${var.workload} ${var.environment} workload&quot;</span>
+<span class="w">  </span><span class="na">deletion_window_in_days</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span>
+<span class="w">  </span><span class="na">enable_key_rotation</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">rotation_period_in_days</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">365</span>
+<span class="w">  </span><span class="na">multi_region</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
+<span class="w">  </span><span class="na">policy</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_iam_policy_document.kms_app.json</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_kms_alias&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;alias/${var.workload}/${var.environment}&quot;</span>
+<span class="w">  </span><span class="na">target_key_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_kms_key.app.key_id</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="aws-secrets-manager">AWS Secrets Manager<a class="headerlink" href="#aws-secrets-manager" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/secrets.tf</span>
+<span class="c1"># Never store credentials in Terraform state or environment variables</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_secretsmanager_secret&quot;</span><span class="w"> </span><span class="nv">&quot;db_credentials&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}/${var.environment}/db-credentials&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;RDS credentials for ${var.workload} ${var.environment}&quot;</span>
+<span class="w">  </span><span class="na">kms_key_id</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_kms_key.app.arn</span>
+<span class="w">  </span><span class="na">recovery_window_in_days</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="c1"># Initial value — rotate immediately after creation</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_secretsmanager_secret_version&quot;</span><span class="w"> </span><span class="nv">&quot;db_credentials&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">secret_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_secretsmanager_secret.db_credentials.id</span>
+<span class="w">  </span><span class="na">secret_string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">jsonencode</span><span class="p">({</span>
+<span class="w">    </span><span class="na">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.db_username</span>
+<span class="w">    </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.db_initial_password</span>
+<span class="w">    </span><span class="na">host</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_db_instance.main.address</span>
+<span class="w">    </span><span class="na">port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_db_instance.main.port</span>
+<span class="w">    </span><span class="na">dbname</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">var.db_name</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="nb">lifecycle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">ignore_changes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nb">secret_string</span><span class="p">]</span><span class="c1">  # Managed by rotation after initial creation</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Enable automatic rotation using the managed Lambda rotator</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_secretsmanager_secret_rotation&quot;</span><span class="w"> </span><span class="nv">&quot;db_credentials&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">secret_id</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_secretsmanager_secret.db_credentials.id</span>
+<span class="w">  </span><span class="na">rotation_lambda_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_lambda_function.rds_rotator.arn</span>
+
+<span class="w">  </span><span class="nb">rotation_rules</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">automatically_after_days</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Resource policy — restrict access to specific roles only</span>
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_iam_policy_document&quot;</span><span class="w"> </span><span class="nv">&quot;secret_resource_policy&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">statement</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">sid</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DenyAllExceptAppRoles&quot;</span>
+<span class="w">    </span><span class="na">effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span>
+<span class="w">    </span><span class="nb">principals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS&quot;</span>
+<span class="w">      </span><span class="na">identifiers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="na">actions</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;secretsmanager:GetSecretValue&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="nb">condition</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">test</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;StringNotLike&quot;</span>
+<span class="w">      </span><span class="na">variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;aws:PrincipalArn&quot;</span>
+<span class="w">      </span><span class="na">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="nv">aws_iam_role.app_pod.arn</span><span class="p">,</span>
+<span class="w">        </span><span class="nv">aws_iam_role.lambda.arn</span><span class="p">,</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_secretsmanager_secret_policy&quot;</span><span class="w"> </span><span class="nv">&quot;db_credentials&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">secret_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_secretsmanager_secret.db_credentials.arn</span>
+<span class="w">  </span><span class="na">policy</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_iam_policy_document.secret_resource_policy.json</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="amazon-guardduty">Amazon GuardDuty<a class="headerlink" href="#amazon-guardduty" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/guardduty.tf</span>
+<span class="c1"># Enable GuardDuty organization-wide from the delegated administrator account</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_guardduty_detector&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+
+<span class="w">  </span><span class="nb">datasources</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">s3_logs</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">kubernetes</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nb">audit_logs</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="na">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">malware_protection</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nb">scan_ec2_instance_with_findings</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">ebs_volumes</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="na">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="c1"># Auto-enable for all new member accounts</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_guardduty_organization_configuration&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">auto_enable_organization_members</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ALL&quot;</span>
+<span class="w">  </span><span class="na">detector_id</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_guardduty_detector.main.id</span>
+
+<span class="w">  </span><span class="nb">datasources</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">s3_logs</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">auto_enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">kubernetes</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nb">audit_logs</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="na">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">malware_protection</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nb">scan_ec2_instance_with_findings</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">ebs_volumes</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="na">auto_enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># SNS alert for HIGH and CRITICAL findings</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_cloudwatch_event_rule&quot;</span><span class="w"> </span><span class="nv">&quot;guardduty_findings&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-guardduty-findings&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Route GuardDuty HIGH and CRITICAL findings to SNS&quot;</span>
+
+<span class="w">  </span><span class="na">event_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">jsonencode</span><span class="p">({</span>
+<span class="w">    </span><span class="na">source</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;aws.guardduty&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">detail-type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;GuardDuty Finding&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="nb">detail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">severity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="na">numeric</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&gt;=&quot;</span><span class="p">,</span><span class="w"> </span><span class="m">7</span><span class="p">]</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_cloudwatch_event_target&quot;</span><span class="w"> </span><span class="nv">&quot;guardduty_sns&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">rule</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_cloudwatch_event_rule.guardduty_findings.name</span>
+<span class="w">  </span><span class="na">target_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SendToSNS&quot;</span>
+<span class="w">  </span><span class="na">arn</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_sns_topic.security_alerts.arn</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="aws-security-hub">AWS Security Hub<a class="headerlink" href="#aws-security-hub" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/securityhub.tf</span>
+<span class="c1"># Aggregated security posture across all accounts and regions</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_securityhub_account&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="c1"># Enable CIS AWS Foundations Benchmark</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_securityhub_standards_subscription&quot;</span><span class="w"> </span><span class="nv">&quot;cis&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">standards_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;arn:aws:securityhub:::ruleset/cis-aws-foundations-benchmark/v/1.4.0&quot;</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_securityhub_account.main</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1"># Enable AWS Foundational Security Best Practices</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_securityhub_standards_subscription&quot;</span><span class="w"> </span><span class="nv">&quot;fsbp&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">standards_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;arn:aws:securityhub:${var.region}::standards/aws-foundational-security-best-practices/v/1.0.0&quot;</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_securityhub_account.main</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1"># Enable NIST 800-53 (for compliance workloads)</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_securityhub_standards_subscription&quot;</span><span class="w"> </span><span class="nv">&quot;nist&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">standards_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;arn:aws:securityhub:${var.region}::standards/nist-800-53/v/5.0.0&quot;</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_securityhub_account.main</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1"># Organization-wide Security Hub management</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_securityhub_organization_configuration&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">auto_enable</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">auto_enable_standards</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;NONE&quot;</span><span class="c1">  # Manage standards explicitly per account type</span>
+<span class="p">}</span>
+
+<span class="c1"># Route CRITICAL findings to PagerDuty via EventBridge</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_cloudwatch_event_rule&quot;</span><span class="w"> </span><span class="nv">&quot;security_hub_critical&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-securityhub-critical&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Route CRITICAL Security Hub findings to incident management&quot;</span>
+
+<span class="w">  </span><span class="na">event_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">jsonencode</span><span class="p">({</span>
+<span class="w">    </span><span class="na">source</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;aws.securityhub&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">detail-type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Security Hub Findings - Imported&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="nb">detail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nb">findings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">Severity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="na">Label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;CRITICAL&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="na">RecordState</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;ACTIVE&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="nb">Workflow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="na">Status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;NEW&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="aws-config">AWS Config<a class="headerlink" href="#aws-config" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># security/config.tf</span>
+<span class="c1"># Continuous compliance monitoring and drift detection</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_config_configuration_recorder&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-recorder&quot;</span>
+<span class="w">  </span><span class="na">role_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_role.config.arn</span>
+
+<span class="w">  </span><span class="nb">recording_group</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">all_supported</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="na">include_global_resource_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">recording_mode</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">recording_frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CONTINUOUS&quot;</span>
+
+<span class="w">    </span><span class="nb">recording_mode_override</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">description</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Daily recording for high-volume resources&quot;</span>
+<span class="w">      </span><span class="na">resource_types</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;AWS::CloudTrail::Trail&quot;, &quot;AWS::Config::ResourceCompliance&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="na">recording_frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DAILY&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_config_delivery_channel&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-delivery&quot;</span>
+<span class="w">  </span><span class="na">s3_bucket_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_s3_bucket.config_logs.bucket</span>
+<span class="w">  </span><span class="na">sns_topic_arn</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_sns_topic.config_changes.arn</span>
+
+<span class="w">  </span><span class="nb">snapshot_delivery_properties</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">delivery_frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;TwentyFour_Hours&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_config_configuration_recorder.main</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_config_configuration_recorder_status&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_config_configuration_recorder.main.name</span>
+<span class="w">  </span><span class="na">is_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_config_delivery_channel.main</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1"># Managed Config rules for security baseline</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_config_config_rule&quot;</span><span class="w"> </span><span class="nv">&quot;s3_public_access_blocked&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;s3-account-level-public-access-blocks&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Checks S3 account-level public access block settings&quot;</span>
+
+<span class="w">  </span><span class="nb">source</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">owner</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS&quot;</span>
+<span class="w">    </span><span class="na">source_identifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;S3_ACCOUNT_LEVEL_PUBLIC_ACCESS_BLOCKS_PERIODIC&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_config_configuration_recorder.main</span><span class="p">]</span>
+<span class="w">  </span><span class="na">tags</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_config_config_rule&quot;</span><span class="w"> </span><span class="nv">&quot;encrypted_volumes&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;encrypted-volumes&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Checks that EBS volumes are encrypted&quot;</span>
+
+<span class="w">  </span><span class="nb">source</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">owner</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS&quot;</span>
+<span class="w">    </span><span class="na">source_identifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ENCRYPTED_VOLUMES&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_config_configuration_recorder.main</span><span class="p">]</span>
+<span class="w">  </span><span class="na">tags</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_config_config_rule&quot;</span><span class="w"> </span><span class="nv">&quot;mfa_enabled_root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;root-account-mfa-enabled&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Checks that MFA is enabled on the root account&quot;</span>
+
+<span class="w">  </span><span class="nb">source</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">owner</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS&quot;</span>
+<span class="w">    </span><span class="na">source_identifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ROOT_ACCOUNT_MFA_ENABLED&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">maximum_execution_frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;TwentyFour_Hours&quot;</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_config_configuration_recorder.main</span><span class="p">]</span>
+<span class="w">  </span><span class="na">tags</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_config_config_rule&quot;</span><span class="w"> </span><span class="nv">&quot;iam_password_policy&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;iam-password-policy&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Checks that the IAM password policy meets requirements&quot;</span>
+
+<span class="w">  </span><span class="nb">source</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">owner</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS&quot;</span>
+<span class="w">    </span><span class="na">source_identifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;IAM_PASSWORD_POLICY&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">input_parameters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">jsonencode</span><span class="p">({</span>
+<span class="w">    </span><span class="na">RequireUppercaseCharacters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="w">    </span><span class="na">RequireLowercaseCharacters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="w">    </span><span class="na">RequireSymbols</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="w">    </span><span class="na">RequireNumbers</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="w">    </span><span class="na">MinimumPasswordLength</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;16&quot;</span>
+<span class="w">    </span><span class="na">PasswordReusePrevention</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;24&quot;</span>
+<span class="w">    </span><span class="na">MaxPasswordAge</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;90&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_config_configuration_recorder.main</span><span class="p">]</span>
+<span class="w">  </span><span class="na">tags</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="c1"># Conformance pack for CIS Level 1</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_config_conformance_pack&quot;</span><span class="w"> </span><span class="nv">&quot;cis_level1&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-cis-level1&quot;</span>
+
+<span class="w">  </span><span class="na">template_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;-</span><span class="dl">YAML</span>
+<span class="sh">    Parameters: {}</span>
+<span class="sh">    Resources:</span>
+<span class="sh">      ConfigRuleForRootMFA:</span>
+<span class="sh">        Type: AWS::Config::ConfigRule</span>
+<span class="sh">        Properties:</span>
+<span class="sh">          ConfigRuleName: root-mfa-enabled</span>
+<span class="sh">          Source:</span>
+<span class="sh">            Owner: AWS</span>
+<span class="sh">            SourceIdentifier: ROOT_ACCOUNT_MFA_ENABLED</span>
+<span class="sh">      ConfigRuleForEncryptedVolumes:</span>
+<span class="sh">        Type: AWS::Config::ConfigRule</span>
+<span class="sh">        Properties:</span>
+<span class="sh">          ConfigRuleName: encrypted-ebs-volumes</span>
+<span class="sh">          Source:</span>
+<span class="sh">            Owner: AWS</span>
+<span class="sh">            SourceIdentifier: ENCRYPTED_VOLUMES</span>
+<span class="dl">  YAML</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_config_configuration_recorder.main</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="aws-cloudtrail">AWS CloudTrail<a class="headerlink" href="#aws-cloudtrail" title="Permanent link">&para;</a></h3>
+<p>```hcl</p>
+<h1 id="securitycloudtrailtf">security/cloudtrail.tf<a class="headerlink" href="#securitycloudtrailtf" title="Permanent link">&para;</a></h1>
+<h1 id="organization-trail-single-trail-covering-all-accounts-and-regions">Organization trail — single trail covering all accounts and regions<a class="headerlink" href="#organization-trail-single-trail-covering-all-accounts-and-regions" title="Permanent link">&para;</a></h1>
+<p>resource "aws_cloudtrail" "organization" {
+  name                          = "${var.org}-organization-trail"
+  s3_bucket_name                = aws_s3_bucket.cloudtrail_logs.bucket
+  include_global_service_events = true
+  is_multi_region_trail         = true
+  is_organization_trail         = true
+  enable_log_file_validation    = true
+  kms_key_id                    = aws_kms_key.cloudtrail.arn
+  cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
+  cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail_cw.arn</p>
+<p>event_selector {
+    read_write_type           = "All"
+    include_management_events = true</p>
+<div class="codehilite"><pre><span></span><code>data_resource<span class="w"> </span>{
+<span class="w">  </span>type<span class="w">   </span>=<span class="w"> </span>&quot;AWS::S3::Object&quot;
+<span class="w">  </span>values<span class="w"> </span>=<span class="w"> </span>[&quot;arn:aws:s3:::<span class="cp">${</span><span class="n">aws_s3_bucket</span><span class="o">.</span><span class="n">sensitive_data</span><span class="o">.</span><span class="n">bucket</span><span class="cp">}</span>/&quot;]
+}
+
+data_resource<span class="w"> </span>{
+<span class="w">  </span>type<span class="w">   </span>=<span class="w"> </span>&quot;AWS::Lambda::Function&quot;
+<span class="w">  </span>values<span class="w"> </span>=<span class="w"> </span>[&quot;arn:aws:lambda&quot;]
+}
+</code></pre></div>
+
+<p>}</p>
+<p>insight_selector {
+    insight_type = "ApiCallRateInsight"
+  }</p>
+<p>insight_selector {
+    insight_type = "ApiErrorRateInsight"
+  }</p>
+<p>tags = local.common_tags
+}</p>
+<h1 id="cloudtrail-log-bucket-with-strict-security-controls">CloudTrail log bucket with strict security controls<a class="headerlink" href="#cloudtrail-log-bucket-with-strict-security-controls" title="Permanent link">&para;</a></h1>
+<p>resource "aws_s3_bucket" "cloudtrail_logs" {
+  bucket = "${var.org}-cloudtrail-logs-${data.aws_caller_identity.current.account_id}-${var.region}"</p>
+<p>tags = local.common_tags
+}</p>
+<p>resource "aws_s3_bucket_public_access_block" "cloudtrail_logs" {
+  bucket                  = aws_s3_bucket.cloudtrail_logs.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}</p>
+<p>resource "aws_s3_bucket_versioning" "cloudtrail_logs" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}</p>
+<p>resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail_logs" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id</p>
+<p>rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.cloudtrail.arn
+    }
+    bucket_key_enabled = true
+  }
+}</p>
+<p>resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id</p>
+<p>rule {
+    id     = "archive-and-expire"
+    status = "Enabled"</p>
+<div class="codehilite"><pre><span></span><code>transition {
+  days          = 90
+  storage_class = &quot;STANDARD_IA&quot;
+}
+
+transition {
+  days          = 365
+  storage_class = &quot;GLACIER&quot;
+}
+
+expiration {
+  days = 2555  # 7 years for compliance
+}
+</code></pre></div>
+
+<p>}
+}</p>
+<h1 id="alert-on-root-account-usage-via-cloudtrail-cloudwatch">Alert on root account usage via CloudTrail + CloudWatch<a class="headerlink" href="#alert-on-root-account-usage-via-cloudtrail-cloudwatch" title="Permanent link">&para;</a></h1>
+<p>resource "aws_cloudwatch_log_metric_filter" "root_login" {
+  name           = "root-account-login"
+  log_group_name = aws_cloudwatch_log_group.cloudtrail.name
+  pattern        = "{ $.userIdentity.type = \"Root\" &amp;&amp; $.userIdentity.invokedBy NOT EXISTS &amp;&amp; $.eventType != \"AwsServiceEvent\" }"</p>
+<p>metric_transformation {
+    name          = "RootAccountLoginCount"
+    namespace     = "CloudTrailMetrics"
+    value         = "1"
+    default_value = "0"
+  }
+}</p>
+<p>resource "aws_cloudwatch_metric_alarm" "root_login" {
+  alarm_name          = "${var.workload}-${var.environment}-root-login"
+  alarm_description   = "Alert on any root account login"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 1
+  metric_name         = "RootAccountLoginCount"
+  namespace           = "CloudTrailMetrics"
+  period              = 300
+  statistic           = "Sum"
+  threshold           = 1
+  alarm_actions       = [aws_sns_topic.security_alerts.arn]
+  treat_missing_data  = "notBreaching"</p>
+<p>tags = local.common_tags
+}</p>
 
 
 
