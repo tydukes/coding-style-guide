@@ -1,6 +1,6 @@
 ---
 title: "Migrating from PEP 8 to DevOps Engineering Style Guide"
-description: "Step-by-step migration guide from standard PEP 8 to the enhanced Dukes Engineering Python style guide"
+description: "Step-by-step migration guide from standard PEP 8 to the enhanced DevOps Engineering Python style guide"
 author: "Tyler Dukes"
 tags: [migration, pep8, python, style-guide, upgrade, transition]
 category: "Migration Guides"
@@ -41,7 +41,7 @@ graph LR
     Enhanced --> Migration
     Relaxed --> Migration
 
-    Migration --> DukesGuide[Dukes Engineering<br/>Style Guide]
+    Migration --> DukesGuide[DevOps Engineering<br/>Style Guide]
 
     style Same fill:#e8f5e9
     style Enhanced fill:#fff3e0
@@ -961,7 +961,7 @@ Track these metrics to measure migration progress:
 
 ### Documentation References
 
-- [Python Style Guide](../02_language_guides/python.md) - Full Dukes Engineering Python standards
+- [Python Style Guide](../02_language_guides/python.md) - Full DevOps Engineering Python standards
 - [Testing Strategies](../05_ci_cd/testing_strategies.md) - pytest patterns and best practices
 - [Security Scanning Guide](../05_ci_cd/security_scanning_guide.md) - Bandit, Safety integration
 - [GitHub Actions Guide](../05_ci_cd/github_actions_guide.md) - Python CI/CD workflows

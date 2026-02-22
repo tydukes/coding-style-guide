@@ -346,7 +346,7 @@ def generate_glossary_content(
 
     lines = [FRONTMATTER, ""]
     lines.append(
-        "This glossary defines terms used throughout the Dukes Engineering "
+        "This glossary defines terms used throughout the DevOps Engineering "
         "Style Guide, including technical concepts, tool names,"
     )
     lines.append("metadata tags, and industry terminology.")

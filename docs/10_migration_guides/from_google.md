@@ -1,6 +1,6 @@
 ---
 title: "Migrating from Google Python Style Guide to DevOps Engineering Style Guide"
-description: "Step-by-step migration guide from Google Python Style Guide to the Dukes Engineering Python style guide"
+description: "Step-by-step migration guide from Google Python Style Guide to the DevOps Engineering Python style guide"
 author: "Tyler Dukes"
 tags: [migration, google-style-guide, python, style-guide, upgrade, transition]
 category: "Migration Guides"
@@ -10,13 +10,13 @@ search_keywords: [migration, google style guide, transition, differences, upgrad
 
 ## Overview
 
-This guide helps Python developers transition from the **Google Python Style Guide** to the **Dukes Engineering
-Style Guide**. While both guides share many similarities and are both based on PEP 8, the Dukes Engineering guide
+This guide helps Python developers transition from the **Google Python Style Guide** to the **DevOps Engineering
+Style Guide**. While both guides share many similarities and are both based on PEP 8, the DevOps Engineering guide
 adds DevOps-focused enhancements and modern tooling requirements for infrastructure automation.
 
 ### What This Guide Covers
 
-- Compatibility assessment between Google and Dukes Engineering guides
+- Compatibility assessment between Google and DevOps Engineering guides
 - Key differences in formatting and conventions
 - Enhanced requirements for DevOps workflows
 - Tool migration (Pylint → Black + mypy + pytest)
@@ -25,7 +25,7 @@ adds DevOps-focused enhancements and modern tooling requirements for infrastruct
 
 ### Who Should Use This Guide
 
-- Google-style Python projects transitioning to Dukes Engineering standards
+- Google-style Python projects transitioning to DevOps Engineering standards
 - Teams familiar with Google's conventions adopting DevOps best practices
 - Projects adding infrastructure automation requirements
 - Organizations standardizing on Black, mypy, and modern Python tooling
@@ -42,7 +42,7 @@ graph LR
     Differences --> Migration
     Enhanced --> Migration
 
-    Migration --> Dukes[Dukes Engineering<br/>Style Guide]
+    Migration --> Dukes[DevOps Engineering<br/>Style Guide]
 
     style Compatible fill:#e8f5e9
     style Differences fill:#fff3e0
@@ -52,7 +52,7 @@ graph LR
 
 ## What Stays the Same
 
-Both Google and Dukes Engineering guides share these core PEP 8 conventions:
+Both Google and DevOps Engineering guides share these core PEP 8 conventions:
 
 ### Naming Conventions ✅
 
@@ -264,7 +264,7 @@ yapf -i -r src/
 **Our Tool Stack**:
 
 ```bash
-## Dukes Engineering setup
+## DevOps Engineering setup
 pip install black mypy flake8 isort
 black .
 isort .
@@ -521,7 +521,7 @@ black --check .
 
 ### Pre-commit Hooks Setup
 
-Replace Google's pre-commit configuration with Dukes Engineering stack:
+Replace Google's pre-commit configuration with DevOps Engineering stack:
 
 ```yaml
 ## .pre-commit-config.yaml
@@ -959,7 +959,7 @@ If immediate full migration is not feasible, adopt incrementally:
 
 ### Month 4+: Complete Transition
 
-- All code follows Dukes Engineering standards
+- All code follows DevOps Engineering standards
 - 100% type hint coverage
 - 80%+ test coverage
 - Zero mypy errors
@@ -979,7 +979,7 @@ Track these metrics to measure migration progress:
 | Docstring Completeness | 100% | % functions with structured docs |
 | Formatting Compliance | 100% | % files passing Black check |
 
-## Side-by-Side Comparison: Google vs. Dukes Engineering
+## Side-by-Side Comparison: Google vs. DevOps Engineering
 
 | Aspect | Google Python Style Guide | DevOps Engineering Style Guide |
 |--------|--------------------------|------------------------------|
@@ -1005,7 +1005,7 @@ Track these metrics to measure migration progress:
 
 ### Documentation References
 
-- [Python Style Guide](../02_language_guides/python.md) - Full Dukes Engineering Python standards
+- [Python Style Guide](../02_language_guides/python.md) - Full DevOps Engineering Python standards
 - [Testing Strategies](../05_ci_cd/testing_strategies.md) - pytest patterns
 - [Security Scanning Guide](../05_ci_cd/security_scanning_guide.md) - Bandit, Safety
 - [GitHub Actions Guide](../05_ci_cd/github_actions_guide.md) - Python CI/CD
@@ -1038,7 +1038,7 @@ Migrating from Google Python Style Guide to DevOps Engineering Style Guide bring
 ✅ **Automation** - Pre-commit hooks and CI/CD integration catch issues early
 ✅ **DevOps Ready** - Enhanced metadata and documentation support automation
 
-While Google's guide is excellent for general Python development, Dukes Engineering guide adds
+While Google's guide is excellent for general Python development, DevOps Engineering guide adds
 the DevOps-focused enhancements essential for infrastructure automation, cloud deployments,
 and production reliability.
 

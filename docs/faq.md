@@ -8,7 +8,7 @@ status: "active"
 search_keywords: [faq, frequently asked questions, help, how to, common questions, troubleshooting]
 ---
 
-Quick answers to common questions about adopting and using the Dukes Engineering
+Quick answers to common questions about adopting and using the DevOps Engineering
 Style Guide.
 
 ---
