@@ -25,6 +25,12 @@ This changelog is automatically generated from GitHub releases. Each release inc
 
 Changes that are in the main branch but not yet released.
 
+## [v1.8.11] - 2026-02-22
+
+## What's Changed
+### New Features
+* feat(ui): enable `content.tabs.link` and `pymdownx.tabbed` for synced content tabs (#385)
+
 ## [v1.8.10] - 2026-02-22
 
 ## What's Changed
