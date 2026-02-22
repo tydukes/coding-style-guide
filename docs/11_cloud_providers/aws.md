@@ -2421,3 +2421,920 @@ resource "aws_flow_log" "this" {
     Name = "${var.workload}-${var.environment}-vpc-flow-logs"
   })
 }
+
+---
+
+## Compute Services
+
+### Amazon EKS
+
+Use managed node groups for most workloads. Fargate profiles are appropriate for
+batch or bursty workloads where node management overhead is undesirable. Always
+use IRSA (IAM Roles for Service Accounts) — never run node-level instance profiles
+with broad permissions.
+
+```hcl
+resource "aws_eks_cluster" "this" {
+  name     = "${var.workload}-${var.environment}"
+  role_arn = aws_iam_role.eks_cluster.arn
+  version  = var.kubernetes_version # e.g. "1.32"
+
+  vpc_config {
+    subnet_ids              = concat(aws_subnet.private[*].id, aws_subnet.intra[*].id)
+    endpoint_private_access = true
+    endpoint_public_access  = false # restrict to VPN/bastion only
+    security_group_ids      = [aws_security_group.eks_cluster.id]
+  }
+
+  enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+
+  encryption_config {
+    provider {
+      key_arn = aws_kms_key.main.arn
+    }
+    resources = ["secrets"]
+  }
+
+  tags = local.common_tags
+
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_cluster_policy,
+    aws_cloudwatch_log_group.eks_cluster,
+  ]
+}
+
+resource "aws_cloudwatch_log_group" "eks_cluster" {
+  name              = "/aws/eks/${var.workload}-${var.environment}/cluster"
+  retention_in_days = 90
+  kms_key_id        = aws_kms_key.main.arn
+
+  tags = local.common_tags
+}
+
+resource "aws_eks_node_group" "this" {
+  cluster_name    = aws_eks_cluster.this.name
+  node_group_name = "${var.workload}-${var.environment}-ng"
+  node_role_arn   = aws_iam_role.eks_node.arn
+  subnet_ids      = aws_subnet.private[*].id
+
+  instance_types = var.node_instance_types # ["m7i.xlarge"]
+  capacity_type  = "ON_DEMAND"             # or "SPOT" for non-prod
+
+  scaling_config {
+    desired_size = var.node_desired_count
+    min_size     = var.node_min_count
+    max_size     = var.node_max_count
+  }
+
+  update_config {
+    max_unavailable_percentage = 33
+  }
+
+  launch_template {
+    id      = aws_launch_template.eks_node.id
+    version = aws_launch_template.eks_node.latest_version
+  }
+
+  tags = local.common_tags
+
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_node_policy,
+    aws_iam_role_policy_attachment.eks_cni_policy,
+    aws_iam_role_policy_attachment.eks_ecr_policy,
+  ]
+}
+
+# Launch template for node customization (IMDSv2 required)
+resource "aws_launch_template" "eks_node" {
+  name_prefix = "${var.workload}-${var.environment}-eks-node-"
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required" # IMDSv2 only
+    http_put_response_hop_limit = 1
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags          = merge(local.common_tags, { Name = "${var.workload}-${var.environment}-eks-node" })
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+    tags          = local.common_tags
+  }
+
+  tags = local.common_tags
+}
+
+# EKS cluster add-ons (managed by AWS, kept current)
+resource "aws_eks_addon" "coredns" {
+  cluster_name                = aws_eks_cluster.this.name
+  addon_name                  = "coredns"
+  resolve_conflicts_on_update = "OVERWRITE"
+  tags                        = local.common_tags
+}
+
+resource "aws_eks_addon" "kube_proxy" {
+  cluster_name                = aws_eks_cluster.this.name
+  addon_name                  = "kube-proxy"
+  resolve_conflicts_on_update = "OVERWRITE"
+  tags                        = local.common_tags
+}
+
+resource "aws_eks_addon" "vpc_cni" {
+  cluster_name                = aws_eks_cluster.this.name
+  addon_name                  = "vpc-cni"
+  resolve_conflicts_on_update = "OVERWRITE"
+
+  configuration_values = jsonencode({
+    env = {
+      ENABLE_PREFIX_DELEGATION = "true" # more IPs per node
+      WARM_PREFIX_TARGET       = "1"
+    }
+  })
+
+  tags = local.common_tags
+}
+
+resource "aws_eks_addon" "ebs_csi" {
+  cluster_name                = aws_eks_cluster.this.name
+  addon_name                  = "aws-ebs-csi-driver"
+  service_account_role_arn    = aws_iam_role.ebs_csi.arn # IRSA
+  resolve_conflicts_on_update = "OVERWRITE"
+  tags                        = local.common_tags
+}
+
+# IRSA — link a Kubernetes service account to an IAM role
+resource "aws_iam_role" "ebs_csi" {
+  name = "${var.workload}-${var.environment}-ebs-csi"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Federated = aws_iam_openid_connect_provider.eks.arn }
+      Action    = "sts:AssumeRoleWithWebIdentity"
+      Condition = {
+        StringEquals = {
+          "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:sub" = "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+          "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:aud" = "sts.amazonaws.com"
+        }
+      }
+    }]
+  })
+
+  tags = local.common_tags
+}
+
+resource "aws_iam_role_policy_attachment" "ebs_csi" {
+  role       = aws_iam_role.ebs_csi.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+}
+
+# OIDC provider for IRSA
+data "tls_certificate" "eks" {
+  url = aws_eks_cluster.this.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "eks" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.eks.certificates[0].sha1_fingerprint]
+  url             = aws_eks_cluster.this.identity[0].oidc[0].issuer
+
+  tags = local.common_tags
+}
+```
+
+### ECS and Fargate
+
+Use `awsvpc` networking mode for all tasks — each task gets its own ENI and
+security group. Never inject secrets as plain environment variables; use Secrets
+Manager or Parameter Store references in the task definition.
+
+```hcl
+resource "aws_ecs_cluster" "this" {
+  name = "${var.workload}-${var.environment}"
+
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
+
+  tags = local.common_tags
+}
+
+resource "aws_ecs_cluster_capacity_providers" "this" {
+  cluster_name       = aws_ecs_cluster.this.name
+  capacity_providers = ["FARGATE", "FARGATE_SPOT"]
+
+  default_capacity_provider_strategy {
+    base              = 1
+    weight            = 100
+    capacity_provider = "FARGATE"
+  }
+}
+
+resource "aws_ecs_task_definition" "app" {
+  family                   = "${var.workload}-${var.environment}-app"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = var.task_cpu    # e.g. 1024
+  memory                   = var.task_memory # e.g. 2048
+  task_role_arn            = aws_iam_role.ecs_task.arn       # app permissions
+  execution_role_arn       = aws_iam_role.ecs_execution.arn  # pull image + logs
+
+  container_definitions = jsonencode([{
+    name      = "app"
+    image     = "${aws_ecr_repository.app.repository_url}:${var.image_tag}"
+    essential = true
+
+    portMappings = [{
+      containerPort = 8080
+      protocol      = "tcp"
+    }]
+
+    # Inject secrets from Secrets Manager — never use plaintext environment variables
+    secrets = [
+      {
+        name      = "DATABASE_URL"
+        valueFrom = "${aws_secretsmanager_secret.db_url.arn}"
+      },
+      {
+        name      = "API_KEY"
+        valueFrom = "${aws_secretsmanager_secret.api_key.arn}:api_key::"
+      }
+    ]
+
+    environment = [
+      { name = "ENVIRONMENT", value = var.environment },
+      { name = "AWS_DEFAULT_REGION", value = var.aws_region }
+    ]
+
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.ecs_app.name
+        "awslogs-region"        = var.aws_region
+        "awslogs-stream-prefix" = "app"
+      }
+    }
+
+    healthCheck = {
+      command     = ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval    = 30
+      timeout     = 5
+      retries     = 3
+      startPeriod = 60
+    }
+  }])
+
+  tags = local.common_tags
+}
+
+resource "aws_ecs_service" "app" {
+  name                               = "${var.workload}-${var.environment}-app"
+  cluster                            = aws_ecs_cluster.this.id
+  task_definition                    = aws_ecs_task_definition.app.arn
+  desired_count                      = var.desired_count
+  launch_type                        = "FARGATE"
+  platform_version                   = "LATEST"
+  health_check_grace_period_seconds  = 60
+  propagate_tags                     = "TASK_DEFINITION"
+
+  network_configuration {
+    subnets          = aws_subnet.private[*].id
+    security_groups  = [aws_security_group.app.id]
+    assign_public_ip = false
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.app.arn
+    container_name   = "app"
+    container_port   = 8080
+  }
+
+  deployment_controller {
+    type = "ECS"
+  }
+
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
+
+  tags = local.common_tags
+}
+
+resource "aws_cloudwatch_log_group" "ecs_app" {
+  name              = "/ecs/${var.workload}-${var.environment}/app"
+  retention_in_days = 90
+  kms_key_id        = aws_kms_key.main.arn
+
+  tags = local.common_tags
+}
+```
+
+### AWS Lambda
+
+Set reserved concurrency to prevent runaway costs. Attach to a VPC only when
+the function needs access to private resources — cold starts increase with VPC
+attachment. Use destinations for async invocations instead of try/catch logging.
+
+```hcl
+resource "aws_lambda_function" "processor" {
+  function_name = "${var.workload}-${var.environment}-processor"
+  role          = aws_iam_role.lambda_processor.arn
+  package_type  = "Image"
+  image_uri     = "${aws_ecr_repository.processor.repository_url}:${var.image_tag}"
+
+  memory_size                    = 512  # MB
+  timeout                        = 30   # seconds
+  reserved_concurrent_executions = 100  # prevent runaway scaling
+
+  environment {
+    variables = {
+      ENVIRONMENT    = var.environment
+      SECRET_ARN     = aws_secretsmanager_secret.processor.arn
+      # Never put secret values here — reference ARNs only
+    }
+  }
+
+  # VPC attachment for private resource access
+  vpc_config {
+    subnet_ids         = aws_subnet.private[*].id
+    security_group_ids = [aws_security_group.lambda.id]
+  }
+
+  # Dead letter queue for failed async invocations
+  dead_letter_config {
+    target_arn = aws_sqs_queue.lambda_dlq.arn
+  }
+
+  # Async destinations
+  dynamic "destination_config" {
+    for_each = var.enable_destinations ? [1] : []
+    content {
+      on_failure {
+        destination = aws_sqs_queue.lambda_dlq.arn
+      }
+      on_success {
+        destination = aws_sns_topic.lambda_success.arn
+      }
+    }
+  }
+
+  tracing_config {
+    mode = "Active" # X-Ray tracing
+  }
+
+  tags = local.common_tags
+
+  depends_on = [aws_cloudwatch_log_group.lambda_processor]
+}
+
+resource "aws_cloudwatch_log_group" "lambda_processor" {
+  name              = "/aws/lambda/${var.workload}-${var.environment}-processor"
+  retention_in_days = 90
+  kms_key_id        = aws_kms_key.main.arn
+
+  tags = local.common_tags
+}
+
+resource "aws_sqs_queue" "lambda_dlq" {
+  name                      = "${var.workload}-${var.environment}-processor-dlq"
+  message_retention_seconds = 1209600 # 14 days
+  kms_master_key_id         = aws_kms_key.main.arn
+
+  tags = local.common_tags
+}
+```
+
+### Amazon EC2
+
+Require IMDSv2 on all instances — block IMDSv1 at the account level with a SCP
+and enforce it in launch templates. Use Systems Manager Session Manager for
+shell access; never open port 22.
+
+```hcl
+resource "aws_launch_template" "app" {
+  name_prefix   = "${var.workload}-${var.environment}-app-"
+  image_id      = data.aws_ami.amazon_linux.id
+  instance_type = var.instance_type
+
+  iam_instance_profile {
+    arn = aws_iam_instance_profile.app.arn
+  }
+
+  network_interfaces {
+    associate_public_ip_address = false
+    security_groups             = [aws_security_group.app.id]
+    delete_on_termination       = true
+  }
+
+  # IMDSv2 required — hop limit of 1 prevents container escape
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = "enabled"
+  }
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    ebs {
+      volume_size           = 30
+      volume_type           = "gp3"
+      encrypted             = true
+      kms_key_id            = aws_kms_key.main.arn
+      delete_on_termination = true
+    }
+  }
+
+  monitoring {
+    enabled = true # detailed monitoring
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags          = merge(local.common_tags, { Name = "${var.workload}-${var.environment}-app" })
+  }
+
+  tags = local.common_tags
+}
+
+resource "aws_autoscaling_group" "app" {
+  name                = "${var.workload}-${var.environment}-app-asg"
+  vpc_zone_identifier = aws_subnet.private[*].id
+  target_group_arns   = [aws_lb_target_group.app.arn]
+  health_check_type   = "ELB"
+
+  min_size         = var.asg_min_size
+  max_size         = var.asg_max_size
+  desired_capacity = var.asg_desired_capacity
+
+  launch_template {
+    id      = aws_launch_template.app.id
+    version = "$Latest"
+  }
+
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 90
+    }
+  }
+
+  dynamic "tag" {
+    for_each = merge(local.common_tags, { Name = "${var.workload}-${var.environment}-app" })
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+  }
+}
+
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-*-x86_64"]
+  }
+
+  filter {
+    name   = "state"
+    values = ["available"]
+  }
+}
+```
+
+---
+
+## Data Services
+
+### Amazon RDS and Aurora
+
+Always enable Multi-AZ, automated backups, and encryption at rest. Manage
+credentials exclusively through Secrets Manager with automatic rotation —
+never hardcode passwords in Terraform or environment variables.
+
+```hcl
+# Subnet group — use intra subnets (no route to internet or NAT)
+resource "aws_db_subnet_group" "this" {
+  name       = "${var.workload}-${var.environment}-db"
+  subnet_ids = aws_subnet.intra[*].id
+
+  tags = local.common_tags
+}
+
+# Parameter group — tune per engine version
+resource "aws_db_parameter_group" "postgres" {
+  name   = "${var.workload}-${var.environment}-pg16"
+  family = "postgres16"
+
+  parameter {
+    name  = "log_connections"
+    value = "1"
+  }
+
+  parameter {
+    name  = "log_disconnections"
+    value = "1"
+  }
+
+  parameter {
+    name  = "log_min_duration_statement"
+    value = "1000" # log queries > 1 s
+  }
+
+  tags = local.common_tags
+}
+
+resource "aws_db_instance" "this" {
+  identifier = "${var.workload}-${var.environment}-db"
+
+  engine               = "postgres"
+  engine_version       = "16.4"
+  instance_class       = var.db_instance_class # e.g. "db.t4g.medium"
+  allocated_storage    = var.db_storage_gb
+  max_allocated_storage = var.db_storage_gb * 2 # autoscaling ceiling
+
+  db_name  = var.db_name
+  username = var.db_username
+  # Never set password here — use manage_master_user_password
+  manage_master_user_password   = true
+  master_user_secret_kms_key_id = aws_kms_key.main.arn
+
+  db_subnet_group_name   = aws_db_subnet_group.this.name
+  vpc_security_group_ids = [aws_security_group.db.id]
+  parameter_group_name   = aws_db_parameter_group.postgres.name
+
+  multi_az               = var.environment == "prod" ? true : false
+  publicly_accessible    = false
+  storage_encrypted      = true
+  kms_key_id             = aws_kms_key.main.arn
+  storage_type           = "gp3"
+
+  backup_retention_period = 14
+  backup_window           = "03:00-04:00"
+  maintenance_window      = "sun:04:00-sun:05:00"
+
+  performance_insights_enabled          = true
+  performance_insights_kms_key_id       = aws_kms_key.main.arn
+  performance_insights_retention_period = 7
+
+  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
+
+  deletion_protection = var.environment == "prod" ? true : false
+  skip_final_snapshot = var.environment == "prod" ? false : true
+  final_snapshot_identifier = var.environment == "prod" ? "${var.workload}-${var.environment}-final" : null
+
+  tags = local.common_tags
+}
+
+# Aurora cluster (preferred for new workloads — better scaling, faster failover)
+resource "aws_rds_cluster" "this" {
+  cluster_identifier = "${var.workload}-${var.environment}-aurora"
+
+  engine         = "aurora-postgresql"
+  engine_version = "16.4"
+  engine_mode    = "provisioned"
+
+  database_name   = var.db_name
+  master_username = var.db_username
+  manage_master_user_password   = true
+  master_user_secret_kms_key_id = aws_kms_key.main.arn
+
+  db_subnet_group_name   = aws_db_subnet_group.this.name
+  vpc_security_group_ids = [aws_security_group.db.id]
+
+  storage_encrypted = true
+  kms_key_id        = aws_kms_key.main.arn
+
+  backup_retention_period = 14
+  preferred_backup_window = "03:00-04:00"
+
+  serverlessv2_scaling_configuration {
+    min_capacity = 0.5
+    max_capacity = 16
+  }
+
+  enabled_cloudwatch_logs_exports = ["postgresql"]
+  deletion_protection             = var.environment == "prod" ? true : false
+  skip_final_snapshot             = var.environment == "prod" ? false : true
+
+  tags = local.common_tags
+}
+
+resource "aws_rds_cluster_instance" "this" {
+  count = var.environment == "prod" ? 2 : 1 # writer + 1 reader in prod
+
+  identifier         = "${var.workload}-${var.environment}-aurora-${count.index}"
+  cluster_identifier = aws_rds_cluster.this.id
+  instance_class     = "db.serverless"
+  engine             = aws_rds_cluster.this.engine
+  engine_version     = aws_rds_cluster.this.engine_version
+
+  performance_insights_enabled          = true
+  performance_insights_kms_key_id       = aws_kms_key.main.arn
+  performance_insights_retention_period = 7
+
+  tags = local.common_tags
+}
+```
+
+### Amazon S3
+
+Block all public access at the account level (AWS Organizations SCP) and
+bucket level. Enable versioning for any bucket holding state or artifacts.
+Use SSE-KMS for sensitive data; SSE-S3 for non-sensitive bulk storage.
+
+```hcl
+# Block public access — apply to every bucket
+resource "aws_s3_bucket_public_access_block" "this" {
+  bucket = aws_s3_bucket.this.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket" "this" {
+  bucket = "${var.workload}-${var.environment}-${var.bucket_purpose}-${data.aws_caller_identity.current.account_id}"
+
+  # Force destroy only for ephemeral/test buckets
+  force_destroy = var.environment != "prod"
+
+  tags = local.common_tags
+}
+
+resource "aws_s3_bucket_versioning" "this" {
+  bucket = aws_s3_bucket.this.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+  bucket = aws_s3_bucket.this.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.main.arn
+    }
+    bucket_key_enabled = true # reduce KMS API costs
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "this" {
+  bucket = aws_s3_bucket.this.id
+
+  rule {
+    id     = "transition-to-ia"
+    status = "Enabled"
+
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+
+    transition {
+      days          = 90
+      storage_class = "GLACIER_IR"
+    }
+
+    noncurrent_version_transition {
+      noncurrent_days = 30
+      storage_class   = "STANDARD_IA"
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 365
+    }
+  }
+}
+
+# Enforce TLS-only access
+resource "aws_s3_bucket_policy" "enforce_tls" {
+  bucket = aws_s3_bucket.this.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Sid       = "DenyHTTP"
+      Effect    = "Deny"
+      Principal = "*"
+      Action    = "s3:*"
+      Resource = [
+        aws_s3_bucket.this.arn,
+        "${aws_s3_bucket.this.arn}/*"
+      ]
+      Condition = {
+        Bool = { "aws:SecureTransport" = "false" }
+      }
+    }]
+  })
+}
+
+# Object Lock for compliance/WORM workloads
+resource "aws_s3_bucket_object_lock_configuration" "compliance" {
+  count  = var.enable_object_lock ? 1 : 0
+  bucket = aws_s3_bucket.this.id
+
+  rule {
+    default_retention {
+      mode = "COMPLIANCE"
+      days = var.object_lock_retention_days
+    }
+  }
+}
+```
+
+### ElastiCache (Redis)
+
+Use replication groups (not single-node clusters) for all non-development
+environments. Enable encryption in transit and at rest. Require an auth token
+for Redis AUTH command support.
+
+```hcl
+resource "aws_elasticache_subnet_group" "this" {
+  name       = "${var.workload}-${var.environment}-redis"
+  subnet_ids = aws_subnet.intra[*].id
+
+  tags = local.common_tags
+}
+
+resource "aws_elasticache_parameter_group" "redis" {
+  name   = "${var.workload}-${var.environment}-redis7"
+  family = "redis7"
+
+  parameter {
+    name  = "maxmemory-policy"
+    value = "allkeys-lru"
+  }
+
+  tags = local.common_tags
+}
+
+resource "aws_elasticache_replication_group" "this" {
+  replication_group_id = "${var.workload}-${var.environment}-redis"
+  description          = "${var.workload} ${var.environment} Redis cluster"
+
+  engine               = "redis"
+  engine_version       = "7.1"
+  node_type            = var.redis_node_type # e.g. "cache.t4g.small"
+  num_cache_clusters   = var.environment == "prod" ? 3 : 1 # 1 primary + N replicas
+  parameter_group_name = aws_elasticache_parameter_group.redis.name
+  subnet_group_name    = aws_elasticache_subnet_group.this.name
+  security_group_ids   = [aws_security_group.redis.id]
+
+  port                   = 6379
+  at_rest_encryption_enabled  = true
+  transit_encryption_enabled  = true
+  transit_encryption_mode     = "required"
+  kms_key_id             = aws_kms_key.main.arn
+
+  # Auth token stored in Secrets Manager — retrieved at runtime
+  auth_token                    = random_password.redis_auth.result
+  auth_token_update_strategy    = "ROTATE"
+
+  automatic_failover_enabled = var.environment == "prod" ? true : false
+  multi_az_enabled           = var.environment == "prod" ? true : false
+
+  snapshot_retention_limit = 7
+  snapshot_window          = "03:00-04:00"
+  maintenance_window       = "sun:04:00-sun:05:00"
+
+  log_delivery_configuration {
+    destination      = aws_cloudwatch_log_group.redis_slow.name
+    destination_type = "cloudwatch-logs"
+    log_format       = "json"
+    log_type         = "slow-log"
+  }
+
+  log_delivery_configuration {
+    destination      = aws_cloudwatch_log_group.redis_engine.name
+    destination_type = "cloudwatch-logs"
+    log_format       = "json"
+    log_type         = "engine-log"
+  }
+
+  tags = local.common_tags
+}
+
+resource "random_password" "redis_auth" {
+  length  = 32
+  special = false # Redis auth token cannot contain special characters
+}
+
+resource "aws_secretsmanager_secret" "redis_auth" {
+  name       = "/${var.workload}/${var.environment}/redis/auth-token"
+  kms_key_id = aws_kms_key.main.arn
+
+  tags = local.common_tags
+}
+
+resource "aws_secretsmanager_secret_version" "redis_auth" {
+  secret_id     = aws_secretsmanager_secret.redis_auth.id
+  secret_string = random_password.redis_auth.result
+}
+
+resource "aws_cloudwatch_log_group" "redis_slow" {
+  name              = "/aws/elasticache/${var.workload}-${var.environment}/slow-log"
+  retention_in_days = 30
+  kms_key_id        = aws_kms_key.main.arn
+
+  tags = local.common_tags
+}
+
+resource "aws_cloudwatch_log_group" "redis_engine" {
+  name              = "/aws/elasticache/${var.workload}-${var.environment}/engine-log"
+  retention_in_days = 30
+  kms_key_id        = aws_kms_key.main.arn
+
+  tags = local.common_tags
+}
+```
+
+### Amazon ECR
+
+Enable image scanning on push for every repository. Use immutable tags to
+prevent tag overwriting in production. Define lifecycle policies to cap
+untagged image accumulation and keep only the last N tagged releases.
+
+```hcl
+resource "aws_ecr_repository" "app" {
+  name                 = "${var.workload}/${var.environment}/app"
+  image_tag_mutability = "IMMUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  encryption_configuration {
+    encryption_type = "KMS"
+    kms_key         = aws_kms_key.main.arn
+  }
+
+  tags = local.common_tags
+}
+
+resource "aws_ecr_lifecycle_policy" "app" {
+  repository = aws_ecr_repository.app.name
+
+  policy = jsonencode({
+    rules = [
+      {
+        rulePriority = 1
+        description  = "Expire untagged images after 7 days"
+        selection = {
+          tagStatus   = "untagged"
+          countType   = "sinceImagePushed"
+          countUnit   = "days"
+          countNumber = 7
+        }
+        action = { type = "expire" }
+      },
+      {
+        rulePriority = 2
+        description  = "Keep last 30 tagged releases"
+        selection = {
+          tagStatus     = "tagged"
+          tagPrefixList = ["v"]
+          countType     = "imageCountMoreThan"
+          countNumber   = 30
+        }
+        action = { type = "expire" }
+      }
+    ]
+  })
+}
+
+# Cross-account pull — allow workload accounts to pull from shared ECR
+resource "aws_ecr_repository_policy" "cross_account" {
+  repository = aws_ecr_repository.app.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Sid    = "CrossAccountPull"
+      Effect = "Allow"
+      Principal = {
+        AWS = [for account_id in var.consumer_account_ids :
+          "arn:aws:iam::${account_id}:root"
+        ]
+      }
+      Action = [
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "ecr:BatchCheckLayerAvailability"
+      ]
+    }]
+  })
+}

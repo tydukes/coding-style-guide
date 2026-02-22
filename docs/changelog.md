@@ -25,6 +25,12 @@ This changelog is automatically generated from GitHub releases. Each release inc
 
 Changes that are in the main branch but not yet released.
 
+## [v1.8.21] - 2026-02-22
+
+### Added
+
+- AWS Cloud Provider Guide: Compute and Data Services sections covering EKS (managed node groups, IRSA, add-ons, OIDC provider), ECS/Fargate (awsvpc networking, Secrets Manager injection), Lambda (reserved concurrency, VPC attachment, DLQ), EC2 (IMDSv2, launch templates, ASGs), RDS/Aurora (Multi-AZ, managed master passwords, serverless v2), S3 (public access block, versioning, SSE-KMS, lifecycle, TLS policy, Object Lock), ElastiCache Redis (replication group, in-transit encryption, auth token rotation), and ECR (immutable tags, scan on push, lifecycle policies, cross-account pull) closes #397
+
 ## [v1.8.20] - 2026-02-22
 
 ### Added
