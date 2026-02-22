@@ -6964,52 +6964,85 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#subnet-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subnet Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nat-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT Gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vpc-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transit-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transit Gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-acls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network ACLs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vpc-flow-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC Flow Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#securitycloudtrailtf" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        security/cloudtrail.tf
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#organization-trail-single-trail-covering-all-accounts-and-regions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Organization trail — single trail covering all accounts and regions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cloudtrail-log-bucket-with-strict-security-controls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CloudTrail log bucket with strict security controls
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alert-on-root-account-usage-via-cloudtrail-cloudwatch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alert on root account usage via CloudTrail + CloudWatch
-      
-    </span>
-  </a>
   
 </li>
       
@@ -7045,6 +7078,8 @@
   
   
 
+
+  <h1>Amazon Web Services Best Practices Guide</h1>
 
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p><strong>Amazon Web Services (AWS)</strong> is the world's most broadly adopted cloud platform, offering 200+
@@ -8763,117 +8798,668 @@ Terraform and Terragrunt deployments.</p>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="aws-cloudtrail">AWS CloudTrail<a class="headerlink" href="#aws-cloudtrail" title="Permanent link">&para;</a></h3>
-<p>```hcl</p>
-<h1 id="securitycloudtrailtf">security/cloudtrail.tf<a class="headerlink" href="#securitycloudtrailtf" title="Permanent link">&para;</a></h1>
-<h1 id="organization-trail-single-trail-covering-all-accounts-and-regions">Organization trail — single trail covering all accounts and regions<a class="headerlink" href="#organization-trail-single-trail-covering-all-accounts-and-regions" title="Permanent link">&para;</a></h1>
-<p>resource "aws_cloudtrail" "organization" {
-  name                          = "${var.org}-organization-trail"
-  s3_bucket_name                = aws_s3_bucket.cloudtrail_logs.bucket
-  include_global_service_events = true
-  is_multi_region_trail         = true
-  is_organization_trail         = true
-  enable_log_file_validation    = true
-  kms_key_id                    = aws_kms_key.cloudtrail.arn
-  cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
-  cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail_cw.arn</p>
-<p>event_selector {
-    read_write_type           = "All"
-    include_management_events = true</p>
-<div class="codehilite"><pre><span></span><code>data_resource<span class="w"> </span>{
-<span class="w">  </span>type<span class="w">   </span>=<span class="w"> </span>&quot;AWS::S3::Object&quot;
-<span class="w">  </span>values<span class="w"> </span>=<span class="w"> </span>[&quot;arn:aws:s3:::<span class="cp">${</span><span class="n">aws_s3_bucket</span><span class="o">.</span><span class="n">sensitive_data</span><span class="o">.</span><span class="n">bucket</span><span class="cp">}</span>/&quot;]
-}
+<div class="highlight"><pre><span></span><code><span class="c1"># security/cloudtrail.tf</span>
+<span class="c1"># Organization trail — single trail covering all accounts and regions</span>
 
-data_resource<span class="w"> </span>{
-<span class="w">  </span>type<span class="w">   </span>=<span class="w"> </span>&quot;AWS::Lambda::Function&quot;
-<span class="w">  </span>values<span class="w"> </span>=<span class="w"> </span>[&quot;arn:aws:lambda&quot;]
-}
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_cloudtrail&quot;</span><span class="w"> </span><span class="nv">&quot;organization&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.org}-organization-trail&quot;</span>
+<span class="w">  </span><span class="na">s3_bucket_name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_s3_bucket.cloudtrail_logs.bucket</span>
+<span class="w">  </span><span class="na">include_global_service_events</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">is_multi_region_trail</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">is_organization_trail</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">enable_log_file_validation</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">kms_key_id</span><span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_kms_key.cloudtrail.arn</span>
+<span class="w">  </span><span class="na">cloud_watch_logs_group_arn</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${aws_cloudwatch_log_group.cloudtrail.arn}:*&quot;</span>
+<span class="w">  </span><span class="na">cloud_watch_logs_role_arn</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_role.cloudtrail_cw.arn</span>
+
+<span class="w">  </span><span class="nb">event_selector</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">read_write_type</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;All&quot;</span>
+<span class="w">    </span><span class="na">include_management_events</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+
+<span class="w">    </span><span class="nb">data_resource</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">type</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS::S3::Object&quot;</span>
+<span class="w">      </span><span class="na">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;arn:aws:s3:::${aws_s3_bucket.sensitive_data.bucket}/&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nb">data_resource</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">type</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS::Lambda::Function&quot;</span>
+<span class="w">      </span><span class="na">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;arn:aws:lambda&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">insight_selector</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">insight_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ApiCallRateInsight&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">insight_selector</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">insight_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ApiErrorRateInsight&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="c1"># CloudTrail log bucket with strict security controls</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket&quot;</span><span class="w"> </span><span class="nv">&quot;cloudtrail_logs&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.org}-cloudtrail-logs-${data.aws_caller_identity.current.account_id}-${var.region}&quot;</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket_public_access_block&quot;</span><span class="w"> </span><span class="nv">&quot;cloudtrail_logs&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_s3_bucket.cloudtrail_logs.id</span>
+<span class="w">  </span><span class="na">block_public_acls</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">block_public_policy</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">ignore_public_acls</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">restrict_public_buckets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket_versioning&quot;</span><span class="w"> </span><span class="nv">&quot;cloudtrail_logs&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_s3_bucket.cloudtrail_logs.id</span>
+<span class="w">  </span><span class="nb">versioning_configuration</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Enabled&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket_server_side_encryption_configuration&quot;</span><span class="w"> </span><span class="nv">&quot;cloudtrail_logs&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_s3_bucket.cloudtrail_logs.id</span>
+
+<span class="w">  </span><span class="nb">rule</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">apply_server_side_encryption_by_default</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">sse_algorithm</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;aws:kms&quot;</span>
+<span class="w">      </span><span class="na">kms_master_key_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_kms_key.cloudtrail.arn</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="na">bucket_key_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket_lifecycle_configuration&quot;</span><span class="w"> </span><span class="nv">&quot;cloudtrail_logs&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_s3_bucket.cloudtrail_logs.id</span>
+
+<span class="w">  </span><span class="nb">rule</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;archive-and-expire&quot;</span>
+<span class="w">    </span><span class="na">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Enabled&quot;</span>
+
+<span class="w">    </span><span class="nb">transition</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">days</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="m">90</span>
+<span class="w">      </span><span class="na">storage_class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;STANDARD_IA&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nb">transition</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">days</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="m">365</span>
+<span class="w">      </span><span class="na">storage_class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GLACIER&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nb">expiration</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">days</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2555</span><span class="c1">  # 7 years for compliance</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Alert on root account usage via CloudTrail + CloudWatch</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_cloudwatch_log_metric_filter&quot;</span><span class="w"> </span><span class="nv">&quot;root_login&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;root-account-login&quot;</span>
+<span class="w">  </span><span class="na">log_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_cloudwatch_log_group.cloudtrail.name</span>
+<span class="w">  </span><span class="na">pattern</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;{ $.userIdentity.type = \&quot;Root\&quot; &amp;&amp; $.userIdentity.invokedBy NOT EXISTS &amp;&amp; $.eventType != \&quot;AwsServiceEvent\&quot; }&quot;</span>
+
+<span class="w">  </span><span class="nb">metric_transformation</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">name</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;RootAccountLoginCount&quot;</span>
+<span class="w">    </span><span class="na">namespace</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CloudTrailMetrics&quot;</span>
+<span class="w">    </span><span class="na">value</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1&quot;</span>
+<span class="w">    </span><span class="na">default_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_cloudwatch_metric_alarm&quot;</span><span class="w"> </span><span class="nv">&quot;root_login&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">alarm_name</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-root-login&quot;</span>
+<span class="w">  </span><span class="na">alarm_description</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Alert on any root account login&quot;</span>
+<span class="w">  </span><span class="na">comparison_operator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GreaterThanOrEqualToThreshold&quot;</span>
+<span class="w">  </span><span class="na">evaluation_periods</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
+<span class="w">  </span><span class="na">metric_name</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;RootAccountLoginCount&quot;</span>
+<span class="w">  </span><span class="na">namespace</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CloudTrailMetrics&quot;</span>
+<span class="w">  </span><span class="na">period</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="m">300</span>
+<span class="w">  </span><span class="na">statistic</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Sum&quot;</span>
+<span class="w">  </span><span class="na">threshold</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
+<span class="w">  </span><span class="na">alarm_actions</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_sns_topic.security_alerts.arn</span><span class="p">]</span>
+<span class="w">  </span><span class="na">treat_missing_data</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;notBreaching&quot;</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="err">---</span>
+
+<span class="c1">## Networking</span>
+
+<span class="err">Networking</span><span class="w"> </span><span class="err">follows</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">hub-and-spoke</span><span class="w"> </span><span class="err">model</span><span class="p">:</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">shared</span><span class="w"> </span><span class="err">network</span><span class="w"> </span><span class="err">account</span><span class="w"> </span><span class="err">hosts</span><span class="w"> </span><span class="err">Transit</span><span class="w"> </span><span class="err">Gateway</span><span class="w"> </span><span class="err">and</span>
+<span class="err">centralized</span><span class="w"> </span><span class="err">egress;</span><span class="w"> </span><span class="err">spoke</span><span class="w"> </span><span class="err">VPCs</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">workload</span><span class="w"> </span><span class="err">accounts</span><span class="w"> </span><span class="err">attach</span><span class="w"> </span><span class="err">via</span><span class="w"> </span><span class="err">TGW</span><span class="w"> </span><span class="err">and</span><span class="w"> </span><span class="err">route</span><span class="w"> </span><span class="err">all</span><span class="w"> </span><span class="err">egress</span><span class="w"> </span><span class="err">through</span>
+<span class="err">the</span><span class="w"> </span><span class="err">hub</span><span class="p">.</span><span class="w"> </span><span class="err">Each</span><span class="w"> </span><span class="err">workload</span><span class="w"> </span><span class="err">VPC</span><span class="w"> </span><span class="err">is</span><span class="w"> </span><span class="err">divided</span><span class="w"> </span><span class="err">into</span><span class="w"> </span><span class="err">three</span><span class="w"> </span><span class="err">subnet</span><span class="w"> </span><span class="err">tiers</span><span class="w"> </span><span class="p">(</span><span class="err">public</span><span class="p">,</span><span class="w"> </span><span class="err">private</span><span class="p">,</span><span class="w"> </span><span class="err">intra</span><span class="p">)</span><span class="w"> </span><span class="err">across</span>
+<span class="err">three</span><span class="w"> </span><span class="err">Availability</span><span class="w"> </span><span class="err">Zones</span><span class="p">.</span>
+
+<span class="c1">### VPC Design</span>
+
+<span class="err">```hcl</span>
+<span class="c1"># locals.tf — shared networking locals used throughout the VPC module</span>
+<span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">azs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">slice</span><span class="p">(</span><span class="nv">data.aws_availability_zones.available.names</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">)</span>
+
+<span class="c1">  # /16 base divided into /18 blocks per tier, then /20 per AZ</span>
+<span class="w">  </span><span class="na">vpc_cidr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vpc_cidr</span><span class="c1"> # e.g. &quot;10.20.0.0/16&quot;</span>
+
+<span class="w">  </span><span class="na">public_subnets</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="err">for</span><span class="w"> </span><span class="err">i</span><span class="p">,</span><span class="w"> </span><span class="err">az</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="nv">local.azs</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nf">cidrsubnet</span><span class="p">(</span><span class="nv">local.vpc_cidr</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="err">i</span><span class="p">)]</span>
+<span class="w">  </span><span class="na">private_subnets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="err">for</span><span class="w"> </span><span class="err">i</span><span class="p">,</span><span class="w"> </span><span class="err">az</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="nv">local.azs</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nf">cidrsubnet</span><span class="p">(</span><span class="nv">local.vpc_cidr</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="err">i</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="m">4</span><span class="p">)]</span>
+<span class="w">  </span><span class="na">intra_subnets</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="err">for</span><span class="w"> </span><span class="err">i</span><span class="p">,</span><span class="w"> </span><span class="err">az</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="nv">local.azs</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nf">cidrsubnet</span><span class="p">(</span><span class="nv">local.vpc_cidr</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="err">i</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="m">8</span><span class="p">)]</span>
+<span class="p">}</span>
+
+<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_availability_zones&quot;</span><span class="w"> </span><span class="nv">&quot;available&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;available&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">local.vpc_cidr</span>
+<span class="w">  </span><span class="na">enable_dns_hostnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">enable_dns_support</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-vpc&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_internet_gateway&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-igw&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
 </code></pre></div>
+<h3 id="subnet-layout">Subnet Layout<a class="headerlink" href="#subnet-layout" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Public subnets — one per AZ, map_public_ip_on_launch for load balancers only</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.azs</span><span class="p">)</span>
 
-<p>}</p>
-<p>insight_selector {
-    insight_type = "ApiCallRateInsight"
-  }</p>
-<p>insight_selector {
-    insight_type = "ApiErrorRateInsight"
-  }</p>
-<p>tags = local.common_tags
-}</p>
-<h1 id="cloudtrail-log-bucket-with-strict-security-controls">CloudTrail log bucket with strict security controls<a class="headerlink" href="#cloudtrail-log-bucket-with-strict-security-controls" title="Permanent link">&para;</a></h1>
-<p>resource "aws_s3_bucket" "cloudtrail_logs" {
-  bucket = "${var.org}-cloudtrail-logs-${data.aws_caller_identity.current.account_id}-${var.region}"</p>
-<p>tags = local.common_tags
-}</p>
-<p>resource "aws_s3_bucket_public_access_block" "cloudtrail_logs" {
-  bucket                  = aws_s3_bucket.cloudtrail_logs.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}</p>
-<p>resource "aws_s3_bucket_versioning" "cloudtrail_logs" {
-  bucket = aws_s3_bucket.cloudtrail_logs.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}</p>
-<p>resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail_logs" {
-  bucket = aws_s3_bucket.cloudtrail_logs.id</p>
-<p>rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm     = "aws:kms"
-      kms_master_key_id = aws_kms_key.cloudtrail.arn
-    }
-    bucket_key_enabled = true
-  }
-}</p>
-<p>resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs" {
-  bucket = aws_s3_bucket.cloudtrail_logs.id</p>
-<p>rule {
-    id     = "archive-and-expire"
-    status = "Enabled"</p>
-<div class="codehilite"><pre><span></span><code>transition {
-  days          = 90
-  storage_class = &quot;STANDARD_IA&quot;
-}
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="nv">local.public_subnets[count.index</span><span class="p">]</span>
+<span class="w">  </span><span class="na">availability_zone</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">local.azs[count.index</span><span class="p">]</span>
+<span class="w">  </span><span class="na">map_public_ip_on_launch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span><span class="c1"> # ALBs use ENIs; only enable if required</span>
 
-transition {
-  days          = 365
-  storage_class = &quot;GLACIER&quot;
-}
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-public-${local.azs[count.index]}&quot;</span>
+<span class="w">    </span><span class="s2">&quot;kubernetes.io/role/elb&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="c1"> # required if EKS public ALBs used</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
 
-expiration {
-  days = 2555  # 7 years for compliance
-}
+<span class="c1"># Private subnets — for compute (EKS nodes, ECS tasks, Lambda VPC)</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;private&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.azs</span><span class="p">)</span>
+
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nv">local.private_subnets[count.index</span><span class="p">]</span>
+<span class="w">  </span><span class="na">availability_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.azs[count.index</span><span class="p">]</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">                              </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-private-${local.azs[count.index]}&quot;</span>
+<span class="w">    </span><span class="s2">&quot;kubernetes.io/role/internal-elb&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="c1"> # required for EKS internal ALBs</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1"># Intra subnets — isolated (no NAT route), for RDS, ElastiCache, VPC endpoints</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;intra&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.azs</span><span class="p">)</span>
+
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nv">local.intra_subnets[count.index</span><span class="p">]</span>
+<span class="w">  </span><span class="na">availability_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.azs[count.index</span><span class="p">]</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-intra-${local.azs[count.index]}&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1"># Route tables</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route_table&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+
+<span class="w">  </span><span class="nb">route</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0.0/0&quot;</span>
+<span class="w">    </span><span class="na">gateway_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_internet_gateway.this.id</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-public-rt&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route_table_association&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.azs</span><span class="p">)</span>
+<span class="w">  </span><span class="na">subnet_id</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.public[count.index].id</span>
+<span class="w">  </span><span class="na">route_table_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_route_table.public.id</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route_table&quot;</span><span class="w"> </span><span class="nv">&quot;private&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.azs</span><span class="p">)</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-private-rt-${local.azs[count.index]}&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route_table_association&quot;</span><span class="w"> </span><span class="nv">&quot;private&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.azs</span><span class="p">)</span>
+<span class="w">  </span><span class="na">subnet_id</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.private[count.index].id</span>
+<span class="w">  </span><span class="na">route_table_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_route_table.private[count.index].id</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route_table&quot;</span><span class="w"> </span><span class="nv">&quot;intra&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-intra-rt&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route_table_association&quot;</span><span class="w"> </span><span class="nv">&quot;intra&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.azs</span><span class="p">)</span>
+<span class="w">  </span><span class="na">subnet_id</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.intra[count.index].id</span>
+<span class="w">  </span><span class="na">route_table_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_route_table.intra.id</span>
+<span class="p">}</span>
 </code></pre></div>
+<h3 id="nat-gateway">NAT Gateway<a class="headerlink" href="#nat-gateway" title="Permanent link">&para;</a></h3>
+<p>One NAT Gateway per AZ for high availability. Single-AZ NAT is acceptable for
+non-production environments to reduce cost.</p>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_eip&quot;</span><span class="w"> </span><span class="nv">&quot;nat&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.azs</span><span class="p">)</span>
+<span class="w">  </span><span class="na">domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span>
 
-<p>}
-}</p>
-<h1 id="alert-on-root-account-usage-via-cloudtrail-cloudwatch">Alert on root account usage via CloudTrail + CloudWatch<a class="headerlink" href="#alert-on-root-account-usage-via-cloudtrail-cloudwatch" title="Permanent link">&para;</a></h1>
-<p>resource "aws_cloudwatch_log_metric_filter" "root_login" {
-  name           = "root-account-login"
-  log_group_name = aws_cloudwatch_log_group.cloudtrail.name
-  pattern        = "{ $.userIdentity.type = \"Root\" &amp;&amp; $.userIdentity.invokedBy NOT EXISTS &amp;&amp; $.eventType != \"AwsServiceEvent\" }"</p>
-<p>metric_transformation {
-    name          = "RootAccountLoginCount"
-    namespace     = "CloudTrailMetrics"
-    value         = "1"
-    default_value = "0"
-  }
-}</p>
-<p>resource "aws_cloudwatch_metric_alarm" "root_login" {
-  alarm_name          = "${var.workload}-${var.environment}-root-login"
-  alarm_description   = "Alert on any root account login"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = 1
-  metric_name         = "RootAccountLoginCount"
-  namespace           = "CloudTrailMetrics"
-  period              = 300
-  statistic           = "Sum"
-  threshold           = 1
-  alarm_actions       = [aws_sns_topic.security_alerts.arn]
-  treat_missing_data  = "notBreaching"</p>
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-nat-eip-${local.azs[count.index]}&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_nat_gateway&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.azs</span><span class="p">)</span>
+
+<span class="w">  </span><span class="na">allocation_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_eip.nat[count.index].id</span>
+<span class="w">  </span><span class="na">subnet_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.public[count.index].id</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-nat-${local.azs[count.index]}&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_internet_gateway.this</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1"># Default route for private subnets — route through AZ-local NAT GW</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route&quot;</span><span class="w"> </span><span class="nv">&quot;private_nat&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.azs</span><span class="p">)</span>
+
+<span class="w">  </span><span class="na">route_table_id</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_route_table.private[count.index].id</span>
+<span class="w">  </span><span class="na">destination_cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0.0/0&quot;</span>
+<span class="w">  </span><span class="na">nat_gateway_id</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_nat_gateway.this[count.index].id</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="security-groups">Security Groups<a class="headerlink" href="#security-groups" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ALB security group — accepts HTTPS from internet, allows health checks</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;alb&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-alb-sg&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;External ALB — HTTPS inbound only&quot;</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+
+<span class="w">  </span><span class="nb">ingress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;HTTPS from internet&quot;</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">443</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">443</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">    </span><span class="na">cidr_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">egress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;All outbound&quot;</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;-1&quot;</span>
+<span class="w">    </span><span class="na">cidr_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-alb-sg&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1"># Application security group — accepts traffic from ALB only</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-app-sg&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Application tier — traffic from ALB only&quot;</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+
+<span class="w">  </span><span class="nb">ingress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">description</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;HTTP from ALB&quot;</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="m">8080</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="m">8080</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">    </span><span class="na">security_groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_security_group.alb.id</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">egress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;All outbound&quot;</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;-1&quot;</span>
+<span class="w">    </span><span class="na">cidr_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-app-sg&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1"># Database security group — accepts traffic from app tier only</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;db&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-db-sg&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Database tier — app tier only&quot;</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+
+<span class="w">  </span><span class="nb">ingress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">description</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PostgreSQL from app&quot;</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="m">5432</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="m">5432</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">    </span><span class="na">security_groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_security_group.app.id</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-db-sg&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1"># VPC endpoint security group — accepts HTTPS from within VPC</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;vpc_endpoints&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-vpce-sg&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;VPC interface endpoints — HTTPS from VPC CIDR&quot;</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+
+<span class="w">  </span><span class="nb">ingress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;HTTPS from VPC&quot;</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">443</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">443</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">    </span><span class="na">cidr_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_vpc.this.cidr_block</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-vpce-sg&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="vpc-endpoints">VPC Endpoints<a class="headerlink" href="#vpc-endpoints" title="Permanent link">&para;</a></h3>
+<p>Use VPC endpoints to keep AWS API traffic off the internet. Gateway endpoints
+(S3, DynamoDB) are free; interface endpoints (ECR, Secrets Manager, SSM) incur
+hourly charges per AZ.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Gateway endpoints — no cost, no security group required</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc_endpoint&quot;</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+<span class="w">  </span><span class="na">service_name</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.amazonaws.${var.aws_region}.s3&quot;</span>
+<span class="w">  </span><span class="na">vpc_endpoint_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Gateway&quot;</span>
+
+<span class="w">  </span><span class="na">route_table_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">concat</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">aws_route_table.private</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">id</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="nv">aws_route_table.intra.id</span><span class="p">]</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-s3-endpoint&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc_endpoint&quot;</span><span class="w"> </span><span class="nv">&quot;dynamodb&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+<span class="w">  </span><span class="na">service_name</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.amazonaws.${var.aws_region}.dynamodb&quot;</span>
+<span class="w">  </span><span class="na">vpc_endpoint_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Gateway&quot;</span>
+
+<span class="w">  </span><span class="na">route_table_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">concat</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">aws_route_table.private</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">id</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="nv">aws_route_table.intra.id</span><span class="p">]</span>
+<span class="w">  </span><span class="p">)</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-dynamodb-endpoint&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1"># Interface endpoints — required for private EKS nodes pulling images</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc_endpoint&quot;</span><span class="w"> </span><span class="nv">&quot;ecr_api&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+<span class="w">  </span><span class="na">service_name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.amazonaws.${var.aws_region}.ecr.api&quot;</span>
+<span class="w">  </span><span class="na">vpc_endpoint_type</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Interface&quot;</span>
+<span class="w">  </span><span class="na">subnet_ids</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.intra</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">id</span>
+<span class="w">  </span><span class="na">security_group_ids</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_security_group.vpc_endpoints.id</span><span class="p">]</span>
+<span class="w">  </span><span class="na">private_dns_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-ecr-api-endpoint&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc_endpoint&quot;</span><span class="w"> </span><span class="nv">&quot;ecr_dkr&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+<span class="w">  </span><span class="na">service_name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.amazonaws.${var.aws_region}.ecr.dkr&quot;</span>
+<span class="w">  </span><span class="na">vpc_endpoint_type</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Interface&quot;</span>
+<span class="w">  </span><span class="na">subnet_ids</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.intra</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">id</span>
+<span class="w">  </span><span class="na">security_group_ids</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_security_group.vpc_endpoints.id</span><span class="p">]</span>
+<span class="w">  </span><span class="na">private_dns_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-ecr-dkr-endpoint&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc_endpoint&quot;</span><span class="w"> </span><span class="nv">&quot;secretsmanager&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+<span class="w">  </span><span class="na">service_name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.amazonaws.${var.aws_region}.secretsmanager&quot;</span>
+<span class="w">  </span><span class="na">vpc_endpoint_type</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Interface&quot;</span>
+<span class="w">  </span><span class="na">subnet_ids</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.intra</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">id</span>
+<span class="w">  </span><span class="na">security_group_ids</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_security_group.vpc_endpoints.id</span><span class="p">]</span>
+<span class="w">  </span><span class="na">private_dns_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-secretsmanager-endpoint&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc_endpoint&quot;</span><span class="w"> </span><span class="nv">&quot;ssm&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+<span class="w">  </span><span class="na">service_name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;com.amazonaws.${var.aws_region}.ssm&quot;</span>
+<span class="w">  </span><span class="na">vpc_endpoint_type</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Interface&quot;</span>
+<span class="w">  </span><span class="na">subnet_ids</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.intra</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">id</span>
+<span class="w">  </span><span class="na">security_group_ids</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_security_group.vpc_endpoints.id</span><span class="p">]</span>
+<span class="w">  </span><span class="na">private_dns_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-ssm-endpoint&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="transit-gateway">Transit Gateway<a class="headerlink" href="#transit-gateway" title="Permanent link">&para;</a></h3>
+<p>Transit Gateway provides org-wide hub-and-spoke routing. The TGW lives in the
+shared network account and is shared to workload accounts via AWS RAM.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># network account — create the TGW</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_ec2_transit_gateway&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Organization Transit Gateway&quot;</span>
+<span class="w">  </span><span class="na">amazon_side_asn</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="m">64512</span>
+<span class="w">  </span><span class="na">auto_accept_shared_attachments</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;disable&quot;</span>
+<span class="w">  </span><span class="na">default_route_table_association</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;disable&quot;</span>
+<span class="w">  </span><span class="na">default_route_table_propagation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;disable&quot;</span>
+<span class="w">  </span><span class="na">dns_support</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;enable&quot;</span>
+<span class="w">  </span><span class="na">vpn_ecmp_support</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;enable&quot;</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;org-tgw&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1"># Share TGW to the entire organization via RAM</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_ram_resource_share&quot;</span><span class="w"> </span><span class="nv">&quot;tgw&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;org-tgw-share&quot;</span>
+<span class="w">  </span><span class="na">allow_external_principals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_ram_resource_association&quot;</span><span class="w"> </span><span class="nv">&quot;tgw&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">resource_arn</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_ec2_transit_gateway.this.arn</span>
+<span class="w">  </span><span class="na">resource_share_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_ram_resource_share.tgw.arn</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_ram_principal_association&quot;</span><span class="w"> </span><span class="nv">&quot;org&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">principal</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_organizations_organization.this.arn</span>
+<span class="w">  </span><span class="na">resource_share_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_ram_resource_share.tgw.arn</span>
+<span class="p">}</span>
+
+<span class="c1"># Separate route tables for prod and non-prod isolation</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_ec2_transit_gateway_route_table&quot;</span><span class="w"> </span><span class="nv">&quot;prod&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">transit_gateway_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_ec2_transit_gateway.this.id</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tgw-rt-prod&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_ec2_transit_gateway_route_table&quot;</span><span class="w"> </span><span class="nv">&quot;nonprod&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">transit_gateway_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_ec2_transit_gateway.this.id</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tgw-rt-nonprod&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1"># workload account — attach the spoke VPC to TGW</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_ec2_transit_gateway_vpc_attachment&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">transit_gateway_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.transit_gateway_id</span><span class="c1"> # passed from network account output</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+<span class="w">  </span><span class="na">subnet_ids</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.private</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">id</span>
+
+<span class="w">  </span><span class="na">dns_support</span><span class="w">                                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;enable&quot;</span>
+<span class="w">  </span><span class="na">transit_gateway_default_route_table_association</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
+<span class="w">  </span><span class="na">transit_gateway_default_route_table_propagation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-tgw-attachment&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1"># Add TGW route to private route tables for RFC 1918 ranges</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_route&quot;</span><span class="w"> </span><span class="nv">&quot;private_tgw&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.azs</span><span class="p">)</span>
+
+<span class="w">  </span><span class="na">route_table_id</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_route_table.private[count.index].id</span>
+<span class="w">  </span><span class="na">destination_cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/8&quot;</span>
+<span class="w">  </span><span class="na">transit_gateway_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.transit_gateway_id</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="network-acls">Network ACLs<a class="headerlink" href="#network-acls" title="Permanent link">&para;</a></h3>
+<p>Security groups are stateful and the primary control plane. NACLs provide a
+stateless secondary layer — use them for intra subnets to explicitly deny
+unexpected traffic.</p>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_network_acl&quot;</span><span class="w"> </span><span class="nv">&quot;intra&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.id</span>
+<span class="w">  </span><span class="na">subnet_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.intra</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">id</span>
+
+<span class="c1">  # Allow return traffic from ephemeral ports</span>
+<span class="w">  </span><span class="nb">ingress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">rule_no</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">    </span><span class="na">action</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;allow&quot;</span>
+<span class="w">    </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.cidr_block</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">65535</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="c1">  # Allow all outbound within VPC</span>
+<span class="w">  </span><span class="nb">egress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">rule_no</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">    </span><span class="na">action</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;allow&quot;</span>
+<span class="w">    </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.this.cidr_block</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">65535</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="c1">  # Explicit deny-all fallthrough (NACLs end with implicit deny)</span>
+<span class="w">  </span><span class="nb">ingress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">rule_no</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">32766</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;-1&quot;</span>
+<span class="w">    </span><span class="na">action</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;deny&quot;</span>
+<span class="w">    </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0.0/0&quot;</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">egress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">rule_no</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">32766</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;-1&quot;</span>
+<span class="w">    </span><span class="na">action</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;deny&quot;</span>
+<span class="w">    </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0.0/0&quot;</span>
+<span class="w">    </span><span class="na">from_port</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="na">to_port</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.workload}-${var.environment}-intra-nacl&quot;</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="vpc-flow-logs">VPC Flow Logs<a class="headerlink" href="#vpc-flow-logs" title="Permanent link">&para;</a></h3>
+<p>Enable flow logs for all VPCs. Store in CloudWatch for short-term analysis and
+optionally replicate to S3 in the log-archive account for long-term retention.</p>
+<p>```hcl
+resource "aws_cloudwatch_log_group" "flow_logs" {
+  name              = "/aws/vpc/flow-logs/${var.workload}-${var.environment}"
+  retention_in_days = 90
+  kms_key_id        = aws_kms_key.main.arn</p>
 <p>tags = local.common_tags
+}</p>
+<p>resource "aws_iam_role" "flow_logs" {
+  name = "${var.workload}-${var.environment}-vpc-flow-logs"</p>
+<p>assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "vpc-flow-logs.amazonaws.com" }
+      Action    = "sts:AssumeRole"
+      Condition = {
+        StringEquals = {
+          "aws:SourceAccount" = data.aws_caller_identity.current.account_id
+        }
+      }
+    }]
+  })</p>
+<p>tags = local.common_tags
+}</p>
+<p>resource "aws_iam_role_policy" "flow_logs" {
+  name = "vpc-flow-logs-cw"
+  role = aws_iam_role.flow_logs.id</p>
+<p>policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Action = [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams"
+      ]
+      Resource = "${aws_cloudwatch_log_group.flow_logs.arn}:*"
+    }]
+  })
+}</p>
+<p>resource "aws_flow_log" "this" {
+  vpc_id          = aws_vpc.this.id
+  traffic_type    = "ALL"
+  iam_role_arn    = aws_iam_role.flow_logs.arn
+  log_destination = aws_cloudwatch_log_group.flow_logs.arn</p>
+<p>tags = merge(local.common_tags, {
+    Name = "${var.workload}-${var.environment}-vpc-flow-logs"
+  })
 }</p>
 
 
