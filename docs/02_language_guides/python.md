@@ -652,9 +652,28 @@ API_KEY = "sk_live_abc123xyz..."  # Committed to git!
   - Configuration: `.flake8` or `setup.cfg`
   - Run: `flake8 .`
 
+```ini
+# .flake8
+[flake8]
+max-line-length = 100
+extend-ignore = E203, W503
+exclude = .git, __pycache__, .venv, dist, build
+per-file-ignores =
+    tests/*: S101
+```
+
 - **Pylint**: Comprehensive code analysis
   - Installation: `pip install pylint`
   - Run: `pylint src/`
+
+```ini
+# .pylintrc (generate full file: pylint --generate-rcfile > .pylintrc)
+[MESSAGES CONTROL]
+disable = C0114, C0115, C0116
+
+[FORMAT]
+max-line-length = 100
+```
 
 ### Type Checkers
 
@@ -662,6 +681,16 @@ API_KEY = "sk_live_abc123xyz..."  # Committed to git!
   - Installation: `pip install mypy`
   - Configuration: `mypy.ini`
   - Run: `mypy src/`
+
+```ini
+# mypy.ini
+[mypy]
+python_version = 3.11
+warn_return_any = True
+warn_unused_configs = True
+disallow_untyped_defs = True
+ignore_missing_imports = True
+```
 
 ### Testing
 
