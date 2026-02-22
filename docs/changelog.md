@@ -25,6 +25,12 @@ This changelog is automatically generated from GitHub releases. Each release inc
 
 Changes that are in the main branch but not yet released.
 
+## [v1.8.22] - 2026-02-22
+
+### Added
+
+- AWS Cloud Provider Guide: Monitoring and Observability (CloudWatch metric and composite alarms, log metric filters, X-Ray groups and sampling rules), CI/CD Integration (GitHub Actions OIDC with plan/apply role separation, Terraform workflow with PR plan comments), Terraform State Management (S3 backend with DynamoDB locking, MFA delete policy, cross-stack remote state), Cost Optimization (AWS Budgets, Cost Anomaly Detection, Spot mixed-instance ASG), Terragrunt Patterns (root configuration, remote state generation, provider generation, dependency blocks), and References section; adds aws.md to mkdocs.yml nav closes #398 closes #393
+
 ## [v1.8.21] - 2026-02-22
 
 ### Added
