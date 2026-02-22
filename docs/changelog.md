@@ -25,12 +25,29 @@ This changelog is automatically generated from GitHub releases. Each release inc
 
 Changes that are in the main branch but not yet released.
 
-## [v1.8.11] - 2026-02-22
+## [v1.8.14] - 2026-02-22
 
 ## What's Changed
 ### New Features
 * feat(ui): enable `content.tabs.link` and `pymdownx.tabbed` for synced content tabs (#385)
 
+## [v1.8.13] - 2026-02-22
+
+## What's Changed
+### New Features
+* feat(ui): enable `content.action.edit` for edit-this-page button on all pages (#383)
+
+## [v1.8.12] - 2026-02-22
+
+## What's Changed
+### New Features
+* feat(ui): enable `navigation.footer` for previous/next page links at page bottom (#382)
+
+## [v1.8.11] - 2026-02-22
+
+## What's Changed
+### New Features
+* feat(ui): enable `navigation.instant` and `navigation.instant.progress` for SPA-style navigation (#381)
 ## [v1.8.10] - 2026-02-22
 
 ## What's Changed
