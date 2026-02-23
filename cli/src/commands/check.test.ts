@@ -48,6 +48,6 @@ describe("check command — integration", () => {
     const { status, stdout } = run(["--no-color", "list"]);
     assert.equal(status, 0);
     // ANSI escape sequences start with ESC (U+001B) followed by "["
-    assert.ok(!stdout.includes(String.fromCharCode(27) + "["), "Expected no ANSI escape codes in output");
+    assert.ok(!stdout.includes(String.fromCodePoint(27) + "["), "Expected no ANSI escape codes in output");
   });
 });
