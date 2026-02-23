@@ -32,7 +32,7 @@ describe("check command — integration", () => {
   it("--version exits 0 and prints semver", () => {
     const { status, stdout } = run(["--version"]);
     assert.equal(status, 0);
-    assert.match(stdout, /\d+\.\d+\.\d+/);
+    assert.match(stdout, /\b\d{1,4}\.\d{1,4}\.\d{1,4}\b/);
   });
 
   it("invalid --format exits non-zero with helpful message", () => {
