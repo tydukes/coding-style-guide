@@ -5,15 +5,15 @@
  * @author Tyler Dukes
  */
 
-import { createHash } from "crypto";
+import { createHash } from "node:crypto";
 import {
   readFileSync,
   writeFileSync,
   mkdirSync,
   existsSync,
   rmSync,
-} from "fs";
-import { join, dirname } from "path";
+} from "node:fs";
+import { join, dirname } from "node:path";
 import type { LintResult } from "../types.js";
 
 /**

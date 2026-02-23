@@ -105,6 +105,136 @@ export async function findFiles(
   return Array.from(allFiles).map((f) => resolve(f));
 }
 
+interface LinterTaskOptions {
+  linterName: string;
+  langFiles: string[];
+  lang: Language;
+  fix?: boolean;
+  useCache: boolean;
+  cacheDir: string;
+}
+
+/**
+ * Build missing-linter results for a batch of files
+ */
+function missingLinterResults(linterName: string, langFiles: string[], lang: Language): LintResult[] {
+  return langFiles.map((file) => ({
+    file,
+    language: lang,
+    issues: [
+      {
+        line: 0,
+        column: 0,
+        message: `Linter '${linterName}' is not installed. Install with: ${installHint(linterName)}`,
+        rule: "linter-not-installed",
+        severity: "warning" as const,
+        fixable: false,
+      },
+    ],
+    fixable: 0,
+  }));
+}
+
+/**
+ * Split files into cached results + files that still need linting
+ */
+function splitByCache(
+  langFiles: string[],
+  linterName: string,
+  cacheDir: string
+): { cachedResults: LintResult[]; uncachedFiles: string[] } {
+  const cachedResults: LintResult[] = [];
+  const uncachedFiles: string[] = [];
+  for (const file of langFiles) {
+    try {
+      const hash = hashFile(file);
+      const cached = getCached(cacheDir, linterName, hash);
+      if (cached) {
+        debug("Cache hit: %s / %s", linterName, file);
+        cachedResults.push(cached);
+      } else {
+        uncachedFiles.push(file);
+      }
+    } catch {
+      uncachedFiles.push(file);
+    }
+  }
+  return { cachedResults, uncachedFiles };
+}
+
+/**
+ * Write lint results to the cache (non-fatal on failure)
+ */
+function writeCacheResults(results: LintResult[], linterName: string, cacheDir: string): void {
+  for (const result of results) {
+    try {
+      const hash = hashFile(result.file);
+      setCached(cacheDir, linterName, hash, result);
+    } catch {
+      // Non-fatal
+    }
+  }
+}
+
+/**
+ * Run a single linter against its file batch, respecting cache and fix mode
+ */
+async function runLinterTask(
+  linter: ReturnType<typeof getLinter>,
+  linterConfig: import("../types.js").LinterConfig,
+  opts: LinterTaskOptions
+): Promise<LintResult[]> {
+  const { linterName, langFiles, lang, fix, useCache, cacheDir } = opts;
+
+  if (!linter) return [];
+
+  // Pre-flight: skip availability check for plugin linters
+  if (linter.info.command !== "plugin") {
+    const installed = await commandExists(linter.info.command);
+    if (!installed) {
+      debug("Linter not installed: %s", linterName);
+      return missingLinterResults(linterName, langFiles, lang);
+    }
+  }
+
+  const { cachedResults, uncachedFiles } = useCache
+    ? splitByCache(langFiles, linterName, cacheDir)
+    : { cachedResults: [], uncachedFiles: langFiles };
+
+  if (uncachedFiles.length === 0) return cachedResults;
+
+  debug("Running linter %s on %d file(s)", linterName, uncachedFiles.length);
+
+  try {
+    const lintResults = fix && linter.fix
+      ? await linter.fix(uncachedFiles, linterConfig)
+      : await linter.check(uncachedFiles, linterConfig);
+
+    if (useCache) writeCacheResults(lintResults, linterName, cacheDir);
+
+    return [...cachedResults, ...lintResults];
+  } catch (error) {
+    return [
+      ...cachedResults,
+      ...uncachedFiles.map((file) => ({
+        file,
+        language: lang,
+        issues: [
+          {
+            line: 0,
+            column: 0,
+            message: `Linter ${linterName} failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+            rule: "internal-error",
+            severity: "error" as const,
+            fixable: false,
+          },
+        ],
+        fixable: 0,
+      })),
+    ];
+  }
+}
+
 /**
  * Run tasks with a concurrency cap
  */
@@ -173,99 +303,14 @@ export async function runLinters(
       const linter = getLinter(linterName);
       if (!linter) continue;
 
-      tasks.push(async (): Promise<LintResult[]> => {
-        // Pre-flight: check if linter is installed
-        const installed = await commandExists(linter.info.command === "plugin" ? "node" : linter.info.command);
-        if (!installed && linter.info.command !== "plugin") {
-          debug("Linter not installed: %s", linterName);
-          return langFiles.map((file) => ({
-            file,
-            language: lang,
-            issues: [
-              {
-                line: 0,
-                column: 0,
-                message: `Linter '${linterName}' is not installed. Install with: ${installHint(linterName)}`,
-                rule: "linter-not-installed",
-                severity: "warning" as const,
-                fixable: false,
-              },
-            ],
-            fixable: 0,
-          }));
-        }
-
-        // Cache split: separate cached vs uncached files
-        let uncachedFiles = langFiles;
-        const cachedResults: LintResult[] = [];
-
-        if (useCache) {
-          uncachedFiles = [];
-          for (const file of langFiles) {
-            try {
-              const hash = hashFile(file);
-              const cached = getCached(cacheDir, linterName, hash);
-              if (cached) {
-                debug("Cache hit: %s / %s", linterName, file);
-                cachedResults.push(cached);
-              } else {
-                uncachedFiles.push(file);
-              }
-            } catch {
-              uncachedFiles.push(file);
-            }
-          }
-        }
-
-        if (uncachedFiles.length === 0) {
-          return cachedResults;
-        }
-
-        debug("Running linter %s on %d file(s)", linterName, uncachedFiles.length);
-
-        try {
-          let lintResults: LintResult[];
-
-          if (options.fix && linter.fix) {
-            lintResults = await linter.fix(uncachedFiles, linterConfig);
-          } else {
-            lintResults = await linter.check(uncachedFiles, linterConfig);
-          }
-
-          // Store results in cache
-          if (useCache) {
-            for (const result of lintResults) {
-              try {
-                const hash = hashFile(result.file);
-                setCached(cacheDir, linterName, hash, result);
-              } catch {
-                // Non-fatal
-              }
-            }
-          }
-
-          return [...cachedResults, ...lintResults];
-        } catch (error) {
-          return [
-            ...cachedResults,
-            ...uncachedFiles.map((file) => ({
-              file,
-              language: lang,
-              issues: [
-                {
-                  line: 0,
-                  column: 0,
-                  message: `Linter ${linterName} failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-                  rule: "internal-error",
-                  severity: "error" as const,
-                  fixable: false,
-                },
-              ],
-              fixable: 0,
-            })),
-          ];
-        }
-      });
+      tasks.push(() => runLinterTask(linter, linterConfig, {
+        linterName,
+        langFiles,
+        lang,
+        fix: options.fix,
+        useCache,
+        cacheDir,
+      }));
     }
   }
 

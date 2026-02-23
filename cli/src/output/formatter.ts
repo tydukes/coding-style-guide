@@ -217,6 +217,35 @@ function extractRules(
 }
 
 /**
+ * Group linters by language
+ */
+function groupByLanguage(
+  linters: Map<string, LinterInfo>
+): Map<string, Array<[string, LinterInfo]>> {
+  const byLanguage = new Map<string, Array<[string, LinterInfo]>>();
+  for (const [name, info] of linters) {
+    const existing = byLanguage.get(info.language) || [];
+    existing.push([name, info]);
+    byLanguage.set(info.language, existing);
+  }
+  return byLanguage;
+}
+
+/**
+ * Format a single linter entry as two display lines
+ */
+function formatLinterEntry(name: string, info: LinterInfo): string[] {
+  const status = info.installed ? chalk.green("✔") : chalk.red("✖");
+  const version = info.version ? chalk.dim(` (${info.version})`) : "";
+  const canFix = info.canFix ? chalk.blue(" [can fix]") : "";
+  const pluginBadge = info.command === "plugin" ? chalk.magenta(" [plugin]") : "";
+  return [
+    `    ${status} ${name}${version}${canFix}${pluginBadge}`,
+    chalk.dim(`      ${info.description}`),
+  ];
+}
+
+/**
  * Format linter list for display
  */
 export function formatLinterList(
@@ -228,45 +257,16 @@ export function formatLinterList(
   if (options.noColor) chalk.level = 0;
   try {
     if (format === "json") {
-      return JSON.stringify(
-        Object.fromEntries(
-          Array.from(linters.entries()).map(([name, info]) => [name, info])
-        ),
-        null,
-        2
-      );
+      return JSON.stringify(Object.fromEntries(linters.entries()), null, 2);
     }
 
-    const lines: string[] = [];
-    lines.push("");
-    lines.push(chalk.bold("Available Linters:"));
-    lines.push("");
+    const lines: string[] = ["", chalk.bold("Available Linters:"), ""];
 
-    // Group by language
-    const byLanguage = new Map<string, Array<[string, LinterInfo]>>();
-    for (const [name, info] of linters) {
-      const existing = byLanguage.get(info.language) || [];
-      existing.push([name, info]);
-      byLanguage.set(info.language, existing);
-    }
-
-    for (const [language, entries] of byLanguage) {
+    for (const [language, entries] of groupByLanguage(linters)) {
       lines.push(chalk.cyan.bold(`  ${language.toUpperCase()}`));
-
       for (const [name, info] of entries) {
-        const status = info.installed
-          ? chalk.green("✔")
-          : chalk.red("✖");
-        const version = info.version
-          ? chalk.dim(` (${info.version})`)
-          : "";
-        const canFix = info.canFix ? chalk.blue(" [can fix]") : "";
-        const pluginBadge = info.command === "plugin" ? chalk.magenta(" [plugin]") : "";
-
-        lines.push(`    ${status} ${name}${version}${canFix}${pluginBadge}`);
-        lines.push(chalk.dim(`      ${info.description}`));
+        lines.push(...formatLinterEntry(name, info));
       }
-
       lines.push("");
     }
 
