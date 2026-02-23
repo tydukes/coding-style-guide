@@ -50,12 +50,16 @@ function validateCommand(command: string): void {
 async function execCommand(
   command: string,
   args: string[],
-  options?: { cwd?: string }
+  options?: { cwd?: string; timeoutMs?: number }
 ): Promise<{ stdout: string; stderr: string; exitCode: number }> {
   // Validate command against allowlist
   validateCommand(command);
 
+  const timeoutMs = options?.timeoutMs ?? 30_000;
+
   return new Promise((resolve) => {
+    const controller = new AbortController();
+
     // Security: shell: false prevents command injection via arguments
     const proc = spawn(command, args, {
       cwd: options?.cwd || process.cwd(),
@@ -65,6 +69,21 @@ async function execCommand(
 
     let stdout = "";
     let stderr = "";
+    let settled = false;
+
+    const settle = (result: { stdout: string; stderr: string; exitCode: number }) => {
+      if (!settled) {
+        settled = true;
+        clearTimeout(timer);
+        resolve(result);
+      }
+    };
+
+    const timer = setTimeout(() => {
+      controller.abort();
+      proc.kill();
+      settle({ stdout, stderr: "Timed out", exitCode: 124 });
+    }, timeoutMs);
 
     proc.stdout?.on("data", (data) => {
       stdout += data.toString();
@@ -75,11 +94,11 @@ async function execCommand(
     });
 
     proc.on("close", (code) => {
-      resolve({ stdout, stderr, exitCode: code || 0 });
+      settle({ stdout, stderr, exitCode: code || 0 });
     });
 
-    proc.on("error", () => {
-      resolve({ stdout, stderr, exitCode: 1 });
+    proc.on("error", (err: Error) => {
+      settle({ stdout, stderr: err.message, exitCode: 1 });
     });
   });
 }
@@ -169,14 +188,19 @@ function createReformatIssue(rule: string): LintIssue {
 }
 
 /**
- * Parse flake8 output into lint issues.
+ * Parse flake8 output into lint issues with their source file.
  * Format: file:line:col: code message
  */
-function parseFlake8Output(output: string): LintIssue[] {
-  const issues: LintIssue[] = [];
+function parseFlake8Output(output: string): Array<{ file: string } & LintIssue> {
+  const issues: Array<{ file: string } & LintIssue> = [];
   const lines = output.split("\n").filter(Boolean);
 
   for (const line of lines) {
+    // Extract the file path (everything before the first colon)
+    const firstColon = line.indexOf(":");
+    if (firstColon === -1) continue;
+    const file = line.slice(0, firstColon);
+
     const parsed = parseFileLineCol(line);
     if (!parsed) continue;
 
@@ -189,6 +213,7 @@ function parseFlake8Output(output: string): LintIssue[] {
 
     if (code && message) {
       issues.push({
+        file,
         line: lineNum,
         column: col,
         message,
@@ -450,10 +475,19 @@ linters.set("flake8", {
 
     const result = await execCommand(config.command || "flake8", args);
 
+    // Parse all issues once and group by source file
+    const allIssues = parseFlake8Output(result.stdout);
+    const byFile = new Map<string, LintIssue[]>();
+    for (const { file, ...issue } of allIssues) {
+      const list = byFile.get(file) ?? [];
+      list.push(issue);
+      byFile.set(file, list);
+    }
+
     return files.map((file) => ({
       file,
       language: "python" as Language,
-      issues: parseFlake8Output(result.stdout),
+      issues: byFile.get(file) ?? [],
       fixable: 0,
     }));
   },
@@ -507,21 +541,18 @@ linters.set("prettier", {
 
     const result = await execCommand(config.command || "prettier", args);
 
-    const notFormatted = result.stdout
-      .split("\n")
-      .filter((line) => line.includes("Checking"))
-      .map((line) => line.replace("Checking formatting...", "").trim())
-      .filter(Boolean);
+    // prettier --check writes all output to stderr; exit code non-zero means
+    // at least one file needs formatting. We can't get per-file breakdown from
+    // prettier's stderr reliably, so mark all files in the batch as needing
+    // format when the exit code is non-zero (same pattern as black).
+    const needsFormat = result.exitCode !== 0;
 
-    return files.map((file) => {
-      const needsFormat = notFormatted.includes(file);
-      return {
-        file,
-        language: "typescript" as Language,
-        issues: needsFormat ? [createReformatIssue("prettier/format")] : [],
-        fixable: needsFormat ? 1 : 0,
-      };
-    });
+    return files.map((file) => ({
+      file,
+      language: "typescript" as Language,
+      issues: needsFormat ? [createReformatIssue("prettier/format")] : [],
+      fixable: needsFormat ? 1 : 0,
+    }));
   },
   async fix(files, config) {
     const args = ["--write", ...files];

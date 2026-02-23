@@ -67,8 +67,6 @@ const DEFAULT_CONFIG: StyleGuideConfig = {
       extensions: [".tf", ".tfvars"],
       linters: {
         "terraform-fmt": { enabled: true },
-        "terraform-validate": { enabled: true },
-        tflint: { enabled: false },
       },
       formatters: ["terraform-fmt"],
     },
