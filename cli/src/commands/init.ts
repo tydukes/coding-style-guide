@@ -64,8 +64,6 @@ const TEMPLATES: Record<string, Partial<StyleGuideConfig>> = {
         extensions: [".tf", ".tfvars"],
         linters: {
           "terraform-fmt": { enabled: true },
-          "terraform-validate": { enabled: true },
-          tflint: { enabled: true },
         },
       },
     },
@@ -79,6 +77,8 @@ export async function initCommand(options: InitOptions): Promise<void> {
   const spinner = ora("Detecting project type...").start();
 
   try {
+    const parentOpts = options as unknown as { parent?: { color?: boolean } };
+    const noColor = parentOpts.parent?.color === false;
     const configPath = join(process.cwd(), ".dukestyle.yaml");
 
     // Check if config already exists
@@ -142,7 +142,7 @@ export async function initCommand(options: InitOptions): Promise<void> {
     await writeFile(configPath, yamlContent, "utf-8");
 
     spinner.stop();
-    console.log(formatInitSuccess(configPath, options.template));
+    console.log(formatInitSuccess(configPath, options.template, { noColor }));
   } catch (error) {
     spinner.fail(
       `Init failed: ${error instanceof Error ? error.message : "Unknown error"}`

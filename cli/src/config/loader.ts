@@ -10,6 +10,8 @@ import { readFile } from "fs/promises";
 import { existsSync } from "fs";
 import { join } from "path";
 import type { StyleGuideConfig, LanguageConfig, Language } from "../types.js";
+import { validateConfig } from "./validate.js";
+import { debug } from "../utils/debug.js";
 
 const MODULE_NAME = "dukestyle";
 
@@ -127,12 +129,17 @@ export async function loadConfig(
   try {
     const result = await explorer.search();
     if (result && !result.isEmpty) {
-      return mergeConfig(DEFAULT_CONFIG, result.config);
+      debug("Config found: %s", result.filepath);
+      const merged = mergeConfig(DEFAULT_CONFIG, result.config);
+      const warnings = validateConfig(merged);
+      for (const w of warnings) console.warn(`[config] Warning: ${w}`);
+      return merged;
     }
   } catch {
     // Config not found, use defaults
   }
 
+  debug("No config file found; using defaults");
   return DEFAULT_CONFIG;
 }
 
@@ -143,6 +150,7 @@ async function loadConfigFile(configPath: string): Promise<StyleGuideConfig> {
   if (!existsSync(configPath)) {
     throw new Error(`Configuration file not found: ${configPath}`);
   }
+  debug("Loading config from explicit path: %s", configPath);
 
   const content = await readFile(configPath, "utf-8");
   const ext = configPath.split(".").pop()?.toLowerCase();
@@ -161,7 +169,10 @@ async function loadConfigFile(configPath: string): Promise<StyleGuideConfig> {
     throw new Error(`Unsupported configuration file format: ${ext}`);
   }
 
-  return mergeConfig(DEFAULT_CONFIG, config);
+  const merged = mergeConfig(DEFAULT_CONFIG, config);
+  const warnings = validateConfig(merged);
+  for (const w of warnings) console.warn(`[config] Warning: ${w}`);
+  return merged;
 }
 
 /**

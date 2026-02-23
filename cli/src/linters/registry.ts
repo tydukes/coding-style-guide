@@ -7,6 +7,7 @@
 
 import { spawn } from "child_process";
 import type { LinterInfo, Language, LintResult, LintIssue, LinterConfig } from "../types.js";
+import { debug } from "../utils/debug.js";
 
 export interface LinterRunner {
   info: LinterInfo;
@@ -54,6 +55,7 @@ async function execCommand(
 ): Promise<{ stdout: string; stderr: string; exitCode: number }> {
   // Validate command against allowlist
   validateCommand(command);
+  debug("execCommand: %s %s", command, args.join(" "));
 
   const timeoutMs = options?.timeoutMs ?? 30_000;
 
@@ -94,6 +96,7 @@ async function execCommand(
     });
 
     proc.on("close", (code) => {
+      debug("execCommand exit: %s → %d", command, code || 0);
       settle({ stdout, stderr, exitCode: code || 0 });
     });
 
@@ -104,15 +107,33 @@ async function execCommand(
 }
 
 /**
- * Check if a command is available
+ * Check if a command is available on PATH
  */
-async function commandExists(command: string): Promise<boolean> {
+export async function commandExists(command: string): Promise<boolean> {
   try {
     const result = await execCommand("which", [command]);
     return result.exitCode === 0;
   } catch {
     return false;
   }
+}
+
+/**
+ * Return the recommended install command for a known linter
+ */
+export function installHint(name: string): string {
+  const hints: Record<string, string> = {
+    black: "pip install black",
+    flake8: "pip install flake8",
+    eslint: "npm install -g eslint",
+    prettier: "npm install -g prettier",
+    shellcheck: "brew install shellcheck  # or apt install shellcheck",
+    yamllint: "pip install yamllint",
+    markdownlint: "npm install -g markdownlint-cli",
+    "terraform-fmt": "Install Terraform: https://developer.hashicorp.com/terraform/install",
+    hadolint: "brew install hadolint  # or see https://github.com/hadolint/hadolint",
+  };
+  return hints[name] ?? `see documentation for '${name}'`;
 }
 
 /**
