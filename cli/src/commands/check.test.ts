@@ -16,7 +16,7 @@ const cliRoot = join(__dirname, "..", "..");
 const cliEntry = join(cliRoot, "dist", "index.js");
 
 function run(args: string[]): { status: number | null; stdout: string; stderr: string } {
-  const result = spawnSync("node", [cliEntry, ...args], {
+  const result = spawnSync(process.execPath, [cliEntry, ...args], {
     encoding: "utf-8",
     cwd: cliRoot,
     timeout: 30_000,
