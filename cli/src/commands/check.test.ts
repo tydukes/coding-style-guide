@@ -47,7 +47,7 @@ describe("check command — integration", () => {
   it("--no-color produces no ANSI escape codes on list", () => {
     const { status, stdout } = run(["--no-color", "list"]);
     assert.equal(status, 0);
-    // ANSI escape sequences start with ESC (\x1b or \u001b)
-    assert.doesNotMatch(stdout, /\u001b\[/);
+    // ANSI escape sequences start with ESC (U+001B) followed by "["
+    assert.ok(!stdout.includes(String.fromCharCode(27) + "["), "Expected no ANSI escape codes in output");
   });
 });
