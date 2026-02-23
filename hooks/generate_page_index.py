@@ -16,7 +16,7 @@ log = logging.getLogger("mkdocs.hooks.generate_page_index")
 _pages = []
 
 
-def on_page_context(context, page, config, nav):
+def on_page_context(context, page, **_kwargs):
     """Collect page metadata during build."""
     meta = page.meta or {}
     tags = meta.get("tags", [])
