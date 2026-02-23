@@ -66,8 +66,10 @@ async function main(): Promise<void> {
     await program.parseAsync(process.argv);
   } catch (err) {
     if (err instanceof Error) {
-      if (err.message.includes("commander.")) {
-        // Commander.js errors (help, version, etc.)
+      // Commander throws CommanderError with a code property (e.g. "commander.version",
+      // "commander.helpDisplayed") — these are normal exits, not failures.
+      const code = (err as { code?: string }).code;
+      if (code?.startsWith("commander.")) {
         process.exit(0);
       }
       console.error(chalk.red(`Error: ${err.message}`));
