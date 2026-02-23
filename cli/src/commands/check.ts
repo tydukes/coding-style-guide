@@ -6,10 +6,10 @@
  */
 
 import ora from "ora";
-import chalk from "chalk";
 import { loadConfig } from "../config/loader.js";
 import { findFiles, runLinters } from "../linters/orchestrator.js";
 import { formatOutput } from "../output/formatter.js";
+import { loadPlugins } from "../plugins/loader.js";
 import type { CheckOptions } from "../types.js";
 
 /**
@@ -23,9 +23,15 @@ export async function checkCommand(
 
   try {
     // Load configuration
-    const parentOpts = options as unknown as { parent?: { config?: string } };
+    const parentOpts = options as unknown as { parent?: { config?: string; color?: boolean } };
+    const noColor = parentOpts.parent?.color === false;
     const config = await loadConfig(parentOpts.parent?.config);
     spinner.text = "Finding files...";
+
+    // Load plugins if configured
+    if (config.plugins?.length) {
+      await loadPlugins(config.plugins);
+    }
 
     // Find files to check
     const filesToCheck = await findFiles(files, config);
@@ -41,6 +47,8 @@ export async function checkCommand(
     const output = await runLinters(filesToCheck, config, {
       fix: options.fix,
       language: options.language,
+      cache: options.cache,
+      cacheDir: config.cacheLocation,
     });
 
     spinner.stop();
@@ -48,6 +56,7 @@ export async function checkCommand(
     // Format and output results
     const formatted = formatOutput(output, options.format, {
       quiet: options.quiet,
+      noColor,
     });
     console.log(formatted);
 

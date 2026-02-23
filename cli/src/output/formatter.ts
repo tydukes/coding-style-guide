@@ -8,6 +8,7 @@
 import chalk from "chalk";
 import { relative } from "path";
 import type { LintOutput, LintResult, OutputFormat, LinterInfo } from "../types.js";
+import { VERSION } from "../version.js";
 
 /**
  * Format lint output based on specified format
@@ -15,16 +16,22 @@ import type { LintOutput, LintResult, OutputFormat, LinterInfo } from "../types.
 export function formatOutput(
   output: LintOutput,
   format: OutputFormat,
-  options: { quiet?: boolean } = {}
+  options: { quiet?: boolean; noColor?: boolean } = {}
 ): string {
-  switch (format) {
-    case "json":
-      return formatJson(output);
-    case "sarif":
-      return formatSarif(output);
-    case "text":
-    default:
-      return formatText(output, options);
+  const prevLevel = chalk.level;
+  if (options.noColor) chalk.level = 0;
+  try {
+    switch (format) {
+      case "json":
+        return formatJson(output);
+      case "sarif":
+        return formatSarif(output);
+      case "text":
+      default:
+        return formatText(output, options);
+    }
+  } finally {
+    chalk.level = prevLevel;
   }
 }
 
@@ -143,7 +150,7 @@ function formatSarif(output: LintOutput): string {
         tool: {
           driver: {
             name: "devops-style",
-            version: "1.0.0",
+            version: VERSION,
             informationUri: "https://tydukes.github.io/coding-style-guide/",
             rules: extractRules(output.results),
           },
@@ -214,70 +221,84 @@ function extractRules(
  */
 export function formatLinterList(
   linters: Map<string, LinterInfo>,
-  format: OutputFormat
+  format: OutputFormat,
+  options: { noColor?: boolean } = {}
 ): string {
-  if (format === "json") {
-    return JSON.stringify(
-      Object.fromEntries(
-        Array.from(linters.entries()).map(([name, info]) => [name, info])
-      ),
-      null,
-      2
-    );
-  }
-
-  const lines: string[] = [];
-  lines.push("");
-  lines.push(chalk.bold("Available Linters:"));
-  lines.push("");
-
-  // Group by language
-  const byLanguage = new Map<string, Array<[string, LinterInfo]>>();
-  for (const [name, info] of linters) {
-    const existing = byLanguage.get(info.language) || [];
-    existing.push([name, info]);
-    byLanguage.set(info.language, existing);
-  }
-
-  for (const [language, entries] of byLanguage) {
-    lines.push(chalk.cyan.bold(`  ${language.toUpperCase()}`));
-
-    for (const [name, info] of entries) {
-      const status = info.installed
-        ? chalk.green("✔")
-        : chalk.red("✖");
-      const version = info.version
-        ? chalk.dim(` (${info.version})`)
-        : "";
-      const canFix = info.canFix ? chalk.blue(" [can fix]") : "";
-
-      lines.push(`    ${status} ${name}${version}${canFix}`);
-      lines.push(chalk.dim(`      ${info.description}`));
+  const prevLevel = chalk.level;
+  if (options.noColor) chalk.level = 0;
+  try {
+    if (format === "json") {
+      return JSON.stringify(
+        Object.fromEntries(
+          Array.from(linters.entries()).map(([name, info]) => [name, info])
+        ),
+        null,
+        2
+      );
     }
 
+    const lines: string[] = [];
     lines.push("");
-  }
+    lines.push(chalk.bold("Available Linters:"));
+    lines.push("");
 
-  return lines.join("\n");
+    // Group by language
+    const byLanguage = new Map<string, Array<[string, LinterInfo]>>();
+    for (const [name, info] of linters) {
+      const existing = byLanguage.get(info.language) || [];
+      existing.push([name, info]);
+      byLanguage.set(info.language, existing);
+    }
+
+    for (const [language, entries] of byLanguage) {
+      lines.push(chalk.cyan.bold(`  ${language.toUpperCase()}`));
+
+      for (const [name, info] of entries) {
+        const status = info.installed
+          ? chalk.green("✔")
+          : chalk.red("✖");
+        const version = info.version
+          ? chalk.dim(` (${info.version})`)
+          : "";
+        const canFix = info.canFix ? chalk.blue(" [can fix]") : "";
+        const pluginBadge = info.command === "plugin" ? chalk.magenta(" [plugin]") : "";
+
+        lines.push(`    ${status} ${name}${version}${canFix}${pluginBadge}`);
+        lines.push(chalk.dim(`      ${info.description}`));
+      }
+
+      lines.push("");
+    }
+
+    return lines.join("\n");
+  } finally {
+    chalk.level = prevLevel;
+  }
 }
 
 /**
  * Format initialization success message
  */
-export function formatInitSuccess(configPath: string, template: string): string {
+export function formatInitSuccess(configPath: string, template: string, options: { noColor?: boolean } = {}): string {
+  const prevLevel = chalk.level;
+  if (options.noColor) chalk.level = 0;
   const lines: string[] = [];
 
   lines.push("");
-  lines.push(chalk.green.bold("✔ Configuration initialized successfully!"));
-  lines.push("");
-  lines.push(`  Template: ${chalk.cyan(template)}`);
-  lines.push(`  Config:   ${chalk.cyan(configPath)}`);
-  lines.push("");
-  lines.push(chalk.dim("Next steps:"));
-  lines.push(chalk.dim("  1. Review and customize the configuration"));
-  lines.push(chalk.dim("  2. Run 'devops-style check' to validate your code"));
-  lines.push(chalk.dim("  3. Run 'devops-style fix' to auto-fix issues"));
-  lines.push("");
+  try {
+    lines.push(chalk.green.bold("✔ Configuration initialized successfully!"));
+    lines.push("");
+    lines.push(`  Template: ${chalk.cyan(template)}`);
+    lines.push(`  Config:   ${chalk.cyan(configPath)}`);
+    lines.push("");
+    lines.push(chalk.dim("Next steps:"));
+    lines.push(chalk.dim("  1. Review and customize the configuration"));
+    lines.push(chalk.dim("  2. Run 'devops-style check' to validate your code"));
+    lines.push(chalk.dim("  3. Run 'devops-style fix' to auto-fix issues"));
+    lines.push("");
 
-  return lines.join("\n");
+    return lines.join("\n");
+  } finally {
+    chalk.level = prevLevel;
+  }
 }

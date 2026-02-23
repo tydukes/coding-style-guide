@@ -14,7 +14,9 @@ import type {
   LintOutput,
   LintSummary,
 } from "../types.js";
-import { getAllLinters, getLinter } from "./registry.js";
+import { getAllLinters, getLinter, commandExists, installHint } from "./registry.js";
+import { debug } from "../utils/debug.js";
+import { hashFile, getCached, setCached } from "../cache/manager.js";
 
 /**
  * Map file extension to language
@@ -104,6 +106,29 @@ export async function findFiles(
 }
 
 /**
+ * Run tasks with a concurrency cap
+ */
+async function runWithConcurrency<T>(
+  tasks: Array<() => Promise<T>>,
+  limit: number
+): Promise<T[]> {
+  const results = new Array<T>(tasks.length);
+  let next = 0;
+
+  async function worker(): Promise<void> {
+    while (next < tasks.length) {
+      const i = next++;
+      results[i] = await tasks[i]();
+    }
+  }
+
+  await Promise.all(
+    Array.from({ length: Math.min(limit, tasks.length) }, worker)
+  );
+  return results;
+}
+
+/**
  * Run all applicable linters on the given files
  */
 export async function runLinters(
@@ -112,10 +137,11 @@ export async function runLinters(
   options: {
     fix?: boolean;
     language?: string;
+    cache?: boolean;
+    cacheDir?: string;
   } = {}
 ): Promise<LintOutput> {
   const startTime = Date.now();
-  const results: LintResult[] = [];
 
   // Filter by language if specified
   let filesToCheck = files;
@@ -128,8 +154,15 @@ export async function runLinters(
 
   // Group files by language
   const grouped = groupFilesByLanguage(filesToCheck, config);
+  debug("Files grouped by language: %s", [...grouped.entries()].map(([l, fs]) => `${l}:${fs.length}`).join(", "));
 
-  // Run linters for each language
+  const useCache = options.fix !== true && options.cache !== false && config.cache !== false;
+  const cacheDir = options.cacheDir ?? config.cacheLocation ?? ".dukestyle-cache";
+
+  // Build flat list of tasks: one per (linter, langFiles) pair
+  type Task = () => Promise<LintResult[]>;
+  const tasks: Task[] = [];
+
   for (const [lang, langFiles] of grouped) {
     const langConfig = config.languages[lang];
     if (!langConfig?.enabled) continue;
@@ -140,38 +173,105 @@ export async function runLinters(
       const linter = getLinter(linterName);
       if (!linter) continue;
 
-      try {
-        let lintResults: LintResult[];
-
-        if (options.fix && linter.fix) {
-          lintResults = await linter.fix(langFiles, linterConfig);
-        } else {
-          lintResults = await linter.check(langFiles, linterConfig);
-        }
-
-        results.push(...lintResults);
-      } catch (error) {
-        // Linter failed, add error result
-        results.push(
-          ...langFiles.map((file) => ({
+      tasks.push(async (): Promise<LintResult[]> => {
+        // Pre-flight: check if linter is installed
+        const installed = await commandExists(linter.info.command === "plugin" ? "node" : linter.info.command);
+        if (!installed && linter.info.command !== "plugin") {
+          debug("Linter not installed: %s", linterName);
+          return langFiles.map((file) => ({
             file,
             language: lang,
             issues: [
               {
                 line: 0,
                 column: 0,
-                message: `Linter ${linterName} failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-                rule: "internal-error",
-                severity: "error" as const,
+                message: `Linter '${linterName}' is not installed. Install with: ${installHint(linterName)}`,
+                rule: "linter-not-installed",
+                severity: "warning" as const,
                 fixable: false,
               },
             ],
             fixable: 0,
-          }))
-        );
-      }
+          }));
+        }
+
+        // Cache split: separate cached vs uncached files
+        let uncachedFiles = langFiles;
+        const cachedResults: LintResult[] = [];
+
+        if (useCache) {
+          uncachedFiles = [];
+          for (const file of langFiles) {
+            try {
+              const hash = hashFile(file);
+              const cached = getCached(cacheDir, linterName, hash);
+              if (cached) {
+                debug("Cache hit: %s / %s", linterName, file);
+                cachedResults.push(cached);
+              } else {
+                uncachedFiles.push(file);
+              }
+            } catch {
+              uncachedFiles.push(file);
+            }
+          }
+        }
+
+        if (uncachedFiles.length === 0) {
+          return cachedResults;
+        }
+
+        debug("Running linter %s on %d file(s)", linterName, uncachedFiles.length);
+
+        try {
+          let lintResults: LintResult[];
+
+          if (options.fix && linter.fix) {
+            lintResults = await linter.fix(uncachedFiles, linterConfig);
+          } else {
+            lintResults = await linter.check(uncachedFiles, linterConfig);
+          }
+
+          // Store results in cache
+          if (useCache) {
+            for (const result of lintResults) {
+              try {
+                const hash = hashFile(result.file);
+                setCached(cacheDir, linterName, hash, result);
+              } catch {
+                // Non-fatal
+              }
+            }
+          }
+
+          return [...cachedResults, ...lintResults];
+        } catch (error) {
+          return [
+            ...cachedResults,
+            ...uncachedFiles.map((file) => ({
+              file,
+              language: lang,
+              issues: [
+                {
+                  line: 0,
+                  column: 0,
+                  message: `Linter ${linterName} failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+                  rule: "internal-error",
+                  severity: "error" as const,
+                  fixable: false,
+                },
+              ],
+              fixable: 0,
+            })),
+          ];
+        }
+      });
     }
   }
+
+  // Run all tasks with concurrency cap of 4
+  const taskResults = await runWithConcurrency(tasks, 4);
+  const results: LintResult[] = taskResults.flat();
 
   // Deduplicate results by file (keep all issues)
   const fileResults = new Map<string, LintResult>();
