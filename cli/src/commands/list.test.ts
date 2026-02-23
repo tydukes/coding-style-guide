@@ -5,28 +5,7 @@
 
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// Resolve to cli/ root (this file compiles to dist/commands/list.test.js)
-const cliRoot = join(__dirname, "..", "..");
-const cliEntry = join(cliRoot, "dist", "index.js");
-
-function run(args: string[]): { status: number | null; stdout: string; stderr: string } {
-  const result = spawnSync(process.execPath, [cliEntry, ...args], {
-    encoding: "utf-8",
-    cwd: cliRoot,
-    timeout: 30_000,
-  });
-  return {
-    status: result.status,
-    stdout: result.stdout ?? "",
-    stderr: result.stderr ?? "",
-  };
-}
+import { run } from "./test-helpers.js";
 
 describe("list command — integration", () => {
   it("list --format json exits 0 and returns object with known linter keys", () => {
@@ -49,7 +28,6 @@ describe("list command — integration", () => {
 
   it("list --language invalid exits non-zero with error message", () => {
     // Commander does not validate --language values, so this may just return empty results
-    // The test verifies that an unknown language doesn't crash (exits 0) or exits non-zero
     const { status, stdout, stderr } = run(["list", "--format", "json", "--language", "invalidlanguage999"]);
     if (status === 0) {
       // Should return empty object (no linters match)

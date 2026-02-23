@@ -5,28 +5,8 @@
 
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// Resolve to cli/ root (this file compiles to dist/commands/check.test.js)
-const cliRoot = join(__dirname, "..", "..");
-const cliEntry = join(cliRoot, "dist", "index.js");
-
-function run(args: string[]): { status: number | null; stdout: string; stderr: string } {
-  const result = spawnSync(process.execPath, [cliEntry, ...args], {
-    encoding: "utf-8",
-    cwd: cliRoot,
-    timeout: 30_000,
-  });
-  return {
-    status: result.status,
-    stdout: result.stdout ?? "",
-    stderr: result.stderr ?? "",
-  };
-}
+import { join } from "node:path";
+import { run, cliRoot } from "./test-helpers.js";
 
 describe("check command — integration", () => {
   it("--version exits 0 and prints semver", () => {
@@ -60,7 +40,6 @@ describe("check command — integration", () => {
     assert.equal(status, 0);
     const parsed = JSON.parse(stdout) as Record<string, unknown>;
     assert.ok(typeof parsed === "object" && parsed !== null);
-    // Should contain at least one known linter
     const keys = Object.keys(parsed);
     assert.ok(keys.length > 0, "Expected at least one linter in output");
   });
