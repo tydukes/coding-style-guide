@@ -20,13 +20,13 @@ function parseFileLineCol(line: string): { lineNum: number; col: number; rest: s
   const afterFile = line.slice(firstColon + 1);
   const secondColon = afterFile.indexOf(":");
   if (secondColon === -1) return null;
-  const lineNum = parseInt(afterFile.slice(0, secondColon), 10);
-  if (isNaN(lineNum)) return null;
+  const lineNum = Number.parseInt(afterFile.slice(0, secondColon), 10);
+  if (Number.isNaN(lineNum)) return null;
   const afterLine = afterFile.slice(secondColon + 1);
   const thirdColon = afterLine.indexOf(":");
   if (thirdColon === -1) return null;
-  const col = parseInt(afterLine.slice(0, thirdColon), 10);
-  if (isNaN(col)) return null;
+  const col = Number.parseInt(afterLine.slice(0, thirdColon), 10);
+  if (Number.isNaN(col)) return null;
   const rest = afterLine.slice(thirdColon + 1).trim();
   return { lineNum, col, rest };
 }
@@ -95,12 +95,18 @@ function parseESLintOutput(output: string): ESLintResult[] {
 
 type ShellcheckIssue = { rule: string; severity: string; fixable: boolean };
 
+function toSeverity(level: string): "error" | "warning" | "info" {
+  if (level === "error") return "error";
+  if (level === "warning") return "warning";
+  return "info";
+}
+
 function parseShellcheckOutput(output: string): ShellcheckIssue[] {
   try {
     const results = JSON.parse(output);
     return results.map((i: { code: number; level: string; fix?: { replacements: unknown[] } }) => ({
       rule: `SC${i.code}`,
-      severity: i.level === "error" ? "error" : i.level === "warning" ? "warning" : "info",
+      severity: toSeverity(i.level),
       fixable: !!i.fix?.replacements?.length,
     }));
   } catch {
@@ -142,8 +148,8 @@ function parseMarkdownlintOutput(output: string): MarkdownIssue[] {
     const afterFile = line.slice(colonIdx + 1);
     const spaceIdx = afterFile.indexOf(" ");
     if (spaceIdx === -1) continue;
-    const lineNum = parseInt(afterFile.slice(0, spaceIdx), 10);
-    if (isNaN(lineNum)) continue;
+    const lineNum = Number.parseInt(afterFile.slice(0, spaceIdx), 10);
+    if (Number.isNaN(lineNum)) continue;
     const rest = afterFile.slice(spaceIdx + 1).trim();
     const slashIdx = rest.indexOf("/");
     if (slashIdx === -1) continue;
@@ -323,7 +329,7 @@ describe("parseMarkdownlintOutput", () => {
 describe("execCommand timeout and ENOENT (integration)", () => {
   it("exits with code 124 when process exceeds timeout", async () => {
     // Dynamically import to avoid top-level module side effects in test file
-    const { spawn } = await import("child_process");
+    const { spawn } = await import("node:child_process");
 
     const timeoutMs = 100;
 
@@ -355,7 +361,7 @@ describe("execCommand timeout and ENOENT (integration)", () => {
   });
 
   it("surfaces ENOENT message when binary is missing", async () => {
-    const { spawn } = await import("child_process");
+    const { spawn } = await import("node:child_process");
 
     const result = await new Promise<{ stdout: string; stderr: string; exitCode: number }>(
       (resolve) => {

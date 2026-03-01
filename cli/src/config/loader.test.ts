@@ -5,9 +5,9 @@
 
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { mkdirSync, writeFileSync, rmSync, existsSync } from "fs";
-import { join } from "path";
-import { tmpdir } from "os";
+import { mkdirSync, writeFileSync, rmSync, existsSync } from "node:fs";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
 import type { StyleGuideConfig, Language, LanguageConfig } from "../types.js";
 
 function mergeConfig(
@@ -30,11 +30,11 @@ function mergeConfig(
           ...langConfig,
           linters: {
             ...defaultLang.linters,
-            ...(langConfig as LanguageConfig).linters,
+            ...langConfig.linters,
           },
         };
       } else if (langConfig) {
-        merged.languages[lang as Language] = langConfig as LanguageConfig;
+        merged.languages[lang as Language] = langConfig;
       }
     }
   }
