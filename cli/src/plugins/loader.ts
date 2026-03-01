@@ -21,7 +21,7 @@ function validatePluginPath(resolvedPath: string): void {
   const cwd = process.cwd();
   const allowedRoots = [
     join(cwd, "node_modules"),
-    join(cwd, ".dukestyle", "plugins"),
+    join(cwd, ".devops-style", "plugins"),
     join(cwd, "plugins"),
   ];
 
@@ -41,7 +41,7 @@ function validatePluginPath(resolvedPath: string): void {
   if (!isAllowed) {
     throw new Error(
       `Plugin path not allowed: ${resolvedPath}. ` +
-      `Plugins must be in node_modules, .dukestyle/plugins, or plugins directory.`
+      `Plugins must be in node_modules, .devops-style/plugins, or plugins directory.`
     );
   }
 }
@@ -91,7 +91,7 @@ export async function loadPlugin(config: PluginConfig): Promise<Plugin> {
     // Package name - look in standard locations only
     const possiblePaths = [
       join(cwd, "node_modules", pluginPath),
-      join(cwd, ".dukestyle", "plugins", pluginPath),
+      join(cwd, ".devops-style", "plugins", pluginPath),
     ];
 
     const foundPath = possiblePaths.find((p) => existsSync(p));

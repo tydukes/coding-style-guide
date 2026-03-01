@@ -79,7 +79,7 @@ export async function initCommand(options: InitOptions): Promise<void> {
   try {
     const parentOpts = options as unknown as { parent?: { color?: boolean } };
     const noColor = parentOpts.parent?.color === false;
-    const configPath = join(process.cwd(), ".dukestyle.yaml");
+    const configPath = join(process.cwd(), ".devops-style.yaml");
 
     // Check if config already exists
     if (existsSync(configPath) && !options.force) {

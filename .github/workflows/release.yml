@@ -129,11 +129,18 @@ jobs:
           sed -i "s/version = \".*\"/version = \"${NEW_VERSION}\"/" pyproject.toml
           echo "Updated version in pyproject.toml to ${NEW_VERSION}"
 
+      - name: Update cli/package.json version
+        env:
+          NEW_VERSION: ${{ needs.determine-version.outputs.new_version }}
+        run: |
+          cd cli
+          npm version "${NEW_VERSION}" --no-git-tag-version
+
       - name: Commit version bump
         env:
           NEW_VERSION: ${{ needs.determine-version.outputs.new_version }}
         run: |
-          git add pyproject.toml
+          git add pyproject.toml cli/package.json
           git commit -m "chore(release): bump version to ${NEW_VERSION}"
           git push
 
@@ -191,3 +198,25 @@ jobs:
           echo "- **New Version**: v${NEW_VERSION}" >> $GITHUB_STEP_SUMMARY
           echo "- **Bump Type**: ${BUMP_TYPE}" >> $GITHUB_STEP_SUMMARY
           echo "- **Release URL**: https://github.com/${REPO}/releases/tag/v${NEW_VERSION}" >> $GITHUB_STEP_SUMMARY
+
+  publish-cli:
+    name: Publish CLI to npm
+    needs: [determine-version, update-version]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Build and publish
+        run: cd cli && npm ci && npm run build && npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

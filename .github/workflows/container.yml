@@ -48,6 +48,16 @@ jobs:
             type=semver,pattern={{major}}
             type=raw,value=latest,enable={{is_default_branch}}
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: cli/package-lock.json
+
+      - name: Build CLI
+        run: cd cli && npm ci && npm run build
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
