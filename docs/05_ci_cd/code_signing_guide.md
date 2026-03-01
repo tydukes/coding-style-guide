@@ -1592,7 +1592,7 @@ EOF
 - [GPG Documentation](https://gnupg.org/documentation/)
 - [Sigstore Documentation](https://docs.sigstore.dev/)
 - [Cosign GitHub Repository](https://github.com/sigstore/cosign)
-- [SLSA Provenance Specification](https://slsa.dev/provenance/)
+- [SLSA Provenance Specification](https://slsa.dev/spec/v1.2/provenance)
 - [in-toto Attestation Framework](https://in-toto.io/)
 
 ### Tools and Utilities
