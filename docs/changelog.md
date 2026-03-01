@@ -25,6 +25,27 @@ This changelog is automatically generated from GitHub releases. Each release inc
 
 Changes that are in the main branch but not yet released.
 
+## [v1.8.24] - 2026-03-01
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+## What's Changed
+### 🐛 Bug Fixes
+* fix(cli): harden CLI — timeout, parser fixes, tests, CI by @tydukes in https://github.com/tydukes/coding-style-guide/pull/405
+### Other Changes
+* feat(cli): 10 CLI enhancements — parallel, caching, plugins, debug, validation by @tydukes in https://github.com/tydukes/coding-style-guide/pull/407
+* fix(docs): replace var with const in shortcuts.js by @tydukes in https://github.com/tydukes/coding-style-guide/pull/413
+* fix(hooks): rename unused params in on_page_context to _config/_nav by @tydukes in https://github.com/tydukes/coding-style-guide/pull/414
+* fix(scripts): reduce cognitive complexity in analyze_code_ratio.py main() by @tydukes in https://github.com/tydukes/coding-style-guide/pull/417
+* fix(cli): resolve 15 TypeScript SonarCloud issues by @tydukes in https://github.com/tydukes/coding-style-guide/pull/418
+* fix(scripts): reduce cognitive complexity in generate_glossary.py by @tydukes in https://github.com/tydukes/coding-style-guide/pull/419
+* fix(docs): update SLSA provenance link to canonical URL by @tydukes in https://github.com/tydukes/coding-style-guide/pull/420
+
+
+**Full Changelog**: https://github.com/tydukes/coding-style-guide/compare/v1.8.23...v1.8.24
+
+[View Release](https://github.com/tydukes/coding-style-guide/releases/tag/v1.8.24)
+
 ## [v1.8.23] - 2026-02-22
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -486,4 +507,4 @@ This release adds comprehensive repository documentation and community files to 
 
 ---
 
-*This changelog was automatically generated on 2026-02-22 23:43:20 UTC*
+*This changelog was automatically generated on 2026-03-01 17:44:17 UTC*
