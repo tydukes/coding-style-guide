@@ -65,6 +65,25 @@ EXEMPT_GUIDES = {
 }
 
 
+def _guide_status(guide_name: str, ratio: float) -> Tuple[str, bool]:
+    """Return (status_label, is_exempt) for a single guide."""
+    if guide_name in EXEMPT_GUIDES:
+        return "⬜ EXEMPT", True
+    return "✅ PASS" if ratio >= 3.0 else "❌ FAIL", False
+
+
+def _report_below_target(below_target: list) -> None:
+    """Print details for every guide that missed the 3:1 target."""
+    if not below_target:
+        return
+    print(f"\n{len(below_target)} guides below 3:1 target ratio:")
+    for guide_name, ratio, code_lines, text_lines in sorted(
+        below_target, key=lambda x: x[1]
+    ):
+        needed_code = (text_lines * 3) - code_lines
+        print(f"  - {guide_name}: {ratio:.2f} (needs ~{needed_code} more code lines)")
+
+
 def main():
     """Main analysis function."""
     guides_dir = Path("docs/02_language_guides")
@@ -97,14 +116,13 @@ def main():
         guide_name = guide_file.stem
         code_lines, text_lines, ratio = analyze_markdown_file(guide_file)
         results[guide_name] = (code_lines, text_lines, ratio)
+        status, is_exempt = _guide_status(guide_name, ratio)
 
-        if guide_name in EXEMPT_GUIDES:
-            status = "⬜ EXEMPT"
+        if is_exempt:
             exempt_count += 1
         else:
             total_code += code_lines
             total_text += text_lines
-            status = "✅ PASS" if ratio >= 3.0 else "❌ FAIL"
             if ratio < 3.0:
                 below_target.append((guide_name, ratio, code_lines, text_lines))
 
@@ -121,15 +139,7 @@ def main():
     )
     print("=" * 80)
 
-    if below_target:
-        print(f"\n{len(below_target)} guides below 3:1 target ratio:")
-        for guide_name, ratio, code_lines, text_lines in sorted(
-            below_target, key=lambda x: x[1]
-        ):
-            needed_code = (text_lines * 3) - code_lines
-            print(
-                f"  - {guide_name}: {ratio:.2f} (needs ~{needed_code} more code lines)"
-            )
+    _report_below_target(below_target)
 
     eligible = len(guide_files) - exempt_count
     passing = eligible - len(below_target)
