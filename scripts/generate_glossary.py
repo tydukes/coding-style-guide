@@ -69,6 +69,151 @@ status: "active"
 ---"""
 
 
+# ---------------------------------------------------------------------------
+# Private helpers — reduce cognitive complexity in the public functions below
+# ---------------------------------------------------------------------------
+
+
+def _flush_term(
+    current_term: str,
+    definition_lines: List[str],
+    section: str,
+    terms: Dict[str, GlossaryTerm],
+    skip: bool = False,
+) -> None:
+    """Save the current term to the terms dict if valid and not skipped."""
+    if current_term and not skip:
+        definition = _strip_trailing_rules("\n".join(definition_lines).strip())
+        terms[current_term.lower()] = GlossaryTerm(
+            name=current_term, definition=definition, section=section
+        )
+
+
+def _update_frontmatter_state(line: str, count: int, in_fm: bool) -> tuple:
+    """
+    Advance frontmatter-tracking state for one line.
+    Returns (new_count, new_in_fm, should_skip).
+    """
+    if line.strip() == "---":
+        count += 1
+        if count <= 2:
+            return count, not in_fm, True
+        return (
+            count,
+            in_fm,
+            False,
+        )  # horizontal rule after frontmatter — process normally
+    return count, in_fm, in_fm  # skip while inside frontmatter, pass through otherwise
+
+
+def _process_section_header(
+    line: str,
+    current_term: str,
+    definition_lines: List[str],
+    current_section: str,
+    in_non_term_section: bool,
+    terms: Dict[str, GlossaryTerm],
+) -> Optional[tuple]:
+    """
+    Handle a ## header line: flush the current term and return updated state.
+    Returns (section, term, def_lines, in_non_term_section), or None if not a ## line.
+    """
+    header_match = re.match(r"^## (.+)$", line.strip())
+    if not header_match:
+        return None
+    _flush_term(
+        current_term, definition_lines, current_section, terms, in_non_term_section
+    )
+    header_text = header_match.group(1).strip()
+    if re.match(r"^[A-Z]$", header_text):  # alphabetical section (## A, ## B, …)
+        return header_text, "", [], False
+    new_non_term = in_non_term_section or (header_text in NON_TERM_SECTIONS)
+    return current_section, "", [], new_non_term
+
+
+def _update_supplementary_capture(section_name: str, capturing: bool) -> tuple:
+    """
+    Update capture state after a ## header in parse_supplementary_sections.
+    Returns (new_capturing, should_skip_line).
+    """
+    if section_name in NON_TERM_SECTIONS:
+        return True, False
+    if re.match(r"^[A-Z]$", section_name):  # alphabetical section ends supplementary
+        return False, True
+    return capturing, False
+
+
+def _is_valid_candidate(term: str, known_terms: Set[str]) -> bool:
+    """Return True if a bold term is a glossary candidate."""
+    if len(term) < 3:
+        return False
+    if term.lower() in known_terms:
+        return False
+    if term.startswith(("Version", "Note", "Warning", "Important")):
+        return False
+    return ":" not in term
+
+
+def _cross_ref_lines(
+    term: GlossaryTerm,
+    references: Dict[str, List[TermReference]],
+) -> List[str]:
+    """Return cross-reference lines for a term, or [] if none found."""
+    refs = references.get(term.name.lower(), [])
+    if not refs:
+        return []
+    ref_links = [
+        f"[{r.display_path}]({r.display_path})"
+        for r in sorted(refs, key=lambda r: r.display_path)
+    ]
+    ref_text = f"*Referenced in: {', '.join(ref_links[:5])}"
+    if len(refs) > 5:
+        ref_text += f" and {len(refs) - 5} more*"
+    else:
+        ref_text += "*"
+    return ["", ref_text]
+
+
+def _run_scan_new_mode(docs_dir: Path, terms: Dict[str, GlossaryTerm]) -> int:
+    """Detect and print candidate terms not yet defined in the glossary."""
+    print("\nScanning for candidate terms not in glossary...")
+    candidates = detect_candidate_terms(docs_dir, set(terms.keys()))
+    if candidates:
+        print(f"\n  Found {len(candidates)} candidate terms (3+ occurrences):")
+        print("  " + "-" * 60)
+        for term, count in sorted(candidates.items(), key=lambda x: (-x[1], x[0])):
+            print(f"    {term:<40} ({count} occurrences)")
+        print("  " + "-" * 60)
+        print(
+            "  Add these terms to docs/glossary.md manually, then re-run "
+            "to include them."
+        )
+    else:
+        print("  No new candidate terms found.")
+    return 0
+
+
+def _run_dry_run_mode(output_path: Path, content: str, terms: Dict) -> int:
+    """Preview glossary output without writing to disk."""
+    print(f"\n--- Preview ({output_path}) ---")
+    preview_lines = content.split("\n")
+    if len(preview_lines) > 60:
+        for line in preview_lines[:50]:
+            print(line)
+        print(f"\n... ({len(preview_lines) - 60} lines omitted) ...\n")
+        for line in preview_lines[-10:]:
+            print(line)
+    else:
+        print(content)
+    print(f"\nTotal: {len(preview_lines)} lines, {len(terms)} terms")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# Public functions
+# ---------------------------------------------------------------------------
+
+
 def parse_existing_glossary(glossary_path: Path) -> Dict[str, GlossaryTerm]:
     """
     Parse the existing glossary.md file to extract all defined terms.
@@ -92,85 +237,49 @@ def parse_existing_glossary(glossary_path: Path) -> Dict[str, GlossaryTerm]:
     in_non_term_section = False
 
     for line in lines:
-        # Handle YAML frontmatter
-        if line.strip() == "---":
-            frontmatter_count += 1
-            if frontmatter_count <= 2:
-                in_frontmatter = not in_frontmatter
-                continue
-        if in_frontmatter:
+        frontmatter_count, in_frontmatter, skip = _update_frontmatter_state(
+            line, frontmatter_count, in_frontmatter
+        )
+        if skip:
             continue
 
-        # Detect alphabetical section headers (## A, ## B, etc.)
-        section_match = re.match(r"^## ([A-Z])$", line.strip())
-        if section_match:
-            # Save previous term if exists
-            if current_term and not in_non_term_section:
-                definition = "\n".join(current_definition_lines).strip()
-                definition = _strip_trailing_rules(definition)
-                terms[current_term.lower()] = GlossaryTerm(
-                    name=current_term,
-                    definition=definition,
-                    section=current_section,
-                )
-            current_section = section_match.group(1)
-            current_term = ""
-            current_definition_lines = []
-            in_non_term_section = False
-            continue
-
-        # Detect non-term sections
-        non_term_match = re.match(r"^## (.+)$", line.strip())
-        if non_term_match:
-            # Save previous term
-            if current_term and not in_non_term_section:
-                definition = "\n".join(current_definition_lines).strip()
-                definition = _strip_trailing_rules(definition)
-                terms[current_term.lower()] = GlossaryTerm(
-                    name=current_term,
-                    definition=definition,
-                    section=current_section,
-                )
-            section_name = non_term_match.group(1).strip()
-            if section_name in NON_TERM_SECTIONS:
-                in_non_term_section = True
-            current_term = ""
-            current_definition_lines = []
+        section_result = _process_section_header(
+            line,
+            current_term,
+            current_definition_lines,
+            current_section,
+            in_non_term_section,
+            terms,
+        )
+        if section_result is not None:
+            (
+                current_section,
+                current_term,
+                current_definition_lines,
+                in_non_term_section,
+            ) = section_result
             continue
 
         if in_non_term_section:
             continue
 
-        # Detect term definitions (### Term Name)
         term_match = re.match(r"^### (.+)$", line.strip())
         if term_match:
-            # Save previous term
-            if current_term:
-                definition = "\n".join(current_definition_lines).strip()
-                # Strip trailing horizontal rules from definitions
-                definition = _strip_trailing_rules(definition)
-                terms[current_term.lower()] = GlossaryTerm(
-                    name=current_term,
-                    definition=definition,
-                    section=current_section,
-                )
+            _flush_term(current_term, current_definition_lines, current_section, terms)
             current_term = term_match.group(1).strip()
             current_definition_lines = []
             continue
 
-        # Collect definition lines
         if current_term:
             current_definition_lines.append(line)
 
-    # Save last term
-    if current_term and not in_non_term_section:
-        definition = "\n".join(current_definition_lines).strip()
-        definition = _strip_trailing_rules(definition)
-        terms[current_term.lower()] = GlossaryTerm(
-            name=current_term,
-            definition=definition,
-            section=current_section,
-        )
+    _flush_term(
+        current_term,
+        current_definition_lines,
+        current_section,
+        terms,
+        in_non_term_section,
+    )
 
     return terms
 
@@ -195,22 +304,17 @@ def parse_supplementary_sections(glossary_path: Path) -> str:
     frontmatter_count = 0
 
     for line in lines:
-        if line.strip() == "---":
-            frontmatter_count += 1
-            if frontmatter_count <= 2:
-                in_frontmatter = not in_frontmatter
-                continue
-        if in_frontmatter:
+        frontmatter_count, in_frontmatter, skip = _update_frontmatter_state(
+            line, frontmatter_count, in_frontmatter
+        )
+        if skip:
             continue
 
-        # Start capturing at first non-term section
         non_term_match = re.match(r"^## (.+)$", line.strip())
         if non_term_match:
             section_name = non_term_match.group(1).strip()
-            if section_name in NON_TERM_SECTIONS:
-                capturing = True
-            elif re.match(r"^[A-Z]$", section_name):
-                capturing = False
+            capturing, skip = _update_supplementary_capture(section_name, capturing)
+            if skip:
                 continue
 
         if capturing:
@@ -301,15 +405,7 @@ def detect_candidate_terms(docs_dir: Path, known_terms: Set[str]) -> Dict[str, i
 
         for match in bold_pattern.finditer(content_no_code):
             term = match.group(1).strip()
-            # Skip short terms and known terms
-            if len(term) < 3:
-                continue
-            if term.lower() in known_terms:
-                continue
-            # Skip common non-term patterns
-            if term.startswith(("Version", "Note", "Warning", "Important")):
-                continue
-            if ":" in term:
+            if not _is_valid_candidate(term, known_terms):
                 continue
             candidates[term] += 1
 
@@ -362,21 +458,8 @@ def generate_glossary_content(
             lines.append("")
             lines.append(term.definition)
 
-            # Add cross-references if enabled
-            if cross_ref and references and term.name.lower() in references:
-                refs = references[term.name.lower()]
-                if refs:
-                    lines.append("")
-                    ref_links = []
-                    for ref in sorted(refs, key=lambda r: r.display_path):
-                        # Create relative link from glossary to the doc
-                        ref_links.append(f"[{ref.display_path}]({ref.display_path})")
-                    ref_text = f"*Referenced in: {', '.join(ref_links[:5])}"
-                    if len(refs) > 5:
-                        ref_text += f" and {len(refs) - 5} more*"
-                    else:
-                        ref_text += "*"
-                    lines.append(ref_text)
+            if cross_ref and references:
+                lines.extend(_cross_ref_lines(term, references))
 
             lines.append("")
 
@@ -462,23 +545,8 @@ def main() -> int:
         referenced_count = sum(1 for refs in references.values() if refs)
         print(f"  {referenced_count}/{len(terms)} terms referenced in docs")
 
-    # Detect candidate terms
     if args.scan_new:
-        print("\nScanning for candidate terms not in glossary...")
-        candidates = detect_candidate_terms(docs_dir, set(terms.keys()))
-        if candidates:
-            print(f"\n  Found {len(candidates)} candidate terms (3+ occurrences):")
-            print("  " + "-" * 60)
-            for term, count in sorted(candidates.items(), key=lambda x: (-x[1], x[0])):
-                print(f"    {term:<40} ({count} occurrences)")
-            print("  " + "-" * 60)
-            print(
-                "  Add these terms to docs/glossary.md manually, then re-run "
-                "to include them."
-            )
-        else:
-            print("  No new candidate terms found.")
-        return 0
+        return _run_scan_new_mode(docs_dir, terms)
 
     # Generate glossary content
     print("Generating glossary...")
@@ -490,19 +558,7 @@ def main() -> int:
     )
 
     if args.dry_run:
-        print(f"\n--- Preview ({output_path}) ---")
-        # Show first 50 lines and last 10 lines
-        preview_lines = content.split("\n")
-        if len(preview_lines) > 60:
-            for line in preview_lines[:50]:
-                print(line)
-            print(f"\n... ({len(preview_lines) - 60} lines omitted) ...\n")
-            for line in preview_lines[-10:]:
-                print(line)
-        else:
-            print(content)
-        print(f"\nTotal: {len(preview_lines)} lines, {len(terms)} terms")
-        return 0
+        return _run_dry_run_mode(output_path, content, terms)
 
     # Write output
     output_path.write_text(content, encoding="utf-8")
