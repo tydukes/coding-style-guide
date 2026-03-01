@@ -287,7 +287,7 @@ export async function runLinters(
   debug("Files grouped by language: %s", [...grouped.entries()].map(([l, fs]) => `${l}:${fs.length}`).join(", "));
 
   const useCache = options.fix !== true && options.cache !== false && config.cache !== false;
-  const cacheDir = options.cacheDir ?? config.cacheLocation ?? ".dukestyle-cache";
+  const cacheDir = options.cacheDir ?? config.cacheLocation ?? ".devops-style-cache";
 
   // Build flat list of tasks: one per (linter, langFiles) pair
   type Task = () => Promise<LintResult[]>;

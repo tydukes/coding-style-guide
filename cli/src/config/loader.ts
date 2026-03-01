@@ -13,7 +13,7 @@ import type { StyleGuideConfig, LanguageConfig, Language } from "../types.js";
 import { validateConfig } from "./validate.js";
 import { debug } from "../utils/debug.js";
 
-const MODULE_NAME = "dukestyle";
+const MODULE_NAME = "devops-style";
 
 const DEFAULT_CONFIG: StyleGuideConfig = {
   languages: {
@@ -91,7 +91,7 @@ const DEFAULT_CONFIG: StyleGuideConfig = {
     "**/.terraform/**",
   ],
   cache: true,
-  cacheLocation: ".dukestyle-cache",
+  cacheLocation: ".devops-style-cache",
 };
 
 /**
