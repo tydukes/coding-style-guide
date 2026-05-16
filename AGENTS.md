@@ -1,6 +1,7 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides general guidance for AI coding assistants working with code in this
+repository.
 
 ## Project Overview
 
@@ -44,7 +45,7 @@ uv run flake8                                   # Lint Python
 
 ### 1. The 3:1 Code-to-Text Ratio
 
-Every file in `docs/02_language_guides/` must maintain ≥3 lines of code examples per 1 line of
+Every file in `docs/02_language_guides/` must maintain >=3 lines of code examples per 1 line of
 explanatory text. This is the primary quality metric — "show, don't tell."
 
 **Algorithm** (in `scripts/analyze_code_ratio.py`):
@@ -87,10 +88,10 @@ Workflow action versions **cannot** be dynamic — `uses:` fields are evaluated 
 before any steps run:
 
 ```yaml
-# ❌ FAILS — evaluated before steps execute
+# Fails — evaluated before steps execute
 - uses: actions/cache@${{ steps.versions.outputs.cache-version }}
 
-# ✅ REQUIRED — hardcoded version
+# Required — hardcoded version
 - uses: actions/cache@v5
 ```
 
@@ -162,7 +163,7 @@ under the `words` array before pushing.
 
 1. Create `docs/02_language_guides/{language}.md` with required YAML frontmatter
 2. Follow `docs/04_templates/language_guide_template.md` structure
-3. **Maintain ≥3:1 code-to-text ratio** — verify with `analyze_code_ratio.py`
+3. **Maintain >=3:1 code-to-text ratio** — verify with `analyze_code_ratio.py`
 4. Add entry to `mkdocs.yml` nav
 5. Test locally with `mkdocs serve`
 

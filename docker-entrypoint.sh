@@ -43,15 +43,15 @@ run_validate() {
 
     # Run metadata validation (non-blocking)
     log_info "Checking metadata tags..."
-    if /app/.venv/bin/python /app/scripts/validate_metadata.py; then
+    if /app/.venv/bin/python /app/scripts/validate_metadata.py .; then
         log_success "Metadata validation passed"
     else
         log_warning "Metadata validation failed (non-blocking)"
     fi
 
-    # Run linters
+    # Run linters via the devops-style CLI
     log_info "Running linters..."
-    if bash /app/scripts/pre_commit_linter.sh; then
+    if devops-style check; then
         log_success "Linter checks passed"
     else
         log_error "Linter checks failed"
@@ -84,7 +84,7 @@ run_validate() {
 run_lint() {
     log_info "Running linters only..."
 
-    if bash /app/scripts/pre_commit_linter.sh; then
+    if devops-style check; then
         log_success "Linter checks passed"
         return 0
     else

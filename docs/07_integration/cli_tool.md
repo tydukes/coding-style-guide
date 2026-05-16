@@ -25,10 +25,10 @@ The CLI wraps multiple linters and formatters into a single, consistent interfac
 
 ```bash
 # Install globally via npm
-npm install -g devops-engineering-style-guide
+npm install -g @tydukes-npm/devops-style
 
 # Or use with npx (no installation)
-npx devops-engineering-style-guide check
+npx @tydukes-npm/devops-style check
 
 # Or use via Docker
 docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest validate
@@ -139,23 +139,23 @@ devops-style list --format json
 
 The CLI searches for configuration in this order:
 
-1. `.dukestylerc`
-2. `.dukestylerc.json`
-3. `.dukestylerc.yaml`
-4. `.dukestylerc.yml`
-5. `dukestyle.config.js`
+1. `.devops-stylerc`
+2. `.devops-stylerc.json`
+3. `.devops-stylerc.yaml`
+4. `.devops-stylerc.yml`
+5. `devops-style.config.js`
 6. `.devops-style.json`
 7. `.devops-style.yaml`
-8. `package.json` (`dukestyle` key)
+8. `package.json` (`devops-style` key)
 
 ### Configuration Schema
 
 ```yaml
-# .dukestyle.yaml
+# .devops-style.yaml
 
 # Extends another configuration (optional)
 extends:
-  - "devops-engineering-style-guide/config/strict"
+  - "@tydukes-npm/devops-style/config/strict"
 
 # Language configurations
 languages:
@@ -250,7 +250,7 @@ ignore:
 
 # Caching
 cache: true
-cacheLocation: .dukestyle-cache
+cacheLocation: .devops-style-cache
 
 # Custom plugins
 plugins:
@@ -293,7 +293,7 @@ jobs:
           node-version: '20'
 
       - name: Install CLI
-        run: npm install -g devops-engineering-style-guide
+        run: npm install -g @tydukes-npm/devops-style
 
       - name: Run style check
         run: devops-style check --format sarif > style-results.sarif
@@ -312,7 +312,7 @@ style-check:
   image: node:20-alpine
   stage: test
   script:
-    - npm install -g devops-engineering-style-guide
+    - npm install -g @tydukes-npm/devops-style
     - devops-style check --format json > gl-code-quality-report.json
   artifacts:
     reports:
@@ -407,7 +407,7 @@ export default {
 ### Plugin Configuration
 
 ```yaml
-# .dukestyle.yaml
+# .devops-style.yaml
 plugins:
   - name: my-plugin
     path: ./plugins/my-plugin.js
@@ -534,7 +534,7 @@ devops-style check --debug
 devops-style check  # Cache enabled by default
 
 # Clear cache if needed
-rm -rf .dukestyle-cache
+rm -rf .devops-style-cache
 ```
 
 ## Related Documentation

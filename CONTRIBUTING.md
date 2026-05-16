@@ -87,7 +87,7 @@ Add status labels to track progress:
 
 ### Full Label Taxonomy
 
-For the complete label taxonomy and usage guidelines, see the [Label Taxonomy section in CLAUDE.md](CLAUDE.md#label-taxonomy).
+For the complete label taxonomy and usage guidelines, see the [Label Taxonomy section in AGENTS.md](AGENTS.md#label-taxonomy-for-issuesprs).
 
 ## Development Setup
 

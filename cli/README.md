@@ -16,10 +16,10 @@ standards across your codebase.
 
 ```bash
 # Install globally
-npm install -g devops-engineering-style-guide
+npm install -g @tydukes-npm/devops-style
 
 # Or use with npx
-npx devops-engineering-style-guide check
+npx @tydukes-npm/devops-style check
 ```
 
 ## Quick Start
@@ -128,19 +128,19 @@ devops-style list --format json
 
 The CLI looks for configuration in the following locations (in order):
 
-1. `.dukestylerc`
-2. `.dukestylerc.json`
-3. `.dukestylerc.yaml`
-4. `.dukestylerc.yml`
-5. `dukestyle.config.js`
+1. `.devops-stylerc`
+2. `.devops-stylerc.json`
+3. `.devops-stylerc.yaml`
+4. `.devops-stylerc.yml`
+5. `devops-style.config.js`
 6. `.devops-style.json`
 7. `.devops-style.yaml`
-8. `package.json` (`dukestyle` key)
+8. `package.json` (`devops-style` key)
 
 ### Example Configuration
 
 ```yaml
-# .dukestyle.yaml
+# .devops-style.yaml
 languages:
   python:
     enabled: true
@@ -172,7 +172,7 @@ ignore:
   - "**/.git/**"
 
 cache: true
-cacheLocation: .dukestyle-cache
+cacheLocation: .devops-style-cache
 ```
 
 ### Configuration Options
@@ -182,7 +182,7 @@ cacheLocation: .dukestyle-cache
 | `languages` | object | See defaults | Language-specific configuration |
 | `ignore` | string[] | Common patterns | Glob patterns to ignore |
 | `cache` | boolean | `true` | Enable result caching |
-| `cacheLocation` | string | `.dukestyle-cache` | Cache directory |
+| `cacheLocation` | string | `.devops-style-cache` | Cache directory |
 | `plugins` | array | `[]` | Custom plugin configurations |
 
 ### Language Configuration
@@ -239,7 +239,7 @@ jobs:
           node-version: '20'
 
       - name: Install CLI
-        run: npm install -g devops-engineering-style-guide
+        run: npm install -g @tydukes-npm/devops-style
 
       - name: Check style
         run: devops-style check --format sarif > results.sarif
@@ -256,7 +256,7 @@ jobs:
 style-check:
   image: node:20
   script:
-    - npm install -g devops-engineering-style-guide
+    - npm install -g @tydukes-npm/devops-style
     - devops-style check --format json > style-report.json
   artifacts:
     reports:
@@ -308,7 +308,7 @@ export default {
 ### Using Plugins
 
 ```yaml
-# .dukestyle.yaml
+# .devops-style.yaml
 plugins:
   - name: my-plugin
     path: ./plugins/my-plugin.js

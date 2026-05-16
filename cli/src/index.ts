@@ -17,7 +17,7 @@ import { clearCache } from "./cache/manager.js";
 
 // Handle --clear-cache before Commander parses (it's a global flag, not a subcommand)
 if (process.argv.includes("--clear-cache")) {
-  const cacheDir = ".dukestyle-cache";
+  const cacheDir = ".devops-style-cache";
   clearCache(cacheDir);
   console.log(chalk.green(`✔ Cache cleared: ${cacheDir}`));
   process.exit(0);

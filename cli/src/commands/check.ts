@@ -8,6 +8,7 @@
 import ora from "ora";
 import { loadConfig } from "../config/loader.js";
 import { findFiles, runLinters } from "../linters/orchestrator.js";
+import { checkLinterAvailability, installHint } from "../linters/registry.js";
 import { formatOutput } from "../output/formatter.js";
 import { loadPlugins } from "../plugins/loader.js";
 import type { CheckOptions } from "../types.js";
@@ -26,7 +27,21 @@ export async function checkCommand(
     const parentOpts = options as unknown as { parent?: { config?: string; color?: boolean } };
     const noColor = parentOpts.parent?.color === false;
     const config = await loadConfig(parentOpts.parent?.config);
-    spinner.text = "Finding files...";
+
+    // Pre-flight: check which linters are available and warn once upfront
+    spinner.text = "Checking linter availability...";
+    const availability = await checkLinterAvailability();
+    const missing = [...availability.entries()].filter(([, info]) => !info.installed);
+    if (missing.length > 0) {
+      spinner.warn(`${missing.length} linter(s) not installed — those checks will be skipped:`);
+      for (const [name, info] of missing) {
+        console.log(`  ✗ ${info.name} (${info.language})  —  ${installHint(name)}`);
+      }
+      console.log("");
+      spinner.start("Finding files...");
+    } else {
+      spinner.text = "Finding files...";
+    }
 
     // Load plugins if configured
     if (config.plugins?.length) {
