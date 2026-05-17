@@ -6,35 +6,37 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Unified, opinionated standards for infrastructure and application code that is both human-readable and AI-optimized">
+        <meta name="description" content="Repository policy for auto-merge, publishing credentials, trusted workflow refs, and partial-release recovery">
       
       
         <meta name="author" content="Tyler Dukes">
       
       
-        <link rel="canonical" href="https://tydukes.github.io/coding-style-guide/">
+        <link rel="canonical" href="https://tydukes.github.io/coding-style-guide/05_ci_cd/release_automation/">
       
       
+        <link rel="prev" href="../changelog_automation_guide/">
       
-        <link rel="next" href="01_overview/getting_started/">
+      
+        <link rel="next" href="../../06_container/usage/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>DevOps Engineering Style Guide - DevOps Engineering Style Guide</title>
+        <title>Release and Auto-Merge Automation - DevOps Engineering Style Guide</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,13 +55,13 @@
       
     
     
-      <link rel="stylesheet" href="stylesheets/print.css">
+      <link rel="stylesheet" href="../../stylesheets/print.css">
     
-      <link rel="stylesheet" href="stylesheets/toc.css">
+      <link rel="stylesheet" href="../../stylesheets/toc.css">
     
-      <link rel="stylesheet" href="stylesheets/features.css">
+      <link rel="stylesheet" href="../../stylesheets/features.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -94,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#introduction" class="md-skip">
+        <a href="#automation-policy" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +114,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="DevOps Engineering Style Guide" class="md-header__button md-logo" aria-label="DevOps Engineering Style Guide" data-md-component="logo">
+    <a href="../.." title="DevOps Engineering Style Guide" class="md-header__button md-logo" aria-label="DevOps Engineering Style Guide" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -132,7 +134,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              DevOps Engineering Style Guide
+              Release and Auto-Merge Automation
             
           </span>
         </div>
@@ -248,11 +250,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="." class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -273,7 +273,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="01_overview/getting_started/" class="md-tabs__link">
+        <a href="../../01_overview/getting_started/" class="md-tabs__link">
           
   
   
@@ -293,7 +293,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="00_standards/heading_structure/" class="md-tabs__link">
+        <a href="../../00_standards/heading_structure/" class="md-tabs__link">
           
   
   
@@ -313,7 +313,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="02_language_guides/comparison_matrix/" class="md-tabs__link">
+        <a href="../../02_language_guides/comparison_matrix/" class="md-tabs__link">
           
   
   
@@ -331,7 +331,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="03_metadata_schema/schema_reference/" class="md-tabs__link">
+      <a href="../../03_metadata_schema/schema_reference/" class="md-tabs__link">
         
   
   
@@ -352,7 +352,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="04_templates/README_template/" class="md-tabs__link">
+        <a href="../../04_templates/README_template/" class="md-tabs__link">
           
   
   
@@ -372,7 +372,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="05_examples/python_package_example/" class="md-tabs__link">
+        <a href="../../05_examples/python_package_example/" class="md-tabs__link">
           
   
   
@@ -392,7 +392,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="09_refactoring/" class="md-tabs__link">
+        <a href="../../09_refactoring/" class="md-tabs__link">
           
   
   
@@ -412,7 +412,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="08_anti_patterns/" class="md-tabs__link">
+        <a href="../../08_anti_patterns/" class="md-tabs__link">
           
   
   
@@ -432,7 +432,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="10_migration_guides/from_pep8/" class="md-tabs__link">
+        <a href="../../10_migration_guides/from_pep8/" class="md-tabs__link">
           
   
   
@@ -452,7 +452,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="11_cloud_providers/aws/" class="md-tabs__link">
+        <a href="../../11_cloud_providers/aws/" class="md-tabs__link">
           
   
   
@@ -468,6 +468,8 @@
   
   
   
+    
+  
   
     
     
@@ -475,11 +477,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="05_ci_cd/ai_validation_pipeline/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../ai_validation_pipeline/" class="md-tabs__link">
           
   
   
@@ -500,7 +504,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="06_container/usage/" class="md-tabs__link">
+      <a href="../../06_container/usage/" class="md-tabs__link">
         
   
   
@@ -521,7 +525,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="07_integration/integration_prompt/" class="md-tabs__link">
+        <a href="../../07_integration/integration_prompt/" class="md-tabs__link">
           
   
   
@@ -541,7 +545,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="12_tutorials/" class="md-tabs__link">
+        <a href="../../12_tutorials/" class="md-tabs__link">
           
   
   
@@ -559,7 +563,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="faq/" class="md-tabs__link">
+      <a href="../../faq/" class="md-tabs__link">
         
   
   
@@ -578,7 +582,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="topic_index/" class="md-tabs__link">
+      <a href="../../topic_index/" class="md-tabs__link">
         
   
   
@@ -597,7 +601,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="glossary/" class="md-tabs__link">
+      <a href="../../glossary/" class="md-tabs__link">
         
   
   
@@ -616,7 +620,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="changelog/" class="md-tabs__link">
+      <a href="../../changelog/" class="md-tabs__link">
         
   
   
@@ -651,7 +655,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="DevOps Engineering Style Guide" class="md-nav__button md-logo" aria-label="DevOps Engineering Style Guide" data-md-component="logo">
+    <a href="../.." title="DevOps Engineering Style Guide" class="md-nav__button md-logo" aria-label="DevOps Engineering Style Guide" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -678,42 +682,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-    
-  
-  
-    <span class="md-status md-status--active"></span>
-  
-
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -736,90 +708,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#introduction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Introduction
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#core-principles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Core Principles
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scope" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scope
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#documentation-sections" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Documentation Sections
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-to-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where to Start
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-use-this-guide" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How to Use This Guide
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -881,7 +769,7 @@
   
   
     <li class="md-nav__item">
-      <a href="01_overview/getting_started/" class="md-nav__link">
+      <a href="../../01_overview/getting_started/" class="md-nav__link">
         
   
   
@@ -916,7 +804,7 @@
   
   
     <li class="md-nav__item">
-      <a href="01_overview/principles/" class="md-nav__link">
+      <a href="../../01_overview/principles/" class="md-nav__link">
         
   
   
@@ -951,7 +839,7 @@
   
   
     <li class="md-nav__item">
-      <a href="01_overview/governance/" class="md-nav__link">
+      <a href="../../01_overview/governance/" class="md-nav__link">
         
   
   
@@ -986,7 +874,7 @@
   
   
     <li class="md-nav__item">
-      <a href="01_overview/structure/" class="md-nav__link">
+      <a href="../../01_overview/structure/" class="md-nav__link">
         
   
   
@@ -1021,7 +909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="01_overview/decision_trees/" class="md-nav__link">
+      <a href="../../01_overview/decision_trees/" class="md-nav__link">
         
   
   
@@ -1056,7 +944,7 @@
   
   
     <li class="md-nav__item">
-      <a href="01_overview/maturity_model/" class="md-nav__link">
+      <a href="../../01_overview/maturity_model/" class="md-nav__link">
         
   
   
@@ -1091,7 +979,7 @@
   
   
     <li class="md-nav__item">
-      <a href="project_status/" class="md-nav__link">
+      <a href="../../project_status/" class="md-nav__link">
         
   
   
@@ -1183,7 +1071,7 @@
   
   
     <li class="md-nav__item">
-      <a href="00_standards/heading_structure/" class="md-nav__link">
+      <a href="../../00_standards/heading_structure/" class="md-nav__link">
         
   
   
@@ -1218,7 +1106,7 @@
   
   
     <li class="md-nav__item">
-      <a href="00_standards/code_block_language_tags/" class="md-nav__link">
+      <a href="../../00_standards/code_block_language_tags/" class="md-nav__link">
         
   
   
@@ -1310,7 +1198,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/comparison_matrix/" class="md-nav__link">
+      <a href="../../02_language_guides/comparison_matrix/" class="md-nav__link">
         
   
   
@@ -1395,7 +1283,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/terraform/" class="md-nav__link">
+      <a href="../../02_language_guides/terraform/" class="md-nav__link">
         
   
   
@@ -1430,7 +1318,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/terragrunt/" class="md-nav__link">
+      <a href="../../02_language_guides/terragrunt/" class="md-nav__link">
         
   
   
@@ -1465,7 +1353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/hcl/" class="md-nav__link">
+      <a href="../../02_language_guides/hcl/" class="md-nav__link">
         
   
   
@@ -1500,7 +1388,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/cloudformation/" class="md-nav__link">
+      <a href="../../02_language_guides/cloudformation/" class="md-nav__link">
         
   
   
@@ -1535,7 +1423,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/bicep/" class="md-nav__link">
+      <a href="../../02_language_guides/bicep/" class="md-nav__link">
         
   
   
@@ -1570,7 +1458,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/cdk/" class="md-nav__link">
+      <a href="../../02_language_guides/cdk/" class="md-nav__link">
         
   
   
@@ -1605,7 +1493,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/pulumi/" class="md-nav__link">
+      <a href="../../02_language_guides/pulumi/" class="md-nav__link">
         
   
   
@@ -1640,7 +1528,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/kubernetes/" class="md-nav__link">
+      <a href="../../02_language_guides/kubernetes/" class="md-nav__link">
         
   
   
@@ -1675,7 +1563,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/gitops/" class="md-nav__link">
+      <a href="../../02_language_guides/gitops/" class="md-nav__link">
         
   
   
@@ -1710,7 +1598,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/crossplane/" class="md-nav__link">
+      <a href="../../02_language_guides/crossplane/" class="md-nav__link">
         
   
   
@@ -1803,7 +1691,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/ansible/" class="md-nav__link">
+      <a href="../../02_language_guides/ansible/" class="md-nav__link">
         
   
   
@@ -1896,7 +1784,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/python/" class="md-nav__link">
+      <a href="../../02_language_guides/python/" class="md-nav__link">
         
   
   
@@ -1931,7 +1819,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/go/" class="md-nav__link">
+      <a href="../../02_language_guides/go/" class="md-nav__link">
         
   
   
@@ -1966,7 +1854,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/typescript/" class="md-nav__link">
+      <a href="../../02_language_guides/typescript/" class="md-nav__link">
         
   
   
@@ -2001,7 +1889,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/bash/" class="md-nav__link">
+      <a href="../../02_language_guides/bash/" class="md-nav__link">
         
   
   
@@ -2036,7 +1924,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/powershell/" class="md-nav__link">
+      <a href="../../02_language_guides/powershell/" class="md-nav__link">
         
   
   
@@ -2071,7 +1959,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/sql/" class="md-nav__link">
+      <a href="../../02_language_guides/sql/" class="md-nav__link">
         
   
   
@@ -2106,7 +1994,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/repl/" class="md-nav__link">
+      <a href="../../02_language_guides/repl/" class="md-nav__link">
         
   
   
@@ -2141,7 +2029,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/shell_aliases/" class="md-nav__link">
+      <a href="../../02_language_guides/shell_aliases/" class="md-nav__link">
         
   
   
@@ -2234,7 +2122,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/jenkins_groovy/" class="md-nav__link">
+      <a href="../../02_language_guides/jenkins_groovy/" class="md-nav__link">
         
   
   
@@ -2269,7 +2157,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/jenkins_shared_libraries/" class="md-nav__link">
+      <a href="../../02_language_guides/jenkins_shared_libraries/" class="md-nav__link">
         
   
   
@@ -2304,7 +2192,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/github_actions/" class="md-nav__link">
+      <a href="../../02_language_guides/github_actions/" class="md-nav__link">
         
   
   
@@ -2339,7 +2227,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/gitlab_ci/" class="md-nav__link">
+      <a href="../../02_language_guides/gitlab_ci/" class="md-nav__link">
         
   
   
@@ -2432,7 +2320,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/compliance_as_code/" class="md-nav__link">
+      <a href="../../02_language_guides/compliance_as_code/" class="md-nav__link">
         
   
   
@@ -2525,7 +2413,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/yaml/" class="md-nav__link">
+      <a href="../../02_language_guides/yaml/" class="md-nav__link">
         
   
   
@@ -2560,7 +2448,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/json/" class="md-nav__link">
+      <a href="../../02_language_guides/json/" class="md-nav__link">
         
   
   
@@ -2595,7 +2483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/json_schema/" class="md-nav__link">
+      <a href="../../02_language_guides/json_schema/" class="md-nav__link">
         
   
   
@@ -2630,7 +2518,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/toml_ini/" class="md-nav__link">
+      <a href="../../02_language_guides/toml_ini/" class="md-nav__link">
         
   
   
@@ -2723,7 +2611,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/dockerfile/" class="md-nav__link">
+      <a href="../../02_language_guides/dockerfile/" class="md-nav__link">
         
   
   
@@ -2758,7 +2646,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/docker_compose/" class="md-nav__link">
+      <a href="../../02_language_guides/docker_compose/" class="md-nav__link">
         
   
   
@@ -2793,7 +2681,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/devcontainer/" class="md-nav__link">
+      <a href="../../02_language_guides/devcontainer/" class="md-nav__link">
         
   
   
@@ -2886,7 +2774,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/makefile/" class="md-nav__link">
+      <a href="../../02_language_guides/makefile/" class="md-nav__link">
         
   
   
@@ -2921,7 +2809,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/task_runners/" class="md-nav__link">
+      <a href="../../02_language_guides/task_runners/" class="md-nav__link">
         
   
   
@@ -3014,7 +2902,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/diagram_as_code/" class="md-nav__link">
+      <a href="../../02_language_guides/diagram_as_code/" class="md-nav__link">
         
   
   
@@ -3107,7 +2995,7 @@
   
   
     <li class="md-nav__item">
-      <a href="02_language_guides/interoperability/" class="md-nav__link">
+      <a href="../../02_language_guides/interoperability/" class="md-nav__link">
         
   
   
@@ -3157,7 +3045,7 @@
   
   
     <li class="md-nav__item">
-      <a href="03_metadata_schema/schema_reference/" class="md-nav__link">
+      <a href="../../03_metadata_schema/schema_reference/" class="md-nav__link">
         
   
   
@@ -3241,7 +3129,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/README_template/" class="md-nav__link">
+      <a href="../../04_templates/README_template/" class="md-nav__link">
         
   
   
@@ -3276,7 +3164,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/terraform_module_template/" class="md-nav__link">
+      <a href="../../04_templates/terraform_module_template/" class="md-nav__link">
         
   
   
@@ -3311,7 +3199,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/python_package_template/" class="md-nav__link">
+      <a href="../../04_templates/python_package_template/" class="md-nav__link">
         
   
   
@@ -3346,7 +3234,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/gitignore_templates/" class="md-nav__link">
+      <a href="../../04_templates/gitignore_templates/" class="md-nav__link">
         
   
   
@@ -3381,7 +3269,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/precommit_config_template/" class="md-nav__link">
+      <a href="../../04_templates/precommit_config_template/" class="md-nav__link">
         
   
   
@@ -3416,7 +3304,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/github_actions_workflow_templates/" class="md-nav__link">
+      <a href="../../04_templates/github_actions_workflow_templates/" class="md-nav__link">
         
   
   
@@ -3451,7 +3339,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/dockerfile_template/" class="md-nav__link">
+      <a href="../../04_templates/dockerfile_template/" class="md-nav__link">
         
   
   
@@ -3486,7 +3374,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/docker_compose_template/" class="md-nav__link">
+      <a href="../../04_templates/docker_compose_template/" class="md-nav__link">
         
   
   
@@ -3521,7 +3409,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/helm_chart_template/" class="md-nav__link">
+      <a href="../../04_templates/helm_chart_template/" class="md-nav__link">
         
   
   
@@ -3556,7 +3444,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/contract_template/" class="md-nav__link">
+      <a href="../../04_templates/contract_template/" class="md-nav__link">
         
   
   
@@ -3591,7 +3479,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/testing_docs_template/" class="md-nav__link">
+      <a href="../../04_templates/testing_docs_template/" class="md-nav__link">
         
   
   
@@ -3626,7 +3514,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/ide_settings_template/" class="md-nav__link">
+      <a href="../../04_templates/ide_settings_template/" class="md-nav__link">
         
   
   
@@ -3661,7 +3549,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/debug_config_template/" class="md-nav__link">
+      <a href="../../04_templates/debug_config_template/" class="md-nav__link">
         
   
   
@@ -3696,7 +3584,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/operational_templates/" class="md-nav__link">
+      <a href="../../04_templates/operational_templates/" class="md-nav__link">
         
   
   
@@ -3731,7 +3619,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/adr_template/" class="md-nav__link">
+      <a href="../../04_templates/adr_template/" class="md-nav__link">
         
   
   
@@ -3766,7 +3654,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/reusable_workflows_template/" class="md-nav__link">
+      <a href="../../04_templates/reusable_workflows_template/" class="md-nav__link">
         
   
   
@@ -3801,7 +3689,7 @@
   
   
     <li class="md-nav__item">
-      <a href="04_templates/code_generators_template/" class="md-nav__link">
+      <a href="../../04_templates/code_generators_template/" class="md-nav__link">
         
   
   
@@ -3893,7 +3781,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_examples/python_package_example/" class="md-nav__link">
+      <a href="../../05_examples/python_package_example/" class="md-nav__link">
         
   
   
@@ -3928,7 +3816,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_examples/flask_api_example/" class="md-nav__link">
+      <a href="../../05_examples/flask_api_example/" class="md-nav__link">
         
   
   
@@ -3963,7 +3851,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_examples/terraform_module_example/" class="md-nav__link">
+      <a href="../../05_examples/terraform_module_example/" class="md-nav__link">
         
   
   
@@ -3998,7 +3886,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_examples/ansible_role_example/" class="md-nav__link">
+      <a href="../../05_examples/ansible_role_example/" class="md-nav__link">
         
   
   
@@ -4033,7 +3921,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_examples/typescript_library_example/" class="md-nav__link">
+      <a href="../../05_examples/typescript_library_example/" class="md-nav__link">
         
   
   
@@ -4068,7 +3956,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_examples/react_app_example/" class="md-nav__link">
+      <a href="../../05_examples/react_app_example/" class="md-nav__link">
         
   
   
@@ -4103,7 +3991,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_examples/monorepo_fullstack_example/" class="md-nav__link">
+      <a href="../../05_examples/monorepo_fullstack_example/" class="md-nav__link">
         
   
   
@@ -4138,7 +4026,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_examples/mkdocs_site_example/" class="md-nav__link">
+      <a href="../../05_examples/mkdocs_site_example/" class="md-nav__link">
         
   
   
@@ -4173,7 +4061,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_examples/github_actions_example/" class="md-nav__link">
+      <a href="../../05_examples/github_actions_example/" class="md-nav__link">
         
   
   
@@ -4265,7 +4153,7 @@
   
   
     <li class="md-nav__item">
-      <a href="09_refactoring/" class="md-nav__link">
+      <a href="../../09_refactoring/" class="md-nav__link">
         
   
   
@@ -4300,7 +4188,7 @@
   
   
     <li class="md-nav__item">
-      <a href="09_refactoring/python_refactoring/" class="md-nav__link">
+      <a href="../../09_refactoring/python_refactoring/" class="md-nav__link">
         
   
   
@@ -4335,7 +4223,7 @@
   
   
     <li class="md-nav__item">
-      <a href="09_refactoring/typescript_refactoring/" class="md-nav__link">
+      <a href="../../09_refactoring/typescript_refactoring/" class="md-nav__link">
         
   
   
@@ -4370,7 +4258,7 @@
   
   
     <li class="md-nav__item">
-      <a href="09_refactoring/terraform_refactoring/" class="md-nav__link">
+      <a href="../../09_refactoring/terraform_refactoring/" class="md-nav__link">
         
   
   
@@ -4405,7 +4293,7 @@
   
   
     <li class="md-nav__item">
-      <a href="09_refactoring/ansible_refactoring/" class="md-nav__link">
+      <a href="../../09_refactoring/ansible_refactoring/" class="md-nav__link">
         
   
   
@@ -4440,7 +4328,7 @@
   
   
     <li class="md-nav__item">
-      <a href="09_refactoring/bash_refactoring/" class="md-nav__link">
+      <a href="../../09_refactoring/bash_refactoring/" class="md-nav__link">
         
   
   
@@ -4532,7 +4420,7 @@
   
   
     <li class="md-nav__item">
-      <a href="08_anti_patterns/" class="md-nav__link">
+      <a href="../../08_anti_patterns/" class="md-nav__link">
         
   
   
@@ -4567,7 +4455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="08_anti_patterns/code_smell_catalog/" class="md-nav__link">
+      <a href="../../08_anti_patterns/code_smell_catalog/" class="md-nav__link">
         
   
   
@@ -4602,7 +4490,7 @@
   
   
     <li class="md-nav__item">
-      <a href="08_anti_patterns/azure/" class="md-nav__link">
+      <a href="../../08_anti_patterns/azure/" class="md-nav__link">
         
   
   
@@ -4694,7 +4582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="10_migration_guides/from_pep8/" class="md-nav__link">
+      <a href="../../10_migration_guides/from_pep8/" class="md-nav__link">
         
   
   
@@ -4729,7 +4617,7 @@
   
   
     <li class="md-nav__item">
-      <a href="10_migration_guides/from_google/" class="md-nav__link">
+      <a href="../../10_migration_guides/from_google/" class="md-nav__link">
         
   
   
@@ -4764,7 +4652,7 @@
   
   
     <li class="md-nav__item">
-      <a href="10_migration_guides/from_airbnb/" class="md-nav__link">
+      <a href="../../10_migration_guides/from_airbnb/" class="md-nav__link">
         
   
   
@@ -4856,7 +4744,7 @@
   
   
     <li class="md-nav__item">
-      <a href="11_cloud_providers/aws/" class="md-nav__link">
+      <a href="../../11_cloud_providers/aws/" class="md-nav__link">
         
   
   
@@ -4891,7 +4779,7 @@
   
   
     <li class="md-nav__item">
-      <a href="11_cloud_providers/azure/" class="md-nav__link">
+      <a href="../../11_cloud_providers/azure/" class="md-nav__link">
         
   
   
@@ -4926,7 +4814,7 @@
   
   
     <li class="md-nav__item">
-      <a href="11_cloud_providers/gcp/" class="md-nav__link">
+      <a href="../../11_cloud_providers/gcp/" class="md-nav__link">
         
   
   
@@ -4965,24 +4853,29 @@
       
   
   
+    
   
   
+  
     
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" checked>
         
           
-          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="">
             
   
   
@@ -5000,7 +4893,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             
@@ -5068,7 +4961,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/ai_validation_pipeline/" class="md-nav__link">
+      <a href="../ai_validation_pipeline/" class="md-nav__link">
         
   
   
@@ -5103,7 +4996,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/github_actions_guide/" class="md-nav__link">
+      <a href="../github_actions_guide/" class="md-nav__link">
         
   
   
@@ -5138,7 +5031,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/gitlab_ci_guide/" class="md-nav__link">
+      <a href="../gitlab_ci_guide/" class="md-nav__link">
         
   
   
@@ -5173,7 +5066,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/jenkins_pipeline_guide/" class="md-nav__link">
+      <a href="../jenkins_pipeline_guide/" class="md-nav__link">
         
   
   
@@ -5208,7 +5101,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/local_validation_setup/" class="md-nav__link">
+      <a href="../local_validation_setup/" class="md-nav__link">
         
   
   
@@ -5301,7 +5194,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/testing_strategies/" class="md-nav__link">
+      <a href="../testing_strategies/" class="md-nav__link">
         
   
   
@@ -5336,7 +5229,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/iac_testing_standards/" class="md-nav__link">
+      <a href="../iac_testing_standards/" class="md-nav__link">
         
   
   
@@ -5371,7 +5264,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/smoke_test_standards/" class="md-nav__link">
+      <a href="../smoke_test_standards/" class="md-nav__link">
         
   
   
@@ -5406,7 +5299,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/performance_testing_standards/" class="md-nav__link">
+      <a href="../performance_testing_standards/" class="md-nav__link">
         
   
   
@@ -5441,7 +5334,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/chaos_engineering_guide/" class="md-nav__link">
+      <a href="../chaos_engineering_guide/" class="md-nav__link">
         
   
   
@@ -5476,7 +5369,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/security_scanning_guide/" class="md-nav__link">
+      <a href="../security_scanning_guide/" class="md-nav__link">
         
   
   
@@ -5511,7 +5404,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/code_signing_guide/" class="md-nav__link">
+      <a href="../code_signing_guide/" class="md-nav__link">
         
   
   
@@ -5604,7 +5497,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/precommit_hooks_guide/" class="md-nav__link">
+      <a href="../precommit_hooks_guide/" class="md-nav__link">
         
   
   
@@ -5639,7 +5532,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/git_hooks_library/" class="md-nav__link">
+      <a href="../git_hooks_library/" class="md-nav__link">
         
   
   
@@ -5674,7 +5567,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/ide_integration_guide/" class="md-nav__link">
+      <a href="../ide_integration_guide/" class="md-nav__link">
         
   
   
@@ -5767,7 +5660,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/dependency_update_policies/" class="md-nav__link">
+      <a href="../dependency_update_policies/" class="md-nav__link">
         
   
   
@@ -5802,7 +5695,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/dependabot_auto_merge/" class="md-nav__link">
+      <a href="../dependabot_auto_merge/" class="md-nav__link">
         
   
   
@@ -5842,6 +5735,8 @@
                 
   
   
+    
+  
   
   
     
@@ -5852,11 +5747,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12_5" checked>
         
           
           <label class="md-nav__link" for="__nav_12_5" id="__nav_12_5_label" tabindex="0">
@@ -5877,7 +5772,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_12_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -5895,7 +5790,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/observability_guide/" class="md-nav__link">
+      <a href="../observability_guide/" class="md-nav__link">
         
   
   
@@ -5930,7 +5825,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/environment_configuration/" class="md-nav__link">
+      <a href="../environment_configuration/" class="md-nav__link">
         
   
   
@@ -5965,7 +5860,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/seed_data_management/" class="md-nav__link">
+      <a href="../seed_data_management/" class="md-nav__link">
         
   
   
@@ -6000,7 +5895,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/performance_optimization/" class="md-nav__link">
+      <a href="../performance_optimization/" class="md-nav__link">
         
   
   
@@ -6035,7 +5930,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/documentation_versioning/" class="md-nav__link">
+      <a href="../documentation_versioning/" class="md-nav__link">
         
   
   
@@ -6070,7 +5965,7 @@
   
   
     <li class="md-nav__item">
-      <a href="05_ci_cd/changelog_automation_guide/" class="md-nav__link">
+      <a href="../changelog_automation_guide/" class="md-nav__link">
         
   
   
@@ -6102,10 +5997,42 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="05_ci_cd/release_automation/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release Automation
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--active"></span>
+  
+
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -6128,6 +6055,101 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#automation-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automation Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auto-merge-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-Merge Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#token-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#container-publishing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container Publishing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#partial-release-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partial Release Recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -6155,7 +6177,7 @@
   
   
     <li class="md-nav__item">
-      <a href="06_container/usage/" class="md-nav__link">
+      <a href="../../06_container/usage/" class="md-nav__link">
         
   
   
@@ -6239,7 +6261,7 @@
   
   
     <li class="md-nav__item">
-      <a href="07_integration/integration_prompt/" class="md-nav__link">
+      <a href="../../07_integration/integration_prompt/" class="md-nav__link">
         
   
   
@@ -6274,7 +6296,7 @@
   
   
     <li class="md-nav__item">
-      <a href="07_integration/ai_code_review/" class="md-nav__link">
+      <a href="../../07_integration/ai_code_review/" class="md-nav__link">
         
   
   
@@ -6309,7 +6331,7 @@
   
   
     <li class="md-nav__item">
-      <a href="07_integration/cli_tool/" class="md-nav__link">
+      <a href="../../07_integration/cli_tool/" class="md-nav__link">
         
   
   
@@ -6401,7 +6423,7 @@
   
   
     <li class="md-nav__item">
-      <a href="12_tutorials/" class="md-nav__link">
+      <a href="../../12_tutorials/" class="md-nav__link">
         
   
   
@@ -6436,7 +6458,7 @@
   
   
     <li class="md-nav__item">
-      <a href="12_tutorials/python_project/" class="md-nav__link">
+      <a href="../../12_tutorials/python_project/" class="md-nav__link">
         
   
   
@@ -6471,7 +6493,7 @@
   
   
     <li class="md-nav__item">
-      <a href="12_tutorials/terraform_migration/" class="md-nav__link">
+      <a href="../../12_tutorials/terraform_migration/" class="md-nav__link">
         
   
   
@@ -6506,7 +6528,7 @@
   
   
     <li class="md-nav__item">
-      <a href="12_tutorials/fullstack_app/" class="md-nav__link">
+      <a href="../../12_tutorials/fullstack_app/" class="md-nav__link">
         
   
   
@@ -6541,7 +6563,7 @@
   
   
     <li class="md-nav__item">
-      <a href="12_tutorials/team_onboarding/" class="md-nav__link">
+      <a href="../../12_tutorials/team_onboarding/" class="md-nav__link">
         
   
   
@@ -6576,7 +6598,7 @@
   
   
     <li class="md-nav__item">
-      <a href="12_tutorials/manual_to_automated/" class="md-nav__link">
+      <a href="../../12_tutorials/manual_to_automated/" class="md-nav__link">
         
   
   
@@ -6618,7 +6640,7 @@
   
   
     <li class="md-nav__item">
-      <a href="faq/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         
   
   
@@ -6652,7 +6674,7 @@
   
   
     <li class="md-nav__item">
-      <a href="topic_index/" class="md-nav__link">
+      <a href="../../topic_index/" class="md-nav__link">
         
   
   
@@ -6686,7 +6708,7 @@
   
   
     <li class="md-nav__item">
-      <a href="glossary/" class="md-nav__link">
+      <a href="../../glossary/" class="md-nav__link">
         
   
   
@@ -6720,7 +6742,7 @@
   
   
     <li class="md-nav__item">
-      <a href="changelog/" class="md-nav__link">
+      <a href="../../changelog/" class="md-nav__link">
         
   
   
@@ -6772,10 +6794,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#introduction" class="md-nav__link">
+  <a href="#automation-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Introduction
+        Automation Policy
       
     </span>
   </a>
@@ -6783,10 +6805,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#core-principles" class="md-nav__link">
+  <a href="#auto-merge-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Principles
+        Auto-Merge Rules
       
     </span>
   </a>
@@ -6794,10 +6816,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#scope" class="md-nav__link">
+  <a href="#required-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Scope
+        Required Checks
       
     </span>
   </a>
@@ -6805,10 +6827,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#documentation-sections" class="md-nav__link">
+  <a href="#token-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Documentation Sections
+        Token Rules
       
     </span>
   </a>
@@ -6816,10 +6838,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-to-start" class="md-nav__link">
+  <a href="#release-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where to Start
+        Release Path
       
     </span>
   </a>
@@ -6827,10 +6849,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-to-use-this-guide" class="md-nav__link">
+  <a href="#container-publishing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How to Use This Guide
+        Container Publishing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#partial-release-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partial Release Recovery
       
     </span>
   </a>
@@ -6855,6 +6888,72 @@
   
 
 
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../ai_validation_pipeline/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    CI / CD
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../observability_guide/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Operations
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
               
               <article class="md-content__inner md-typeset">
                 
@@ -6862,7 +6961,7 @@
 
 
   
-    <a href="https://github.com/tydukes/coding-style-guide/edit/main/docs/index.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/tydukes/coding-style-guide/edit/main/docs/05_ci_cd/release_automation.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -6870,196 +6969,147 @@
   
 
 
-  <h1>Home</h1>
+  <h1>Release Automation</h1>
 
-<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
-<p>The <strong>DevOps Engineering Style Guide</strong> defines a unified, opinionated standard for writing infrastructure
-and application code that is both <strong>human-readable</strong> and <strong>AI-optimized</strong>.
-It creates consistency across 35+ languages and tools — enabling reproducible automation and long-term
-maintainability across teams and projects.</p>
-<p>This guide reflects practical standards derived from real-world DevOps, SRE, and automation practices.
-Its intent is to strike the right balance between flexibility and rigor — allowing engineers to focus on
-<em>building systems</em> instead of debating style.</p>
-<hr />
-<h2 id="core-principles">Core Principles<a class="headerlink" href="#core-principles" title="Permanent link">&para;</a></h2>
-<ol>
-<li>
-<p><strong>Clarity First:</strong>
-   Code must communicate intent before it executes logic.
-   Readability and maintainability take precedence over brevity.</p>
-</li>
-<li>
-<p><strong>Automation by Default:</strong>
-   Everything that can be automated — linting, formatting, testing, and deployment — <em>is</em> automated.</p>
-</li>
-<li>
-<p><strong>Security and Stability:</strong>
-   Secrets are always managed securely, dependencies are pinned, and environments are deterministic.</p>
-</li>
-<li>
-<p><strong>Reproducibility:</strong>
-   Builds, tests, and deployments must produce consistent outcomes across local, CI, and production environments.</p>
-</li>
-<li>
-<p><strong>Human + AI Collaboration:</strong>
-   Every standard is designed for dual readability — equally interpretable by developers and AI assistants.</p>
-</li>
-</ol>
-<hr />
-<h2 id="scope">Scope<a class="headerlink" href="#scope" title="Permanent link">&para;</a></h2>
-<p>This guide covers 35+ languages and tooling categories:</p>
-<p><strong>Infrastructure as Code</strong>:
-Terraform, Terragrunt, HCL, AWS CloudFormation, Azure Bicep, AWS CDK, Pulumi,
-Kubernetes &amp; Helm, GitOps (ArgoCD &amp; Flux), Crossplane</p>
-<p><strong>Configuration Management</strong>: Ansible</p>
-<p><strong>Programming Languages</strong>: Python, Go, TypeScript, Bash, PowerShell, SQL, Groovy (Jenkins)</p>
-<p><strong>CI/CD &amp; Automation</strong>: GitHub Actions, GitLab CI/CD, Jenkins, Jenkins Shared Libraries</p>
-<p><strong>Compliance as Code</strong>: InSpec, OPA, Sentinel</p>
-<p><strong>Data Formats</strong>: YAML, JSON, JSON Schema, TOML &amp; INI</p>
-<p><strong>Containerization</strong>: Dockerfile, Docker Compose, Dev Containers</p>
-<p><strong>Build Tools</strong>: Makefile, Task &amp; Just</p>
-<p><strong>Developer Experience</strong>: REPL &amp; Interactive Shells, Shell Aliases &amp; Functions, Diagram as Code</p>
-<p>Each guide defines standardized formatting, naming conventions, directory structure, security practices,
-documentation expectations, and AI-annotation standards.</p>
-<hr />
-<h2 id="documentation-sections">Documentation Sections<a class="headerlink" href="#documentation-sections" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Section</th>
-<th>What You'll Find</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Overview</strong></td>
-<td>Principles, governance, structure, decision trees, maturity model, project status</td>
-</tr>
-<tr>
-<td><strong>Standards</strong></td>
-<td>Code block requirements, heading structure conventions</td>
-</tr>
-<tr>
-<td><strong>Language Guides</strong></td>
-<td>35+ language-specific style guides organized by category</td>
-</tr>
-<tr>
-<td><strong>Metadata Schema</strong></td>
-<td>Universal <code>@module</code> annotation schema for all languages</td>
-</tr>
-<tr>
-<td><strong>Templates</strong></td>
-<td>Ready-to-use templates: README, Terraform, Python, Helm, Dockerfile, ADR, and more</td>
-</tr>
-<tr>
-<td><strong>Examples</strong></td>
-<td>Full reference implementations: Python package, Flask API, Terraform module, React app, monorepo</td>
-</tr>
-<tr>
-<td><strong>Refactoring</strong></td>
-<td>Before/after examples for Python, TypeScript, Terraform, Ansible, Bash</td>
-</tr>
-<tr>
-<td><strong>Anti-Patterns</strong></td>
-<td>Common code smells, Azure anti-patterns, and what to avoid</td>
-</tr>
-<tr>
-<td><strong>Migration Guides</strong></td>
-<td>Moving from PEP 8, Google Style Guide, or Airbnb Style Guide</td>
-</tr>
-<tr>
-<td><strong>Cloud Providers</strong></td>
-<td>Microsoft Azure and Google Cloud Platform specific guidance</td>
-</tr>
-<tr>
-<td><strong>CI / CD</strong></td>
-<td>Pipeline setup, testing strategies, security scanning, observability, DevEx tooling</td>
-</tr>
-<tr>
-<td><strong>Container Usage</strong></td>
-<td>Using the published validation container in your projects</td>
-</tr>
-<tr>
-<td><strong>Integration</strong></td>
-<td>AI code review integration, CLI tool, integration prompts</td>
-</tr>
-<tr>
-<td><strong>Tutorials</strong></td>
-<td>Hands-on walkthroughs: Python project, Terraform migration, full-stack app, team onboarding</td>
-</tr>
-<tr>
-<td><strong>FAQ</strong></td>
-<td>Frequently asked questions and quick answers</td>
-</tr>
-<tr>
-<td><strong>Topic Index</strong></td>
-<td>Comprehensive index of all topics across the guide</td>
-</tr>
-<tr>
-<td><strong>Glossary</strong></td>
-<td>Terminology and definitions</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="where-to-start">Where to Start<a class="headerlink" href="#where-to-start" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Your Role</th>
-<th>Start Here</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>New to this guide</strong></td>
-<td><a href="01_overview/getting_started/">Getting Started</a> → <a href="01_overview/maturity_model/">Maturity Model</a></td>
-</tr>
-<tr>
-<td><strong>Python developer</strong></td>
-<td><a href="02_language_guides/python/">Python Guide</a> → <a href="12_tutorials/python_project/">Tutorial 1</a></td>
-</tr>
-<tr>
-<td><strong>Infrastructure / IaC</strong></td>
-<td><a href="02_language_guides/terraform/">Terraform Guide</a> → <a href="12_tutorials/terraform_migration/">Tutorial 2</a></td>
-</tr>
-<tr>
-<td><strong>DevOps / CI/CD focus</strong></td>
-<td><a href="02_language_guides/github_actions/">GitHub Actions</a> → <a href="05_ci_cd/github_actions_guide/">CI/CD Guides</a></td>
-</tr>
-<tr>
-<td><strong>Team lead / onboarding</strong></td>
-<td><a href="12_tutorials/team_onboarding/">Tutorial 4: Team Onboarding</a> → <a href="01_overview/governance/">Governance</a></td>
-</tr>
-<tr>
-<td><strong>Building multi-language apps</strong></td>
-<td><a href="02_language_guides/interoperability/">Interoperability</a> → <a href="12_tutorials/fullstack_app/">Tutorial 3</a></td>
-</tr>
-<tr>
-<td><strong>Adopting from another style guide</strong></td>
-<td><a href="10_migration_guides/from_pep8/">Migration Guides</a></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="how-to-use-this-guide">How to Use This Guide<a class="headerlink" href="#how-to-use-this-guide" title="Permanent link">&para;</a></h2>
-<ul>
-<li>For <strong>human readers</strong>, this guide acts as a living documentation of your engineering standards.</li>
-<li>For <strong>AI models</strong>, embedded metadata blocks and clear structure enable code generation, refactoring,
-  and auditing with minimal ambiguity.</li>
-<li>For <strong>teams adopting this guide</strong>, use the <a href="01_overview/maturity_model/">Maturity Model</a> to plan
-  a progressive rollout across your projects.</li>
-</ul>
-<p>You can contribute to this repository using standard Git workflows:</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/tydukes/coding-style-guide.git
-<span class="nb">cd</span><span class="w"> </span>coding-style-guide
-uv<span class="w"> </span>sync
-mkdocs<span class="w"> </span>serve
-<span class="c1"># Browse to http://127.0.0.1:8000</span>
+<h2 id="automation-policy">Automation Policy<a class="headerlink" href="#automation-policy" title="Permanent link">&para;</a></h2>
+<p>Automation must help trusted maintainers move faster without changing the repository security model.
+Branch protection, required checks, review rules, and GitHub token restrictions remain the source of
+truth for whether a pull request can merge or a release can publish.</p>
+<h2 id="auto-merge-rules">Auto-Merge Rules<a class="headerlink" href="#auto-merge-rules" title="Permanent link">&para;</a></h2>
+<p>Trusted same-repository pull requests may have GitHub auto-merge enabled after CI succeeds. The
+workflow does not directly approve, directly merge, or delete branches with a personal access token.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">trusted_auto_merge_authors</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">maintainers</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tydukes</span>
+<span class="w">  </span><span class="nt">automation</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dependabot[bot]</span>
+
+<span class="nt">required_behavior</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">merge_method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squash</span>
+<span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GITHUB_TOKEN</span>
+<span class="w">  </span><span class="nt">same_repository_branch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">direct_merge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">auto_approve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">branch_protection_bypass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </code></pre></div>
-<p>Or validate your own project immediately using the published container:</p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>validate
+<p>Outside contributors are intentionally excluded from automatic enablement. Their pull requests must
+receive normal maintainer review and pass the required branch protection checks before merge.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">outside_contributor_guardrails</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">forked_pull_requests</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">auto_merge_enabled_by_workflow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">publish_secrets_available</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">maintainer_review_required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">first_time_contributors</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">secret_bearing_workflows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">maintainer_approval_required</span>
+</code></pre></div>
+<h2 id="required-checks">Required Checks<a class="headerlink" href="#required-checks" title="Permanent link">&para;</a></h2>
+<p>Branch protection should require the checks that represent the full repository risk, not only the
+first workflow that completes.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">required_checks</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Commit Message Lint</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLI Build and Test</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dependency Version Check</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Spell Checker</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CodeQL</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SonarCloud</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build and Publish Container</span>
+</code></pre></div>
+<p>Container checks are required for container-affecting changes. CodeQL and SonarCloud are required
+where those services are enabled for the repository.</p>
+<h2 id="token-rules">Token Rules<a class="headerlink" href="#token-rules" title="Permanent link">&para;</a></h2>
+<p>Use <code>GITHUB_TOKEN</code> by default. It is scoped to the repository, receives workflow-level permissions,
+and is the correct token for checkout, version bump commits, release creation, issue creation, and
+GitHub auto-merge enablement.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">github_token_uses</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions checkout</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">release version bump commits</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">changelog commits</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GitHub release creation</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GitHub auto-merge enablement</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recovery issue creation</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr container publishing</span>
+</code></pre></div>
+<p>Use a personal access token only when GitHub documents a permission limitation that blocks the
+intended operation and the repository intentionally accepts that risk. A personal access token must
+be fine-grained, limited to this repository, time-bound, and documented with the exact reason and
+permissions.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">personal_access_token_rules</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">avoid</span>
+<span class="w">  </span><span class="nt">allowed_only_when</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GITHUB_TOKEN cannot perform the required GitHub operation</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">branch protection is not bypassed</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scopes are documented</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expiration is configured</span>
+<span class="w">  </span><span class="nt">not_required_for</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current auto-merge workflow</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current release workflow</span>
+</code></pre></div>
+<h2 id="release-path">Release Path<a class="headerlink" href="#release-path" title="Permanent link">&para;</a></h2>
+<p>Releases are manual, trusted-ref workflows. Run them from <code>main</code>; do not run release publishing from
+pull requests, forks, feature branches, or code that has not been reviewed.</p>
+<div class="highlight"><pre><span></span><code>gh<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span>release.yml<span class="w"> </span>--ref<span class="w"> </span>main<span class="w"> </span>--field<span class="w"> </span><span class="nv">bump_type</span><span class="o">=</span>patch
+gh<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span>release.yml<span class="w"> </span>--ref<span class="w"> </span>main<span class="w"> </span>--field<span class="w"> </span><span class="nv">bump_type</span><span class="o">=</span>auto
+</code></pre></div>
+<p>For recovery of a partially completed version, rerun the workflow with the exact version and no
+leading <code>v</code>.</p>
+<div class="highlight"><pre><span></span><code>gh<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span>release.yml<span class="w"> </span>--ref<span class="w"> </span>main<span class="w"> </span>--field<span class="w"> </span><span class="nv">release_version</span><span class="o">=</span><span class="m">1</span>.2.3
+</code></pre></div>
+<p>The release path keeps the Python package version, CLI package version, GitHub release tag,
+changelog generation, and npm package publish in one workflow.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">release_steps</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate main branch</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate NPM_TOKEN exists</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">determine version</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update pyproject.toml</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update cli/package.json</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update cli/package-lock.json</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commit version bump</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">create GitHub release</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">generate changelog</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commit changelog</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">publish CLI to npm</span>
+</code></pre></div>
+<h2 id="container-publishing">Container Publishing<a class="headerlink" href="#container-publishing" title="Permanent link">&para;</a></h2>
+<p>Container images are built for pull requests but only published from release or tag events. The
+<code>main</code> branch build validates documentation and code, but it does not publish <code>latest</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">container_publishing</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">push</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">linux/amd64</span>
+<span class="w">  </span><span class="nt">tag_or_release</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">push</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">platforms</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">linux/amd64</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">linux/arm64</span>
+<span class="w">    </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">semver</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latest</span>
+</code></pre></div>
+<h2 id="partial-release-recovery">Partial Release Recovery<a class="headerlink" href="#partial-release-recovery" title="Permanent link">&para;</a></h2>
+<p>A partial release is any run where one artifact succeeds and a later artifact fails. Examples include
+a GitHub release created but npm publish failed, or an npm package published but container publishing
+failed.</p>
+<p>The workflows create recovery issues when a release or release container publish fails on a trusted
+ref. The issue records the intended version, completed steps, failed steps, workflow run, commit, and
+recommended forward-fix path.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">recovery_issue_contents</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">release version</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">completed jobs</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">failed jobs</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">workflow run URL</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commit SHA</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">same-version recovery command</span>
+</code></pre></div>
+<p>Prefer completing the same intended version. Do not create a second divergent version unless no
+release artifacts were published.</p>
+<div class="highlight"><pre><span></span><code>1. Inspect the failed workflow job.
+2. Check GitHub releases, npm, and ghcr for artifacts that already exist.
+3. Fix the failed automation or package state on main.
+4. Rerun release.yml with release_version set to the same version.
+5. Manually publish only a missing artifact if a full rerun would duplicate completed work.
 </code></pre></div>
 
 
@@ -7102,15 +7152,31 @@ mkdocs<span class="w"> </span>serve
       
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
+          
+          <a href="../changelog_automation_guide/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Changelog Automation">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Changelog Automation
+              </div>
+            </div>
+          </a>
+        
         
           
-          <a href="01_overview/getting_started/" class="md-footer__link md-footer__link--next" aria-label="Next: Getting Started">
+          <a href="../../06_container/usage/" class="md-footer__link md-footer__link--next" aria-label="Next: Container Usage">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Getting Started
+                Container Usage
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -7171,16 +7237,16 @@ mkdocs<span class="w"> </span>serve
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="javascripts/shortcuts.js"></script>
+        <script src="../../javascripts/shortcuts.js"></script>
       
-        <script src="javascripts/related-pages.js"></script>
+        <script src="../../javascripts/related-pages.js"></script>
       
-        <script src="javascripts/bookmarks.js"></script>
+        <script src="../../javascripts/bookmarks.js"></script>
       
     
   </body>
