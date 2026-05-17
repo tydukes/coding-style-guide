@@ -1,6 +1,6 @@
 name: Auto-Merge
 
-on:
+"on":
   workflow_run:
     workflows: ["CI"]
     types: [completed]
@@ -8,12 +8,14 @@ on:
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
-    # Only run if CI workflow completed successfully
-    if: github.event.workflow_run.conclusion == 'success'
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request'
 
     permissions:
-      contents: write
+      contents: read
       pull-requests: write
+      issues: write
 
     steps:
       - name: Get PR number
@@ -21,26 +23,25 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
-            // Get PR from the workflow run branch
+            const run = context.payload.workflow_run;
+
             const { data: pullRequests } = await github.rest.pulls.list({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              head: `${context.repo.owner}:${context.payload.workflow_run.head_branch}`
+              head: `${context.repo.owner}:${run.head_branch}`
             });
 
             if (pullRequests.length === 0) {
-              console.log('No open PR found for this branch');
-              core.setFailed('No PR found for branch');
-              return null;
+              core.notice(`No open same-repository PR found for ${run.head_branch}`);
+              return;
             }
 
             const prNumber = pullRequests[0].number;
-            console.log(`Found PR #${prNumber} for branch ${context.payload.workflow_run.head_branch}`);
+            console.log(`Found PR #${prNumber} for branch ${run.head_branch}`);
             core.setOutput('number', prNumber);
-            return prNumber;
 
-      - name: Get PR details and check author
+      - name: Check auto-merge eligibility
         id: pr-details
         if: steps.pr-number.outputs.number != ''
         uses: actions/github-script@v9
@@ -55,92 +56,98 @@ jobs:
             });
 
             const author = pr.user.login;
-            const isAllowed = author === 'dependabot[bot]' || author === 'tydukes';
+            const trustedAutomation = ['dependabot[bot]'];
+            const trustedMaintainers = ['tydukes'];
+            const isAllowed = trustedAutomation.includes(author) || trustedMaintainers.includes(author);
+            const sameRepository = pr.head.repo.full_name === pr.base.repo.full_name;
 
             console.log(`PR #${prNumber} by ${author}`);
+            console.log(`Same repository branch: ${sameRepository}`);
             console.log(`Auto-merge allowed: ${isAllowed}`);
 
             if (!isAllowed) {
-              core.setFailed(`Auto-merge not allowed for user: ${author}`);
+              core.notice(`Auto-merge skipped for untrusted author: ${author}`);
+              return;
+            }
+
+            if (!sameRepository) {
+              core.notice(`Auto-merge skipped for forked PR #${prNumber}`);
               return;
             }
 
             core.setOutput('author', author);
             core.setOutput('pr_number', prNumber);
 
-      - name: Auto-approve PR
+      - name: Enable auto-merge
         if: steps.pr-details.outputs.pr_number != ''
         uses: actions/github-script@v9
         with:
-          github-token: ${{ secrets.AUTO_MERGE_TOKEN }}
           script: |
             const prNumber = ${{ steps.pr-details.outputs.pr_number }};
-            const author = '${{ steps.pr-details.outputs.author }}';
-            const approvalBody = author === 'dependabot[bot]'
-              ? '✅ Auto-approved by workflow: All checks passed for Dependabot PR'
-              : '✅ Auto-approved by workflow: All checks passed';
-
-            await github.rest.pulls.createReview({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber,
-              event: 'APPROVE',
-              body: approvalBody
-            });
-
-            console.log(`✅ Approved PR #${prNumber}`);
-
-      - name: Merge PR
-        if: steps.pr-details.outputs.pr_number != ''
-        uses: actions/github-script@v9
-        with:
-          github-token: ${{ secrets.AUTO_MERGE_TOKEN }}
-          script: |
-            const prNumber = ${{ steps.pr-details.outputs.pr_number }};
-
             const { data: pr } = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: prNumber
             });
 
-            try {
-              await github.rest.pulls.merge({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: prNumber,
-                merge_method: 'squash',
-                commit_title: pr.title,
-                commit_message: `${pr.body || ''}\n\n🤖 Auto-merged after successful checks`
-              });
+            const query = `
+              mutation EnablePullRequestAutoMerge($pullRequestId: ID!, $mergeMethod: PullRequestMergeMethod!) {
+                enablePullRequestAutoMerge(input: {
+                  pullRequestId: $pullRequestId,
+                  mergeMethod: $mergeMethod
+                }) {
+                  pullRequest {
+                    number
+                    autoMergeRequest {
+                      enabledAt
+                    }
+                  }
+                }
+              }
+            `;
 
-              console.log(`✅ PR #${prNumber} auto-merged successfully`);
+            try {
+              await github.graphql(query, {
+                pullRequestId: pr.node_id,
+                mergeMethod: 'SQUASH'
+              });
+              console.log(`Enabled auto-merge for PR #${prNumber}`);
             } catch (error) {
-              console.error('Merge failed:', error.message);
-              throw error;
+              if (error.message.includes('Pull request Auto-merge is already enabled')) {
+                console.log(`Auto-merge already enabled for PR #${prNumber}`);
+                return;
+              }
+
+              core.setFailed(`Unable to enable auto-merge for PR #${prNumber}: ${error.message}`);
             }
 
-      - name: Delete branch after merge
+      - name: Add policy note
         if: steps.pr-details.outputs.pr_number != ''
         uses: actions/github-script@v9
         with:
-          github-token: ${{ secrets.AUTO_MERGE_TOKEN }}
           script: |
             const prNumber = ${{ steps.pr-details.outputs.pr_number }};
+            const marker = '<!-- auto-merge-policy-note -->';
+            const body = [
+              marker,
+              'Auto-merge was enabled by policy for trusted authors.',
+              'GitHub branch protection and required checks still control when this PR can merge.'
+            ].join('\n');
 
-            const { data: pr } = await github.rest.pulls.get({
+            const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: prNumber
+              issue_number: prNumber,
+              per_page: 100
             });
 
-            try {
-              await github.rest.git.deleteRef({
+            const existing = comments.find((comment) => comment.body.includes(marker));
+
+            if (!existing) {
+              await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                ref: `heads/${pr.head.ref}`
+                issue_number: prNumber,
+                body
               });
-              console.log(`✅ Deleted branch: ${pr.head.ref}`);
-            } catch (error) {
-              console.log('Branch already deleted or error:', error.message);
             }

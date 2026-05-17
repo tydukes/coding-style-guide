@@ -78,9 +78,16 @@ gh workflow run release.yml --field bump_type=patch
 gh workflow run release.yml --field bump_type=auto
 ```
 
-The workflow automatically: bumps `pyproject.toml`, creates a GitHub release, generates
-`docs/changelog.md` via the GitHub API, and commits the changelog. **Never edit
-`docs/changelog.md` manually.**
+The workflow automatically: bumps `pyproject.toml` and `cli/package.json`, generates
+`docs/changelog.md` via the GitHub API, creates a GitHub release, and publishes the CLI package to
+npm. **Never edit `docs/changelog.md` manually.**
+
+Release publishing must run from `main`. If a partial release needs recovery, rerun the workflow with
+the exact version instead of creating a new version:
+
+```bash
+gh workflow run release.yml --ref main --field release_version=1.2.3
+```
 
 ### 3. GitHub Actions Version Constraint
 
@@ -148,8 +155,8 @@ testable and map directly to test descriptions:
 Stage 1: Pre-commit hooks  (<30s)  formatting, linting, secret detection
 Stage 2: CI pipeline       (<10m)  metadata validation (warn), linting (block), docs build
 Stage 3: Quality gates     (<10m)  spell-check (BLOCKS merge), link-check
-Stage 4: Deployment        (<5m)   GitHub Pages, container publish
-Stage 5: Auto-merge        (auto)  squash-merge for dependabot[bot] and tydukes
+Stage 4: Deployment        (<5m)   GitHub Pages, release/tag container publish
+Stage 5: Auto-merge        (auto)  enable squash auto-merge for dependabot[bot] and tydukes
 ```
 
 **Spell checker blocks merges.** New technical terms must be whitelisted in `.github/cspell.json`
@@ -202,7 +209,10 @@ Valid types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `ci`, 
 
 ## CI/CD Automation Notes
 
-**Auto-merge**: PRs from `dependabot[bot]` or `tydukes` squash-merge automatically after CI.
+**Auto-merge**: same-repository PRs from `dependabot[bot]` or `tydukes` can have GitHub
+auto-merge enabled after CI succeeds. The workflow uses `GITHUB_TOKEN`; it does not auto-approve,
+directly merge, use `AUTO_MERGE_TOKEN`, or bypass branch protection. Outside-contributor PRs must
+receive normal maintainer review and required checks before merge.
 
 **Blocking checks** (prevent merge):
 
@@ -219,6 +229,10 @@ Valid types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `ci`, 
 action version: edit `versions.yml`, manually update all workflow files to match, then CI
 validates they stay in sync.
 
+**Token policy**: use `GITHUB_TOKEN` for checkout, version bump commits, changelog commits, release
+creation, auto-merge enablement, recovery issue creation, and container publishing to `ghcr.io`. Add a PAT
+only when GitHub permission limits require it, and document the exact reason, scopes, and expiration.
+
 ---
 
 ## Container Usage
@@ -232,7 +246,8 @@ docker run --rm ghcr.io/tydukes/coding-style-guide:latest help
 ```
 
 Multi-platform builds (linux/amd64, linux/arm64) publish to `ghcr.io/tydukes/coding-style-guide`
-on every push to main.
+from release or `v*` tag events. Pull requests build a single-platform image for validation without
+pushing.
 
 ---
 

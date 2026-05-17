@@ -1,6 +1,6 @@
 name: Automated Release
 
-on:
+"on":
   workflow_dispatch:
     inputs:
       bump_type:
@@ -13,10 +13,41 @@ on:
           - minor
           - patch
         default: auto
+      release_version:
+        description: 'Exact version to release for partial-release recovery (for example, 1.2.3)'
+        required: false
+        type: string
+
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
+  preflight:
+    name: Release Preflight
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Validate trusted release ref
+        run: |
+          if [ "${GITHUB_REF}" != "refs/heads/main" ]; then
+            echo "::error::Releases must be dispatched from the main branch. Current ref: ${GITHUB_REF}"
+            exit 1
+          fi
+
+      - name: Validate required publish token
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "${NPM_TOKEN}" ]; then
+            echo "::error::NPM_TOKEN is required because npm publishing is part of the release path."
+            exit 1
+          fi
+
   determine-version:
     name: Determine Next Version
+    needs: preflight
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -69,9 +100,19 @@ jobs:
         run: |
           CURRENT="${{ steps.current.outputs.version }}"
           INPUT_BUMP="${{ github.event.inputs.bump_type }}"
+          INPUT_VERSION="${{ github.event.inputs.release_version }}"
           AUTO_BUMP="${{ steps.analyze.outputs.bump_type }}"
 
-          # Use manual override if provided and not 'auto'
+          if [ -n "$INPUT_VERSION" ]; then
+            if ! echo "$INPUT_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+              echo "::error::release_version must be a semantic version without the leading v."
+              exit 1
+            fi
+            echo "new_version=$INPUT_VERSION" >> $GITHUB_OUTPUT
+            echo "Using explicit recovery version: $INPUT_VERSION"
+            exit 0
+          fi
+
           if [ "$INPUT_BUMP" != "auto" ] && [ -n "$INPUT_BUMP" ]; then
             BUMP_TYPE="$INPUT_BUMP"
             echo "Using manual bump type: $BUMP_TYPE"
@@ -111,6 +152,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      issues: write
     steps:
       - uses: actions/checkout@v6
         with:
@@ -140,8 +182,12 @@ jobs:
           NEW_VERSION: ${{ needs.determine-version.outputs.new_version }}
         run: |
           git add pyproject.toml cli/package.json cli/package-lock.json
-          git commit -m "chore(release): bump version to ${NEW_VERSION}"
-          git push
+          if git diff --cached --quiet; then
+            echo "Version files already match v${NEW_VERSION}; continuing recovery path."
+          else
+            git commit -m "chore(release): bump version to ${NEW_VERSION}"
+            git push origin HEAD:main
+          fi
 
       - name: Create GitHub Release
         id: create_release
@@ -149,7 +195,13 @@ jobs:
           NEW_VERSION: ${{ needs.determine-version.outputs.new_version }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          if gh release view "v${NEW_VERSION}" >/dev/null 2>&1; then
+            echo "Release v${NEW_VERSION} already exists; continuing recovery path."
+            exit 0
+          fi
+
           gh release create "v${NEW_VERSION}" \
+            --target main \
             --title "v${NEW_VERSION}" \
             --generate-notes
           echo "Created release v${NEW_VERSION}"
@@ -183,7 +235,7 @@ jobs:
           else
             git add docs/changelog.md
             git commit -m "docs(changelog): update changelog for v${NEW_VERSION}"
-            git push
+            git push origin HEAD:main
           fi
 
       - name: Summary
@@ -204,6 +256,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v6
         with:
@@ -215,7 +268,132 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Verify package version
+        env:
+          NEW_VERSION: ${{ needs.determine-version.outputs.new_version }}
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./cli/package.json').version")
+          if [ "${PACKAGE_VERSION}" != "${NEW_VERSION}" ]; then
+            echo "::error::cli/package.json version ${PACKAGE_VERSION} does not match release ${NEW_VERSION}."
+            exit 1
+          fi
+
+      - name: Check npm publish state
+        id: npm-state
+        env:
+          NEW_VERSION: ${{ needs.determine-version.outputs.new_version }}
+        run: |
+          PACKAGE_NAME=$(node -p "require('./cli/package.json').name")
+          if npm view "${PACKAGE_NAME}@${NEW_VERSION}" version >/dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            echo "${PACKAGE_NAME}@${NEW_VERSION} is already published; skipping npm publish."
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build and publish
-        run: cd cli && npm ci && npm run build && npm publish --access public
+        if: steps.npm-state.outputs.published != 'true'
+        run: cd cli && npm ci && npm run build && npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  release-recovery:
+    name: Create Release Recovery Issue
+    needs: [preflight, determine-version, update-version, publish-cli]
+    runs-on: ubuntu-latest
+    if: always() && contains(needs.*.result, 'failure') && github.ref == 'refs/heads/main'
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - name: Create or update recovery issue
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const version = '${{ needs.determine-version.outputs.new_version }}' || 'unknown';
+            const runUrl = [
+              context.serverUrl,
+              context.repo.owner,
+              context.repo.repo,
+              'actions',
+              'runs',
+              context.runId
+            ].join('/');
+            const results = {
+              preflight: '${{ needs.preflight.result }}',
+              determineVersion: '${{ needs.determine-version.result }}',
+              updateVersionAndRelease: '${{ needs.update-version.result }}',
+              publishCli: '${{ needs.publish-cli.result }}'
+            };
+
+            const completed = Object.entries(results)
+              .filter(([, result]) => result === 'success')
+              .map(([name]) => `- ${name}`)
+              .join('\n') || '- None';
+
+            const failed = Object.entries(results)
+              .filter(([, result]) => ['failure', 'cancelled'].includes(result))
+              .map(([name, result]) => `- ${name}: ${result}`)
+              .join('\n') || '- None';
+
+            const title = version === 'unknown'
+              ? 'Release recovery required'
+              : `Release recovery required for v${version}`;
+
+            const body = `## Release Recovery
+
+            A release workflow partially failed and needs fix-forward recovery.
+
+            - **Version**: ${version}
+            - **Workflow run**: ${runUrl}
+            - **Triggered from**: ${context.ref}
+            - **Commit**: ${context.sha}
+
+            ## Completed Steps
+
+            ${completed}
+
+            ## Failed Steps
+
+            ${failed}
+
+            ## Recommended Forward-Fix Path
+
+            1. Inspect the failed job logs in the workflow run.
+            2. Check whether v${version} exists as a GitHub release, npm package, or container image.
+            3. Do not trigger a new version unless no artifacts were published.
+            4. Fix the failing automation or package state on main.
+            5. Re-run the release workflow with \`release_version=${version}\` to complete the same version.
+            6. Manually publish only the missing artifact if a full rerun would duplicate completed work.
+
+            ---
+            This issue was created automatically by the release workflow.`;
+
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'scope:automation,type:maintenance',
+              per_page: 100
+            });
+
+            const existing = issues.find((issue) => issue.title === title);
+
+            if (existing) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.number,
+                body
+              });
+              console.log(`Updated release recovery issue #${existing.number}`);
+            } else {
+              const issue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['scope:automation', 'type:maintenance', 'priority:high']
+              });
+              console.log(`Created release recovery issue #${issue.data.number}`);
+            }
