@@ -11,14 +11,15 @@ search_keywords: [dependabot, auto merge, dependency updates, github, automation
 
 ## Overview
 
-This guide explains the Dependabot auto-merge configuration for this repository, enabling automatic
-merging of dependency updates when all CI checks pass.
+This guide explains the Dependabot auto-merge configuration for this repository. The workflow enables
+GitHub auto-merge for trusted same-repository pull requests after CI succeeds, while branch
+protection and required checks still decide when the pull request can merge.
 
 ### What This Configuration Provides
 
 - ✅ **Automated Dependency Updates**: Weekly checks for Python, GitHub Actions, and Docker updates
-- ✅ **Auto-Merge for Safe Updates**: Automatic merging of patch/minor updates after checks pass
-- ✅ **Maintainer Auto-Merge**: Auto-merge support for repository maintainer PRs
+- ✅ **Auto-Merge for Safe Updates**: GitHub auto-merge enablement for patch/minor updates
+- ✅ **Maintainer Auto-Merge**: Auto-merge enablement for trusted maintainer PRs
 - ✅ **Grouped Updates**: Related dependencies updated together to reduce PR noise
 - ✅ **Security-First**: All security checks must pass before auto-merge
 
@@ -78,127 +79,47 @@ Located at `.github/workflows/auto-merge.yml`:
 name: Auto-Merge
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-  pull_request_review:
-    types: [submitted]
-  check_suite:
+  workflow_run:
+    workflows: ["CI"]
     types: [completed]
-  status: {}
 
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
-    if: |
-      github.event.pull_request.user.login == 'dependabot[bot]' ||
-      github.event.pull_request.user.login == 'tydukes'
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request'
 
     permissions:
-      contents: write
+      contents: read
       pull-requests: write
+      issues: write
 
     steps:
-      - name: Wait for status checks
-        # Ensures all CI checks pass before merge
-
-      - name: Auto-approve PR
-        # Automatically approves PR using AUTO_MERGE_TOKEN
-        # Works for both Dependabot and maintainer PRs
+      - name: Check auto-merge eligibility
+        # Allows dependabot[bot] and tydukes on same-repository branches only
 
       - name: Enable auto-merge
-        # Merges PR using squash strategy
-
-      - name: Delete branch after merge
-        # Cleans up branches after successful merge
+        # Uses GitHub auto-merge with squash strategy
 ```
 
 ## Setup Requirements
 
-### Personal Access Token (PAT)
+### Token Model
 
-This workflow uses a fine-grained Personal Access Token to bypass branch protection approval requirements,
-enabling full automation for both Dependabot and maintainer PRs.
+The workflow uses `GITHUB_TOKEN` with the narrow permissions needed to read repository contents,
+enable auto-merge, and add the policy note to the pull request.
 
-#### Why a PAT is Needed
+```yaml
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+```
 
-The default `GITHUB_TOKEN` has limitations:
-
-- ❌ Cannot approve PRs created by the same user running the workflow
-- ❌ Cannot bypass branch protection rules requiring approvals
-
-A PAT with appropriate permissions:
-
-- ✅ Can approve PRs from any user (including repository owner)
-- ✅ Can merge PRs that meet branch protection requirements
-- ✅ Enables full automation without manual intervention
-
-#### Creating the PAT
-
-1. **Navigate to GitHub Settings**:
-   - Go to: <https://github.com/settings/personal-access-tokens/new>
-   - Or: Settings → Developer settings → Personal access tokens → Fine-grained tokens
-
-2. **Configure Token Settings**:
-
-   **Token name**: `AUTO_MERGE_TOKEN`
-
-   **Expiration**: `90 days` (recommended - you'll get renewal reminders)
-
-   **Repository access**:
-   - Select: **Only select repositories**
-   - Choose: Your repository (e.g., `tydukes/coding-style-guide`)
-
-   **Permissions** (Repository permissions):
-   - `Contents`: **Read and write**
-   - `Pull requests`: **Read and write**
-   - `Metadata`: **Read-only** (automatically selected)
-
-3. **Generate and Copy Token**:
-   - Click "Generate token"
-   - **Copy the token immediately** (you'll only see it once)
-
-4. **Store as Repository Secret**:
-
-   Using GitHub CLI:
-
-   ```bash
-   # Option 1: Prompted for token
-   gh secret set AUTO_MERGE_TOKEN --repo owner/repo
-
-   # Option 2: Pipe token directly
-   echo "your_token_here" | gh secret set AUTO_MERGE_TOKEN --repo owner/repo
-   ```
-
-   Or via GitHub web UI:
-   - Go to: Repository → Settings → Secrets and variables → Actions
-   - Click "New repository secret"
-   - Name: `AUTO_MERGE_TOKEN`
-   - Value: Paste your token
-   - Click "Add secret"
-
-#### Token Renewal
-
-Fine-grained PATs expire for security. GitHub will email you before expiration:
-
-1. **7 days before**: First reminder
-2. **1 day before**: Final reminder
-3. **On expiration**: Workflow will fail
-
-To renew:
-
-1. Go to: <https://github.com/settings/tokens>
-2. Find `AUTO_MERGE_TOKEN`
-3. Click "Regenerate token"
-4. Update the repository secret with the new value
-
-#### PAT Security Best Practices
-
-- ✅ **Scope**: Limited to specific repository only
-- ✅ **Permissions**: Minimum required (contents + PRs)
-- ✅ **Expiration**: 90-day rotation enforced
-- ✅ **Auditing**: All PAT actions logged in audit log
-- ⚠️ **Storage**: Never commit the token to git
-- ⚠️ **Sharing**: Keep the token secure, don't share it
+Do not add `AUTO_MERGE_TOKEN` for this workflow. A personal access token would make it easier to
+bypass review gates, which is not the intended policy. If a future workflow truly needs a PAT,
+document the exact GitHub limitation, required scopes, expiration, and branch protection impact.
 
 ## How It Works
 
@@ -224,10 +145,10 @@ flowchart TD
     Validate --> ChecksPass
 
     ChecksPass -->|No| End2([Manual Review Required])
-    ChecksPass -->|Yes| Approve[Auto-Approve PR]
+    ChecksPass -->|Yes| Enable[Enable GitHub Auto-Merge]
 
-    Approve --> Merge[Auto-Merge PR]
-    Merge --> Cleanup[Delete Branch]
+    Enable --> Merge[GitHub Merges When All Required Checks Pass]
+    Merge --> Cleanup[Repository Branch Cleanup Policy Applies]
     Cleanup --> End3([✅ Complete])
 ```
 
@@ -235,19 +156,20 @@ flowchart TD
 
 The auto-merge workflow triggers on:
 
-1. **PR Events**: When a PR is opened, synchronized, or reopened
-2. **Review Events**: When a review is submitted
-3. **Check Suite Events**: When CI checks complete
-4. **Status Events**: When commit statuses update
+1. **CI Completion**: The `CI` workflow completes successfully
+2. **Pull Request Source**: The CI run came from a pull request
+3. **Same Repository Branch**: The pull request branch belongs to this repository
 
 ### Merge Criteria
 
-A PR is auto-merged when:
+A PR has auto-merge enabled when:
 
 1. ✅ **Author Check**: PR is from `dependabot[bot]` or `tydukes`
-2. ✅ **CI Checks**: All required checks pass
-3. ✅ **Status Checks**: Combined status is "success"
-4. ✅ **Mergeable State**: No merge conflicts
+2. ✅ **Repository Check**: PR branch is in the same repository, not a fork
+3. ✅ **CI Check**: The `CI` workflow completed successfully
+
+GitHub merges the PR only after branch protection is satisfied. Required checks, required reviews,
+merge conflicts, and repository auto-merge settings still apply.
 
 ## Update Grouping Strategy
 
@@ -308,31 +230,31 @@ Before auto-merge, the following must pass:
 3. **Metadata Validation**: All frontmatter is valid
 4. **No Merge Conflicts**: PR is mergeable
 
-## Maintainer Auto-Merge
+## Maintainer Auto-Merge Enablement
 
-The workflow supports full auto-merge for repository maintainer (@tydukes):
+The workflow supports auto-merge enablement for repository maintainer (@tydukes):
 
 ```yaml
-if: |
-  github.event.pull_request.user.login == 'dependabot[bot]' ||
-  github.event.pull_request.user.login == 'tydukes'
+trusted_auto_merge_authors:
+  - dependabot[bot]
+  - tydukes
 ```
 
 ### How Maintainer Auto-Merge Works
 
-With the `AUTO_MERGE_TOKEN` configured:
+With `GITHUB_TOKEN` permissions configured:
 
-1. ✅ **Auto-Approval**: PAT approves the PR (bypasses self-approval restriction)
-2. ✅ **Branch Protection**: Approval requirement satisfied
-3. ✅ **Auto-Merge**: PR merges automatically when checks pass
-4. ✅ **Branch Cleanup**: Feature branch deleted after merge
+1. ✅ **Eligibility Check**: Workflow confirms trusted author and same-repository branch
+2. ✅ **Auto-Merge Enablement**: GitHub auto-merge is enabled with squash strategy
+3. ✅ **Branch Protection**: Required checks and reviews remain enforced
+4. ✅ **Merge**: GitHub merges when the PR becomes mergeable
 
 ### Benefits for Sole Maintainer
 
-- **Zero Manual Steps**: Create PR → Wait for CI → Automatic merge
+- **Reduced Manual Steps**: Create PR → Wait for CI → GitHub auto-merge enabled
 - **Fast Iteration**: Quick documentation fixes and updates
 - **Consistent Process**: Same workflow for dependencies and feature work
-- **Future-Proof**: Branch protection already in place for future contributors
+- **Future-Proof**: Branch protection remains in place for future contributors
 
 ### Use Cases
 
@@ -384,15 +306,14 @@ gh run view <run-id>
 
 **Issue**: PAT authentication errors
 
-- **Check**: Verify `AUTO_MERGE_TOKEN` secret exists in repository settings
-- **Check**: Ensure PAT hasn't expired (check email notifications)
-- **Solution**: Regenerate PAT and update repository secret
+- **Cause**: The workflow should not use a PAT
+- **Solution**: Remove `AUTO_MERGE_TOKEN` usage and rely on `GITHUB_TOKEN`
 
 **Issue**: "Resource not accessible by integration" error
 
-- **Check**: Verify PAT has `contents: write` and `pull_requests: write` permissions
-- **Check**: Ensure PAT is scoped to the correct repository
-- **Solution**: Recreate PAT with proper permissions
+- **Check**: Verify workflow permissions include `pull-requests: write`
+- **Check**: Verify the PR is not from a fork
+- **Solution**: Use normal maintainer review for outside-contributor PRs
 
 ### GitHub Permissions Required
 
@@ -400,8 +321,9 @@ The auto-merge workflow requires:
 
 ```yaml
 permissions:
-  contents: write        # To merge PRs
-  pull-requests: write   # To approve and manage PRs
+  contents: read         # To read repository metadata
+  pull-requests: write   # To enable GitHub auto-merge
+  issues: write          # To add the auto-merge policy note
 ```
 
 These are granted at the job level in the workflow.
@@ -459,12 +381,12 @@ To add more ecosystems (e.g., npm, cargo):
 Change from squash to merge or rebase:
 
 ```javascript
-merge_method: 'merge'    // Options: merge, squash, rebase
+mergeMethod: 'MERGE'    // Options: MERGE, SQUASH, REBASE
 ```
 
-### Custom Approval Logic
+### Custom Eligibility Logic
 
-Add additional checks before auto-approve:
+Add additional checks before auto-merge enablement:
 
 ```javascript
 // Check changelog for breaking changes
@@ -477,6 +399,7 @@ if (changelog.includes('BREAKING')) {
 ## Related Documentation
 
 - [GitHub Actions Guide](./github_actions_guide.md) - Complete CI/CD patterns
+- [Release Automation](./release_automation.md) - Release, publishing, and recovery policy
 - [GitHub Actions Language Guide](../02_language_guides/github_actions.md) - YAML syntax
 - [Pre-commit Hooks Guide](./precommit_hooks_guide.md) - Local validation
 
@@ -489,4 +412,4 @@ if (changelog.includes('BREAKING')) {
 ---
 
 **Note**: This configuration is designed for a single-maintainer repository with trusted dependency
-sources. Adjust security controls for multi-contributor projects.
+sources. Outside-contributor pull requests follow the normal review and branch protection path.

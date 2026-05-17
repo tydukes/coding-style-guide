@@ -2,8 +2,9 @@ name: Build and Publish Container
 
 "on":
   push:
-    branches: [main]
     tags: ['v*']
+  release:
+    types: [published]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -15,10 +16,14 @@ env:
 permissions:
   contents: read
   packages: write
+  issues: write
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    concurrency:
+      group: container-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - name: Checkout repository
@@ -41,12 +46,11 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=latest,enable=${{ github.event_name != 'pull_request' }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
@@ -93,3 +97,73 @@ jobs:
           name: sbom
           path: sbom.spdx.json
           retention-days: 30
+
+  create-recovery-issue:
+    name: Create Container Recovery Issue
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: always() && needs.build-and-push.result == 'failure' && github.event_name != 'pull_request'
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Create or update recovery issue
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const refName = context.ref.replace('refs/tags/', '').replace('refs/heads/', '');
+            const runUrl = [
+              context.serverUrl,
+              context.repo.owner,
+              context.repo.repo,
+              'actions',
+              'runs',
+              context.runId
+            ].join('/');
+            const title = `Container publishing recovery required for ${refName}`;
+            const body = `## Container Publishing Recovery
+
+            Container publishing failed for a trusted release or tag event.
+
+            - **Ref**: ${context.ref}
+            - **Workflow run**: ${runUrl}
+            - **Commit**: ${context.sha}
+
+            ## Recommended Forward-Fix Path
+
+            1. Inspect the failed container build or push logs.
+            2. Check whether any expected image tags already exist in GHCR.
+            3. Fix the issue on main without changing the intended release version.
+            4. Re-run this workflow for ${refName} or publish only the missing image tags.
+
+            ---
+            This issue was created automatically by the container workflow.`;
+
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'scope:automation,type:maintenance',
+              per_page: 100
+            });
+
+            const existing = issues.find((issue) => issue.title === title);
+
+            if (existing) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.number,
+                body
+              });
+              console.log(`Updated container recovery issue #${existing.number}`);
+            } else {
+              const issue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['scope:automation', 'type:maintenance', 'priority:high']
+              });
+              console.log(`Created container recovery issue #${issue.data.number}`);
+            }
