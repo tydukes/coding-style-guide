@@ -21,7 +21,7 @@ function validatePluginPath(resolvedPath: string): void {
   const cwd = process.cwd();
   const allowedRoots = [
     join(cwd, "node_modules"),
-    join(cwd, ".dukestyle", "plugins"),
+    join(cwd, ".devops-style", "plugins"),
     join(cwd, "plugins"),
   ];
 
@@ -41,7 +41,7 @@ function validatePluginPath(resolvedPath: string): void {
   if (!isAllowed) {
     throw new Error(
       `Plugin path not allowed: ${resolvedPath}. ` +
-      `Plugins must be in node_modules, .dukestyle/plugins, or plugins directory.`
+      `Plugins must be in node_modules, .devops-style/plugins, or plugins directory.`
     );
   }
 }
@@ -91,7 +91,7 @@ export async function loadPlugin(config: PluginConfig): Promise<Plugin> {
     // Package name - look in standard locations only
     const possiblePaths = [
       join(cwd, "node_modules", pluginPath),
-      join(cwd, ".dukestyle", "plugins", pluginPath),
+      join(cwd, ".devops-style", "plugins", pluginPath),
     ];
 
     const foundPath = possiblePaths.find((p) => existsSync(p));
@@ -197,7 +197,7 @@ export function createPluginTemplate(name: string): string {
 
 /**
  * Plugin definition
- * @type {import('devops-engineering-style-guide').Plugin}
+ * @type {import('@tydukes-npm/devops-style').Plugin}
  */
 export default {
   name: '${name}',
@@ -215,7 +215,7 @@ export default {
        * Check files for issues
        * @param {string[]} files - Files to check
        * @param {object} config - Linter configuration
-       * @returns {Promise<import('devops-engineering-style-guide').LintResult[]>}
+       * @returns {Promise<import('@tydukes-npm/devops-style').LintResult[]>}
        */
       async check(files, config) {
         const results = [];
@@ -237,7 +237,7 @@ export default {
        * Fix issues in files (optional)
        * @param {string[]} files - Files to fix
        * @param {object} config - Linter configuration
-       * @returns {Promise<import('devops-engineering-style-guide').LintResult[]>}
+       * @returns {Promise<import('@tydukes-npm/devops-style').LintResult[]>}
        */
       async fix(files, config) {
         const results = [];
@@ -271,7 +271,7 @@ export default {
        * Check content for rule violations
        * @param {string} content - File content
        * @param {string} file - File path
-       * @returns {import('devops-engineering-style-guide').LintIssue[]}
+       * @returns {import('@tydukes-npm/devops-style').LintIssue[]}
        */
       check(content, file) {
         const issues = [];

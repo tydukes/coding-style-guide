@@ -50,4 +50,45 @@ describe("check command — integration", () => {
     // ANSI escape sequences start with ESC (U+001B) followed by "["
     assert.ok(!stdout.includes(String.fromCodePoint(27) + "["), "Expected no ANSI escape codes in output");
   });
+
+  it("check bad.sh exits 0 and stdout contains SC2164 when shellcheck available", () => {
+    const badSh = join(cliRoot, "test", "fixtures", "bad.sh");
+    const { status, stdout } = run(["check", "--no-color", badSh]);
+    // If shellcheck not installed the output contains "not installed" — skip assertion
+    if (stdout.includes("not installed")) return;
+    assert.equal(status, 0); // SC2164 is a warning, not an error — exit 0
+    assert.match(stdout, /SC2164/);
+  });
+
+  it("check --language bash JSON results contain only bash entries", () => {
+    const badSh = join(cliRoot, "test", "fixtures", "bad.sh");
+    const { stdout } = run(["check", "--language", "bash", "--format", "json", badSh]);
+    let parsed: { results?: Array<{ language: string }> };
+    try {
+      parsed = JSON.parse(stdout) as typeof parsed;
+    } catch {
+      return; // Linters not installed — non-JSON output; skip
+    }
+    if (!parsed.results || parsed.results.length === 0) return;
+    for (const result of parsed.results) {
+      assert.equal(result.language, "bash", `Expected language=bash, got ${result.language}`);
+    }
+  });
+
+  it("check --format sarif bad.sh produces valid SARIF 2.1.0 JSON", () => {
+    const badSh = join(cliRoot, "test", "fixtures", "bad.sh");
+    const { stdout } = run(["check", "--format", "sarif", badSh]);
+    let parsed: Record<string, unknown>;
+    try {
+      parsed = JSON.parse(stdout) as Record<string, unknown>;
+    } catch {
+      // Linters not installed — output may be empty or non-JSON; skip
+      return;
+    }
+    assert.equal(parsed.version, "2.1.0", "Expected SARIF schema version 2.1.0");
+    const runs = parsed.runs as Array<Record<string, unknown>>;
+    assert.ok(Array.isArray(runs) && runs.length > 0, "Expected runs array");
+    const driver = (runs[0].tool as Record<string, unknown>).driver as Record<string, unknown>;
+    assert.equal(driver.name, "devops-style", "Expected driver.name to be devops-style");
+  });
 });

@@ -2,7 +2,7 @@
 title: "Integration Guide"
 description: "Guide for integrating style standards with AI assistants and development workflows"
 author: "Tyler Dukes"
-tags: [integration, ai, claude, workflow, automation]
+tags: [integration, ai, workflow, automation]
 category: "Integration"
 status: "active"
 search_keywords: [integration, ai, prompt, code review, style guide, automation]
@@ -12,7 +12,7 @@ Use this prompt to quickly integrate the coding style guide validator into any c
 
 ---
 
-## Copy-Paste Prompt for Claude Code
+## Copy-Paste Prompt for AI Coding Assistants
 
 ```markdown
 I need to integrate the coding style guide validator into this repository. The validator is

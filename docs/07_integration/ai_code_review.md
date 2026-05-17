@@ -5,7 +5,7 @@ author: "Tyler Dukes"
 tags: [ai, code-review, github-copilot, coderabbit, automation, integration]
 category: "Integration"
 status: "active"
-search_keywords: [ai code review, automated review, claude, copilot, code quality, pull request]
+search_keywords: [ai code review, automated review, ai assistant, copilot, code quality, pull request]
 ---
 
 ## Overview
@@ -20,7 +20,7 @@ integrating GitHub Copilot, CodeRabbit, and other AI review tools.
 |------|---------|-------------------|
 | GitHub Copilot | Code suggestions, workspace-aware assistance | IDE, CLI |
 | CodeRabbit | Automated PR review and suggestions | GitHub/GitLab |
-| Claude Code | Multi-language code review and generation | CLI, IDE |
+| AI coding assistants | Multi-language code review and generation | CLI, IDE |
 | Amazon CodeGuru | Security and performance recommendations | AWS-native |
 | Sourcery | Python-specific code improvement | GitHub, IDE |
 
@@ -148,7 +148,7 @@ aliases:
 context:
   - type: file
     patterns:
-      - "CLAUDE.md"
+      - "AGENTS.md"
       - "README.md"
       - "pyproject.toml"
       - "package.json"
