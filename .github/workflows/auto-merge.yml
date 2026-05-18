@@ -82,6 +82,7 @@ jobs:
         if: steps.pr-details.outputs.pr_number != ''
         uses: actions/github-script@v9
         with:
+          github-token: ${{ secrets.AUTO_MERGE_TOKEN }}
           script: |
             const prNumber = ${{ steps.pr-details.outputs.pr_number }};
             const { data: pr } = await github.rest.pulls.get({

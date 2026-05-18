@@ -107,19 +107,25 @@ jobs:
 
 ### Token Model
 
-The workflow uses `GITHUB_TOKEN` with the narrow permissions needed to read repository contents,
-enable auto-merge, and add the policy note to the pull request.
+The workflow uses the default `GITHUB_TOKEN` for repository reads and pull request comments. It uses
+`AUTO_MERGE_TOKEN` only for the GitHub auto-merge enablement mutation because GitHub rejected that
+operation from the `workflow_run` event when attempted with `GITHUB_TOKEN`.
 
 ```yaml
 permissions:
   contents: read
   pull-requests: write
   issues: write
+
+secrets:
+  AUTO_MERGE_TOKEN:
+    use: enable GitHub auto-merge for trusted same-repository PRs
+    permissions:
+      - Pull requests: read and write
 ```
 
-Do not add `AUTO_MERGE_TOKEN` for this workflow. A personal access token would make it easier to
-bypass review gates, which is not the intended policy. If a future workflow truly needs a PAT,
-document the exact GitHub limitation, required scopes, expiration, and branch protection impact.
+`AUTO_MERGE_TOKEN` must not approve reviews, merge pull requests directly, delete branches, push to
+protected branches, or bypass branch protection.
 
 ## How It Works
 
@@ -242,7 +248,7 @@ trusted_auto_merge_authors:
 
 ### How Maintainer Auto-Merge Works
 
-With `GITHUB_TOKEN` permissions configured:
+With `AUTO_MERGE_TOKEN` configured for the enablement call:
 
 1. ✅ **Eligibility Check**: Workflow confirms trusted author and same-repository branch
 2. ✅ **Auto-Merge Enablement**: GitHub auto-merge is enabled with squash strategy
@@ -306,8 +312,9 @@ gh run view <run-id>
 
 **Issue**: PAT authentication errors
 
-- **Cause**: The workflow should not use a PAT
-- **Solution**: Remove `AUTO_MERGE_TOKEN` usage and rely on `GITHUB_TOKEN`
+- **Check**: Verify `AUTO_MERGE_TOKEN` exists in repository secrets
+- **Check**: Verify the token has pull request read/write permission for this repository
+- **Solution**: Rotate the token if it has expired or lost repository access
 
 **Issue**: "Resource not accessible by integration" error
 
