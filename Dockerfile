@@ -1,7 +1,7 @@
 # Multi-stage build for coding style guide validator
 
 # Stage 1: install CLI npm production dependencies
-FROM node:20-slim AS cli-deps
+FROM node:26-slim AS cli-deps
 WORKDIR /app/cli
 COPY cli/package.json cli/package-lock.json ./
 RUN npm ci --omit=dev
