@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   update-dashboard:
@@ -52,14 +53,39 @@ jobs:
         run: |
           git diff --quiet docs/project_status.md || echo "changed=true" >> $GITHUB_OUTPUT
 
-      - name: Commit and push changes
+      - name: Open dashboard update PR
         if: steps.check_changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          BRANCH="automation/project-dashboard"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin "${BRANCH}" > /dev/null 2>&1; then
+            git fetch --no-tags origin "refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}"
+          fi
+          git switch -C "${BRANCH}"
           git add docs/project_status.md
-          git commit -m "chore: update project health dashboard [skip ci]"
-          git push
+          git commit -m "docs(dashboard): update project health"
+          git push --force-with-lease origin "${BRANCH}"
+
+          PR_NUMBER=$(gh pr list \
+            --repo "${GITHUB_REPOSITORY}" \
+            --head "${BRANCH}" \
+            --state open \
+            --json number \
+            --jq '.[0].number')
+
+          if [ -n "${PR_NUMBER}" ]; then
+            echo "Dashboard update PR already open: #${PR_NUMBER}"
+          else
+            gh pr create \
+              --repo "${GITHUB_REPOSITORY}" \
+              --base main \
+              --head "${BRANCH}" \
+              --title "docs(dashboard): update project health" \
+              --body "Automated project health dashboard refresh."
+          fi
 
       - name: Summary
         run: |
