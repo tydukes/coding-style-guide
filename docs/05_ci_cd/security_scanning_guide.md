@@ -5427,7 +5427,7 @@ We will not pursue legal action against researchers who:
 
 ### Container and Infrastructure Security
 
-- [Trivy Documentation](https://aquasecurity.github.io/trivy/)
+- [Trivy Documentation](https://trivy.dev/)
 - [Checkov Documentation](https://www.checkov.io/1.Welcome/What%20is%20Checkov.html)
 - [tfsec Documentation](https://aquasecurity.github.io/tfsec/)
 - [kube-bench Documentation](https://github.com/aquasecurity/kube-bench)
