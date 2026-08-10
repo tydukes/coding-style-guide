@@ -7,7 +7,7 @@ COPY cli/package.json cli/package-lock.json ./
 RUN npm ci --omit=dev
 
 # Stage 2: final image
-FROM python:3.15.0b1-slim AS base
+FROM python:3.15.0rc1-slim AS base
 
 # Install system dependencies, UV, and Node.js runtime
 RUN apt-get update && apt-get install -y --no-install-recommends \
