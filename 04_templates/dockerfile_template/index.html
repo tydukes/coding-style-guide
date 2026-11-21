@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7476,10 +7476,10 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 
 <span class="c">## Health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>CMD<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import urllib.request; urllib.request.urlopen(&#39;http://localhost:8000/health&#39;)&quot;</span>
+<span class="w">    </span>CMD<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"</span>
 
 <span class="c">## Run application</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;uvicorn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;app.main:app&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--port&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;8000&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"python"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-m"</span><span class="p">,</span><span class="w"> </span><span class="s2">"uvicorn"</span><span class="p">,</span><span class="w"> </span><span class="s2">"app.main:app"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--host"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--port"</span><span class="p">,</span><span class="w"> </span><span class="s2">"8000"</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="nodejs-typescript-application">Node.js / TypeScript Application<a class="headerlink" href="#nodejs-typescript-application" title="Permanent link">&para;</a></h2>
@@ -7529,13 +7529,13 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 
 <span class="c">## Health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>CMD<span class="w"> </span>node<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;require(&#39;http&#39;).get(&#39;http://localhost:3000/health&#39;, (r) =&gt; {process.exit(r.statusCode === 200 ? 0 : 1)})&quot;</span>
+<span class="w">    </span>CMD<span class="w"> </span>node<span class="w"> </span>-e<span class="w"> </span><span class="s2">"require('http').get('http://localhost:3000/health', (r) =&gt; {process.exit(r.statusCode === 200 ? 0 : 1)})"</span>
 
 <span class="c">## Use dumb-init to handle signals properly</span>
-<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dumb-init&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--&quot;</span><span class="p">]</span>
+<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">"dumb-init"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--"</span><span class="p">]</span>
 
 <span class="c">## Run application</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dist/index.js"</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="go-application">Go Application<a class="headerlink" href="#go-application" title="Permanent link">&para;</a></h2>
@@ -7559,7 +7559,7 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 
 <span class="c">## Build application with optimizations</span>
 <span class="k">RUN</span><span class="w"> </span><span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">GOOS</span><span class="o">=</span>linux<span class="w"> </span><span class="nv">GOARCH</span><span class="o">=</span>amd64<span class="w"> </span>go<span class="w"> </span>build<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-ldflags<span class="o">=</span><span class="s1">&#39;-w -s -extldflags &quot;-static&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-ldflags<span class="o">=</span><span class="s1">'-w -s -extldflags "-static"'</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-a<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-o<span class="w"> </span>/app/server<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>./cmd/server
@@ -7576,11 +7576,11 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 <span class="c">## Expose application port</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
 
-<span class="c">## Health check (note: scratch doesn&#39;t have shell, so limited options)</span>
+<span class="c">## Health check (note: scratch doesn't have shell, so limited options)</span>
 <span class="c">## For health checks, consider using a sidecar or external monitoring</span>
 
 <span class="c">## Run application</span>
-<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/server&quot;</span><span class="p">]</span>
+<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">"/server"</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="react-nextjs-application">React / Next.js Application<a class="headerlink" href="#react-nextjs-application" title="Permanent link">&para;</a></h2>
@@ -7642,11 +7642,11 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 
 <span class="c">## Health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>10s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>CMD<span class="w"> </span>node<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;require(&#39;http&#39;).get(&#39;http://localhost:3000&#39;, (r) =&gt; {process.exit(r.statusCode === 200 ? 0 : 1)})&quot;</span>
+<span class="w">    </span>CMD<span class="w"> </span>node<span class="w"> </span>-e<span class="w"> </span><span class="s2">"require('http').get('http://localhost:3000', (r) =&gt; {process.exit(r.statusCode === 200 ? 0 : 1)})"</span>
 
 <span class="c">## Run application</span>
-<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dumb-init&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--&quot;</span><span class="p">]</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.js&quot;</span><span class="p">]</span>
+<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">"dumb-init"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--"</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"server.js"</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="django-application">Django Application<a class="headerlink" href="#django-application" title="Permanent link">&para;</a></h2>
@@ -7712,10 +7712,10 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 
 <span class="c">## Health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>10s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>CMD<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import urllib.request; urllib.request.urlopen(&#39;http://localhost:8000/health/&#39;)&quot;</span>
+<span class="w">    </span>CMD<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import urllib.request; urllib.request.urlopen('http://localhost:8000/health/')"</span>
 
 <span class="c">## Run application with gunicorn</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;gunicorn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--bind&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0:8000&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--workers&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;config.wsgi:application&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"gunicorn"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--bind"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0.0.0.0:8000"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--workers"</span><span class="p">,</span><span class="w"> </span><span class="s2">"4"</span><span class="p">,</span><span class="w"> </span><span class="s2">"config.wsgi:application"</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="nginx-static-site">Nginx Static Site<a class="headerlink" href="#nginx-static-site" title="Permanent link">&para;</a></h2>
@@ -7770,7 +7770,7 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 <span class="w">    </span>CMD<span class="w"> </span>wget<span class="w"> </span>--no-verbose<span class="w"> </span>--tries<span class="o">=</span><span class="m">1</span><span class="w"> </span>--spider<span class="w"> </span>http://localhost:8080/<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 
 <span class="c">## Run nginx</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;nginx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-g&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;daemon off;&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"nginx"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-g"</span><span class="p">,</span><span class="w"> </span><span class="s2">"daemon off;"</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="development-vs-production">Development vs Production<a class="headerlink" href="#development-vs-production" title="Permanent link">&para;</a></h2>
@@ -7791,7 +7791,7 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
 
 <span class="c">## Enable hot reload</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;run&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"npm"</span><span class="p">,</span><span class="w"> </span><span class="s2">"run"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dev"</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="production-dockerfile">Production Dockerfile<a class="headerlink" href="#production-dockerfile" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## Production Dockerfile (optimized)</span>
@@ -7820,8 +7820,8 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
 
-<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dumb-init&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--&quot;</span><span class="p">]</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
+<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">"dumb-init"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--"</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dist/index.js"</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
@@ -7839,7 +7839,7 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 <span class="c">## 4. Use minimal base images</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">alpine:3.19</span><span class="w">  </span><span class="c"># Or scratch for Go apps</span>
 
-<span class="c">## 5. Don&#39;t include secrets</span>
+<span class="c">## 5. Don't include secrets</span>
 <span class="c">## Use build args or secret mounts instead</span>
 <span class="k">RUN</span><span class="w"> </span>--mount<span class="o">=</span><span class="nv">type</span><span class="o">=</span>secret,id<span class="o">=</span>npmrc,target<span class="o">=</span>/root/.npmrc<span class="w"> </span>npm<span class="w"> </span>install
 </code></pre></div>
@@ -7856,7 +7856,7 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 <span class="c">## *.md</span>
 
 <span class="c">## 3. Multi-stage builds to reduce image size</span>
-<span class="k">FROM</span><span class="w"> </span><span class="s">builder</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span><span class="w">  </span>#<span class="w"> </span>Only<span class="w"> </span>copy<span class="w"> </span>what<span class="err">&#39;</span>s<span class="w"> </span>needed
+<span class="k">FROM</span><span class="w"> </span><span class="s">builder</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span><span class="w">  </span>#<span class="w"> </span>Only<span class="w"> </span>copy<span class="w"> </span>what<span class="err">'</span>s<span class="w"> </span>needed
 
 <span class="c">## 4. Combine RUN commands to reduce layers</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
@@ -7873,11 +7873,11 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 
 <span class="c">## Python health check (no curl)</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>CMD<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import urllib.request; urllib.request.urlopen(&#39;http://localhost:8000/health&#39;)&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="w">    </span>CMD<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 
 <span class="c">## Node.js health check</span>
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>CMD<span class="w"> </span>node<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;require(&#39;http&#39;).get(&#39;http://localhost:3000/health&#39;, (r) =&gt; {process.exit(r.statusCode === 200 ? 0 : 1)})&quot;</span>
+<span class="w">    </span>CMD<span class="w"> </span>node<span class="w"> </span>-e<span class="w"> </span><span class="s2">"require('http').get('http://localhost:3000/health', (r) =&gt; {process.exit(r.statusCode === 200 ? 0 : 1)})"</span>
 </code></pre></div>
 <hr />
 <h2 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h2>
@@ -7889,9 +7889,9 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 <span class="k">ARG</span><span class="w"> </span>VERSION
 <span class="k">ARG</span><span class="w"> </span>REVISION
 
-<span class="k">LABEL</span><span class="w"> </span>org.opencontainers.image.created<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BUILD_DATE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.version<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.revision<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">REVISION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">LABEL</span><span class="w"> </span>org.opencontainers.image.created<span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">BUILD_DATE</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.version<span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.revision<span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">REVISION</span><span class="si">}</span><span class="s2">"</span>
 </code></pre></div>
 <h3 id="using-secrets-during-build">Using Secrets During Build<a class="headerlink" href="#using-secrets-during-build" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## Mount secrets without storing in layers</span>
@@ -7909,14 +7909,14 @@ across all languages and frameworks. Multi-stage builds reduce image size, impro
 <span class="k">FROM</span><span class="w"> </span><span class="s">base</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">development</span>
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>install
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;run&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"npm"</span><span class="p">,</span><span class="w"> </span><span class="s2">"run"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dev"</span><span class="p">]</span>
 
 <span class="c">## Production stage</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">base</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dist/index.js"</span><span class="p">]</span>
 
 <span class="c">## Build with: docker build --target production -t myapp:prod .</span>
 </code></pre></div>
@@ -8003,7 +8003,7 @@ docker-compose*.yml
 
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/server<span class="w"> </span>/server
 
-<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/server&quot;</span><span class="p">]</span>
+<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">"/server"</span><span class="p">]</span>
 
 <span class="c">## Build with: docker buildx build --platform linux/amd64,linux/arm64 -t myapp .</span>
 </code></pre></div>
@@ -8174,10 +8174,10 @@ docker-compose*.yml
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

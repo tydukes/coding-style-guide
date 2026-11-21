@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -8197,7 +8197,7 @@ and other infrastructure automation technologies.</p>
 <p><strong>Testing infrastructure code is not optional—it's a fundamental requirement for production readiness.</strong></p>
 <h3 id="shift-left-testing">Shift-Left Testing<a class="headerlink" href="#shift-left-testing" title="Permanent link">&para;</a></h3>
 <p>Catch issues as early as possible in the development cycle:</p>
-<div class="highlight"><pre><span></span><code>Developer&#39;s    Commit    CI        Integration   Production
+<div class="highlight"><pre><span></span><code>Developer's    Commit    CI        Integration   Production
   Machine       Hook    Pipeline     Testing      Deployment
      |            |        |             |             |
      ▼            ▼        ▼             ▼             ▼
@@ -8373,7 +8373,7 @@ and other infrastructure automation technologies.</p>
 ✓ CloudTrail enabled in all regions
 ✓ S3 buckets have encryption enabled
 ✓ VPC Flow Logs enabled
-✓ Security groups don&#39;t allow 0.0.0.0/0 on sensitive ports
+✓ Security groups don't allow 0.0.0.0/0 on sensitive ports
 ✓ EBS volumes encrypted
 ✓ RDS instances have backup enabled
 </code></pre></div>
@@ -8680,11 +8680,11 @@ and other infrastructure automation technologies.</p>
 </ul>
 <p><strong>Example Test Fixture</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># tests/fixtures/test_config.yml</span>
-<span class="nt">vpc_cidr</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10.0.0.0/16&quot;</span>
-<span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
-<span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test-project&quot;</span>
+<span class="nt">vpc_cidr</span><span class="p">:</span><span class="w"> </span><span class="s">"10.0.0.0/16"</span>
+<span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="s">"test"</span>
+<span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="s">"test-project"</span>
 <span class="c1"># DO NOT use real values</span>
-<span class="nt">aws_account_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;123456789012&quot;</span><span class="w">  </span><span class="c1"># Fake account</span>
+<span class="nt">aws_account_id</span><span class="p">:</span><span class="w"> </span><span class="s">"123456789012"</span><span class="w">  </span><span class="c1"># Fake account</span>
 </code></pre></div>
 <h3 id="fixture-and-mock-usage">Fixture and Mock Usage<a class="headerlink" href="#fixture-and-mock-usage" title="Permanent link">&para;</a></h3>
 <p><strong>When to Use Fixtures</strong>:</p>
@@ -8701,15 +8701,15 @@ and other infrastructure automation technologies.</p>
 </ul>
 <p><strong>Example Mock</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Mock AWS API responses in unit tests</span>
-<span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;boto3.client&#39;</span><span class="p">)</span>
+<span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">'boto3.client'</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_s3_bucket_creation</span><span class="p">(</span><span class="n">mock_boto</span><span class="p">):</span>
     <span class="n">mock_s3</span> <span class="o">=</span> <span class="n">mock_boto</span><span class="o">.</span><span class="n">return_value</span>
-    <span class="n">mock_s3</span><span class="o">.</span><span class="n">create_bucket</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Location&#39;</span><span class="p">:</span> <span class="s1">&#39;/test-bucket&#39;</span><span class="p">}</span>
+    <span class="n">mock_s3</span><span class="o">.</span><span class="n">create_bucket</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'Location'</span><span class="p">:</span> <span class="s1">'/test-bucket'</span><span class="p">}</span>
 
     <span class="c1"># Test code that creates S3 bucket</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">create_bucket</span><span class="p">(</span><span class="s1">&#39;test-bucket&#39;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">create_bucket</span><span class="p">(</span><span class="s1">'test-bucket'</span><span class="p">)</span>
 
-    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Location&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/test-bucket&#39;</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s1">'Location'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'/test-bucket'</span>
     <span class="n">mock_s3</span><span class="o">.</span><span class="n">create_bucket</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="6-quality-gates">6. Quality Gates<a class="headerlink" href="#6-quality-gates" title="Permanent link">&para;</a></h2>
@@ -8742,7 +8742,7 @@ Allow Merge      Allow Merge          Block Merge
 <p><strong>Implementation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># GitLab CI</span>
 <span class="nt">lint:terraform</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform fmt -check || echo &quot;⚠️ Formatting issues detected&quot;</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform fmt -check || echo "⚠️ Formatting issues detected"</span>
 <span class="w">  </span><span class="nt">allow_failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
 <span class="c1"># GitHub Actions</span>
@@ -8798,7 +8798,7 @@ terraform fmt -recursive
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform fmt -check</span>
 <span class="w">  </span><span class="nt">allow_failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$ENFORCEMENT_PHASE == &quot;strict&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$ENFORCEMENT_PHASE == "strict"</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span><span class="w">  </span><span class="c1"># Always strict on main</span>
 
 <span class="c1"># GitHub Actions</span>
@@ -8861,8 +8861,8 @@ terraform fmt -recursive
 <span class="nt">emergency-bypass</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">      </span><span class="no">if echo &quot;$CI_COMMIT_MESSAGE&quot; | grep -q &quot;\[emergency-bypass\]&quot;; then</span>
-<span class="w">        </span><span class="no">echo &quot;🚨 Emergency bypass detected&quot;</span>
+<span class="w">      </span><span class="no">if echo "$CI_COMMIT_MESSAGE" | grep -q "\[emergency-bypass\]"; then</span>
+<span class="w">        </span><span class="no">echo "🚨 Emergency bypass detected"</span>
 <span class="w">        </span><span class="no"># Post to Slack, create ticket</span>
 <span class="w">        </span><span class="no">./scripts/notify_emergency_bypass.sh</span>
 <span class="w">      </span><span class="no">fi</span>
@@ -9149,38 +9149,38 @@ gitlab-ci-local<span class="w"> </span>--job<span class="w"> </span>lint:terrafo
 </ul>
 <p><strong>Example Compliance Evidence</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;report_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;compliance_verification&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-01-15T10:30:00Z&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;module&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vpc-module-v1.2.0&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;commit_sha&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc123def456&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;pull_request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/org/repo/pull/123&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;tests_executed&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;passed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;failed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;skipped&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nt">"report_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"compliance_verification"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-01-15T10:30:00Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"module"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vpc-module-v1.2.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"commit_sha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abc123def456"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"pull_request"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://github.com/org/repo/pull/123"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"tests_executed"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"passed"</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"failed"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"skipped"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;compliance_checks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;cis_aws_foundations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;passed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;failed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;score&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;100%&quot;</span>
+<span class="w">  </span><span class="nt">"compliance_checks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"cis_aws_foundations"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"passed"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"failed"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100%"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;pci_dss&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;passed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;failed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;score&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;100%&quot;</span>
+<span class="w">    </span><span class="nt">"pci_dss"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"passed"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"failed"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100%"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;evidence_files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;artifacts/junit-report.xml&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;artifacts/inspec-results.json&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;artifacts/coverage-report.xml&quot;</span>
+<span class="w">  </span><span class="nt">"evidence_files"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"artifacts/junit-report.xml"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"artifacts/inspec-results.json"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"artifacts/coverage-report.xml"</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;approved_by&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tech-lead@example.com&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;verification_signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha256:...&quot;</span>
+<span class="w">  </span><span class="nt">"approved_by"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tech-lead@example.com"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"verification_signature"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sha256:..."</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="audit-trail-maintenance">Audit Trail Maintenance<a class="headerlink" href="#audit-trail-maintenance" title="Permanent link">&para;</a></h3>
@@ -9203,8 +9203,8 @@ gitlab-ci-local<span class="w"> </span>--job<span class="w"> </span>lint:terrafo
 <div class="highlight"><pre><span></span><code><span class="c1">-- Find all quality gate bypasses in last 30 days</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="n">commit_sha</span><span class="p">,</span><span class="w"> </span><span class="n">author</span><span class="p">,</span><span class="w"> </span><span class="n">bypass_reason</span><span class="p">,</span><span class="w"> </span><span class="n">approved_by</span><span class="p">,</span><span class="w"> </span><span class="k">timestamp</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">audit_log</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;quality_gate_bypass&#39;</span>
-<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'quality_gate_bypass'</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">'30 days'</span>
 <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 
 <span class="c1">-- Find all deployments that failed compliance checks</span>
@@ -9250,7 +9250,7 @@ gitlab-ci-local<span class="w"> </span>--job<span class="w"> </span>lint:terrafo
 <span class="w">    </span><span class="nt">expire_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">365 days</span><span class="w">  </span><span class="c1"># Long retention for audit</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;schedule&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "schedule"</span>
 </code></pre></div>
 <h3 id="compliance-ready-reporting">Compliance-Ready Reporting<a class="headerlink" href="#compliance-ready-reporting" title="Permanent link">&para;</a></h3>
 <p><strong>Report Requirements</strong>:</p>
@@ -9338,7 +9338,7 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>c
 <p><strong>Contract Update Process</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gu">## Contract Review Checklist</span>
 
-<span class="k">- [ ]</span> Reviewed all &quot;Guarantees&quot; sections
+<span class="k">- [ ]</span> Reviewed all "Guarantees" sections
 <span class="k">- [ ]</span> Verified platform support matrix is current
 <span class="k">- [ ]</span> Updated breaking changes policy
 <span class="k">- [ ]</span> Confirmed test coverage matches guarantees
@@ -9523,10 +9523,10 @@ industry best practices, and regulatory requirements.</em></p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

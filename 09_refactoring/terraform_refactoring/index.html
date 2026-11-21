@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7150,51 +7150,51 @@
 <h3 id="problem-repeated-resource-definitions-across-environments">Problem: Repeated resource definitions across environments<a class="headerlink" href="#problem-repeated-resource-definitions-across-environments" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong> (separate files for each environment, lots of duplication):</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## environments/dev/main.tf</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"main"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
 <span class="w">  </span><span class="na">enable_dns_hostnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="w">  </span><span class="na">enable_dns_support</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev-vpc&quot;</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
-<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"dev-vpc"</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"dev"</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;private&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_subnet"</span><span class="w"> </span><span class="nv">"private"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.${count.index + 1}.0/24&quot;</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.${count.index + 1}.0/24"</span>
 <span class="w">  </span><span class="na">availability_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_availability_zones.available.names[count.index</span><span class="p">]</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev-private-${count.index + 1}&quot;</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
-<span class="w">    </span><span class="na">Type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;private&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"dev-private-${count.index + 1}"</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"dev"</span>
+<span class="w">    </span><span class="na">Type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"private"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_subnet"</span><span class="w"> </span><span class="nv">"public"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.${count.index + 10}.0/24&quot;</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.${count.index + 10}.0/24"</span>
 <span class="w">  </span><span class="na">availability_zone</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_availability_zones.available.names[count.index</span><span class="p">]</span>
 <span class="w">  </span><span class="na">map_public_ip_on_launch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev-public-${count.index + 1}&quot;</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
-<span class="w">    </span><span class="na">Type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;public&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"dev-public-${count.index + 1}"</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"dev"</span>
+<span class="w">    </span><span class="na">Type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"public"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_internet_gateway&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_internet_gateway"</span><span class="w"> </span><span class="nv">"main"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev-igw&quot;</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"dev-igw"</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"dev"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
@@ -7208,12 +7208,12 @@
 <span class="w">    </span><span class="nv">var.tags</span><span class="p">,</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span>
-<span class="w">      </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
+<span class="w">      </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"main"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vpc_cidr</span>
 <span class="w">  </span><span class="na">enable_dns_hostnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_dns_hostnames</span>
 <span class="w">  </span><span class="na">enable_dns_support</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_dns_support</span>
@@ -7221,12 +7221,12 @@
 <span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
 <span class="w">    </span><span class="nv">local.common_tags</span><span class="p">,</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.name}-vpc&quot;</span>
+<span class="w">      </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${var.name}-vpc"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;private&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_subnet"</span><span class="w"> </span><span class="nv">"private"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.private_subnet_cidrs</span>
 
 <span class="w">  </span><span class="na">vpc_id</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
@@ -7236,13 +7236,13 @@
 <span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
 <span class="w">    </span><span class="nv">local.common_tags</span><span class="p">,</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.name}-private-${each.key}&quot;</span>
-<span class="w">      </span><span class="na">Type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;private&quot;</span>
+<span class="w">      </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${var.name}-private-${each.key}"</span>
+<span class="w">      </span><span class="na">Type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"private"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_subnet"</span><span class="w"> </span><span class="nv">"public"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.public_subnet_cidrs</span>
 
 <span class="w">  </span><span class="na">vpc_id</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
@@ -7253,84 +7253,84 @@
 <span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
 <span class="w">    </span><span class="nv">local.common_tags</span><span class="p">,</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.name}-public-${each.key}&quot;</span>
-<span class="w">      </span><span class="na">Type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;public&quot;</span>
+<span class="w">      </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${var.name}-public-${each.key}"</span>
+<span class="w">      </span><span class="na">Type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"public"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1">## modules/vpc/variables.tf</span>
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;name&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Name prefix for VPC resources&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"name"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Name prefix for VPC resources"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environment&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Environment name&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"environment"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Environment name"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;vpc_cidr&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CIDR block for VPC&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"vpc_cidr"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"CIDR block for VPC"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;private_subnet_cidrs&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Map of AZ to CIDR for private subnets&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"private_subnet_cidrs"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Map of AZ to CIDR for private subnets"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nf">map</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;public_subnet_cidrs&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Map of AZ to CIDR for public subnets&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"public_subnet_cidrs"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Map of AZ to CIDR for public subnets"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nf">map</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;enable_dns_hostnames&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Enable DNS hostnames in VPC&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"enable_dns_hostnames"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Enable DNS hostnames in VPC"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">bool</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;enable_dns_support&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Enable DNS support in VPC&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"enable_dns_support"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Enable DNS support in VPC"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">bool</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;map_public_ip_on_launch&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Map public IP on launch for public subnets&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"map_public_ip_on_launch"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Map public IP on launch for public subnets"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">bool</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;tags&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Additional tags for resources&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"tags"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Additional tags for resources"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nf">map</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
 <span class="w">  </span><span class="nb">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
 <span class="p">}</span>
 
 <span class="c1">## environments/dev/main.tf (now much simpler)</span>
-<span class="kr">module</span><span class="w"> </span><span class="nv">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../../modules/vpc&quot;</span>
+<span class="kr">module</span><span class="w"> </span><span class="nv">"vpc"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../../modules/vpc"</span>
 
-<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
-<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
-<span class="w">  </span><span class="na">vpc_cidr</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"dev"</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"dev"</span>
+<span class="w">  </span><span class="na">vpc_cidr</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
 
 <span class="w">  </span><span class="nb">private_subnet_cidrs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;us-east-1a&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.1.0/24&quot;</span>
-<span class="w">    </span><span class="s2">&quot;us-east-1b&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.2.0/24&quot;</span>
-<span class="w">    </span><span class="s2">&quot;us-east-1c&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.3.0/24&quot;</span>
+<span class="w">    </span><span class="s2">"us-east-1a"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.1.0/24"</span>
+<span class="w">    </span><span class="s2">"us-east-1b"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.2.0/24"</span>
+<span class="w">    </span><span class="s2">"us-east-1c"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.3.0/24"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">public_subnet_cidrs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;us-east-1a&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.10.0/24&quot;</span>
-<span class="w">    </span><span class="s2">&quot;us-east-1b&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.11.0/24&quot;</span>
-<span class="w">    </span><span class="s2">&quot;us-east-1c&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.12.0/24&quot;</span>
+<span class="w">    </span><span class="s2">"us-east-1a"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.10.0/24"</span>
+<span class="w">    </span><span class="s2">"us-east-1b"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.11.0/24"</span>
+<span class="w">    </span><span class="s2">"us-east-1c"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.12.0/24"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span>
+<span class="w">    </span><span class="na">Project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-project"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -7346,103 +7346,103 @@
 <h2 id="use-for_each-instead-of-count">Use for_each Instead of count<a class="headerlink" href="#use-for_each-instead-of-count" title="Permanent link">&para;</a></h2>
 <h3 id="problem-using-count-for-dynamic-resources-causes-recreation-on-reordering">Problem: Using count for dynamic resources causes recreation on reordering<a class="headerlink" href="#problem-using-count-for-dynamic-resources-causes-recreation-on-reordering" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong> (using count):</p>
-<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;List of IAM users to create&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">"users"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"List of IAM users to create"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
-<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;alice&quot;, &quot;bob&quot;, &quot;charlie&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"alice", "bob", "charlie"</span><span class="p">]</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_user&quot;</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_iam_user"</span><span class="w"> </span><span class="nv">"users"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.users</span><span class="p">)</span>
 <span class="w">  </span><span class="na">name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">var.users[count.index</span><span class="p">]</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_access_key&quot;</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_iam_access_key"</span><span class="w"> </span><span class="nv">"users"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.users</span><span class="p">)</span>
 <span class="w">  </span><span class="na">user</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_user.users[count.index].name</span>
 <span class="p">}</span>
 
-<span class="c1">## Problem: If you remove &quot;bob&quot; from the list:</span>
-<span class="c1">## variable &quot;users&quot; {</span>
-<span class="c1">##   default = [&quot;alice&quot;, &quot;charlie&quot;]  # bob removed</span>
+<span class="c1">## Problem: If you remove "bob" from the list:</span>
+<span class="c1">## variable "users" {</span>
+<span class="c1">##   default = ["alice", "charlie"]  # bob removed</span>
 <span class="c1">## }</span>
 <span class="c1">## Terraform will:</span>
 <span class="c1">## 1. Destroy users[1] (bob) - GOOD</span>
 <span class="c1">## 2. Destroy users[2] (charlie) - BAD!</span>
 <span class="c1">## 3. Recreate users[1] (charlie) - BAD!</span>
-<span class="c1">## Charlie&#39;s access keys get destroyed and recreated!</span>
+<span class="c1">## Charlie's access keys get destroyed and recreated!</span>
 </code></pre></div>
 <p><strong>After</strong> (using for_each):</p>
-<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Set of IAM users to create&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">"users"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Set of IAM users to create"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">set</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
-<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;alice&quot;, &quot;bob&quot;, &quot;charlie&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"alice", "bob", "charlie"</span><span class="p">]</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_user&quot;</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_iam_user"</span><span class="w"> </span><span class="nv">"users"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.users</span>
 
 <span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">each.key</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_access_key&quot;</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_iam_access_key"</span><span class="w"> </span><span class="nv">"users"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.users</span>
 
 <span class="w">  </span><span class="na">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_user.users[each.key].name</span>
 <span class="p">}</span>
 
-<span class="c1">## Now if you remove &quot;bob&quot; from the set:</span>
-<span class="c1">## variable &quot;users&quot; {</span>
-<span class="c1">##   default = [&quot;alice&quot;, &quot;charlie&quot;]  # bob removed</span>
+<span class="c1">## Now if you remove "bob" from the set:</span>
+<span class="c1">## variable "users" {</span>
+<span class="c1">##   default = ["alice", "charlie"]  # bob removed</span>
 <span class="c1">## }</span>
 <span class="c1">## Terraform will:</span>
-<span class="c1">## 1. Destroy users[&quot;bob&quot;] - GOOD</span>
-<span class="c1">## Charlie is untouched because he&#39;s keyed by name, not index!</span>
+<span class="c1">## 1. Destroy users["bob"] - GOOD</span>
+<span class="c1">## Charlie is untouched because he's keyed by name, not index!</span>
 </code></pre></div>
 <p><strong>Even Better</strong> (using map for additional attributes):</p>
-<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Map of IAM users with their attributes&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">"users"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Map of IAM users with their attributes"</span>
 <span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">map</span><span class="p">(</span><span class="kt">object</span><span class="p">({</span>
 <span class="w">    </span><span class="na">path</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="w">    </span><span class="na">groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
 <span class="w">  </span><span class="p">}))</span>
 <span class="w">  </span><span class="nb">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">alice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">path</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/developers/&quot;</span>
-<span class="w">      </span><span class="na">groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;developers&quot;, &quot;admins&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="na">path</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"/developers/"</span>
+<span class="w">      </span><span class="na">groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"developers", "admins"</span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="nb">bob</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">path</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/contractors/&quot;</span>
-<span class="w">      </span><span class="na">groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;developers&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="na">path</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"/contractors/"</span>
+<span class="w">      </span><span class="na">groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"developers"</span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="nb">charlie</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">path</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/developers/&quot;</span>
-<span class="w">      </span><span class="na">groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;developers&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="na">path</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"/developers/"</span>
+<span class="w">      </span><span class="na">groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"developers"</span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_user&quot;</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_iam_user"</span><span class="w"> </span><span class="nv">"users"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.users</span>
 
 <span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">each.key</span>
 <span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">each.value.path</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
-<span class="w">    </span><span class="na">UserType</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">each.value.path</span><span class="p">)[</span><span class="m">1</span><span class="p">]</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
+<span class="w">    </span><span class="na">UserType</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span><span class="w"> </span><span class="nv">each.value.path</span><span class="p">)[</span><span class="m">1</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_iam_user_group_membership&quot;</span><span class="w"> </span><span class="nv">&quot;users&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_iam_user_group_membership"</span><span class="w"> </span><span class="nv">"users"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.users</span>
 
 <span class="w">  </span><span class="na">user</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_user.users[each.key].name</span>
@@ -7461,66 +7461,66 @@
 <h2 id="apply-locals-for-dry">Apply Locals for DRY<a class="headerlink" href="#apply-locals-for-dry" title="Permanent link">&para;</a></h2>
 <h3 id="problem-repeated-expressions-and-hard-coded-values">Problem: Repeated expressions and hard-coded values<a class="headerlink" href="#problem-repeated-expressions-and-hard-coded-values" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"web"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
-<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-0c55b159cbfafe1f0&quot;</span>
-<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.medium&quot;</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"ami-0c55b159cbfafe1f0"</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.medium"</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;web-server-${count.index + 1}&quot;</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
-<span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span>
-<span class="w">    </span><span class="na">CostCenter</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;engineering&quot;</span>
-<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
-<span class="w">    </span><span class="na">Owner</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform-team@example.com&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"web-server-${count.index + 1}"</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
+<span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-project"</span>
+<span class="w">    </span><span class="na">CostCenter</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"engineering"</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform"</span>
+<span class="w">    </span><span class="na">Owner</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"platform-team@example.com"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;api&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"api"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
-<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-0c55b159cbfafe1f0&quot;</span>
-<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.large&quot;</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"ami-0c55b159cbfafe1f0"</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.large"</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;api-server-${count.index + 1}&quot;</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
-<span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span>
-<span class="w">    </span><span class="na">CostCenter</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;engineering&quot;</span>
-<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
-<span class="w">    </span><span class="na">Owner</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform-team@example.com&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"api-server-${count.index + 1}"</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
+<span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-project"</span>
+<span class="w">    </span><span class="na">CostCenter</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"engineering"</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform"</span>
+<span class="w">    </span><span class="na">Owner</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"platform-team@example.com"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">identifier</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production-my-project-db&quot;</span>
-<span class="w">  </span><span class="na">engine</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
-<span class="w">  </span><span class="na">instance_class</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;db.t3.medium&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_db_instance"</span><span class="w"> </span><span class="nv">"main"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">identifier</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"production-my-project-db"</span>
+<span class="w">  </span><span class="na">engine</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">"postgres"</span>
+<span class="w">  </span><span class="na">instance_class</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"db.t3.medium"</span>
 <span class="w">  </span><span class="na">allocated_storage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;main-database&quot;</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
-<span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span>
-<span class="w">    </span><span class="na">CostCenter</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;engineering&quot;</span>
-<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
-<span class="w">    </span><span class="na">Owner</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform-team@example.com&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"main-database"</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
+<span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-project"</span>
+<span class="w">    </span><span class="na">CostCenter</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"engineering"</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform"</span>
+<span class="w">    </span><span class="na">Owner</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"platform-team@example.com"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>After</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="c1">  # Environment configuration</span>
-<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
-<span class="w">  </span><span class="na">project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
+<span class="w">  </span><span class="na">project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-project"</span>
 
 <span class="c1">  # Common naming prefix</span>
-<span class="w">  </span><span class="na">name_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${local.environment}-${local.project}&quot;</span>
+<span class="w">  </span><span class="na">name_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${local.environment}-${local.project}"</span>
 
 <span class="c1">  # AMI selection based on environment</span>
 <span class="w">  </span><span class="nb">amis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">production</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-0c55b159cbfafe1f0&quot;</span>
-<span class="w">    </span><span class="na">staging</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-0abcdef123456789&quot;</span>
-<span class="w">    </span><span class="na">dev</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-0fedcba987654321&quot;</span>
+<span class="w">    </span><span class="na">production</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ami-0c55b159cbfafe1f0"</span>
+<span class="w">    </span><span class="na">staging</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"ami-0abcdef123456789"</span>
+<span class="w">    </span><span class="na">dev</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"ami-0fedcba987654321"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="na">selected_ami</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.amis[local.environment</span><span class="p">]</span>
@@ -7529,29 +7529,29 @@
 <span class="w">  </span><span class="nb">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.environment</span>
 <span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">local.project</span>
-<span class="w">    </span><span class="na">CostCenter</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;engineering&quot;</span>
-<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
-<span class="w">    </span><span class="na">Owner</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform-team@example.com&quot;</span>
+<span class="w">    </span><span class="na">CostCenter</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"engineering"</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform"</span>
+<span class="w">    </span><span class="na">Owner</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"platform-team@example.com"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="c1">  # Instance type selection based on environment</span>
 <span class="w">  </span><span class="nb">instance_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">production</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">web</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.medium&quot;</span>
-<span class="w">      </span><span class="na">api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.large&quot;</span>
+<span class="w">      </span><span class="na">web</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.medium"</span>
+<span class="w">      </span><span class="na">api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.large"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="nb">staging</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">web</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.small&quot;</span>
-<span class="w">      </span><span class="na">api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.medium&quot;</span>
+<span class="w">      </span><span class="na">web</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.small"</span>
+<span class="w">      </span><span class="na">api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.medium"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="nb">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">web</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.micro&quot;</span>
-<span class="w">      </span><span class="na">api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.small&quot;</span>
+<span class="w">      </span><span class="na">web</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.micro"</span>
+<span class="w">      </span><span class="na">api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.small"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"web"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
 
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">local.selected_ami</span>
@@ -7560,13 +7560,13 @@
 <span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
 <span class="w">    </span><span class="nv">local.common_tags</span><span class="p">,</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${local.name_prefix}-web-${count.index + 1}&quot;</span>
-<span class="w">      </span><span class="na">Role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;web-server&quot;</span>
+<span class="w">      </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${local.name_prefix}-web-${count.index + 1}"</span>
+<span class="w">      </span><span class="na">Role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"web-server"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;api&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"api"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
 
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">local.selected_ami</span>
@@ -7575,23 +7575,23 @@
 <span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
 <span class="w">    </span><span class="nv">local.common_tags</span><span class="p">,</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${local.name_prefix}-api-${count.index + 1}&quot;</span>
-<span class="w">      </span><span class="na">Role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;api-server&quot;</span>
+<span class="w">      </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${local.name_prefix}-api-${count.index + 1}"</span>
+<span class="w">      </span><span class="na">Role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"api-server"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">identifier</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${local.name_prefix}-db&quot;</span>
-<span class="w">  </span><span class="na">engine</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
-<span class="w">  </span><span class="na">instance_class</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;db.${local.instance_types[local.environment].api}&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_db_instance"</span><span class="w"> </span><span class="nv">"main"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">identifier</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"${local.name_prefix}-db"</span>
+<span class="w">  </span><span class="na">engine</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">"postgres"</span>
+<span class="w">  </span><span class="na">instance_class</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"db.${local.instance_types[local.environment].api}"</span>
 <span class="w">  </span><span class="na">allocated_storage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
 
 <span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
 <span class="w">    </span><span class="nv">local.common_tags</span><span class="p">,</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;main-database&quot;</span>
-<span class="w">      </span><span class="na">Role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;database&quot;</span>
+<span class="w">      </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"main-database"</span>
+<span class="w">      </span><span class="na">Role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"database"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
@@ -7608,8 +7608,8 @@
 <h2 id="simplify-variable-structures">Simplify Variable Structures<a class="headerlink" href="#simplify-variable-structures" title="Permanent link">&para;</a></h2>
 <h3 id="problem-complex-nested-variable-structures-that-are-hard-to-use">Problem: Complex, nested variable structures that are hard to use<a class="headerlink" href="#problem-complex-nested-variable-structures-that-are-hard-to-use" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;config&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Application configuration&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">"config"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Application configuration"</span>
 <span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">object</span><span class="p">({</span>
 <span class="w">    </span><span class="na">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">object</span><span class="p">({</span>
 <span class="w">      </span><span class="na">name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
@@ -7635,12 +7635,12 @@
 <span class="p">}</span>
 
 <span class="c1">## Usage (very verbose and error-prone)</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"app"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">var.config.infra.compute.count</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.config.infra.compute.instance_type</span>
 
 <span class="c1">  # Hard to work with nested env vars</span>
-<span class="w">  </span><span class="na">user_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">templatefile</span><span class="p">(</span><span class="s2">&quot;${path.module}/user-data.sh&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">user_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">templatefile</span><span class="p">(</span><span class="s2">"${path.module}/user-data.sh"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">app_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.config.app.name</span>
 <span class="w">    </span><span class="nb">env_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="err">for</span><span class="w"> </span><span class="err">env</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="nv">var.config.app.env.vars</span><span class="w"> </span><span class="p">:</span>
@@ -7649,86 +7649,86 @@
 <span class="w">  </span><span class="p">})</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.config.app.name}-${count.index}&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"${var.config.app.name}-${count.index}"</span>
 <span class="w">    </span><span class="na">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.config.app.version</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>After</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Flatten and simplify variable structure</span>
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;app_name&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Application name&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"app_name"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Application name"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;app_version&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Application version&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"app_version"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Application version"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environment_variables&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Application environment variables&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"environment_variables"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Application environment variables"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nf">map</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
 <span class="w">  </span><span class="nb">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;vpc_cidr&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;VPC CIDR block&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"vpc_cidr"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"VPC CIDR block"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;availability_zones&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;List of availability zones&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"availability_zones"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"List of availability zones"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;instance_type&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;EC2 instance type&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"instance_type"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"EC2 instance type"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.medium&quot;</span>
+<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.medium"</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;instance_count&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Number of instances to create&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"instance_count"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Number of instances to create"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">number</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
 
 <span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instance_count</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="err">&amp;&amp;</span><span class="w"> </span><span class="nv">var.instance_count</span><span class="w"> </span><span class="err">&lt;</span><span class="p">=</span><span class="w"> </span><span class="m">10</span>
-<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Instance count must be between 1 and 10.&quot;</span>
+<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Instance count must be between 1 and 10."</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">## Usage (much simpler and clearer)</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"app"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instance_count</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instance_type</span>
 
-<span class="w">  </span><span class="na">user_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">templatefile</span><span class="p">(</span><span class="s2">&quot;${path.module}/user-data.sh&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">user_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">templatefile</span><span class="p">(</span><span class="s2">"${path.module}/user-data.sh"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">app_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.app_name</span>
 <span class="w">    </span><span class="na">env_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment_variables</span>
 <span class="w">  </span><span class="p">})</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.app_name}-${count.index}&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"${var.app_name}-${count.index}"</span>
 <span class="w">    </span><span class="na">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.app_version</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">## terraform.tfvars (easier to read and write)</span>
-<span class="na">app_name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-application&quot;</span>
-<span class="na">app_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.2.3&quot;</span>
+<span class="na">app_name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-application"</span>
+<span class="na">app_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"1.2.3"</span>
 
 <span class="nb">environment_variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">LOG_LEVEL</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;info&quot;</span>
-<span class="w">  </span><span class="na">DATABASE_URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres://...&quot;</span>
-<span class="w">  </span><span class="na">API_KEY</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;secret-key&quot;</span>
+<span class="w">  </span><span class="na">LOG_LEVEL</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"info"</span>
+<span class="w">  </span><span class="na">DATABASE_URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"postgres://..."</span>
+<span class="w">  </span><span class="na">API_KEY</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"secret-key"</span>
 <span class="p">}</span>
 
-<span class="na">vpc_cidr</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
-<span class="na">availability_zones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;, &quot;us-east-1c&quot;</span><span class="p">]</span>
+<span class="na">vpc_cidr</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
+<span class="na">availability_zones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"us-east-1a", "us-east-1b", "us-east-1c"</span><span class="p">]</span>
 
-<span class="na">instance_type</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.large&quot;</span>
+<span class="na">instance_type</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.large"</span>
 <span class="na">instance_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
 </code></pre></div>
 <p><strong>Improvements</strong>:</p>
@@ -7744,156 +7744,156 @@
 <h2 id="improve-resource-naming">Improve Resource Naming<a class="headerlink" href="#improve-resource-naming" title="Permanent link">&para;</a></h2>
 <h3 id="problem-inconsistent-and-unclear-resource-naming">Problem: Inconsistent and unclear resource naming<a class="headerlink" href="#problem-inconsistent-and-unclear-resource-naming" title="Permanent link">&para;</a></h3>
 <p><strong>Before</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"main"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;vpc2&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;172.16.0.0/16&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"vpc2"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"172.16.0.0/16"</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;subnet1&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_subnet"</span><span class="w"> </span><span class="nv">"subnet1"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.1.0/24&quot;</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.1.0/24"</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;pub_sub&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_subnet"</span><span class="w"> </span><span class="nv">"pub_sub"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.10.0/24&quot;</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.10.0/24"</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;server&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-12345&quot;</span>
-<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.medium&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"server"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"ami-12345"</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.medium"</span>
 <span class="w">  </span><span class="na">subnet_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.subnet1.id</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web_server&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-12345&quot;</span>
-<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.medium&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"web_server"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"ami-12345"</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.medium"</span>
 <span class="w">  </span><span class="na">subnet_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.pub_sub.id</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;sg&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_security_group"</span><span class="w"> </span><span class="nv">"sg"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
 <span class="p">}</span>
 
 <span class="c1">## References are unclear:</span>
-<span class="c1">## - What is &quot;main&quot; vs &quot;vpc2&quot;?</span>
-<span class="c1">## - What&#39;s the difference between &quot;subnet1&quot; and &quot;pub_sub&quot;?</span>
-<span class="c1">## - What does &quot;server&quot; do vs &quot;web_server&quot;?</span>
+<span class="c1">## - What is "main" vs "vpc2"?</span>
+<span class="c1">## - What's the difference between "subnet1" and "pub_sub"?</span>
+<span class="c1">## - What does "server" do vs "web_server"?</span>
 </code></pre></div>
 <p><strong>After</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Use descriptive, consistent naming patterns</span>
 
 <span class="c1">## VPCs: describe purpose</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;application&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"application"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;application-vpc&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"application-vpc"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;management&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;172.16.0.0/16&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"management"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"172.16.0.0/16"</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;management-vpc&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"management-vpc"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">## Subnets: include type and purpose</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;application_private&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">toset</span><span class="p">([</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;, &quot;us-east-1c&quot;</span><span class="p">])</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_subnet"</span><span class="w"> </span><span class="nv">"application_private"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">toset</span><span class="p">([</span><span class="s2">"us-east-1a", "us-east-1b", "us-east-1c"</span><span class="p">])</span>
 
 <span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.application.id</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">cidrsubnet</span><span class="p">(</span>
 <span class="w">    </span><span class="nv">aws_vpc.application.cidr_block</span><span class="p">,</span>
 <span class="w">    </span><span class="m">8</span><span class="p">,</span>
-<span class="w">    </span><span class="nf">index</span><span class="p">([</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;, &quot;us-east-1c&quot;</span><span class="p">],</span><span class="w"> </span><span class="nv">each.key</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">index</span><span class="p">([</span><span class="s2">"us-east-1a", "us-east-1b", "us-east-1c"</span><span class="p">],</span><span class="w"> </span><span class="nv">each.key</span><span class="p">)</span>
 <span class="w">  </span><span class="p">)</span>
 <span class="w">  </span><span class="na">availability_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">each.key</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;application-private-${each.key}&quot;</span>
-<span class="w">    </span><span class="na">Type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;private&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"application-private-${each.key}"</span>
+<span class="w">    </span><span class="na">Type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"private"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;application_public&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">toset</span><span class="p">([</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;, &quot;us-east-1c&quot;</span><span class="p">])</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_subnet"</span><span class="w"> </span><span class="nv">"application_public"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">for_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">toset</span><span class="p">([</span><span class="s2">"us-east-1a", "us-east-1b", "us-east-1c"</span><span class="p">])</span>
 
 <span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.application.id</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">cidrsubnet</span><span class="p">(</span>
 <span class="w">    </span><span class="nv">aws_vpc.application.cidr_block</span><span class="p">,</span>
 <span class="w">    </span><span class="m">8</span><span class="p">,</span>
-<span class="w">    </span><span class="nf">index</span><span class="p">([</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;, &quot;us-east-1c&quot;</span><span class="p">],</span><span class="w"> </span><span class="nv">each.key</span><span class="p">)</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="m">10</span>
+<span class="w">    </span><span class="nf">index</span><span class="p">([</span><span class="s2">"us-east-1a", "us-east-1b", "us-east-1c"</span><span class="p">],</span><span class="w"> </span><span class="nv">each.key</span><span class="p">)</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="m">10</span>
 <span class="w">  </span><span class="p">)</span>
 <span class="w">  </span><span class="na">availability_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">each.key</span>
 <span class="w">  </span><span class="na">map_public_ip_on_launch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;application-public-${each.key}&quot;</span>
-<span class="w">    </span><span class="na">Type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;public&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"application-public-${each.key}"</span>
+<span class="w">    </span><span class="na">Type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"public"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">## Instances: describe role and tier</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;api_backend&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"api_backend"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
 
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_ami.amazon_linux_2.id</span>
-<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.medium&quot;</span>
-<span class="w">  </span><span class="na">subnet_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.application_private</span><span class="p">[</span><span class="s2">&quot;us-east-1a&quot;</span><span class="p">].</span><span class="err">id</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.medium"</span>
+<span class="w">  </span><span class="na">subnet_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.application_private</span><span class="p">[</span><span class="s2">"us-east-1a"</span><span class="p">].</span><span class="err">id</span>
 
 <span class="w">  </span><span class="na">vpc_security_group_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="nv">aws_security_group.api_backend.id</span>
 <span class="w">  </span><span class="p">]</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;api-backend-${count.index + 1}&quot;</span>
-<span class="w">    </span><span class="na">Role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;backend&quot;</span>
-<span class="w">    </span><span class="na">Tier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;api&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"api-backend-${count.index + 1}"</span>
+<span class="w">    </span><span class="na">Role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"backend"</span>
+<span class="w">    </span><span class="na">Tier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"api"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web_frontend&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"web_frontend"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
 
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_ami.amazon_linux_2.id</span>
-<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.medium&quot;</span>
-<span class="w">  </span><span class="na">subnet_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.application_public</span><span class="p">[</span><span class="s2">&quot;us-east-1a&quot;</span><span class="p">].</span><span class="err">id</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.medium"</span>
+<span class="w">  </span><span class="na">subnet_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.application_public</span><span class="p">[</span><span class="s2">"us-east-1a"</span><span class="p">].</span><span class="err">id</span>
 
 <span class="w">  </span><span class="na">vpc_security_group_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="nv">aws_security_group.web_frontend.id</span>
 <span class="w">  </span><span class="p">]</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;web-frontend-${count.index + 1}&quot;</span>
-<span class="w">    </span><span class="na">Role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;frontend&quot;</span>
-<span class="w">    </span><span class="na">Tier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;web&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"web-frontend-${count.index + 1}"</span>
+<span class="w">    </span><span class="na">Role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"frontend"</span>
+<span class="w">    </span><span class="na">Tier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"web"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">## Security groups: describe what they protect</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;api_backend&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;api-backend-&quot;</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Security group for API backend instances&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_security_group"</span><span class="w"> </span><span class="nv">"api_backend"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"api-backend-"</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Security group for API backend instances"</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.application.id</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;api-backend-sg&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"api-backend-sg"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;web_frontend&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;web-frontend-&quot;</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Security group for web frontend instances&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_security_group"</span><span class="w"> </span><span class="nv">"web_frontend"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"web-frontend-"</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Security group for web frontend instances"</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.application.id</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;web-frontend-sg&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"web-frontend-sg"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
@@ -8064,10 +8064,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

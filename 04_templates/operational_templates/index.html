@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7284,15 +7284,15 @@ troubleshoot a service.</p>
 
 <span class="sb">```promql</span>
 <span class="c1"># Availability SLI</span>
-<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">http_requests_total</span><span class="p">{</span><span class="nl">service</span><span class="o">=</span><span class="p">&quot;</span><span class="s">my-service</span><span class="p">&quot;,</span><span class="w"> </span><span class="nl">status</span><span class="o">!~</span><span class="p">&quot;</span><span class="s">5..</span><span class="p">&quot;}[</span><span class="s">5m</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">/</span>
-<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">http_requests_total</span><span class="p">{</span><span class="nl">service</span><span class="o">=</span><span class="p">&quot;</span><span class="s">my-service</span><span class="p">&quot;}[</span><span class="s">5m</span><span class="p">]</span><span class="o">))</span>
+<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">http_requests_total</span><span class="p">{</span><span class="nl">service</span><span class="o">=</span><span class="p">"</span><span class="s">my-service</span><span class="p">",</span><span class="w"> </span><span class="nl">status</span><span class="o">!~</span><span class="p">"</span><span class="s">5..</span><span class="p">"}[</span><span class="s">5m</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">/</span>
+<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">http_requests_total</span><span class="p">{</span><span class="nl">service</span><span class="o">=</span><span class="p">"</span><span class="s">my-service</span><span class="p">"}[</span><span class="s">5m</span><span class="p">]</span><span class="o">))</span>
 
 <span class="c1"># Latency SLI (p99)</span>
-<span class="kr">histogram_quantile</span><span class="o">(</span><span class="mf">0.99</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">http_request_duration_seconds_bucket</span><span class="p">{</span><span class="nl">service</span><span class="o">=</span><span class="p">&quot;</span><span class="s">my-service</span><span class="p">&quot;}[</span><span class="s">5m</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">le</span><span class="o">))</span>
+<span class="kr">histogram_quantile</span><span class="o">(</span><span class="mf">0.99</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">http_request_duration_seconds_bucket</span><span class="p">{</span><span class="nl">service</span><span class="o">=</span><span class="p">"</span><span class="s">my-service</span><span class="p">"}[</span><span class="s">5m</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">le</span><span class="o">))</span>
 
 <span class="c1"># Error Rate SLI</span>
-<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">http_requests_total</span><span class="p">{</span><span class="nl">service</span><span class="o">=</span><span class="p">&quot;</span><span class="s">my-service</span><span class="p">&quot;,</span><span class="w"> </span><span class="nl">status</span><span class="o">=~</span><span class="p">&quot;</span><span class="s">5..</span><span class="p">&quot;}[</span><span class="s">5m</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">/</span>
-<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">http_requests_total</span><span class="p">{</span><span class="nl">service</span><span class="o">=</span><span class="p">&quot;</span><span class="s">my-service</span><span class="p">&quot;}[</span><span class="s">5m</span><span class="p">]</span><span class="o">))</span>
+<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">http_requests_total</span><span class="p">{</span><span class="nl">service</span><span class="o">=</span><span class="p">"</span><span class="s">my-service</span><span class="p">",</span><span class="w"> </span><span class="nl">status</span><span class="o">=~</span><span class="p">"</span><span class="s">5..</span><span class="p">"}[</span><span class="s">5m</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">/</span>
+<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">http_requests_total</span><span class="p">{</span><span class="nl">service</span><span class="o">=</span><span class="p">"</span><span class="s">my-service</span><span class="p">"}[</span><span class="s">5m</span><span class="p">]</span><span class="o">))</span>
 <span class="sb">```</span>
 
 ---
@@ -7392,48 +7392,48 @@ troubleshoot a service.</p>
 <span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighErrorRate</span>
 <span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">sum(rate(http_requests_total{service=&quot;my-service&quot;, status=~&quot;5..&quot;}[5m])) /</span>
-<span class="w">          </span><span class="no">sum(rate(http_requests_total{service=&quot;my-service&quot;}[5m])) &gt; 0.01</span>
+<span class="w">          </span><span class="no">sum(rate(http_requests_total{service="my-service", status=~"5.."}[5m])) /</span>
+<span class="w">          </span><span class="no">sum(rate(http_requests_total{service="my-service"}[5m])) &gt; 0.01</span>
 <span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2m</span>
 <span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
-<span class="w">          </span><span class="nt">runbook</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#high-error-rate&quot;</span>
+<span class="w">          </span><span class="nt">runbook</span><span class="p">:</span><span class="w"> </span><span class="s">"#high-error-rate"</span>
 <span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.service</span><span class="nv"> </span><span class="s">}}&quot;</span>
-<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">humanizePercentage</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"High</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.service</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"Error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">humanizePercentage</span><span class="nv"> </span><span class="s">}}"</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighLatency</span>
 <span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{service=&quot;my-service&quot;}[5m])) by (le)) &gt; 0.5</span>
+<span class="w">          </span><span class="no">histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{service="my-service"}[5m])) by (le)) &gt; 0.5</span>
 <span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
 <span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
-<span class="w">          </span><span class="nt">runbook</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#high-latency&quot;</span>
+<span class="w">          </span><span class="nt">runbook</span><span class="p">:</span><span class="w"> </span><span class="s">"#high-latency"</span>
 <span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.service</span><span class="nv"> </span><span class="s">}}&quot;</span>
-<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;p99</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">humanizeDuration</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"High</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.service</span><span class="nv"> </span><span class="s">}}"</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"p99</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">humanizeDuration</span><span class="nv"> </span><span class="s">}}"</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DatabaseConnectionPoolExhausted</span>
 <span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">database_connection_pool_size{state=&quot;waiting&quot;} &gt; 0</span>
+<span class="w">          </span><span class="no">database_connection_pool_size{state="waiting"} &gt; 0</span>
 <span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1m</span>
 <span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
-<span class="w">          </span><span class="nt">runbook</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#db-connection-pool&quot;</span>
+<span class="w">          </span><span class="nt">runbook</span><span class="p">:</span><span class="w"> </span><span class="s">"#db-connection-pool"</span>
 <span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Database</span><span class="nv"> </span><span class="s">connection</span><span class="nv"> </span><span class="s">pool</span><span class="nv"> </span><span class="s">exhausted&quot;</span>
-<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">connections</span><span class="nv"> </span><span class="s">waiting&quot;</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"Database</span><span class="nv"> </span><span class="s">connection</span><span class="nv"> </span><span class="s">pool</span><span class="nv"> </span><span class="s">exhausted"</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">connections</span><span class="nv"> </span><span class="s">waiting"</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PodCrashLooping</span>
 <span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">increase(kube_pod_container_status_restarts_total{namespace=&quot;production&quot;, container=&quot;my-service&quot;}[1h]) &gt; 3</span>
+<span class="w">          </span><span class="no">increase(kube_pod_container_status_restarts_total{namespace="production", container="my-service"}[1h]) &gt; 3</span>
 <span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
 <span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
-<span class="w">          </span><span class="nt">runbook</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#pod-crash-loop&quot;</span>
+<span class="w">          </span><span class="nt">runbook</span><span class="p">:</span><span class="w"> </span><span class="s">"#pod-crash-loop"</span>
 <span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pod</span><span class="nv"> </span><span class="s">crash</span><span class="nv"> </span><span class="s">looping&quot;</span>
-<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">restarts</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">last</span><span class="nv"> </span><span class="s">hour&quot;</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">"Pod</span><span class="nv"> </span><span class="s">crash</span><span class="nv"> </span><span class="s">looping"</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">restarts</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">last</span><span class="nv"> </span><span class="s">hour"</span>
 <span class="sb">```</span>
 
 ---
@@ -7453,17 +7453,17 @@ troubleshoot a service.</p>
 
 <span class="sb">```bash</span>
 <span class="c1"># Check error logs (last 100 lines)</span>
-kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/my-service<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ERROR|CRITICAL&quot;</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/my-service<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"ERROR|CRITICAL"</span>
 
 <span class="c1"># Check error breakdown by type</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/my-service<span class="w"> </span>--tail<span class="o">=</span><span class="m">1000</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>grep<span class="w"> </span>ERROR<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>awk<span class="w"> </span><span class="s1">&#39;{print $NF}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>awk<span class="w"> </span><span class="s1">'{print $NF}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
 
 <span class="c1"># Check if errors correlate with specific endpoint</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/my-service<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>localhost:8080/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>http_requests_total<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;status=&quot;5&#39;</span>
+<span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>localhost:8080/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>http_requests_total<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">'status="5'</span>
 
 <span class="c1"># Check database connectivity</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/my-service<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
@@ -7471,7 +7471,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 
 <span class="c1"># Check external service health</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/my-service<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://api.stripe.com/v1/health
+<span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}"</span><span class="w"> </span>https://api.stripe.com/v1/health
 <span class="sb">```</span>
 
 <span class="gs">**Resolution Steps**</span>:
@@ -7519,18 +7519,18 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 
 <span class="c1"># Check slow query logs</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/postgres<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>app<span class="w"> </span>-d<span class="w"> </span>mydb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT * FROM pg_stat_activity WHERE state = &#39;active&#39; ORDER BY query_start;&quot;</span>
+<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>app<span class="w"> </span>-d<span class="w"> </span>mydb<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT * FROM pg_stat_activity WHERE state = 'active' ORDER BY query_start;"</span>
 
 <span class="c1"># Check for N+1 query patterns</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/my-service<span class="w"> </span>--tail<span class="o">=</span><span class="m">500</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>grep<span class="w"> </span><span class="s2">&quot;SELECT&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>awk<span class="w"> </span><span class="s1">&#39;{print $NF}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<span class="w">  </span>grep<span class="w"> </span><span class="s2">"SELECT"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>awk<span class="w"> </span><span class="s1">'{print $NF}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 
 <span class="c1"># Check CPU/memory pressure</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>my-service
 
 <span class="c1"># Check for GC pauses (if applicable)</span>
-kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/my-service<span class="w"> </span>--tail<span class="o">=</span><span class="m">1000</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;gc pause&quot;</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/my-service<span class="w"> </span>--tail<span class="o">=</span><span class="m">1000</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"gc pause"</span>
 <span class="sb">```</span>
 
 <span class="gs">**Resolution Steps**</span>:
@@ -7538,7 +7538,7 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 <span class="sb">```bash</span>
 <span class="c1"># 1. If database query is slow, check for missing indexes</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/postgres<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>app<span class="w"> </span>-d<span class="w"> </span>mydb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;EXPLAIN ANALYZE SELECT ...&quot;</span>
+<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>app<span class="w"> </span>-d<span class="w"> </span>mydb<span class="w"> </span>-c<span class="w"> </span><span class="s2">"EXPLAIN ANALYZE SELECT ..."</span>
 
 <span class="c1"># 2. If cache miss rate high, warm the cache</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/my-service<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
@@ -7549,7 +7549,7 @@ kubectl<span class="w"> </span>scale<span class="w"> </span>deployment/my-servic
 
 <span class="c1"># 4. If memory-bound, increase limits</span>
 kubectl<span class="w"> </span>patch<span class="w"> </span>deployment<span class="w"> </span>my-service<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-p<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;containers&quot;:[{&quot;name&quot;:&quot;my-service&quot;,&quot;resources&quot;:{&quot;limits&quot;:{&quot;memory&quot;:&quot;2Gi&quot;}}}]}}}}&#39;</span>
+<span class="w">  </span><span class="s1">'{"spec":{"template":{"spec":{"containers":[{"name":"my-service","resources":{"limits":{"memory":"2Gi"}}}]}}}}'</span>
 
 <span class="c1"># 5. Enable response caching</span>
 kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>deployment/my-service<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span><span class="se">\</span>
@@ -7572,11 +7572,11 @@ kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </spa
 <span class="sb">```bash</span>
 <span class="c1"># Check current connection usage</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/postgres<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) as total, state FROM pg_stat_activity GROUP BY state;&quot;</span>
+<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT count(*) as total, state FROM pg_stat_activity GROUP BY state;"</span>
 
 <span class="c1"># Check max connections setting</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/postgres<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW max_connections;&quot;</span>
+<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SHOW max_connections;"</span>
 
 <span class="c1"># Check connection pool metrics</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/my-service<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
@@ -7584,10 +7584,10 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 
 <span class="c1"># Identify long-running queries</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/postgres<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pid, now() - pg_stat_activity.query_start AS duration, query, state</span>
+<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT pid, now() - pg_stat_activity.query_start AS duration, query, state</span>
 <span class="s2">    FROM pg_stat_activity</span>
-<span class="s2">    WHERE (now() - pg_stat_activity.query_start) &gt; interval &#39;5 minutes&#39;</span>
-<span class="s2">    ORDER BY duration DESC;&quot;</span>
+<span class="s2">    WHERE (now() - pg_stat_activity.query_start) &gt; interval '5 minutes'</span>
+<span class="s2">    ORDER BY duration DESC;"</span>
 <span class="sb">```</span>
 
 <span class="gs">**Resolution Steps**</span>:
@@ -7595,7 +7595,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="sb">```bash</span>
 <span class="c1"># 1. Kill long-running queries (with caution)</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/postgres<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE duration &gt; interval &#39;10 minutes&#39; AND state != &#39;idle&#39;;&quot;</span>
+<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE duration &gt; interval '10 minutes' AND state != 'idle';"</span>
 
 <span class="c1"># 2. Increase connection pool size (temporary)</span>
 kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>deployment/my-service<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span><span class="se">\</span>
@@ -7629,10 +7629,10 @@ kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>my-service<span class="w"> </span>-o<span class="w"> </span>wide
 
 <span class="c1"># Check why pod terminated</span>
-kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>my-service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;Last State&quot;</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>my-service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">"Last State"</span>
 
 <span class="c1"># Check for OOM kills</span>
-kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>my-service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;oom&quot;</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>my-service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">"oom"</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>--field-selector<span class="w"> </span><span class="nv">reason</span><span class="o">=</span>OOMKilled
 
 <span class="c1"># Check container logs before crash</span>
@@ -7647,7 +7647,7 @@ kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> <
 <span class="sb">```bash</span>
 <span class="c1"># 1. If OOMKilled, increase memory limits</span>
 kubectl<span class="w"> </span>patch<span class="w"> </span>deployment<span class="w"> </span>my-service<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-p<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;containers&quot;:[{&quot;name&quot;:&quot;my-service&quot;,&quot;resources&quot;:{&quot;limits&quot;:{&quot;memory&quot;:&quot;4Gi&quot;},&quot;requests&quot;:{&quot;memory&quot;:&quot;2Gi&quot;}}}]}}}}&#39;</span>
+<span class="w">  </span><span class="s1">'{"spec":{"template":{"spec":{"containers":[{"name":"my-service","resources":{"limits":{"memory":"4Gi"},"requests":{"memory":"2Gi"}}}]}}}}'</span>
 
 <span class="c1"># 2. If configuration error, check configmap</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>my-service-config<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-o<span class="w"> </span>yaml
@@ -7719,15 +7719,15 @@ kubectl<span class="w"> </span>get<span class="w"> </span>hpa<span class="w"> </
 
 <span class="c1"># Temporarily disable HPA for manual control</span>
 kubectl<span class="w"> </span>patch<span class="w"> </span>hpa<span class="w"> </span>my-service-hpa<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-p<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;minReplicas&quot;:10,&quot;maxReplicas&quot;:10}}&#39;</span>
+<span class="w">  </span><span class="s1">'{"spec":{"minReplicas":10,"maxReplicas":10}}'</span>
 
 <span class="c1"># Re-enable HPA</span>
 kubectl<span class="w"> </span>patch<span class="w"> </span>hpa<span class="w"> </span>my-service-hpa<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-p<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;minReplicas&quot;:3,&quot;maxReplicas&quot;:20}}&#39;</span>
+<span class="w">  </span><span class="s1">'{"spec":{"minReplicas":3,"maxReplicas":20}}'</span>
 
 <span class="c1"># Vertical scaling (requires restart)</span>
 kubectl<span class="w"> </span>patch<span class="w"> </span>deployment<span class="w"> </span>my-service<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-p<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;containers&quot;:[{&quot;name&quot;:&quot;my-service&quot;,&quot;resources&quot;:{&quot;requests&quot;:{&quot;cpu&quot;:&quot;500m&quot;,&quot;memory&quot;:&quot;1Gi&quot;},&quot;limits&quot;:{&quot;cpu&quot;:&quot;2&quot;,&quot;memory&quot;:&quot;4Gi&quot;}}}]}}}}&#39;</span>
+<span class="w">  </span><span class="s1">'{"spec":{"template":{"spec":{"containers":[{"name":"my-service","resources":{"requests":{"cpu":"500m","memory":"1Gi"},"limits":{"cpu":"2","memory":"4Gi"}}}]}}}}'</span>
 <span class="sb">```</span>
 
 <span class="gu">### Log Access</span>
@@ -7746,7 +7746,7 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>my-service-abc123-xyz<span class="w"> </span>--previous
 
 <span class="c1"># Search logs for specific pattern</span>
-kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>my-service<span class="w"> </span>--tail<span class="o">=</span><span class="m">10000</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ERROR|WARN&quot;</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>my-service<span class="w"> </span>--tail<span class="o">=</span><span class="m">10000</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"ERROR|WARN"</span>
 
 <span class="c1"># Export logs to file</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>my-service<span class="w"> </span>--since<span class="o">=</span>24h<span class="w"> </span>&gt;<span class="w"> </span>service-logs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.log
@@ -7760,11 +7760,11 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 
 <span class="c1"># Run read-only query</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/postgres<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>app<span class="w"> </span>-d<span class="w"> </span>mydb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM users;&quot;</span>
+<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>app<span class="w"> </span>-d<span class="w"> </span>mydb<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT count(*) FROM users;"</span>
 
 <span class="c1"># Check database size</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/postgres<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_database.datname, pg_size_pretty(pg_database_size(pg_database.datname)) FROM pg_database ORDER BY pg_database_size(pg_database.datname) DESC;&quot;</span>
+<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT pg_database.datname, pg_size_pretty(pg_database_size(pg_database.datname)) FROM pg_database ORDER BY pg_database_size(pg_database.datname) DESC;"</span>
 
 <span class="c1"># Backup database</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/postgres<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
@@ -7772,7 +7772,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 
 <span class="c1"># Check replication status (if applicable)</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/postgres<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT * FROM pg_stat_replication;&quot;</span>
+<span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT * FROM pg_stat_replication;"</span>
 <span class="sb">```</span>
 
 <span class="gu">### Cache Operations</span>
@@ -7788,7 +7788,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/redis<span class="w"> </span>--<span class="w"> </span>redis-cli<span class="w"> </span>INFO<span class="w"> </span>memory
 
 <span class="c1"># Flush specific cache namespace (with caution)</span>
-kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/redis<span class="w"> </span>--<span class="w"> </span>redis-cli<span class="w"> </span>KEYS<span class="w"> </span><span class="s2">&quot;session:*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>redis-cli<span class="w"> </span>DEL
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/redis<span class="w"> </span>--<span class="w"> </span>redis-cli<span class="w"> </span>KEYS<span class="w"> </span><span class="s2">"session:*"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>redis-cli<span class="w"> </span>DEL
 
 <span class="c1"># Monitor cache operations in real-time</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/redis<span class="w"> </span>--<span class="w"> </span>redis-cli<span class="w"> </span>MONITOR
@@ -7830,7 +7830,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="sb">```bash</span>
 <span class="c1"># Pre-maintenance</span>
 -<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Announce<span class="w"> </span>maintenance<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="c1">#engineering Slack channel</span>
--<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Update<span class="w"> </span>status<span class="w"> </span>page<span class="w"> </span>to<span class="w"> </span><span class="s2">&quot;Scheduled Maintenance&quot;</span>
+-<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Update<span class="w"> </span>status<span class="w"> </span>page<span class="w"> </span>to<span class="w"> </span><span class="s2">"Scheduled Maintenance"</span>
 -<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Notify<span class="w"> </span>stakeholders<span class="w"> </span>via<span class="w"> </span>email
 -<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Verify<span class="w"> </span>rollback<span class="w"> </span>plan
 -<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Confirm<span class="w"> </span>on-call<span class="w"> </span>coverage
@@ -7843,7 +7843,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 
 <span class="c1"># Post-maintenance</span>
 -<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Disable<span class="w"> </span>maintenance<span class="w"> </span>mode:<span class="w"> </span>kubectl<span class="w"> </span>delete<span class="w"> </span>-f<span class="w"> </span>k8s/production/maintenance.yaml
--<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Update<span class="w"> </span>status<span class="w"> </span>page<span class="w"> </span>to<span class="w"> </span><span class="s2">&quot;Operational&quot;</span>
+-<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Update<span class="w"> </span>status<span class="w"> </span>page<span class="w"> </span>to<span class="w"> </span><span class="s2">"Operational"</span>
 -<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Notify<span class="w"> </span>stakeholders<span class="w"> </span>of<span class="w"> </span>completion
 -<span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="o">]</span><span class="w"> </span>Document<span class="w"> </span>any<span class="w"> </span>issues<span class="w"> </span>encountered
 <span class="sb">```</span>
@@ -8072,17 +8072,17 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="nt">triage_checklist</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Acknowledge alert</span>
 <span class="w">    </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PagerDuty</span>
-<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Click</span><span class="nv"> </span><span class="s">&#39;Acknowledge&#39;</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">use</span><span class="nv"> </span><span class="s">mobile</span><span class="nv"> </span><span class="s">app&quot;</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">"Click</span><span class="nv"> </span><span class="s">'Acknowledge'</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">use</span><span class="nv"> </span><span class="s">mobile</span><span class="nv"> </span><span class="s">app"</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Assess scope and impact</span>
 <span class="w">    </span><span class="nt">questions</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;How</span><span class="nv"> </span><span class="s">many</span><span class="nv"> </span><span class="s">users</span><span class="nv"> </span><span class="s">affected?&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Which</span><span class="nv"> </span><span class="s">services</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">impacted?&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Is</span><span class="nv"> </span><span class="s">there</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">loss</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">corruption?&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Is</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">security</span><span class="nv"> </span><span class="s">incident?&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"How</span><span class="nv"> </span><span class="s">many</span><span class="nv"> </span><span class="s">users</span><span class="nv"> </span><span class="s">affected?"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Which</span><span class="nv"> </span><span class="s">services</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">impacted?"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Is</span><span class="nv"> </span><span class="s">there</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">loss</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">corruption?"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Is</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">security</span><span class="nv"> </span><span class="s">incident?"</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Determine severity</span>
-<span class="w">    </span><span class="nt">reference</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;See</span><span class="nv"> </span><span class="s">Severity</span><span class="nv"> </span><span class="s">Definitions</span><span class="nv"> </span><span class="s">above&quot;</span>
+<span class="w">    </span><span class="nt">reference</span><span class="p">:</span><span class="w"> </span><span class="s">"See</span><span class="nv"> </span><span class="s">Severity</span><span class="nv"> </span><span class="s">Definitions</span><span class="nv"> </span><span class="s">above"</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create incident record</span>
 <span class="w">    </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Jira/PagerDuty</span>
@@ -8099,20 +8099,20 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="ch">#!/bin/bash</span>
 <span class="c1"># severity_check.sh - Quick impact assessment</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Service Health Check ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Service Health Check ==="</span>
 
 <span class="c1"># Check error rate</span>
-<span class="nv">ERROR_RATE</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/query?query=sum(rate(http_requests_total{status=~\&quot;5..\&quot;}[5m]))/sum(rate(http_requests_total[5m]))&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.data.result[0].value[1]&#39;</span><span class="k">)</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Current error rate: </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ERROR_RATE</span><span class="s2"> * 100&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="k">)</span><span class="s2">%&quot;</span>
+<span class="nv">ERROR_RATE</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">"http://prometheus:9090/api/v1/query?query=sum(rate(http_requests_total{status=~\"5..\"}[5m]))/sum(rate(http_requests_total[5m]))"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.data.result[0].value[1]'</span><span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Current error rate: </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$ERROR_RATE</span><span class="s2"> * 100"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="k">)</span><span class="s2">%"</span>
 
 <span class="c1"># Check affected users (example)</span>
-<span class="nv">AFFECTED_USERS</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/query?query=count(rate(http_requests_total{status=~\&quot;5..\&quot;}[5m])by(user_id))&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.data.result[0].value[1]&#39;</span><span class="k">)</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Affected users: </span><span class="nv">$AFFECTED_USERS</span><span class="s2">&quot;</span>
+<span class="nv">AFFECTED_USERS</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">"http://prometheus:9090/api/v1/query?query=count(rate(http_requests_total{status=~\"5..\"}[5m])by(user_id))"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.data.result[0].value[1]'</span><span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Affected users: </span><span class="nv">$AFFECTED_USERS</span><span class="s2">"</span>
 
 <span class="c1"># Check service availability</span>
 <span class="k">for</span><span class="w"> </span>service<span class="w"> </span><span class="k">in</span><span class="w"> </span>api-gateway<span class="w"> </span>auth-service<span class="w"> </span>user-service<span class="w"> </span>payment-service<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nv">STATUS</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span><span class="nv">$service</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.availableReplicas}&#39;</span><span class="k">)</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$service</span><span class="s2">: </span><span class="nv">$STATUS</span><span class="s2"> replicas available&quot;</span>
+<span class="w">  </span><span class="nv">STATUS</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span><span class="nv">$service</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.availableReplicas}'</span><span class="k">)</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$service</span><span class="s2">: </span><span class="nv">$STATUS</span><span class="s2"> replicas available"</span>
 <span class="k">done</span>
 <span class="sb">```</span>
 
@@ -8129,8 +8129,8 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Look for anomalies in key metrics</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check dependent service health</span>
 <span class="w">    </span><span class="nt">links</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;https://grafana.example.com/d/prod-overview&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;https://grafana.example.com/d/service-detail&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"https://grafana.example.com/d/prod-overview"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"https://grafana.example.com/d/service-detail"</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Review recent changes</span>
 <span class="w">    </span><span class="nt">actions</span><span class="p">:</span>
@@ -8138,9 +8138,9 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Review recent config changes</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check infrastructure changes</span>
 <span class="w">    </span><span class="nt">commands</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;kubectl</span><span class="nv"> </span><span class="s">rollout</span><span class="nv"> </span><span class="s">history</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;git</span><span class="nv"> </span><span class="s">log</span><span class="nv"> </span><span class="s">--oneline</span><span class="nv"> </span><span class="s">-10&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;terraform</span><span class="nv"> </span><span class="s">show</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">grep</span><span class="nv"> </span><span class="s">-A5</span><span class="nv"> </span><span class="s">&#39;recent_changes&#39;&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"kubectl</span><span class="nv"> </span><span class="s">rollout</span><span class="nv"> </span><span class="s">history</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"git</span><span class="nv"> </span><span class="s">log</span><span class="nv"> </span><span class="s">--oneline</span><span class="nv"> </span><span class="s">-10"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"terraform</span><span class="nv"> </span><span class="s">show</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">grep</span><span class="nv"> </span><span class="s">-A5</span><span class="nv"> </span><span class="s">'recent_changes'"</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Analyze logs</span>
 <span class="w">    </span><span class="nt">actions</span><span class="p">:</span>
@@ -8148,8 +8148,8 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Identify first occurrence</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Correlate with events</span>
 <span class="w">    </span><span class="nt">commands</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;kubectl</span><span class="nv"> </span><span class="s">logs</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production</span><span class="nv"> </span><span class="s">-l</span><span class="nv"> </span><span class="s">app=my-service</span><span class="nv"> </span><span class="s">--since=30m</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">grep</span><span class="nv"> </span><span class="s">ERROR&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Query</span><span class="nv"> </span><span class="s">Elasticsearch/Loki</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">detailed</span><span class="nv"> </span><span class="s">logs&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"kubectl</span><span class="nv"> </span><span class="s">logs</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production</span><span class="nv"> </span><span class="s">-l</span><span class="nv"> </span><span class="s">app=my-service</span><span class="nv"> </span><span class="s">--since=30m</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">grep</span><span class="nv"> </span><span class="s">ERROR"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Query</span><span class="nv"> </span><span class="s">Elasticsearch/Loki</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">detailed</span><span class="nv"> </span><span class="s">logs"</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check dependencies</span>
 <span class="w">    </span><span class="nt">actions</span><span class="p">:</span>
@@ -8157,8 +8157,8 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check external API status</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verify message queue health</span>
 <span class="w">    </span><span class="nt">commands</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;kubectl</span><span class="nv"> </span><span class="s">exec</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">--</span><span class="nv"> </span><span class="s">nc</span><span class="nv"> </span><span class="s">-zv</span><span class="nv"> </span><span class="s">postgres</span><span class="nv"> </span><span class="s">5432&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;curl</span><span class="nv"> </span><span class="s">-s</span><span class="nv"> </span><span class="s">https://status.stripe.com/api/v2/status.json&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"kubectl</span><span class="nv"> </span><span class="s">exec</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">--</span><span class="nv"> </span><span class="s">nc</span><span class="nv"> </span><span class="s">-zv</span><span class="nv"> </span><span class="s">postgres</span><span class="nv"> </span><span class="s">5432"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"curl</span><span class="nv"> </span><span class="s">-s</span><span class="nv"> </span><span class="s">https://status.stripe.com/api/v2/status.json"</span>
 <span class="sb">```</span>
 
 <span class="gs">**Investigation Commands**</span>:
@@ -8167,30 +8167,30 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="c1"># Comprehensive investigation script</span>
 <span class="c1">#!/bin/bash</span>
 
-<span class="nv">NAMESPACE</span><span class="o">=</span><span class="s2">&quot;production&quot;</span>
-<span class="nv">SERVICE</span><span class="o">=</span><span class="s2">&quot;my-service&quot;</span>
+<span class="nv">NAMESPACE</span><span class="o">=</span><span class="s2">"production"</span>
+<span class="nv">SERVICE</span><span class="o">=</span><span class="s2">"my-service"</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Deployment Status ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Deployment Status ==="</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span><span class="nv">$SERVICE</span><span class="w"> </span>-n<span class="w"> </span><span class="nv">$NAMESPACE</span><span class="w"> </span>-o<span class="w"> </span>wide
 kubectl<span class="w"> </span>rollout<span class="w"> </span><span class="nb">history</span><span class="w"> </span>deployment/<span class="nv">$SERVICE</span><span class="w"> </span>-n<span class="w"> </span><span class="nv">$NAMESPACE</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
 
-<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\n=== Pod Status ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"\n=== Pod Status ==="</span>
 kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span><span class="nv">$NAMESPACE</span><span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span><span class="nv">$SERVICE</span><span class="w"> </span>-o<span class="w"> </span>wide
 
-<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\n=== Recent Events ===&quot;</span>
-kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span><span class="nv">$NAMESPACE</span><span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"\n=== Recent Events ==="</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span><span class="nv">$NAMESPACE</span><span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">'.lastTimestamp'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 
-<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\n=== Resource Usage ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"\n=== Resource Usage ==="</span>
 kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span><span class="nv">$NAMESPACE</span><span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span><span class="nv">$SERVICE</span>
 
-<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\n=== Recent Errors ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"\n=== Recent Errors ==="</span>
 kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span><span class="nv">$NAMESPACE</span><span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span><span class="nv">$SERVICE</span><span class="w"> </span>--since<span class="o">=</span>10m<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 
-<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\n=== Network Connectivity ===&quot;</span>
-kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span><span class="nv">$NAMESPACE</span><span class="w"> </span>deployment/<span class="nv">$SERVICE</span><span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>http://auth-service/health
+<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"\n=== Network Connectivity ==="</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span><span class="nv">$NAMESPACE</span><span class="w"> </span>deployment/<span class="nv">$SERVICE</span><span class="w"> </span>--<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}"</span><span class="w"> </span>http://auth-service/health
 
-<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\n=== Database Connections ===&quot;</span>
-kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span><span class="nv">$NAMESPACE</span><span class="w"> </span>deployment/postgres<span class="w"> </span>--<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_stat_activity;&quot;</span>
+<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"\n=== Database Connections ==="</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span><span class="nv">$NAMESPACE</span><span class="w"> </span>deployment/postgres<span class="w"> </span>--<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT count(*) FROM pg_stat_activity;"</span>
 <span class="sb">```</span>
 
 ---
@@ -8201,7 +8201,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="c1"># Communication templates</span>
 <span class="nt">templates</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">initial_notice</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#incidents&quot;</span>
+<span class="w">    </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">"#incidents"</span>
 <span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">:rotating_light: **INCIDENT DECLARED**</span>
 <span class="w">      </span><span class="no">**Severity**: SEV-{X}</span>
@@ -8211,16 +8211,16 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="w">      </span><span class="no">**War Room**: {Zoom/Slack huddle link}</span>
 
 <span class="w">  </span><span class="nt">status_update</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#incidents&quot;</span>
+<span class="w">    </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">"#incidents"</span>
 <span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">:information_source: **STATUS UPDATE** - {HH:MM UTC}</span>
 <span class="w">      </span><span class="no">**Current Status**: {Investigating|Identified|Mitigating|Resolved}</span>
-<span class="w">      </span><span class="no">**Progress**: {What we&#39;ve learned/done}</span>
-<span class="w">      </span><span class="no">**Next Steps**: {What we&#39;re doing next}</span>
+<span class="w">      </span><span class="no">**Progress**: {What we've learned/done}</span>
+<span class="w">      </span><span class="no">**Next Steps**: {What we're doing next}</span>
 <span class="w">      </span><span class="no">**ETA**: {Estimated time to resolution if known}</span>
 
 <span class="w">  </span><span class="nt">resolution_notice</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#incidents&quot;</span>
+<span class="w">    </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">"#incidents"</span>
 <span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">:white_check_mark: **INCIDENT RESOLVED**</span>
 <span class="w">      </span><span class="no">**Duration**: {X hours Y minutes}</span>
@@ -8229,7 +8229,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="w">      </span><span class="no">**Action Items**: {Number} items identified</span>
 
 <span class="w">  </span><span class="nt">customer_notice</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;status_page&quot;</span>
+<span class="w">    </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">"status_page"</span>
 <span class="w">    </span><span class="nt">investigating</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">We are currently investigating reports of {issue description}.</span>
 <span class="w">      </span><span class="no">Some users may experience {symptoms}. We will provide updates as we learn more.</span>
@@ -8250,34 +8250,34 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="ch">#!/bin/bash</span>
 <span class="c1"># update_status.sh - Update status page via API</span>
 
-<span class="nv">STATUS_API</span><span class="o">=</span><span class="s2">&quot;https://api.statuspage.io/v1&quot;</span>
-<span class="nv">PAGE_ID</span><span class="o">=</span><span class="s2">&quot;your-page-id&quot;</span>
-<span class="nv">COMPONENT_ID</span><span class="o">=</span><span class="s2">&quot;your-component-id&quot;</span>
+<span class="nv">STATUS_API</span><span class="o">=</span><span class="s2">"https://api.statuspage.io/v1"</span>
+<span class="nv">PAGE_ID</span><span class="o">=</span><span class="s2">"your-page-id"</span>
+<span class="nv">COMPONENT_ID</span><span class="o">=</span><span class="s2">"your-component-id"</span>
 
 update_status<span class="o">()</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">status</span><span class="o">=</span><span class="nv">$1</span>
 <span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">body</span><span class="o">=</span><span class="nv">$2</span>
 
-<span class="w">  </span>curl<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$STATUS_API</span><span class="s2">/pages/</span><span class="nv">$PAGE_ID</span><span class="s2">/components/</span><span class="nv">$COMPONENT_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: OAuth </span><span class="nv">$STATUSPAGE_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;component\&quot;: {\&quot;status\&quot;: \&quot;</span><span class="nv">$status</span><span class="s2">\&quot;}}&quot;</span>
+<span class="w">  </span>curl<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">"</span><span class="nv">$STATUS_API</span><span class="s2">/pages/</span><span class="nv">$PAGE_ID</span><span class="s2">/components/</span><span class="nv">$COMPONENT_ID</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-H<span class="w"> </span><span class="s2">"Authorization: OAuth </span><span class="nv">$STATUSPAGE_API_KEY</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span><span class="s2">"{\"component\": {\"status\": \"</span><span class="nv">$status</span><span class="s2">\"}}"</span>
 
-<span class="w">  </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$STATUS_API</span><span class="s2">/pages/</span><span class="nv">$PAGE_ID</span><span class="s2">/incidents&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: OAuth </span><span class="nv">$STATUSPAGE_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
-<span class="s2">      \&quot;incident\&quot;: {</span>
-<span class="s2">        \&quot;name\&quot;: \&quot;Service Degradation\&quot;,</span>
-<span class="s2">        \&quot;status\&quot;: \&quot;investigating\&quot;,</span>
-<span class="s2">        \&quot;body\&quot;: \&quot;</span><span class="nv">$body</span><span class="s2">\&quot;,</span>
-<span class="s2">        \&quot;component_ids\&quot;: [\&quot;</span><span class="nv">$COMPONENT_ID</span><span class="s2">\&quot;]</span>
+<span class="w">  </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">"</span><span class="nv">$STATUS_API</span><span class="s2">/pages/</span><span class="nv">$PAGE_ID</span><span class="s2">/incidents"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-H<span class="w"> </span><span class="s2">"Authorization: OAuth </span><span class="nv">$STATUSPAGE_API_KEY</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span><span class="s2">"{</span>
+<span class="s2">      \"incident\": {</span>
+<span class="s2">        \"name\": \"Service Degradation\",</span>
+<span class="s2">        \"status\": \"investigating\",</span>
+<span class="s2">        \"body\": \"</span><span class="nv">$body</span><span class="s2">\",</span>
+<span class="s2">        \"component_ids\": [\"</span><span class="nv">$COMPONENT_ID</span><span class="s2">\"]</span>
 <span class="s2">      }</span>
-<span class="s2">    }&quot;</span>
+<span class="s2">    }"</span>
 <span class="o">}</span>
 
 <span class="c1"># Usage</span>
-update_status<span class="w"> </span><span class="s2">&quot;degraded_performance&quot;</span><span class="w"> </span><span class="s2">&quot;We are investigating elevated error rates.&quot;</span>
+update_status<span class="w"> </span><span class="s2">"degraded_performance"</span><span class="w"> </span><span class="s2">"We are investigating elevated error rates."</span>
 <span class="sb">```</span>
 
 ---
@@ -8288,50 +8288,50 @@ update_status<span class="w"> </span><span class="s2">&quot;degraded_performance
 <span class="c1"># Mitigation strategies</span>
 <span class="nt">mitigation_options</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rollback deployment</span>
-<span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Issue</span><span class="nv"> </span><span class="s">started</span><span class="nv"> </span><span class="s">after</span><span class="nv"> </span><span class="s">recent</span><span class="nv"> </span><span class="s">deployment&quot;</span>
-<span class="w">    </span><span class="nt">risk</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Low</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">returns</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">known-good</span><span class="nv"> </span><span class="s">state&quot;</span>
+<span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="s">"Issue</span><span class="nv"> </span><span class="s">started</span><span class="nv"> </span><span class="s">after</span><span class="nv"> </span><span class="s">recent</span><span class="nv"> </span><span class="s">deployment"</span>
+<span class="w">    </span><span class="nt">risk</span><span class="p">:</span><span class="w"> </span><span class="s">"Low</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">returns</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">known-good</span><span class="nv"> </span><span class="s">state"</span>
 <span class="w">    </span><span class="nt">commands</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;kubectl</span><span class="nv"> </span><span class="s">rollout</span><span class="nv"> </span><span class="s">undo</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"kubectl</span><span class="nv"> </span><span class="s">rollout</span><span class="nv"> </span><span class="s">undo</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production"</span>
 <span class="w">    </span><span class="nt">verification</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;kubectl</span><span class="nv"> </span><span class="s">rollout</span><span class="nv"> </span><span class="s">status</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Check</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">Grafana&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"kubectl</span><span class="nv"> </span><span class="s">rollout</span><span class="nv"> </span><span class="s">status</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Check</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">Grafana"</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Scale up resources</span>
-<span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Resource</span><span class="nv"> </span><span class="s">exhaustion</span><span class="nv"> </span><span class="s">(CPU,</span><span class="nv"> </span><span class="s">memory,</span><span class="nv"> </span><span class="s">connections)&quot;</span>
-<span class="w">    </span><span class="nt">risk</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Low</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">increases</span><span class="nv"> </span><span class="s">capacity&quot;</span>
+<span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="s">"Resource</span><span class="nv"> </span><span class="s">exhaustion</span><span class="nv"> </span><span class="s">(CPU,</span><span class="nv"> </span><span class="s">memory,</span><span class="nv"> </span><span class="s">connections)"</span>
+<span class="w">    </span><span class="nt">risk</span><span class="p">:</span><span class="w"> </span><span class="s">"Low</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">increases</span><span class="nv"> </span><span class="s">capacity"</span>
 <span class="w">    </span><span class="nt">commands</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;kubectl</span><span class="nv"> </span><span class="s">scale</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production</span><span class="nv"> </span><span class="s">--replicas=20&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"kubectl</span><span class="nv"> </span><span class="s">scale</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production</span><span class="nv"> </span><span class="s">--replicas=20"</span>
 <span class="w">    </span><span class="nt">verification</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;kubectl</span><span class="nv"> </span><span class="s">get</span><span class="nv"> </span><span class="s">pods</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production</span><span class="nv"> </span><span class="s">-l</span><span class="nv"> </span><span class="s">app=my-service&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Check</span><span class="nv"> </span><span class="s">response</span><span class="nv"> </span><span class="s">times&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"kubectl</span><span class="nv"> </span><span class="s">get</span><span class="nv"> </span><span class="s">pods</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production</span><span class="nv"> </span><span class="s">-l</span><span class="nv"> </span><span class="s">app=my-service"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Check</span><span class="nv"> </span><span class="s">response</span><span class="nv"> </span><span class="s">times"</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enable circuit breaker</span>
-<span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Downstream</span><span class="nv"> </span><span class="s">dependency</span><span class="nv"> </span><span class="s">failure&quot;</span>
-<span class="w">    </span><span class="nt">risk</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Medium</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">cause</span><span class="nv"> </span><span class="s">degraded</span><span class="nv"> </span><span class="s">functionality&quot;</span>
+<span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="s">"Downstream</span><span class="nv"> </span><span class="s">dependency</span><span class="nv"> </span><span class="s">failure"</span>
+<span class="w">    </span><span class="nt">risk</span><span class="p">:</span><span class="w"> </span><span class="s">"Medium</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">cause</span><span class="nv"> </span><span class="s">degraded</span><span class="nv"> </span><span class="s">functionality"</span>
 <span class="w">    </span><span class="nt">commands</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;kubectl</span><span class="nv"> </span><span class="s">set</span><span class="nv"> </span><span class="s">env</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production</span><span class="nv"> </span><span class="s">CIRCUIT_BREAKER_ENABLED=true&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"kubectl</span><span class="nv"> </span><span class="s">set</span><span class="nv"> </span><span class="s">env</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production</span><span class="nv"> </span><span class="s">CIRCUIT_BREAKER_ENABLED=true"</span>
 <span class="w">    </span><span class="nt">verification</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Check</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">decreases&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Verify</span><span class="nv"> </span><span class="s">fallback</span><span class="nv"> </span><span class="s">behavior&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Check</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">decreases"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Verify</span><span class="nv"> </span><span class="s">fallback</span><span class="nv"> </span><span class="s">behavior"</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Failover to secondary</span>
-<span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Primary</span><span class="nv"> </span><span class="s">region/database</span><span class="nv"> </span><span class="s">unavailable&quot;</span>
-<span class="w">    </span><span class="nt">risk</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Medium</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">have</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">lag&quot;</span>
+<span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="s">"Primary</span><span class="nv"> </span><span class="s">region/database</span><span class="nv"> </span><span class="s">unavailable"</span>
+<span class="w">    </span><span class="nt">risk</span><span class="p">:</span><span class="w"> </span><span class="s">"Medium</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">have</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">lag"</span>
 <span class="w">    </span><span class="nt">commands</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;kubectl</span><span class="nv"> </span><span class="s">apply</span><span class="nv"> </span><span class="s">-f</span><span class="nv"> </span><span class="s">k8s/disaster-recovery/failover.yaml&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Update</span><span class="nv"> </span><span class="s">DNS</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">point</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">secondary&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"kubectl</span><span class="nv"> </span><span class="s">apply</span><span class="nv"> </span><span class="s">-f</span><span class="nv"> </span><span class="s">k8s/disaster-recovery/failover.yaml"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Update</span><span class="nv"> </span><span class="s">DNS</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">point</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">secondary"</span>
 <span class="w">    </span><span class="nt">verification</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Verify</span><span class="nv"> </span><span class="s">secondary</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">serving</span><span class="nv"> </span><span class="s">traffic&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Check</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">consistency&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Verify</span><span class="nv"> </span><span class="s">secondary</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">serving</span><span class="nv"> </span><span class="s">traffic"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Check</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">consistency"</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Traffic shedding</span>
-<span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Overload</span><span class="nv"> </span><span class="s">causing</span><span class="nv"> </span><span class="s">cascading</span><span class="nv"> </span><span class="s">failures&quot;</span>
-<span class="w">    </span><span class="nt">risk</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">intentionally</span><span class="nv"> </span><span class="s">drops</span><span class="nv"> </span><span class="s">traffic&quot;</span>
+<span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="s">"Overload</span><span class="nv"> </span><span class="s">causing</span><span class="nv"> </span><span class="s">cascading</span><span class="nv"> </span><span class="s">failures"</span>
+<span class="w">    </span><span class="nt">risk</span><span class="p">:</span><span class="w"> </span><span class="s">"High</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">intentionally</span><span class="nv"> </span><span class="s">drops</span><span class="nv"> </span><span class="s">traffic"</span>
 <span class="w">    </span><span class="nt">commands</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;kubectl</span><span class="nv"> </span><span class="s">apply</span><span class="nv"> </span><span class="s">-f</span><span class="nv"> </span><span class="s">k8s/production/rate-limit-emergency.yaml&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"kubectl</span><span class="nv"> </span><span class="s">apply</span><span class="nv"> </span><span class="s">-f</span><span class="nv"> </span><span class="s">k8s/production/rate-limit-emergency.yaml"</span>
 <span class="w">    </span><span class="nt">verification</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Check</span><span class="nv"> </span><span class="s">healthy</span><span class="nv"> </span><span class="s">traffic</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">succeeding&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Monitor</span><span class="nv"> </span><span class="s">queue</span><span class="nv"> </span><span class="s">depth&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Check</span><span class="nv"> </span><span class="s">healthy</span><span class="nv"> </span><span class="s">traffic</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">succeeding"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Monitor</span><span class="nv"> </span><span class="s">queue</span><span class="nv"> </span><span class="s">depth"</span>
 <span class="sb">```</span>
 
 <span class="gs">**Mitigation Decision Tree**</span>:
@@ -8367,26 +8367,26 @@ update_status<span class="w"> </span><span class="s2">&quot;degraded_performance
 <span class="nt">resolution_checklist</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">verification</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Confirm fix is deployed</span>
-<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubectl</span><span class="nv"> </span><span class="s">rollout</span><span class="nv"> </span><span class="s">status</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production&quot;</span>
+<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">"kubectl</span><span class="nv"> </span><span class="s">rollout</span><span class="nv"> </span><span class="s">status</span><span class="nv"> </span><span class="s">deployment/my-service</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">production"</span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verify metrics returning to normal</span>
 <span class="w">      </span><span class="nt">checks</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">&lt;</span><span class="nv"> </span><span class="s">0.1%&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Latency</span><span class="nv"> </span><span class="s">p99</span><span class="nv"> </span><span class="s">&lt;</span><span class="nv"> </span><span class="s">500ms&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;No</span><span class="nv"> </span><span class="s">new</span><span class="nv"> </span><span class="s">alerts</span><span class="nv"> </span><span class="s">firing&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">&lt;</span><span class="nv"> </span><span class="s">0.1%"</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Latency</span><span class="nv"> </span><span class="s">p99</span><span class="nv"> </span><span class="s">&lt;</span><span class="nv"> </span><span class="s">500ms"</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"No</span><span class="nv"> </span><span class="s">new</span><span class="nv"> </span><span class="s">alerts</span><span class="nv"> </span><span class="s">firing"</span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run smoke tests</span>
-<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pytest</span><span class="nv"> </span><span class="s">tests/smoke/</span><span class="nv"> </span><span class="s">-v</span><span class="nv"> </span><span class="s">--env=production&quot;</span>
+<span class="w">      </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">"pytest</span><span class="nv"> </span><span class="s">tests/smoke/</span><span class="nv"> </span><span class="s">-v</span><span class="nv"> </span><span class="s">--env=production"</span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verify customer impact resolved</span>
 <span class="w">      </span><span class="nt">checks</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Status</span><span class="nv"> </span><span class="s">page</span><span class="nv"> </span><span class="s">showing</span><span class="nv"> </span><span class="s">operational&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;No</span><span class="nv"> </span><span class="s">new</span><span class="nv"> </span><span class="s">support</span><span class="nv"> </span><span class="s">tickets&quot;</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Synthetic</span><span class="nv"> </span><span class="s">monitors</span><span class="nv"> </span><span class="s">passing&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Status</span><span class="nv"> </span><span class="s">page</span><span class="nv"> </span><span class="s">showing</span><span class="nv"> </span><span class="s">operational"</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"No</span><span class="nv"> </span><span class="s">new</span><span class="nv"> </span><span class="s">support</span><span class="nv"> </span><span class="s">tickets"</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Synthetic</span><span class="nv"> </span><span class="s">monitors</span><span class="nv"> </span><span class="s">passing"</span>
 
 <span class="w">  </span><span class="nt">communication</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Post resolution notice to</span><span class="w"> </span><span class="c1">#incidents</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update status page to &quot;Operational&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update status page to "Operational"</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Send resolution email to stakeholders</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">step</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update incident record with resolution details</span>
 
@@ -8403,35 +8403,35 @@ update_status<span class="w"> </span><span class="s2">&quot;degraded_performance
 <span class="ch">#!/bin/bash</span>
 <span class="c1"># verify_resolution.sh</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Resolution Verification ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Resolution Verification ==="</span>
 
 <span class="c1"># Check error rate</span>
-<span class="nv">ERROR_RATE</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/query?query=sum(rate(http_requests_total{status=~\&quot;5..\&quot;}[5m]))/sum(rate(http_requests_total[5m]))&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.data.result[0].value[1]&#39;</span><span class="k">)</span>
-<span class="k">if</span><span class="w"> </span><span class="o">((</span><span class="w"> </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ERROR_RATE</span><span class="s2"> &lt; 0.001&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="w"> </span>-l<span class="k">)</span><span class="w"> </span><span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✅ Error rate: </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ERROR_RATE</span><span class="s2"> * 100&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="k">)</span><span class="s2">% (&lt; 0.1%)&quot;</span>
+<span class="nv">ERROR_RATE</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">"http://prometheus:9090/api/v1/query?query=sum(rate(http_requests_total{status=~\"5..\"}[5m]))/sum(rate(http_requests_total[5m]))"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.data.result[0].value[1]'</span><span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">((</span><span class="w"> </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$ERROR_RATE</span><span class="s2"> &lt; 0.001"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="w"> </span>-l<span class="k">)</span><span class="w"> </span><span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"✅ Error rate: </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$ERROR_RATE</span><span class="s2"> * 100"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="k">)</span><span class="s2">% (&lt; 0.1%)"</span>
 <span class="k">else</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ Error rate: </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ERROR_RATE</span><span class="s2"> * 100&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="k">)</span><span class="s2">% (&gt;= 0.1%)&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"❌ Error rate: </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$ERROR_RATE</span><span class="s2"> * 100"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="k">)</span><span class="s2">% (&gt;= 0.1%)"</span>
 <span class="k">fi</span>
 
 <span class="c1"># Check latency</span>
-<span class="nv">LATENCY</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/query?query=histogram_quantile(0.99,sum(rate(http_request_duration_seconds_bucket[5m]))by(le))&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.data.result[0].value[1]&#39;</span><span class="k">)</span>
-<span class="k">if</span><span class="w"> </span><span class="o">((</span><span class="w"> </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LATENCY</span><span class="s2"> &lt; 0.5&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="w"> </span>-l<span class="k">)</span><span class="w"> </span><span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✅ p99 Latency: </span><span class="si">${</span><span class="nv">LATENCY</span><span class="si">}</span><span class="s2">s (&lt; 500ms)&quot;</span>
+<span class="nv">LATENCY</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">"http://prometheus:9090/api/v1/query?query=histogram_quantile(0.99,sum(rate(http_request_duration_seconds_bucket[5m]))by(le))"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.data.result[0].value[1]'</span><span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">((</span><span class="w"> </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$LATENCY</span><span class="s2"> &lt; 0.5"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="w"> </span>-l<span class="k">)</span><span class="w"> </span><span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"✅ p99 Latency: </span><span class="si">${</span><span class="nv">LATENCY</span><span class="si">}</span><span class="s2">s (&lt; 500ms)"</span>
 <span class="k">else</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ p99 Latency: </span><span class="si">${</span><span class="nv">LATENCY</span><span class="si">}</span><span class="s2">s (&gt;= 500ms)&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"❌ p99 Latency: </span><span class="si">${</span><span class="nv">LATENCY</span><span class="si">}</span><span class="s2">s (&gt;= 500ms)"</span>
 <span class="k">fi</span>
 
 <span class="c1"># Check all pods running</span>
-<span class="nv">READY_PODS</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>my-service<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.readyReplicas}&#39;</span><span class="k">)</span>
-<span class="nv">DESIRED_PODS</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>my-service<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.replicas}&#39;</span><span class="k">)</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$READY_PODS</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DESIRED_PODS</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✅ Pods: </span><span class="nv">$READY_PODS</span><span class="s2">/</span><span class="nv">$DESIRED_PODS</span><span class="s2"> ready&quot;</span>
+<span class="nv">READY_PODS</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>my-service<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.status.readyReplicas}'</span><span class="k">)</span>
+<span class="nv">DESIRED_PODS</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>my-service<span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.replicas}'</span><span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$READY_PODS</span><span class="s2">"</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"</span><span class="nv">$DESIRED_PODS</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"✅ Pods: </span><span class="nv">$READY_PODS</span><span class="s2">/</span><span class="nv">$DESIRED_PODS</span><span class="s2"> ready"</span>
 <span class="k">else</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ Pods: </span><span class="nv">$READY_PODS</span><span class="s2">/</span><span class="nv">$DESIRED_PODS</span><span class="s2"> ready&quot;</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"❌ Pods: </span><span class="nv">$READY_PODS</span><span class="s2">/</span><span class="nv">$DESIRED_PODS</span><span class="s2"> ready"</span>
 <span class="k">fi</span>
 
 <span class="c1"># Run smoke tests</span>
-<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\n=== Running Smoke Tests ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"\n=== Running Smoke Tests ==="</span>
 pytest<span class="w"> </span>tests/smoke/<span class="w"> </span>-v<span class="w"> </span>--env<span class="o">=</span>production<span class="w"> </span>-q
 <span class="sb">```</span>
 
@@ -8445,20 +8445,20 @@ pytest<span class="w"> </span>tests/smoke/<span class="w"> </span>-v<span class=
 <span class="w">  </span><span class="nt">immediate</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Close incident record</span>
 <span class="w">      </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IC</span>
-<span class="w">      </span><span class="nt">deadline</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Within</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">hour</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">resolution&quot;</span>
+<span class="w">      </span><span class="nt">deadline</span><span class="p">:</span><span class="w"> </span><span class="s">"Within</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">hour</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">resolution"</span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Send summary to stakeholders</span>
 <span class="w">      </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Comms Lead</span>
-<span class="w">      </span><span class="nt">deadline</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Within</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">hours</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">resolution&quot;</span>
+<span class="w">      </span><span class="nt">deadline</span><span class="p">:</span><span class="w"> </span><span class="s">"Within</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">hours</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">resolution"</span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create postmortem document</span>
 <span class="w">      </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Scribe</span>
-<span class="w">      </span><span class="nt">deadline</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Within</span><span class="nv"> </span><span class="s">4</span><span class="nv"> </span><span class="s">hours</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">resolution&quot;</span>
+<span class="w">      </span><span class="nt">deadline</span><span class="p">:</span><span class="w"> </span><span class="s">"Within</span><span class="nv"> </span><span class="s">4</span><span class="nv"> </span><span class="s">hours</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">resolution"</span>
 
 <span class="w">  </span><span class="nt">within_48_hours</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Conduct postmortem meeting</span>
-<span class="w">      </span><span class="nt">attendees</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;All</span><span class="nv"> </span><span class="s">incident</span><span class="nv"> </span><span class="s">responders</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">stakeholders&quot;</span>
-<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;60-90</span><span class="nv"> </span><span class="s">minutes&quot;</span>
+<span class="w">      </span><span class="nt">attendees</span><span class="p">:</span><span class="w"> </span><span class="s">"All</span><span class="nv"> </span><span class="s">incident</span><span class="nv"> </span><span class="s">responders</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">stakeholders"</span>
+<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="s">"60-90</span><span class="nv"> </span><span class="s">minutes"</span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Finalize postmortem document</span>
 <span class="w">      </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IC</span>
@@ -8470,16 +8470,16 @@ pytest<span class="w"> </span>tests/smoke/<span class="w"> </span>-v<span class=
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create action item tickets</span>
 <span class="w">      </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IC</span>
-<span class="w">      </span><span class="nt">tracking</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Jira/Linear/GitHub</span><span class="nv"> </span><span class="s">Issues&quot;</span>
+<span class="w">      </span><span class="nt">tracking</span><span class="p">:</span><span class="w"> </span><span class="s">"Jira/Linear/GitHub</span><span class="nv"> </span><span class="s">Issues"</span>
 
 <span class="w">  </span><span class="nt">within_1_week</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Share postmortem summary</span>
-<span class="w">      </span><span class="nt">audience</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Engineering</span><span class="nv"> </span><span class="s">organization&quot;</span>
-<span class="w">      </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Email</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">Slack</span><span class="nv"> </span><span class="s">post&quot;</span>
+<span class="w">      </span><span class="nt">audience</span><span class="p">:</span><span class="w"> </span><span class="s">"Engineering</span><span class="nv"> </span><span class="s">organization"</span>
+<span class="w">      </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">"Email</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">Slack</span><span class="nv"> </span><span class="s">post"</span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Review action item progress</span>
-<span class="w">      </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Engineering</span><span class="nv"> </span><span class="s">Manager&quot;</span>
-<span class="w">      </span><span class="nt">frequency</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Weekly</span><span class="nv"> </span><span class="s">until</span><span class="nv"> </span><span class="s">all</span><span class="nv"> </span><span class="s">items</span><span class="nv"> </span><span class="s">closed&quot;</span>
+<span class="w">      </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="s">"Engineering</span><span class="nv"> </span><span class="s">Manager"</span>
+<span class="w">      </span><span class="nt">frequency</span><span class="p">:</span><span class="w"> </span><span class="s">"Weekly</span><span class="nv"> </span><span class="s">until</span><span class="nv"> </span><span class="s">all</span><span class="nv"> </span><span class="s">items</span><span class="nv"> </span><span class="s">closed"</span>
 <span class="sb">```</span>
 </code></pre></div>
 <hr />
@@ -8649,9 +8649,9 @@ Write this for an audience that may not be technical.}
 
 <span class="sb">```text</span>
 Why did users see errors?
-  → Because the application couldn&#39;t get database connections
+  → Because the application couldn't get database connections
 
-Why couldn&#39;t the application get database connections?
+Why couldn't the application get database connections?
   → Because the connection pool was exhausted
 
 Why was the connection pool exhausted?
@@ -8661,7 +8661,7 @@ Why was traffic 3x higher?
   → Because a marketing campaign drove unexpected traffic
 
 Why was this traffic unexpected?
-  → Because there&#39;s no process for marketing to notify engineering of campaigns
+  → Because there's no process for marketing to notify engineering of campaigns
 <span class="sb">```</span>
 
 <span class="gu">### Root Causes</span>
@@ -8691,7 +8691,7 @@ Why was this traffic unexpected?
 |----------|--------|
 | Could we have detected earlier? | Yes, with connection pool monitoring |
 | What alert should have fired first? | <span class="sb">`DatabaseConnectionPoolHigh`</span> at 80% |
-| Why didn&#39;t it fire? | Alert not configured |
+| Why didn't it fire? | Alert not configured |
 
 ---
 
@@ -8733,13 +8733,13 @@ Why was this traffic unexpected?
 <span class="c1"># Verification commands run during recovery</span>
 kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>production<span class="w"> </span>deployment/my-service<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>localhost:8080/health/db
-<span class="c1"># Output: {&quot;status&quot;: &quot;healthy&quot;, &quot;pool&quot;: {&quot;active&quot;: 45, &quot;idle&quot;: 255, &quot;max&quot;: 300}}</span>
+<span class="c1"># Output: {"status": "healthy", "pool": {"active": 45, "idle": 255, "max": 300}}</span>
 
 pytest<span class="w"> </span>tests/smoke/<span class="w"> </span>-v<span class="w"> </span>--env<span class="o">=</span>production
 <span class="c1"># Output: 24 passed in 45.23s</span>
 
 curl<span class="w"> </span>-s<span class="w"> </span>https://api.example.com/health
-<span class="c1"># Output: {&quot;status&quot;: &quot;ok&quot;, &quot;version&quot;: &quot;1.2.3&quot;}</span>
+<span class="c1"># Output: {"status": "ok", "version": "1.2.3"}</span>
 <span class="sb">```</span>
 
 ---
@@ -8755,7 +8755,7 @@ curl<span class="w"> </span>-s<span class="w"> </span>https://api.example.com/he
 
 <span class="gu">### Surprising Findings</span>
 
-<span class="k">-</span><span class="w"> </span>Connection pool exhaustion doesn&#39;t trigger OOM or CPU alerts
+<span class="k">-</span><span class="w"> </span>Connection pool exhaustion doesn't trigger OOM or CPU alerts
 <span class="k">-</span><span class="w"> </span>Our synthetic monitors only check endpoint availability, not error rates
 <span class="k">-</span><span class="w"> </span>Marketing has launched 3 campaigns in the past month without notification
 
@@ -8769,25 +8769,25 @@ curl<span class="w"> </span>-s<span class="w"> </span>https://api.example.com/he
 
 | ID | Action | Owner | Due | Ticket | Priority |
 |----|--------|-------|-----|--------|----------|
-| AI-1 | Add connection pool utilization alert (80% threshold) | <span class="ni">@sre</span>-engineer | 2025-01-20 | OPS-1234 | P1 |
-| AI-2 | Document connection pool troubleshooting in runbook | <span class="ni">@oncall</span>-engineer | 2025-01-22 | OPS-1235 | P1 |
+| AI-1 | Add connection pool utilization alert (80% threshold) | <span class="ni">@sre-engineer</span> | 2025-01-20 | OPS-1234 | P1 |
+| AI-2 | Document connection pool troubleshooting in runbook | <span class="ni">@oncall-engineer</span> | 2025-01-22 | OPS-1235 | P1 |
 | AI-3 | Increase production connection pool to 500 | <span class="ni">@dba</span> | 2025-01-19 | OPS-1236 | P1 |
 
 <span class="gu">### Short-term (This Sprint)</span>
 
 | ID | Action | Owner | Due | Ticket | Priority |
 |----|--------|-------|-----|--------|----------|
-| AI-4 | Implement connection pool autoscaling | <span class="ni">@platform</span>-engineer | 2025-01-31 | ENG-5678 | P2 |
+| AI-4 | Implement connection pool autoscaling | <span class="ni">@platform-engineer</span> | 2025-01-31 | ENG-5678 | P2 |
 | AI-5 | Add read replica autoscaling | <span class="ni">@dba</span> | 2025-02-07 | OPS-1237 | P2 |
-| AI-6 | Create marketing → engineering notification process | <span class="ni">@engineering</span>-manager | 2025-01-25 | PROC-123 | P2 |
+| AI-6 | Create marketing → engineering notification process | <span class="ni">@engineering-manager</span> | 2025-01-25 | PROC-123 | P2 |
 
 <span class="gu">### Long-term (This Quarter)</span>
 
 | ID | Action | Owner | Due | Ticket | Priority |
 |----|--------|-------|-----|--------|----------|
-| AI-7 | Implement automatic status page updates | <span class="ni">@sre</span>-team | 2025-03-31 | OPS-1238 | P3 |
-| AI-8 | Add synthetic monitors for error rate thresholds | <span class="ni">@sre</span>-team | 2025-02-28 | OPS-1239 | P3 |
-| AI-9 | Conduct capacity planning review for all services | <span class="ni">@platform</span>-team | 2025-03-15 | ENG-5679 | P3 |
+| AI-7 | Implement automatic status page updates | <span class="ni">@sre-team</span> | 2025-03-31 | OPS-1238 | P3 |
+| AI-8 | Add synthetic monitors for error rate thresholds | <span class="ni">@sre-team</span> | 2025-02-28 | OPS-1239 | P3 |
+| AI-9 | Conduct capacity planning review for all services | <span class="ni">@platform-team</span> | 2025-03-15 | ENG-5679 | P3 |
 
 ---
 
@@ -9072,10 +9072,10 @@ available at the time.*
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

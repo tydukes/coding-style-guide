@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7129,12 +7129,12 @@ make<span class="w"> </span>verify-setup
 
 <span class="sb">```bash</span>
 <span class="c1"># AWS</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span><span class="s2">&quot;your-access-key&quot;</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span><span class="s2">&quot;your-secret-key&quot;</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span><span class="s2">"your-access-key"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span><span class="s2">"your-secret-key"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span><span class="s2">"us-east-1"</span>
 
 <span class="c1"># Or use AWS profile</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_PROFILE</span><span class="o">=</span><span class="s2">&quot;terraform-testing&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_PROFILE</span><span class="o">=</span><span class="s2">"terraform-testing"</span>
 <span class="sb">```</span>
 
 <span class="gu">### Test Infrastructure Requirements [Optional]</span>
@@ -7434,7 +7434,7 @@ make<span class="w"> </span>test-platform<span class="w"> </span><span class="nv
 ./scripts/test-changed-modules.sh
 
 <span class="c1"># Or use git diff</span>
-git<span class="w"> </span>diff<span class="w"> </span>--name-only<span class="w"> </span>main...HEAD<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;\.tf$&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="w"> </span><span class="o">{}</span><span class="w"> </span>dirname<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u
+git<span class="w"> </span>diff<span class="w"> </span>--name-only<span class="w"> </span>main...HEAD<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">'\.tf$'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="w"> </span><span class="o">{}</span><span class="w"> </span>dirname<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u
 <span class="sb">```</span>
 
 <span class="gu">## Troubleshooting</span>
@@ -7465,8 +7465,8 @@ aws<span class="w"> </span>iam<span class="w"> </span>simulate-principal-policy<
 
 <span class="sb">```bash</span>
 <span class="c1"># List and clean up test VPCs</span>
-aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpcs<span class="w"> </span>--filters<span class="w"> </span><span class="s2">&quot;Name=tag:Environment,Values=test&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.Vpcs[].VpcId&#39;</span><span class="w"> </span><span class="se">\</span>
+aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpcs<span class="w"> </span>--filters<span class="w"> </span><span class="s2">"Name=tag:Environment,Values=test"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.Vpcs[].VpcId'</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="w"> </span><span class="o">{}</span><span class="w"> </span>aws<span class="w"> </span>ec2<span class="w"> </span>delete-vpc<span class="w"> </span>--vpc-id<span class="w"> </span><span class="o">{}</span>
 <span class="sb">```</span>
 
@@ -7478,7 +7478,7 @@ aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpcs<span class="
 
 <span class="k">-</span><span class="w"> </span>Check security group rules allow required ports
 <span class="k">-</span><span class="w"> </span>Verify subnets have route to internet (for outbound)
-<span class="k">-</span><span class="w"> </span>Check network ACLs aren&#39;t blocking traffic
+<span class="k">-</span><span class="w"> </span>Check network ACLs aren't blocking traffic
 
 <span class="gu">#### Docker Issues (Molecule)</span>
 
@@ -7561,9 +7561,9 @@ molecule<span class="w"> </span>login<span class="w">  </span><span class="c1">#
 
 <span class="sb">```hcl</span>
 <span class="c1"># tests/fixtures/basic_vpc.tfvars</span>
-<span class="na">vpc_cidr</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
-<span class="na">environment</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;test&quot;</span>
-<span class="na">availability_zones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;</span><span class="p">]</span>
+<span class="na">vpc_cidr</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
+<span class="na">environment</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"test"</span>
+<span class="na">availability_zones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"us-east-1a", "us-east-1b"</span><span class="p">]</span>
 <span class="na">enable_nat_gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="sb">```</span>
 
@@ -7571,7 +7571,7 @@ molecule<span class="w"> </span>login<span class="w">  </span><span class="c1">#
 
 <span class="sb">```yaml</span>
 <span class="c1"># tests/fixtures/webserver_config.yml</span>
-<span class="nt">nginx_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.24&quot;</span>
+<span class="nt">nginx_version</span><span class="p">:</span><span class="w"> </span><span class="s">"1.24"</span>
 <span class="nt">nginx_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
 <span class="nt">enable_ssl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="sb">```</span>
@@ -7584,18 +7584,18 @@ Use fake/placeholder values:
 
 <span class="sb">```yaml</span>
 <span class="c1"># GOOD - Fake credentials for testing</span>
-<span class="nt">aws_account_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;123456789012&quot;</span><span class="w">  </span><span class="c1"># Clearly fake</span>
-<span class="nt">database_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test-password-not-real&quot;</span>
+<span class="nt">aws_account_id</span><span class="p">:</span><span class="w"> </span><span class="s">"123456789012"</span><span class="w">  </span><span class="c1"># Clearly fake</span>
+<span class="nt">database_password</span><span class="p">:</span><span class="w"> </span><span class="s">"test-password-not-real"</span>
 
 <span class="c1"># BAD - Real credentials</span>
-<span class="nt">aws_access_key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;AKIAIOSFODNN7EXAMPLE&quot;</span><span class="w">  </span><span class="c1"># Never do this!</span>
+<span class="nt">aws_access_key</span><span class="p">:</span><span class="w"> </span><span class="s">"AKIAIOSFODNN7EXAMPLE"</span><span class="w">  </span><span class="c1"># Never do this!</span>
 <span class="sb">```</span>
 
 For tests requiring real credentials, use environment variables:
 
 <span class="sb">```bash</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">TEST_AWS_ACCESS_KEY_ID</span><span class="o">=</span><span class="s2">&quot;from-vault&quot;</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">TEST_DATABASE_PASSWORD</span><span class="o">=</span><span class="s2">&quot;from-vault&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">TEST_AWS_ACCESS_KEY_ID</span><span class="o">=</span><span class="s2">"from-vault"</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">TEST_DATABASE_PASSWORD</span><span class="o">=</span><span class="s2">"from-vault"</span>
 <span class="sb">```</span>
 
 <span class="gu">### Mock vs Real Resources</span>
@@ -7689,7 +7689,7 @@ test:multi-platform:
 
 <span class="k">1.</span> Review tests during code review
 <span class="k">2.</span> Verify tests match CONTRACT.md guarantees
-<span class="k">3.</span> Check test coverage hasn&#39;t decreased
+<span class="k">3.</span> Check test coverage hasn't decreased
 <span class="k">4.</span> Ensure new features have tests
 
 <span class="gs">**CONTRACT.md Synchronization**</span>:
@@ -7734,12 +7734,12 @@ Pin versions for reproducibility:
 <span class="sb">```hcl</span>
 <span class="c1"># Terraform</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.3.0, &lt; 2.0.0&quot;</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.3.0, &lt; 2.0.0"</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/aws&quot;</span>
-<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 5.0&quot;</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"hashicorp/aws"</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 5.0"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7908,10 +7908,10 @@ Molecule and InSpec testing examples.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

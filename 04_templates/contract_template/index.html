@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7068,9 +7068,9 @@ These are explicit, testable promises about what this module/role will do:
 
 | Name | Type | Description | Validation Rules | Example |
 |------|------|-------------|------------------|---------|
-| <span class="sb">`vpc_cidr`</span> | <span class="sb">`string`</span> | VPC CIDR block | Must be valid IPv4 CIDR, /16 to /28 | <span class="sb">`&quot;10.0.0.0/16&quot;`</span> |
-| <span class="sb">`environment`</span> | <span class="sb">`string`</span> | Deployment environment | Must be: dev, staging, prod | <span class="sb">`&quot;prod&quot;`</span> |
-| <span class="sb">`availability_zones`</span> | <span class="sb">`list(string)`</span> | AZs for subnet distribution | Minimum 2 AZs | <span class="sb">`[&quot;us-east-1a&quot;, &quot;us-east-1b&quot;]`</span> |
+| <span class="sb">`vpc_cidr`</span> | <span class="sb">`string`</span> | VPC CIDR block | Must be valid IPv4 CIDR, /16 to /28 | <span class="sb">`"10.0.0.0/16"`</span> |
+| <span class="sb">`environment`</span> | <span class="sb">`string`</span> | Deployment environment | Must be: dev, staging, prod | <span class="sb">`"prod"`</span> |
+| <span class="sb">`availability_zones`</span> | <span class="sb">`list(string)`</span> | AZs for subnet distribution | Minimum 2 AZs | <span class="sb">`["us-east-1a", "us-east-1b"]`</span> |
 
 <span class="gu">### Optional Inputs</span>
 
@@ -7083,7 +7083,7 @@ These are explicit, testable promises about what this module/role will do:
 | Name | Type | Default | Description | Validation Rules | Example |
 |------|------|---------|-------------|------------------|---------|
 | <span class="sb">`enable_nat_gateway`</span> | <span class="sb">`bool`</span> | <span class="sb">`true`</span> | Create NAT gateways | None | <span class="sb">`false`</span> |
-| <span class="sb">`tags`</span> | <span class="sb">`map(string)`</span> | <span class="sb">`{}`</span> | Additional resource tags | None | <span class="sb">`{&quot;Project&quot;: &quot;MyApp&quot;}`</span> |
+| <span class="sb">`tags`</span> | <span class="sb">`map(string)`</span> | <span class="sb">`{}`</span> | Additional resource tags | None | <span class="sb">`{"Project": "MyApp"}`</span> |
 
 <span class="gu">## 4. Outputs (Returns)</span>
 
@@ -7180,24 +7180,24 @@ These are explicit, testable promises about what this module/role will do:
 
 <span class="sb">```json</span>
 <span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;ec2:CreateVpc&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ec2:DescribeVpcs&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ec2:ModifyVpcAttribute&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ec2:CreateSubnet&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ec2:DescribeSubnets&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ec2:CreateInternetGateway&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ec2:AttachInternetGateway&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ec2:CreateNatGateway&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ec2:DescribeNatGateways&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ec2:AllocateAddress&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ec2:DescribeAddresses&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ec2:CreateRouteTable&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ec2:CreateRoute&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;ec2:AssociateRouteTable&quot;</span>
+<span class="w">  </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"ec2:CreateVpc"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ec2:DescribeVpcs"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ec2:ModifyVpcAttribute"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ec2:CreateSubnet"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ec2:DescribeSubnets"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ec2:CreateInternetGateway"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ec2:AttachInternetGateway"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ec2:CreateNatGateway"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ec2:DescribeNatGateways"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ec2:AllocateAddress"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ec2:DescribeAddresses"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ec2:CreateRouteTable"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ec2:CreateRoute"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"ec2:AssociateRouteTable"</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<span class="w">  </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span>
 <span class="p">}</span>
 <span class="sb">```</span>
 
@@ -7274,7 +7274,7 @@ These are explicit, testable promises about what this module/role will do:
 <span class="gu">### Idempotency Guarantees</span>
 
 <span class="k">1.</span> <span class="gs">**I1**</span>: Running role multiple times produces no additional changes
-<span class="k">2.</span> <span class="gs">**I2**</span>: Tasks report &quot;changed&quot; only when actual changes are made
+<span class="k">2.</span> <span class="gs">**I2**</span>: Tasks report "changed" only when actual changes are made
 <span class="k">3.</span> <span class="gs">**I3**</span>: Service restarts only occur when configuration changes
 
 <span class="gu">### Safe Rerun Scenarios</span>
@@ -7426,16 +7426,16 @@ See [<span class="nt">README.md</span>](<span class="na">README.md</span>) for c
 
 <span class="sb">```hcl</span>
 <span class="c1"># Terraform example</span>
-<span class="kr">module</span><span class="w"> </span><span class="nv">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;./modules/vpc&quot;</span>
+<span class="kr">module</span><span class="w"> </span><span class="nv">"vpc"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"./modules/vpc"</span>
 
-<span class="w">  </span><span class="na">vpc_cidr</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
-<span class="w">  </span><span class="na">environment</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span>
-<span class="w">  </span><span class="na">availability_zones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">vpc_cidr</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
+<span class="w">  </span><span class="na">environment</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"prod"</span>
+<span class="w">  </span><span class="na">availability_zones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"us-east-1a", "us-east-1b"</span><span class="p">]</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MyApp&quot;</span>
-<span class="w">    </span><span class="na">Owner</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DevOps&quot;</span>
+<span class="w">    </span><span class="na">Project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"MyApp"</span>
+<span class="w">    </span><span class="na">Owner</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"DevOps"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 <span class="sb">```</span>
@@ -7447,9 +7447,9 @@ See [<span class="nt">README.md</span>](<span class="na">README.md</span>) for c
 <span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webserver</span>
 <span class="w">      </span><span class="nt">vars</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">nginx_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.24&quot;</span>
+<span class="w">        </span><span class="nt">nginx_version</span><span class="p">:</span><span class="w"> </span><span class="s">"1.24"</span>
 <span class="w">        </span><span class="nt">enable_ssl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">        </span><span class="nt">ssl_certificate_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/etc/ssl/certs/server.crt&quot;</span>
+<span class="w">        </span><span class="nt">ssl_certificate_path</span><span class="p">:</span><span class="w"> </span><span class="s">"/etc/ssl/certs/server.crt"</span>
 <span class="sb">```</span>
 
 ---
@@ -7621,10 +7621,10 @@ webserver role CONTRACT.md example.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

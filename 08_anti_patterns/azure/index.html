@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7277,61 +7277,61 @@ Each anti-pattern includes:</p>
 <h2 id="security-anti-patterns">Security Anti-Patterns<a class="headerlink" href="#security-anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="public-network-access-on-paas-services">Public Network Access on PaaS Services<a class="headerlink" href="#public-network-access-on-paas-services" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Exposing PaaS services to the public internet</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_key_vault&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;kv-webapp-prod&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_key_vault"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"kv-webapp-prod"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">tenant_id</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">data.azurerm_client_config.current.tenant_id</span>
-<span class="w">  </span><span class="na">sku_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;standard&quot;</span>
+<span class="w">  </span><span class="na">sku_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">"standard"</span>
 
 <span class="c1">  # No network restrictions - accessible from anywhere</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_storage_account&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;stwebappprod001&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_storage_account"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">"stwebappprod001"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard&quot;</span>
-<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;LRS&quot;</span>
+<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard"</span>
+<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"LRS"</span>
 
 <span class="c1">  # Public blob access enabled</span>
 <span class="w">  </span><span class="na">allow_nested_items_to_be_public</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_mssql_server&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sql-webapp-prod&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_mssql_server"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                         </span><span class="o">=</span><span class="w"> </span><span class="s2">"sql-webapp-prod"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">version</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;12.0&quot;</span>
-<span class="w">  </span><span class="na">administrator_login</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sqladmin&quot;</span>
+<span class="w">  </span><span class="na">version</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">"12.0"</span>
+<span class="w">  </span><span class="na">administrator_login</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"sqladmin"</span>
 <span class="w">  </span><span class="na">administrator_login_password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.sql_password</span>
 
 <span class="c1">  # Public network access enabled by default</span>
 <span class="p">}</span>
 
 <span class="c1"># Firewall rule allowing all Azure services AND public internet</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_mssql_firewall_rule&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AllowAll&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_mssql_firewall_rule"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">"AllowAll"</span>
 <span class="w">  </span><span class="na">server_id</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_mssql_server.bad.id</span>
-<span class="w">  </span><span class="na">start_ip_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span>
-<span class="w">  </span><span class="na">end_ip_address</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;255.255.255.255&quot;</span>
+<span class="w">  </span><span class="na">start_ip_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"0.0.0.0"</span>
+<span class="w">  </span><span class="na">end_ip_address</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"255.255.255.255"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use private endpoints and disable public access</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_key_vault&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;kv-webapp-prod&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_key_vault"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"kv-webapp-prod"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">tenant_id</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">data.azurerm_client_config.current.tenant_id</span>
-<span class="w">  </span><span class="na">sku_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;standard&quot;</span>
+<span class="w">  </span><span class="na">sku_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">"standard"</span>
 
 <span class="c1">  # Disable public access</span>
 <span class="w">  </span><span class="na">public_network_access_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 
 <span class="c1">  # Network ACLs as defense in depth</span>
 <span class="w">  </span><span class="nb">network_acls</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">default_action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span>
-<span class="w">    </span><span class="na">bypass</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AzureServices&quot;</span>
+<span class="w">    </span><span class="na">default_action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Deny"</span>
+<span class="w">    </span><span class="na">bypass</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">"AzureServices"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="c1">  # Enable purge protection for production</span>
@@ -7339,32 +7339,32 @@ Each anti-pattern includes:</p>
 <span class="w">  </span><span class="na">soft_delete_retention_days</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">90</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_storage_account&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;stwebappprod001&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_storage_account"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">"stwebappprod001"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard&quot;</span>
-<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GRS&quot;</span>
+<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard"</span>
+<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"GRS"</span>
 
 <span class="c1">  # Security settings</span>
 <span class="w">  </span><span class="na">allow_nested_items_to_be_public</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 <span class="w">  </span><span class="na">public_network_access_enabled</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
-<span class="w">  </span><span class="na">min_tls_version</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;TLS1_2&quot;</span>
+<span class="w">  </span><span class="na">min_tls_version</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">"TLS1_2"</span>
 
 <span class="w">  </span><span class="nb">network_rules</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">default_action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span>
-<span class="w">    </span><span class="na">bypass</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;AzureServices&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">default_action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Deny"</span>
+<span class="w">    </span><span class="na">bypass</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"AzureServices"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_mssql_server&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sql-webapp-prod&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_mssql_server"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                          </span><span class="o">=</span><span class="w"> </span><span class="s2">"sql-webapp-prod"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">version</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;12.0&quot;</span>
-<span class="w">  </span><span class="na">administrator_login</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sqladmin&quot;</span>
+<span class="w">  </span><span class="na">version</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="s2">"12.0"</span>
+<span class="w">  </span><span class="na">administrator_login</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"sqladmin"</span>
 <span class="w">  </span><span class="na">administrator_login_password</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">var.sql_password</span>
-<span class="w">  </span><span class="na">minimum_tls_version</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.2&quot;</span>
+<span class="w">  </span><span class="na">minimum_tls_version</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"1.2"</span>
 <span class="w">  </span><span class="na">public_network_access_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 
 <span class="w">  </span><span class="nb">azuread_administrator</span><span class="w"> </span><span class="p">{</span>
@@ -7375,21 +7375,21 @@ Each anti-pattern includes:</p>
 <span class="p">}</span>
 
 <span class="c1"># Private endpoint for SQL Server</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_private_endpoint&quot;</span><span class="w"> </span><span class="nv">&quot;sql&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pep-sql-webapp-prod&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_private_endpoint"</span><span class="w"> </span><span class="nv">"sql"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"pep-sql-webapp-prod"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">subnet_id</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.data_subnet_id</span>
 
 <span class="w">  </span><span class="nb">private_service_connection</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">name</span><span class="w">                           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;psc-sql&quot;</span>
+<span class="w">    </span><span class="na">name</span><span class="w">                           </span><span class="o">=</span><span class="w"> </span><span class="s2">"psc-sql"</span>
 <span class="w">    </span><span class="na">private_connection_resource_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_mssql_server.good.id</span>
-<span class="w">    </span><span class="na">subresource_names</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sqlServer&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">subresource_names</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"sqlServer"</span><span class="p">]</span>
 <span class="w">    </span><span class="na">is_manual_connection</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">private_dns_zone_group</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
+<span class="w">    </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">"default"</span>
 <span class="w">    </span><span class="na">private_dns_zone_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">var.sql_private_dns_zone_id</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7399,57 +7399,57 @@ stays within Azure's backbone network and your VNet.</p>
 <hr />
 <h3 id="hardcoded-secrets-in-terraform">Hardcoded Secrets in Terraform<a class="headerlink" href="#hardcoded-secrets-in-terraform" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Secrets stored in Terraform code or tfvars</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_mssql_server&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sql-webapp-prod&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_mssql_server"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                         </span><span class="o">=</span><span class="w"> </span><span class="s2">"sql-webapp-prod"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">version</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;12.0&quot;</span>
-<span class="w">  </span><span class="na">administrator_login</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sqladmin&quot;</span>
-<span class="w">  </span><span class="na">administrator_login_password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;P@ssw0rd123!&quot;</span><span class="c1">  # Hardcoded secret!</span>
+<span class="w">  </span><span class="na">version</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">"12.0"</span>
+<span class="w">  </span><span class="na">administrator_login</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"sqladmin"</span>
+<span class="w">  </span><span class="na">administrator_login_password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"P@ssw0rd123!"</span><span class="c1">  # Hardcoded secret!</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_linux_web_app&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;app-webapp-prod&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_linux_web_app"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"app-webapp-prod"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">service_plan_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_service_plan.main.id</span>
 
 <span class="w">  </span><span class="nb">app_settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;DATABASE_PASSWORD&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;P@ssw0rd123!&quot;</span><span class="c1">  # Secret in plain text!</span>
-<span class="w">    </span><span class="s2">&quot;API_KEY&quot;</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sk-abc123xyz&quot;</span><span class="c1">   # Another hardcoded secret!</span>
+<span class="w">    </span><span class="s2">"DATABASE_PASSWORD"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"P@ssw0rd123!"</span><span class="c1">  # Secret in plain text!</span>
+<span class="w">    </span><span class="s2">"API_KEY"</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"sk-abc123xyz"</span><span class="c1">   # Another hardcoded secret!</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">site_config</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">application_stack</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3.11&quot;</span>
+<span class="w">      </span><span class="na">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"3.11"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use Key Vault and managed identities</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Generate random password</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;random_password&quot;</span><span class="w"> </span><span class="nv">&quot;sql_admin&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"random_password"</span><span class="w"> </span><span class="nv">"sql_admin"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">length</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="m">32</span>
 <span class="w">  </span><span class="na">special</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-<span class="w">  </span><span class="na">override_special</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;!@#$%^&amp;*&quot;</span>
+<span class="w">  </span><span class="na">override_special</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"!@#$%^&amp;*"</span>
 <span class="p">}</span>
 
 <span class="c1"># Store password in Key Vault</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_key_vault_secret&quot;</span><span class="w"> </span><span class="nv">&quot;sql_password&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sql-admin-password&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_key_vault_secret"</span><span class="w"> </span><span class="nv">"sql_password"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">"sql-admin-password"</span>
 <span class="w">  </span><span class="na">value</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nv">random_password.sql_admin.result</span>
 <span class="w">  </span><span class="na">key_vault_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_key_vault.main.id</span>
 
-<span class="w">  </span><span class="na">content_type</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;password&quot;</span>
-<span class="w">  </span><span class="na">expiration_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">timeadd</span><span class="p">(</span><span class="nf">timestamp</span><span class="p">(),</span><span class="w"> </span><span class="s2">&quot;8760h&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="na">content_type</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"password"</span>
+<span class="w">  </span><span class="na">expiration_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">timeadd</span><span class="p">(</span><span class="nf">timestamp</span><span class="p">(),</span><span class="w"> </span><span class="s2">"8760h"</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_mssql_server&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sql-webapp-prod&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_mssql_server"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                         </span><span class="o">=</span><span class="w"> </span><span class="s2">"sql-webapp-prod"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">version</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;12.0&quot;</span>
-<span class="w">  </span><span class="na">administrator_login</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sqladmin&quot;</span>
+<span class="w">  </span><span class="na">version</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">"12.0"</span>
+<span class="w">  </span><span class="na">administrator_login</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"sqladmin"</span>
 <span class="w">  </span><span class="na">administrator_login_password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">random_password.sql_admin.result</span>
 
 <span class="c1">  # Prefer Azure AD authentication</span>
@@ -7464,32 +7464,32 @@ stays within Azure's backbone network and your VNet.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_linux_web_app&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;app-webapp-prod&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_linux_web_app"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"app-webapp-prod"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">service_plan_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_service_plan.main.id</span>
 
 <span class="w">  </span><span class="nb">identity</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SystemAssigned&quot;</span>
+<span class="w">    </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"SystemAssigned"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">app_settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="c1">    # Reference Key Vault - app retrieves secrets at runtime</span>
-<span class="w">    </span><span class="s2">&quot;KEY_VAULT_URI&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_key_vault.main.vault_uri</span>
+<span class="w">    </span><span class="s2">"KEY_VAULT_URI"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_key_vault.main.vault_uri</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">site_config</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">application_stack</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3.11&quot;</span>
+<span class="w">      </span><span class="na">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"3.11"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1"># Grant the app access to Key Vault secrets</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_role_assignment&quot;</span><span class="w"> </span><span class="nv">&quot;app_keyvault&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_role_assignment"</span><span class="w"> </span><span class="nv">"app_keyvault"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">scope</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_key_vault.main.id</span>
-<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Key Vault Secrets User&quot;</span>
+<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Key Vault Secrets User"</span>
 <span class="w">  </span><span class="na">principal_id</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_linux_web_app.good.identity[0].principal_id</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -7498,38 +7498,38 @@ identity eliminates secret exposure.</p>
 <hr />
 <h3 id="using-service-principal-secrets-instead-of-managed-identity">Using Service Principal Secrets Instead of Managed Identity<a class="headerlink" href="#using-service-principal-secrets-instead-of-managed-identity" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Service principal with client secrets</p>
-<div class="highlight"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;azurerm&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">"azurerm"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nb">features</span><span class="w"> </span><span class="p">{}</span>
 
 <span class="c1">  # Service principal authentication with secrets</span>
-<span class="w">  </span><span class="na">client_id</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;</span>
+<span class="w">  </span><span class="na">client_id</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"</span>
 <span class="w">  </span><span class="na">client_secret</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">var.client_secret</span><span class="c1">  # Secret that expires and must be rotated</span>
-<span class="w">  </span><span class="na">tenant_id</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;</span>
-<span class="w">  </span><span class="na">subscription_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;</span>
+<span class="w">  </span><span class="na">tenant_id</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"</span>
+<span class="w">  </span><span class="na">subscription_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_linux_web_app&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;app-webapp-prod&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_linux_web_app"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"app-webapp-prod"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">service_plan_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_service_plan.main.id</span>
 
 <span class="w">  </span><span class="nb">app_settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="c1">    # Storing credentials for the app to use</span>
-<span class="w">    </span><span class="s2">&quot;AZURE_CLIENT_ID&quot;</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.app_client_id</span>
-<span class="w">    </span><span class="s2">&quot;AZURE_CLIENT_SECRET&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.app_client_secret</span>
-<span class="w">    </span><span class="s2">&quot;AZURE_TENANT_ID&quot;</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.tenant_id</span>
+<span class="w">    </span><span class="s2">"AZURE_CLIENT_ID"</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.app_client_id</span>
+<span class="w">    </span><span class="s2">"AZURE_CLIENT_SECRET"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.app_client_secret</span>
+<span class="w">    </span><span class="s2">"AZURE_TENANT_ID"</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.tenant_id</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">site_config</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">application_stack</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3.11&quot;</span>
+<span class="w">      </span><span class="na">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"3.11"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use OIDC for CI/CD and managed identity for workloads</p>
-<div class="highlight"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;azurerm&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">"azurerm"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nb">features</span><span class="w"> </span><span class="p">{}</span>
 
 <span class="c1">  # OIDC authentication for GitHub Actions</span>
@@ -7538,32 +7538,32 @@ identity eliminates secret exposure.</p>
 <span class="w">  </span><span class="na">tenant_id</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">var.tenant_id</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_linux_web_app&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;app-webapp-prod&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_linux_web_app"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"app-webapp-prod"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">service_plan_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_service_plan.main.id</span>
 
 <span class="w">  </span><span class="nb">identity</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SystemAssigned&quot;</span>
+<span class="w">    </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"SystemAssigned"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">app_settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="c1">    # No credentials needed - uses managed identity</span>
-<span class="w">    </span><span class="s2">&quot;AZURE_CLIENT_ID&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="c1">  # DefaultAzureCredential auto-detects managed identity</span>
+<span class="w">    </span><span class="s2">"AZURE_CLIENT_ID"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">""</span><span class="c1">  # DefaultAzureCredential auto-detects managed identity</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">site_config</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">application_stack</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3.11&quot;</span>
+<span class="w">      </span><span class="na">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"3.11"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1"># Grant specific permissions to the managed identity</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_role_assignment&quot;</span><span class="w"> </span><span class="nv">&quot;app_storage&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_role_assignment"</span><span class="w"> </span><span class="nv">"app_storage"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">scope</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_storage_account.main.id</span>
-<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Storage Blob Data Contributor&quot;</span>
+<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Storage Blob Data Contributor"</span>
 <span class="w">  </span><span class="na">principal_id</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_linux_web_app.good.identity[0].principal_id</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -7573,52 +7573,52 @@ are automatically managed by Azure with no secrets to handle.</p>
 <h3 id="overly-permissive-rbac">Overly Permissive RBAC<a class="headerlink" href="#overly-permissive-rbac" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Assigning Owner or Contributor at subscription scope</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Granting Owner at subscription level</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_role_assignment&quot;</span><span class="w"> </span><span class="nv">&quot;bad_owner&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">scope</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/subscriptions/${data.azurerm_subscription.current.subscription_id}&quot;</span>
-<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Owner&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_role_assignment"</span><span class="w"> </span><span class="nv">"bad_owner"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">scope</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"/subscriptions/${data.azurerm_subscription.current.subscription_id}"</span>
+<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Owner"</span>
 <span class="w">  </span><span class="na">principal_id</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">var.developer_group_object_id</span>
 <span class="p">}</span>
 
 <span class="c1"># Granting Contributor to a service principal for everything</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_role_assignment&quot;</span><span class="w"> </span><span class="nv">&quot;bad_contributor&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">scope</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/subscriptions/${data.azurerm_subscription.current.subscription_id}&quot;</span>
-<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Contributor&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_role_assignment"</span><span class="w"> </span><span class="nv">"bad_contributor"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">scope</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"/subscriptions/${data.azurerm_subscription.current.subscription_id}"</span>
+<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Contributor"</span>
 <span class="w">  </span><span class="na">principal_id</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_user_assigned_identity.app.principal_id</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Good</strong>: Least privilege at the narrowest scope</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Developers get Contributor only on their resource group</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_role_assignment&quot;</span><span class="w"> </span><span class="nv">&quot;dev_contributor&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_role_assignment"</span><span class="w"> </span><span class="nv">"dev_contributor"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">scope</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_resource_group.app.id</span>
-<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Contributor&quot;</span>
+<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Contributor"</span>
 <span class="w">  </span><span class="na">principal_id</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">var.developer_group_object_id</span>
 <span class="p">}</span>
 
 <span class="c1"># App identity gets only the specific permissions needed</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_role_assignment&quot;</span><span class="w"> </span><span class="nv">&quot;app_storage_read&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_role_assignment"</span><span class="w"> </span><span class="nv">"app_storage_read"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">scope</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_storage_account.main.id</span>
-<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Storage Blob Data Reader&quot;</span>
+<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Storage Blob Data Reader"</span>
 <span class="w">  </span><span class="na">principal_id</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_user_assigned_identity.app.principal_id</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_role_assignment&quot;</span><span class="w"> </span><span class="nv">&quot;app_keyvault_secrets&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_role_assignment"</span><span class="w"> </span><span class="nv">"app_keyvault_secrets"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">scope</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_key_vault.main.id</span>
-<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Key Vault Secrets User&quot;</span>
+<span class="w">  </span><span class="na">role_definition_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Key Vault Secrets User"</span>
 <span class="w">  </span><span class="na">principal_id</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_user_assigned_identity.app.principal_id</span>
 <span class="p">}</span>
 
 <span class="c1"># Custom role for specific actions when built-in roles are too broad</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_role_definition&quot;</span><span class="w"> </span><span class="nv">&quot;app_operator&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Application Operator&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_role_definition"</span><span class="w"> </span><span class="nv">"app_operator"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"Application Operator"</span>
 <span class="w">  </span><span class="na">scope</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_resource_group.app.id</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Can restart and monitor applications&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Can restart and monitor applications"</span>
 
 <span class="w">  </span><span class="nb">permissions</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="s2">&quot;Microsoft.Web/sites/restart/action&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;Microsoft.Web/sites/slots/restart/action&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;Microsoft.Insights/metrics/read&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;Microsoft.Insights/logs/read&quot;</span>
+<span class="w">      </span><span class="s2">"Microsoft.Web/sites/restart/action"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"Microsoft.Web/sites/slots/restart/action"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"Microsoft.Insights/metrics/read"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"Microsoft.Insights/logs/read"</span>
 <span class="w">    </span><span class="p">]</span>
 <span class="w">    </span><span class="na">not_actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
 <span class="w">  </span><span class="p">}</span>
@@ -7631,133 +7631,133 @@ are automatically managed by Azure with no secrets to handle.</p>
 <h2 id="networking-anti-patterns">Networking Anti-Patterns<a class="headerlink" href="#networking-anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="flat-network-without-segmentation">Flat Network Without Segmentation<a class="headerlink" href="#flat-network-without-segmentation" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Single subnet for all workloads</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_virtual_network&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vnet-webapp&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_virtual_network"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"vnet-webapp"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
-<span class="w">  </span><span class="na">address_space</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.0.0/16&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">address_space</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"10.0.0.0/16"</span><span class="p">]</span>
 <span class="p">}</span>
 
 <span class="c1"># Single large subnet for everything</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_subnet"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">"default"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">virtual_network_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_virtual_network.bad.name</span>
-<span class="w">  </span><span class="na">address_prefixes</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.0.0/16&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">address_prefixes</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"10.0.0.0/16"</span><span class="p">]</span>
 <span class="p">}</span>
 
 <span class="c1"># No NSG - all traffic allowed</span>
 </code></pre></div>
 <p><strong>Good</strong>: Network segmentation with NSGs</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_virtual_network&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vnet-webapp-prod&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_virtual_network"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"vnet-webapp-prod"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
-<span class="w">  </span><span class="na">address_space</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.0.0/16&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">address_space</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"10.0.0.0/16"</span><span class="p">]</span>
 <span class="p">}</span>
 
 <span class="c1"># Web tier subnet</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;snet-web&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_subnet"</span><span class="w"> </span><span class="nv">"web"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">"snet-web"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">virtual_network_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_virtual_network.good.name</span>
-<span class="w">  </span><span class="na">address_prefixes</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.1.0/24&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">address_prefixes</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"10.0.1.0/24"</span><span class="p">]</span>
 <span class="p">}</span>
 
 <span class="c1"># Application tier subnet with App Service delegation</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;snet-app&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_subnet"</span><span class="w"> </span><span class="nv">"app"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">"snet-app"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">virtual_network_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_virtual_network.good.name</span>
-<span class="w">  </span><span class="na">address_prefixes</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.2.0/24&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">address_prefixes</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"10.0.2.0/24"</span><span class="p">]</span>
 
 <span class="w">  </span><span class="nb">delegation</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;app-service&quot;</span>
+<span class="w">    </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"app-service"</span>
 <span class="w">    </span><span class="nb">service_delegation</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Microsoft.Web/serverFarms&quot;</span>
-<span class="w">      </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Microsoft.Network/virtualNetworks/subnets/action&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="na">name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"Microsoft.Web/serverFarms"</span>
+<span class="w">      </span><span class="na">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"Microsoft.Network/virtualNetworks/subnets/action"</span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1"># Data tier subnet for databases</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;data&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;snet-data&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_subnet"</span><span class="w"> </span><span class="nv">"data"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">"snet-data"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">virtual_network_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_virtual_network.good.name</span>
-<span class="w">  </span><span class="na">address_prefixes</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.3.0/24&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">address_prefixes</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"10.0.3.0/24"</span><span class="p">]</span>
 
-<span class="w">  </span><span class="na">private_endpoint_network_policies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Disabled&quot;</span>
+<span class="w">  </span><span class="na">private_endpoint_network_policies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Disabled"</span>
 <span class="p">}</span>
 
 <span class="c1"># NSG for web tier</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_network_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;nsg-web&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_network_security_group"</span><span class="w"> </span><span class="nv">"web"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"nsg-web"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 
 <span class="w">  </span><span class="nb">security_rule</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">name</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AllowHTTPS&quot;</span>
+<span class="w">    </span><span class="na">name</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="s2">"AllowHTTPS"</span>
 <span class="w">    </span><span class="na">priority</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
-<span class="w">    </span><span class="na">direction</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Inbound&quot;</span>
-<span class="w">    </span><span class="na">access</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
-<span class="w">    </span><span class="na">protocol</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Tcp&quot;</span>
-<span class="w">    </span><span class="na">source_port_range</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<span class="w">    </span><span class="na">destination_port_range</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;443&quot;</span>
-<span class="w">    </span><span class="na">source_address_prefix</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Internet&quot;</span>
-<span class="w">    </span><span class="na">destination_address_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<span class="w">    </span><span class="na">direction</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">"Inbound"</span>
+<span class="w">    </span><span class="na">access</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">"Allow"</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Tcp"</span>
+<span class="w">    </span><span class="na">source_port_range</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
+<span class="w">    </span><span class="na">destination_port_range</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"443"</span>
+<span class="w">    </span><span class="na">source_address_prefix</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"Internet"</span>
+<span class="w">    </span><span class="na">destination_address_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">security_rule</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">name</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DenyAllInbound&quot;</span>
+<span class="w">    </span><span class="na">name</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="s2">"DenyAllInbound"</span>
 <span class="w">    </span><span class="na">priority</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="m">4096</span>
-<span class="w">    </span><span class="na">direction</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Inbound&quot;</span>
-<span class="w">    </span><span class="na">access</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span>
-<span class="w">    </span><span class="na">protocol</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<span class="w">    </span><span class="na">source_port_range</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<span class="w">    </span><span class="na">destination_port_range</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<span class="w">    </span><span class="na">source_address_prefix</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<span class="w">    </span><span class="na">destination_address_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<span class="w">    </span><span class="na">direction</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">"Inbound"</span>
+<span class="w">    </span><span class="na">access</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">"Deny"</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
+<span class="w">    </span><span class="na">source_port_range</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
+<span class="w">    </span><span class="na">destination_port_range</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
+<span class="w">    </span><span class="na">source_address_prefix</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
+<span class="w">    </span><span class="na">destination_address_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1"># NSG for data tier - only allow app tier</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_network_security_group&quot;</span><span class="w"> </span><span class="nv">&quot;data&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;nsg-data&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_network_security_group"</span><span class="w"> </span><span class="nv">"data"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"nsg-data"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 
 <span class="w">  </span><span class="nb">security_rule</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">name</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AllowAppTier&quot;</span>
+<span class="w">    </span><span class="na">name</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="s2">"AllowAppTier"</span>
 <span class="w">    </span><span class="na">priority</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
-<span class="w">    </span><span class="na">direction</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Inbound&quot;</span>
-<span class="w">    </span><span class="na">access</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
-<span class="w">    </span><span class="na">protocol</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Tcp&quot;</span>
-<span class="w">    </span><span class="na">source_port_range</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<span class="w">    </span><span class="na">destination_port_ranges</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;1433&quot;, &quot;5432&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="na">source_address_prefix</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.2.0/24&quot;</span>
-<span class="w">    </span><span class="na">destination_address_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<span class="w">    </span><span class="na">direction</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">"Inbound"</span>
+<span class="w">    </span><span class="na">access</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">"Allow"</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Tcp"</span>
+<span class="w">    </span><span class="na">source_port_range</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
+<span class="w">    </span><span class="na">destination_port_ranges</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"1433", "5432"</span><span class="p">]</span>
+<span class="w">    </span><span class="na">source_address_prefix</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.2.0/24"</span>
+<span class="w">    </span><span class="na">destination_address_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">security_rule</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">name</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DenyAllInbound&quot;</span>
+<span class="w">    </span><span class="na">name</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="s2">"DenyAllInbound"</span>
 <span class="w">    </span><span class="na">priority</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="m">4096</span>
-<span class="w">    </span><span class="na">direction</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Inbound&quot;</span>
-<span class="w">    </span><span class="na">access</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span>
-<span class="w">    </span><span class="na">protocol</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<span class="w">    </span><span class="na">source_port_range</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<span class="w">    </span><span class="na">destination_port_range</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<span class="w">    </span><span class="na">source_address_prefix</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<span class="w">    </span><span class="na">destination_address_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<span class="w">    </span><span class="na">direction</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">"Inbound"</span>
+<span class="w">    </span><span class="na">access</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">"Deny"</span>
+<span class="w">    </span><span class="na">protocol</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
+<span class="w">    </span><span class="na">source_port_range</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
+<span class="w">    </span><span class="na">destination_port_range</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
+<span class="w">    </span><span class="na">source_address_prefix</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
+<span class="w">    </span><span class="na">destination_address_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"*"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_subnet_network_security_group_association&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_subnet_network_security_group_association"</span><span class="w"> </span><span class="nv">"web"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">subnet_id</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_subnet.web.id</span>
 <span class="w">  </span><span class="na">network_security_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_network_security_group.web.id</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_subnet_network_security_group_association&quot;</span><span class="w"> </span><span class="nv">&quot;data&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_subnet_network_security_group_association"</span><span class="w"> </span><span class="nv">"data"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">subnet_id</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_subnet.data.id</span>
 <span class="w">  </span><span class="na">network_security_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_network_security_group.data.id</span>
 <span class="p">}</span>
@@ -7766,16 +7766,16 @@ are automatically managed by Azure with no secrets to handle.</p>
 <hr />
 <h3 id="not-using-private-dns-zones-with-private-endpoints">Not Using Private DNS Zones with Private Endpoints<a class="headerlink" href="#not-using-private-dns-zones-with-private-endpoints" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Private endpoints without DNS integration</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_private_endpoint&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pep-storage&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_private_endpoint"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"pep-storage"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">subnet_id</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.subnet_id</span>
 
 <span class="w">  </span><span class="nb">private_service_connection</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">name</span><span class="w">                           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;psc-storage&quot;</span>
+<span class="w">    </span><span class="na">name</span><span class="w">                           </span><span class="o">=</span><span class="w"> </span><span class="s2">"psc-storage"</span>
 <span class="w">    </span><span class="na">private_connection_resource_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_storage_account.main.id</span>
-<span class="w">    </span><span class="na">subresource_names</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;blob&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">subresource_names</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"blob"</span><span class="p">]</span>
 <span class="w">    </span><span class="na">is_manual_connection</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 <span class="w">  </span><span class="p">}</span>
 
@@ -7784,36 +7784,36 @@ are automatically managed by Azure with no secrets to handle.</p>
 </code></pre></div>
 <p><strong>Good</strong>: Private endpoints with private DNS zone integration</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Private DNS zone for blob storage</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_private_dns_zone&quot;</span><span class="w"> </span><span class="nv">&quot;blob&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;privatelink.blob.core.windows.net&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_private_dns_zone"</span><span class="w"> </span><span class="nv">"blob"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"privatelink.blob.core.windows.net"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="p">}</span>
 
 <span class="c1"># Link DNS zone to VNet</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_private_dns_zone_virtual_network_link&quot;</span><span class="w"> </span><span class="nv">&quot;blob&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;link-${var.vnet_name}&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_private_dns_zone_virtual_network_link"</span><span class="w"> </span><span class="nv">"blob"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">"link-${var.vnet_name}"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">private_dns_zone_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_private_dns_zone.blob.name</span>
 <span class="w">  </span><span class="na">virtual_network_id</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vnet_id</span>
 <span class="w">  </span><span class="na">registration_enabled</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_private_endpoint&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pep-storage&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_private_endpoint"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"pep-storage"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">subnet_id</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.subnet_id</span>
 
 <span class="w">  </span><span class="nb">private_service_connection</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">name</span><span class="w">                           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;psc-storage&quot;</span>
+<span class="w">    </span><span class="na">name</span><span class="w">                           </span><span class="o">=</span><span class="w"> </span><span class="s2">"psc-storage"</span>
 <span class="w">    </span><span class="na">private_connection_resource_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_storage_account.main.id</span>
-<span class="w">    </span><span class="na">subresource_names</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;blob&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">subresource_names</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"blob"</span><span class="p">]</span>
 <span class="w">    </span><span class="na">is_manual_connection</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="c1">  # Automatic DNS registration</span>
 <span class="w">  </span><span class="nb">private_dns_zone_group</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
+<span class="w">    </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">"default"</span>
 <span class="w">    </span><span class="na">private_dns_zone_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">azurerm_private_dns_zone.blob.id</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7824,27 +7824,27 @@ breaking portability and complicating configuration.</p>
 <h2 id="cost-anti-patterns">Cost Anti-Patterns<a class="headerlink" href="#cost-anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="over-provisioned-resources">Over-Provisioned Resources<a class="headerlink" href="#over-provisioned-resources" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Production sizing for all environments</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_kubernetes_cluster&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;aks-webapp-dev&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_kubernetes_cluster"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"aks-webapp-dev"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
-<span class="w">  </span><span class="na">dns_prefix</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;webapp-dev&quot;</span>
+<span class="w">  </span><span class="na">dns_prefix</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"webapp-dev"</span>
 
 <span class="w">  </span><span class="nb">default_node_pool</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;system&quot;</span>
+<span class="w">    </span><span class="na">name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"system"</span>
 <span class="w">    </span><span class="na">node_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="c1">                    # Same as production</span>
-<span class="w">    </span><span class="na">vm_size</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard_D16s_v5&quot;</span><span class="c1">   # Expensive VM size for dev</span>
+<span class="w">    </span><span class="na">vm_size</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard_D16s_v5"</span><span class="c1">   # Expensive VM size for dev</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">identity</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SystemAssigned&quot;</span>
+<span class="w">    </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"SystemAssigned"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_mssql_database&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sqldb-webapp-dev&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_mssql_database"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"sqldb-webapp-dev"</span>
 <span class="w">  </span><span class="na">server_id</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_mssql_server.main.id</span>
-<span class="w">  </span><span class="na">sku_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;P6&quot;</span><span class="c1">   # Premium tier for dev environment</span>
+<span class="w">  </span><span class="na">sku_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"P6"</span><span class="c1">   # Premium tier for dev environment</span>
 <span class="w">  </span><span class="na">max_size_gb</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">500</span>
 <span class="w">  </span><span class="na">zone_redundant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">   # HA in dev</span>
 <span class="p">}</span>
@@ -7854,22 +7854,22 @@ breaking portability and complicating configuration.</p>
 <span class="w">  </span><span class="nb">env_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="na">aks_node_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
-<span class="w">      </span><span class="na">aks_vm_size</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard_B2ms&quot;</span>
-<span class="w">      </span><span class="na">sql_sku</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;S0&quot;</span>
+<span class="w">      </span><span class="na">aks_vm_size</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard_B2ms"</span>
+<span class="w">      </span><span class="na">sql_sku</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"S0"</span>
 <span class="w">      </span><span class="na">sql_size_gb</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">10</span>
 <span class="w">      </span><span class="na">zone_redundant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="nb">staging</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="na">aks_node_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
-<span class="w">      </span><span class="na">aks_vm_size</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard_D4s_v5&quot;</span>
-<span class="w">      </span><span class="na">sql_sku</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;S3&quot;</span>
+<span class="w">      </span><span class="na">aks_vm_size</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard_D4s_v5"</span>
+<span class="w">      </span><span class="na">sql_sku</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"S3"</span>
 <span class="w">      </span><span class="na">sql_size_gb</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">50</span>
 <span class="w">      </span><span class="na">zone_redundant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="nb">prod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="na">aks_node_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span>
-<span class="w">      </span><span class="na">aks_vm_size</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard_D8s_v5&quot;</span>
-<span class="w">      </span><span class="na">sql_sku</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;P2&quot;</span>
+<span class="w">      </span><span class="na">aks_vm_size</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard_D8s_v5"</span>
+<span class="w">      </span><span class="na">sql_sku</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"P2"</span>
 <span class="w">      </span><span class="na">sql_size_gb</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">250</span>
 <span class="w">      </span><span class="na">zone_redundant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="w">    </span><span class="p">}</span>
@@ -7877,28 +7877,28 @@ breaking portability and complicating configuration.</p>
 <span class="w">  </span><span class="na">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.env_config[var.environment</span><span class="p">]</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_kubernetes_cluster&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;aks-webapp-${var.environment}&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_kubernetes_cluster"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"aks-webapp-${var.environment}"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
-<span class="w">  </span><span class="na">dns_prefix</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;webapp-${var.environment}&quot;</span>
+<span class="w">  </span><span class="na">dns_prefix</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"webapp-${var.environment}"</span>
 
 <span class="w">  </span><span class="nb">default_node_pool</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;system&quot;</span>
+<span class="w">    </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"system"</span>
 <span class="w">    </span><span class="na">node_count</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">local.config.aks_node_count</span>
 <span class="w">    </span><span class="na">vm_size</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nv">local.config.aks_vm_size</span>
-<span class="w">    </span><span class="na">auto_scaling_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span>
-<span class="w">    </span><span class="na">min_count</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">null</span>
-<span class="w">    </span><span class="na">max_count</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">null</span>
+<span class="w">    </span><span class="na">auto_scaling_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s2">"prod"</span>
+<span class="w">    </span><span class="na">min_count</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s2">"prod"</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">null</span>
+<span class="w">    </span><span class="na">max_count</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s2">"prod"</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">null</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">identity</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SystemAssigned&quot;</span>
+<span class="w">    </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"SystemAssigned"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_mssql_database&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sqldb-webapp-${var.environment}&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_mssql_database"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"sqldb-webapp-${var.environment}"</span>
 <span class="w">  </span><span class="na">server_id</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_mssql_server.main.id</span>
 <span class="w">  </span><span class="na">sku_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">local.config.sql_sku</span>
 <span class="w">  </span><span class="na">max_size_gb</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">local.config.sql_size_gb</span>
@@ -7909,76 +7909,76 @@ breaking portability and complicating configuration.</p>
 <hr />
 <h3 id="no-auto-shutdown-for-devtest">No Auto-Shutdown for Dev/Test<a class="headerlink" href="#no-auto-shutdown-for-devtest" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Dev VMs running 24/7</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_linux_virtual_machine&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vm-dev-001&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_linux_virtual_machine"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"vm-dev-001"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">size</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard_D4s_v5&quot;</span>
-<span class="w">  </span><span class="na">admin_username</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;azureuser&quot;</span>
+<span class="w">  </span><span class="na">size</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard_D4s_v5"</span>
+<span class="w">  </span><span class="na">admin_username</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"azureuser"</span>
 
 <span class="c1">  # VM runs 24/7 even though dev team only works 8 hours</span>
 
 <span class="w">  </span><span class="nb">admin_ssh_key</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">username</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;azureuser&quot;</span>
+<span class="w">    </span><span class="na">username</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"azureuser"</span>
 <span class="w">    </span><span class="na">public_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.ssh_public_key</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">os_disk</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">caching</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ReadWrite&quot;</span>
-<span class="w">    </span><span class="na">storage_account_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Premium_LRS&quot;</span>
+<span class="w">    </span><span class="na">caching</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">"ReadWrite"</span>
+<span class="w">    </span><span class="na">storage_account_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Premium_LRS"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">source_image_reference</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">publisher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Canonical&quot;</span>
-<span class="w">    </span><span class="na">offer</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0001-com-ubuntu-server-jammy&quot;</span>
-<span class="w">    </span><span class="na">sku</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;22_04-lts&quot;</span>
-<span class="w">    </span><span class="na">version</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;latest&quot;</span>
+<span class="w">    </span><span class="na">publisher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Canonical"</span>
+<span class="w">    </span><span class="na">offer</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"0001-com-ubuntu-server-jammy"</span>
+<span class="w">    </span><span class="na">sku</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"22_04-lts"</span>
+<span class="w">    </span><span class="na">version</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"latest"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="na">network_interface_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">azurerm_network_interface.main.id</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Good</strong>: Auto-shutdown for non-production</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_linux_virtual_machine&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vm-dev-001&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_linux_virtual_machine"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"vm-dev-001"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">size</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard_D4s_v5&quot;</span>
-<span class="w">  </span><span class="na">admin_username</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;azureuser&quot;</span>
+<span class="w">  </span><span class="na">size</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard_D4s_v5"</span>
+<span class="w">  </span><span class="na">admin_username</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"azureuser"</span>
 
 <span class="w">  </span><span class="nb">admin_ssh_key</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">username</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;azureuser&quot;</span>
+<span class="w">    </span><span class="na">username</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"azureuser"</span>
 <span class="w">    </span><span class="na">public_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.ssh_public_key</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">os_disk</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">caching</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ReadWrite&quot;</span>
-<span class="w">    </span><span class="na">storage_account_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard_LRS&quot;</span><span class="c1">  # Standard for dev</span>
+<span class="w">    </span><span class="na">caching</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">"ReadWrite"</span>
+<span class="w">    </span><span class="na">storage_account_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard_LRS"</span><span class="c1">  # Standard for dev</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">source_image_reference</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">publisher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Canonical&quot;</span>
-<span class="w">    </span><span class="na">offer</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0001-com-ubuntu-server-jammy&quot;</span>
-<span class="w">    </span><span class="na">sku</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;22_04-lts&quot;</span>
-<span class="w">    </span><span class="na">version</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;latest&quot;</span>
+<span class="w">    </span><span class="na">publisher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Canonical"</span>
+<span class="w">    </span><span class="na">offer</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"0001-com-ubuntu-server-jammy"</span>
+<span class="w">    </span><span class="na">sku</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"22_04-lts"</span>
+<span class="w">    </span><span class="na">version</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"latest"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="na">network_interface_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">azurerm_network_interface.main.id</span><span class="p">]</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
-<span class="w">    </span><span class="na">AutoShutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"dev"</span>
+<span class="w">    </span><span class="na">AutoShutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"true"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1"># Auto-shutdown schedule</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_dev_test_global_vm_shutdown_schedule&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_dev_test_global_vm_shutdown_schedule"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">virtual_machine_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_linux_virtual_machine.good.id</span>
 <span class="w">  </span><span class="na">location</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">enabled</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 
-<span class="w">  </span><span class="na">daily_recurrence_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1900&quot;</span><span class="c1">   # 7 PM local time</span>
-<span class="w">  </span><span class="na">timezone</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Eastern Standard Time&quot;</span>
+<span class="w">  </span><span class="na">daily_recurrence_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"1900"</span><span class="c1">   # 7 PM local time</span>
+<span class="w">  </span><span class="na">timezone</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">"Eastern Standard Time"</span>
 
 <span class="w">  </span><span class="nb">notification_settings</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">enabled</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
@@ -7991,18 +7991,18 @@ breaking portability and complicating configuration.</p>
 <hr />
 <h3 id="missing-tags-for-cost-allocation">Missing Tags for Cost Allocation<a class="headerlink" href="#missing-tags-for-cost-allocation" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Resources without cost allocation tags</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_resource_group&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;rg-webapp&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_resource_group"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"rg-webapp"</span>
 <span class="w">  </span><span class="na">location</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="c1">  # No tags</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_storage_account&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;stwebapp001&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_storage_account"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">"stwebapp001"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_resource_group.bad.name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard&quot;</span>
-<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;LRS&quot;</span>
+<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard"</span>
+<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"LRS"</span>
 <span class="c1">  # No tags - impossible to track costs</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -8013,38 +8013,38 @@ breaking portability and complicating configuration.</p>
 <span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.project_name</span>
 <span class="w">    </span><span class="na">CostCenter</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">var.cost_center</span>
 <span class="w">    </span><span class="na">Owner</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">var.owner_email</span>
-<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform&quot;</span>
-<span class="w">    </span><span class="na">CreatedDate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">formatdate</span><span class="p">(</span><span class="s2">&quot;YYYY-MM-DD&quot;</span><span class="p">,</span><span class="w"> </span><span class="nf">timestamp</span><span class="p">())</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"terraform"</span>
+<span class="w">    </span><span class="na">CreatedDate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">formatdate</span><span class="p">(</span><span class="s2">"YYYY-MM-DD"</span><span class="p">,</span><span class="w"> </span><span class="nf">timestamp</span><span class="p">())</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_resource_group&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;rg-${var.project_name}-${var.environment}&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_resource_group"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"rg-${var.project_name}-${var.environment}"</span>
 <span class="w">  </span><span class="na">location</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">tags</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">local.required_tags</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_storage_account&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;st${var.project_name}${var.environment}001&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_storage_account"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">"st${var.project_name}${var.environment}001"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_resource_group.good.name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard&quot;</span>
-<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;LRS&quot;</span>
+<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard"</span>
+<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"LRS"</span>
 
 <span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.required_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">DataClassification</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Internal&quot;</span>
-<span class="w">    </span><span class="na">BackupPolicy</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Daily&quot;</span>
+<span class="w">    </span><span class="na">DataClassification</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Internal"</span>
+<span class="w">    </span><span class="na">BackupPolicy</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"Daily"</span>
 <span class="w">  </span><span class="p">})</span>
 <span class="p">}</span>
 
 <span class="c1"># Azure Policy to enforce required tags</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_policy_assignment&quot;</span><span class="w"> </span><span class="nv">&quot;require_cost_center&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;require-cost-center&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_policy_assignment"</span><span class="w"> </span><span class="nv">"require_cost_center"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">"require-cost-center"</span>
 <span class="w">  </span><span class="na">scope</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_resource_group.good.id</span>
-<span class="w">  </span><span class="na">policy_definition_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025&quot;</span>
+<span class="w">  </span><span class="na">policy_definition_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025"</span>
 
 <span class="w">  </span><span class="na">parameters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">jsonencode</span><span class="p">({</span>
-<span class="w">    </span><span class="nb">tagName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="na">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CostCenter&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">tagName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="na">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"CostCenter"</span><span class="w"> </span><span class="p">}</span>
 <span class="w">  </span><span class="p">})</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -8055,10 +8055,10 @@ determine which teams are responsible for spending.</p>
 <h3 id="local-state-for-team-projects">Local State for Team Projects<a class="headerlink" href="#local-state-for-team-projects" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Terraform state stored locally</p>
 <div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.6.0&quot;</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.6.0"</span>
 
 <span class="c1">  # No backend configured - state stored locally</span>
-<span class="c1">  # - Can&#39;t collaborate with team</span>
+<span class="c1">  # - Can't collaborate with team</span>
 <span class="c1">  # - No state locking</span>
 <span class="c1">  # - State can be lost</span>
 <span class="c1">  # - Secrets in state file on developer machines</span>
@@ -8066,27 +8066,27 @@ determine which teams are responsible for spending.</p>
 </code></pre></div>
 <p><strong>Good</strong>: Remote state with Azure Storage</p>
 <div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.6.0&quot;</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.6.0"</span>
 
-<span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;azurerm&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">resource_group_name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;rg-terraform-state&quot;</span>
-<span class="w">    </span><span class="na">storage_account_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sttfstateprod001&quot;</span>
-<span class="w">    </span><span class="na">container_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tfstate&quot;</span>
-<span class="w">    </span><span class="na">key</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;webapp/prod/terraform.tfstate&quot;</span>
+<span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">"azurerm"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">resource_group_name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"rg-terraform-state"</span>
+<span class="w">    </span><span class="na">storage_account_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"sttfstateprod001"</span>
+<span class="w">    </span><span class="na">container_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"tfstate"</span>
+<span class="w">    </span><span class="na">key</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">"webapp/prod/terraform.tfstate"</span>
 <span class="w">    </span><span class="na">use_oidc</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>With secure storage account:</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_storage_account&quot;</span><span class="w"> </span><span class="nv">&quot;tfstate&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sttfstateprod001&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_storage_account"</span><span class="w"> </span><span class="nv">"tfstate"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">"sttfstateprod001"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">var.state_resource_group</span>
 <span class="w">  </span><span class="na">location</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard&quot;</span>
-<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GRS&quot;</span>
+<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard"</span>
+<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"GRS"</span>
 
 <span class="c1">  # Security settings</span>
-<span class="w">  </span><span class="na">min_tls_version</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;TLS1_2&quot;</span>
+<span class="w">  </span><span class="na">min_tls_version</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">"TLS1_2"</span>
 <span class="w">  </span><span class="na">allow_nested_items_to_be_public</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 <span class="w">  </span><span class="na">public_network_access_enabled</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 
@@ -8101,8 +8101,8 @@ determine which teams are responsible for spending.</p>
 
 <span class="c1">  # Restrict access</span>
 <span class="w">  </span><span class="nb">network_rules</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">default_action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span>
-<span class="w">    </span><span class="na">bypass</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;AzureServices&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">default_action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Deny"</span>
+<span class="w">    </span><span class="na">bypass</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"AzureServices"</span><span class="p">]</span>
 <span class="w">    </span><span class="na">ip_rules</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">var.allowed_ip_ranges</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -8113,64 +8113,64 @@ accidentally deleted or corrupted.</p>
 <h2 id="operational-anti-patterns">Operational Anti-Patterns<a class="headerlink" href="#operational-anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="no-diagnostic-settings">No Diagnostic Settings<a class="headerlink" href="#no-diagnostic-settings" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Resources without logging</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_key_vault&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;kv-webapp-prod&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_key_vault"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"kv-webapp-prod"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">tenant_id</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">data.azurerm_client_config.current.tenant_id</span>
-<span class="w">  </span><span class="na">sku_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;standard&quot;</span>
+<span class="w">  </span><span class="na">sku_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">"standard"</span>
 
-<span class="c1">  # No diagnostic settings - can&#39;t audit access or troubleshoot issues</span>
+<span class="c1">  # No diagnostic settings - can't audit access or troubleshoot issues</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_mssql_server&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sql-webapp-prod&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_mssql_server"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                         </span><span class="o">=</span><span class="w"> </span><span class="s2">"sql-webapp-prod"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">version</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;12.0&quot;</span>
-<span class="w">  </span><span class="na">administrator_login</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sqladmin&quot;</span>
+<span class="w">  </span><span class="na">version</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">"12.0"</span>
+<span class="w">  </span><span class="na">administrator_login</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"sqladmin"</span>
 <span class="w">  </span><span class="na">administrator_login_password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.sql_password</span>
 
 <span class="c1">  # No auditing - compliance risk</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Good</strong>: Comprehensive diagnostic settings</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_key_vault&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;kv-webapp-prod&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_key_vault"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"kv-webapp-prod"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">tenant_id</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">data.azurerm_client_config.current.tenant_id</span>
-<span class="w">  </span><span class="na">sku_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;standard&quot;</span>
+<span class="w">  </span><span class="na">sku_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">"standard"</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_monitor_diagnostic_setting&quot;</span><span class="w"> </span><span class="nv">&quot;keyvault&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;diag-kv-webapp-prod&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_monitor_diagnostic_setting"</span><span class="w"> </span><span class="nv">"keyvault"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="s2">"diag-kv-webapp-prod"</span>
 <span class="w">  </span><span class="na">target_resource_id</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_key_vault.good.id</span>
 <span class="w">  </span><span class="na">log_analytics_workspace_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.log_analytics_workspace_id</span>
 
 <span class="w">  </span><span class="nb">enabled_log</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AuditEvent&quot;</span>
+<span class="w">    </span><span class="na">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"AuditEvent"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">enabled_log</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AzurePolicyEvaluationDetails&quot;</span>
+<span class="w">    </span><span class="na">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"AzurePolicyEvaluationDetails"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">metric</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AllMetrics&quot;</span>
+<span class="w">    </span><span class="na">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"AllMetrics"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_mssql_server&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sql-webapp-prod&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_mssql_server"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                         </span><span class="o">=</span><span class="w"> </span><span class="s2">"sql-webapp-prod"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">version</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;12.0&quot;</span>
-<span class="w">  </span><span class="na">administrator_login</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sqladmin&quot;</span>
+<span class="w">  </span><span class="na">version</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">"12.0"</span>
+<span class="w">  </span><span class="na">administrator_login</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"sqladmin"</span>
 <span class="w">  </span><span class="na">administrator_login_password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.sql_password</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_mssql_server_extended_auditing_policy&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_mssql_server_extended_auditing_policy"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">server_id</span><span class="w">                               </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_mssql_server.good.id</span>
 <span class="w">  </span><span class="na">storage_endpoint</span><span class="w">                        </span><span class="o">=</span><span class="w"> </span><span class="nv">var.audit_storage_endpoint</span>
 <span class="w">  </span><span class="na">storage_account_access_key</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="nv">var.audit_storage_key</span>
@@ -8179,9 +8179,9 @@ accidentally deleted or corrupted.</p>
 <span class="w">  </span><span class="na">log_monitoring_enabled</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_mssql_server_security_alert_policy&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_mssql_server_security_alert_policy"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">server_id</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_mssql_server.good.id</span>
-<span class="w">  </span><span class="na">state</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Enabled&quot;</span>
+<span class="w">  </span><span class="na">state</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">"Enabled"</span>
 <span class="w">  </span><span class="na">email_addresses</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">var.security_email</span><span class="p">]</span>
 <span class="w">  </span><span class="na">email_account_admins</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="w">  </span><span class="na">retention_days</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="m">30</span>
@@ -8193,32 +8193,32 @@ accidentally deleted or corrupted.</p>
 <hr />
 <h3 id="no-backup-strategy">No Backup Strategy<a class="headerlink" href="#no-backup-strategy" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Production resources without backup</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_mssql_database&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sqldb-webapp-prod&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_mssql_database"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"sqldb-webapp-prod"</span>
 <span class="w">  </span><span class="na">server_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_mssql_server.main.id</span>
-<span class="w">  </span><span class="na">sku_name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;S3&quot;</span>
+<span class="w">  </span><span class="na">sku_name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"S3"</span>
 
 <span class="c1">  # Default 7-day retention only</span>
 <span class="c1">  # No geo-redundant backup</span>
 <span class="c1">  # No long-term retention</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_storage_account&quot;</span><span class="w"> </span><span class="nv">&quot;bad&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;stwebappprod001&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_storage_account"</span><span class="w"> </span><span class="nv">"bad"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">"stwebappprod001"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard&quot;</span>
-<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;LRS&quot;</span><span class="c1">  # Single region - data loss risk</span>
+<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard"</span>
+<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"LRS"</span><span class="c1">  # Single region - data loss risk</span>
 
 <span class="c1">  # No soft delete</span>
 <span class="c1">  # No versioning</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Good</strong>: Comprehensive backup and recovery</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_mssql_database&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sqldb-webapp-prod&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_mssql_database"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"sqldb-webapp-prod"</span>
 <span class="w">  </span><span class="na">server_id</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_mssql_server.main.id</span>
-<span class="w">  </span><span class="na">sku_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;S3&quot;</span>
+<span class="w">  </span><span class="na">sku_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"S3"</span>
 <span class="w">  </span><span class="na">zone_redundant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 
 <span class="c1">  # Enhanced backup retention</span>
@@ -8229,19 +8229,19 @@ accidentally deleted or corrupted.</p>
 
 <span class="c1">  # Long-term retention for compliance</span>
 <span class="w">  </span><span class="nb">long_term_retention_policy</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">weekly_retention</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;P4W&quot;</span><span class="c1">    # 4 weeks</span>
-<span class="w">    </span><span class="na">monthly_retention</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;P12M&quot;</span><span class="c1">   # 12 months</span>
-<span class="w">    </span><span class="na">yearly_retention</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;P5Y&quot;</span><span class="c1">    # 5 years</span>
+<span class="w">    </span><span class="na">weekly_retention</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"P4W"</span><span class="c1">    # 4 weeks</span>
+<span class="w">    </span><span class="na">monthly_retention</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"P12M"</span><span class="c1">   # 12 months</span>
+<span class="w">    </span><span class="na">yearly_retention</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"P5Y"</span><span class="c1">    # 5 years</span>
 <span class="w">    </span><span class="na">week_of_year</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_storage_account&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;stwebappprod001&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_storage_account"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="s2">"stwebappprod001"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">location</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
-<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard&quot;</span>
-<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GRS&quot;</span><span class="c1">  # Geo-redundant</span>
+<span class="w">  </span><span class="na">account_tier</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard"</span>
+<span class="w">  </span><span class="na">account_replication_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"GRS"</span><span class="c1">  # Geo-redundant</span>
 
 <span class="c1">  # Enable soft delete and versioning</span>
 <span class="w">  </span><span class="nb">blob_properties</span><span class="w"> </span><span class="p">{</span>
@@ -8260,24 +8260,24 @@ accidentally deleted or corrupted.</p>
 <span class="p">}</span>
 
 <span class="c1"># Backup vault for VMs</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_recovery_services_vault&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;rsv-webapp-prod&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_recovery_services_vault"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"rsv-webapp-prod"</span>
 <span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.location</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
-<span class="w">  </span><span class="na">sku</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard&quot;</span>
+<span class="w">  </span><span class="na">sku</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="s2">"Standard"</span>
 <span class="w">  </span><span class="na">soft_delete_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 
 <span class="w">  </span><span class="na">cross_region_restore_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_backup_policy_vm&quot;</span><span class="w"> </span><span class="nv">&quot;good&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;policy-vm-daily&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"azurerm_backup_policy_vm"</span><span class="w"> </span><span class="nv">"good"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">"policy-vm-daily"</span>
 <span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.resource_group_name</span>
 <span class="w">  </span><span class="na">recovery_vault_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_recovery_services_vault.good.name</span>
 
 <span class="w">  </span><span class="nb">backup</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Daily&quot;</span>
-<span class="w">    </span><span class="na">time</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;02:00&quot;</span>
+<span class="w">    </span><span class="na">frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Daily"</span>
+<span class="w">    </span><span class="na">time</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"02:00"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">retention_daily</span><span class="w"> </span><span class="p">{</span>
@@ -8286,20 +8286,20 @@ accidentally deleted or corrupted.</p>
 
 <span class="w">  </span><span class="nb">retention_weekly</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">count</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">12</span>
-<span class="w">    </span><span class="na">weekdays</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Sunday&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">weekdays</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"Sunday"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">retention_monthly</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">count</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">12</span>
-<span class="w">    </span><span class="na">weekdays</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Sunday&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="na">weeks</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;First&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">weekdays</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"Sunday"</span><span class="p">]</span>
+<span class="w">    </span><span class="na">weeks</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"First"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">retention_yearly</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">count</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">5</span>
-<span class="w">    </span><span class="na">weekdays</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Sunday&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="na">weeks</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;First&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="na">months</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;January&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">weekdays</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"Sunday"</span><span class="p">]</span>
+<span class="w">    </span><span class="na">weeks</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"First"</span><span class="p">]</span>
+<span class="w">    </span><span class="na">months</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"January"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -8439,10 +8439,10 @@ accidentally deleted or corrupted.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

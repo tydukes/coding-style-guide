@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7854,13 +7854,13 @@ optimization.</p>
 <h3 id="full-stack-application-pipeline">Full-Stack Application Pipeline<a class="headerlink" href="#full-stack-application-pipeline" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## .gitlab-ci.yml</span>
 <span class="nt">variables</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">NODE_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;20&quot;</span>
-<span class="w">  </span><span class="nt">PYTHON_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span>
+<span class="w">  </span><span class="nt">NODE_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"20"</span>
+<span class="w">  </span><span class="nt">PYTHON_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"3.11"</span>
 <span class="w">  </span><span class="nt">DOCKER_DRIVER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">overlay2</span>
-<span class="w">  </span><span class="nt">DOCKER_TLS_CERTDIR</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/certs&quot;</span>
-<span class="w">  </span><span class="nt">FF_USE_FASTZIP</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<span class="w">  </span><span class="nt">ARTIFACT_COMPRESSION_LEVEL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fast&quot;</span>
-<span class="w">  </span><span class="nt">CACHE_COMPRESSION_LEVEL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fast&quot;</span>
+<span class="w">  </span><span class="nt">DOCKER_TLS_CERTDIR</span><span class="p">:</span><span class="w"> </span><span class="s">"/certs"</span>
+<span class="w">  </span><span class="nt">FF_USE_FASTZIP</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
+<span class="w">  </span><span class="nt">ARTIFACT_COMPRESSION_LEVEL</span><span class="p">:</span><span class="w"> </span><span class="s">"fast"</span>
+<span class="w">  </span><span class="nt">CACHE_COMPRESSION_LEVEL</span><span class="p">:</span><span class="w"> </span><span class="s">"fast"</span>
 
 <span class="nt">stages</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate</span>
@@ -7891,7 +7891,7 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run format:check</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run type-check</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 <span class="w">      </span><span class="nt">changes</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend/**/*</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
@@ -7915,7 +7915,7 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mypy . --ignore-missing-imports</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pylint **/*.py</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 <span class="w">      </span><span class="nt">changes</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/**/*</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
@@ -7926,7 +7926,7 @@ optimization.</p>
 <span class="nt">test:frontend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:${NODE_VERSION}-alpine</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;lint:frontend&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"lint:frontend"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">cache</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">key</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">files</span><span class="p">:</span>
@@ -7938,7 +7938,7 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run test:unit -- --coverage</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run test:integration</span>
-<span class="w">  </span><span class="nt">coverage</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/All</span><span class="nv"> </span><span class="s">files[^|]*\|[^|]*\s+([\d\.]+)/&#39;</span>
+<span class="w">  </span><span class="nt">coverage</span><span class="p">:</span><span class="w"> </span><span class="s">'/All</span><span class="nv"> </span><span class="s">files[^|]*\|[^|]*\s+([\d\.]+)/'</span>
 <span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">reports</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">coverage_report</span><span class="p">:</span>
@@ -7948,7 +7948,7 @@ optimization.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend/coverage/</span>
 <span class="w">    </span><span class="nt">expire_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 week</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 <span class="w">      </span><span class="nt">changes</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend/**/*</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
@@ -7956,7 +7956,7 @@ optimization.</p>
 <span class="nt">test:backend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python:${PYTHON_VERSION}-slim</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;lint:backend&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"lint:backend"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">services</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15-alpine</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:7-alpine</span>
@@ -7980,7 +7980,7 @@ optimization.</p>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest tests/unit -v --cov --cov-report=xml --cov-report=term</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest tests/integration -v</span>
-<span class="w">  </span><span class="nt">coverage</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/(?i)total.*?</span><span class="nv"> </span><span class="s">(100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/&#39;</span>
+<span class="w">  </span><span class="nt">coverage</span><span class="p">:</span><span class="w"> </span><span class="s">'/(?i)total.*?</span><span class="nv"> </span><span class="s">(100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'</span>
 <span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">reports</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">coverage_report</span><span class="p">:</span>
@@ -7990,7 +7990,7 @@ optimization.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/htmlcov/</span>
 <span class="w">    </span><span class="nt">expire_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 week</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 <span class="w">      </span><span class="nt">changes</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/**/*</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
@@ -8001,7 +8001,7 @@ optimization.</p>
 <span class="nt">build:frontend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:${NODE_VERSION}-alpine</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;test:frontend&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"test:frontend"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">cache</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">key</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">files</span><span class="p">:</span>
@@ -8017,7 +8017,7 @@ optimization.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend/dist/</span>
 <span class="w">    </span><span class="nt">expire_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 week</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 <span class="w">      </span><span class="nt">changes</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frontend/**/*</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
@@ -8025,11 +8025,11 @@ optimization.</p>
 <span class="nt">build:backend:image</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:24-dind</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;test:backend&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"test:backend"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">services</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:24-dind</span>
 <span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;$CI_REGISTRY_PASSWORD&quot; | docker login -u &quot;$CI_REGISTRY_USER&quot; --password-stdin $CI_REGISTRY</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cd backend</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker build</span>
@@ -8043,7 +8043,7 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker push $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_REF_SLUG</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker push $CI_REGISTRY_IMAGE/backend:latest</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 <span class="w">      </span><span class="nt">changes</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend/**/*</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
@@ -8063,7 +8063,7 @@ optimization.</p>
 
 <span class="nt">container_scanning</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;build:backend:image&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"build:backend:image"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">allow_failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">CI_APPLICATION_REPOSITORY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_REGISTRY_IMAGE/backend</span>
@@ -8080,7 +8080,7 @@ optimization.</p>
 <span class="nt">deploy:staging:frontend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy-staging</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;build:frontend&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"build:frontend"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">staging</span>
 <span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://staging.example.com</span>
@@ -8088,16 +8088,16 @@ optimization.</p>
 <span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws --version</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws s3 sync frontend/dist s3://$S3_BUCKET_STAGING --delete --cache-control &quot;public, max-age=31536000&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DIST_ID_STAGING --paths &quot;/*&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws s3 sync frontend/dist s3://$S3_BUCKET_STAGING --delete --cache-control "public, max-age=31536000"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DIST_ID_STAGING --paths "/*"</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == &quot;develop&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == "develop"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 
 <span class="nt">deploy:staging:backend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy-staging</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;build:backend:image&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;container_scanning&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"build:backend:image"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"container_scanning"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">staging</span>
 <span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://staging.example.com</span>
@@ -8111,8 +8111,8 @@ optimization.</p>
 <span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">--cluster staging-cluster</span>
 <span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">--services backend-service</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == &quot;develop&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == "develop"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 
 <span class="c1">## ====================</span>
 <span class="c1">## SMOKE TESTS</span>
@@ -8120,10 +8120,10 @@ optimization.</p>
 <span class="nt">smoke-test:staging</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">smoke-test</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postman/newman:alpine</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;deploy:staging:frontend&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;deploy:staging:backend&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"deploy:staging:frontend"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"deploy:staging:backend"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">newman run tests/postman/smoke-tests.json</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">--env-var &quot;baseUrl=https://staging.example.com/api&quot;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">--env-var "baseUrl=https://staging.example.com/api"</span>
 <span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">--bail</span>
 <span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">--reporters cli,json</span>
 <span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">--reporter-json-export newman-results.json</span>
@@ -8133,8 +8133,8 @@ optimization.</p>
 <span class="w">      </span><span class="nt">junit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">newman-results.json</span>
 <span class="w">    </span><span class="nt">expire_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 week</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == &quot;develop&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == "develop"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 
 <span class="c1">## ====================</span>
 <span class="c1">## DEPLOY TO PRODUCTION</span>
@@ -8142,7 +8142,7 @@ optimization.</p>
 <span class="nt">deploy:production:frontend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy-production</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;smoke-test:staging&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"smoke-test:staging"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
 <span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://example.com</span>
@@ -8150,8 +8150,8 @@ optimization.</p>
 <span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws --version</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws s3 sync frontend/dist s3://$S3_BUCKET_PRODUCTION --delete --cache-control &quot;public, max-age=31536000&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DIST_ID_PRODUCTION --paths &quot;/*&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws s3 sync frontend/dist s3://$S3_BUCKET_PRODUCTION --delete --cache-control "public, max-age=31536000"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DIST_ID_PRODUCTION --paths "/*"</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
@@ -8160,7 +8160,7 @@ optimization.</p>
 <span class="nt">deploy:production:backend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy-production</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;smoke-test:staging&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"smoke-test:staging"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
 <span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://example.com</span>
@@ -8207,7 +8207,7 @@ optimization.</p>
 <span class="nt">performance-test:production</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitor</span>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/k6:latest</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;deploy:production:backend&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"deploy:production:backend"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k6 run --out json=results.json tests/performance/load.js</span>
 <span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
@@ -8235,7 +8235,7 @@ optimization.</p>
 <span class="w">        </span><span class="no">--listener-arn $LISTENER_ARN \</span>
 <span class="w">        </span><span class="no">--default-actions Type=forward,TargetGroupArn=$TARGET_GROUP_BLUE_ARN</span>
 
-<span class="w">      </span><span class="no">echo &quot;Rolled back to previous production version&quot;</span>
+<span class="w">      </span><span class="no">echo "Rolled back to previous production version"</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
@@ -8247,9 +8247,9 @@ optimization.</p>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">staging</span>
 <span class="w">    </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stop</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;Stopping staging environment&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "Stopping staging environment"</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
 
 <span class="c1">## ====================</span>
@@ -8294,7 +8294,7 @@ optimization.</p>
 <span class="nt">switch:traffic</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">&lt;&lt;</span><span class="p">:</span><span class="w"> </span><span class="nv">*deploy_template</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;deploy:green&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"deploy:green"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
@@ -8303,20 +8303,20 @@ optimization.</p>
 <span class="w">      </span><span class="no">curl -f https://green.example.com/health || exit 1</span>
 
 <span class="w">      </span><span class="no"># Switch service to green</span>
-<span class="w">      </span><span class="no">kubectl patch service myapp-service -p &#39;{&quot;spec&quot;:{&quot;selector&quot;:{&quot;slot&quot;:&quot;green&quot;}}}&#39;</span>
+<span class="w">      </span><span class="no">kubectl patch service myapp-service -p '{"spec":{"selector":{"slot":"green"}}}'</span>
 
 <span class="w">      </span><span class="no"># Monitor for 5 minutes</span>
 <span class="w">      </span><span class="no">sleep 300</span>
 
 <span class="w">      </span><span class="no"># Check error rates</span>
-<span class="w">      </span><span class="no">ERROR_RATE=$(curl -s &quot;https://monitoring.example.com/api/error-rate&quot;)</span>
-<span class="w">      </span><span class="no">if [ &quot;$ERROR_RATE&quot; -gt &quot;1&quot; ]; then</span>
-<span class="w">        </span><span class="no">echo &quot;High error rate detected, rolling back&quot;</span>
-<span class="w">        </span><span class="no">kubectl patch service myapp-service -p &#39;{&quot;spec&quot;:{&quot;selector&quot;:{&quot;slot&quot;:&quot;blue&quot;}}}&#39;</span>
+<span class="w">      </span><span class="no">ERROR_RATE=$(curl -s "https://monitoring.example.com/api/error-rate")</span>
+<span class="w">      </span><span class="no">if [ "$ERROR_RATE" -gt "1" ]; then</span>
+<span class="w">        </span><span class="no">echo "High error rate detected, rolling back"</span>
+<span class="w">        </span><span class="no">kubectl patch service myapp-service -p '{"spec":{"selector":{"slot":"blue"}}}'</span>
 <span class="w">        </span><span class="no">exit 1</span>
 <span class="w">      </span><span class="no">fi</span>
 
-<span class="w">      </span><span class="no">echo &quot;Deployment successful&quot;</span>
+<span class="w">      </span><span class="no">echo "Deployment successful"</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
@@ -8332,20 +8332,20 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no"># Start with 10% traffic</span>
 <span class="w">      </span><span class="no">for weight in 10 25 50 75 100; do</span>
-<span class="w">        </span><span class="no">echo &quot;Setting canary weight to $weight%&quot;</span>
-<span class="w">        </span><span class="no">kubectl patch virtualservice myapp -p &quot;{\&quot;spec\&quot;:{\&quot;http\&quot;:[{\&quot;weight\&quot;:$weight,\&quot;route\&quot;:[{\&quot;destination\&quot;:\&quot;canary\&quot;}]},{\&quot;weight\&quot;:$((100-weight)),\&quot;route\&quot;:[{\&quot;destination\&quot;:\&quot;stable\&quot;}]}]}}&quot;</span>
+<span class="w">        </span><span class="no">echo "Setting canary weight to $weight%"</span>
+<span class="w">        </span><span class="no">kubectl patch virtualservice myapp -p "{\"spec\":{\"http\":[{\"weight\":$weight,\"route\":[{\"destination\":\"canary\"}]},{\"weight\":$((100-weight)),\"route\":[{\"destination\":\"stable\"}]}]}}"</span>
 
 <span class="w">        </span><span class="no"># Monitor for 5 minutes</span>
 <span class="w">        </span><span class="no">sleep 300</span>
 
 <span class="w">        </span><span class="no"># Check metrics</span>
-<span class="w">        </span><span class="no">ERROR_RATE=$(curl -s &quot;https://monitoring.example.com/api/error-rate&quot;)</span>
-<span class="w">        </span><span class="no">LATENCY_P99=$(curl -s &quot;https://monitoring.example.com/api/latency-p99&quot;)</span>
+<span class="w">        </span><span class="no">ERROR_RATE=$(curl -s "https://monitoring.example.com/api/error-rate")</span>
+<span class="w">        </span><span class="no">LATENCY_P99=$(curl -s "https://monitoring.example.com/api/latency-p99")</span>
 
-<span class="w">        </span><span class="no">if [ &quot;$ERROR_RATE&quot; -gt &quot;1&quot; ] || [ &quot;$LATENCY_P99&quot; -gt &quot;1000&quot; ]; then</span>
-<span class="w">          </span><span class="no">echo &quot;Metrics exceeded thresholds, rolling back&quot;</span>
+<span class="w">        </span><span class="no">if [ "$ERROR_RATE" -gt "1" ] || [ "$LATENCY_P99" -gt "1000" ]; then</span>
+<span class="w">          </span><span class="no">echo "Metrics exceeded thresholds, rolling back"</span>
 <span class="w">          </span><span class="no">kubectl delete -f k8s/canary/</span>
-<span class="w">          </span><span class="no">kubectl patch virtualservice myapp -p &#39;{&quot;spec&quot;:{&quot;http&quot;:[{&quot;weight&quot;:100,&quot;route&quot;:[{&quot;destination&quot;:&quot;stable&quot;}]}]}}&#39;</span>
+<span class="w">          </span><span class="no">kubectl patch virtualservice myapp -p '{"spec":{"http":[{"weight":100,"route":[{"destination":"stable"}]}]}}'</span>
 <span class="w">          </span><span class="no">exit 1</span>
 <span class="w">        </span><span class="no">fi</span>
 <span class="w">      </span><span class="no">done</span>
@@ -8380,9 +8380,9 @@ optimization.</p>
 
 <span class="w">      </span><span class="no"># Run post-deployment health checks</span>
 <span class="w">      </span><span class="no">for i in {1..10}; do</span>
-<span class="w">        </span><span class="no">STATUS=$(curl -s -o /dev/null -w &quot;%{http_code}&quot; https://example.com/health)</span>
-<span class="w">        </span><span class="no">if [ &quot;$STATUS&quot; != &quot;200&quot; ]; then</span>
-<span class="w">          </span><span class="no">echo &quot;Health check failed with status $STATUS&quot;</span>
+<span class="w">        </span><span class="no">STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://example.com/health)</span>
+<span class="w">        </span><span class="no">if [ "$STATUS" != "200" ]; then</span>
+<span class="w">          </span><span class="no">echo "Health check failed with status $STATUS"</span>
 <span class="w">          </span><span class="no">kubectl rollout undo deployment/myapp</span>
 <span class="w">          </span><span class="no">kubectl rollout status deployment/myapp --timeout=10m</span>
 <span class="w">          </span><span class="no">exit 1</span>
@@ -8390,7 +8390,7 @@ optimization.</p>
 <span class="w">        </span><span class="no">sleep 3</span>
 <span class="w">      </span><span class="no">done</span>
 
-<span class="w">      </span><span class="no">echo &quot;Progressive deployment successful&quot;</span>
+<span class="w">      </span><span class="no">echo "Progressive deployment successful"</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 </code></pre></div>
@@ -8423,9 +8423,9 @@ optimization.</p>
 <span class="w">        </span><span class="no">-n review-$CI_COMMIT_REF_SLUG \</span>
 <span class="w">        </span><span class="no">--timeout=5m</span>
 
-<span class="w">      </span><span class="no">echo &quot;Review app available at https://$CI_COMMIT_REF_SLUG.review.example.com&quot;</span>
+<span class="w">      </span><span class="no">echo "Review app available at https://$CI_COMMIT_REF_SLUG.review.example.com"</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 <span class="w">  </span><span class="nt">resource_group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">review/$CI_COMMIT_REF_SLUG</span>
 
 <span class="nt">review:stop</span><span class="p">:</span>
@@ -8438,7 +8438,7 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">helm uninstall review-$CI_COMMIT_REF_SLUG --namespace review-$CI_COMMIT_REF_SLUG</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubectl delete namespace review-$CI_COMMIT_REF_SLUG</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
 <span class="w">  </span><span class="nt">resource_group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">review/$CI_COMMIT_REF_SLUG</span>
 </code></pre></div>
@@ -8461,12 +8461,12 @@ optimization.</p>
 <span class="nt">dependency_scanning</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">DS_EXCLUDED_PATHS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spec, test, tests, tmp, node_modules</span>
-<span class="w">    </span><span class="nt">DS_DEFAULT_ANALYZERS</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;gemnasium,</span><span class="nv"> </span><span class="s">gemnasium-python,</span><span class="nv"> </span><span class="s">retire.js&quot;</span>
+<span class="w">    </span><span class="nt">DS_DEFAULT_ANALYZERS</span><span class="p">:</span><span class="w"> </span><span class="s">"gemnasium,</span><span class="nv"> </span><span class="s">gemnasium-python,</span><span class="nv"> </span><span class="s">retire.js"</span>
 
 <span class="c1">## Customize Container Scanning</span>
 <span class="nt">container_scanning</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">CS_SEVERITY_THRESHOLD</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;HIGH&quot;</span>
+<span class="w">    </span><span class="nt">CS_SEVERITY_THRESHOLD</span><span class="p">:</span><span class="w"> </span><span class="s">"HIGH"</span>
 <span class="w">    </span><span class="nt">CI_APPLICATION_REPOSITORY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_REGISTRY_IMAGE/backend</span>
 <span class="w">    </span><span class="nt">CI_APPLICATION_TAG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_SHA</span>
 
@@ -8474,9 +8474,9 @@ optimization.</p>
 <span class="nt">dast</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">DAST_WEBSITE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://staging.example.com</span>
-<span class="w">    </span><span class="nt">DAST_FULL_SCAN_ENABLED</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">DAST_FULL_SCAN_ENABLED</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == &quot;develop&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == "develop"</span>
 <span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
 </code></pre></div>
 <h3 id="secrets-management-with-hashicorp-vault">Secrets Management with HashiCorp Vault<a class="headerlink" href="#secrets-management-with-hashicorp-vault" title="Permanent link">&para;</a></h3>
@@ -8522,9 +8522,9 @@ optimization.</p>
 <span class="w">        </span><span class="no">--duration-seconds 3600)</span>
 
 <span class="w">      </span><span class="no"># Export AWS credentials</span>
-<span class="w">      </span><span class="no">export AWS_ACCESS_KEY_ID=$(echo $STS_RESPONSE | jq -r &#39;.Credentials.AccessKeyId&#39;)</span>
-<span class="w">      </span><span class="no">export AWS_SECRET_ACCESS_KEY=$(echo $STS_RESPONSE | jq -r &#39;.Credentials.SecretAccessKey&#39;)</span>
-<span class="w">      </span><span class="no">export AWS_SESSION_TOKEN=$(echo $STS_RESPONSE | jq -r &#39;.Credentials.SessionToken&#39;)</span>
+<span class="w">      </span><span class="no">export AWS_ACCESS_KEY_ID=$(echo $STS_RESPONSE | jq -r '.Credentials.AccessKeyId')</span>
+<span class="w">      </span><span class="no">export AWS_SECRET_ACCESS_KEY=$(echo $STS_RESPONSE | jq -r '.Credentials.SecretAccessKey')</span>
+<span class="w">      </span><span class="no">export AWS_SESSION_TOKEN=$(echo $STS_RESPONSE | jq -r '.Credentials.SessionToken')</span>
 
 <span class="w">      </span><span class="no"># Deploy to AWS</span>
 <span class="w">      </span><span class="no">aws s3 sync ./dist s3://$S3_BUCKET_PRODUCTION</span>
@@ -8534,30 +8534,30 @@ optimization.</p>
 <h3 id="parallel-jobs-with-dag">Parallel Jobs with DAG<a class="headerlink" href="#parallel-jobs-with-dag" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nt">workflow</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 
 <span class="nt">build:frontend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;test:frontend&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"test:frontend"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run build</span>
 
 <span class="nt">build:backend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;test:backend&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"test:backend"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker build -t backend .</span>
 
 <span class="nt">deploy:cdn</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;build:frontend&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"build:frontend"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws s3 sync dist s3://bucket</span>
 
 <span class="nt">deploy:api</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;build:backend&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"build:backend"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubectl apply -f k8s/</span>
 </code></pre></div>
@@ -8626,13 +8626,13 @@ optimization.</p>
 
 <span class="nt">test:frontend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 <span class="w">      </span><span class="nt">&lt;&lt;</span><span class="p">:</span><span class="w"> </span><span class="nv">*frontend_changes</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 
 <span class="nt">test:backend</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 <span class="w">      </span><span class="nt">&lt;&lt;</span><span class="p">:</span><span class="w"> </span><span class="nv">*backend_changes</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH</span>
 </code></pre></div>
@@ -8640,9 +8640,9 @@ optimization.</p>
 <h2 id="monorepo-patterns">Monorepo Patterns<a class="headerlink" href="#monorepo-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="selective-pipeline-execution">Selective Pipeline Execution<a class="headerlink" href="#selective-pipeline-execution" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nt">variables</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">FRONTEND_CHANGES</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
-<span class="w">  </span><span class="nt">BACKEND_CHANGES</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
-<span class="w">  </span><span class="nt">SHARED_CHANGES</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
+<span class="w">  </span><span class="nt">FRONTEND_CHANGES</span><span class="p">:</span><span class="w"> </span><span class="s">"false"</span>
+<span class="w">  </span><span class="nt">BACKEND_CHANGES</span><span class="p">:</span><span class="w"> </span><span class="s">"false"</span>
+<span class="w">  </span><span class="nt">SHARED_CHANGES</span><span class="p">:</span><span class="w"> </span><span class="s">"false"</span>
 
 <span class="nt">detect:changes</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.pre</span>
@@ -8651,36 +8651,36 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA $CI_COMMIT_SHA &gt; changes.txt</span>
 
-<span class="w">      </span><span class="no">if grep -q &quot;^frontend/&quot; changes.txt; then</span>
-<span class="w">        </span><span class="no">echo &quot;FRONTEND_CHANGES=true&quot; &gt;&gt; build.env</span>
+<span class="w">      </span><span class="no">if grep -q "^frontend/" changes.txt; then</span>
+<span class="w">        </span><span class="no">echo "FRONTEND_CHANGES=true" &gt;&gt; build.env</span>
 <span class="w">      </span><span class="no">fi</span>
 
-<span class="w">      </span><span class="no">if grep -q &quot;^backend/&quot; changes.txt; then</span>
-<span class="w">        </span><span class="no">echo &quot;BACKEND_CHANGES=true&quot; &gt;&gt; build.env</span>
+<span class="w">      </span><span class="no">if grep -q "^backend/" changes.txt; then</span>
+<span class="w">        </span><span class="no">echo "BACKEND_CHANGES=true" &gt;&gt; build.env</span>
 <span class="w">      </span><span class="no">fi</span>
 
-<span class="w">      </span><span class="no">if grep -q &quot;^shared/&quot; changes.txt; then</span>
-<span class="w">        </span><span class="no">echo &quot;FRONTEND_CHANGES=true&quot; &gt;&gt; build.env</span>
-<span class="w">        </span><span class="no">echo &quot;BACKEND_CHANGES=true&quot; &gt;&gt; build.env</span>
-<span class="w">        </span><span class="no">echo &quot;SHARED_CHANGES=true&quot; &gt;&gt; build.env</span>
+<span class="w">      </span><span class="no">if grep -q "^shared/" changes.txt; then</span>
+<span class="w">        </span><span class="no">echo "FRONTEND_CHANGES=true" &gt;&gt; build.env</span>
+<span class="w">        </span><span class="no">echo "BACKEND_CHANGES=true" &gt;&gt; build.env</span>
+<span class="w">        </span><span class="no">echo "SHARED_CHANGES=true" &gt;&gt; build.env</span>
 <span class="w">      </span><span class="no">fi</span>
 <span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">reports</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">dotenv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build.env</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == &quot;merge_request_event&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_PIPELINE_SOURCE == "merge_request_event"</span>
 
 <span class="nt">test:frontend</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;detect:changes&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"detect:changes"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$FRONTEND_CHANGES == &quot;true&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$FRONTEND_CHANGES == "true"</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cd frontend &amp;&amp; npm test</span>
 
 <span class="nt">test:backend</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;detect:changes&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"detect:changes"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$BACKEND_CHANGES == &quot;true&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$BACKEND_CHANGES == "true"</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cd backend &amp;&amp; pytest</span>
 </code></pre></div>
@@ -8737,19 +8737,19 @@ optimization.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no"># Create deployment event in LaunchDarkly</span>
 <span class="w">      </span><span class="no">curl -X POST https://app.launchdarkly.com/api/v2/flags/production/my-feature/on \</span>
-<span class="w">        </span><span class="no">-H &quot;Authorization: $LAUNCHDARKLY_API_KEY&quot; \</span>
-<span class="w">        </span><span class="no">-H &quot;Content-Type: application/json&quot;</span>
+<span class="w">        </span><span class="no">-H "Authorization: $LAUNCHDARKLY_API_KEY" \</span>
+<span class="w">        </span><span class="no">-H "Content-Type: application/json"</span>
 
 <span class="w">      </span><span class="no"># Deploy application</span>
 <span class="w">      </span><span class="no">kubectl apply -f k8s/</span>
 
 <span class="w">      </span><span class="no"># Gradually enable feature flag</span>
 <span class="w">      </span><span class="no">for percentage in 10 25 50 75 100; do</span>
-<span class="w">        </span><span class="no">echo &quot;Enabling feature for $percentage% of users&quot;</span>
+<span class="w">        </span><span class="no">echo "Enabling feature for $percentage% of users"</span>
 <span class="w">        </span><span class="no">curl -X PATCH https://app.launchdarkly.com/api/v2/flags/production/my-feature \</span>
-<span class="w">          </span><span class="no">-H &quot;Authorization: $LAUNCHDARKLY_API_KEY&quot; \</span>
-<span class="w">          </span><span class="no">-H &quot;Content-Type: application/json&quot; \</span>
-<span class="w">          </span><span class="no">-d &quot;{\&quot;rollout\&quot;:{\&quot;variations\&quot;:[{\&quot;variation\&quot;:0,\&quot;weight\&quot;:$((100-percentage))},{\&quot;variation\&quot;:1,\&quot;weight\&quot;:$percentage}]}}&quot;</span>
+<span class="w">          </span><span class="no">-H "Authorization: $LAUNCHDARKLY_API_KEY" \</span>
+<span class="w">          </span><span class="no">-H "Content-Type: application/json" \</span>
+<span class="w">          </span><span class="no">-d "{\"rollout\":{\"variations\":[{\"variation\":0,\"weight\":$((100-percentage))},{\"variation\":1,\"weight\":$percentage}]}}"</span>
 
 <span class="w">        </span><span class="no">sleep 300  # Monitor for 5 minutes</span>
 <span class="w">      </span><span class="no">done</span>
@@ -8778,7 +8778,7 @@ optimization.</p>
 <span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python:${PYTHON_VERSION}-slim</span>
 <span class="w">  </span><span class="nt">parallel</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">matrix</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">PYTHON_VERSION</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;3.10&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;3.12&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">PYTHON_VERSION</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"3.10"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"3.11"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"3.12"</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python -m pytest tests/</span>
 </code></pre></div>
@@ -8787,17 +8787,17 @@ optimization.</p>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Auto-DevOps.gitlab-ci.yml</span>
 
 <span class="nt">variables</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">AUTO_DEVOPS_PLATFORM_TARGET</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ECS&quot;</span>
-<span class="w">  </span><span class="nt">POSTGRES_ENABLED</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">  </span><span class="nt">AUTO_DEVOPS_PLATFORM_TARGET</span><span class="p">:</span><span class="w"> </span><span class="s">"ECS"</span>
+<span class="w">  </span><span class="nt">POSTGRES_ENABLED</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 <span class="w">  </span><span class="nt">POSTGRES_VERSION</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
-<span class="w">  </span><span class="nt">REDIS_ENABLED</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">  </span><span class="nt">REDIS_ENABLED</span><span class="p">:</span><span class="w"> </span><span class="s">"true"</span>
 
 <span class="nt">production</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">extends</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.auto-deploy</span>
 <span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;Custom pre-deployment tasks&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "Custom pre-deployment tasks"</span>
 <span class="w">  </span><span class="nt">after_script</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;Custom post-deployment tasks&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "Custom post-deployment tasks"</span>
 </code></pre></div>
 <hr />
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
@@ -8805,10 +8805,10 @@ optimization.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">debug:pipeline</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.pre</span>
 <span class="w">  </span><span class="nt">script</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;CI_COMMIT_SHA=$CI_COMMIT_SHA&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;CI_PIPELINE_SOURCE=$CI_PIPELINE_SOURCE&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;CI_MERGE_REQUEST_ID=$CI_MERGE_REQUEST_ID&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "CI_COMMIT_SHA=$CI_COMMIT_SHA"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "CI_PIPELINE_SOURCE=$CI_PIPELINE_SOURCE"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "CI_MERGE_REQUEST_ID=$CI_MERGE_REQUEST_ID"</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">env | sort</span>
 <span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_COMMIT_MESSAGE =~ /\[debug\]/</span>
@@ -9017,10 +9017,10 @@ optimization.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

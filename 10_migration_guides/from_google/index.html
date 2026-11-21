@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -8352,21 +8352,21 @@ Type hints enable static analysis, prevent runtime errors, and serve as inline d
 <p><strong>Migration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Google - optional type hints</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve user by ID.</span>
+<span class="w">    </span><span class="sd">"""Retrieve user by ID.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        user_id: The user ID to retrieve.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        User object if found, None otherwise.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
 
 <span class="c1">## Our Guide - required type hints</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Retrieve user by ID.</span>
 
 <span class="sd">    Args:</span>
@@ -8374,7 +8374,7 @@ Type hints enable static analysis, prevent runtime errors, and serve as inline d
 
 <span class="sd">    Returns:</span>
 <span class="sd">        User object if found, None otherwise</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
 </code></pre></div>
 <p><strong>Action Required</strong>:</p>
@@ -8391,13 +8391,13 @@ Type hints enable static analysis, prevent runtime errors, and serve as inline d
 version management, and AI-assisted code analysis for DevOps workflows.</p>
 <p><strong>Migration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Google - basic module docstring</span>
-<span class="sd">&quot;&quot;&quot;User authentication and session management.&quot;&quot;&quot;</span>
+<span class="sd">"""User authentication and session management."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">jwt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTTPException</span>
 
 <span class="c1">## Our Guide - enhanced module metadata</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">@module user_authentication</span>
 <span class="sd">@description Handles user authentication, session management, and JWT token generation</span>
 <span class="sd">@dependencies fastapi, pyjwt, passlib, python-dotenv</span>
@@ -8407,7 +8407,7 @@ version management, and AI-assisted code analysis for DevOps workflows.</p>
 <span class="sd">@status stable</span>
 <span class="sd">@security_classification internal</span>
 <span class="sd">@python_version &gt;= 3.9</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">jwt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTTPException</span>
@@ -8455,14 +8455,14 @@ coverage prevents production incidents.</p>
 <p><strong>Migration</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Google - flexible test naming and structure</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_user_creation</span><span class="p">():</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="s2">&quot;john@example.com&quot;</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s2">&quot;john@example.com&quot;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="s2">"john@example.com"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s2">"john@example.com"</span>
 
 <span class="c1">## Our Guide - structured naming and Arrange-Act-Assert</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_should_create_user_when_valid_email_provided</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test create_user creates user with valid email.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Test create_user creates user with valid email."""</span>
     <span class="c1"># Arrange</span>
-    <span class="n">email</span> <span class="o">=</span> <span class="s2">&quot;john@example.com&quot;</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="s2">"john@example.com"</span>
 
     <span class="c1"># Act</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
@@ -8487,32 +8487,32 @@ systems. Security must be enforced, not just recommended.</p>
 <p><strong>Migration - Input Validation</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Google - manual validation</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">email</span> <span class="ow">or</span> <span class="s1">&#39;@&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">email</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid email&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">email</span> <span class="ow">or</span> <span class="s1">'@'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">email</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Invalid email"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
 
 <span class="c1">## Our Guide - schema validation with Pydantic</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">EmailStr</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">UserQuery</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validated user query request.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Validated user query request."""</span>
     <span class="n">email</span><span class="p">:</span> <span class="n">EmailStr</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get user by email with validated input.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Get user by email with validated input."""</span>
     <span class="n">query_data</span> <span class="o">=</span> <span class="n">UserQuery</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query_data</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Migration - Secret Management</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Google - configuration flexibility</span>
-<span class="n">API_KEY</span> <span class="o">=</span> <span class="s2">&quot;sk_live_abc123&quot;</span>  <span class="c1"># Not ideal but allowed</span>
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="s2">"sk_live_abc123"</span>  <span class="c1"># Not ideal but allowed</span>
 
 <span class="c1">## Our Guide - environment variables required</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="n">API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">)</span>
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"API_KEY"</span><span class="p">)</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">API_KEY</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">EnvironmentError</span><span class="p">(</span><span class="s2">&quot;API_KEY environment variable required&quot;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">EnvironmentError</span><span class="p">(</span><span class="s2">"API_KEY environment variable required"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Action Required</strong>:</p>
 <ul>
@@ -8534,30 +8534,30 @@ Custom exceptions improve error handling and debugging.</p>
         <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
 
 <span class="c1">## Our Guide - custom exceptions and proper logging</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">APIError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception for API-related errors.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Base exception for API-related errors."""</span>
     <span class="k">pass</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">APITimeoutError</span><span class="p">(</span><span class="n">APIError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when API request times out.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Raised when API request times out."""</span>
     <span class="k">pass</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">fetch_data</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch data from remote API with proper error handling.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Fetch data from remote API with proper error handling."""</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
     <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">Timeout</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Timeout fetching data from </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="n">APITimeoutError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Request to </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2"> timed out&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Timeout fetching data from </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">APITimeoutError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Request to </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2"> timed out"</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;HTTP error </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to fetch data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"HTTP error </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to fetch data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Action Required</strong>:</p>
 <ul>
@@ -8579,13 +8579,13 @@ Custom exceptions improve error handling and debugging.</p>
 <p>In <code>pyproject.toml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.black]</span>
 <span class="n">line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span>
-<span class="n">target-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;py39&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;py310&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;py311&#39;</span><span class="p">]</span>
-<span class="n">include</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;\.pyi?$&#39;</span>
+<span class="n">target-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">'py39'</span><span class="p">,</span><span class="w"> </span><span class="s1">'py310'</span><span class="p">,</span><span class="w"> </span><span class="s1">'py311'</span><span class="p">]</span>
+<span class="n">include</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'\.pyi?$'</span>
 </code></pre></div>
 <h4 id="add-mypy-configuration">Add mypy Configuration<a class="headerlink" href="#add-mypy-configuration" title="Permanent link">&para;</a></h4>
 <p>In <code>pyproject.toml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.mypy]</span>
-<span class="n">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3.9&quot;</span>
+<span class="n">python_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"3.9"</span>
 <span class="n">warn_return_any</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="n">warn_unused_configs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="n">disallow_untyped_defs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
@@ -8608,7 +8608,7 @@ Custom exceptions improve error handling and debugging.</p>
 <h4 id="add-isort-configuration">Add isort Configuration<a class="headerlink" href="#add-isort-configuration" title="Permanent link">&para;</a></h4>
 <p>In <code>pyproject.toml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.isort]</span>
-<span class="n">profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;black&quot;</span>
+<span class="n">profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"black"</span>
 <span class="n">line_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span>
 <span class="n">multi_line_output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
 <span class="n">include_trailing_comma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
@@ -8649,13 +8649,13 @@ black<span class="w"> </span>--check<span class="w"> </span>.
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.13.2</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isort</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;--profile&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;black&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"--profile"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"black"</span><span class="p p-Indicator">]</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pycqa/flake8</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7.1.1</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flake8</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;--max-line-length=88&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;--extend-ignore=E203&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"--max-line-length=88"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"--extend-ignore=E203"</span><span class="p p-Indicator">]</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/mirrors-mypy</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.11.2</span>
@@ -8667,7 +8667,7 @@ black<span class="w"> </span>--check<span class="w"> </span>.
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.7.9</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bandit</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;-c&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pyproject.toml&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"-c"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"pyproject.toml"</span><span class="p p-Indicator">]</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/pre-commit-hooks</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v4.6.0</span>
@@ -8789,7 +8789,7 @@ flake8<span class="w"> </span>.
 <ul>
 <li>[ ] <strong>Add module metadata to docstrings</strong></li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""</span>
 <span class="sd">@module module_name</span>
 <span class="sd">@description Clear description</span>
 <span class="sd">@dependencies package1, package2</span>
@@ -8797,7 +8797,7 @@ flake8<span class="w"> </span>.
 <span class="sd">@author Your Name</span>
 <span class="sd">@last_updated 2025-12-07</span>
 <span class="sd">@status stable</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 </code></pre></div>
 <ul>
 <li>[ ] <strong>Verify Google-style docstrings</strong></li>
@@ -8841,9 +8841,9 @@ flake8<span class="w"> </span>.
 </li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.pytest.ini_options]</span>
-<span class="n">minversion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;7.0&quot;</span>
-<span class="n">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;-ra -q --cov=src --cov-report=term-missing --cov-fail-under=80&quot;</span>
-<span class="n">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tests&quot;</span><span class="p">]</span>
+<span class="n">minversion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"7.0"</span>
+<span class="n">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"-ra -q --cov=src --cov-report=term-missing --cov-fail-under=80"</span>
+<span class="n">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"tests"</span><span class="p">]</span>
 </code></pre></div>
 <ul>
 <li>[ ] <strong>Run tests and verify coverage</strong></li>
@@ -8889,11 +8889,11 @@ safety<span class="w"> </span>check
 <li>[ ] <strong>Create custom exception hierarchies</strong></li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ServiceError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception for service errors.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Base exception for service errors."""</span>
     <span class="k">pass</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ValidationError</span><span class="p">(</span><span class="n">ServiceError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Input validation failed.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Input validation failed."""</span>
     <span class="k">pass</span>
 </code></pre></div>
 <ul>
@@ -8971,7 +8971,7 @@ safety<span class="w"> </span>check
 <div class="highlight"><pre><span></span><code><span class="c1">## Do this in one commit</span>
 black<span class="w"> </span>.
 git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor: convert to 4-space indentation with Black&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"refactor: convert to 4-space indentation with Black"</span>
 </code></pre></div>
 <h3 id="2-type-hint-complexity-overload">2. Type Hint Complexity Overload<a class="headerlink" href="#2-type-hint-complexity-overload" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Trying to add perfect type hints to complex legacy code immediately.</p>
@@ -9021,10 +9021,10 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <p><strong>Problem</strong>: Accidentally committing hardcoded secrets while refactoring.</p>
 <p><strong>Solution</strong>: Add <code>.env</code> to <code>.gitignore</code> FIRST, then migrate secrets.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Do this FIRST</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;.env&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;.env.local&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
+<span class="nb">echo</span><span class="w"> </span><span class="s2">".env"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
+<span class="nb">echo</span><span class="w"> </span><span class="s2">".env.local"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
 git<span class="w"> </span>add<span class="w"> </span>.gitignore
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: ignore environment files&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"chore: ignore environment files"</span>
 
 <span class="c1">## THEN migrate secrets</span>
 <span class="c1">## Create .env.example (safe to commit)</span>
@@ -9384,10 +9384,10 @@ and production reliability.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

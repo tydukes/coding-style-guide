@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -8663,46 +8663,46 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 
 <span class="c1">## Generate backend configuration for all child modules</span>
 <span class="nb">remote_state</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span>
+<span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"s3"</span>
 
 <span class="w">  </span><span class="nb">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-terraform-state-${local.account_id}&quot;</span>
-<span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${path_relative_to_include()}/terraform.tfstate&quot;</span>
+<span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-terraform-state-${local.account_id}"</span>
+<span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">"${path_relative_to_include()}/terraform.tfstate"</span>
 <span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">local.aws_region</span>
 <span class="w">    </span><span class="na">encrypt</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-locks&quot;</span>
+<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"terraform-locks"</span>
 
 <span class="w">    </span><span class="nb">s3_bucket_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform State&quot;</span>
+<span class="w">      </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform State"</span>
 <span class="w">      </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.environment</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="nb">dynamodb_table_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform Locks&quot;</span>
+<span class="w">      </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform Locks"</span>
 <span class="w">      </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.environment</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;backend.tf&quot;</span>
-<span class="w">    </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite_terragrunt&quot;</span>
+<span class="w">    </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"backend.tf"</span>
+<span class="w">    </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"overwrite_terragrunt"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">## Generate provider configuration</span>
-<span class="err">generate</span><span class="w"> </span><span class="s2">&quot;provider&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;provider.tf&quot;</span>
-<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite_terragrunt&quot;</span>
+<span class="err">generate</span><span class="w"> </span><span class="s2">"provider"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"provider.tf"</span>
+<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"overwrite_terragrunt"</span>
 
 <span class="w">  </span><span class="na">contents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;-</span><span class="dl">EOF</span>
-<span class="sh">    provider &quot;aws&quot; {</span>
-<span class="sh">      region = &quot;${local.aws_region}&quot;</span>
+<span class="sh">    provider "aws" {</span>
+<span class="sh">      region = "${local.aws_region}"</span>
 
 <span class="sh">      default_tags {</span>
 <span class="sh">        tags = {</span>
-<span class="sh">          Environment = &quot;${local.environment}&quot;</span>
-<span class="sh">          ManagedBy   = &quot;Terragrunt&quot;</span>
-<span class="sh">          Region      = &quot;${local.aws_region}&quot;</span>
+<span class="sh">          Environment = "${local.environment}"</span>
+<span class="sh">          ManagedBy   = "Terragrunt"</span>
+<span class="sh">          Region      = "${local.aws_region}"</span>
 <span class="sh">        }</span>
 <span class="sh">      }</span>
 <span class="sh">    }</span>
@@ -8713,23 +8713,23 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="c1">  # Parse environment and region from path</span>
 <span class="c1">  # Expected path: live/&lt;environment&gt;/&lt;region&gt;/&lt;stack&gt;/terragrunt.hcl</span>
-<span class="w">  </span><span class="na">path_parts</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="err">path_relative_to_include</span><span class="p">())</span>
-<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.path_parts</span><span class="p">)</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">local.path_parts[0</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
-<span class="w">  </span><span class="na">aws_region</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.path_parts</span><span class="p">)</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">local.path_parts[1</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">  </span><span class="na">path_parts</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span><span class="w"> </span><span class="err">path_relative_to_include</span><span class="p">())</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.path_parts</span><span class="p">)</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">local.path_parts[0</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"dev"</span>
+<span class="w">  </span><span class="na">aws_region</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">local.path_parts</span><span class="p">)</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">local.path_parts[1</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"us-east-1"</span>
 
 <span class="c1">  # Account ID mapping</span>
 <span class="w">  </span><span class="nb">account_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">prod</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;111111111111&quot;</span>
-<span class="w">    </span><span class="na">staging</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;222222222222&quot;</span>
-<span class="w">    </span><span class="na">dev</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;333333333333&quot;</span>
+<span class="w">    </span><span class="na">prod</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"111111111111"</span>
+<span class="w">    </span><span class="na">staging</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"222222222222"</span>
+<span class="w">    </span><span class="na">dev</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"333333333333"</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="na">account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lookup</span><span class="p">(</span><span class="nv">local.account_ids</span><span class="p">,</span><span class="w"> </span><span class="nv">local.environment</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;333333333333&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="na">account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">lookup</span><span class="p">(</span><span class="nv">local.account_ids</span><span class="p">,</span><span class="w"> </span><span class="nv">local.environment</span><span class="p">,</span><span class="w"> </span><span class="s2">"333333333333"</span><span class="p">)</span>
 
 <span class="c1">  # Common tags</span>
 <span class="w">  </span><span class="nb">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.environment</span>
-<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terragrunt&quot;</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terragrunt"</span>
 <span class="w">    </span><span class="na">Region</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">local.aws_region</span>
 <span class="w">    </span><span class="na">AccountId</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">local.account_id</span>
 <span class="w">  </span><span class="p">}</span>
@@ -8737,11 +8737,11 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 
 <span class="c1">## Terraform version constraints</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="err">extra_arguments</span><span class="w"> </span><span class="s2">&quot;common_vars&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="err">extra_arguments</span><span class="w"> </span><span class="s2">"common_vars"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_terraform_commands_that_need_vars</span><span class="p">()</span>
 
 <span class="w">    </span><span class="nb">env_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">TF_INPUT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;false&quot;</span>
+<span class="w">      </span><span class="na">TF_INPUT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"false"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -8756,31 +8756,31 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="c1">## @last_updated 2025-10-28</span>
 
 <span class="c1">## Include root configuration</span>
-<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">"root"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
 <span class="p">}</span>
 
 <span class="c1">## Reference Terraform module</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_repo_root()}/modules//vpc&quot;</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${get_repo_root()}/modules//vpc"</span>
 
 <span class="c1">  # Or use Git repository</span>
-<span class="c1">  # source = &quot;git::ssh://git@github.com/myorg/terraform-modules.git//vpc?ref=v1.2.0&quot;</span>
+<span class="c1">  # source = "git::ssh://git@github.com/myorg/terraform-modules.git//vpc?ref=v1.2.0"</span>
 <span class="p">}</span>
 
 <span class="c1">## Module inputs</span>
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">vpc_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-vpc-us-east-1&quot;</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
-<span class="w">  </span><span class="na">availability_zones</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;, &quot;us-east-1c&quot;</span><span class="p">]</span>
-<span class="w">  </span><span class="na">public_subnets</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.1.0/24&quot;, &quot;10.0.2.0/24&quot;, &quot;10.0.3.0/24&quot;</span><span class="p">]</span>
-<span class="w">  </span><span class="na">private_subnets</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.11.0/24&quot;, &quot;10.0.12.0/24&quot;, &quot;10.0.13.0/24&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">vpc_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">"prod-vpc-us-east-1"</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
+<span class="w">  </span><span class="na">availability_zones</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"us-east-1a", "us-east-1b", "us-east-1c"</span><span class="p">]</span>
+<span class="w">  </span><span class="na">public_subnets</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"</span><span class="p">]</span>
+<span class="w">  </span><span class="na">private_subnets</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"</span><span class="p">]</span>
 <span class="w">  </span><span class="na">enable_nat_gateway</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="w">  </span><span class="na">enable_vpn_gateway</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MyApp&quot;</span>
-<span class="w">    </span><span class="na">Owner</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Platform Team&quot;</span>
+<span class="w">    </span><span class="na">Project</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"MyApp"</span>
+<span class="w">    </span><span class="na">Owner</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Platform Team"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -8791,30 +8791,30 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="c1">## @author Tyler Dukes</span>
 <span class="c1">## @last_updated 2025-10-28</span>
 
-<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">"root"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
 <span class="p">}</span>
 
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_repo_root()}/modules//eks&quot;</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${get_repo_root()}/modules//eks"</span>
 <span class="p">}</span>
 
 <span class="c1">## Dependency on VPC module</span>
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"vpc"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../vpc"</span>
 
 <span class="c1">  # Mock outputs for faster plan/validate without applying VPC first</span>
 <span class="w">  </span><span class="nb">mock_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">vpc_id</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-mock-id&quot;</span>
-<span class="w">    </span><span class="na">private_subnet_ids</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;subnet-mock-1&quot;, &quot;subnet-mock-2&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">vpc_id</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">"vpc-mock-id"</span>
+<span class="w">    </span><span class="na">private_subnet_ids</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"subnet-mock-1", "subnet-mock-2"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;validate&quot;, &quot;plan&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"validate", "plan"</span><span class="p">]</span>
 <span class="p">}</span>
 
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">cluster_name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-eks-us-east-1&quot;</span>
-<span class="w">  </span><span class="na">cluster_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.28&quot;</span>
+<span class="w">  </span><span class="na">cluster_name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"prod-eks-us-east-1"</span>
+<span class="w">  </span><span class="na">cluster_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"1.28"</span>
 
 <span class="c1">  # Use VPC outputs as inputs</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nv">dependency.vpc.outputs.vpc_id</span>
@@ -8825,7 +8825,7 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="w">      </span><span class="na">desired_capacity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
 <span class="w">      </span><span class="na">max_capacity</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">10</span>
 <span class="w">      </span><span class="na">min_capacity</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
-<span class="w">      </span><span class="na">instance_types</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;t3.large&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="na">instance_types</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"t3.large"</span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -8837,40 +8837,40 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="c1">## @author Tyler Dukes</span>
 <span class="c1">## @last_updated 2025-10-28</span>
 
-<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">"root"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
 <span class="p">}</span>
 
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_repo_root()}/modules//rds&quot;</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${get_repo_root()}/modules//rds"</span>
 <span class="p">}</span>
 
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"vpc"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../vpc"</span>
 
 <span class="w">  </span><span class="nb">mock_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">vpc_id</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-mock-id&quot;</span>
-<span class="w">    </span><span class="na">private_subnet_ids</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;subnet-mock-1&quot;, &quot;subnet-mock-2&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">vpc_id</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">"vpc-mock-id"</span>
+<span class="w">    </span><span class="na">private_subnet_ids</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"subnet-mock-1", "subnet-mock-2"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;validate&quot;, &quot;plan&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"validate", "plan"</span><span class="p">]</span>
 <span class="p">}</span>
 
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;security_groups&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../security-groups&quot;</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"security_groups"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../security-groups"</span>
 
 <span class="w">  </span><span class="nb">mock_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">database_security_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sg-mock-id&quot;</span>
+<span class="w">    </span><span class="na">database_security_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"sg-mock-id"</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;validate&quot;, &quot;plan&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"validate", "plan"</span><span class="p">]</span>
 <span class="p">}</span>
 
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">identifier</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-postgres&quot;</span>
-<span class="w">  </span><span class="na">engine</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
-<span class="w">  </span><span class="na">engine_version</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;15.3&quot;</span>
-<span class="w">  </span><span class="na">instance_class</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;db.t3.large&quot;</span>
+<span class="w">  </span><span class="na">identifier</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"prod-postgres"</span>
+<span class="w">  </span><span class="na">engine</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">"postgres"</span>
+<span class="w">  </span><span class="na">engine_version</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"15.3"</span>
+<span class="w">  </span><span class="na">instance_class</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"db.t3.large"</span>
 <span class="w">  </span><span class="na">allocated_storage</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
 
 <span class="w">  </span><span class="na">vpc_id</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nv">dependency.vpc.outputs.vpc_id</span>
@@ -8885,18 +8885,18 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <h2 id="generate-blocks">Generate Blocks<a class="headerlink" href="#generate-blocks" title="Permanent link">&para;</a></h2>
 <h3 id="generating-files">Generating Files<a class="headerlink" href="#generating-files" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Generate versions.tf</span>
-<span class="err">generate</span><span class="w"> </span><span class="s2">&quot;versions&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;versions.tf&quot;</span>
-<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite&quot;</span>
+<span class="err">generate</span><span class="w"> </span><span class="s2">"versions"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"versions.tf"</span>
+<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"overwrite"</span>
 
 <span class="w">  </span><span class="na">contents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;-</span><span class="dl">EOF</span>
 <span class="sh">    terraform {</span>
-<span class="sh">      required_version = &quot;&gt;= 1.5.0&quot;</span>
+<span class="sh">      required_version = "&gt;= 1.5.0"</span>
 
 <span class="sh">      required_providers {</span>
 <span class="sh">        aws = {</span>
-<span class="sh">          source  = &quot;hashicorp/aws&quot;</span>
-<span class="sh">          version = &quot;~&gt; 5.0&quot;</span>
+<span class="sh">          source  = "hashicorp/aws"</span>
+<span class="sh">          version = "~&gt; 5.0"</span>
 <span class="sh">        }</span>
 <span class="sh">      }</span>
 <span class="sh">    }</span>
@@ -8904,13 +8904,13 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <span class="p">}</span>
 
 <span class="c1">## Generate data sources</span>
-<span class="err">generate</span><span class="w"> </span><span class="s2">&quot;common_data&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;data.tf&quot;</span>
-<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite&quot;</span>
+<span class="err">generate</span><span class="w"> </span><span class="s2">"common_data"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"data.tf"</span>
+<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"overwrite"</span>
 
 <span class="w">  </span><span class="na">contents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;-</span><span class="dl">EOF</span>
-<span class="sh">    data &quot;aws_caller_identity&quot; &quot;current&quot; {}</span>
-<span class="sh">    data &quot;aws_region&quot; &quot;current&quot; {}</span>
+<span class="sh">    data "aws_caller_identity" "current" {}</span>
+<span class="sh">    data "aws_region" "current" {}</span>
 <span class="dl">  EOF</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -8918,24 +8918,24 @@ Terragrunt best practices for multi-environment infrastructure.</p>
 <h2 id="hooks">Hooks<a class="headerlink" href="#hooks" title="Permanent link">&para;</a></h2>
 <h3 id="before-and-after-hooks">Before and After Hooks<a class="headerlink" href="#before-and-after-hooks" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_repo_root()}/modules//vpc&quot;</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${get_repo_root()}/modules//vpc"</span>
 
 <span class="c1">  # Format code before plan/apply</span>
-<span class="w">  </span><span class="err">before_hook</span><span class="w"> </span><span class="s2">&quot;terraform_fmt&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;plan&quot;, &quot;apply&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="na">execute</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;terraform&quot;, &quot;fmt&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="err">before_hook</span><span class="w"> </span><span class="s2">"terraform_fmt"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"plan", "apply"</span><span class="p">]</span>
+<span class="w">    </span><span class="na">execute</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"terraform", "fmt"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="c1">  # Validate before plan</span>
-<span class="w">  </span><span class="err">before_hook</span><span class="w"> </span><span class="s2">&quot;terraform_validate&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;plan&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="na">execute</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;terraform&quot;, &quot;validate&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="err">before_hook</span><span class="w"> </span><span class="s2">"terraform_validate"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"plan"</span><span class="p">]</span>
+<span class="w">    </span><span class="na">execute</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"terraform", "validate"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="c1">  # Run custom script after apply</span>
-<span class="w">  </span><span class="err">after_hook</span><span class="w"> </span><span class="s2">&quot;notify_deployment&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">commands</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;apply&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="na">execute</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;bash&quot;, &quot;${get_repo_root()}/scripts/notify-deployment.sh&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="err">after_hook</span><span class="w"> </span><span class="s2">"notify_deployment"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">commands</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"apply"</span><span class="p">]</span>
+<span class="w">    </span><span class="na">execute</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"bash", "${get_repo_root()}/scripts/notify-deployment.sh"</span><span class="p">]</span>
 <span class="w">    </span><span class="na">run_on_error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -8979,20 +8979,20 @@ terragrunt<span class="w"> </span>graph-dependencies
 <div class="highlight"><pre><span></span><code><span class="c1">## Define dependencies to ensure correct apply order</span>
 <span class="nb">dependencies</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;../vpc&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;../security-groups&quot;</span>
+<span class="w">    </span><span class="s2">"../vpc"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"../security-groups"</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="skip-dependencies">Skip Dependencies<a class="headerlink" href="#skip-dependencies" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Skip dependency for faster iteration during development</span>
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"vpc"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../vpc"</span>
 
 <span class="w">  </span><span class="na">skip_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 
 <span class="w">  </span><span class="nb">mock_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-mock-id&quot;</span>
+<span class="w">    </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"vpc-mock-id"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -9000,49 +9000,49 @@ terragrunt<span class="w"> </span>graph-dependencies
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="use-mock-outputs">Use Mock Outputs<a class="headerlink" href="#use-mock-outputs" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Always provide mock outputs for faster plan/validate</span>
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"vpc"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../vpc"</span>
 
 <span class="w">  </span><span class="nb">mock_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">vpc_id</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-00000000&quot;</span>
-<span class="w">    </span><span class="na">public_subnet_ids</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;subnet-00000001&quot;, &quot;subnet-00000002&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="na">private_subnet_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;subnet-00000003&quot;, &quot;subnet-00000004&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">vpc_id</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">"vpc-00000000"</span>
+<span class="w">    </span><span class="na">public_subnet_ids</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"subnet-00000001", "subnet-00000002"</span><span class="p">]</span>
+<span class="w">    </span><span class="na">private_subnet_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"subnet-00000003", "subnet-00000004"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;validate&quot;, &quot;plan&quot;</span><span class="p">]</span>
-<span class="w">  </span><span class="na">mock_outputs_merge_strategy_with_state</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;shallow&quot;</span>
+<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"validate", "plan"</span><span class="p">]</span>
+<span class="w">  </span><span class="na">mock_outputs_merge_strategy_with_state</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"shallow"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="use-get_repo_root">Use get_repo_root()<a class="headerlink" href="#use-get_repo_root" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - Portable across different directory depths</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_repo_root()}/modules//vpc&quot;</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${get_repo_root()}/modules//vpc"</span>
 <span class="p">}</span>
 
 <span class="c1">## Avoid - Brittle with multiple ../</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../../../modules//vpc&quot;</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../../../modules//vpc"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="keep-inputs-dry-with-locals">Keep Inputs DRY with Locals<a class="headerlink" href="#keep-inputs-dry-with-locals" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="c1">  # Define common inputs in locals</span>
 <span class="w">  </span><span class="nb">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
-<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terragrunt&quot;</span>
-<span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MyApp&quot;</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terragrunt"</span>
+<span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"MyApp"</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">vpc_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
-<span class="w">    </span><span class="na">azs</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;, &quot;us-east-1c&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
+<span class="w">    </span><span class="na">azs</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"us-east-1a", "us-east-1b", "us-east-1c"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="na">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
 <span class="w">  </span><span class="nv">local.vpc_config</span><span class="p">,</span>
 <span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="na">vpc_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-vpc&quot;</span>
+<span class="w">    </span><span class="na">vpc_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"prod-vpc"</span>
 <span class="w">    </span><span class="na">tags</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">)</span>
@@ -9084,7 +9084,7 @@ terraform<span class="w"> </span>show<span class="w"> </span>-json<span class="w
 <span class="c1">## Test all modules</span>
 terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>tfplan
 <span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>envs/*/*<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$dir</span><span class="s2">"</span>
 <span class="w">  </span>terraform<span class="w"> </span>show<span class="w"> </span>-json<span class="w"> </span>tfplan<span class="w"> </span><span class="p">|</span><span class="w"> </span>conftest<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-p<span class="w"> </span>../../../policy/<span class="w"> </span>-
 <span class="w">  </span><span class="nb">cd</span><span class="w"> </span>-
 <span class="k">done</span>
@@ -9095,16 +9095,16 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 
 <span class="n">deny</span><span class="p">[</span><span class="n">msg</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">resource</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">input</span><span class="p">.</span><span class="n">planned_values</span><span class="p">.</span><span class="n">root_module</span><span class="p">.</span><span class="n">resources</span><span class="p">[</span><span class="n">_</span><span class="p">]</span>
-<span class="w">  </span><span class="n">resource</span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;aws_s3_bucket&quot;</span>
+<span class="w">  </span><span class="n">resource</span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"aws_s3_bucket"</span>
 <span class="w">  </span><span class="k">not</span><span class="w"> </span><span class="n">resource</span><span class="p">.</span><span class="n">values</span><span class="p">.</span><span class="n">versioning</span><span class="p">[</span><span class="n">_</span><span class="p">].</span><span class="n">enabled</span>
-<span class="w">  </span><span class="n">msg</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">sprintf</span><span class="p">(</span><span class="s2">&quot;S3 bucket %s must have versioning enabled&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">resource</span><span class="p">.</span><span class="n">address</span><span class="p">])</span>
+<span class="w">  </span><span class="n">msg</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">sprintf</span><span class="p">(</span><span class="s2">"S3 bucket %s must have versioning enabled"</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">resource</span><span class="p">.</span><span class="n">address</span><span class="p">])</span>
 <span class="p">}</span>
 
 <span class="n">deny</span><span class="p">[</span><span class="n">msg</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">resource</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">input</span><span class="p">.</span><span class="n">planned_values</span><span class="p">.</span><span class="n">root_module</span><span class="p">.</span><span class="n">resources</span><span class="p">[</span><span class="n">_</span><span class="p">]</span>
-<span class="w">  </span><span class="n">resource</span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;aws_instance&quot;</span>
-<span class="w">  </span><span class="k">not</span><span class="w"> </span><span class="n">startswith</span><span class="p">(</span><span class="n">resource</span><span class="p">.</span><span class="n">values</span><span class="p">.</span><span class="n">instance_type</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;t3&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="n">msg</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">sprintf</span><span class="p">(</span><span class="s2">&quot;Instance %s must use t3 instance type&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">resource</span><span class="p">.</span><span class="n">address</span><span class="p">])</span>
+<span class="w">  </span><span class="n">resource</span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"aws_instance"</span>
+<span class="w">  </span><span class="k">not</span><span class="w"> </span><span class="n">startswith</span><span class="p">(</span><span class="n">resource</span><span class="p">.</span><span class="n">values</span><span class="p">.</span><span class="n">instance_type</span><span class="p">,</span><span class="w"> </span><span class="s2">"t3"</span><span class="p">)</span>
+<span class="w">  </span><span class="n">msg</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">sprintf</span><span class="p">(</span><span class="s2">"Instance %s must use t3 instance type"</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">resource</span><span class="p">.</span><span class="n">address</span><span class="p">])</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="testing-dependencies">Testing Dependencies<a class="headerlink" href="#testing-dependencies" title="Permanent link">&para;</a></h3>
@@ -9124,7 +9124,7 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <span class="c1">#!/bin/bash</span>
 <span class="nb">set</span><span class="w"> </span>-e
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Testing Terragrunt configuration...&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Testing Terragrunt configuration..."</span>
 
 <span class="c1">## Validate all configurations</span>
 terragrunt<span class="w"> </span>run-all<span class="w"> </span>validate
@@ -9142,30 +9142,30 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>apply<span clas
 <span class="c1">## Destroy test resources</span>
 terragrunt<span class="w"> </span>run-all<span class="w"> </span>destroy<span class="w"> </span>-auto-approve
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Integration tests passed!&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Integration tests passed!"</span>
 </code></pre></div>
 <h3 id="testing-with-terratest">Testing with Terratest<a class="headerlink" href="#testing-with-terratest" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="err">##</span><span class="w"> </span><span class="nx">tests</span><span class="o">/</span><span class="nx">terragrunt_test</span><span class="p">.</span><span class="k">go</span>
 <span class="kn">package</span><span class="w"> </span><span class="nx">test</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="s">&quot;testing&quot;</span>
-<span class="w">    </span><span class="s">&quot;github.com/gruntwork-io/terratest/modules/terraform&quot;</span>
-<span class="w">    </span><span class="s">&quot;github.com/stretchr/testify/assert&quot;</span>
+<span class="w">    </span><span class="s">"testing"</span>
+<span class="w">    </span><span class="s">"github.com/gruntwork-io/terratest/modules/terraform"</span>
+<span class="w">    </span><span class="s">"github.com/stretchr/testify/assert"</span>
 <span class="p">)</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="nx">TestTerragruntVPC</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nx">t</span><span class="p">.</span><span class="nx">Parallel</span><span class="p">()</span>
 
 <span class="w">    </span><span class="nx">terraformOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
-<span class="w">        </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../envs/test/vpc&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">TerraformBinary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;terragrunt&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">"../envs/test/vpc"</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">TerraformBinary</span><span class="p">:</span><span class="w"> </span><span class="s">"terragrunt"</span><span class="p">,</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="k">defer</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Destroy</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
 <span class="w">    </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
 
-<span class="w">    </span><span class="nx">vpcID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;vpc_id&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">vpcID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">"vpc_id"</span><span class="p">)</span>
 <span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">vpcID</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -9231,8 +9231,8 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 
 <span class="c1">## Measure per-module performance</span>
 <span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>envs/production/*<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Testing </span><span class="nv">$dir</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$dir</span><span class="s2">"</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Testing </span><span class="nv">$dir</span><span class="s2">"</span>
 <span class="w">  </span><span class="nb">time</span><span class="w"> </span>terragrunt<span class="w"> </span>plan
 <span class="w">  </span><span class="nb">cd</span><span class="w"> </span>-
 <span class="k">done</span>
@@ -9243,8 +9243,8 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <p><strong>Issue</strong>: Incorrect dependency paths cause Terragrunt to fail silently or create resources in wrong order.</p>
 <p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Typo in dependency path</span>
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;network&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../networking&quot;</span><span class="c1">  # ❌ Typo! Should be ../network</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"network"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../networking"</span><span class="c1">  # ❌ Typo! Should be ../network</span>
 <span class="p">}</span>
 
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -9253,8 +9253,8 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 </code></pre></div>
 <p><strong>Solution</strong>: Verify dependency paths and test with <code>terragrunt run-all plan</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - Correct dependency path</span>
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;network&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../network&quot;</span><span class="c1">  # ✅ Correct path</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"network"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../network"</span><span class="c1">  # ✅ Correct path</span>
 <span class="p">}</span>
 
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -9262,8 +9262,8 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <span class="p">}</span>
 
 <span class="c1">## Good - Use relative paths from terragrunt.hcl location</span>
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;database&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_terragrunt_dir()}/../rds&quot;</span><span class="c1">  # ✅ Explicit relative path</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"database"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${get_terragrunt_dir()}/../rds"</span><span class="c1">  # ✅ Explicit relative path</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Key Points</strong>:</p>
@@ -9277,8 +9277,8 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <p><strong>Issue</strong>: Dependencies without <code>mock_outputs</code> cause failures during initial <code>plan</code> before dependencies exist.</p>
 <p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - No mock outputs</span>
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"vpc"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../vpc"</span>
 <span class="c1">  # ❌ No mock_outputs! Fails on first plan</span>
 <span class="p">}</span>
 
@@ -9288,15 +9288,15 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 </code></pre></div>
 <p><strong>Solution</strong>: Always provide mock outputs for dependencies.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - Mock outputs for planning</span>
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"vpc"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../vpc"</span>
 
 <span class="w">  </span><span class="nb">mock_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-mock-12345&quot;</span><span class="c1">  # ✅ Used during initial plan</span>
-<span class="w">    </span><span class="na">subnet_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;subnet-mock-1&quot;, &quot;subnet-mock-2&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"vpc-mock-12345"</span><span class="c1">  # ✅ Used during initial plan</span>
+<span class="w">    </span><span class="na">subnet_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"subnet-mock-1", "subnet-mock-2"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;validate&quot;, &quot;plan&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"validate", "plan"</span><span class="p">]</span>
 <span class="p">}</span>
 
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -9315,33 +9315,33 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <p><strong>Issue</strong>: Include blocks are processed in order; later includes can't reference earlier ones.</p>
 <p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Trying to reference included locals</span>
-<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">"root"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
 <span class="p">}</span>
 
-<span class="err">include</span><span class="w"> </span><span class="s2">&quot;region&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">(</span><span class="s2">&quot;region.hcl&quot;</span><span class="p">)</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">"region"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">(</span><span class="s2">"region.hcl"</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="c1">## ❌ Can&#39;t reference locals from included files here</span>
+<span class="c1">## ❌ Can't reference locals from included files here</span>
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="nv">local.region_tags</span><span class="p">)</span><span class="c1">  # Error: locals not defined</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Solution</strong>: Define locals after includes or use input variables.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - Locals defined after includes</span>
-<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">"root"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
 <span class="p">}</span>
 
-<span class="err">include</span><span class="w"> </span><span class="s2">&quot;region&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">(</span><span class="s2">&quot;region.hcl&quot;</span><span class="p">)</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">"region"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">(</span><span class="s2">"region.hcl"</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nb">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">ManagedBy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terragrunt&quot;</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terragrunt"</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
@@ -9363,13 +9363,13 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Repeated in every module</span>
 <span class="nb">remote_state</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span>
+<span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"s3"</span>
 <span class="w">  </span><span class="nb">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-terraform-state&quot;</span><span class="c1">  # ❌ Duplicated everywhere</span>
-<span class="w">    </span><span class="na">key</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${path_relative_to_include()}/terraform.tfstate&quot;</span>
-<span class="w">    </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">    </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-terraform-state"</span><span class="c1">  # ❌ Duplicated everywhere</span>
+<span class="w">    </span><span class="na">key</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"${path_relative_to_include()}/terraform.tfstate"</span>
+<span class="w">    </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"us-east-1"</span>
 <span class="w">    </span><span class="na">encrypt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-locks&quot;</span>
+<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"terraform-locks"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -9377,23 +9377,23 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - Root terragrunt.hcl</span>
 <span class="c1">## _root/terragrunt.hcl</span>
 <span class="nb">remote_state</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span>
+<span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"s3"</span>
 <span class="w">  </span><span class="nb">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;backend.tf&quot;</span>
-<span class="w">    </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite_terragrunt&quot;</span>
+<span class="w">    </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"backend.tf"</span>
+<span class="w">    </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"overwrite_terragrunt"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="nb">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-terraform-state-${get_aws_account_id()}&quot;</span>
-<span class="w">    </span><span class="na">key</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${path_relative_to_include()}/terraform.tfstate&quot;</span>
+<span class="w">    </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-terraform-state-${get_aws_account_id()}"</span>
+<span class="w">    </span><span class="na">key</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"${path_relative_to_include()}/terraform.tfstate"</span>
 <span class="w">    </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.aws_region</span>
 <span class="w">    </span><span class="na">encrypt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-locks-${get_aws_account_id()}&quot;</span>
+<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"terraform-locks-${get_aws_account_id()}"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">## Good - Child module references root</span>
 <span class="c1">## modules/vpc/terragrunt.hcl</span>
-<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">"root"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span><span class="c1">  # ✅ Inherits remote_state config</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -9413,7 +9413,7 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <span class="p">}</span>
 
 <span class="c1">## Bad - Incorrect relative path</span>
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"vpc"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_parent_terragrunt_dir</span><span class="p">()</span><span class="c1">  # ❌ Points to parent dir, not sibling module</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -9421,25 +9421,25 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - Correct path functions</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
 <span class="c1">  # Get environment from parent directory structure</span>
-<span class="c1">  # /envs/production/vpc/terragrunt.hcl -&gt; &quot;production&quot;</span>
+<span class="c1">  # /envs/production/vpc/terragrunt.hcl -&gt; "production"</span>
 <span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">basename</span><span class="p">(</span><span class="nf">dirname</span><span class="p">(</span><span class="err">get_terragrunt_dir</span><span class="p">()))</span>
 
 <span class="c1">  # Get module name</span>
-<span class="c1">  # /envs/production/vpc/terragrunt.hcl -&gt; &quot;vpc&quot;</span>
+<span class="c1">  # /envs/production/vpc/terragrunt.hcl -&gt; "vpc"</span>
 <span class="w">  </span><span class="na">module_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">basename</span><span class="p">(</span><span class="err">get_terragrunt_dir</span><span class="p">())</span>
 
 <span class="c1">  # Get path relative to root</span>
-<span class="c1">  # /envs/production/vpc/terragrunt.hcl -&gt; &quot;envs/production/vpc&quot;</span>
+<span class="c1">  # /envs/production/vpc/terragrunt.hcl -&gt; "envs/production/vpc"</span>
 <span class="w">  </span><span class="na">relative_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">path_relative_to_include</span><span class="p">()</span>
 <span class="p">}</span>
 
 <span class="c1">## Good - Sibling module dependency</span>
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span><span class="c1">  # ✅ Relative to current module</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"vpc"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../vpc"</span><span class="c1">  # ✅ Relative to current module</span>
 <span class="p">}</span>
 
 <span class="c1">## Good - Find root terragrunt.hcl</span>
-<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">"root"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span><span class="c1">  # ✅ Searches up directory tree</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -9455,13 +9455,13 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <h3 id="avoid-hardcoded-values-everywhere">❌ Avoid: Hardcoded Values Everywhere<a class="headerlink" href="#avoid-hardcoded-values-everywhere" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Hardcoded values in each child</span>
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span>
-<span class="w">  </span><span class="na">region</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"prod"</span>
+<span class="w">  </span><span class="na">region</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"us-east-1"</span>
 <span class="p">}</span>
 
 <span class="c1">## Good - Parse from path in root terragrunt.hcl</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">path_parts</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="w"> </span><span class="err">path_relative_to_include</span><span class="p">())</span>
+<span class="w">  </span><span class="na">path_parts</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span><span class="w"> </span><span class="err">path_relative_to_include</span><span class="p">())</span>
 <span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.path_parts[0</span><span class="p">]</span>
 <span class="w">  </span><span class="na">region</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">local.path_parts[1</span><span class="p">]</span>
 <span class="p">}</span>
@@ -9469,12 +9469,12 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <h3 id="avoid-not-using-dependencies">❌ Avoid: Not Using Dependencies<a class="headerlink" href="#avoid-not-using-dependencies" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Manually passing outputs</span>
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-1234567890abcdef&quot;</span><span class="c1">  # Hardcoded!</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"vpc-1234567890abcdef"</span><span class="c1">  # Hardcoded!</span>
 <span class="p">}</span>
 
 <span class="c1">## Good - Use dependency block</span>
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"vpc"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../vpc"</span>
 <span class="p">}</span>
 
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -9499,14 +9499,14 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <span class="c1">## Repeated in every terragrunt.hcl</span>
 
 <span class="c1">## Good - Generate provider in root</span>
-<span class="err">generate</span><span class="w"> </span><span class="s2">&quot;provider&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;provider.tf&quot;</span>
-<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite_terragrunt&quot;</span>
+<span class="err">generate</span><span class="w"> </span><span class="s2">"provider"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"provider.tf"</span>
+<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"overwrite_terragrunt"</span>
 <span class="w">  </span><span class="na">contents</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="dl">EOF</span>
-<span class="sh">provider &quot;aws&quot; {</span>
-<span class="sh">  region = &quot;${local.region}&quot;</span>
+<span class="sh">provider "aws" {</span>
+<span class="sh">  region = "${local.region}"</span>
 <span class="sh">  assume_role {</span>
-<span class="sh">    role_arn = &quot;arn:aws:iam::${local.account_id}:role/TerraformRole&quot;</span>
+<span class="sh">    role_arn = "arn:aws:iam::${local.account_id}:role/TerraformRole"</span>
 <span class="sh">  }</span>
 <span class="sh">}</span>
 <span class="dl">EOF</span>
@@ -9517,41 +9517,41 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 
 <span class="c1">## Good - Configure remote state in root</span>
 <span class="nb">remote_state</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span>
+<span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"s3"</span>
 <span class="w">  </span><span class="nb">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-terraform-state-${local.account_id}&quot;</span>
-<span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${path_relative_to_include()}/terraform.tfstate&quot;</span>
-<span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-terraform-state-${local.account_id}"</span>
+<span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">"${path_relative_to_include()}/terraform.tfstate"</span>
+<span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">"us-east-1"</span>
 <span class="w">    </span><span class="na">encrypt</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-locks&quot;</span>
+<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"terraform-locks"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-not-using-run_cmd-for-dynamic-values">❌ Avoid: Not Using run_cmd for Dynamic Values<a class="headerlink" href="#avoid-not-using-run_cmd-for-dynamic-values" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Static values that should be dynamic</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;123456789012&quot;</span><span class="c1">  # ❌ Hardcoded</span>
+<span class="w">  </span><span class="na">account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"123456789012"</span><span class="c1">  # ❌ Hardcoded</span>
 <span class="p">}</span>
 
 <span class="c1">## Good - Get dynamically</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">run_cmd</span><span class="p">(</span><span class="s2">&quot;aws&quot;, &quot;sts&quot;, &quot;get-caller-identity&quot;, &quot;--query&quot;, &quot;Account&quot;, &quot;--output&quot;, &quot;text&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="na">account_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">run_cmd</span><span class="p">(</span><span class="s2">"aws", "sts", "get-caller-identity", "--query", "Account", "--output", "text"</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="avoid-deep-module-paths-without-include">❌ Avoid: Deep Module Paths Without include<a class="headerlink" href="#avoid-deep-module-paths-without-include" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Duplicating terraform source in each child</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;git::https://github.com/org/modules.git//vpc?ref=v1.0.0&quot;</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"git::https://github.com/org/modules.git//vpc?ref=v1.0.0"</span>
 <span class="p">}</span>
 
 <span class="c1">## Good - Define in root, reference in children</span>
 <span class="c1">## Root terragrunt.hcl</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_parent_terragrunt_dir()}/modules//vpc&quot;</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${get_parent_terragrunt_dir()}/modules//vpc"</span>
 <span class="p">}</span>
 
 <span class="c1">## Child just includes</span>
-<span class="err">include</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="err">include</span><span class="w"> </span><span class="s2">"root"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">find_in_parent_folders</span><span class="p">()</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -9562,30 +9562,30 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Local state (not secure for teams)</span>
 <span class="c1">## terragrunt.hcl</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;git::https://github.com/org/modules//vpc&quot;</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"git::https://github.com/org/modules//vpc"</span>
 <span class="p">}</span>
 <span class="c1">## State stored locally - no encryption, no locking!</span>
 
 <span class="c1">## Good - S3 backend with encryption</span>
 <span class="nb">remote_state</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span>
+<span class="w">  </span><span class="na">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"s3"</span>
 <span class="w">  </span><span class="nb">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mycompany-terraform-state&quot;</span>
-<span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${path_relative_to_include()}/terraform.tfstate&quot;</span>
-<span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">"mycompany-terraform-state"</span>
+<span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">"${path_relative_to_include()}/terraform.tfstate"</span>
+<span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">"us-east-1"</span>
 <span class="w">    </span><span class="na">encrypt</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">  # Server-side encryption</span>
-<span class="w">    </span><span class="na">kms_key_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012&quot;</span>
-<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-locks&quot;</span><span class="c1">  # State locking</span>
+<span class="w">    </span><span class="na">kms_key_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012"</span>
+<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"terraform-locks"</span><span class="c1">  # State locking</span>
 
 <span class="c1">    ## Restrict access</span>
-<span class="w">    </span><span class="na">acl</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;private&quot;</span>
+<span class="w">    </span><span class="na">acl</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">"private"</span>
 
 <span class="c1">    ## Enable versioning for recovery</span>
 <span class="w">    </span><span class="na">versioning</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="nb">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;backend.tf&quot;</span>
-<span class="w">    </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite_terragrunt&quot;</span>
+<span class="w">    </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"backend.tf"</span>
+<span class="w">    </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"overwrite_terragrunt"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -9594,19 +9594,19 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Hardcoded secrets</span>
 <span class="c1">## terragrunt.hcl</span>
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">database_password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SuperSecret123&quot;</span><span class="c1">  # NEVER!</span>
-<span class="w">  </span><span class="na">api_key</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sk_live_abc123&quot;</span><span class="c1">   # Exposed in version control!</span>
+<span class="w">  </span><span class="na">database_password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"SuperSecret123"</span><span class="c1">  # NEVER!</span>
+<span class="w">  </span><span class="na">api_key</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"sk_live_abc123"</span><span class="c1">   # Exposed in version control!</span>
 <span class="p">}</span>
 
 <span class="c1">## Good - Use environment variables</span>
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">database_password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">&quot;TF_VAR_database_password&quot;, &quot;&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="na">api_key</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">&quot;TF_VAR_api_key&quot;, &quot;&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="na">database_password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">"TF_VAR_database_password", ""</span><span class="p">)</span>
+<span class="w">  </span><span class="na">api_key</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">"TF_VAR_api_key", ""</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1">## Better - Use AWS Secrets Manager/Parameter Store</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">secrets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">yamldecode</span><span class="p">(</span><span class="err">sops_decrypt_</span><span class="nf">file</span><span class="p">(</span><span class="s2">&quot;${get_terragrunt_dir()}/secrets.enc.yaml&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="na">secrets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">yamldecode</span><span class="p">(</span><span class="err">sops_decrypt_</span><span class="nf">file</span><span class="p">(</span><span class="s2">"${get_terragrunt_dir()}/secrets.enc.yaml"</span><span class="p">))</span>
 <span class="p">}</span>
 
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -9622,87 +9622,87 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <p>Validate inputs to prevent misconfigurations.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - Validate environment names</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">&quot;ENVIRONMENT&quot;, &quot;dev&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">"ENVIRONMENT", "dev"</span><span class="p">)</span>
 
 <span class="c1">  ## Validate environment</span>
-<span class="w">  </span><span class="na">valid_environments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dev&quot;, &quot;staging&quot;, &quot;prod&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">valid_environments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"dev", "staging", "prod"</span><span class="p">]</span>
 <span class="w">  </span><span class="na">is_valid_env</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">(</span><span class="nv">local.valid_environments</span><span class="p">,</span><span class="w"> </span><span class="nv">local.environment</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.is_valid_env</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">local.environment</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="err">run_cmd</span><span class="p">(</span>
-<span class="w">    </span><span class="s2">&quot;--terragrunt-quiet&quot;, &quot;echo&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;Error: Invalid environment ${local.environment}&quot;, &quot;&amp;&amp;&quot;, &quot;exit&quot;, &quot;1&quot;</span>
+<span class="w">    </span><span class="s2">"--terragrunt-quiet", "echo"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Error: Invalid environment ${local.environment}", "&amp;&amp;", "exit", "1"</span>
 <span class="w">  </span><span class="p">)</span>
 
 <span class="c1">  ## Validate CIDR blocks</span>
-<span class="w">  </span><span class="na">vpc_cidr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">&quot;VPC_CIDR&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="na">vpc_cidr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">"VPC_CIDR"</span><span class="p">)</span>
 
 <span class="c1">  ## Validation in module will check format</span>
 <span class="p">}</span>
 
 <span class="c1">## Good - Validate AWS region</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">aws_region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">&quot;AWS_REGION&quot;, &quot;us-east-1&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="na">aws_region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">"AWS_REGION", "us-east-1"</span><span class="p">)</span>
 
 <span class="w">  </span><span class="na">valid_regions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;us-east-1&quot;, &quot;us-east-2&quot;, &quot;us-west-1&quot;, &quot;us-west-2&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;eu-west-1&quot;, &quot;eu-central-1&quot;, &quot;ap-southeast-1&quot;</span>
+<span class="w">    </span><span class="s2">"us-east-1", "us-east-2", "us-west-1", "us-west-2"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"eu-west-1", "eu-central-1", "ap-southeast-1"</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">aws_region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">(</span><span class="nv">local.valid_regions</span><span class="p">,</span><span class="w"> </span><span class="nv">local.aws_region</span><span class="p">)</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">local.aws_region</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">  </span><span class="na">aws_region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">(</span><span class="nv">local.valid_regions</span><span class="p">,</span><span class="w"> </span><span class="nv">local.aws_region</span><span class="p">)</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">local.aws_region</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"us-east-1"</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="dependency-security">Dependency Security<a class="headerlink" href="#dependency-security" title="Permanent link">&para;</a></h3>
 <p>Trust but verify module sources and dependencies.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Unverified module source</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;github.com/random-user/terraform-modules//vpc&quot;</span><span class="c1">  # Untrusted!</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"github.com/random-user/terraform-modules//vpc"</span><span class="c1">  # Untrusted!</span>
 <span class="p">}</span>
 
 <span class="c1">## Bad - Using latest/master (no version pinning)</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;git::https://github.com/org/modules.git//vpc?ref=master&quot;</span><span class="c1">  # Unpredictable!</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"git::https://github.com/org/modules.git//vpc?ref=master"</span><span class="c1">  # Unpredictable!</span>
 <span class="p">}</span>
 
 <span class="c1">## Good - Pin to specific verified version</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;git::https://github.com/your-org/terraform-modules.git//vpc?ref=v1.2.3&quot;</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"git::https://github.com/your-org/terraform-modules.git//vpc?ref=v1.2.3"</span>
 <span class="p">}</span>
 
 <span class="c1">## Good - Use release tags with verification</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;git::ssh://git@github.com/your-org/modules.git//vpc?ref=v1.2.3&quot;</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"git::ssh://git@github.com/your-org/modules.git//vpc?ref=v1.2.3"</span>
 <span class="p">}</span>
 
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../vpc&quot;</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"vpc"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../vpc"</span>
 
-<span class="c1">  ## Skip outputs if VPC doesn&#39;t exist (safe default)</span>
+<span class="c1">  ## Skip outputs if VPC doesn't exist (safe default)</span>
 <span class="w">  </span><span class="na">skip_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 
 <span class="c1">  ## Mock outputs for plan operations</span>
 <span class="w">  </span><span class="nb">mock_outputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">vpc_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-mock-id&quot;</span>
-<span class="w">    </span><span class="na">subnet_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;subnet-mock-1&quot;, &quot;subnet-mock-2&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="na">vpc_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"vpc-mock-id"</span>
+<span class="w">    </span><span class="na">subnet_ids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"subnet-mock-1", "subnet-mock-2"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;validate&quot;, &quot;plan&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">mock_outputs_allowed_terraform_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"validate", "plan"</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="iam-role-security">IAM Role Security<a class="headerlink" href="#iam-role-security" title="Permanent link">&para;</a></h3>
 <p>Use assume_role with proper constraints.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Over-privileged role</span>
-<span class="err">generate</span><span class="w"> </span><span class="s2">&quot;provider&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;provider.tf&quot;</span>
-<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite_terragrunt&quot;</span>
+<span class="err">generate</span><span class="w"> </span><span class="s2">"provider"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"provider.tf"</span>
+<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"overwrite_terragrunt"</span>
 <span class="w">  </span><span class="na">contents</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="dl">EOF</span>
-<span class="sh">provider &quot;aws&quot; {</span>
-<span class="sh">  region = &quot;${local.aws_region}&quot;</span>
+<span class="sh">provider "aws" {</span>
+<span class="sh">  region = "${local.aws_region}"</span>
 
 <span class="sh">  assume_role {</span>
-<span class="sh">    role_arn = &quot;arn:aws:iam::123456789012:role/TerraformAdmin&quot;  # Too broad!</span>
+<span class="sh">    role_arn = "arn:aws:iam::123456789012:role/TerraformAdmin"  # Too broad!</span>
 <span class="sh">  }</span>
 <span class="sh">}</span>
 <span class="dl">EOF</span>
@@ -9710,29 +9710,29 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 
 <span class="c1">## Good - Environment-specific roles with external ID</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">account_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">&quot;AWS_ACCOUNT_ID&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">&quot;ENVIRONMENT&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="na">external_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">&quot;TERRAFORM_EXTERNAL_ID&quot;</span><span class="p">)</span><span class="c1">  # Additional security</span>
+<span class="w">  </span><span class="na">account_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">"AWS_ACCOUNT_ID"</span><span class="p">)</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">"ENVIRONMENT"</span><span class="p">)</span>
+<span class="w">  </span><span class="na">external_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">"TERRAFORM_EXTERNAL_ID"</span><span class="p">)</span><span class="c1">  # Additional security</span>
 <span class="p">}</span>
 
-<span class="err">generate</span><span class="w"> </span><span class="s2">&quot;provider&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;provider.tf&quot;</span>
-<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;overwrite_terragrunt&quot;</span>
+<span class="err">generate</span><span class="w"> </span><span class="s2">"provider"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">path</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">"provider.tf"</span>
+<span class="w">  </span><span class="na">if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"overwrite_terragrunt"</span>
 <span class="w">  </span><span class="na">contents</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="dl">EOF</span>
-<span class="sh">provider &quot;aws&quot; {</span>
-<span class="sh">  region = &quot;${local.aws_region}&quot;</span>
+<span class="sh">provider "aws" {</span>
+<span class="sh">  region = "${local.aws_region}"</span>
 
 <span class="sh">  assume_role {</span>
-<span class="sh">    role_arn    = &quot;arn:aws:iam::${local.account_id}:role/Terraform-${local.environment}&quot;</span>
-<span class="sh">    external_id = &quot;${local.external_id}&quot;</span>
-<span class="sh">    session_name = &quot;terragrunt-${local.environment}-$${USER}&quot;</span>
+<span class="sh">    role_arn    = "arn:aws:iam::${local.account_id}:role/Terraform-${local.environment}"</span>
+<span class="sh">    external_id = "${local.external_id}"</span>
+<span class="sh">    session_name = "terragrunt-${local.environment}-$${USER}"</span>
 <span class="sh">  }</span>
 
 <span class="sh">  default_tags {</span>
 <span class="sh">    tags = {</span>
-<span class="sh">      ManagedBy   = &quot;Terragrunt&quot;</span>
-<span class="sh">      Environment = &quot;${local.environment}&quot;</span>
-<span class="sh">      Owner       = &quot;$${USER}&quot;</span>
+<span class="sh">      ManagedBy   = "Terragrunt"</span>
+<span class="sh">      Environment = "${local.environment}"</span>
+<span class="sh">      Owner       = "$${USER}"</span>
 <span class="sh">    }</span>
 <span class="sh">  }</span>
 <span class="sh">}</span>
@@ -9742,8 +9742,8 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <h3 id="sensitive-output-protection">Sensitive Output Protection<a class="headerlink" href="#sensitive-output-protection" title="Permanent link">&para;</a></h3>
 <p>Mark sensitive outputs appropriately.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Exposing sensitive data</span>
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;rds&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../rds&quot;</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"rds"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../rds"</span>
 <span class="p">}</span>
 
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -9753,14 +9753,14 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 
 <span class="c1">## Good - Use sensitive flag in module outputs</span>
 <span class="c1">## In RDS module outputs.tf:</span>
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;password&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"password"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">value</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">random_password.db_password.result</span>
 <span class="w">  </span><span class="na">sensitive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">  # Prevents logging in Terraform output</span>
 <span class="p">}</span>
 
 <span class="c1">## In terragrunt.hcl - outputs remain sensitive</span>
-<span class="err">dependency</span><span class="w"> </span><span class="s2">&quot;rds&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../rds&quot;</span>
+<span class="err">dependency</span><span class="w"> </span><span class="s2">"rds"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../rds"</span>
 <span class="p">}</span>
 
 <span class="nb">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -9772,7 +9772,7 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <p>Use and verify lock files.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Ignoring lock files</span>
 <span class="c1">## .gitignore</span>
-<span class="p">.</span><span class="nv">terraform.lock.hcl</span><span class="c1">  # DON&#39;T IGNORE!</span>
+<span class="p">.</span><span class="nv">terraform.lock.hcl</span><span class="c1">  # DON'T IGNORE!</span>
 
 <span class="c1">## Good - Commit lock files</span>
 <span class="c1">## .gitignore should NOT include:</span>
@@ -9784,7 +9784,7 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <span class="w">  </span><span class="err">-</span><span class="w"> </span><span class="err">name</span><span class="p">:</span><span class="w"> </span><span class="err">Verify</span><span class="w"> </span><span class="err">lock</span><span class="w"> </span><span class="err">file</span>
 <span class="w">    </span><span class="err">run</span><span class="p">:</span><span class="w"> </span><span class="err">|</span>
 <span class="w">      </span><span class="err">if</span><span class="w"> </span><span class="p">!</span><span class="w"> </span><span class="err">git</span><span class="w"> </span><span class="err">diff</span><span class="w"> </span><span class="err">--exit-code</span><span class="w"> </span><span class="p">.</span><span class="nv">terraform.lock.hcl</span><span class="err">;</span><span class="w"> </span><span class="err">then</span>
-<span class="w">        </span><span class="err">echo</span><span class="w"> </span><span class="s2">&quot;Error: Lock file has uncommitted changes&quot;</span>
+<span class="w">        </span><span class="err">echo</span><span class="w"> </span><span class="s2">"Error: Lock file has uncommitted changes"</span>
 <span class="w">        </span><span class="err">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="w">      </span><span class="err">fi</span>
 
@@ -9796,29 +9796,29 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <p>Use prevent_destroy and require confirmations.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - Require confirmation for prod</span>
 <span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">&quot;ENVIRONMENT&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_env</span><span class="p">(</span><span class="s2">"ENVIRONMENT"</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1">## Prevent accidental destroy in production</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="err">before_hook</span><span class="w"> </span><span class="s2">&quot;prevent_destroy&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;destroy&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="na">execute</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">local.environment</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="s2">&quot;bash&quot;, &quot;-c&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;echo &#39;ERROR: Cannot destroy production environment!&#39; &amp;&amp; exit 1&quot;</span>
-<span class="w">    </span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;echo&quot;, &quot;Destroy allowed in ${local.environment}&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="err">before_hook</span><span class="w"> </span><span class="s2">"prevent_destroy"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"destroy"</span><span class="p">]</span>
+<span class="w">    </span><span class="na">execute</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">local.environment</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s2">"prod"</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">"bash", "-c"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"echo 'ERROR: Cannot destroy production environment!' &amp;&amp; exit 1"</span>
+<span class="w">    </span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"echo", "Destroy allowed in ${local.environment}"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">## Require manual approval</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="err">before_hook</span><span class="w"> </span><span class="s2">&quot;require_approval&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;apply&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="na">execute</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">local.environment</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="s2">&quot;bash&quot;, &quot;-c&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;read -p &#39;Apply to PRODUCTION? (yes/no): &#39; confirm &amp;&amp; &quot;</span><span class="w"> </span><span class="err">+</span>
-<span class="w">      </span><span class="s2">&quot;[ \&quot;$confirm\&quot; = \&quot;yes\&quot; ] || exit 1&quot;</span>
-<span class="w">    </span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;echo&quot;, &quot;Proceeding with apply&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="err">before_hook</span><span class="w"> </span><span class="s2">"require_approval"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"apply"</span><span class="p">]</span>
+<span class="w">    </span><span class="na">execute</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">local.environment</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s2">"prod"</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">"bash", "-c"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"read -p 'Apply to PRODUCTION? (yes/no): ' confirm &amp;&amp; "</span><span class="w"> </span><span class="err">+</span>
+<span class="w">      </span><span class="s2">"[ \"$confirm\" = \"yes\" ] || exit 1"</span>
+<span class="w">    </span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"echo", "Proceeding with apply"</span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -9826,23 +9826,23 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <p>Validate hook scripts and limit execution.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - Arbitrary command execution</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="err">after_hook</span><span class="w"> </span><span class="s2">&quot;notify&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;apply&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="na">execute</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;sh&quot;, &quot;-c&quot;, get_env(&quot;NOTIFY_COMMAND&quot;</span><span class="p">)]</span><span class="c1">  # Dangerous!</span>
+<span class="w">  </span><span class="err">after_hook</span><span class="w"> </span><span class="s2">"notify"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"apply"</span><span class="p">]</span>
+<span class="w">    </span><span class="na">execute</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"sh", "-c", get_env("NOTIFY_COMMAND"</span><span class="p">)]</span><span class="c1">  # Dangerous!</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">## Good - Controlled hook execution</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="err">after_hook</span><span class="w"> </span><span class="s2">&quot;notify_success&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">commands</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;apply&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="na">execute</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;bash&quot;, &quot;${get_terragrunt_dir()}/scripts/notify.sh&quot;, &quot;success&quot;, &quot;${path_relative_to_include()}&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="err">after_hook</span><span class="w"> </span><span class="s2">"notify_success"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">commands</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"apply"</span><span class="p">]</span>
+<span class="w">    </span><span class="na">execute</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"bash", "${get_terragrunt_dir()}/scripts/notify.sh", "success", "${path_relative_to_include()}"</span><span class="p">]</span>
 <span class="w">    </span><span class="na">run_on_error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="err">after_hook</span><span class="w"> </span><span class="s2">&quot;notify_failure&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">commands</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;apply&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="na">execute</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;bash&quot;, &quot;${get_terragrunt_dir()}/scripts/notify.sh&quot;, &quot;failure&quot;, &quot;${path_relative_to_include()}&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="err">after_hook</span><span class="w"> </span><span class="s2">"notify_failure"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">commands</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"apply"</span><span class="p">]</span>
+<span class="w">    </span><span class="na">execute</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"bash", "${get_terragrunt_dir()}/scripts/notify.sh", "failure", "${path_relative_to_include()}"</span><span class="p">]</span>
 <span class="w">    </span><span class="na">run_on_error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -9855,22 +9855,22 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
 <p>Enable comprehensive logging for audit trails.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - Log all Terragrunt operations</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="err">extra_arguments</span><span class="w"> </span><span class="s2">&quot;common_vars&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="err">extra_arguments</span><span class="w"> </span><span class="s2">"common_vars"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">get_terraform_commands_that_need_vars</span><span class="p">()</span>
 
 <span class="w">    </span><span class="nb">env_vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">TF_LOG</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;INFO&quot;</span>
-<span class="w">      </span><span class="na">TF_LOG_PATH</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${get_terragrunt_dir()}/terraform.log&quot;</span>
+<span class="w">      </span><span class="na">TF_LOG</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">"INFO"</span>
+<span class="w">      </span><span class="na">TF_LOG_PATH</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"${get_terragrunt_dir()}/terraform.log"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="err">before_hook</span><span class="w"> </span><span class="s2">&quot;log_start&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;apply&quot;, &quot;destroy&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="err">before_hook</span><span class="w"> </span><span class="s2">"log_start"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"apply", "destroy"</span><span class="p">]</span>
 <span class="w">    </span><span class="na">execute</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="s2">&quot;bash&quot;, &quot;-c&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="s2">&quot;echo \&quot;[$(date -u +%Y-%m-%dT%H:%M:%SZ)] User: $USER, &quot;</span><span class="w"> </span><span class="err">+</span>
-<span class="w">      </span><span class="s2">&quot;Action: ${command}, Path: ${path_relative_to_include()}\&quot; &gt;&gt; &quot;</span><span class="w"> </span><span class="err">+</span>
-<span class="w">      </span><span class="s2">&quot;/var/log/terragrunt-audit.log&quot;</span>
+<span class="w">      </span><span class="s2">"bash", "-c"</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">"echo \"[$(date -u +%Y-%m-%dT%H:%M:%SZ)] User: $USER, "</span><span class="w"> </span><span class="err">+</span>
+<span class="w">      </span><span class="s2">"Action: ${command}, Path: ${path_relative_to_include()}\" &gt;&gt; "</span><span class="w"> </span><span class="err">+</span>
+<span class="w">      </span><span class="s2">"/var/log/terragrunt-audit.log"</span>
 <span class="w">    </span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -10039,10 +10039,10 @@ terragrunt<span class="w"> </span>run-all<span class="w"> </span>plan<span class
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

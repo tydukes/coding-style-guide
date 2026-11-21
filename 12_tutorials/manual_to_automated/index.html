@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -8188,7 +8188,7 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>~/automation-tutorial/src
 git<span class="w"> </span>init
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create a sample Python file with intentional issues</span>
-cat<span class="w"> </span>&gt;<span class="w"> </span>src/app.py<span class="w"> </span><span class="s">&lt;&lt; &#39;PYEOF&#39;</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>src/app.py<span class="w"> </span><span class="s">&lt;&lt; 'PYEOF'</span>
 <span class="s">import os</span>
 <span class="s">import sys</span>
 <span class="s">import json</span>
@@ -8201,8 +8201,8 @@ cat<span class="w"> </span>&gt;<span class="w"> </span>src/app.py<span class="w"
 <span class="s">def process_items(items):</span>
 <span class="s">    result = []</span>
 <span class="s">    for item in items:</span>
-<span class="s">        if item[&quot;status&quot;]==&quot;active&quot;:</span>
-<span class="s">            result.append(item[&quot;name&quot;])</span>
+<span class="s">        if item["status"]=="active":</span>
+<span class="s">            result.append(item["name"])</span>
 <span class="s">    return result</span>
 
 <span class="s">class  DataProcessor:</span>
@@ -8218,31 +8218,31 @@ cat<span class="w"> </span>&gt;<span class="w"> </span>src/app.py<span class="w"
 <span class="s">PYEOF</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create a sample Bash script with issues</span>
-cat<span class="w"> </span>&gt;<span class="w"> </span>src/deploy.sh<span class="w"> </span><span class="s">&lt;&lt; &#39;SHEOF&#39;</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>src/deploy.sh<span class="w"> </span><span class="s">&lt;&lt; 'SHEOF'</span>
 <span class="s">#!/bin/bash</span>
-<span class="s">echo &quot;Deploying application...&quot;</span>
-<span class="s">if [ $1 == &quot;production&quot; ]; then</span>
-<span class="s">    echo &quot;Deploying to production&quot;</span>
+<span class="s">echo "Deploying application..."</span>
+<span class="s">if [ $1 == "production" ]; then</span>
+<span class="s">    echo "Deploying to production"</span>
 <span class="s">    rm -rf /tmp/deploy/*</span>
 <span class="s">fi</span>
-<span class="s">echo &quot;Done&quot;</span>
+<span class="s">echo "Done"</span>
 <span class="s">SHEOF</span>
 chmod<span class="w"> </span>+x<span class="w"> </span>src/deploy.sh
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create a sample Terraform file</span>
-cat<span class="w"> </span>&gt;<span class="w"> </span>src/main.tf<span class="w"> </span><span class="s">&lt;&lt; &#39;TFEOF&#39;</span>
-<span class="s">resource &quot;aws_instance&quot; &quot;web&quot; {</span>
-<span class="s">ami           = &quot;ami-0c55b159cbfafe1f0&quot;</span>
-<span class="s">instance_type = &quot;t2.micro&quot;</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>src/main.tf<span class="w"> </span><span class="s">&lt;&lt; 'TFEOF'</span>
+<span class="s">resource "aws_instance" "web" {</span>
+<span class="s">ami           = "ami-0c55b159cbfafe1f0"</span>
+<span class="s">instance_type = "t2.micro"</span>
 <span class="s">tags = {</span>
-<span class="s">Name = &quot;web-server&quot;</span>
-<span class="s">Environment = &quot;production&quot;</span>
+<span class="s">Name = "web-server"</span>
+<span class="s">Environment = "production"</span>
 <span class="s">}</span>
 <span class="s">}</span>
 <span class="s">TFEOF</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create a YAML config with issues</span>
-cat<span class="w"> </span>&gt;<span class="w"> </span>src/config.yaml<span class="w"> </span><span class="s">&lt;&lt; &#39;YAMLEOF&#39;</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>src/config.yaml<span class="w"> </span><span class="s">&lt;&lt; 'YAMLEOF'</span>
 <span class="s">app:</span>
 <span class="s">  name: my-application</span>
 <span class="s">  version: 1.0.0</span>
@@ -8263,23 +8263,23 @@ cat<span class="w"> </span>&gt;<span class="w"> </span>src/config.yaml<span clas
 point most teams live with -- running checks by hand when they remember to.</p>
 <h3 id="the-manual-checklist">The Manual Checklist<a class="headerlink" href="#the-manual-checklist" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Manual check 1: Python formatting</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Checking Python formatting ===&quot;</span>
-python3<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span>src/app.py<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Syntax OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Syntax ERROR&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Checking Python formatting ==="</span>
+python3<span class="w"> </span>-m<span class="w"> </span>py_compile<span class="w"> </span>src/app.py<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Syntax OK"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Syntax ERROR"</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Manual check 2: Shell script issues</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Checking shell scripts ===&quot;</span>
-bash<span class="w"> </span>-n<span class="w"> </span>src/deploy.sh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Syntax OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Syntax ERROR&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Checking shell scripts ==="</span>
+bash<span class="w"> </span>-n<span class="w"> </span>src/deploy.sh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Syntax OK"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Syntax ERROR"</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Manual check 3: YAML validity</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Checking YAML files ===&quot;</span>
-python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import yaml; yaml.safe_load(open(&#39;src/config.yaml&#39;))&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Valid&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Invalid&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Checking YAML files ==="</span>
+python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import yaml; yaml.safe_load(open('src/config.yaml'))"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Valid"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Invalid"</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Manual check 4: Look for secrets</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Checking for potential secrets ===&quot;</span>
-grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">&quot;password\|secret\|api_key\|token&quot;</span><span class="w"> </span>src/<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No secrets found&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"=== Checking for potential secrets ==="</span>
+grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">"password\|secret\|api_key\|token"</span><span class="w"> </span>src/<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"No secrets found"</span>
 </code></pre></div>
 <h3 id="automate-the-manual-checks-into-a-script">Automate the Manual Checks into a Script<a class="headerlink" href="#automate-the-manual-checks-into-a-script" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>scripts/manual_checks.sh<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>scripts/manual_checks.sh<span class="w"> </span><span class="s">&lt;&lt; 'EOF'</span>
 <span class="s">#!/bin/bash</span>
 <span class="s"># manual_checks.sh - Manual validation checklist</span>
 <span class="s"># Run this before every commit (if you remember)</span>
@@ -8290,100 +8290,100 @@ grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">&quot;pa
 <span class="s">FAIL=0</span>
 <span class="s">WARN=0</span>
 
-<span class="s">check_pass() { echo &quot;  PASS: $1&quot;; ((PASS++)); }</span>
-<span class="s">check_fail() { echo &quot;  FAIL: $1&quot;; ((FAIL++)); }</span>
-<span class="s">check_warn() { echo &quot;  WARN: $1&quot;; ((WARN++)); }</span>
+<span class="s">check_pass() { echo "  PASS: $1"; ((PASS++)); }</span>
+<span class="s">check_fail() { echo "  FAIL: $1"; ((FAIL++)); }</span>
+<span class="s">check_warn() { echo "  WARN: $1"; ((WARN++)); }</span>
 
-<span class="s">echo &quot;============================================&quot;</span>
-<span class="s">echo &quot;  Manual Validation Checklist&quot;</span>
-<span class="s">echo &quot;============================================&quot;</span>
-<span class="s">echo &quot;&quot;</span>
+<span class="s">echo "============================================"</span>
+<span class="s">echo "  Manual Validation Checklist"</span>
+<span class="s">echo "============================================"</span>
+<span class="s">echo ""</span>
 
 <span class="s"># 1. Python syntax check</span>
-<span class="s">echo &quot;[1/6] Python Syntax&quot;</span>
-<span class="s">for f in $(find . -name &quot;*.py&quot; -not -path &quot;./.venv/*&quot;); do</span>
-<span class="s">    if python3 -m py_compile &quot;$f&quot; 2&gt;/dev/null; then</span>
-<span class="s">        check_pass &quot;$f&quot;</span>
+<span class="s">echo "[1/6] Python Syntax"</span>
+<span class="s">for f in $(find . -name "*.py" -not -path "./.venv/*"); do</span>
+<span class="s">    if python3 -m py_compile "$f" 2&gt;/dev/null; then</span>
+<span class="s">        check_pass "$f"</span>
 <span class="s">    else</span>
-<span class="s">        check_fail &quot;$f&quot;</span>
+<span class="s">        check_fail "$f"</span>
 <span class="s">    fi</span>
 <span class="s">done</span>
-<span class="s">echo &quot;&quot;</span>
+<span class="s">echo ""</span>
 
 <span class="s"># 2. Shell script syntax</span>
-<span class="s">echo &quot;[2/6] Shell Script Syntax&quot;</span>
-<span class="s">for f in $(find . -name &quot;*.sh&quot; -not -path &quot;./.venv/*&quot;); do</span>
-<span class="s">    if bash -n &quot;$f&quot; 2&gt;/dev/null; then</span>
-<span class="s">        check_pass &quot;$f&quot;</span>
+<span class="s">echo "[2/6] Shell Script Syntax"</span>
+<span class="s">for f in $(find . -name "*.sh" -not -path "./.venv/*"); do</span>
+<span class="s">    if bash -n "$f" 2&gt;/dev/null; then</span>
+<span class="s">        check_pass "$f"</span>
 <span class="s">    else</span>
-<span class="s">        check_fail &quot;$f&quot;</span>
+<span class="s">        check_fail "$f"</span>
 <span class="s">    fi</span>
 <span class="s">done</span>
-<span class="s">echo &quot;&quot;</span>
+<span class="s">echo ""</span>
 
 <span class="s"># 3. YAML validity</span>
-<span class="s">echo &quot;[3/6] YAML Validity&quot;</span>
-<span class="s">for f in $(find . -name &quot;*.yaml&quot; -o -name &quot;*.yml&quot; | grep -v &quot;.venv&quot;); do</span>
-<span class="s">    if python3 -c &quot;import yaml; yaml.safe_load(open(&#39;$f&#39;))&quot; 2&gt;/dev/null; then</span>
-<span class="s">        check_pass &quot;$f&quot;</span>
+<span class="s">echo "[3/6] YAML Validity"</span>
+<span class="s">for f in $(find . -name "*.yaml" -o -name "*.yml" | grep -v ".venv"); do</span>
+<span class="s">    if python3 -c "import yaml; yaml.safe_load(open('$f'))" 2&gt;/dev/null; then</span>
+<span class="s">        check_pass "$f"</span>
 <span class="s">    else</span>
-<span class="s">        check_fail &quot;$f&quot;</span>
+<span class="s">        check_fail "$f"</span>
 <span class="s">    fi</span>
 <span class="s">done</span>
-<span class="s">echo &quot;&quot;</span>
+<span class="s">echo ""</span>
 
 <span class="s"># 4. JSON validity</span>
-<span class="s">echo &quot;[4/6] JSON Validity&quot;</span>
-<span class="s">for f in $(find . -name &quot;*.json&quot; -not -path &quot;./.venv/*&quot; -not -path &quot;./node_modules/*&quot;); do</span>
-<span class="s">    if python3 -c &quot;import json; json.load(open(&#39;$f&#39;))&quot; 2&gt;/dev/null; then</span>
-<span class="s">        check_pass &quot;$f&quot;</span>
+<span class="s">echo "[4/6] JSON Validity"</span>
+<span class="s">for f in $(find . -name "*.json" -not -path "./.venv/*" -not -path "./node_modules/*"); do</span>
+<span class="s">    if python3 -c "import json; json.load(open('$f'))" 2&gt;/dev/null; then</span>
+<span class="s">        check_pass "$f"</span>
 <span class="s">    else</span>
-<span class="s">        check_fail &quot;$f&quot;</span>
+<span class="s">        check_fail "$f"</span>
 <span class="s">    fi</span>
 <span class="s">done</span>
-<span class="s">echo &quot;&quot;</span>
+<span class="s">echo ""</span>
 
 <span class="s"># 5. Secret detection</span>
-<span class="s">echo &quot;[5/6] Secret Detection&quot;</span>
+<span class="s">echo "[5/6] Secret Detection"</span>
 <span class="s">SECRETS_FOUND=$(grep -rn \</span>
-<span class="s">    --include=&quot;*.py&quot; --include=&quot;*.sh&quot; --include=&quot;*.yaml&quot; --include=&quot;*.yml&quot; \</span>
-<span class="s">    --include=&quot;*.json&quot; --include=&quot;*.tf&quot; \</span>
-<span class="s">    -E &quot;(password|secret|api_key|token)\s*[:=]&quot; . \</span>
-<span class="s">    --exclude-dir=&quot;.venv&quot; --exclude-dir=&quot;node_modules&quot; 2&gt;/dev/null || true)</span>
-<span class="s">if [ -n &quot;$SECRETS_FOUND&quot; ]; then</span>
-<span class="s">    echo &quot;$SECRETS_FOUND&quot; | while read -r line; do</span>
-<span class="s">        check_warn &quot;Potential secret: $line&quot;</span>
+<span class="s">    --include="*.py" --include="*.sh" --include="*.yaml" --include="*.yml" \</span>
+<span class="s">    --include="*.json" --include="*.tf" \</span>
+<span class="s">    -E "(password|secret|api_key|token)\s*[:=]" . \</span>
+<span class="s">    --exclude-dir=".venv" --exclude-dir="node_modules" 2&gt;/dev/null || true)</span>
+<span class="s">if [ -n "$SECRETS_FOUND" ]; then</span>
+<span class="s">    echo "$SECRETS_FOUND" | while read -r line; do</span>
+<span class="s">        check_warn "Potential secret: $line"</span>
 <span class="s">    done</span>
 <span class="s">else</span>
-<span class="s">    check_pass &quot;No hardcoded secrets detected&quot;</span>
+<span class="s">    check_pass "No hardcoded secrets detected"</span>
 <span class="s">fi</span>
-<span class="s">echo &quot;&quot;</span>
+<span class="s">echo ""</span>
 
 <span class="s"># 6. Trailing whitespace</span>
-<span class="s">echo &quot;[6/6] Trailing Whitespace&quot;</span>
-<span class="s">TRAILING=$(grep -rn &#39; $&#39; \</span>
-<span class="s">    --include=&quot;*.py&quot; --include=&quot;*.sh&quot; --include=&quot;*.yaml&quot; --include=&quot;*.yml&quot; \</span>
-<span class="s">    --include=&quot;*.tf&quot; --include=&quot;*.md&quot; \</span>
-<span class="s">    . --exclude-dir=&quot;.venv&quot; --exclude-dir=&quot;node_modules&quot; 2&gt;/dev/null || true)</span>
-<span class="s">if [ -n &quot;$TRAILING&quot; ]; then</span>
-<span class="s">    echo &quot;$TRAILING&quot; | head -5 | while read -r line; do</span>
-<span class="s">        check_warn &quot;Trailing whitespace: $line&quot;</span>
+<span class="s">echo "[6/6] Trailing Whitespace"</span>
+<span class="s">TRAILING=$(grep -rn ' $' \</span>
+<span class="s">    --include="*.py" --include="*.sh" --include="*.yaml" --include="*.yml" \</span>
+<span class="s">    --include="*.tf" --include="*.md" \</span>
+<span class="s">    . --exclude-dir=".venv" --exclude-dir="node_modules" 2&gt;/dev/null || true)</span>
+<span class="s">if [ -n "$TRAILING" ]; then</span>
+<span class="s">    echo "$TRAILING" | head -5 | while read -r line; do</span>
+<span class="s">        check_warn "Trailing whitespace: $line"</span>
 <span class="s">    done</span>
 <span class="s">else</span>
-<span class="s">    check_pass &quot;No trailing whitespace found&quot;</span>
+<span class="s">    check_pass "No trailing whitespace found"</span>
 <span class="s">fi</span>
-<span class="s">echo &quot;&quot;</span>
+<span class="s">echo ""</span>
 
 <span class="s"># Summary</span>
-<span class="s">echo &quot;============================================&quot;</span>
-<span class="s">echo &quot;  Results: $PASS passed, $FAIL failed, $WARN warnings&quot;</span>
-<span class="s">echo &quot;============================================&quot;</span>
+<span class="s">echo "============================================"</span>
+<span class="s">echo "  Results: $PASS passed, $FAIL failed, $WARN warnings"</span>
+<span class="s">echo "============================================"</span>
 
-<span class="s">if [ &quot;$FAIL&quot; -gt 0 ]; then</span>
-<span class="s">    echo &quot;STATUS: FAILED&quot;</span>
+<span class="s">if [ "$FAIL" -gt 0 ]; then</span>
+<span class="s">    echo "STATUS: FAILED"</span>
 <span class="s">    exit 1</span>
 <span class="s">else</span>
-<span class="s">    echo &quot;STATUS: PASSED (with $WARN warnings)&quot;</span>
+<span class="s">    echo "STATUS: PASSED (with $WARN warnings)"</span>
 <span class="s">    exit 0</span>
 <span class="s">fi</span>
 <span class="s">EOF</span>
@@ -8434,14 +8434,14 @@ ls<span class="w"> </span>-la<span class="w"> </span>scripts/manual_checks.sh
 <span class="c1"># Expected: -rwxr-xr-x ... scripts/manual_checks.sh</span>
 
 <span class="c1"># Verify it runs</span>
-bash<span class="w"> </span>scripts/manual_checks.sh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Manual checks configured&quot;</span>
+bash<span class="w"> </span>scripts/manual_checks.sh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Manual checks configured"</span>
 </code></pre></div>
 <hr />
 <h2 id="step-2-add-editorconfig-3-min">Step 2: Add EditorConfig (3 min)<a class="headerlink" href="#step-2-add-editorconfig-3-min" title="Permanent link">&para;</a></h2>
 <p>EditorConfig enforces consistent formatting across all editors and IDEs without any plugins
 for most editors. This is the lowest-friction automation you can add.</p>
 <h3 id="create-the-editorconfig-file">Create the EditorConfig File<a class="headerlink" href="#create-the-editorconfig-file" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>.editorconfig<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>.editorconfig<span class="w"> </span><span class="s">&lt;&lt; 'EOF'</span>
 <span class="s"># EditorConfig: https://EditorConfig.org</span>
 <span class="s">root = true</span>
 
@@ -8575,11 +8575,11 @@ After EditorConfig:
 </code></pre></div>
 <h3 id="checkpoint-editorconfig">Checkpoint: EditorConfig<a class="headerlink" href="#checkpoint-editorconfig" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify EditorConfig exists and has correct structure</span>
-grep<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;^\[&#39;</span><span class="w"> </span>.editorconfig
+grep<span class="w"> </span>-c<span class="w"> </span><span class="s1">'^\['</span><span class="w"> </span>.editorconfig
 <span class="c1"># Expected: 14 (or more section headers)</span>
 
 <span class="c1"># Verify root = true is set</span>
-head<span class="w"> </span>-3<span class="w"> </span>.editorconfig<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;root = true&quot;</span>
+head<span class="w"> </span>-3<span class="w"> </span>.editorconfig<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"root = true"</span>
 <span class="c1"># Expected: root = true</span>
 </code></pre></div>
 <hr />
@@ -8595,10 +8595,10 @@ possible point. We build the configuration progressively in three stages.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trailing-whitespace</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">end-of-file-fixer</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-yaml</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--unsafe&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'--unsafe'</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-json</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-added-large-files</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--maxkb=1000&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'--maxkb=1000'</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-merge-conflict</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-case-conflict</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mixed-line-ending</span>
@@ -8631,10 +8631,10 @@ Detect Private Key...................................Passed
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trailing-whitespace</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">end-of-file-fixer</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-yaml</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--unsafe&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'--unsafe'</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-json</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-added-large-files</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--maxkb=1000&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'--maxkb=1000'</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-merge-conflict</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-case-conflict</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mixed-line-ending</span>
@@ -8652,14 +8652,14 @@ Detect Private Key...................................Passed
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7.3.0</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flake8</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--max-line-length=100&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;--extend-ignore=E203,W503&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'--max-line-length=100'</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">'--extend-ignore=E203,W503'</span><span class="p p-Indicator">]</span>
 
 <span class="w">  </span><span class="c1"># YAML linting</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/adrienverge/yamllint</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.38.0</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yamllint</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;-d&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;{extends:</span><span class="nv"> </span><span class="s">default,</span><span class="nv"> </span><span class="s">rules:</span><span class="nv"> </span><span class="s">{line-length:</span><span class="nv"> </span><span class="s">{max:</span><span class="nv"> </span><span class="s">120},</span><span class="nv"> </span><span class="s">document-start:</span><span class="nv"> </span><span class="s">disable}}&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'-d'</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">'{extends:</span><span class="nv"> </span><span class="s">default,</span><span class="nv"> </span><span class="s">rules:</span><span class="nv"> </span><span class="s">{line-length:</span><span class="nv"> </span><span class="s">{max:</span><span class="nv"> </span><span class="s">120},</span><span class="nv"> </span><span class="s">document-start:</span><span class="nv"> </span><span class="s">disable}}'</span><span class="p p-Indicator">]</span>
 
 <span class="w">  </span><span class="c1"># Shell script linting</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/shellcheck-py/shellcheck-py</span>
@@ -8672,7 +8672,7 @@ Detect Private Key...................................Passed
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.47.0</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">markdownlint</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--fix&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'--fix'</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Update hooks to install new environments</span>
 pre-commit<span class="w"> </span>install<span class="w"> </span>--install-hooks
@@ -8706,7 +8706,7 @@ shellcheck...........................................Failed
 - exit code: 1
 
 In src/deploy.sh line 3:
-if [ $1 == &quot;production&quot; ]; then
+if [ $1 == "production" ]; then
      ^-- SC2086: Double quote to prevent globbing and word splitting.
         ^-- SC2039: In POSIX sh, == in place of = is undefined.
 </code></pre></div>
@@ -8720,10 +8720,10 @@ if [ $1 == &quot;production&quot; ]; then
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trailing-whitespace</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">end-of-file-fixer</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-yaml</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--unsafe&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'--unsafe'</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-json</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-added-large-files</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--maxkb=1000&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'--maxkb=1000'</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-merge-conflict</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-case-conflict</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mixed-line-ending</span>
@@ -8741,14 +8741,14 @@ if [ $1 == &quot;production&quot; ]; then
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7.3.0</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flake8</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--max-line-length=100&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;--extend-ignore=E203,W503&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'--max-line-length=100'</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">'--extend-ignore=E203,W503'</span><span class="p p-Indicator">]</span>
 
 <span class="w">  </span><span class="c1"># YAML linting</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/adrienverge/yamllint</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.38.0</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yamllint</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;-d&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;{extends:</span><span class="nv"> </span><span class="s">default,</span><span class="nv"> </span><span class="s">rules:</span><span class="nv"> </span><span class="s">{line-length:</span><span class="nv"> </span><span class="s">{max:</span><span class="nv"> </span><span class="s">120},</span><span class="nv"> </span><span class="s">document-start:</span><span class="nv"> </span><span class="s">disable}}&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'-d'</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">'{extends:</span><span class="nv"> </span><span class="s">default,</span><span class="nv"> </span><span class="s">rules:</span><span class="nv"> </span><span class="s">{line-length:</span><span class="nv"> </span><span class="s">{max:</span><span class="nv"> </span><span class="s">120},</span><span class="nv"> </span><span class="s">document-start:</span><span class="nv"> </span><span class="s">disable}}'</span><span class="p p-Indicator">]</span>
 
 <span class="w">  </span><span class="c1"># Shell script linting</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/shellcheck-py/shellcheck-py</span>
@@ -8761,7 +8761,7 @@ if [ $1 == &quot;production&quot; ]; then
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.47.0</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">markdownlint</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--fix&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'--fix'</span><span class="p p-Indicator">]</span>
 
 <span class="w">  </span><span class="c1"># Terraform formatting</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/antonbabenko/pre-commit-terraform</span>
@@ -8771,22 +8771,22 @@ if [ $1 == &quot;production&quot; ]; then
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform_validate</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform_docs</span>
 <span class="w">        </span><span class="nt">args</span><span class="p">:</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;--args=--config=.terraform-docs.yml&#39;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'--args=--config=.terraform-docs.yml'</span>
 
 <span class="w">  </span><span class="c1"># Security: detect secrets in code</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/Yelp/detect-secrets</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.5.0</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">detect-secrets</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--baseline&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;.secrets.baseline&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'--baseline'</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">'.secrets.baseline'</span><span class="p p-Indicator">]</span>
 
 <span class="w">  </span><span class="c1"># Security: check for common vulnerabilities</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/PyCQA/bandit</span>
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.8.3</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bandit</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;-c&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;pyproject.toml&#39;</span><span class="p p-Indicator">]</span>
-<span class="w">        </span><span class="nt">additional_dependencies</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;bandit[toml]&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'-c'</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">'pyproject.toml'</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">additional_dependencies</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'bandit[toml]'</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Generate initial secrets baseline (marks existing secrets as known)</span>
 detect-secrets<span class="w"> </span>scan<span class="w"> </span>&gt;<span class="w"> </span>.secrets.baseline
@@ -8818,18 +8818,18 @@ bandit...............................................Passed
 </code></pre></div>
 <h3 id="fix-the-shell-script-issues">Fix the Shell Script Issues<a class="headerlink" href="#fix-the-shell-script-issues" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fix the shellcheck issues in deploy.sh</span>
-cat<span class="w"> </span>&gt;<span class="w"> </span>src/deploy.sh<span class="w"> </span><span class="s">&lt;&lt; &#39;SHEOF&#39;</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>src/deploy.sh<span class="w"> </span><span class="s">&lt;&lt; 'SHEOF'</span>
 <span class="s">#!/bin/bash</span>
 <span class="s">set -euo pipefail</span>
 
-<span class="s">echo &quot;Deploying application...&quot;</span>
+<span class="s">echo "Deploying application..."</span>
 
-<span class="s">if [ &quot;${1:-}&quot; = &quot;production&quot; ]; then</span>
-<span class="s">    echo &quot;Deploying to production&quot;</span>
+<span class="s">if [ "${1:-}" = "production" ]; then</span>
+<span class="s">    echo "Deploying to production"</span>
 <span class="s">    rm -rf /tmp/deploy/*</span>
 <span class="s">fi</span>
 
-<span class="s">echo &quot;Done&quot;</span>
+<span class="s">echo "Done"</span>
 <span class="s">SHEOF</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify all hooks pass now</span>
@@ -8863,11 +8863,11 @@ ls<span class="w"> </span>.git/hooks/pre-commit
 <span class="c1"># Expected: .git/hooks/pre-commit</span>
 
 <span class="c1"># Count configured hooks</span>
-grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;id:&quot;</span><span class="w"> </span>.pre-commit-config.yaml
+grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"id:"</span><span class="w"> </span>.pre-commit-config.yaml
 <span class="c1"># Expected: 16+ hooks</span>
 
 <span class="c1"># Run all hooks and verify pass</span>
-pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;All hooks pass&quot;</span>
+pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"All hooks pass"</span>
 </code></pre></div>
 <hr />
 <h2 id="step-4-add-cicd-pipeline-10-min">Step 4: Add CI/CD Pipeline (10 min)<a class="headerlink" href="#step-4-add-cicd-pipeline-10-min" title="Permanent link">&para;</a></h2>
@@ -8893,7 +8893,7 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v6</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.11'</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install linters</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
@@ -8907,13 +8907,13 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flake8 --max-line-length=100 --extend-ignore=E203,W503 .</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run yamllint</span>
-<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yamllint -d &#39;{extends</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default, rules</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">line-length</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="nv">120</span><span class="p p-Indicator">},</span><span class="nt"> document-start</span><span class="p">:</span><span class="w"> </span><span class="nv">disable</span><span class="p p-Indicator">}</span><span class="err">}</span><span class="s">&#39;</span><span class="nv"> </span><span class="s">.</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yamllint -d '{extends</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default, rules</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">line-length</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="nv">120</span><span class="p p-Indicator">},</span><span class="nt"> document-start</span><span class="p">:</span><span class="w"> </span><span class="nv">disable</span><span class="p p-Indicator">}</span><span class="err">}</span><span class="s">'</span><span class="nv"> </span><span class="s">.</span>
 
 <span class="w">      </span><span class="s">-</span><span class="nv"> </span><span class="s">name:</span><span class="nv"> </span><span class="s">Run</span><span class="nv"> </span><span class="s">ShellCheck</span>
 <span class="w">        </span><span class="s">run:</span><span class="nv"> </span><span class="s">|</span>
-<span class="w">          </span><span class="s">find</span><span class="nv"> </span><span class="s">.</span><span class="nv"> </span><span class="s">-name</span><span class="nv"> </span><span class="s">&quot;*.sh&quot;</span><span class="nv"> </span><span class="s">-not</span><span class="nv"> </span><span class="s">-path</span><span class="nv"> </span><span class="s">&quot;./.venv/*&quot;</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">while</span><span class="nv"> </span><span class="s">read</span><span class="nv"> </span><span class="s">-r</span><span class="nv"> </span><span class="s">f;</span><span class="nv"> </span><span class="s">do</span>
-<span class="w">            </span><span class="s">echo</span><span class="nv"> </span><span class="s">&quot;Checking</span><span class="nv"> </span><span class="s">$f&quot;</span>
-<span class="w">            </span><span class="s">shellcheck</span><span class="nv"> </span><span class="s">&quot;$f&quot;</span>
+<span class="w">          </span><span class="s">find</span><span class="nv"> </span><span class="s">.</span><span class="nv"> </span><span class="s">-name</span><span class="nv"> </span><span class="s">"*.sh"</span><span class="nv"> </span><span class="s">-not</span><span class="nv"> </span><span class="s">-path</span><span class="nv"> </span><span class="s">"./.venv/*"</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">while</span><span class="nv"> </span><span class="s">read</span><span class="nv"> </span><span class="s">-r</span><span class="nv"> </span><span class="s">f;</span><span class="nv"> </span><span class="s">do</span>
+<span class="w">            </span><span class="s">echo</span><span class="nv"> </span><span class="s">"Checking</span><span class="nv"> </span><span class="s">$f"</span>
+<span class="w">            </span><span class="s">shellcheck</span><span class="nv"> </span><span class="s">"$f"</span>
 <span class="w">          </span><span class="s">done</span>
 </code></pre></div>
 <h3 id="add-test-and-security-jobs">Add Test and Security Jobs<a class="headerlink" href="#add-test-and-security-jobs" title="Permanent link">&para;</a></h3>
@@ -8936,7 +8936,7 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v6</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.11'</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
@@ -8949,11 +8949,11 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flake8 --max-line-length=100 --extend-ignore=E203,W503 .</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run yamllint</span>
-<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yamllint -d &#39;{extends</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default, rules</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">line-length</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="nv">120</span><span class="p p-Indicator">},</span><span class="nt"> document-start</span><span class="p">:</span><span class="w"> </span><span class="nv">disable</span><span class="p p-Indicator">}</span><span class="err">}</span><span class="s">&#39;</span><span class="nv"> </span><span class="s">.</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yamllint -d '{extends</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default, rules</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">line-length</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="nv">120</span><span class="p p-Indicator">},</span><span class="nt"> document-start</span><span class="p">:</span><span class="w"> </span><span class="nv">disable</span><span class="p p-Indicator">}</span><span class="err">}</span><span class="s">'</span><span class="nv"> </span><span class="s">.</span>
 
 <span class="w">      </span><span class="s">-</span><span class="nv"> </span><span class="s">name:</span><span class="nv"> </span><span class="s">Run</span><span class="nv"> </span><span class="s">ShellCheck</span>
 <span class="w">        </span><span class="s">run:</span><span class="nv"> </span><span class="s">|</span>
-<span class="w">          </span><span class="s">find</span><span class="nv"> </span><span class="s">.</span><span class="nv"> </span><span class="s">-name</span><span class="nv"> </span><span class="s">&quot;*.sh&quot;</span><span class="nv"> </span><span class="s">-not</span><span class="nv"> </span><span class="s">-path</span><span class="nv"> </span><span class="s">&quot;./.venv/*&quot;</span><span class="nv"> </span><span class="s">-exec</span><span class="nv"> </span><span class="s">shellcheck</span><span class="nv"> </span><span class="s">{}</span><span class="nv"> </span><span class="s">+</span>
+<span class="w">          </span><span class="s">find</span><span class="nv"> </span><span class="s">.</span><span class="nv"> </span><span class="s">-name</span><span class="nv"> </span><span class="s">"*.sh"</span><span class="nv"> </span><span class="s">-not</span><span class="nv"> </span><span class="s">-path</span><span class="nv"> </span><span class="s">"./.venv/*"</span><span class="nv"> </span><span class="s">-exec</span><span class="nv"> </span><span class="s">shellcheck</span><span class="nv"> </span><span class="s">{}</span><span class="nv"> </span><span class="s">+</span>
 
 <span class="w">  </span><span class="s">test:</span>
 <span class="w">    </span><span class="s">runs-on:</span><span class="nv"> </span><span class="s">ubuntu-latest</span>
@@ -8965,7 +8965,7 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 <span class="w">      </span><span class="s">-</span><span class="nv"> </span><span class="s">name:</span><span class="nv"> </span><span class="s">Set</span><span class="nv"> </span><span class="s">up</span><span class="nv"> </span><span class="s">Python</span>
 <span class="w">        </span><span class="s">uses:</span><span class="nv"> </span><span class="s">actions/setup-python@v6</span>
 <span class="w">        </span><span class="s">with:</span>
-<span class="w">          </span><span class="s">python-version:</span><span class="nv"> </span><span class="s">&#39;</span><span class="l l-Scalar l-Scalar-Plain">3.11&#39;</span>
+<span class="w">          </span><span class="s">python-version:</span><span class="nv"> </span><span class="s">'</span><span class="l l-Scalar l-Scalar-Plain">3.11'</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
@@ -8988,7 +8988,7 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v6</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.11'</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install security tools</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
@@ -8999,21 +8999,21 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run detect-secrets</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">detect-secrets scan --all-files --exclude-files &#39;\.secrets\.baseline$&#39; \</span>
-<span class="w">            </span><span class="no">| python3 -c &quot;</span>
+<span class="w">          </span><span class="no">detect-secrets scan --all-files --exclude-files '\.secrets\.baseline$' \</span>
+<span class="w">            </span><span class="no">| python3 -c "</span>
 <span class="w">          </span><span class="no">import json, sys</span>
 <span class="w">          </span><span class="no">results = json.load(sys.stdin)</span>
-<span class="w">          </span><span class="no">secrets = results.get(&#39;results&#39;, {})</span>
+<span class="w">          </span><span class="no">secrets = results.get('results', {})</span>
 <span class="w">          </span><span class="no">total = sum(len(v) for v in secrets.values())</span>
 <span class="w">          </span><span class="no">if total &gt; 0:</span>
-<span class="w">              </span><span class="no">print(f&#39;Found {total} potential secrets:&#39;)</span>
+<span class="w">              </span><span class="no">print(f'Found {total} potential secrets:')</span>
 <span class="w">              </span><span class="no">for file, findings in secrets.items():</span>
 <span class="w">                  </span><span class="no">for finding in findings:</span>
-<span class="w">                      </span><span class="no">print(f&#39;  {file}:{finding[\&quot;line_number\&quot;]} - {finding[\&quot;type\&quot;]}&#39;)</span>
+<span class="w">                      </span><span class="no">print(f'  {file}:{finding[\"line_number\"]} - {finding[\"type\"]}')</span>
 <span class="w">              </span><span class="no">sys.exit(1)</span>
 <span class="w">          </span><span class="no">else:</span>
-<span class="w">              </span><span class="no">print(&#39;No secrets detected&#39;)</span>
-<span class="w">          </span><span class="no">&quot;</span>
+<span class="w">              </span><span class="no">print('No secrets detected')</span>
+<span class="w">          </span><span class="no">"</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload security reports</span>
 <span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always()</span>
@@ -9044,13 +9044,13 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v6</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.11'</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install UV</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curl -LsSf https://astral.sh/uv/install.sh | sh</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add UV to PATH</span>
-<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;$HOME/.local/bin&quot; &gt;&gt; $GITHUB_PATH</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "$HOME/.local/bin" &gt;&gt; $GITHUB_PATH</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cache UV dependencies</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v5</span>
@@ -9058,7 +9058,7 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 <span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">            </span><span class="no">~/.cache/uv</span>
 <span class="w">            </span><span class="no">.venv</span>
-<span class="w">          </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ runner.os }}-uv-${{ hashFiles(&#39;pyproject.toml&#39;, &#39;uv.lock&#39;) }}</span>
+<span class="w">          </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ runner.os }}-uv-${{ hashFiles('pyproject.toml', 'uv.lock') }}</span>
 <span class="w">          </span><span class="nt">restore-keys</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">            </span><span class="no">${{ runner.os }}-uv-</span>
 
@@ -9072,11 +9072,11 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uv run flake8 --max-line-length=100 --extend-ignore=E203,W503 .</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run yamllint</span>
-<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uv run yamllint -d &#39;{extends</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default, rules</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">line-length</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="nv">120</span><span class="p p-Indicator">},</span><span class="nt"> document-start</span><span class="p">:</span><span class="w"> </span><span class="nv">disable</span><span class="p p-Indicator">}</span><span class="err">}</span><span class="s">&#39;</span><span class="nv"> </span><span class="s">.</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uv run yamllint -d '{extends</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default, rules</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">line-length</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="nv">120</span><span class="p p-Indicator">},</span><span class="nt"> document-start</span><span class="p">:</span><span class="w"> </span><span class="nv">disable</span><span class="p p-Indicator">}</span><span class="err">}</span><span class="s">'</span><span class="nv"> </span><span class="s">.</span>
 
 <span class="w">      </span><span class="s">-</span><span class="nv"> </span><span class="s">name:</span><span class="nv"> </span><span class="s">Run</span><span class="nv"> </span><span class="s">ShellCheck</span>
 <span class="w">        </span><span class="s">run:</span><span class="nv"> </span><span class="s">|</span>
-<span class="w">          </span><span class="s">find</span><span class="nv"> </span><span class="s">.</span><span class="nv"> </span><span class="s">-name</span><span class="nv"> </span><span class="s">&quot;*.sh&quot;</span><span class="nv"> </span><span class="s">-not</span><span class="nv"> </span><span class="s">-path</span><span class="nv"> </span><span class="s">&quot;./.venv/*&quot;</span><span class="nv"> </span><span class="s">-exec</span><span class="nv"> </span><span class="s">shellcheck</span><span class="nv"> </span><span class="s">{}</span><span class="nv"> </span><span class="s">+</span>
+<span class="w">          </span><span class="s">find</span><span class="nv"> </span><span class="s">.</span><span class="nv"> </span><span class="s">-name</span><span class="nv"> </span><span class="s">"*.sh"</span><span class="nv"> </span><span class="s">-not</span><span class="nv"> </span><span class="s">-path</span><span class="nv"> </span><span class="s">"./.venv/*"</span><span class="nv"> </span><span class="s">-exec</span><span class="nv"> </span><span class="s">shellcheck</span><span class="nv"> </span><span class="s">{}</span><span class="nv"> </span><span class="s">+</span>
 
 <span class="w">  </span><span class="s">test:</span>
 <span class="w">    </span><span class="s">runs-on:</span><span class="nv"> </span><span class="s">ubuntu-latest</span>
@@ -9088,13 +9088,13 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 <span class="w">      </span><span class="s">-</span><span class="nv"> </span><span class="s">name:</span><span class="nv"> </span><span class="s">Set</span><span class="nv"> </span><span class="s">up</span><span class="nv"> </span><span class="s">Python</span>
 <span class="w">        </span><span class="s">uses:</span><span class="nv"> </span><span class="s">actions/setup-python@v6</span>
 <span class="w">        </span><span class="s">with:</span>
-<span class="w">          </span><span class="s">python-version:</span><span class="nv"> </span><span class="s">&#39;</span><span class="l l-Scalar l-Scalar-Plain">3.11&#39;</span>
+<span class="w">          </span><span class="s">python-version:</span><span class="nv"> </span><span class="s">'</span><span class="l l-Scalar l-Scalar-Plain">3.11'</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install UV</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curl -LsSf https://astral.sh/uv/install.sh | sh</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add UV to PATH</span>
-<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;$HOME/.local/bin&quot; &gt;&gt; $GITHUB_PATH</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "$HOME/.local/bin" &gt;&gt; $GITHUB_PATH</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sync environment</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uv sync</span>
@@ -9116,7 +9116,7 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v6</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.11'</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install security tools</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install bandit detect-secrets</span>
@@ -9127,17 +9127,17 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run detect-secrets</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">detect-secrets scan --all-files \</span>
-<span class="w">            </span><span class="no">--exclude-files &#39;\.secrets\.baseline$&#39; \</span>
-<span class="w">            </span><span class="no">--exclude-files &#39;\.git/&#39; &gt; /tmp/secrets-scan.json</span>
-<span class="w">          </span><span class="no">python3 -c &quot;</span>
+<span class="w">            </span><span class="no">--exclude-files '\.secrets\.baseline$' \</span>
+<span class="w">            </span><span class="no">--exclude-files '\.git/' &gt; /tmp/secrets-scan.json</span>
+<span class="w">          </span><span class="no">python3 -c "</span>
 <span class="w">          </span><span class="no">import json, sys</span>
-<span class="w">          </span><span class="no">results = json.load(open(&#39;/tmp/secrets-scan.json&#39;))</span>
-<span class="w">          </span><span class="no">total = sum(len(v) for v in results.get(&#39;results&#39;, {}).values())</span>
+<span class="w">          </span><span class="no">results = json.load(open('/tmp/secrets-scan.json'))</span>
+<span class="w">          </span><span class="no">total = sum(len(v) for v in results.get('results', {}).values())</span>
 <span class="w">          </span><span class="no">if total &gt; 0:</span>
-<span class="w">              </span><span class="no">print(f&#39;ERROR: Found {total} potential secrets&#39;)</span>
+<span class="w">              </span><span class="no">print(f'ERROR: Found {total} potential secrets')</span>
 <span class="w">              </span><span class="no">sys.exit(1)</span>
-<span class="w">          </span><span class="no">print(&#39;No secrets detected&#39;)</span>
-<span class="w">          </span><span class="no">&quot;</span>
+<span class="w">          </span><span class="no">print('No secrets detected')</span>
+<span class="w">          </span><span class="no">"</span>
 
 <span class="w">  </span><span class="nt">docs</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
@@ -9149,13 +9149,13 @@ creates a GitHub Actions workflow that validates every push and pull request.</p
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v6</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.11'</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install UV</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curl -LsSf https://astral.sh/uv/install.sh | sh</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add UV to PATH</span>
-<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;$HOME/.local/bin&quot; &gt;&gt; $GITHUB_PATH</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo "$HOME/.local/bin" &gt;&gt; $GITHUB_PATH</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sync environment</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uv sync</span>
@@ -9201,15 +9201,15 @@ ls<span class="w"> </span>-la<span class="w"> </span>.github/workflows/ci.yml
 <span class="c1"># Expected: -rw-r--r-- ... .github/workflows/ci.yml</span>
 
 <span class="c1"># Validate YAML syntax</span>
-python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import yaml; yaml.safe_load(open(&#39;.github/workflows/ci.yml&#39;)); print(&#39;Valid YAML&#39;)&quot;</span>
+python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import yaml; yaml.safe_load(open('.github/workflows/ci.yml')); print('Valid YAML')"</span>
 <span class="c1"># Expected: Valid YAML</span>
 
 <span class="c1"># Count jobs defined</span>
-grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;runs-on:&quot;</span><span class="w"> </span>.github/workflows/ci.yml
+grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"runs-on:"</span><span class="w"> </span>.github/workflows/ci.yml
 <span class="c1"># Expected: 4 (lint, test, security, docs)</span>
 
 <span class="c1"># Verify job dependencies</span>
-grep<span class="w"> </span><span class="s2">&quot;needs:&quot;</span><span class="w"> </span>.github/workflows/ci.yml
+grep<span class="w"> </span><span class="s2">"needs:"</span><span class="w"> </span>.github/workflows/ci.yml
 <span class="c1"># Expected:</span>
 <span class="c1">#     needs: lint</span>
 <span class="c1">#     needs: lint</span>
@@ -9246,7 +9246,7 @@ markdownlint<span class="w"> </span>--fix<span class="w"> </span>docs/<span clas
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trailing-whitespace</span><span class="w">      </span><span class="c1"># Removes trailing whitespace</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">end-of-file-fixer</span><span class="w">        </span><span class="c1"># Adds missing final newline</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mixed-line-ending</span><span class="w">        </span><span class="c1"># Normalizes line endings</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--fix=lf&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'--fix=lf'</span><span class="p p-Indicator">]</span>
 
 <span class="w">  </span><span class="c1"># Black AUTO-FORMATS Python files</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/psf/black</span>
@@ -9261,7 +9261,7 @@ markdownlint<span class="w"> </span>--fix<span class="w"> </span>docs/<span clas
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.47.0</span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">markdownlint</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;--fix&#39;</span><span class="p p-Indicator">]</span><span class="w">  </span><span class="c1"># Auto-fix mode</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'--fix'</span><span class="p p-Indicator">]</span><span class="w">  </span><span class="c1"># Auto-fix mode</span>
 
 <span class="w">  </span><span class="c1"># Terraform AUTO-FORMAT</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/antonbabenko/pre-commit-terraform</span>
@@ -9270,71 +9270,71 @@ markdownlint<span class="w"> </span>--fix<span class="w"> </span>docs/<span clas
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform_fmt</span><span class="w">  </span><span class="c1"># Auto-formats .tf files</span>
 </code></pre></div>
 <h3 id="create-an-auto-fix-script-for-manual-use">Create an Auto-fix Script for Manual Use<a class="headerlink" href="#create-an-auto-fix-script-for-manual-use" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>scripts/autofix.sh<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>scripts/autofix.sh<span class="w"> </span><span class="s">&lt;&lt; 'EOF'</span>
 <span class="s">#!/bin/bash</span>
 <span class="s"># autofix.sh - Run all auto-fix tools</span>
 <span class="s"># Use this to bulk-fix formatting issues before committing</span>
 
 <span class="s">set -euo pipefail</span>
 
-<span class="s">echo &quot;============================================&quot;</span>
-<span class="s">echo &quot;  Auto-fix: Formatting &amp; Linting&quot;</span>
-<span class="s">echo &quot;============================================&quot;</span>
+<span class="s">echo "============================================"</span>
+<span class="s">echo "  Auto-fix: Formatting &amp; Linting"</span>
+<span class="s">echo "============================================"</span>
 
 <span class="s"># Python formatting</span>
-<span class="s">echo &quot;&quot;</span>
-<span class="s">echo &quot;[1/5] Running Black (Python formatter)...&quot;</span>
+<span class="s">echo ""</span>
+<span class="s">echo "[1/5] Running Black (Python formatter)..."</span>
 <span class="s">if command -v black &amp;&gt;/dev/null; then</span>
 <span class="s">    black . 2&gt;&amp;1 | tail -1</span>
 <span class="s">else</span>
-<span class="s">    echo &quot;  Skipped: black not installed&quot;</span>
+<span class="s">    echo "  Skipped: black not installed"</span>
 <span class="s">fi</span>
 
 <span class="s"># Terraform formatting</span>
-<span class="s">echo &quot;&quot;</span>
-<span class="s">echo &quot;[2/5] Running terraform fmt...&quot;</span>
+<span class="s">echo ""</span>
+<span class="s">echo "[2/5] Running terraform fmt..."</span>
 <span class="s">if command -v terraform &amp;&gt;/dev/null; then</span>
-<span class="s">    find . -name &quot;*.tf&quot; -not -path &quot;./.terraform/*&quot; -exec terraform fmt {} \;</span>
-<span class="s">    echo &quot;  Done&quot;</span>
+<span class="s">    find . -name "*.tf" -not -path "./.terraform/*" -exec terraform fmt {} \;</span>
+<span class="s">    echo "  Done"</span>
 <span class="s">else</span>
-<span class="s">    echo &quot;  Skipped: terraform not installed&quot;</span>
+<span class="s">    echo "  Skipped: terraform not installed"</span>
 <span class="s">fi</span>
 
 <span class="s"># Markdown formatting</span>
-<span class="s">echo &quot;&quot;</span>
-<span class="s">echo &quot;[3/5] Running markdownlint --fix...&quot;</span>
+<span class="s">echo ""</span>
+<span class="s">echo "[3/5] Running markdownlint --fix..."</span>
 <span class="s">if command -v markdownlint &amp;&gt;/dev/null; then</span>
-<span class="s">    markdownlint --fix &quot;**/*.md&quot; 2&gt;&amp;1 || true</span>
-<span class="s">    echo &quot;  Done&quot;</span>
+<span class="s">    markdownlint --fix "**/*.md" 2&gt;&amp;1 || true</span>
+<span class="s">    echo "  Done"</span>
 <span class="s">else</span>
-<span class="s">    echo &quot;  Skipped: markdownlint not installed&quot;</span>
+<span class="s">    echo "  Skipped: markdownlint not installed"</span>
 <span class="s">fi</span>
 
 <span class="s"># Trailing whitespace</span>
-<span class="s">echo &quot;&quot;</span>
-<span class="s">echo &quot;[4/5] Removing trailing whitespace...&quot;</span>
-<span class="s">find . -type f \( -name &quot;*.py&quot; -o -name &quot;*.sh&quot; -o -name &quot;*.yaml&quot; -o -name &quot;*.yml&quot; \</span>
-<span class="s">    -o -name &quot;*.tf&quot; -o -name &quot;*.json&quot; -o -name &quot;*.ts&quot; -o -name &quot;*.js&quot; \) \</span>
-<span class="s">    -not -path &quot;./.venv/*&quot; -not -path &quot;./node_modules/*&quot; -not -path &quot;./.git/*&quot; \</span>
-<span class="s">    -exec sed -i.bak &#39;s/[[:space:]]*$//&#39; {} \;</span>
-<span class="s">find . -name &quot;*.bak&quot; -delete 2&gt;/dev/null || true</span>
-<span class="s">echo &quot;  Done&quot;</span>
+<span class="s">echo ""</span>
+<span class="s">echo "[4/5] Removing trailing whitespace..."</span>
+<span class="s">find . -type f \( -name "*.py" -o -name "*.sh" -o -name "*.yaml" -o -name "*.yml" \</span>
+<span class="s">    -o -name "*.tf" -o -name "*.json" -o -name "*.ts" -o -name "*.js" \) \</span>
+<span class="s">    -not -path "./.venv/*" -not -path "./node_modules/*" -not -path "./.git/*" \</span>
+<span class="s">    -exec sed -i.bak 's/[[:space:]]*$//' {} \;</span>
+<span class="s">find . -name "*.bak" -delete 2&gt;/dev/null || true</span>
+<span class="s">echo "  Done"</span>
 
 <span class="s"># Fix line endings</span>
-<span class="s">echo &quot;&quot;</span>
-<span class="s">echo &quot;[5/5] Normalizing line endings to LF...&quot;</span>
-<span class="s">find . -type f \( -name &quot;*.py&quot; -o -name &quot;*.sh&quot; -o -name &quot;*.yaml&quot; -o -name &quot;*.yml&quot; \</span>
-<span class="s">    -o -name &quot;*.tf&quot; -o -name &quot;*.json&quot; -o -name &quot;*.ts&quot; -o -name &quot;*.js&quot; -o -name &quot;*.md&quot; \) \</span>
-<span class="s">    -not -path &quot;./.venv/*&quot; -not -path &quot;./node_modules/*&quot; -not -path &quot;./.git/*&quot; \</span>
-<span class="s">    -exec sed -i.bak &#39;s/\r$//&#39; {} \;</span>
-<span class="s">find . -name &quot;*.bak&quot; -delete 2&gt;/dev/null || true</span>
-<span class="s">echo &quot;  Done&quot;</span>
+<span class="s">echo ""</span>
+<span class="s">echo "[5/5] Normalizing line endings to LF..."</span>
+<span class="s">find . -type f \( -name "*.py" -o -name "*.sh" -o -name "*.yaml" -o -name "*.yml" \</span>
+<span class="s">    -o -name "*.tf" -o -name "*.json" -o -name "*.ts" -o -name "*.js" -o -name "*.md" \) \</span>
+<span class="s">    -not -path "./.venv/*" -not -path "./node_modules/*" -not -path "./.git/*" \</span>
+<span class="s">    -exec sed -i.bak 's/\r$//' {} \;</span>
+<span class="s">find . -name "*.bak" -delete 2&gt;/dev/null || true</span>
+<span class="s">echo "  Done"</span>
 
-<span class="s">echo &quot;&quot;</span>
-<span class="s">echo &quot;============================================&quot;</span>
-<span class="s">echo &quot;  Auto-fix complete. Review changes with:&quot;</span>
-<span class="s">echo &quot;    git diff&quot;</span>
-<span class="s">echo &quot;============================================&quot;</span>
+<span class="s">echo ""</span>
+<span class="s">echo "============================================"</span>
+<span class="s">echo "  Auto-fix complete. Review changes with:"</span>
+<span class="s">echo "    git diff"</span>
+<span class="s">echo "============================================"</span>
 <span class="s">EOF</span>
 chmod<span class="w"> </span>+x<span class="w"> </span>scripts/autofix.sh
 </code></pre></div>
@@ -9373,7 +9373,7 @@ ls<span class="w"> </span>-la<span class="w"> </span>scripts/autofix.sh
 
 <span class="c1"># Run auto-fix and verify no remaining issues</span>
 bash<span class="w"> </span>scripts/autofix.sh
-pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;All checks pass after auto-fix&quot;</span>
+pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"All checks pass after auto-fix"</span>
 </code></pre></div>
 <hr />
 <h2 id="step-6-add-quality-gates-5-min">Step 6: Add Quality Gates (5 min)<a class="headerlink" href="#step-6-add-quality-gates-5-min" title="Permanent link">&para;</a></h2>
@@ -9381,31 +9381,31 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files<span cl
 Some gates block merges; others provide advisory warnings.</p>
 <h3 id="spell-checking-blocking">Spell Checking (Blocking)<a class="headerlink" href="#spell-checking-blocking" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.2&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;en&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;words&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;autofix&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;bandit&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;cspell&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;devops&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;editorconfig&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;flake8&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;markdownlint&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;mkdocs&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;mypy&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;pycqa&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;pytest&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;shellcheck&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;terraform&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;terragrunt&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;yamllint&quot;</span>
+<span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.2"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"words"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"autofix"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"bandit"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"cspell"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"devops"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"editorconfig"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"flake8"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"markdownlint"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"mkdocs"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"mypy"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"pycqa"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"pytest"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"shellcheck"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"terraform"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"terragrunt"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"yamllint"</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;ignorePaths&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;node_modules/**&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;.venv/**&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;*.lock&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;.git/**&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;site/**&quot;</span>
+<span class="w">  </span><span class="nt">"ignorePaths"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"node_modules/**"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">".venv/**"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"*.lock"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">".git/**"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"site/**"</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -9414,7 +9414,7 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>.github
 <span class="c1"># (copy the JSON above to .github/cspell.json)</span>
 
 <span class="c1"># Run spell check</span>
-cspell<span class="w"> </span>--config<span class="w"> </span>.github/cspell.json<span class="w"> </span><span class="s2">&quot;docs/**/*.md&quot;</span><span class="w"> </span><span class="s2">&quot;*.md&quot;</span>
+cspell<span class="w"> </span>--config<span class="w"> </span>.github/cspell.json<span class="w"> </span><span class="s2">"docs/**/*.md"</span><span class="w"> </span><span class="s2">"*.md"</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code># Expected output (clean):
 CSpell: Files checked: 15, Issues found: 0
@@ -9439,14 +9439,14 @@ CSpell: Files checked: 15, Issues found: 0
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Node.js</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-node@v6</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;20&#39;</span>
+<span class="w">          </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="s">'20'</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install cSpell</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm install -g cspell</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run spell check</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">cspell --config .github/cspell.json &quot;docs/**/*.md&quot; &quot;*.md&quot;</span>
+<span class="w">          </span><span class="no">cspell --config .github/cspell.json "docs/**/*.md" "*.md"</span>
 </code></pre></div>
 <h3 id="link-checking-advisory">Link Checking (Advisory)<a class="headerlink" href="#link-checking-advisory" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/link-checker.yml</span>
@@ -9456,7 +9456,7 @@ CSpell: Files checked: 15, Issues found: 0
 <span class="w">  </span><span class="nt">push</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">schedule</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1&#39;</span><span class="w">  </span><span class="c1"># Weekly on Mondays</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">'0</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1'</span><span class="w">  </span><span class="c1"># Weekly on Mondays</span>
 
 <span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">check-links</span><span class="p">:</span>
@@ -9468,7 +9468,7 @@ CSpell: Files checked: 15, Issues found: 0
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check links</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lycheeverse/lychee-action@v2</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--verbose --no-progress &#39;docs/**/*.md&#39;</span>
+<span class="w">          </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--verbose --no-progress 'docs/**/*.md'</span>
 <span class="w">          </span><span class="nt">fail</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># Advisory only, does not block merge</span>
 </code></pre></div>
 <h3 id="metadata-validation-advisory">Metadata Validation (Advisory)<a class="headerlink" href="#metadata-validation-advisory" title="Permanent link">&para;</a></h3>
@@ -9519,7 +9519,7 @@ ls<span class="w"> </span>-la<span class="w"> </span>.github/cspell.json
 <span class="c1"># Expected: -rw-r--r-- ... .github/cspell.json</span>
 
 <span class="c1"># Run spell check locally</span>
-cspell<span class="w"> </span>--config<span class="w"> </span>.github/cspell.json<span class="w"> </span><span class="s2">&quot;docs/**/*.md&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Spelling OK&quot;</span>
+cspell<span class="w"> </span>--config<span class="w"> </span>.github/cspell.json<span class="w"> </span><span class="s2">"docs/**/*.md"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Spelling OK"</span>
 
 <span class="c1"># Verify workflow files exist</span>
 ls<span class="w"> </span>.github/workflows/spell-checker.yml
@@ -9543,12 +9543,12 @@ value and identify bottlenecks.</p>
 </code></pre></div>
 <h3 id="dashboard-script">Dashboard Script<a class="headerlink" href="#dashboard-script" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">automation_dashboard.py - Track automation metrics from CI data.</span>
 
 <span class="sd">Usage:</span>
 <span class="sd">    python scripts/automation_dashboard.py</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
@@ -9556,52 +9556,52 @@ value and identify bottlenecks.</p>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">run_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a shell command and return stdout.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Run a shell command and return stdout."""</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_commit_count</span><span class="p">(</span><span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Count commits in the last N days.&quot;&quot;&quot;</span>
-    <span class="n">since</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">run_cmd</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;git log --since=&quot;</span><span class="si">{</span><span class="n">since</span><span class="si">}</span><span class="s1">&quot; --oneline&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Count commits in the last N days."""</span>
+    <span class="n">since</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">run_cmd</span><span class="p">(</span><span class="sa">f</span><span class="s1">'git log --since="</span><span class="si">{</span><span class="n">since</span><span class="si">}</span><span class="s1">" --oneline'</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span> <span class="k">if</span> <span class="n">output</span> <span class="k">else</span> <span class="mi">0</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_hook_skip_count</span><span class="p">(</span><span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Count commits that skipped pre-commit hooks.&quot;&quot;&quot;</span>
-    <span class="n">since</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Count commits that skipped pre-commit hooks."""</span>
+    <span class="n">since</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">run_cmd</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s1">&#39;git log --since=&quot;</span><span class="si">{</span><span class="n">since</span><span class="si">}</span><span class="s1">&quot; --oneline --grep=&quot;no-verify&quot; --grep=&quot;skip-hooks&quot;&#39;</span>
+        <span class="sa">f</span><span class="s1">'git log --since="</span><span class="si">{</span><span class="n">since</span><span class="si">}</span><span class="s1">" --oneline --grep="no-verify" --grep="skip-hooks"'</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span> <span class="k">if</span> <span class="n">output</span> <span class="k">else</span> <span class="mi">0</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_precommit_hook_count</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Count configured pre-commit hooks.&quot;&quot;&quot;</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">run_cmd</span><span class="p">(</span><span class="s2">&quot;grep -c &#39;id:&#39; .pre-commit-config.yaml 2&gt;/dev/null&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Count configured pre-commit hooks."""</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">run_cmd</span><span class="p">(</span><span class="s2">"grep -c 'id:' .pre-commit-config.yaml 2&gt;/dev/null"</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_ci_workflow_count</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Count CI workflow files.&quot;&quot;&quot;</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">run_cmd</span><span class="p">(</span><span class="s2">&quot;ls .github/workflows/*.yml 2&gt;/dev/null | wc -l&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Count CI workflow files."""</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">run_cmd</span><span class="p">(</span><span class="s2">"ls .github/workflows/*.yml 2&gt;/dev/null | wc -l"</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_autofix_hooks</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;List hooks that auto-fix files.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""List hooks that auto-fix files."""</span>
     <span class="n">autofix_hooks</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;trailing-whitespace&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;end-of-file-fixer&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;mixed-line-ending&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;black&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;markdownlint --fix&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;terraform_fmt&quot;</span><span class="p">,</span>
+        <span class="s2">"trailing-whitespace"</span><span class="p">,</span>
+        <span class="s2">"end-of-file-fixer"</span><span class="p">,</span>
+        <span class="s2">"mixed-line-ending"</span><span class="p">,</span>
+        <span class="s2">"black"</span><span class="p">,</span>
+        <span class="s2">"markdownlint --fix"</span><span class="p">,</span>
+        <span class="s2">"terraform_fmt"</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="n">configured</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;.pre-commit-config.yaml&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">".pre-commit-config.yaml"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">hook</span> <span class="ow">in</span> <span class="n">autofix_hooks</span><span class="p">:</span>
             <span class="n">hook_id</span> <span class="o">=</span> <span class="n">hook</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
@@ -9613,39 +9613,39 @@ value and identify bottlenecks.</p>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">print_dashboard</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the automation dashboard.&quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  AUTOMATION DASHBOARD&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Generated: </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Print the automation dashboard."""</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"  AUTOMATION DASHBOARD"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Generated: </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">()</span>
 
     <span class="c1"># Commit activity</span>
     <span class="n">commits_30d</span> <span class="o">=</span> <span class="n">get_commit_count</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
     <span class="n">commits_7d</span> <span class="o">=</span> <span class="n">get_commit_count</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Commits (last 30 days):  </span><span class="si">{</span><span class="n">commits_30d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Commits (last 7 days):   </span><span class="si">{</span><span class="n">commits_7d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Commits (last 30 days):  </span><span class="si">{</span><span class="n">commits_30d</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Commits (last 7 days):   </span><span class="si">{</span><span class="n">commits_7d</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">()</span>
 
     <span class="c1"># Hook metrics</span>
     <span class="n">hook_count</span> <span class="o">=</span> <span class="n">get_precommit_hook_count</span><span class="p">()</span>
     <span class="n">skip_count</span> <span class="o">=</span> <span class="n">get_hook_skip_count</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
     <span class="n">skip_rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">skip_count</span> <span class="o">/</span> <span class="n">commits_30d</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="k">if</span> <span class="n">commits_30d</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Pre-commit hooks:        </span><span class="si">{</span><span class="n">hook_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Hook skips (30 days):    </span><span class="si">{</span><span class="n">skip_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Skip rate:               </span><span class="si">{</span><span class="n">skip_rate</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Pre-commit hooks:        </span><span class="si">{</span><span class="n">hook_count</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Hook skips (30 days):    </span><span class="si">{</span><span class="n">skip_count</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Skip rate:               </span><span class="si">{</span><span class="n">skip_rate</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">()</span>
 
     <span class="c1"># Auto-fix hooks</span>
     <span class="n">autofix</span> <span class="o">=</span> <span class="n">get_autofix_hooks</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Auto-fix hooks:          </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">autofix</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Auto-fix hooks:          </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">autofix</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">hook</span> <span class="ow">in</span> <span class="n">autofix</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    - </span><span class="si">{</span><span class="n">hook</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    - </span><span class="si">{</span><span class="n">hook</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">()</span>
 
     <span class="c1"># CI workflows</span>
     <span class="n">workflow_count</span> <span class="o">=</span> <span class="n">get_ci_workflow_count</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  CI workflows:            </span><span class="si">{</span><span class="n">workflow_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  CI workflows:            </span><span class="si">{</span><span class="n">workflow_count</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">()</span>
 
     <span class="c1"># Automation maturity score</span>
@@ -9665,12 +9665,12 @@ value and identify bottlenecks.</p>
     <span class="k">if</span> <span class="n">skip_rate</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">score</span> <span class="o">+=</span> <span class="mi">10</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Automation Score:        </span><span class="si">{</span><span class="n">score</span><span class="si">}</span><span class="s2">/100&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Automation Score:        </span><span class="si">{</span><span class="n">score</span><span class="si">}</span><span class="s2">/100"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">print_dashboard</span><span class="p">()</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Save the script and run it</span>
@@ -9707,7 +9707,7 @@ python<span class="w"> </span>scripts/automation_dashboard.py
 <div class="highlight"><pre><span></span><code><span class="c1"># Get recent workflow run durations</span>
 gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--workflow<span class="o">=</span>ci.yml<span class="w"> </span>--limit<span class="o">=</span><span class="m">10</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--json<span class="w"> </span>conclusion,updatedAt,createdAt<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--jq<span class="w"> </span><span class="s1">&#39;.[] | &quot;\(.conclusion)\t\(.createdAt)\t\(.updatedAt)&quot;&#39;</span>
+<span class="w">    </span>--jq<span class="w"> </span><span class="s1">'.[] | "\(.conclusion)\t\(.createdAt)\t\(.updatedAt)"'</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code># Expected output:
 success   2026-02-14T09:00:00Z   2026-02-14T09:03:42Z
@@ -9717,7 +9717,7 @@ failure   2026-02-13T14:10:00Z   2026-02-13T14:12:55Z
 <div class="highlight"><pre><span></span><code><span class="c1"># Calculate average CI duration (in seconds) for last 10 runs</span>
 gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--workflow<span class="o">=</span>ci.yml<span class="w"> </span>--limit<span class="o">=</span><span class="m">10</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--json<span class="w"> </span>createdAt,updatedAt<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--jq<span class="w"> </span><span class="s1">&#39;[.[] | ((.updatedAt | fromdateiso8601) - (.createdAt | fromdateiso8601))] | add / length | round&#39;</span>
+<span class="w">    </span>--jq<span class="w"> </span><span class="s1">'[.[] | ((.updatedAt | fromdateiso8601) - (.createdAt | fromdateiso8601))] | add / length | round'</span>
 </code></pre></div>
 <h3 id="checkpoint-monitoring">Checkpoint: Monitoring<a class="headerlink" href="#checkpoint-monitoring" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Verify dashboard script exists</span>
@@ -9725,7 +9725,7 @@ ls<span class="w"> </span>-la<span class="w"> </span>scripts/automation_dashboar
 <span class="c1"># Expected: -rw-r--r-- ... scripts/automation_dashboard.py</span>
 
 <span class="c1"># Run the dashboard</span>
-python<span class="w"> </span>scripts/automation_dashboard.py<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Dashboard works&quot;</span>
+python<span class="w"> </span>scripts/automation_dashboard.py<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Dashboard works"</span>
 </code></pre></div>
 <hr />
 <h2 id="automation-maturity-model">Automation Maturity Model<a class="headerlink" href="#automation-maturity-model" title="Permanent link">&para;</a></h2>
@@ -9828,37 +9828,37 @@ Level 5 (Quality Gates):
 <h2 id="checkpoint-final-verification">Checkpoint: Final Verification<a class="headerlink" href="#checkpoint-final-verification" title="Permanent link">&para;</a></h2>
 <p>Run through this complete checklist to verify your automation pipeline.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. EditorConfig exists and has sections for all languages</span>
-<span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>.editorconfig<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: .editorconfig exists&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL&quot;</span>
+<span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>.editorconfig<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"PASS: .editorconfig exists"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"FAIL"</span>
 
 <span class="c1"># 2. Pre-commit hooks are installed</span>
-<span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>.git/hooks/pre-commit<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: hooks installed&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL&quot;</span>
+<span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>.git/hooks/pre-commit<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"PASS: hooks installed"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"FAIL"</span>
 
 <span class="c1"># 3. Pre-commit config has 10+ hooks</span>
-<span class="nv">HOOK_COUNT</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;id:&quot;</span><span class="w"> </span>.pre-commit-config.yaml<span class="k">)</span>
-<span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOOK_COUNT</span><span class="s2">&quot;</span><span class="w"> </span>-ge<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: </span><span class="nv">$HOOK_COUNT</span><span class="s2"> hooks configured&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: only </span><span class="nv">$HOOK_COUNT</span><span class="s2"> hooks&quot;</span>
+<span class="nv">HOOK_COUNT</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"id:"</span><span class="w"> </span>.pre-commit-config.yaml<span class="k">)</span>
+<span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$HOOK_COUNT</span><span class="s2">"</span><span class="w"> </span>-ge<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"PASS: </span><span class="nv">$HOOK_COUNT</span><span class="s2"> hooks configured"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"FAIL: only </span><span class="nv">$HOOK_COUNT</span><span class="s2"> hooks"</span>
 
 <span class="c1"># 4. CI workflow exists and is valid YAML</span>
-python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import yaml; yaml.safe_load(open(&#39;.github/workflows/ci.yml&#39;))&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: CI workflow valid&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: CI workflow invalid&quot;</span>
+python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import yaml; yaml.safe_load(open('.github/workflows/ci.yml'))"</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"PASS: CI workflow valid"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"FAIL: CI workflow invalid"</span>
 
 <span class="c1"># 5. CI workflow has multiple jobs</span>
-<span class="nv">JOB_COUNT</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;runs-on:&quot;</span><span class="w"> </span>.github/workflows/ci.yml<span class="k">)</span>
-<span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$JOB_COUNT</span><span class="s2">&quot;</span><span class="w"> </span>-ge<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: </span><span class="nv">$JOB_COUNT</span><span class="s2"> CI jobs&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: only </span><span class="nv">$JOB_COUNT</span><span class="s2"> CI jobs&quot;</span>
+<span class="nv">JOB_COUNT</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">"runs-on:"</span><span class="w"> </span>.github/workflows/ci.yml<span class="k">)</span>
+<span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$JOB_COUNT</span><span class="s2">"</span><span class="w"> </span>-ge<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"PASS: </span><span class="nv">$JOB_COUNT</span><span class="s2"> CI jobs"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"FAIL: only </span><span class="nv">$JOB_COUNT</span><span class="s2"> CI jobs"</span>
 
 <span class="c1"># 6. Spell check config exists</span>
-<span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>.github/cspell.json<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: spell check configured&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL&quot;</span>
+<span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>.github/cspell.json<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"PASS: spell check configured"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"FAIL"</span>
 
 <span class="c1"># 7. Auto-fix script exists</span>
-<span class="nb">test</span><span class="w"> </span>-x<span class="w"> </span>scripts/autofix.sh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: autofix script executable&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL&quot;</span>
+<span class="nb">test</span><span class="w"> </span>-x<span class="w"> </span>scripts/autofix.sh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"PASS: autofix script executable"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"FAIL"</span>
 
 <span class="c1"># 8. Dashboard script exists</span>
-<span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>scripts/automation_dashboard.py<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: dashboard exists&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL&quot;</span>
+<span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>scripts/automation_dashboard.py<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"PASS: dashboard exists"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"FAIL"</span>
 
 <span class="c1"># 9. All pre-commit hooks pass</span>
-pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: all hooks pass&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: hooks failing&quot;</span>
+pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"PASS: all hooks pass"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"FAIL: hooks failing"</span>
 
 <span class="c1"># 10. Git is clean (all fixes committed)</span>
-<span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>git<span class="w"> </span>status<span class="w"> </span>--porcelain<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: working tree clean&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;WARN: uncommitted changes&quot;</span>
+<span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>git<span class="w"> </span>status<span class="w"> </span>--porcelain<span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"PASS: working tree clean"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"WARN: uncommitted changes"</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code># Expected output:
 PASS: .editorconfig exists
@@ -9877,7 +9877,7 @@ PASS: working tree clean
 <h3 id="problem-pre-commit-hooks-fail-on-first-run">Problem: Pre-commit hooks fail on first run<a class="headerlink" href="#problem-pre-commit-hooks-fail-on-first-run" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>Symptom:
   An error occurred during hook execution.
-  The hook &#39;black&#39; failed with exit code 1.
+  The hook 'black' failed with exit code 1.
 
 Cause:
   Hook environments are not installed yet.
@@ -9891,8 +9891,8 @@ Solution:
   Black formats code one way, Flake8 complains about it.
 
 Cause:
-  Flake8&#39;s E203 (whitespace before &#39;:&#39;) and W503 (line break before binary operator)
-  conflict with Black&#39;s formatting.
+  Flake8's E203 (whitespace before ':') and W503 (line break before binary operator)
+  conflict with Black's formatting.
 
 Solution:
   Configure Flake8 to ignore these rules:
@@ -9900,23 +9900,23 @@ Solution:
 
   In .pre-commit-config.yaml:
     - id: flake8
-      args: [&#39;--max-line-length=100&#39;, &#39;--extend-ignore=E203,W503&#39;]
+      args: ['--max-line-length=100', '--extend-ignore=E203,W503']
 </code></pre></div>
 <h3 id="problem-shellcheck-reports-sc2086-unquoted-variables">Problem: ShellCheck reports SC2086 (unquoted variables)<a class="headerlink" href="#problem-shellcheck-reports-sc2086-unquoted-variables" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Symptom:</span>
 <span class="c1"># In src/deploy.sh line 3:</span>
-<span class="c1"># if [ $1 == &quot;production&quot; ]; then</span>
+<span class="c1"># if [ $1 == "production" ]; then</span>
 <span class="c1">#      ^-- SC2086: Double quote to prevent globbing and word splitting.</span>
 
 <span class="c1"># Solution: Quote variables and use = instead of ==</span>
 <span class="c1"># Before:</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deploying&quot;</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"production"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"deploying"</span>
 <span class="k">fi</span>
 
 <span class="c1"># After:</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deploying&quot;</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"deploying"</span>
 <span class="k">fi</span>
 </code></pre></div>
 <h3 id="problem-detect-secrets-flags-known-safe-values">Problem: detect-secrets flags known safe values<a class="headerlink" href="#problem-detect-secrets-flags-known-safe-values" title="Permanent link">&para;</a></h3>
@@ -9928,7 +9928,7 @@ detect-secrets<span class="w"> </span>scan<span class="w"> </span>--update<span 
 
 <span class="c1"># Then audit and mark false positives</span>
 detect-secrets<span class="w"> </span>audit<span class="w"> </span>.secrets.baseline
-<span class="c1"># Answer &#39;n&#39; (not a real secret) for each false positive</span>
+<span class="c1"># Answer 'n' (not a real secret) for each false positive</span>
 </code></pre></div>
 <h3 id="problem-ci-is-too-slow-over-10-minutes">Problem: CI is too slow (over 10 minutes)<a class="headerlink" href="#problem-ci-is-too-slow-over-10-minutes" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>Symptom:
@@ -9940,7 +9940,7 @@ Causes and Solutions:
    Fix: Add actions/cache for pip, uv, npm
 
 2. Sequential jobs that could run in parallel
-   Fix: Remove unnecessary &#39;needs:&#39; dependencies
+   Fix: Remove unnecessary 'needs:' dependencies
 
 3. Installing tools from scratch every run
    Fix: Use setup-* actions with caching
@@ -9953,21 +9953,21 @@ Causes and Solutions:
 <span class="w">  </span><span class="nt">push</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
 <span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;src/**&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;tests/**&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;pyproject.toml&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;.github/workflows/ci.yml&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'src/**'</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'tests/**'</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'pyproject.toml'</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'.github/workflows/ci.yml'</span>
 <span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
 <span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;src/**&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;tests/**&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;pyproject.toml&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;.github/workflows/ci.yml&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'src/**'</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'tests/**'</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'pyproject.toml'</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'.github/workflows/ci.yml'</span>
 </code></pre></div>
 <h3 id="problem-pre-commit-hooks-modified-files-but-commit-still-failed">Problem: Pre-commit hooks modified files but commit still failed<a class="headerlink" href="#problem-pre-commit-hooks-modified-files-but-commit-still-failed" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>Symptom:
-  Pre-commit says &quot;files were modified by this hook&quot; and the commit fails.
+  Pre-commit says "files were modified by this hook" and the commit fails.
 
 Cause:
   Auto-fix hooks (black, trailing-whitespace, end-of-file-fixer) modified files.
@@ -9976,19 +9976,19 @@ Cause:
 Solution:
   1. Review the changes: git diff
   2. Stage the auto-fixed files: git add -u
-  3. Commit again: git commit -m &quot;your message&quot;
+  3. Commit again: git commit -m "your message"
 
   The second commit will pass because files are already formatted.
 </code></pre></div>
 <h3 id="problem-yamllint-complains-about-line-length">Problem: yamllint complains about line length<a class="headerlink" href="#problem-yamllint-complains-about-line-length" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>Symptom:
-  yamllint reports &quot;line too long (150 &gt; 120 characters)&quot;
+  yamllint reports "line too long (150 &gt; 120 characters)"
 
 Solution:
   Option 1: Break the line using YAML multiline syntax
 
   Before:
-    description: &quot;This is a very long description that exceeds the line length limit and causes yamllint to fail&quot;
+    description: "This is a very long description that exceeds the line length limit and causes yamllint to fail"
 
   After:
     description: &gt;-
@@ -9996,7 +9996,7 @@ Solution:
       limit and causes yamllint to fail
 
   Option 2: Adjust the yamllint max line length in .pre-commit-config.yaml:
-    args: [&#39;-d&#39;, &#39;{extends: default, rules: {line-length: {max: 150}}}&#39;]
+    args: ['-d', '{extends: default, rules: {line-length: {max: 150}}}']
 </code></pre></div>
 <hr />
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
@@ -10165,10 +10165,10 @@ scripts/automation_dashboard.py   Automation metrics dashboard
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

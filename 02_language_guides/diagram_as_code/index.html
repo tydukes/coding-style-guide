@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -9370,9 +9370,9 @@ graph LR
 <span class="w">          </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="kt">!!python/name:pymdownx.superfences.fence_code_format</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;mermaid.theme&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;mermaid.backgroundColor&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;transparent&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;mermaid.maxTextSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50000</span>
+<span class="w">  </span><span class="nt">"mermaid.theme"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"mermaid.backgroundColor"</span><span class="p">:</span><span class="w"> </span><span class="s2">"transparent"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"mermaid.maxTextSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">50000</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -9401,11 +9401,11 @@ deployment diagrams, and has extensive icon libraries for cloud architecture.</p
 </code></pre></div>
 <h3 id="plantuml-naming-conventions">PlantUML Naming Conventions<a class="headerlink" href="#plantuml-naming-conventions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>@startuml
-&#39; Good: Clear participant naming with stereotypes
+' Good: Clear participant naming with stereotypes
 actor User &lt;&lt;Human&gt;&gt;
-participant &quot;API Gateway&quot; as api &lt;&lt;Service&gt;&gt;
-participant &quot;Auth Service&quot; as auth &lt;&lt;Microservice&gt;&gt;
-database &quot;PostgreSQL&quot; as db &lt;&lt;Database&gt;&gt;
+participant "API Gateway" as api &lt;&lt;Service&gt;&gt;
+participant "Auth Service" as auth &lt;&lt;Microservice&gt;&gt;
+database "PostgreSQL" as db &lt;&lt;Database&gt;&gt;
 
 User -&gt; api: POST /login
 api -&gt; auth: Validate credentials
@@ -9416,20 +9416,20 @@ api --&gt; User: 200 OK
 @enduml
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>@startuml
-&#39; Good: Component naming with technology tags
+' Good: Component naming with technology tags
 !define RECTANGLE(x) rectangle x
 !define DATABASE(x) database x
 
-package &quot;Backend Services&quot; {
+package "Backend Services" {
     [Catalog API] &lt;&lt;Python/FastAPI&gt;&gt;
     [Order API] &lt;&lt;Python/FastAPI&gt;&gt;
     [Payment API] &lt;&lt;Node.js&gt;&gt;
 }
 
-package &quot;Data Layer&quot; {
-    database &quot;Products DB&quot; &lt;&lt;PostgreSQL&gt;&gt;
-    database &quot;Orders DB&quot; &lt;&lt;PostgreSQL&gt;&gt;
-    database &quot;Cache&quot; &lt;&lt;Redis&gt;&gt;
+package "Data Layer" {
+    database "Products DB" &lt;&lt;PostgreSQL&gt;&gt;
+    database "Orders DB" &lt;&lt;PostgreSQL&gt;&gt;
+    database "Cache" &lt;&lt;Redis&gt;&gt;
 }
 
 [Catalog API] --&gt; [Products DB]
@@ -9442,17 +9442,17 @@ package &quot;Data Layer&quot; {
 <div class="highlight"><pre><span></span><code>@startuml
 title Order Processing Sequence
 
-&#39; Participants with clear naming
+' Participants with clear naming
 actor Customer
-participant &quot;Web App&quot; as web
-participant &quot;API Gateway&quot; as gateway
-participant &quot;Order Service&quot; as order
-participant &quot;Inventory Service&quot; as inventory
-participant &quot;Payment Service&quot; as payment
-queue &quot;Message Queue&quot; as queue
-database &quot;Database&quot; as db
+participant "Web App" as web
+participant "API Gateway" as gateway
+participant "Order Service" as order
+participant "Inventory Service" as inventory
+participant "Payment Service" as payment
+queue "Message Queue" as queue
+database "Database" as db
 
-&#39; Main flow
+' Main flow
 Customer -&gt; web: Place order
 activate web
 
@@ -9462,7 +9462,7 @@ activate gateway
 gateway -&gt; order: Create order
 activate order
 
-&#39; Parallel processing
+' Parallel processing
 order -&gt; inventory: Check stock
 activate inventory
 inventory --&gt; order: Stock available
@@ -9473,7 +9473,7 @@ activate payment
 payment --&gt; order: Payment confirmed
 deactivate payment
 
-&#39; Async notification
+' Async notification
 order -&gt;&gt; queue: Publish OrderCreated
 order --&gt; gateway: Order confirmed
 deactivate order
@@ -9484,7 +9484,7 @@ deactivate gateway
 web --&gt; Customer: Order confirmation
 deactivate web
 
-&#39; Background processing
+' Background processing
 queue -&gt; inventory: Reserve stock
 queue -&gt; payment: Capture payment
 
@@ -9496,7 +9496,7 @@ end note
 </code></pre></div>
 <h3 id="class-diagrams">Class Diagrams<a class="headerlink" href="#class-diagrams" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>@startuml
-&#39; Good: Clean class diagram with relationships
+' Good: Clean class diagram with relationships
 skinparam classAttributeIconSize 0
 
 abstract class BaseModel {
@@ -9552,9 +9552,9 @@ enum OrderStatus {
     CANCELLED
 }
 
-User &quot;1&quot; -- &quot;0..*&quot; Order: places &gt;
-Order &quot;1&quot; *-- &quot;1..*&quot; OrderItem: contains
-OrderItem &quot;0..*&quot; -- &quot;1&quot; Product: references &gt;
+User "1" -- "0..*" Order: places &gt;
+Order "1" *-- "1..*" OrderItem: contains
+OrderItem "0..*" -- "1" Product: references &gt;
 Order -- OrderStatus
 @enduml
 </code></pre></div>
@@ -9572,28 +9572,28 @@ Order -- OrderStatus
 
 title AWS Production Architecture
 
-CloudFront(cdn, &quot;CloudFront CDN&quot;, &quot;Content delivery&quot;)
-S3(static, &quot;S3 Static Assets&quot;, &quot;Web assets&quot;)
+CloudFront(cdn, "CloudFront CDN", "Content delivery")
+S3(static, "S3 Static Assets", "Web assets")
 
-package &quot;VPC - Production&quot; {
-    ELB(alb, &quot;Application Load Balancer&quot;, &quot;HTTPS termination&quot;)
+package "VPC - Production" {
+    ELB(alb, "Application Load Balancer", "HTTPS termination")
 
-    package &quot;Public Subnets&quot; {
-        EC2(bastion, &quot;Bastion Host&quot;, &quot;SSH access&quot;)
+    package "Public Subnets" {
+        EC2(bastion, "Bastion Host", "SSH access")
     }
 
-    package &quot;Private Subnets - App Tier&quot; {
-        EC2(app1, &quot;App Server 1&quot;, &quot;t3.medium&quot;)
-        EC2(app2, &quot;App Server 2&quot;, &quot;t3.medium&quot;)
+    package "Private Subnets - App Tier" {
+        EC2(app1, "App Server 1", "t3.medium")
+        EC2(app2, "App Server 2", "t3.medium")
     }
 
-    package &quot;Private Subnets - Data Tier&quot; {
-        RDS(db, &quot;PostgreSQL&quot;, &quot;db.r5.large&quot;)
-        ElastiCache(cache, &quot;Redis Cluster&quot;, &quot;cache.r5.large&quot;)
+    package "Private Subnets - Data Tier" {
+        RDS(db, "PostgreSQL", "db.r5.large")
+        ElastiCache(cache, "Redis Cluster", "cache.r5.large")
     }
 }
 
-Lambda(processor, &quot;Event Processor&quot;, &quot;Async tasks&quot;)
+Lambda(processor, "Event Processor", "Async tasks")
 
 cdn --&gt; static
 cdn --&gt; alb
@@ -9610,29 +9610,29 @@ app1 --&gt; processor
 <div class="highlight"><pre><span></span><code>@startuml
 title Microservices Architecture
 
-package &quot;API Layer&quot; {
+package "API Layer" {
     [API Gateway] as gateway
     [GraphQL Server] as graphql
 }
 
-package &quot;Core Services&quot; {
+package "Core Services" {
     [User Service] as user &lt;&lt;gRPC&gt;&gt;
     [Product Service] as product &lt;&lt;gRPC&gt;&gt;
     [Order Service] as order &lt;&lt;gRPC&gt;&gt;
     [Payment Service] as payment &lt;&lt;gRPC&gt;&gt;
 }
 
-package &quot;Infrastructure&quot; {
+package "Infrastructure" {
     [Service Mesh] as mesh &lt;&lt;Istio&gt;&gt;
-    queue &quot;Event Bus&quot; as events &lt;&lt;Kafka&gt;&gt;
+    queue "Event Bus" as events &lt;&lt;Kafka&gt;&gt;
     [Config Server] as config &lt;&lt;Consul&gt;&gt;
 }
 
-package &quot;Data Stores&quot; {
-    database &quot;User DB&quot; as userdb &lt;&lt;PostgreSQL&gt;&gt;
-    database &quot;Product DB&quot; as productdb &lt;&lt;PostgreSQL&gt;&gt;
-    database &quot;Order DB&quot; as orderdb &lt;&lt;PostgreSQL&gt;&gt;
-    database &quot;Cache&quot; as cache &lt;&lt;Redis&gt;&gt;
+package "Data Stores" {
+    database "User DB" as userdb &lt;&lt;PostgreSQL&gt;&gt;
+    database "Product DB" as productdb &lt;&lt;PostgreSQL&gt;&gt;
+    database "Order DB" as orderdb &lt;&lt;PostgreSQL&gt;&gt;
+    database "Cache" as cache &lt;&lt;Redis&gt;&gt;
 }
 
 gateway --&gt; mesh
@@ -9657,7 +9657,7 @@ product --&gt; cache
 </code></pre></div>
 <h3 id="plantuml-styling">PlantUML Styling<a class="headerlink" href="#plantuml-styling" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>@startuml
-&#39; Consistent color palette
+' Consistent color palette
 !define PRIMARY_COLOR #007bff
 !define SUCCESS_COLOR #28a745
 !define WARNING_COLOR #ffc107
@@ -9692,10 +9692,10 @@ skinparam actor {
 }
 
 actor User
-component &quot;Web App&quot; as web
-component &quot;API&quot; as api
-database &quot;Database&quot; as db
-queue &quot;Queue&quot; as q
+component "Web App" as web
+component "API" as api
+database "Database" as db
+queue "Queue" as q
 
 User --&gt; web
 web --&gt; api
@@ -9743,13 +9743,13 @@ apt-get<span class="w"> </span>install<span class="w"> </span>graphviz
 choco<span class="w"> </span>install<span class="w"> </span>graphviz
 </code></pre></div>
 <h3 id="basic-architecture-diagram">Basic Architecture Diagram<a class="headerlink" href="#basic-architecture-diagram" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""</span>
 <span class="sd">@module aws_web_architecture</span>
 <span class="sd">@description AWS three-tier web architecture diagram</span>
 <span class="sd">@version 1.0.0</span>
 <span class="sd">@author Tyler Dukes</span>
 <span class="sd">@last_updated 2024-01-15</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diagrams</span><span class="w"> </span><span class="kn">import</span> <span class="n">Diagram</span><span class="p">,</span> <span class="n">Cluster</span><span class="p">,</span> <span class="n">Edge</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diagrams.aws.compute</span><span class="w"> </span><span class="kn">import</span> <span class="n">EC2</span><span class="p">,</span> <span class="n">ECS</span><span class="p">,</span> <span class="n">Lambda</span>
@@ -9759,46 +9759,46 @@ choco<span class="w"> </span>install<span class="w"> </span>graphviz
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">create_architecture_diagram</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate AWS web architecture diagram.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Generate AWS web architecture diagram."""</span>
     <span class="n">graph_attr</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="s2">&quot;14&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;bgcolor&quot;</span><span class="p">:</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;pad&quot;</span><span class="p">:</span> <span class="s2">&quot;0.5&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;splines&quot;</span><span class="p">:</span> <span class="s2">&quot;spline&quot;</span><span class="p">,</span>
+        <span class="s2">"fontsize"</span><span class="p">:</span> <span class="s2">"14"</span><span class="p">,</span>
+        <span class="s2">"bgcolor"</span><span class="p">:</span> <span class="s2">"white"</span><span class="p">,</span>
+        <span class="s2">"pad"</span><span class="p">:</span> <span class="s2">"0.5"</span><span class="p">,</span>
+        <span class="s2">"splines"</span><span class="p">:</span> <span class="s2">"spline"</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">with</span> <span class="n">Diagram</span><span class="p">(</span>
-        <span class="s2">&quot;AWS Web Architecture&quot;</span><span class="p">,</span>
+        <span class="s2">"AWS Web Architecture"</span><span class="p">,</span>
         <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;aws_web_architecture&quot;</span><span class="p">,</span>
-        <span class="n">outformat</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s2">"aws_web_architecture"</span><span class="p">,</span>
+        <span class="n">outformat</span><span class="o">=</span><span class="s2">"png"</span><span class="p">,</span>
         <span class="n">graph_attr</span><span class="o">=</span><span class="n">graph_attr</span><span class="p">,</span>
-        <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;LR&quot;</span><span class="p">,</span>
+        <span class="n">direction</span><span class="o">=</span><span class="s2">"LR"</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># DNS and CDN</span>
-        <span class="n">dns</span> <span class="o">=</span> <span class="n">Route53</span><span class="p">(</span><span class="s2">&quot;Route 53&quot;</span><span class="p">)</span>
-        <span class="n">cdn</span> <span class="o">=</span> <span class="n">CloudFront</span><span class="p">(</span><span class="s2">&quot;CloudFront&quot;</span><span class="p">)</span>
-        <span class="n">static</span> <span class="o">=</span> <span class="n">S3</span><span class="p">(</span><span class="s2">&quot;Static Assets&quot;</span><span class="p">)</span>
+        <span class="n">dns</span> <span class="o">=</span> <span class="n">Route53</span><span class="p">(</span><span class="s2">"Route 53"</span><span class="p">)</span>
+        <span class="n">cdn</span> <span class="o">=</span> <span class="n">CloudFront</span><span class="p">(</span><span class="s2">"CloudFront"</span><span class="p">)</span>
+        <span class="n">static</span> <span class="o">=</span> <span class="n">S3</span><span class="p">(</span><span class="s2">"Static Assets"</span><span class="p">)</span>
 
         <span class="c1"># Load balancer</span>
-        <span class="n">lb</span> <span class="o">=</span> <span class="n">ELB</span><span class="p">(</span><span class="s2">&quot;Application LB&quot;</span><span class="p">)</span>
+        <span class="n">lb</span> <span class="o">=</span> <span class="n">ELB</span><span class="p">(</span><span class="s2">"Application LB"</span><span class="p">)</span>
 
         <span class="c1"># Application tier</span>
-        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;Application Tier&quot;</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"Application Tier"</span><span class="p">):</span>
             <span class="n">app_servers</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">ECS</span><span class="p">(</span><span class="s2">&quot;App Server 1&quot;</span><span class="p">),</span>
-                <span class="n">ECS</span><span class="p">(</span><span class="s2">&quot;App Server 2&quot;</span><span class="p">),</span>
-                <span class="n">ECS</span><span class="p">(</span><span class="s2">&quot;App Server 3&quot;</span><span class="p">),</span>
+                <span class="n">ECS</span><span class="p">(</span><span class="s2">"App Server 1"</span><span class="p">),</span>
+                <span class="n">ECS</span><span class="p">(</span><span class="s2">"App Server 2"</span><span class="p">),</span>
+                <span class="n">ECS</span><span class="p">(</span><span class="s2">"App Server 3"</span><span class="p">),</span>
             <span class="p">]</span>
 
         <span class="c1"># Data tier</span>
-        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;Data Tier&quot;</span><span class="p">):</span>
-            <span class="n">db_primary</span> <span class="o">=</span> <span class="n">RDS</span><span class="p">(</span><span class="s2">&quot;PostgreSQL Primary&quot;</span><span class="p">)</span>
-            <span class="n">db_replica</span> <span class="o">=</span> <span class="n">RDS</span><span class="p">(</span><span class="s2">&quot;PostgreSQL Replica&quot;</span><span class="p">)</span>
-            <span class="n">cache</span> <span class="o">=</span> <span class="n">ElastiCache</span><span class="p">(</span><span class="s2">&quot;Redis Cache&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"Data Tier"</span><span class="p">):</span>
+            <span class="n">db_primary</span> <span class="o">=</span> <span class="n">RDS</span><span class="p">(</span><span class="s2">"PostgreSQL Primary"</span><span class="p">)</span>
+            <span class="n">db_replica</span> <span class="o">=</span> <span class="n">RDS</span><span class="p">(</span><span class="s2">"PostgreSQL Replica"</span><span class="p">)</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="n">ElastiCache</span><span class="p">(</span><span class="s2">"Redis Cache"</span><span class="p">)</span>
 
         <span class="c1"># Serverless</span>
-        <span class="n">processor</span> <span class="o">=</span> <span class="n">Lambda</span><span class="p">(</span><span class="s2">&quot;Event Processor&quot;</span><span class="p">)</span>
+        <span class="n">processor</span> <span class="o">=</span> <span class="n">Lambda</span><span class="p">(</span><span class="s2">"Event Processor"</span><span class="p">)</span>
 
         <span class="c1"># Connections</span>
         <span class="n">dns</span> <span class="o">&gt;&gt;</span> <span class="n">cdn</span> <span class="o">&gt;&gt;</span> <span class="n">lb</span>
@@ -9810,18 +9810,18 @@ choco<span class="w"> </span>install<span class="w"> </span>graphviz
             <span class="n">server</span> <span class="o">&gt;&gt;</span> <span class="n">cache</span>
             <span class="n">server</span> <span class="o">&gt;&gt;</span> <span class="n">processor</span>
 
-        <span class="n">db_primary</span> <span class="o">&gt;&gt;</span> <span class="n">Edge</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">db_replica</span>
+        <span class="n">db_primary</span> <span class="o">&gt;&gt;</span> <span class="n">Edge</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">"dashed"</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">db_replica</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">create_architecture_diagram</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="kubernetes-architecture">Kubernetes Architecture<a class="headerlink" href="#kubernetes-architecture" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""</span>
 <span class="sd">@module kubernetes_architecture</span>
 <span class="sd">@description Kubernetes microservices deployment diagram</span>
 <span class="sd">@version 1.0.0</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diagrams</span><span class="w"> </span><span class="kn">import</span> <span class="n">Diagram</span><span class="p">,</span> <span class="n">Cluster</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diagrams.k8s.clusterconfig</span><span class="w"> </span><span class="kn">import</span> <span class="n">HPA</span>
@@ -9832,36 +9832,36 @@ choco<span class="w"> </span>install<span class="w"> </span>graphviz
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">create_k8s_diagram</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate Kubernetes architecture diagram.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Generate Kubernetes architecture diagram."""</span>
     <span class="k">with</span> <span class="n">Diagram</span><span class="p">(</span>
-        <span class="s2">&quot;Kubernetes Microservices&quot;</span><span class="p">,</span>
+        <span class="s2">"Kubernetes Microservices"</span><span class="p">,</span>
         <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;k8s_architecture&quot;</span><span class="p">,</span>
-        <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;TB&quot;</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s2">"k8s_architecture"</span><span class="p">,</span>
+        <span class="n">direction</span><span class="o">=</span><span class="s2">"TB"</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="n">ingress</span> <span class="o">=</span> <span class="n">Ingress</span><span class="p">(</span><span class="s2">&quot;ingress-nginx&quot;</span><span class="p">)</span>
+        <span class="n">ingress</span> <span class="o">=</span> <span class="n">Ingress</span><span class="p">(</span><span class="s2">"ingress-nginx"</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;API Namespace&quot;</span><span class="p">):</span>
-            <span class="n">api_svc</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;api-service&quot;</span><span class="p">)</span>
-            <span class="n">api_hpa</span> <span class="o">=</span> <span class="n">HPA</span><span class="p">(</span><span class="s2">&quot;api-hpa&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"API Namespace"</span><span class="p">):</span>
+            <span class="n">api_svc</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">"api-service"</span><span class="p">)</span>
+            <span class="n">api_hpa</span> <span class="o">=</span> <span class="n">HPA</span><span class="p">(</span><span class="s2">"api-hpa"</span><span class="p">)</span>
 
-            <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;API Deployment&quot;</span><span class="p">):</span>
-                <span class="n">api_deploy</span> <span class="o">=</span> <span class="n">Deployment</span><span class="p">(</span><span class="s2">&quot;api-deployment&quot;</span><span class="p">)</span>
-                <span class="n">api_pods</span> <span class="o">=</span> <span class="p">[</span><span class="n">Pod</span><span class="p">(</span><span class="s2">&quot;api-pod-1&quot;</span><span class="p">),</span> <span class="n">Pod</span><span class="p">(</span><span class="s2">&quot;api-pod-2&quot;</span><span class="p">),</span> <span class="n">Pod</span><span class="p">(</span><span class="s2">&quot;api-pod-3&quot;</span><span class="p">)]</span>
+            <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"API Deployment"</span><span class="p">):</span>
+                <span class="n">api_deploy</span> <span class="o">=</span> <span class="n">Deployment</span><span class="p">(</span><span class="s2">"api-deployment"</span><span class="p">)</span>
+                <span class="n">api_pods</span> <span class="o">=</span> <span class="p">[</span><span class="n">Pod</span><span class="p">(</span><span class="s2">"api-pod-1"</span><span class="p">),</span> <span class="n">Pod</span><span class="p">(</span><span class="s2">"api-pod-2"</span><span class="p">),</span> <span class="n">Pod</span><span class="p">(</span><span class="s2">"api-pod-3"</span><span class="p">)]</span>
 
-            <span class="n">api_config</span> <span class="o">=</span> <span class="n">ConfigMap</span><span class="p">(</span><span class="s2">&quot;api-config&quot;</span><span class="p">)</span>
-            <span class="n">api_secret</span> <span class="o">=</span> <span class="n">Secret</span><span class="p">(</span><span class="s2">&quot;api-secrets&quot;</span><span class="p">)</span>
+            <span class="n">api_config</span> <span class="o">=</span> <span class="n">ConfigMap</span><span class="p">(</span><span class="s2">"api-config"</span><span class="p">)</span>
+            <span class="n">api_secret</span> <span class="o">=</span> <span class="n">Secret</span><span class="p">(</span><span class="s2">"api-secrets"</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;Database Namespace&quot;</span><span class="p">):</span>
-            <span class="n">db_svc</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">&quot;postgres-service&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"Database Namespace"</span><span class="p">):</span>
+            <span class="n">db_svc</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="s2">"postgres-service"</span><span class="p">)</span>
 
-            <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;StatefulSet&quot;</span><span class="p">):</span>
-                <span class="n">db_pods</span> <span class="o">=</span> <span class="p">[</span><span class="n">Pod</span><span class="p">(</span><span class="s2">&quot;postgres-0&quot;</span><span class="p">),</span> <span class="n">Pod</span><span class="p">(</span><span class="s2">&quot;postgres-1&quot;</span><span class="p">)]</span>
+            <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"StatefulSet"</span><span class="p">):</span>
+                <span class="n">db_pods</span> <span class="o">=</span> <span class="p">[</span><span class="n">Pod</span><span class="p">(</span><span class="s2">"postgres-0"</span><span class="p">),</span> <span class="n">Pod</span><span class="p">(</span><span class="s2">"postgres-1"</span><span class="p">)]</span>
 
-            <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;Storage&quot;</span><span class="p">):</span>
-                <span class="n">sc</span> <span class="o">=</span> <span class="n">StorageClass</span><span class="p">(</span><span class="s2">&quot;fast-storage&quot;</span><span class="p">)</span>
-                <span class="n">pvc</span> <span class="o">=</span> <span class="n">PVC</span><span class="p">(</span><span class="s2">&quot;postgres-pvc&quot;</span><span class="p">)</span>
-                <span class="n">pv</span> <span class="o">=</span> <span class="n">PV</span><span class="p">(</span><span class="s2">&quot;postgres-pv&quot;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"Storage"</span><span class="p">):</span>
+                <span class="n">sc</span> <span class="o">=</span> <span class="n">StorageClass</span><span class="p">(</span><span class="s2">"fast-storage"</span><span class="p">)</span>
+                <span class="n">pvc</span> <span class="o">=</span> <span class="n">PVC</span><span class="p">(</span><span class="s2">"postgres-pvc"</span><span class="p">)</span>
+                <span class="n">pv</span> <span class="o">=</span> <span class="n">PV</span><span class="p">(</span><span class="s2">"postgres-pv"</span><span class="p">)</span>
 
         <span class="c1"># Connections</span>
         <span class="n">ingress</span> <span class="o">&gt;&gt;</span> <span class="n">api_svc</span> <span class="o">&gt;&gt;</span> <span class="n">api_deploy</span> <span class="o">&gt;&gt;</span> <span class="n">api_pods</span>
@@ -9873,15 +9873,15 @@ choco<span class="w"> </span>install<span class="w"> </span>graphviz
         <span class="n">sc</span> <span class="o">&gt;&gt;</span> <span class="n">pvc</span> <span class="o">&gt;&gt;</span> <span class="n">pv</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">create_k8s_diagram</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="multi-cloud-architecture">Multi-Cloud Architecture<a class="headerlink" href="#multi-cloud-architecture" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""</span>
 <span class="sd">@module multi_cloud_architecture</span>
 <span class="sd">@description Multi-cloud deployment with AWS, Azure, and GCP</span>
 <span class="sd">@version 1.0.0</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diagrams</span><span class="w"> </span><span class="kn">import</span> <span class="n">Diagram</span><span class="p">,</span> <span class="n">Cluster</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diagrams.aws.compute</span><span class="w"> </span><span class="kn">import</span> <span class="n">EKS</span>
@@ -9895,29 +9895,29 @@ choco<span class="w"> </span>install<span class="w"> </span>graphviz
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">create_multi_cloud_diagram</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate multi-cloud architecture diagram.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Generate multi-cloud architecture diagram."""</span>
     <span class="k">with</span> <span class="n">Diagram</span><span class="p">(</span>
-        <span class="s2">&quot;Multi-Cloud Architecture&quot;</span><span class="p">,</span>
+        <span class="s2">"Multi-Cloud Architecture"</span><span class="p">,</span>
         <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;multi_cloud&quot;</span><span class="p">,</span>
-        <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;TB&quot;</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s2">"multi_cloud"</span><span class="p">,</span>
+        <span class="n">direction</span><span class="o">=</span><span class="s2">"TB"</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="n">dns</span> <span class="o">=</span> <span class="n">Route53</span><span class="p">(</span><span class="s2">&quot;Global DNS&quot;</span><span class="p">)</span>
-        <span class="n">lb</span> <span class="o">=</span> <span class="n">Traefik</span><span class="p">(</span><span class="s2">&quot;Global Load Balancer&quot;</span><span class="p">)</span>
+        <span class="n">dns</span> <span class="o">=</span> <span class="n">Route53</span><span class="p">(</span><span class="s2">"Global DNS"</span><span class="p">)</span>
+        <span class="n">lb</span> <span class="o">=</span> <span class="n">Traefik</span><span class="p">(</span><span class="s2">"Global Load Balancer"</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;AWS - US East&quot;</span><span class="p">):</span>
-            <span class="n">aws_k8s</span> <span class="o">=</span> <span class="n">EKS</span><span class="p">(</span><span class="s2">&quot;EKS Cluster&quot;</span><span class="p">)</span>
-            <span class="n">aws_db</span> <span class="o">=</span> <span class="n">RDS</span><span class="p">(</span><span class="s2">&quot;PostgreSQL&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"AWS - US East"</span><span class="p">):</span>
+            <span class="n">aws_k8s</span> <span class="o">=</span> <span class="n">EKS</span><span class="p">(</span><span class="s2">"EKS Cluster"</span><span class="p">)</span>
+            <span class="n">aws_db</span> <span class="o">=</span> <span class="n">RDS</span><span class="p">(</span><span class="s2">"PostgreSQL"</span><span class="p">)</span>
             <span class="n">aws_k8s</span> <span class="o">&gt;&gt;</span> <span class="n">aws_db</span>
 
-        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;Azure - Europe&quot;</span><span class="p">):</span>
-            <span class="n">azure_k8s</span> <span class="o">=</span> <span class="n">AKS</span><span class="p">(</span><span class="s2">&quot;AKS Cluster&quot;</span><span class="p">)</span>
-            <span class="n">azure_db</span> <span class="o">=</span> <span class="n">CosmosDb</span><span class="p">(</span><span class="s2">&quot;CosmosDB&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"Azure - Europe"</span><span class="p">):</span>
+            <span class="n">azure_k8s</span> <span class="o">=</span> <span class="n">AKS</span><span class="p">(</span><span class="s2">"AKS Cluster"</span><span class="p">)</span>
+            <span class="n">azure_db</span> <span class="o">=</span> <span class="n">CosmosDb</span><span class="p">(</span><span class="s2">"CosmosDB"</span><span class="p">)</span>
             <span class="n">azure_k8s</span> <span class="o">&gt;&gt;</span> <span class="n">azure_db</span>
 
-        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;GCP - Asia&quot;</span><span class="p">):</span>
-            <span class="n">gcp_k8s</span> <span class="o">=</span> <span class="n">GKE</span><span class="p">(</span><span class="s2">&quot;GKE Cluster&quot;</span><span class="p">)</span>
-            <span class="n">gcp_db</span> <span class="o">=</span> <span class="n">Spanner</span><span class="p">(</span><span class="s2">&quot;Cloud Spanner&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"GCP - Asia"</span><span class="p">):</span>
+            <span class="n">gcp_k8s</span> <span class="o">=</span> <span class="n">GKE</span><span class="p">(</span><span class="s2">"GKE Cluster"</span><span class="p">)</span>
+            <span class="n">gcp_db</span> <span class="o">=</span> <span class="n">Spanner</span><span class="p">(</span><span class="s2">"Cloud Spanner"</span><span class="p">)</span>
             <span class="n">gcp_k8s</span> <span class="o">&gt;&gt;</span> <span class="n">gcp_db</span>
 
         <span class="n">dns</span> <span class="o">&gt;&gt;</span> <span class="n">lb</span>
@@ -9926,15 +9926,15 @@ choco<span class="w"> </span>install<span class="w"> </span>graphviz
         <span class="n">lb</span> <span class="o">&gt;&gt;</span> <span class="n">gcp_k8s</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">create_multi_cloud_diagram</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="cicd-pipeline-diagram">CI/CD Pipeline Diagram<a class="headerlink" href="#cicd-pipeline-diagram" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""</span>
 <span class="sd">@module cicd_pipeline</span>
 <span class="sd">@description CI/CD pipeline architecture diagram</span>
 <span class="sd">@version 1.0.0</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diagrams</span><span class="w"> </span><span class="kn">import</span> <span class="n">Diagram</span><span class="p">,</span> <span class="n">Cluster</span><span class="p">,</span> <span class="n">Edge</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diagrams.onprem.vcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">Github</span>
@@ -9947,53 +9947,53 @@ choco<span class="w"> </span>install<span class="w"> </span>graphviz
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">create_cicd_diagram</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate CI/CD pipeline diagram.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Generate CI/CD pipeline diagram."""</span>
     <span class="k">with</span> <span class="n">Diagram</span><span class="p">(</span>
-        <span class="s2">&quot;CI/CD Pipeline&quot;</span><span class="p">,</span>
+        <span class="s2">"CI/CD Pipeline"</span><span class="p">,</span>
         <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;cicd_pipeline&quot;</span><span class="p">,</span>
-        <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;LR&quot;</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s2">"cicd_pipeline"</span><span class="p">,</span>
+        <span class="n">direction</span><span class="o">=</span><span class="s2">"LR"</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># Source</span>
-        <span class="n">github</span> <span class="o">=</span> <span class="n">Github</span><span class="p">(</span><span class="s2">&quot;GitHub Repository&quot;</span><span class="p">)</span>
+        <span class="n">github</span> <span class="o">=</span> <span class="n">Github</span><span class="p">(</span><span class="s2">"GitHub Repository"</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;CI Pipeline&quot;</span><span class="p">):</span>
-            <span class="n">actions</span> <span class="o">=</span> <span class="n">GithubActions</span><span class="p">(</span><span class="s2">&quot;GitHub Actions&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"CI Pipeline"</span><span class="p">):</span>
+            <span class="n">actions</span> <span class="o">=</span> <span class="n">GithubActions</span><span class="p">(</span><span class="s2">"GitHub Actions"</span><span class="p">)</span>
 
-            <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;Build Stage&quot;</span><span class="p">):</span>
-                <span class="n">lint</span> <span class="o">=</span> <span class="n">Codebuild</span><span class="p">(</span><span class="s2">&quot;Lint &amp; Test&quot;</span><span class="p">)</span>
-                <span class="n">build</span> <span class="o">=</span> <span class="n">Docker</span><span class="p">(</span><span class="s2">&quot;Build Image&quot;</span><span class="p">)</span>
-                <span class="n">scan</span> <span class="o">=</span> <span class="n">Trivy</span><span class="p">(</span><span class="s2">&quot;Security Scan&quot;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"Build Stage"</span><span class="p">):</span>
+                <span class="n">lint</span> <span class="o">=</span> <span class="n">Codebuild</span><span class="p">(</span><span class="s2">"Lint &amp; Test"</span><span class="p">)</span>
+                <span class="n">build</span> <span class="o">=</span> <span class="n">Docker</span><span class="p">(</span><span class="s2">"Build Image"</span><span class="p">)</span>
+                <span class="n">scan</span> <span class="o">=</span> <span class="n">Trivy</span><span class="p">(</span><span class="s2">"Security Scan"</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;Artifact Storage&quot;</span><span class="p">):</span>
-            <span class="n">registry</span> <span class="o">=</span> <span class="n">Harbor</span><span class="p">(</span><span class="s2">&quot;Container Registry&quot;</span><span class="p">)</span>
-            <span class="n">secrets</span> <span class="o">=</span> <span class="n">Vault</span><span class="p">(</span><span class="s2">&quot;Secrets Manager&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"Artifact Storage"</span><span class="p">):</span>
+            <span class="n">registry</span> <span class="o">=</span> <span class="n">Harbor</span><span class="p">(</span><span class="s2">"Container Registry"</span><span class="p">)</span>
+            <span class="n">secrets</span> <span class="o">=</span> <span class="n">Vault</span><span class="p">(</span><span class="s2">"Secrets Manager"</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;CD Pipeline&quot;</span><span class="p">):</span>
-            <span class="n">deploy_dev</span> <span class="o">=</span> <span class="n">EKS</span><span class="p">(</span><span class="s2">&quot;Dev Cluster&quot;</span><span class="p">)</span>
-            <span class="n">deploy_staging</span> <span class="o">=</span> <span class="n">EKS</span><span class="p">(</span><span class="s2">&quot;Staging Cluster&quot;</span><span class="p">)</span>
-            <span class="n">deploy_prod</span> <span class="o">=</span> <span class="n">EKS</span><span class="p">(</span><span class="s2">&quot;Prod Cluster&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"CD Pipeline"</span><span class="p">):</span>
+            <span class="n">deploy_dev</span> <span class="o">=</span> <span class="n">EKS</span><span class="p">(</span><span class="s2">"Dev Cluster"</span><span class="p">)</span>
+            <span class="n">deploy_staging</span> <span class="o">=</span> <span class="n">EKS</span><span class="p">(</span><span class="s2">"Staging Cluster"</span><span class="p">)</span>
+            <span class="n">deploy_prod</span> <span class="o">=</span> <span class="n">EKS</span><span class="p">(</span><span class="s2">"Prod Cluster"</span><span class="p">)</span>
 
         <span class="c1"># Flow</span>
         <span class="n">github</span> <span class="o">&gt;&gt;</span> <span class="n">actions</span>
         <span class="n">actions</span> <span class="o">&gt;&gt;</span> <span class="n">lint</span> <span class="o">&gt;&gt;</span> <span class="n">build</span> <span class="o">&gt;&gt;</span> <span class="n">scan</span>
         <span class="n">scan</span> <span class="o">&gt;&gt;</span> <span class="n">registry</span>
-        <span class="n">secrets</span> <span class="o">&gt;&gt;</span> <span class="n">Edge</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">build</span>
+        <span class="n">secrets</span> <span class="o">&gt;&gt;</span> <span class="n">Edge</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">"dashed"</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">build</span>
 
         <span class="n">registry</span> <span class="o">&gt;&gt;</span> <span class="n">deploy_dev</span>
-        <span class="n">registry</span> <span class="o">&gt;&gt;</span> <span class="n">Edge</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;approval&quot;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">deploy_staging</span>
-        <span class="n">registry</span> <span class="o">&gt;&gt;</span> <span class="n">Edge</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;approval&quot;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">deploy_prod</span>
+        <span class="n">registry</span> <span class="o">&gt;&gt;</span> <span class="n">Edge</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"approval"</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">deploy_staging</span>
+        <span class="n">registry</span> <span class="o">&gt;&gt;</span> <span class="n">Edge</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"approval"</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">deploy_prod</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">create_cicd_diagram</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="naming-and-style-conventions">Naming and Style Conventions<a class="headerlink" href="#naming-and-style-conventions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""</span>
 <span class="sd">@module diagram_conventions</span>
 <span class="sd">@description Examples of naming and style conventions</span>
 <span class="sd">@version 1.0.0</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diagrams</span><span class="w"> </span><span class="kn">import</span> <span class="n">Diagram</span><span class="p">,</span> <span class="n">Cluster</span><span class="p">,</span> <span class="n">Edge</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diagrams.aws.compute</span><span class="w"> </span><span class="kn">import</span> <span class="n">EC2</span>
@@ -10001,38 +10001,38 @@ choco<span class="w"> </span>install<span class="w"> </span>graphviz
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">create_conventions_example</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Demonstrate naming and style conventions.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Demonstrate naming and style conventions."""</span>
     <span class="c1"># Good: Descriptive diagram name</span>
     <span class="k">with</span> <span class="n">Diagram</span><span class="p">(</span>
-        <span class="s2">&quot;Payment Processing System&quot;</span><span class="p">,</span>  <span class="c1"># Clear, specific name</span>
+        <span class="s2">"Payment Processing System"</span><span class="p">,</span>  <span class="c1"># Clear, specific name</span>
         <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;payment_system&quot;</span><span class="p">,</span>  <span class="c1"># snake_case filename</span>
-        <span class="n">outformat</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="s2">&quot;svg&quot;</span><span class="p">],</span>  <span class="c1"># Multiple output formats</span>
-        <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;LR&quot;</span><span class="p">,</span>  <span class="c1"># Explicit direction</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s2">"payment_system"</span><span class="p">,</span>  <span class="c1"># snake_case filename</span>
+        <span class="n">outformat</span><span class="o">=</span><span class="p">[</span><span class="s2">"png"</span><span class="p">,</span> <span class="s2">"svg"</span><span class="p">],</span>  <span class="c1"># Multiple output formats</span>
+        <span class="n">direction</span><span class="o">=</span><span class="s2">"LR"</span><span class="p">,</span>  <span class="c1"># Explicit direction</span>
         <span class="n">graph_attr</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="s2">&quot;12&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;bgcolor&quot;</span><span class="p">:</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;pad&quot;</span><span class="p">:</span> <span class="s2">&quot;0.5&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;splines&quot;</span><span class="p">:</span> <span class="s2">&quot;spline&quot;</span><span class="p">,</span>  <span class="c1"># Curved lines</span>
-            <span class="s2">&quot;nodesep&quot;</span><span class="p">:</span> <span class="s2">&quot;0.8&quot;</span><span class="p">,</span>  <span class="c1"># Node spacing</span>
-            <span class="s2">&quot;ranksep&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>  <span class="c1"># Rank spacing</span>
+            <span class="s2">"fontsize"</span><span class="p">:</span> <span class="s2">"12"</span><span class="p">,</span>
+            <span class="s2">"bgcolor"</span><span class="p">:</span> <span class="s2">"white"</span><span class="p">,</span>
+            <span class="s2">"pad"</span><span class="p">:</span> <span class="s2">"0.5"</span><span class="p">,</span>
+            <span class="s2">"splines"</span><span class="p">:</span> <span class="s2">"spline"</span><span class="p">,</span>  <span class="c1"># Curved lines</span>
+            <span class="s2">"nodesep"</span><span class="p">:</span> <span class="s2">"0.8"</span><span class="p">,</span>  <span class="c1"># Node spacing</span>
+            <span class="s2">"ranksep"</span><span class="p">:</span> <span class="s2">"1.0"</span><span class="p">,</span>  <span class="c1"># Rank spacing</span>
         <span class="p">},</span>
     <span class="p">):</span>
         <span class="c1"># Good: Descriptive labels</span>
-        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">&quot;Payment Gateway&quot;</span><span class="p">):</span>
-            <span class="n">gateway</span> <span class="o">=</span> <span class="n">EC2</span><span class="p">(</span><span class="s2">&quot;API Gateway&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">Cluster</span><span class="p">(</span><span class="s2">"Payment Gateway"</span><span class="p">):</span>
+            <span class="n">gateway</span> <span class="o">=</span> <span class="n">EC2</span><span class="p">(</span><span class="s2">"API Gateway"</span><span class="p">)</span>
 
         <span class="c1"># Good: Edge labels for relationship context</span>
         <span class="n">gateway</span> <span class="o">&gt;&gt;</span> <span class="n">Edge</span><span class="p">(</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;HTTPS&quot;</span><span class="p">,</span>
-            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span>
-            <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">RDS</span><span class="p">(</span><span class="s2">&quot;Transactions DB&quot;</span><span class="p">)</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"HTTPS"</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">"green"</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="s2">"bold"</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">RDS</span><span class="p">(</span><span class="s2">"Transactions DB"</span><span class="p">)</span>
 
 
-<span class="c1"># Bad examples (don&#39;t do these):</span>
-<span class="c1"># - Diagram(&quot;diagram1&quot;)  # Non-descriptive name</span>
-<span class="c1"># - filename=&quot;DIAGRAM&quot;   # Uppercase filename</span>
+<span class="c1"># Bad examples (don't do these):</span>
+<span class="c1"># - Diagram("diagram1")  # Non-descriptive name</span>
+<span class="c1"># - filename="DIAGRAM"   # Uppercase filename</span>
 <span class="c1"># - No direction specified (defaults may not be intuitive)</span>
 <span class="c1"># - No graph_attr (default spacing may be cramped)</span>
 </code></pre></div>
@@ -10066,46 +10066,46 @@ choco<span class="w"> </span>install<span class="w"> </span>graphviz
 </code></pre></div>
 <h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># diagrams/config.py</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">@module diagram_config</span>
 <span class="sd">@description Shared configuration for diagram generation</span>
 <span class="sd">@version 1.0.0</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="c1"># Standard graph attributes</span>
 <span class="n">GRAPH_ATTRS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="s2">&quot;14&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;bgcolor&quot;</span><span class="p">:</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;pad&quot;</span><span class="p">:</span> <span class="s2">&quot;0.5&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;splines&quot;</span><span class="p">:</span> <span class="s2">&quot;spline&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;nodesep&quot;</span><span class="p">:</span> <span class="s2">&quot;0.8&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ranksep&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="s2">"fontsize"</span><span class="p">:</span> <span class="s2">"14"</span><span class="p">,</span>
+    <span class="s2">"bgcolor"</span><span class="p">:</span> <span class="s2">"white"</span><span class="p">,</span>
+    <span class="s2">"pad"</span><span class="p">:</span> <span class="s2">"0.5"</span><span class="p">,</span>
+    <span class="s2">"splines"</span><span class="p">:</span> <span class="s2">"spline"</span><span class="p">,</span>
+    <span class="s2">"nodesep"</span><span class="p">:</span> <span class="s2">"0.8"</span><span class="p">,</span>
+    <span class="s2">"ranksep"</span><span class="p">:</span> <span class="s2">"1.0"</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="c1"># Standard node attributes</span>
 <span class="n">NODE_ATTRS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="s2">&quot;12&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;fontname&quot;</span><span class="p">:</span> <span class="s2">&quot;Sans-Serif&quot;</span><span class="p">,</span>
+    <span class="s2">"fontsize"</span><span class="p">:</span> <span class="s2">"12"</span><span class="p">,</span>
+    <span class="s2">"fontname"</span><span class="p">:</span> <span class="s2">"Sans-Serif"</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="c1"># Standard edge attributes</span>
 <span class="n">EDGE_ATTRS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="s2">&quot;10&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;fontname&quot;</span><span class="p">:</span> <span class="s2">&quot;Sans-Serif&quot;</span><span class="p">,</span>
+    <span class="s2">"fontsize"</span><span class="p">:</span> <span class="s2">"10"</span><span class="p">,</span>
+    <span class="s2">"fontname"</span><span class="p">:</span> <span class="s2">"Sans-Serif"</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="c1"># Output formats</span>
-<span class="n">OUTPUT_FORMATS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="s2">&quot;svg&quot;</span><span class="p">]</span>
+<span class="n">OUTPUT_FORMATS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"png"</span><span class="p">,</span> <span class="s2">"svg"</span><span class="p">]</span>
 
 <span class="c1"># Color palette</span>
 <span class="n">COLORS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;primary&quot;</span><span class="p">:</span> <span class="s2">&quot;#007bff&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="s2">&quot;#28a745&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;warning&quot;</span><span class="p">:</span> <span class="s2">&quot;#ffc107&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;danger&quot;</span><span class="p">:</span> <span class="s2">&quot;#dc3545&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;neutral&quot;</span><span class="p">:</span> <span class="s2">&quot;#6c757d&quot;</span><span class="p">,</span>
+    <span class="s2">"primary"</span><span class="p">:</span> <span class="s2">"#007bff"</span><span class="p">,</span>
+    <span class="s2">"success"</span><span class="p">:</span> <span class="s2">"#28a745"</span><span class="p">,</span>
+    <span class="s2">"warning"</span><span class="p">:</span> <span class="s2">"#ffc107"</span><span class="p">,</span>
+    <span class="s2">"danger"</span><span class="p">:</span> <span class="s2">"#dc3545"</span><span class="p">,</span>
+    <span class="s2">"neutral"</span><span class="p">:</span> <span class="s2">"#6c757d"</span><span class="p">,</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -10210,14 +10210,14 @@ title: E-Commerce Platform Architecture {
 customer: Customer {
     shape: person
     style: {
-        fill: &quot;#e1f5fe&quot;
+        fill: "#e1f5fe"
     }
 }
 
 admin: Admin {
     shape: person
     style: {
-        fill: &quot;#fff3e0&quot;
+        fill: "#fff3e0"
     }
 }
 
@@ -10233,7 +10233,7 @@ cdn: CloudFront {
 # Application tier
 app: Application Tier {
     style: {
-        fill: &quot;#e8f5e9&quot;
+        fill: "#e8f5e9"
     }
 
     lb: ALB {
@@ -10252,7 +10252,7 @@ app: Application Tier {
 # Services tier
 services: Microservices {
     style: {
-        fill: &quot;#fff8e1&quot;
+        fill: "#fff8e1"
     }
 
     catalog: Catalog Service
@@ -10264,7 +10264,7 @@ services: Microservices {
 # Data tier
 data: Data Tier {
     style: {
-        fill: &quot;#fce4ec&quot;
+        fill: "#fce4ec"
     }
 
     postgres: PostgreSQL {
@@ -10410,14 +10410,14 @@ OrderItem -&gt; Product: references {
 <div class="highlight"><pre><span></span><code># Global styles
 style: {
     fill: transparent
-    stroke: &quot;#333&quot;
+    stroke: "#333"
 }
 
 # Container with custom style
 services: Services {
     style: {
-        fill: &quot;#e3f2fd&quot;
-        stroke: &quot;#1976d2&quot;
+        fill: "#e3f2fd"
+        stroke: "#1976d2"
         stroke-width: 2
         border-radius: 8
         shadow: true
@@ -10425,7 +10425,7 @@ services: Services {
 
     api: API {
         style: {
-            fill: &quot;#4caf50&quot;
+            fill: "#4caf50"
             font-color: white
             bold: true
         }
@@ -10434,7 +10434,7 @@ services: Services {
     db: Database {
         shape: cylinder
         style: {
-            fill: &quot;#ff9800&quot;
+            fill: "#ff9800"
             font-color: white
         }
     }
@@ -10443,7 +10443,7 @@ services: Services {
 # Connection styles
 services.api -&gt; services.db: Query {
     style: {
-        stroke: &quot;#2196f3&quot;
+        stroke: "#2196f3"
         stroke-width: 2
         stroke-dash: 5
     }
@@ -10487,9 +10487,9 @@ state machines, and complex network topologies where automatic layout is essenti
 <span class="w">    </span><span class="k">edge</span><span class="w"> </span><span class="p">[</span><span class="na">color</span><span class="p">=</span><span class="s">gray</span><span class="p">];</span>
 
 <span class="w">    </span><span class="c1">// Nodes</span>
-<span class="w">    </span><span class="nt">A</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Start&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">B</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Process&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">C</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;End&quot;</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">A</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Start"</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">B</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Process"</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">C</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"End"</span><span class="p">];</span>
 
 <span class="w">    </span><span class="c1">// Edges</span>
 <span class="w">    </span><span class="nt">A</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">B</span><span class="p">;</span>
@@ -10511,51 +10511,51 @@ state machines, and complex network topologies where automatic layout is essenti
 <h3 id="dependency-graph">Dependency Graph<a class="headerlink" href="#dependency-graph" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">digraph</span><span class="w"> </span><span class="nt">Dependencies</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">rankdir</span><span class="p">=</span><span class="s">BT</span><span class="p">;</span>
-<span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">shape</span><span class="p">=</span><span class="s">box</span><span class="p">,</span><span class="w"> </span><span class="na">style</span><span class="p">=</span><span class="s2">&quot;rounded,filled&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">lightblue</span><span class="p">];</span>
+<span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">shape</span><span class="p">=</span><span class="s">box</span><span class="p">,</span><span class="w"> </span><span class="na">style</span><span class="p">=</span><span class="s2">"rounded,filled"</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">lightblue</span><span class="p">];</span>
 <span class="w">    </span><span class="k">edge</span><span class="w"> </span><span class="p">[</span><span class="na">color</span><span class="p">=</span><span class="s">gray</span><span class="p">];</span>
 
 <span class="w">    </span><span class="c1">// Core packages</span>
 <span class="w">    </span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster_core</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Core&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">"Core"</span><span class="p">;</span>
 <span class="w">        </span><span class="na">style</span><span class="p">=</span><span class="s">filled</span><span class="p">;</span>
 <span class="w">        </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">lightyellow</span><span class="p">;</span>
 
-<span class="w">        </span><span class="nt">core_utils</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;utils&quot;</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">core_config</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;config&quot;</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">core_logger</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;logger&quot;</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">core_utils</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"utils"</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">core_config</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"config"</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">core_logger</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"logger"</span><span class="p">];</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">// Data layer</span>
 <span class="w">    </span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster_data</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Data Layer&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">"Data Layer"</span><span class="p">;</span>
 <span class="w">        </span><span class="na">style</span><span class="p">=</span><span class="s">filled</span><span class="p">;</span>
 <span class="w">        </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">lightgreen</span><span class="p">;</span>
 
-<span class="w">        </span><span class="nt">data_models</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;models&quot;</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">data_repos</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;repositories&quot;</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">data_db</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;database&quot;</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">data_models</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"models"</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">data_repos</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"repositories"</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">data_db</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"database"</span><span class="p">];</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">// Service layer</span>
 <span class="w">    </span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster_services</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Services&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">"Services"</span><span class="p">;</span>
 <span class="w">        </span><span class="na">style</span><span class="p">=</span><span class="s">filled</span><span class="p">;</span>
 <span class="w">        </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">lightpink</span><span class="p">;</span>
 
-<span class="w">        </span><span class="nt">svc_user</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;user_service&quot;</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">svc_order</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;order_service&quot;</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">svc_payment</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;payment_service&quot;</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">svc_user</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"user_service"</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">svc_order</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"order_service"</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">svc_payment</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"payment_service"</span><span class="p">];</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">// API layer</span>
 <span class="w">    </span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster_api</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;API&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">"API"</span><span class="p">;</span>
 <span class="w">        </span><span class="na">style</span><span class="p">=</span><span class="s">filled</span><span class="p">;</span>
 <span class="w">        </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">lavender</span><span class="p">;</span>
 
-<span class="w">        </span><span class="nt">api_routes</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;routes&quot;</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">api_middleware</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;middleware&quot;</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">api_schemas</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;schemas&quot;</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">api_routes</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"routes"</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">api_middleware</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"middleware"</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">api_schemas</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"schemas"</span><span class="p">];</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">// Dependencies</span>
@@ -10590,22 +10590,22 @@ state machines, and complex network topologies where automatic layout is essenti
 
 <span class="w">    </span><span class="c1">// States</span>
 <span class="w">    </span><span class="nt">start</span><span class="w"> </span><span class="p">[</span><span class="na">shape</span><span class="p">=</span><span class="s">point</span><span class="p">,</span><span class="w"> </span><span class="na">width</span><span class="p">=</span><span class="m">0.2</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">pending</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Pending&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">confirmed</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Confirmed&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">processing</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Processing&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">shipped</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Shipped&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">delivered</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Delivered&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">peripheries</span><span class="p">=</span><span class="m">2</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">cancelled</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Cancelled&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">peripheries</span><span class="p">=</span><span class="m">2</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">pending</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Pending"</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">confirmed</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Confirmed"</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">processing</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Processing"</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">shipped</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Shipped"</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">delivered</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Delivered"</span><span class="p">,</span><span class="w"> </span><span class="na">peripheries</span><span class="p">=</span><span class="m">2</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">cancelled</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Cancelled"</span><span class="p">,</span><span class="w"> </span><span class="na">peripheries</span><span class="p">=</span><span class="m">2</span><span class="p">];</span>
 
 <span class="w">    </span><span class="c1">// Transitions</span>
-<span class="w">    </span><span class="nt">start</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">pending</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;create&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">pending</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">confirmed</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;confirm&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">pending</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">cancelled</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;cancel&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">confirmed</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">processing</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;process&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">confirmed</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">cancelled</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;cancel&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">processing</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">shipped</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;ship&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">processing</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">cancelled</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;cancel\n(refund)&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">shipped</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">delivered</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;deliver&quot;</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">start</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">pending</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"create"</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">pending</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">confirmed</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"confirm"</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">pending</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">cancelled</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"cancel"</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">confirmed</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">processing</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"process"</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">confirmed</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">cancelled</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"cancel"</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">processing</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">shipped</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"ship"</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">processing</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">cancelled</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"cancel\n(refund)"</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">shipped</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">delivered</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"deliver"</span><span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="network-topology">Network Topology<a class="headerlink" href="#network-topology" title="Permanent link">&para;</a></h3>
@@ -10619,42 +10619,42 @@ state machines, and complex network topologies where automatic layout is essenti
 <span class="w">    </span><span class="k">edge</span><span class="w"> </span><span class="p">[</span><span class="na">len</span><span class="p">=</span><span class="m">2</span><span class="p">];</span>
 
 <span class="w">    </span><span class="c1">// Internet</span>
-<span class="w">    </span><span class="nt">internet</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Internet&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">cloud</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">lightblue</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">internet</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Internet"</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">cloud</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">lightblue</span><span class="p">];</span>
 
 <span class="w">    </span><span class="c1">// DMZ</span>
 <span class="w">    </span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster_dmz</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;DMZ&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">"DMZ"</span><span class="p">;</span>
 <span class="w">        </span><span class="na">style</span><span class="p">=</span><span class="s">filled</span><span class="p">;</span>
 <span class="w">        </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">lightyellow</span><span class="p">;</span>
 
-<span class="w">        </span><span class="nt">fw_external</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Firewall\n(External)&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">hexagon</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">red</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">lb</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Load Balancer&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">hexagon</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">orange</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">waf</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;WAF&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">hexagon</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">orange</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">fw_external</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Firewall\n(External)"</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">hexagon</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">red</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">lb</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Load Balancer"</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">hexagon</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">orange</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">waf</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"WAF"</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">hexagon</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">orange</span><span class="p">];</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">// Application Zone</span>
 <span class="w">    </span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster_app</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Application Zone&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">"Application Zone"</span><span class="p">;</span>
 <span class="w">        </span><span class="na">style</span><span class="p">=</span><span class="s">filled</span><span class="p">;</span>
 <span class="w">        </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">lightgreen</span><span class="p">;</span>
 
-<span class="w">        </span><span class="nt">fw_internal</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Firewall\n(Internal)&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">hexagon</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">red</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">web1</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Web Server 1&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">web2</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Web Server 2&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">app1</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;App Server 1&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">app2</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;App Server 2&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">fw_internal</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Firewall\n(Internal)"</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">hexagon</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">red</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">web1</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Web Server 1"</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">web2</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Web Server 2"</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">app1</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"App Server 1"</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">app2</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"App Server 2"</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">// Data Zone</span>
 <span class="w">    </span><span class="k">subgraph</span><span class="w"> </span><span class="nt">cluster_data</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Data Zone&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="na">label</span><span class="p">=</span><span class="s2">"Data Zone"</span><span class="p">;</span>
 <span class="w">        </span><span class="na">style</span><span class="p">=</span><span class="s">filled</span><span class="p">;</span>
 <span class="w">        </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">lightpink</span><span class="p">;</span>
 
-<span class="w">        </span><span class="nt">fw_data</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Firewall\n(Data)&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">hexagon</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">red</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">db_primary</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;DB Primary&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">cylinder</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">db_replica</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;DB Replica&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">cylinder</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
-<span class="w">        </span><span class="nt">cache</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Redis Cache&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">cylinder</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">fw_data</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Firewall\n(Data)"</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">hexagon</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">red</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">db_primary</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"DB Primary"</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">cylinder</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">db_replica</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"DB Replica"</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">cylinder</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
+<span class="w">        </span><span class="nt">cache</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Redis Cache"</span><span class="p">,</span><span class="w"> </span><span class="na">shape</span><span class="p">=</span><span class="s">cylinder</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">// Connections</span>
@@ -10675,7 +10675,7 @@ state machines, and complex network topologies where automatic layout is essenti
 <span class="w">    </span><span class="nt">fw_data</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="nt">db_primary</span><span class="p">;</span>
 <span class="w">    </span><span class="nt">fw_data</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="nt">cache</span><span class="p">;</span>
 
-<span class="w">    </span><span class="nt">db_primary</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="nt">db_replica</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">dashed</span><span class="p">,</span><span class="w"> </span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;replication&quot;</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">db_primary</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="nt">db_replica</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">dashed</span><span class="p">,</span><span class="w"> </span><span class="na">label</span><span class="p">=</span><span class="s2">"replication"</span><span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="styling-conventions">Styling Conventions<a class="headerlink" href="#styling-conventions" title="Permanent link">&para;</a></h3>
@@ -10683,7 +10683,7 @@ state machines, and complex network topologies where automatic layout is essenti
 <span class="w">    </span><span class="c1">// Standard graph attributes</span>
 <span class="w">    </span><span class="na">rankdir</span><span class="p">=</span><span class="s">LR</span><span class="p">;</span>
 <span class="w">    </span><span class="na">bgcolor</span><span class="p">=</span><span class="s">white</span><span class="p">;</span>
-<span class="w">    </span><span class="na">fontname</span><span class="p">=</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="na">fontname</span><span class="p">=</span><span class="s2">"Helvetica"</span><span class="p">;</span>
 <span class="w">    </span><span class="na">fontsize</span><span class="p">=</span><span class="m">12</span><span class="p">;</span>
 <span class="w">    </span><span class="na">pad</span><span class="p">=</span><span class="m">0.5</span><span class="p">;</span>
 <span class="w">    </span><span class="na">nodesep</span><span class="p">=</span><span class="m">0.5</span><span class="p">;</span>
@@ -10693,33 +10693,33 @@ state machines, and complex network topologies where automatic layout is essenti
 <span class="w">    </span><span class="c1">// Standard node attributes</span>
 <span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span>
 <span class="w">        </span><span class="na">shape</span><span class="p">=</span><span class="s">box</span><span class="p">,</span>
-<span class="w">        </span><span class="na">style</span><span class="p">=</span><span class="s2">&quot;rounded,filled&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="na">fontname</span><span class="p">=</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="na">style</span><span class="p">=</span><span class="s2">"rounded,filled"</span><span class="p">,</span>
+<span class="w">        </span><span class="na">fontname</span><span class="p">=</span><span class="s2">"Helvetica"</span><span class="p">,</span>
 <span class="w">        </span><span class="na">fontsize</span><span class="p">=</span><span class="m">11</span><span class="p">,</span>
-<span class="w">        </span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">&quot;#e3f2fd&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="na">color</span><span class="p">=</span><span class="s2">&quot;#1976d2&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">"#e3f2fd"</span><span class="p">,</span>
+<span class="w">        </span><span class="na">color</span><span class="p">=</span><span class="s2">"#1976d2"</span><span class="p">,</span>
 <span class="w">        </span><span class="na">penwidth</span><span class="p">=</span><span class="m">1.5</span>
 <span class="w">    </span><span class="p">];</span>
 
 <span class="w">    </span><span class="c1">// Standard edge attributes</span>
 <span class="w">    </span><span class="k">edge</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="na">fontname</span><span class="p">=</span><span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="na">fontname</span><span class="p">=</span><span class="s2">"Helvetica"</span><span class="p">,</span>
 <span class="w">        </span><span class="na">fontsize</span><span class="p">=</span><span class="m">10</span><span class="p">,</span>
-<span class="w">        </span><span class="na">color</span><span class="p">=</span><span class="s2">&quot;#666666&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="na">color</span><span class="p">=</span><span class="s2">"#666666"</span><span class="p">,</span>
 <span class="w">        </span><span class="na">penwidth</span><span class="p">=</span><span class="m">1.0</span>
 <span class="w">    </span><span class="p">];</span>
 
 <span class="w">    </span><span class="c1">// Color classes</span>
-<span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">&quot;#4caf50&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">]</span><span class="w"> </span><span class="nt">success</span><span class="p">;</span>
-<span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">&quot;#f44336&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">]</span><span class="w"> </span><span class="nt">error</span><span class="p">;</span>
-<span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">&quot;#ff9800&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">]</span><span class="w"> </span><span class="nt">warning</span><span class="p">;</span>
-<span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">&quot;#2196f3&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">]</span><span class="w"> </span><span class="nt">info</span><span class="p">;</span>
+<span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">"#4caf50"</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">]</span><span class="w"> </span><span class="nt">success</span><span class="p">;</span>
+<span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">"#f44336"</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">]</span><span class="w"> </span><span class="nt">error</span><span class="p">;</span>
+<span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">"#ff9800"</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">]</span><span class="w"> </span><span class="nt">warning</span><span class="p">;</span>
+<span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">"#2196f3"</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">]</span><span class="w"> </span><span class="nt">info</span><span class="p">;</span>
 
 <span class="w">    </span><span class="c1">// Usage</span>
-<span class="w">    </span><span class="nt">A</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Success&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">&quot;#4caf50&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">B</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Warning&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">&quot;#ff9800&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">black</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">C</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">&quot;#f44336&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
-<span class="w">    </span><span class="nt">D</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Info&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">&quot;#2196f3&quot;</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">A</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Success"</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">"#4caf50"</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">B</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Warning"</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">"#ff9800"</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">black</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">C</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Error"</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">"#f44336"</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
+<span class="w">    </span><span class="nt">D</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">"Info"</span><span class="p">,</span><span class="w"> </span><span class="na">fillcolor</span><span class="p">=</span><span class="s2">"#2196f3"</span><span class="p">,</span><span class="w"> </span><span class="na">fontcolor</span><span class="p">=</span><span class="s">white</span><span class="p">];</span>
 
 <span class="w">    </span><span class="nt">A</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">B</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">C</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">D</span><span class="p">;</span>
 <span class="p">}</span>
@@ -10760,82 +10760,82 @@ Level 4: Code
 </code></pre></div>
 <h3 id="system-context-diagram">System Context Diagram<a class="headerlink" href="#system-context-diagram" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>workspace {
-    name &quot;E-Commerce Platform&quot;
-    description &quot;Architecture documentation for the e-commerce platform&quot;
+    name "E-Commerce Platform"
+    description "Architecture documentation for the e-commerce platform"
 
     model {
         # People
-        customer = person &quot;Customer&quot; &quot;A user who browses and purchases products&quot; {
-            tags &quot;External&quot;
+        customer = person "Customer" "A user who browses and purchases products" {
+            tags "External"
         }
 
-        admin = person &quot;Administrator&quot; &quot;Internal staff managing the platform&quot; {
-            tags &quot;Internal&quot;
+        admin = person "Administrator" "Internal staff managing the platform" {
+            tags "Internal"
         }
 
-        support = person &quot;Support Agent&quot; &quot;Customer support representative&quot; {
-            tags &quot;Internal&quot;
+        support = person "Support Agent" "Customer support representative" {
+            tags "Internal"
         }
 
         # Software Systems
-        ecommerce = softwareSystem &quot;E-Commerce Platform&quot; &quot;Allows customers to browse and purchase products&quot; {
-            tags &quot;Primary&quot;
+        ecommerce = softwareSystem "E-Commerce Platform" "Allows customers to browse and purchase products" {
+            tags "Primary"
         }
 
         # External Systems
-        paymentGateway = softwareSystem &quot;Payment Gateway&quot; &quot;Processes credit card payments&quot; {
-            tags &quot;External System&quot;
+        paymentGateway = softwareSystem "Payment Gateway" "Processes credit card payments" {
+            tags "External System"
         }
 
-        shippingProvider = softwareSystem &quot;Shipping Provider&quot; &quot;Handles order fulfillment and delivery&quot; {
-            tags &quot;External System&quot;
+        shippingProvider = softwareSystem "Shipping Provider" "Handles order fulfillment and delivery" {
+            tags "External System"
         }
 
-        emailService = softwareSystem &quot;Email Service&quot; &quot;Sends transactional emails&quot; {
-            tags &quot;External System&quot;
+        emailService = softwareSystem "Email Service" "Sends transactional emails" {
+            tags "External System"
         }
 
-        analytics = softwareSystem &quot;Analytics Platform&quot; &quot;Collects and analyzes user behavior&quot; {
-            tags &quot;External System&quot;
+        analytics = softwareSystem "Analytics Platform" "Collects and analyzes user behavior" {
+            tags "External System"
         }
 
         # Relationships
-        customer -&gt; ecommerce &quot;Browses products, places orders&quot; &quot;HTTPS&quot;
-        admin -&gt; ecommerce &quot;Manages products, inventory, orders&quot; &quot;HTTPS&quot;
-        support -&gt; ecommerce &quot;Handles customer inquiries&quot; &quot;HTTPS&quot;
+        customer -&gt; ecommerce "Browses products, places orders" "HTTPS"
+        admin -&gt; ecommerce "Manages products, inventory, orders" "HTTPS"
+        support -&gt; ecommerce "Handles customer inquiries" "HTTPS"
 
-        ecommerce -&gt; paymentGateway &quot;Processes payments&quot; &quot;HTTPS/REST&quot;
-        ecommerce -&gt; shippingProvider &quot;Creates shipments&quot; &quot;HTTPS/REST&quot;
-        ecommerce -&gt; emailService &quot;Sends emails&quot; &quot;SMTP&quot;
-        ecommerce -&gt; analytics &quot;Sends events&quot; &quot;HTTPS&quot;
+        ecommerce -&gt; paymentGateway "Processes payments" "HTTPS/REST"
+        ecommerce -&gt; shippingProvider "Creates shipments" "HTTPS/REST"
+        ecommerce -&gt; emailService "Sends emails" "SMTP"
+        ecommerce -&gt; analytics "Sends events" "HTTPS"
     }
 
     views {
-        systemContext ecommerce &quot;SystemContext&quot; {
+        systemContext ecommerce "SystemContext" {
             include *
             autoLayout lr
         }
 
         styles {
-            element &quot;Person&quot; {
+            element "Person" {
                 shape Person
                 background #08427b
                 color #ffffff
             }
-            element &quot;External&quot; {
+            element "External" {
                 background #999999
             }
-            element &quot;Internal&quot; {
+            element "Internal" {
                 background #08427b
             }
-            element &quot;Software System&quot; {
+            element "Software System" {
                 background #1168bd
                 color #ffffff
             }
-            element &quot;Primary&quot; {
+            element "Primary" {
                 background #438dd5
             }
-            element &quot;External System&quot; {
+            element "External System" {
                 background #999999
             }
         }
@@ -10843,123 +10843,123 @@ Level 4: Code
 }
 </code></pre></div>
 <h3 id="container-diagram">Container Diagram<a class="headerlink" href="#container-diagram" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>workspace extends &quot;context.dsl&quot; {
+<div class="highlight"><pre><span></span><code>workspace extends "context.dsl" {
     model {
-        ecommerce = softwareSystem &quot;E-Commerce Platform&quot; {
+        ecommerce = softwareSystem "E-Commerce Platform" {
             # Web Applications
-            webapp = container &quot;Web Application&quot; &quot;Single-page application for customers&quot; &quot;React, TypeScript&quot; {
-                tags &quot;Web Browser&quot;
+            webapp = container "Web Application" "Single-page application for customers" "React, TypeScript" {
+                tags "Web Browser"
             }
 
-            adminApp = container &quot;Admin Portal&quot; &quot;Internal admin dashboard&quot; &quot;React, TypeScript&quot; {
-                tags &quot;Web Browser&quot;
+            adminApp = container "Admin Portal" "Internal admin dashboard" "React, TypeScript" {
+                tags "Web Browser"
             }
 
             # API Layer
-            apiGateway = container &quot;API Gateway&quot; &quot;Routes and authenticates API requests&quot; &quot;Kong&quot; {
-                tags &quot;API&quot;
+            apiGateway = container "API Gateway" "Routes and authenticates API requests" "Kong" {
+                tags "API"
             }
 
             # Microservices
-            catalogService = container &quot;Catalog Service&quot; &quot;Manages product catalog&quot; &quot;Python, FastAPI&quot; {
-                tags &quot;Microservice&quot;
+            catalogService = container "Catalog Service" "Manages product catalog" "Python, FastAPI" {
+                tags "Microservice"
             }
 
-            orderService = container &quot;Order Service&quot; &quot;Handles order processing&quot; &quot;Python, FastAPI&quot; {
-                tags &quot;Microservice&quot;
+            orderService = container "Order Service" "Handles order processing" "Python, FastAPI" {
+                tags "Microservice"
             }
 
-            userService = container &quot;User Service&quot; &quot;Manages user accounts&quot; &quot;Python, FastAPI&quot; {
-                tags &quot;Microservice&quot;
+            userService = container "User Service" "Manages user accounts" "Python, FastAPI" {
+                tags "Microservice"
             }
 
-            paymentService = container &quot;Payment Service&quot; &quot;Processes payments&quot; &quot;Node.js, Express&quot; {
-                tags &quot;Microservice&quot;
+            paymentService = container "Payment Service" "Processes payments" "Node.js, Express" {
+                tags "Microservice"
             }
 
-            notificationService = container &quot;Notification Service&quot; &quot;Sends notifications&quot; &quot;Python, FastAPI&quot; {
-                tags &quot;Microservice&quot;
+            notificationService = container "Notification Service" "Sends notifications" "Python, FastAPI" {
+                tags "Microservice"
             }
 
             # Data Stores
-            catalogDb = container &quot;Catalog Database&quot; &quot;Stores product information&quot; &quot;PostgreSQL&quot; {
-                tags &quot;Database&quot;
+            catalogDb = container "Catalog Database" "Stores product information" "PostgreSQL" {
+                tags "Database"
             }
 
-            orderDb = container &quot;Order Database&quot; &quot;Stores order information&quot; &quot;PostgreSQL&quot; {
-                tags &quot;Database&quot;
+            orderDb = container "Order Database" "Stores order information" "PostgreSQL" {
+                tags "Database"
             }
 
-            userDb = container &quot;User Database&quot; &quot;Stores user accounts&quot; &quot;PostgreSQL&quot; {
-                tags &quot;Database&quot;
+            userDb = container "User Database" "Stores user accounts" "PostgreSQL" {
+                tags "Database"
             }
 
-            cache = container &quot;Cache&quot; &quot;Caches frequently accessed data&quot; &quot;Redis&quot; {
-                tags &quot;Cache&quot;
+            cache = container "Cache" "Caches frequently accessed data" "Redis" {
+                tags "Cache"
             }
 
-            messageQueue = container &quot;Message Queue&quot; &quot;Async message processing&quot; &quot;RabbitMQ&quot; {
-                tags &quot;Queue&quot;
+            messageQueue = container "Message Queue" "Async message processing" "RabbitMQ" {
+                tags "Queue"
             }
 
             # Relationships
-            customer -&gt; webapp &quot;Uses&quot; &quot;HTTPS&quot;
-            admin -&gt; adminApp &quot;Uses&quot; &quot;HTTPS&quot;
+            customer -&gt; webapp "Uses" "HTTPS"
+            admin -&gt; adminApp "Uses" "HTTPS"
 
-            webapp -&gt; apiGateway &quot;Calls&quot; &quot;HTTPS/JSON&quot;
-            adminApp -&gt; apiGateway &quot;Calls&quot; &quot;HTTPS/JSON&quot;
+            webapp -&gt; apiGateway "Calls" "HTTPS/JSON"
+            adminApp -&gt; apiGateway "Calls" "HTTPS/JSON"
 
-            apiGateway -&gt; catalogService &quot;Routes&quot; &quot;HTTP/JSON&quot;
-            apiGateway -&gt; orderService &quot;Routes&quot; &quot;HTTP/JSON&quot;
-            apiGateway -&gt; userService &quot;Routes&quot; &quot;HTTP/JSON&quot;
+            apiGateway -&gt; catalogService "Routes" "HTTP/JSON"
+            apiGateway -&gt; orderService "Routes" "HTTP/JSON"
+            apiGateway -&gt; userService "Routes" "HTTP/JSON"
 
-            catalogService -&gt; catalogDb &quot;Reads/Writes&quot; &quot;SQL&quot;
-            catalogService -&gt; cache &quot;Caches&quot; &quot;Redis Protocol&quot;
+            catalogService -&gt; catalogDb "Reads/Writes" "SQL"
+            catalogService -&gt; cache "Caches" "Redis Protocol"
 
-            orderService -&gt; orderDb &quot;Reads/Writes&quot; &quot;SQL&quot;
-            orderService -&gt; paymentService &quot;Calls&quot; &quot;HTTP/JSON&quot;
-            orderService -&gt; messageQueue &quot;Publishes&quot; &quot;AMQP&quot;
+            orderService -&gt; orderDb "Reads/Writes" "SQL"
+            orderService -&gt; paymentService "Calls" "HTTP/JSON"
+            orderService -&gt; messageQueue "Publishes" "AMQP"
 
-            userService -&gt; userDb &quot;Reads/Writes&quot; &quot;SQL&quot;
-            userService -&gt; cache &quot;Caches&quot; &quot;Redis Protocol&quot;
+            userService -&gt; userDb "Reads/Writes" "SQL"
+            userService -&gt; cache "Caches" "Redis Protocol"
 
-            paymentService -&gt; paymentGateway &quot;Processes&quot; &quot;HTTPS&quot;
+            paymentService -&gt; paymentGateway "Processes" "HTTPS"
 
-            notificationService -&gt; messageQueue &quot;Consumes&quot; &quot;AMQP&quot;
-            notificationService -&gt; emailService &quot;Sends&quot; &quot;SMTP&quot;
+            notificationService -&gt; messageQueue "Consumes" "AMQP"
+            notificationService -&gt; emailService "Sends" "SMTP"
         }
     }
 
     views {
-        container ecommerce &quot;Containers&quot; {
+        container ecommerce "Containers" {
             include *
             autoLayout lr
         }
 
         styles {
-            element &quot;Web Browser&quot; {
+            element "Web Browser" {
                 shape WebBrowser
                 background #438dd5
                 color #ffffff
             }
-            element &quot;Microservice&quot; {
+            element "Microservice" {
                 shape Hexagon
                 background #85bbf0
             }
-            element &quot;Database&quot; {
+            element "Database" {
                 shape Cylinder
                 background #438dd5
                 color #ffffff
             }
-            element &quot;Cache&quot; {
+            element "Cache" {
                 shape Cylinder
                 background #85bbf0
             }
-            element &quot;Queue&quot; {
+            element "Queue" {
                 shape Pipe
                 background #85bbf0
             }
-            element &quot;API&quot; {
+            element "API" {
                 shape RoundedBox
                 background #438dd5
                 color #ffffff
@@ -10969,58 +10969,58 @@ Level 4: Code
 }
 </code></pre></div>
 <h3 id="component-diagram">Component Diagram<a class="headerlink" href="#component-diagram" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>workspace extends &quot;containers.dsl&quot; {
+<div class="highlight"><pre><span></span><code>workspace extends "containers.dsl" {
     model {
-        orderService = container &quot;Order Service&quot; {
+        orderService = container "Order Service" {
             # API Layer
-            orderController = component &quot;Order Controller&quot; &quot;REST API endpoints for orders&quot; &quot;FastAPI Router&quot;
-            orderSchemas = component &quot;Order Schemas&quot; &quot;Request/response validation&quot; &quot;Pydantic&quot;
+            orderController = component "Order Controller" "REST API endpoints for orders" "FastAPI Router"
+            orderSchemas = component "Order Schemas" "Request/response validation" "Pydantic"
 
             # Service Layer
-            orderServiceLayer = component &quot;Order Service&quot; &quot;Business logic for orders&quot; &quot;Python&quot;
-            paymentClient = component &quot;Payment Client&quot; &quot;Client for payment service&quot; &quot;httpx&quot;
-            inventoryClient = component &quot;Inventory Client&quot; &quot;Client for inventory checks&quot; &quot;httpx&quot;
+            orderServiceLayer = component "Order Service" "Business logic for orders" "Python"
+            paymentClient = component "Payment Client" "Client for payment service" "httpx"
+            inventoryClient = component "Inventory Client" "Client for inventory checks" "httpx"
 
             # Repository Layer
-            orderRepository = component &quot;Order Repository&quot; &quot;Data access for orders&quot; &quot;SQLAlchemy&quot;
-            orderItemRepository = component &quot;Order Item Repository&quot; &quot;Data access for order items&quot; &quot;SQLAlchemy&quot;
+            orderRepository = component "Order Repository" "Data access for orders" "SQLAlchemy"
+            orderItemRepository = component "Order Item Repository" "Data access for order items" "SQLAlchemy"
 
             # Domain Layer
-            orderModel = component &quot;Order Model&quot; &quot;Order domain entity&quot; &quot;SQLAlchemy Model&quot;
-            orderItemModel = component &quot;Order Item Model&quot; &quot;Order item entity&quot; &quot;SQLAlchemy Model&quot;
+            orderModel = component "Order Model" "Order domain entity" "SQLAlchemy Model"
+            orderItemModel = component "Order Item Model" "Order item entity" "SQLAlchemy Model"
 
             # Events
-            orderEventPublisher = component &quot;Order Event Publisher&quot; &quot;Publishes order events&quot; &quot;Pika&quot;
+            orderEventPublisher = component "Order Event Publisher" "Publishes order events" "Pika"
 
             # Relationships
-            orderController -&gt; orderSchemas &quot;Validates with&quot;
-            orderController -&gt; orderServiceLayer &quot;Uses&quot;
+            orderController -&gt; orderSchemas "Validates with"
+            orderController -&gt; orderServiceLayer "Uses"
 
-            orderServiceLayer -&gt; paymentClient &quot;Processes payments&quot;
-            orderServiceLayer -&gt; inventoryClient &quot;Checks inventory&quot;
-            orderServiceLayer -&gt; orderRepository &quot;Persists orders&quot;
-            orderServiceLayer -&gt; orderEventPublisher &quot;Publishes events&quot;
+            orderServiceLayer -&gt; paymentClient "Processes payments"
+            orderServiceLayer -&gt; inventoryClient "Checks inventory"
+            orderServiceLayer -&gt; orderRepository "Persists orders"
+            orderServiceLayer -&gt; orderEventPublisher "Publishes events"
 
-            orderRepository -&gt; orderModel &quot;Maps&quot;
-            orderRepository -&gt; orderItemRepository &quot;Uses&quot;
-            orderItemRepository -&gt; orderItemModel &quot;Maps&quot;
+            orderRepository -&gt; orderModel "Maps"
+            orderRepository -&gt; orderItemRepository "Uses"
+            orderItemRepository -&gt; orderItemModel "Maps"
         }
 
         # External relationships
-        apiGateway -&gt; orderController &quot;Routes requests&quot;
-        orderRepository -&gt; orderDb &quot;Queries&quot;
-        orderEventPublisher -&gt; messageQueue &quot;Publishes to&quot;
-        paymentClient -&gt; paymentService &quot;Calls&quot;
+        apiGateway -&gt; orderController "Routes requests"
+        orderRepository -&gt; orderDb "Queries"
+        orderEventPublisher -&gt; messageQueue "Publishes to"
+        paymentClient -&gt; paymentService "Calls"
     }
 
     views {
-        component orderService &quot;OrderServiceComponents&quot; {
+        component orderService "OrderServiceComponents" {
             include *
             autoLayout tb
         }
 
         styles {
-            element &quot;Component&quot; {
+            element "Component" {
                 background #85bbf0
                 color #000000
             }
@@ -11029,51 +11029,51 @@ Level 4: Code
 }
 </code></pre></div>
 <h3 id="deployment-diagram">Deployment Diagram<a class="headerlink" href="#deployment-diagram" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>workspace extends &quot;containers.dsl&quot; {
+<div class="highlight"><pre><span></span><code>workspace extends "containers.dsl" {
     model {
-        production = deploymentEnvironment &quot;Production&quot; {
-            deploymentNode &quot;AWS&quot; {
-                tags &quot;Cloud Provider&quot;
+        production = deploymentEnvironment "Production" {
+            deploymentNode "AWS" {
+                tags "Cloud Provider"
 
-                deploymentNode &quot;us-east-1&quot; {
-                    tags &quot;Region&quot;
+                deploymentNode "us-east-1" {
+                    tags "Region"
 
-                    deploymentNode &quot;VPC&quot; {
-                        deploymentNode &quot;Public Subnets&quot; {
-                            deploymentNode &quot;ALB&quot; {
-                                loadBalancer = infrastructureNode &quot;Application Load Balancer&quot; {
-                                    technology &quot;AWS ALB&quot;
+                    deploymentNode "VPC" {
+                        deploymentNode "Public Subnets" {
+                            deploymentNode "ALB" {
+                                loadBalancer = infrastructureNode "Application Load Balancer" {
+                                    technology "AWS ALB"
                                 }
                             }
                         }
 
-                        deploymentNode &quot;Private Subnets - App&quot; {
-                            deploymentNode &quot;EKS Cluster&quot; {
-                                deploymentNode &quot;API Gateway Pod&quot; {
+                        deploymentNode "Private Subnets - App" {
+                            deploymentNode "EKS Cluster" {
+                                deploymentNode "API Gateway Pod" {
                                     containerInstance apiGateway
                                 }
-                                deploymentNode &quot;Catalog Service Pod&quot; {
+                                deploymentNode "Catalog Service Pod" {
                                     containerInstance catalogService
                                 }
-                                deploymentNode &quot;Order Service Pod&quot; {
+                                deploymentNode "Order Service Pod" {
                                     containerInstance orderService
                                 }
-                                deploymentNode &quot;User Service Pod&quot; {
+                                deploymentNode "User Service Pod" {
                                     containerInstance userService
                                 }
                             }
                         }
 
-                        deploymentNode &quot;Private Subnets - Data&quot; {
-                            deploymentNode &quot;RDS&quot; {
+                        deploymentNode "Private Subnets - Data" {
+                            deploymentNode "RDS" {
                                 containerInstance catalogDb
                                 containerInstance orderDb
                                 containerInstance userDb
                             }
-                            deploymentNode &quot;ElastiCache&quot; {
+                            deploymentNode "ElastiCache" {
                                 containerInstance cache
                             }
-                            deploymentNode &quot;Amazon MQ&quot; {
+                            deploymentNode "Amazon MQ" {
                                 containerInstance messageQueue
                             }
                         }
@@ -11081,26 +11081,26 @@ Level 4: Code
                 }
             }
 
-            deploymentNode &quot;CloudFlare&quot; {
-                cdn = infrastructureNode &quot;CDN&quot; {
-                    technology &quot;CloudFlare CDN&quot;
+            deploymentNode "CloudFlare" {
+                cdn = infrastructureNode "CDN" {
+                    technology "CloudFlare CDN"
                 }
             }
         }
     }
 
     views {
-        deployment ecommerce &quot;Production&quot; &quot;ProductionDeployment&quot; {
+        deployment ecommerce "Production" "ProductionDeployment" {
             include *
             autoLayout lr
         }
 
         styles {
-            element &quot;Cloud Provider&quot; {
+            element "Cloud Provider" {
                 background #232f3e
                 color #ffffff
             }
-            element &quot;Region&quot; {
+            element "Region" {
                 background #147eba
                 color #ffffff
             }
@@ -11133,13 +11133,13 @@ structurizr-cli<span class="w"> </span>push<span class="w"> </span>-workspace<sp
 <span class="nt">on</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">push</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;docs/**/*.md&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;diagrams/**&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;.github/workflows/diagrams.yml&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'docs/**/*.md'</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'diagrams/**'</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'.github/workflows/diagrams.yml'</span>
 <span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;docs/**/*.md&#39;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;diagrams/**&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'docs/**/*.md'</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'diagrams/**'</span>
 
 <span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">validate-mermaid</span><span class="p">:</span>
@@ -11151,16 +11151,16 @@ structurizr-cli<span class="w"> </span>push<span class="w"> </span>-workspace<sp
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Node.js</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-node@v4</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;20&#39;</span>
+<span class="w">          </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="s">'20'</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install Mermaid CLI</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm install -g @mermaid-js/mermaid-cli</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate Mermaid in Markdown</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">find docs -name &#39;*.md&#39; -exec grep -l &#39;```mermaid&#39; {} \; | while read file; do</span>
-<span class="w">            </span><span class="no">echo &quot;Validating Mermaid in $file&quot;</span>
-<span class="w">            </span><span class="no">mmdc -i &quot;$file&quot; -o /dev/null 2&gt;&amp;1 || exit 1</span>
+<span class="w">          </span><span class="no">find docs -name '*.md' -exec grep -l '```mermaid' {} \; | while read file; do</span>
+<span class="w">            </span><span class="no">echo "Validating Mermaid in $file"</span>
+<span class="w">            </span><span class="no">mmdc -i "$file" -o /dev/null 2&gt;&amp;1 || exit 1</span>
 <span class="w">          </span><span class="no">done</span>
 
 <span class="w">  </span><span class="nt">validate-plantuml</span><span class="p">:</span>
@@ -11183,7 +11183,7 @@ structurizr-cli<span class="w"> </span>push<span class="w"> </span>-workspace<sp
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Python</span>
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.11&#39;</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.11'</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
@@ -11194,8 +11194,8 @@ structurizr-cli<span class="w"> </span>push<span class="w"> </span>-workspace<sp
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate diagrams</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">for file in diagrams/**/*.py; do</span>
-<span class="w">            </span><span class="no">echo &quot;Generating diagram from $file&quot;</span>
-<span class="w">            </span><span class="no">python &quot;$file&quot;</span>
+<span class="w">            </span><span class="no">echo "Generating diagram from $file"</span>
+<span class="w">            </span><span class="no">python "$file"</span>
 <span class="w">          </span><span class="no">done</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload generated diagrams</span>
@@ -11217,8 +11217,8 @@ structurizr-cli<span class="w"> </span>push<span class="w"> </span>-workspace<sp
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate D2 files</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">for file in diagrams/**/*.d2; do</span>
-<span class="w">            </span><span class="no">echo &quot;Validating $file&quot;</span>
-<span class="w">            </span><span class="no">d2 fmt --check &quot;$file&quot;</span>
+<span class="w">            </span><span class="no">echo "Validating $file"</span>
+<span class="w">            </span><span class="no">d2 fmt --check "$file"</span>
 <span class="w">          </span><span class="no">done</span>
 
 <span class="w">  </span><span class="nt">validate-graphviz</span><span class="p">:</span>
@@ -11233,8 +11233,8 @@ structurizr-cli<span class="w"> </span>push<span class="w"> </span>-workspace<sp
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate DOT files</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">for file in diagrams/**/*.dot; do</span>
-<span class="w">            </span><span class="no">echo &quot;Validating $file&quot;</span>
-<span class="w">            </span><span class="no">dot -Tsvg &quot;$file&quot; -o /dev/null</span>
+<span class="w">            </span><span class="no">echo "Validating $file"</span>
+<span class="w">            </span><span class="no">dot -Tsvg "$file" -o /dev/null</span>
 <span class="w">          </span><span class="no">done</span>
 </code></pre></div>
 <h3 id="pre-commit-hooks">Pre-commit Hooks<a class="headerlink" href="#pre-commit-hooks" title="Permanent link">&para;</a></h3>
@@ -11245,7 +11245,7 @@ structurizr-cli<span class="w"> </span>push<span class="w"> </span>-workspace<sp
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mermaid-lint</span>
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate Mermaid diagrams</span>
-<span class="w">        </span><span class="nt">entry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash -c &#39;npx -y @mermaid-js/mermaid-cli -i &quot;$@&quot; -o /dev/null&#39;</span>
+<span class="w">        </span><span class="nt">entry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash -c 'npx -y @mermaid-js/mermaid-cli -i "$@" -o /dev/null'</span>
 <span class="w">        </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">system</span>
 <span class="w">        </span><span class="nt">files</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\.mmd$</span>
 <span class="w">        </span><span class="nt">pass_filenames</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -11275,7 +11275,7 @@ structurizr-cli<span class="w"> </span>push<span class="w"> </span>-workspace<sp
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">graphviz-lint</span>
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate Graphviz DOT files</span>
-<span class="w">        </span><span class="nt">entry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash -c &#39;dot -Tsvg &quot;$@&quot; -o /dev/null&#39;</span>
+<span class="w">        </span><span class="nt">entry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bash -c 'dot -Tsvg "$@" -o /dev/null'</span>
 <span class="w">        </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">system</span>
 <span class="w">        </span><span class="nt">files</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\.(dot|gv)$</span>
 <span class="w">        </span><span class="nt">pass_filenames</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -11294,51 +11294,51 @@ structurizr-cli<span class="w"> </span>push<span class="w"> </span>-workspace<sp
 <h2 id="ide-configuration">IDE Configuration<a class="headerlink" href="#ide-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="vs-code-extensions">VS Code Extensions<a class="headerlink" href="#vs-code-extensions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;recommendations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;bierner.markdown-mermaid&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;jebbs.plantuml&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;terrastruct.d2&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;joaompinto.vscode-graphviz&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;tintinweb.graphviz-interactive-preview&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;systemticks.c4-dsl-extension&quot;</span>
+<span class="w">  </span><span class="nt">"recommendations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"bierner.markdown-mermaid"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"jebbs.plantuml"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"terrastruct.d2"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"joaompinto.vscode-graphviz"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"tintinweb.graphviz-interactive-preview"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"systemticks.c4-dsl-extension"</span>
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="vs-code-settings">VS Code Settings<a class="headerlink" href="#vs-code-settings" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;[mermaid]&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;editor.formatOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;editor.tabSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;editor.insertSpaces&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"[mermaid]"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"editor.formatOnSave"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"editor.tabSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"editor.insertSpaces"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;[plantuml]&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;editor.formatOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;editor.tabSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;editor.insertSpaces&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"[plantuml]"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"editor.formatOnSave"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"editor.tabSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"editor.insertSpaces"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;[d2]&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;editor.formatOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;editor.tabSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;editor.insertSpaces&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"[d2]"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"editor.formatOnSave"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"editor.tabSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"editor.insertSpaces"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;[dot]&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;editor.formatOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;editor.tabSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;editor.insertSpaces&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"[dot]"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"editor.formatOnSave"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"editor.tabSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"editor.insertSpaces"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;plantuml.server&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://www.plantuml.com/plantuml&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;plantuml.render&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PlantUMLServer&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;plantuml.exportFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;svg&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;graphviz-interactive-preview.renderEngine&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dot&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;d2.execPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/usr/local/bin/d2&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;files.associations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;*.mmd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mermaid&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;*.puml&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;plantuml&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;*.plantuml&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;plantuml&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;*.d2&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;d2&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;*.dot&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dot&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;*.gv&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dot&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;*.dsl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;structurizr&quot;</span>
+<span class="w">  </span><span class="nt">"plantuml.server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.plantuml.com/plantuml"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"plantuml.render"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PlantUMLServer"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"plantuml.exportFormat"</span><span class="p">:</span><span class="w"> </span><span class="s2">"svg"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"graphviz-interactive-preview.renderEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dot"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"d2.execPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/usr/local/bin/d2"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"files.associations"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"*.mmd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mermaid"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"*.puml"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plantuml"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"*.plantuml"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plantuml"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"*.d2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d2"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"*.dot"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dot"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"*.gv"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dot"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"*.dsl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"structurizr"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -11419,7 +11419,7 @@ service1: Service 1 {
     style.fill: red
 }
 service2: Service 2 {
-    style.fill: &quot;#00ff00&quot;
+    style.fill: "#00ff00"
 }
 service3: Service 3 {
     style.fill: blue
@@ -11435,25 +11435,25 @@ vars: {
 
 # Use semantic colors
 healthy: Healthy Service {
-    style.fill: &quot;#28a745&quot;
+    style.fill: "#28a745"
 }
 degraded: Degraded Service {
-    style.fill: &quot;#ffc107&quot;
+    style.fill: "#ffc107"
 }
 failed: Failed Service {
-    style.fill: &quot;#dc3545&quot;
+    style.fill: "#dc3545"
 }
 </code></pre></div>
 <h3 id="missing-labels">Missing Labels<a class="headerlink" href="#missing-labels" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>@startuml
-&#39; Bad: No context about relationships
+' Bad: No context about relationships
 A -&gt; B
 B -&gt; C
 C -&gt; D
 @enduml
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>@startuml
-&#39; Good: Clear labels explain the flow
+' Good: Clear labels explain the flow
 actor User
 User -&gt; WebApp: HTTP Request
 WebApp -&gt; API: REST Call
@@ -11462,7 +11462,7 @@ API -&gt; Database: SQL Query
 </code></pre></div>
 <h3 id="wrong-tool-for-the-job">Wrong Tool for the Job<a class="headerlink" href="#wrong-tool-for-the-job" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code># Bad: Using Mermaid for complex UML class diagrams
-# Mermaid&#39;s class diagram support is limited
+# Mermaid's class diagram support is limited
 
 # Good: Use PlantUML for detailed UML
 # Use Mermaid for quick documentation diagrams
@@ -11668,10 +11668,10 @@ graph LR
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

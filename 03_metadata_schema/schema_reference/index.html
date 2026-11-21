@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -8150,7 +8150,7 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <p>The metadata block must use the appropriate comment syntax for each language.</p>
 <h3 id="python">Python<a class="headerlink" href="#python" title="Permanent link">&para;</a></h3>
 <p><strong>Docstring Format</strong> (Recommended):</p>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""</span>
 <span class="sd">@module user_authentication</span>
 <span class="sd">@description Handles user authentication, session management, and JWT token generation</span>
 <span class="sd">@dependencies fastapi, pyjwt, passlib, python-dotenv</span>
@@ -8161,7 +8161,7 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <span class="sd">@security_classification internal</span>
 <span class="sd">@api_endpoints POST /auth/login, POST /auth/logout, POST /auth/refresh</span>
 <span class="sd">@python_version &gt;= 3.9</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">jwt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIRouter</span><span class="p">,</span> <span class="n">HTTPException</span>
@@ -8186,7 +8186,7 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <span class="cm"> * @env prod, staging, dev</span>
 <span class="cm"> */</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"main"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vpc_cidr</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -8199,7 +8199,7 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <span class="c1">## @description Creates VPC infrastructure</span>
 <span class="c1">## @version 2.1.0</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"main"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vpc_cidr</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -8216,8 +8216,8 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <span class="cm"> * @api_endpoints POST /payments/charge, POST /payments/refund</span>
 <span class="cm"> */</span>
 
-<span class="k">import</span><span class="w"> </span><span class="nx">Stripe</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;stripe&#39;</span><span class="p">;</span>
-<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Router</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;express&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">Stripe</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'stripe'</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Router</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'express'</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="bash">Bash<a class="headerlink" href="#bash" title="Permanent link">&para;</a></h3>
 <p><strong>Comment Block</strong>:</p>
@@ -8250,7 +8250,7 @@ code modules, functions, and infrastructure components. This metadata serves thr
 <span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add users</span>
 <span class="w">      </span><span class="nt">user</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}"</span>
 <span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 </code></pre></div>
 <h3 id="sql">SQL<a class="headerlink" href="#sql" title="Permanent link">&para;</a></h3>
@@ -8439,44 +8439,44 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="do-keep-metadata-up-to-date">DO: Keep Metadata Up-to-Date<a class="headerlink" href="#do-keep-metadata-up-to-date" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - version and date updated together</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">@module user_service</span>
 <span class="sd">@version 2.1.0</span>
 <span class="sd">@last_updated 2025-10-27</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 </code></pre></div>
 <h3 id="dont-leave-stale-metadata">DON'T: Leave Stale Metadata<a class="headerlink" href="#dont-leave-stale-metadata" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - version updated but date is old</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">@module user_service</span>
 <span class="sd">@version 2.1.0</span>
 <span class="sd">@last_updated 2023-01-15  # Stale date!</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 </code></pre></div>
 <h3 id="do-be-specific-in-descriptions">DO: Be Specific in Descriptions<a class="headerlink" href="#do-be-specific-in-descriptions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - specific about what it does</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">@description Validates user input for email format, length constraints, and prohibited characters</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 </code></pre></div>
 <h3 id="dont-use-vague-descriptions">DON'T: Use Vague Descriptions<a class="headerlink" href="#dont-use-vague-descriptions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - too generic</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">@description Handles validation</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 </code></pre></div>
 <h3 id="do-list-all-dependencies">DO: List All Dependencies<a class="headerlink" href="#do-list-all-dependencies" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - comprehensive dependency list</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">@dependencies fastapi, pyjwt, passlib[bcrypt], python-dotenv, redis</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 </code></pre></div>
 <h3 id="dont-omit-dependencies">DON'T: Omit Dependencies<a class="headerlink" href="#dont-omit-dependencies" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Bad - missing implicit dependencies</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">@dependencies fastapi</span>
 <span class="sd">## Missing: pyjwt (used in code)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 </code></pre></div>
 <h3 id="do-use-semantic-versioning-correctly">DO: Use Semantic Versioning Correctly<a class="headerlink" href="#do-use-semantic-versioning-correctly" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - breaking change bumps major version</span>
@@ -8495,11 +8495,11 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 <h2 id="integration-with-ai-assistants">Integration with AI Assistants<a class="headerlink" href="#integration-with-ai-assistants" title="Permanent link">&para;</a></h2>
 <p>Metadata tags help AI assistants:</p>
 <h3 id="understand-context">Understand Context<a class="headerlink" href="#understand-context" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""</span>
 <span class="sd">@module payment_processor</span>
 <span class="sd">@description Processes credit card payments via Stripe API</span>
 <span class="sd">@security_classification confidential</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 </code></pre></div>
 <p>AI knows:</p>
 <ul>
@@ -8508,10 +8508,10 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 <li>Contains confidential data (requires extra care)</li>
 </ul>
 <h3 id="suggest-compatible-dependencies">Suggest Compatible Dependencies<a class="headerlink" href="#suggest-compatible-dependencies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""</span>
 <span class="sd">@dependencies fastapi &gt;= 0.100.0, pydantic &gt;= 2.0</span>
 <span class="sd">@python_version &gt;= 3.9</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 </code></pre></div>
 <p>AI knows:</p>
 <ul>
@@ -8541,7 +8541,7 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 </ul>
 <h2 id="complete-examples">Complete Examples<a class="headerlink" href="#complete-examples" title="Permanent link">&para;</a></h2>
 <h3 id="python-fastapi-module">Python FastAPI Module<a class="headerlink" href="#python-fastapi-module" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""</span>
 <span class="sd">@module user_authentication_api</span>
 <span class="sd">@description RESTful API for user authentication with JWT tokens and refresh token support</span>
 <span class="sd">@dependencies fastapi, pyjwt, passlib[bcrypt], python-dotenv, redis, sqlalchemy</span>
@@ -8553,7 +8553,7 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 <span class="sd">@api_endpoints POST /auth/login, POST /auth/logout, POST /auth/refresh, GET /auth/verify</span>
 <span class="sd">@python_version &gt;= 3.9</span>
 <span class="sd">@depends_on ./models/user, ./database/connection, ./cache/redis_client</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIRouter</span><span class="p">,</span> <span class="n">Depends</span><span class="p">,</span> <span class="n">HTTPException</span><span class="p">,</span> <span class="n">status</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.security</span><span class="w"> </span><span class="kn">import</span> <span class="n">OAuth2PasswordBearer</span>
@@ -8561,8 +8561,8 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 <span class="kn">from</span><span class="w"> </span><span class="nn">passlib.context</span><span class="w"> </span><span class="kn">import</span> <span class="n">CryptContext</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
-<span class="n">router</span> <span class="o">=</span> <span class="n">APIRouter</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;/auth&quot;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;authentication&quot;</span><span class="p">])</span>
-<span class="n">pwd_context</span> <span class="o">=</span> <span class="n">CryptContext</span><span class="p">(</span><span class="n">schemes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bcrypt&quot;</span><span class="p">],</span> <span class="n">deprecated</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+<span class="n">router</span> <span class="o">=</span> <span class="n">APIRouter</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">"/auth"</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"authentication"</span><span class="p">])</span>
+<span class="n">pwd_context</span> <span class="o">=</span> <span class="n">CryptContext</span><span class="p">(</span><span class="n">schemes</span><span class="o">=</span><span class="p">[</span><span class="s2">"bcrypt"</span><span class="p">],</span> <span class="n">deprecated</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="terraform-vpc-module">Terraform VPC Module<a class="headerlink" href="#terraform-vpc-module" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="cm">/**</span>
@@ -8578,26 +8578,26 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 <span class="cm"> * @security_classification internal</span>
 <span class="cm"> */</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;vpc_cidr&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CIDR block for VPC&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"vpc_cidr"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"CIDR block for VPC"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environment&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Environment name (prod, staging, dev)&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"environment"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Environment name (prod, staging, dev)"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"main"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vpc_cidr</span>
 <span class="w">  </span><span class="na">enable_dns_hostnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="w">  </span><span class="na">enable_dns_support</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.environment}-vpc&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"${var.environment}-vpc"</span>
 <span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span>
-<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -8618,22 +8618,22 @@ python<span class="w"> </span>scripts/validate_metadata.py<span class="w"> </spa
 
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-<span class="nb">readonly</span><span class="w"> </span><span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>dirname<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">readonly</span><span class="w"> </span><span class="nv">APP_NAME</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">APP_NAME</span><span class="k">:-</span><span class="nv">myapp</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="nb">readonly</span><span class="w"> </span><span class="nv">ENVIRONMENT</span><span class="o">=</span><span class="s2">&quot;staging&quot;</span>
+<span class="nb">readonly</span><span class="w"> </span><span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>dirname<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">"</span><span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="k">)</span><span class="s2">"</span>
+<span class="nb">readonly</span><span class="w"> </span><span class="nv">APP_NAME</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">APP_NAME</span><span class="k">:-</span><span class="nv">myapp</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">readonly</span><span class="w"> </span><span class="nv">ENVIRONMENT</span><span class="o">=</span><span class="s2">"staging"</span>
 </code></pre></div>
 <h2 id="migration-guide">Migration Guide<a class="headerlink" href="#migration-guide" title="Permanent link">&para;</a></h2>
 <h3 id="adding-metadata-to-existing-code">Adding Metadata to Existing Code<a class="headerlink" href="#adding-metadata-to-existing-code" title="Permanent link">&para;</a></h3>
 <p><strong>Step 1</strong>: Identify all modules without metadata</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Find Python files without @module tag</span>
-find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-exec<span class="w"> </span>grep<span class="w"> </span>-L<span class="w"> </span><span class="s2">&quot;@module&quot;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">"*.py"</span><span class="w"> </span>-exec<span class="w"> </span>grep<span class="w"> </span>-L<span class="w"> </span><span class="s2">"@module"</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
 </code></pre></div>
 <p><strong>Step 2</strong>: Add minimal metadata block</p>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""</span>
 <span class="sd">@module [infer_from_filename]</span>
 <span class="sd">@description [TODO: Add description]</span>
 <span class="sd">@version 0.1.0</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 </code></pre></div>
 <p><strong>Step 3</strong>: Progressively enhance</p>
 <ul>
@@ -8778,10 +8778,10 @@ find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </spa
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

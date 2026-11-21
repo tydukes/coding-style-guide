@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -8794,14 +8794,14 @@ SQL-compliant databases.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- UPPERCASE keywords, lowercase identifiers</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="p">;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'active'</span><span class="p">;</span>
 
 <span class="c1">-- Avoid mixed case or all lowercase keywords</span>
 <span class="c1">-- Bad</span>
-<span class="k">select</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="p">;</span>
+<span class="k">select</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'active'</span><span class="p">;</span>
 
 <span class="c1">-- Bad</span>
-<span class="k">Select</span><span class="w"> </span><span class="n">User_Id</span><span class="w"> </span><span class="k">From</span><span class="w"> </span><span class="n">Users</span><span class="w"> </span><span class="k">Where</span><span class="w"> </span><span class="n">Status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="p">;</span>
+<span class="k">Select</span><span class="w"> </span><span class="n">User_Id</span><span class="w"> </span><span class="k">From</span><span class="w"> </span><span class="n">Users</span><span class="w"> </span><span class="k">Where</span><span class="w"> </span><span class="n">Status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'active'</span><span class="p">;</span>
 </code></pre></div>
 <hr />
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
@@ -9030,7 +9030,7 @@ SQL-compliant databases.</p>
 <span class="c1">-- Partial indexes (PostgreSQL)</span>
 <span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_orders_active</span>
 <span class="w">    </span><span class="k">ON</span><span class="w"> </span><span class="n">orders</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span><span class="p">)</span>
-<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'active'</span><span class="p">;</span>
 </code></pre></div>
 <hr />
 <h2 id="query-formatting">Query Formatting<a class="headerlink" href="#query-formatting" title="Permanent link">&para;</a></h2>
@@ -9045,15 +9045,15 @@ SQL-compliant databases.</p>
 <span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">order_count</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
 <span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span>
-<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="s1">&#39;2024-01-01&#39;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'active'</span>
+<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="s1">'2024-01-01'</span>
 <span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">first_name</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">last_name</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">created_at</span>
 <span class="k">HAVING</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>
 <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">order_count</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">created_at</span><span class="w"> </span><span class="k">DESC</span>
 <span class="k">LIMIT</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
 
 <span class="c1">-- Simple queries on one line</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'active'</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="join-conventions">JOIN Conventions<a class="headerlink" href="#join-conventions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Use explicit JOIN syntax (not implicit with WHERE)</span>
@@ -9088,7 +9088,7 @@ SQL-compliant databases.</p>
 <span class="k">INNER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span>
 <span class="k">INNER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">order_items</span><span class="w"> </span><span class="n">oi</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">oi</span><span class="p">.</span><span class="n">order_id</span>
 <span class="k">INNER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">oi</span><span class="p">.</span><span class="n">product_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_id</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;completed&#39;</span><span class="p">;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'completed'</span><span class="p">;</span>
 </code></pre></div>
 <hr />
 <h2 id="common-table-expressions-ctes">Common Table Expressions (CTEs)<a class="headerlink" href="#common-table-expressions-ctes" title="Permanent link">&para;</a></h2>
@@ -9096,7 +9096,7 @@ SQL-compliant databases.</p>
 <span class="k">WITH</span><span class="w"> </span><span class="n">active_users</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span>
 <span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span>
-<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'active'</span>
 <span class="p">),</span>
 <span class="n">user_orders</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="k">SELECT</span>
@@ -9104,7 +9104,7 @@ SQL-compliant databases.</p>
 <span class="w">        </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">order_count</span><span class="p">,</span>
 <span class="w">        </span><span class="k">SUM</span><span class="p">(</span><span class="n">total</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">total_spent</span>
 <span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span>
-<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;completed&#39;</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'completed'</span>
 <span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">user_id</span>
 <span class="p">)</span>
 <span class="k">SELECT</span>
@@ -9145,24 +9145,24 @@ SQL-compliant databases.</p>
 <h3 id="insert">INSERT<a class="headerlink" href="#insert" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Single row insert</span>
 <span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">first_name</span><span class="p">,</span><span class="w"> </span><span class="n">last_name</span><span class="p">)</span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;user@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;John&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Doe&#39;</span><span class="p">);</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'user@example.com'</span><span class="p">,</span><span class="w"> </span><span class="s1">'John'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Doe'</span><span class="p">);</span>
 
 <span class="c1">-- Multiple row insert</span>
 <span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">first_name</span><span class="p">,</span><span class="w"> </span><span class="n">last_name</span><span class="p">)</span>
 <span class="k">VALUES</span>
-<span class="w">    </span><span class="p">(</span><span class="s1">&#39;user1@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Smith&#39;</span><span class="p">),</span>
-<span class="w">    </span><span class="p">(</span><span class="s1">&#39;user2@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Bob&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Jones&#39;</span><span class="p">),</span>
-<span class="w">    </span><span class="p">(</span><span class="s1">&#39;user3@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Charlie&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Brown&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">(</span><span class="s1">'user1@example.com'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Alice'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Smith'</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s1">'user2@example.com'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Bob'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Jones'</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s1">'user3@example.com'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Charlie'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Brown'</span><span class="p">);</span>
 
 <span class="c1">-- INSERT with SELECT</span>
 <span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">user_audit</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">action</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span><span class="p">)</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;login&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="s1">'login'</span><span class="p">,</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">last_login</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">CURRENT_DATE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span><span class="p">;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">last_login</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">CURRENT_DATE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">'30 days'</span><span class="p">;</span>
 
 <span class="c1">-- UPSERT (PostgreSQL)</span>
 <span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">user_preferences</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">theme</span><span class="p">,</span><span class="w"> </span><span class="k">language</span><span class="p">)</span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;dark&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;en&#39;</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'dark'</span><span class="p">,</span><span class="w"> </span><span class="s1">'en'</span><span class="p">)</span>
 <span class="k">ON</span><span class="w"> </span><span class="n">CONFLICT</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
 <span class="k">DO</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">SET</span>
 <span class="w">    </span><span class="n">theme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EXCLUDED</span><span class="p">.</span><span class="n">theme</span><span class="p">,</span>
@@ -9173,17 +9173,17 @@ SQL-compliant databases.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Always use WHERE clause</span>
 <span class="k">UPDATE</span><span class="w"> </span><span class="n">users</span>
 <span class="k">SET</span>
-<span class="w">    </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;inactive&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'inactive'</span><span class="p">,</span>
 <span class="w">    </span><span class="n">updated_at</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">last_login</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">CURRENT_DATE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;90 days&#39;</span><span class="p">;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">last_login</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">CURRENT_DATE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">'90 days'</span><span class="p">;</span>
 
 <span class="c1">-- UPDATE with JOIN</span>
 <span class="k">UPDATE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span>
-<span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;cancelled&#39;</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'cancelled'</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
 <span class="k">WHERE</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span>
-<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;deleted&#39;</span>
-<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pending&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'deleted'</span>
+<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'pending'</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="delete">DELETE<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Always use WHERE clause (unless intentional truncation)</span>
@@ -9195,7 +9195,7 @@ SQL-compliant databases.</p>
 <span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span>
 <span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span>
-<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;deleted&#39;</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'deleted'</span>
 <span class="p">);</span>
 </code></pre></div>
 <hr />
@@ -9256,14 +9256,14 @@ SQL-compliant databases.</p>
 <span class="k">BEGIN</span>
 <span class="w">    </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">orders</span>
 <span class="w">    </span><span class="k">SET</span>
-<span class="w">        </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;expired&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'expired'</span><span class="p">,</span>
 <span class="w">        </span><span class="n">updated_at</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span>
-<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pending&#39;</span>
-<span class="w">        </span><span class="k">AND</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;7 days&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'pending'</span>
+<span class="w">        </span><span class="k">AND</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">'7 days'</span><span class="p">;</span>
 
 <span class="w">    </span><span class="c1">-- Log the operation</span>
 <span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">audit_log</span><span class="w"> </span><span class="p">(</span><span class="n">action</span><span class="p">,</span><span class="w"> </span><span class="n">affected_rows</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span><span class="p">)</span>
-<span class="w">    </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;close_expired_orders&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">ROW_COUNT</span><span class="p">(),</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">);</span>
+<span class="w">    </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'close_expired_orders'</span><span class="p">,</span><span class="w"> </span><span class="k">ROW_COUNT</span><span class="p">(),</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">);</span>
 
 <span class="w">    </span><span class="k">COMMIT</span><span class="p">;</span>
 <span class="k">END</span><span class="p">;</span>
@@ -9285,8 +9285,8 @@ SQL-compliant databases.</p>
 <span class="w">    </span><span class="n">o</span><span class="p">.</span><span class="n">created_at</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
 <span class="k">INNER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span>
-<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;pending&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;processing&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;shipped&#39;</span><span class="p">);</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'active'</span>
+<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'pending'</span><span class="p">,</span><span class="w"> </span><span class="s1">'processing'</span><span class="p">,</span><span class="w"> </span><span class="s1">'shipped'</span><span class="p">);</span>
 
 <span class="c1">-- Materialized view (PostgreSQL)</span>
 <span class="k">CREATE</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">user_order_summary</span><span class="w"> </span><span class="k">AS</span>
@@ -9298,7 +9298,7 @@ SQL-compliant databases.</p>
 <span class="w">    </span><span class="k">MAX</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">created_at</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">last_order_date</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
 <span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;completed&#39;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'completed'</span>
 <span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">email</span><span class="p">;</span>
 
 <span class="c1">-- Refresh materialized view</span>
@@ -9322,7 +9322,7 @@ SQL-compliant databases.</p>
 <span class="w">    </span><span class="n">password_hash</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
 <span class="w">    </span><span class="n">first_name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
 <span class="w">    </span><span class="n">last_name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
-<span class="w">    </span><span class="n">status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">'active'</span><span class="p">,</span>
 <span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
 <span class="w">    </span><span class="n">updated_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span>
 <span class="p">);</span>
@@ -9344,9 +9344,9 @@ SQL-compliant databases.</p>
 
 <span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">roles</span><span class="w"> </span><span class="p">(</span><span class="n">role_name</span><span class="p">,</span><span class="w"> </span><span class="n">description</span><span class="p">)</span>
 <span class="k">VALUES</span>
-<span class="w">    </span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;System administrator&#39;</span><span class="p">),</span>
-<span class="w">    </span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Regular user&#39;</span><span class="p">),</span>
-<span class="w">    </span><span class="p">(</span><span class="s1">&#39;guest&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Guest user&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="s1">'admin'</span><span class="p">,</span><span class="w"> </span><span class="s1">'System administrator'</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s1">'user'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Regular user'</span><span class="p">),</span>
+<span class="w">    </span><span class="p">(</span><span class="s1">'guest'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Guest user'</span><span class="p">)</span>
 <span class="k">ON</span><span class="w"> </span><span class="n">CONFLICT</span><span class="w"> </span><span class="p">(</span><span class="n">role_name</span><span class="p">)</span><span class="w"> </span><span class="k">DO</span><span class="w"> </span><span class="k">NOTHING</span><span class="p">;</span>
 
 <span class="k">COMMIT</span><span class="p">;</span>
@@ -9355,10 +9355,10 @@ SQL-compliant databases.</p>
 <h2 id="query-optimization">Query Optimization<a class="headerlink" href="#query-optimization" title="Permanent link">&para;</a></h2>
 <h3 id="use-indexes-effectively">Use Indexes Effectively<a class="headerlink" href="#use-indexes-effectively" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Bad - Full table scan</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">LOWER</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;user@example.com&#39;</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">LOWER</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'user@example.com'</span><span class="p">;</span>
 
 <span class="c1">-- Good - Index-friendly query</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;user@example.com&#39;</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'user@example.com'</span><span class="p">;</span>
 
 <span class="c1">-- Create functional index if needed</span>
 <span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_users_email_lower</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="k">LOWER</span><span class="p">(</span><span class="n">email</span><span class="p">));</span>
@@ -9378,7 +9378,7 @@ SQL-compliant databases.</p>
 <span class="k">SELECT</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">order_count</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
 <span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="s1">&#39;2024-01-01&#39;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="s1">'2024-01-01'</span>
 <span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">email</span>
 <span class="k">HAVING</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">order_id</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
 </code></pre></div>
@@ -9406,17 +9406,17 @@ sqlfluff<span class="w"> </span>lint<span class="w"> </span>--dialect<span class
 <span class="k">SELECT</span><span class="w"> </span><span class="n">plan</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
 
 <span class="c1">-- Test table exists</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">has_table</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;users table should exist&#39;</span><span class="p">);</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">has_table</span><span class="p">(</span><span class="s1">'users'</span><span class="p">,</span><span class="w"> </span><span class="s1">'users table should exist'</span><span class="p">);</span>
 
 <span class="c1">-- Test columns</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">has_column</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;users should have id column&#39;</span><span class="p">);</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">has_column</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;email&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;users should have email column&#39;</span><span class="p">);</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">has_column</span><span class="p">(</span><span class="s1">'users'</span><span class="p">,</span><span class="w"> </span><span class="s1">'id'</span><span class="p">,</span><span class="w"> </span><span class="s1">'users should have id column'</span><span class="p">);</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">has_column</span><span class="p">(</span><span class="s1">'users'</span><span class="p">,</span><span class="w"> </span><span class="s1">'email'</span><span class="p">,</span><span class="w"> </span><span class="s1">'users should have email column'</span><span class="p">);</span>
 
 <span class="c1">-- Test constraints</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">has_pk</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;users should have primary key&#39;</span><span class="p">);</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">has_pk</span><span class="p">(</span><span class="s1">'users'</span><span class="p">,</span><span class="w"> </span><span class="s1">'users should have primary key'</span><span class="p">);</span>
 
 <span class="c1">-- Test index</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">has_index</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;idx_users_email&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;email index should exist&#39;</span><span class="p">);</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">has_index</span><span class="p">(</span><span class="s1">'users'</span><span class="p">,</span><span class="w"> </span><span class="s1">'idx_users_email'</span><span class="p">,</span><span class="w"> </span><span class="s1">'email index should exist'</span><span class="p">);</span>
 
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">finish</span><span class="p">();</span>
 <span class="k">ROLLBACK</span><span class="p">;</span>
@@ -9433,23 +9433,23 @@ sqlfluff<span class="w"> </span>lint<span class="w"> </span>--dialect<span class
 sqlite3<span class="w"> </span>test.db<span class="w"> </span>&lt;<span class="w"> </span>schema.sql
 
 <span class="c1">## Test query results</span>
-<span class="nv">result</span><span class="o">=</span><span class="k">$(</span>sqlite3<span class="w"> </span>test.db<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM users;&quot;</span><span class="k">)</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$result</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: Expected 0 users&quot;</span>
+<span class="nv">result</span><span class="o">=</span><span class="k">$(</span>sqlite3<span class="w"> </span>test.db<span class="w"> </span><span class="s2">"SELECT COUNT(*) FROM users;"</span><span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$result</span><span class="s2">"</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">"0"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"FAIL: Expected 0 users"</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
 
 <span class="c1">## Insert test data</span>
-sqlite3<span class="w"> </span>test.db<span class="w"> </span><span class="s2">&quot;INSERT INTO users (name, email) VALUES (&#39;Test&#39;, &#39;test@example.com&#39;);&quot;</span>
+sqlite3<span class="w"> </span>test.db<span class="w"> </span><span class="s2">"INSERT INTO users (name, email) VALUES ('Test', 'test@example.com');"</span>
 
 <span class="c1">## Verify insertion</span>
-<span class="nv">result</span><span class="o">=</span><span class="k">$(</span>sqlite3<span class="w"> </span>test.db<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM users WHERE email=&#39;test@example.com&#39;;&quot;</span><span class="k">)</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$result</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: User not inserted correctly&quot;</span>
+<span class="nv">result</span><span class="o">=</span><span class="k">$(</span>sqlite3<span class="w"> </span>test.db<span class="w"> </span><span class="s2">"SELECT COUNT(*) FROM users WHERE email='test@example.com';"</span><span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$result</span><span class="s2">"</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">"1"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"FAIL: User not inserted correctly"</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;All SQL tests passed&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"All SQL tests passed"</span>
 rm<span class="w"> </span>test.db
 </code></pre></div>
 <h3 id="integration-testing">Integration Testing<a class="headerlink" href="#integration-testing" title="Permanent link">&para;</a></h3>
@@ -9461,10 +9461,10 @@ rm<span class="w"> </span>test.db
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">db_connection</span><span class="p">():</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-        <span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
-        <span class="n">database</span><span class="o">=</span><span class="s1">&#39;test_db&#39;</span><span class="p">,</span>
-        <span class="n">user</span><span class="o">=</span><span class="s1">&#39;test_user&#39;</span><span class="p">,</span>
-        <span class="n">password</span><span class="o">=</span><span class="s1">&#39;test_pass&#39;</span>
+        <span class="n">host</span><span class="o">=</span><span class="s1">'localhost'</span><span class="p">,</span>
+        <span class="n">database</span><span class="o">=</span><span class="s1">'test_db'</span><span class="p">,</span>
+        <span class="n">user</span><span class="o">=</span><span class="s1">'test_user'</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s1">'test_pass'</span>
     <span class="p">)</span>
     <span class="k">yield</span> <span class="n">conn</span>
     <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -9473,19 +9473,19 @@ rm<span class="w"> </span>test.db
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">db_connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
 
     <span class="c1"># Execute SQL</span>
-    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        INSERT INTO users (name, email)</span>
-<span class="s2">        VALUES (&#39;Test User&#39;, &#39;test@example.com&#39;)</span>
+<span class="s2">        VALUES ('Test User', 'test@example.com')</span>
 <span class="s2">        RETURNING id;</span>
-<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+<span class="s2">    """</span><span class="p">)</span>
 
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">user_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
     <span class="c1"># Verify</span>
-    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT email FROM users WHERE id = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"SELECT email FROM users WHERE id = </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
     <span class="n">email</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">assert</span> <span class="n">email</span> <span class="o">==</span> <span class="s1">&#39;test@example.com&#39;</span>
+    <span class="k">assert</span> <span class="n">email</span> <span class="o">==</span> <span class="s1">'test@example.com'</span>
 
     <span class="n">db_connection</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
 
@@ -9495,10 +9495,10 @@ rm<span class="w"> </span>test.db
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">db_connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
 
     <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM large_table WHERE indexed_column = &#39;value&#39;&quot;</span><span class="p">)</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"SELECT * FROM large_table WHERE indexed_column = 'value'"</span><span class="p">)</span>
     <span class="n">duration</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
 
-    <span class="k">assert</span> <span class="n">duration</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Query too slow: </span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s2">s&quot;</span>
+    <span class="k">assert</span> <span class="n">duration</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Query too slow: </span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s2">s"</span>
 </code></pre></div>
 <h3 id="testing-migrations">Testing Migrations<a class="headerlink" href="#testing-migrations" title="Permanent link">&para;</a></h3>
 <p>Test database migrations:</p>
@@ -9511,25 +9511,25 @@ psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </
 psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </span>-f<span class="w"> </span>migrations/002_add_users_email_index.sql
 
 <span class="c1">## Verify schema</span>
-<span class="nv">result</span><span class="o">=</span><span class="k">$(</span>psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </span>-t<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM information_schema.tables WHERE table_name=&#39;users&#39;;&quot;</span><span class="k">)</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$result</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: users table not created&quot;</span>
+<span class="nv">result</span><span class="o">=</span><span class="k">$(</span>psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </span>-t<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT COUNT(*) FROM information_schema.tables WHERE table_name='users';"</span><span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$result</span><span class="s2">"</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">"1"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"FAIL: users table not created"</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
 
 <span class="c1">## Verify index</span>
-<span class="nv">result</span><span class="o">=</span><span class="k">$(</span>psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </span>-t<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM pg_indexes WHERE indexname=&#39;idx_users_email&#39;;&quot;</span><span class="k">)</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$result</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: email index not created&quot;</span>
+<span class="nv">result</span><span class="o">=</span><span class="k">$(</span>psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </span>-t<span class="w"> </span>-c<span class="w"> </span><span class="s2">"SELECT COUNT(*) FROM pg_indexes WHERE indexname='idx_users_email';"</span><span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$result</span><span class="s2">"</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">"1"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"FAIL: email index not created"</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Migration tests passed&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Migration tests passed"</span>
 </code></pre></div>
 <h3 id="testing-with-docker">Testing with Docker<a class="headerlink" href="#testing-with-docker" title="Permanent link">&para;</a></h3>
 <p>Test SQL in isolated environment:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## docker-compose.test.yml</span>
-<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.8'</span>
 
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">postgres</span><span class="p">:</span>
@@ -9539,7 +9539,7 @@ psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </
 <span class="w">      </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_user</span>
 <span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_pass</span>
 <span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">test_user&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"CMD-SHELL"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">test_user"</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
 <span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3s</span>
 <span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
@@ -9558,11 +9558,11 @@ psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </
 <span class="w">      </span><span class="nt">PGUSER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_user</span>
 <span class="w">      </span><span class="nt">PGPASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_pass</span>
 <span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
-<span class="w">      </span><span class="no">sh -c &quot;</span>
+<span class="w">      </span><span class="no">sh -c "</span>
 <span class="w">        </span><span class="no">psql -f /sql/schema.sql &amp;&amp;</span>
 <span class="w">        </span><span class="no">psql -f /sql/seed.sql &amp;&amp;</span>
 <span class="w">        </span><span class="no">pg_prove /tests/*.sql</span>
-<span class="w">      </span><span class="no">&quot;</span>
+<span class="w">      </span><span class="no">"</span>
 </code></pre></div>
 <p>Run tests:</p>
 <div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.test.yml<span class="w"> </span>up<span class="w"> </span>--abort-on-container-exit
@@ -9574,11 +9574,11 @@ psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </
 <span class="k">SELECT</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">total</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
 <span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="s1">&#39;2024-01-01&#39;</span><span class="p">;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="s1">'2024-01-01'</span><span class="p">;</span>
 
 <span class="c1">-- Test index usage</span>
 <span class="k">EXPLAIN</span><span class="w"> </span><span class="p">(</span><span class="n">FORMAT</span><span class="w"> </span><span class="n">JSON</span><span class="p">)</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;test@example.com&#39;</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'test@example.com'</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="cicd-integration">CI/CD Integration<a class="headerlink" href="#cicd-integration" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## .github/workflows/sql-test.yml</span>
@@ -9620,7 +9620,7 @@ psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </
 <span class="w">          </span><span class="nt">PGPASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_pass</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">for file in migrations/*.sql; do</span>
-<span class="w">            </span><span class="no">psql -f &quot;$file&quot;</span>
+<span class="w">            </span><span class="no">psql -f "$file"</span>
 <span class="w">          </span><span class="no">done</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run tests</span>
@@ -9630,7 +9630,7 @@ psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </
 <span class="w">          </span><span class="nt">PGUSER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_user</span>
 <span class="w">          </span><span class="nt">PGPASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_pass</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">psql -c &quot;SELECT version();&quot;</span>
+<span class="w">          </span><span class="no">psql -c "SELECT version();"</span>
 <span class="w">          </span><span class="no">psql -f tests/test_schema.sql</span>
 </code></pre></div>
 <h3 id="coverage-testing">Coverage Testing<a class="headerlink" href="#coverage-testing" title="Permanent link">&para;</a></h3>
@@ -9643,7 +9643,7 @@ psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </
 <span class="p">);</span>
 
 <span class="c1">-- Enable query logging (PostgreSQL)</span>
-<span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">log_statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;all&#39;</span><span class="p">;</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">SYSTEM</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">log_statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'all'</span><span class="p">;</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="n">pg_reload_conf</span><span class="p">();</span>
 </code></pre></div>
 <hr />
@@ -9652,36 +9652,36 @@ psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </
 <p>Always use parameterized queries; never concatenate user input into SQL.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- NEVER DO THIS - Vulnerable to SQL injection</span>
 <span class="c1">-- Python example showing the vulnerability</span>
-<span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="ss">&quot;SELECT * FROM users WHERE email = &#39;{user_email}&#39;&quot;</span><span class="w">  </span><span class="c1">-- DANGEROUS!</span>
-<span class="c1">-- Attacker input: &quot;&#39; OR &#39;1&#39;=&#39;1&quot; exposes all data</span>
+<span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="ss">"SELECT * FROM users WHERE email = '{user_email}'"</span><span class="w">  </span><span class="c1">-- DANGEROUS!</span>
+<span class="c1">-- Attacker input: "' OR '1'='1" exposes all data</span>
 
 <span class="c1">-- ALWAYS USE - Parameterized queries (Python example)</span>
-<span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;SELECT * FROM users WHERE email = %s&quot;</span>
+<span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">"SELECT * FROM users WHERE email = %s"</span>
 <span class="k">cursor</span><span class="p">.</span><span class="k">execute</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">user_email</span><span class="p">,))</span><span class="w">  </span><span class="c1">-- Safe - parameters are escaped</span>
 
 <span class="c1">-- ALWAYS USE - Prepared statements (Node.js example)</span>
-<span class="n">const</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;SELECT * FROM users WHERE email = $1&#39;</span><span class="p">;</span>
+<span class="n">const</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'SELECT * FROM users WHERE email = $1'</span><span class="p">;</span>
 <span class="n">await</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">userEmail</span><span class="p">]);</span><span class="w">  </span><span class="c1">-- Safe</span>
 </code></pre></div>
 <h3 id="access-control-and-least-privilege">Access Control and Least Privilege<a class="headerlink" href="#access-control-and-least-privilege" title="Permanent link">&para;</a></h3>
 <p>Grant minimum necessary permissions to database users.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Bad - Granting excessive permissions</span>
 <span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">myapp</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">app_user</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Too broad!</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="n">SUPER</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">*</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">app_user</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- NEVER grant SUPER!</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="n">SUPER</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">*</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">app_user</span><span class="o">@</span><span class="s1">'%'</span><span class="p">;</span><span class="w">  </span><span class="c1">-- NEVER grant SUPER!</span>
 
 <span class="c1">-- Good - Minimal permissions for application user</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;app_user&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;SecurePassword123!&#39;</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">'app_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">'SecurePassword123!'</span><span class="p">;</span>
 
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">myapp</span><span class="p">.</span><span class="n">users</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;app_user&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">myapp</span><span class="p">.</span><span class="n">orders</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;app_user&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">myapp</span><span class="p">.</span><span class="n">process_order</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;app_user&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">myapp</span><span class="p">.</span><span class="n">users</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">'app_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">myapp</span><span class="p">.</span><span class="n">orders</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">'app_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">myapp</span><span class="p">.</span><span class="n">process_order</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">'app_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="p">;</span>
 
 <span class="c1">-- Good - Read-only user for reporting</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;report_user&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;SecurePassword456!&#39;</span><span class="p">;</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">myapp</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;report_user&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">'report_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">'SecurePassword456!'</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">myapp</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">'report_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="p">;</span>
 
 <span class="c1">-- Good - Revoke dangerous permissions</span>
-<span class="k">REVOKE</span><span class="w"> </span><span class="n">FILE</span><span class="p">,</span><span class="w"> </span><span class="n">SUPER</span><span class="p">,</span><span class="w"> </span><span class="n">PROCESS</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">*</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="s1">&#39;app_user&#39;</span><span class="o">@</span><span class="s1">&#39;localhost&#39;</span><span class="p">;</span>
+<span class="k">REVOKE</span><span class="w"> </span><span class="n">FILE</span><span class="p">,</span><span class="w"> </span><span class="n">SUPER</span><span class="p">,</span><span class="w"> </span><span class="n">PROCESS</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">*</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="s1">'app_user'</span><span class="o">@</span><span class="s1">'localhost'</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="data-encryption">Data Encryption<a class="headerlink" href="#data-encryption" title="Permanent link">&para;</a></h3>
 <p>Encrypt sensitive data at rest and in transit.</p>
@@ -9693,7 +9693,7 @@ psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </
 <span class="p">);</span>
 
 <span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">)</span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;user@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Password123&#39;</span><span class="p">);</span><span class="w">  </span><span class="c1">-- Exposed!</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'user@example.com'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Password123'</span><span class="p">);</span><span class="w">  </span><span class="c1">-- Exposed!</span>
 
 <span class="c1">-- Good - Use application-level hashing (bcrypt, argon2)</span>
 <span class="c1">-- Store only hashed passwords</span>
@@ -9717,18 +9717,18 @@ psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </
 
 <span class="c1">-- Insert encrypted data</span>
 <span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">sensitive_data</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">ssn_encrypted</span><span class="p">)</span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">pgp_sym_encrypt</span><span class="p">(</span><span class="s1">&#39;123-45-6789&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;encryption_key&#39;</span><span class="p">));</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">pgp_sym_encrypt</span><span class="p">(</span><span class="s1">'123-45-6789'</span><span class="p">,</span><span class="w"> </span><span class="s1">'encryption_key'</span><span class="p">));</span>
 
 <span class="c1">-- Query encrypted data</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">pgp_sym_decrypt</span><span class="p">(</span><span class="n">ssn_encrypted</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;encryption_key&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ssn</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">pgp_sym_decrypt</span><span class="p">(</span><span class="n">ssn_encrypted</span><span class="p">,</span><span class="w"> </span><span class="s1">'encryption_key'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ssn</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">sensitive_data</span>
 <span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 
 <span class="c1">-- Good - Enable SSL/TLS for connections</span>
 <span class="c1">-- In postgresql.conf:</span>
 <span class="c1">-- ssl = on</span>
-<span class="c1">-- ssl_cert_file = &#39;server.crt&#39;</span>
-<span class="c1">-- ssl_key_file = &#39;server.key&#39;</span>
+<span class="c1">-- ssl_cert_file = 'server.crt'</span>
+<span class="c1">-- ssl_key_file = 'server.key'</span>
 </code></pre></div>
 <h3 id="sensitive-data-handling">Sensitive Data Handling<a class="headerlink" href="#sensitive-data-handling" title="Permanent link">&para;</a></h3>
 <p>Protect PII and implement data masking.</p>
@@ -9736,10 +9736,10 @@ psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </
 <span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">users_masked</span><span class="w"> </span><span class="k">AS</span>
 <span class="k">SELECT</span>
 <span class="w">    </span><span class="n">user_id</span><span class="p">,</span>
-<span class="w">    </span><span class="n">CONCAT</span><span class="p">(</span><span class="k">LEFT</span><span class="p">(</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="s1">&#39;***@***.com&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">email_masked</span><span class="p">,</span>
-<span class="w">    </span><span class="n">CONCAT</span><span class="p">(</span><span class="k">LEFT</span><span class="p">(</span><span class="n">phone</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="s1">&#39;-***-****&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">phone_masked</span><span class="p">,</span>
+<span class="w">    </span><span class="n">CONCAT</span><span class="p">(</span><span class="k">LEFT</span><span class="p">(</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="s1">'***@***.com'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">email_masked</span><span class="p">,</span>
+<span class="w">    </span><span class="n">CONCAT</span><span class="p">(</span><span class="k">LEFT</span><span class="p">(</span><span class="n">phone</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="s1">'-***-****'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">phone_masked</span><span class="p">,</span>
 <span class="w">    </span><span class="n">first_name</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;REDACTED&#39;</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">last_name_masked</span>
+<span class="w">    </span><span class="s1">'REDACTED'</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">last_name_masked</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="p">;</span>
 
 <span class="c1">-- Good - Row-level security (PostgreSQL)</span>
@@ -9782,15 +9782,15 @@ psql<span class="w"> </span>-d<span class="w"> </span>test_db<span class="w"> </
 <span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">audit_trigger_func</span><span class="p">()</span>
 <span class="k">RETURNS</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
 <span class="k">BEGIN</span>
-<span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="p">(</span><span class="n">TG_OP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;DELETE&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="p">(</span><span class="n">TG_OP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'DELETE'</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
 <span class="w">        </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">audit_log</span><span class="w"> </span><span class="p">(</span><span class="k">table_name</span><span class="p">,</span><span class="w"> </span><span class="k">operation</span><span class="p">,</span><span class="w"> </span><span class="n">user_name</span><span class="p">,</span><span class="w"> </span><span class="n">old_values</span><span class="p">,</span><span class="w"> </span><span class="n">ip_address</span><span class="p">)</span>
 <span class="w">        </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">TG_TABLE_NAME</span><span class="p">,</span><span class="w"> </span><span class="n">TG_OP</span><span class="p">,</span><span class="w"> </span><span class="k">current_user</span><span class="p">,</span><span class="w"> </span><span class="n">row_to_json</span><span class="p">(</span><span class="k">OLD</span><span class="p">),</span><span class="w"> </span><span class="n">inet_client_addr</span><span class="p">());</span>
 <span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="k">OLD</span><span class="p">;</span>
-<span class="w">    </span><span class="k">ELSIF</span><span class="w"> </span><span class="p">(</span><span class="n">TG_OP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;UPDATE&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">    </span><span class="k">ELSIF</span><span class="w"> </span><span class="p">(</span><span class="n">TG_OP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'UPDATE'</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
 <span class="w">        </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">audit_log</span><span class="w"> </span><span class="p">(</span><span class="k">table_name</span><span class="p">,</span><span class="w"> </span><span class="k">operation</span><span class="p">,</span><span class="w"> </span><span class="n">user_name</span><span class="p">,</span><span class="w"> </span><span class="n">old_values</span><span class="p">,</span><span class="w"> </span><span class="n">new_values</span><span class="p">,</span><span class="w"> </span><span class="n">ip_address</span><span class="p">)</span>
 <span class="w">        </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">TG_TABLE_NAME</span><span class="p">,</span><span class="w"> </span><span class="n">TG_OP</span><span class="p">,</span><span class="w"> </span><span class="k">current_user</span><span class="p">,</span><span class="w"> </span><span class="n">row_to_json</span><span class="p">(</span><span class="k">OLD</span><span class="p">),</span><span class="w"> </span><span class="n">row_to_json</span><span class="p">(</span><span class="k">NEW</span><span class="p">),</span><span class="w"> </span><span class="n">inet_client_addr</span><span class="p">());</span>
 <span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="k">NEW</span><span class="p">;</span>
-<span class="w">    </span><span class="k">ELSIF</span><span class="w"> </span><span class="p">(</span><span class="n">TG_OP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;INSERT&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">    </span><span class="k">ELSIF</span><span class="w"> </span><span class="p">(</span><span class="n">TG_OP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'INSERT'</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
 <span class="w">        </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">audit_log</span><span class="w"> </span><span class="p">(</span><span class="k">table_name</span><span class="p">,</span><span class="w"> </span><span class="k">operation</span><span class="p">,</span><span class="w"> </span><span class="n">user_name</span><span class="p">,</span><span class="w"> </span><span class="n">new_values</span><span class="p">,</span><span class="w"> </span><span class="n">ip_address</span><span class="p">)</span>
 <span class="w">        </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">TG_TABLE_NAME</span><span class="p">,</span><span class="w"> </span><span class="n">TG_OP</span><span class="p">,</span><span class="w"> </span><span class="k">current_user</span><span class="p">,</span><span class="w"> </span><span class="n">row_to_json</span><span class="p">(</span><span class="k">NEW</span><span class="p">),</span><span class="w"> </span><span class="n">inet_client_addr</span><span class="p">());</span>
 <span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="k">NEW</span><span class="p">;</span>
@@ -9831,10 +9831,10 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">app_user</span><span class="w"> </span><span class="n">REQUIRE</span><span class="w"> </span><span class="n">SSL</span><span class="p">;</span>
 
 <span class="c1">-- Good - Restrict connections by IP (MySQL)</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;app_user&#39;</span><span class="o">@</span><span class="s1">&#39;10.0.1.%&#39;</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;SecurePassword123!&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Specific subnet only</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">'app_user'</span><span class="o">@</span><span class="s1">'10.0.1.%'</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">'SecurePassword123!'</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Specific subnet only</span>
 
 <span class="c1">-- Good - Disable remote root access</span>
-<span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">mysql</span><span class="p">.</span><span class="k">user</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">User</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">Host</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;::1&#39;</span><span class="p">);</span>
+<span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">mysql</span><span class="p">.</span><span class="k">user</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">User</span><span class="o">=</span><span class="s1">'root'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">Host</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'localhost'</span><span class="p">,</span><span class="w"> </span><span class="s1">'127.0.0.1'</span><span class="p">,</span><span class="w"> </span><span class="s1">'::1'</span><span class="p">);</span>
 <span class="n">FLUSH</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="p">;</span>
 
 <span class="c1">-- Good - Connection limits</span>
@@ -9845,7 +9845,7 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <div class="highlight"><pre><span></span><code><span class="c1">-- Bad - Stored procedure vulnerable to injection</span>
 <span class="k">CREATE</span><span class="w"> </span><span class="k">PROCEDURE</span><span class="w"> </span><span class="n">get_user_by_email</span><span class="p">(</span><span class="k">IN</span><span class="w"> </span><span class="n">email_input</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">))</span>
 <span class="k">BEGIN</span>
-<span class="w">    </span><span class="k">SET</span><span class="w"> </span><span class="o">@</span><span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CONCAT</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM users WHERE email = &quot;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">email_input</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="p">);</span><span class="w">  </span><span class="c1">-- VULNERABLE!</span>
+<span class="w">    </span><span class="k">SET</span><span class="w"> </span><span class="o">@</span><span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CONCAT</span><span class="p">(</span><span class="s1">'SELECT * FROM users WHERE email = "'</span><span class="p">,</span><span class="w"> </span><span class="n">email_input</span><span class="p">,</span><span class="w"> </span><span class="s1">'"'</span><span class="p">);</span><span class="w">  </span><span class="c1">-- VULNERABLE!</span>
 <span class="w">    </span><span class="k">PREPARE</span><span class="w"> </span><span class="n">stmt</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="o">@</span><span class="n">query</span><span class="p">;</span>
 <span class="w">    </span><span class="k">EXECUTE</span><span class="w"> </span><span class="n">stmt</span><span class="p">;</span>
 <span class="w">    </span><span class="k">DEALLOCATE</span><span class="w"> </span><span class="k">PREPARE</span><span class="w"> </span><span class="n">stmt</span><span class="p">;</span>
@@ -9866,15 +9866,15 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <span class="p">)</span>
 <span class="k">BEGIN</span>
 <span class="w">    </span><span class="c1">-- Validate email format</span>
-<span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">email_input</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">REGEXP</span><span class="w"> </span><span class="s1">&#39;^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$&#39;</span><span class="w"> </span><span class="k">THEN</span>
-<span class="w">        </span><span class="n">SIGNAL</span><span class="w"> </span><span class="k">SQLSTATE</span><span class="w"> </span><span class="s1">&#39;45000&#39;</span>
-<span class="w">        </span><span class="k">SET</span><span class="w"> </span><span class="k">MESSAGE_TEXT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Invalid email format&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">email_input</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">REGEXP</span><span class="w"> </span><span class="s1">'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$'</span><span class="w"> </span><span class="k">THEN</span>
+<span class="w">        </span><span class="n">SIGNAL</span><span class="w"> </span><span class="k">SQLSTATE</span><span class="w"> </span><span class="s1">'45000'</span>
+<span class="w">        </span><span class="k">SET</span><span class="w"> </span><span class="k">MESSAGE_TEXT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Invalid email format'</span><span class="p">;</span>
 <span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
 
 <span class="w">    </span><span class="c1">-- Validate name length</span>
 <span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="k">LENGTH</span><span class="p">(</span><span class="n">first_name_input</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">LENGTH</span><span class="p">(</span><span class="n">first_name_input</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">THEN</span>
-<span class="w">        </span><span class="n">SIGNAL</span><span class="w"> </span><span class="k">SQLSTATE</span><span class="w"> </span><span class="s1">&#39;45000&#39;</span>
-<span class="w">        </span><span class="k">SET</span><span class="w"> </span><span class="k">MESSAGE_TEXT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Invalid name length&#39;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SIGNAL</span><span class="w"> </span><span class="k">SQLSTATE</span><span class="w"> </span><span class="s1">'45000'</span>
+<span class="w">        </span><span class="k">SET</span><span class="w"> </span><span class="k">MESSAGE_TEXT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Invalid name length'</span><span class="p">;</span>
 <span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">first_name</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">email_input</span><span class="p">,</span><span class="w"> </span><span class="n">first_name_input</span><span class="p">);</span>
@@ -9883,17 +9883,17 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <h3 id="prevent-information-disclosure">Prevent Information Disclosure<a class="headerlink" href="#prevent-information-disclosure" title="Permanent link">&para;</a></h3>
 <p>Avoid exposing sensitive information in error messages.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Bad - Exposing table structure in errors</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;invalid&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Error reveals table schema!</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'invalid'</span><span class="p">;</span><span class="w">  </span><span class="c1">-- Error reveals table schema!</span>
 
 <span class="c1">-- Good - Handle errors gracefully (application level)</span>
 <span class="c1">-- Python example</span>
 <span class="n">try</span><span class="p">:</span>
-<span class="w">    </span><span class="k">cursor</span><span class="p">.</span><span class="k">execute</span><span class="p">(</span><span class="ss">&quot;SELECT * FROM users WHERE user_id = %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
+<span class="w">    </span><span class="k">cursor</span><span class="p">.</span><span class="k">execute</span><span class="p">(</span><span class="ss">"SELECT * FROM users WHERE user_id = %s"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
 <span class="k">except</span><span class="w"> </span><span class="n">DatabaseError</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">e</span><span class="p">:</span>
 <span class="w">    </span><span class="o">#</span><span class="w"> </span><span class="n">Log</span><span class="w"> </span><span class="n">detailed</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="n">server</span><span class="o">-</span><span class="n">side</span>
-<span class="w">    </span><span class="n">logger</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="ss">&quot;Database error: {str(e)}&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">logger</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="ss">"Database error: {str(e)}"</span><span class="p">)</span>
 <span class="w">    </span><span class="o">#</span><span class="w"> </span><span class="k">Return</span><span class="w"> </span><span class="n">generic</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">client</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="err">{</span><span class="ss">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="ss">&quot;An error occurred processing your request&quot;</span><span class="err">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="err">{</span><span class="ss">"error"</span><span class="p">:</span><span class="w"> </span><span class="ss">"An error occurred processing your request"</span><span class="err">}</span>
 
 <span class="c1">-- Good - Use views to hide sensitive columns</span>
 <span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">public_user_profile</span><span class="w"> </span><span class="k">AS</span>
@@ -9908,11 +9908,11 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <h3 id="null-comparison-confusion">NULL Comparison Confusion<a class="headerlink" href="#null-comparison-confusion" title="Permanent link">&para;</a></h3>
 <p><strong>Issue</strong>: Using <code>= NULL</code> or <code>!= NULL</code> instead of <code>IS NULL</code> or <code>IS NOT NULL</code> returns unexpected results.</p>
 <p><strong>Example</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="n">comparisons</span><span class="w"> </span><span class="n">don</span><span class="s1">&#39;t work with = or !=</span>
+<div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="n">comparisons</span><span class="w"> </span><span class="n">don</span><span class="s1">'t work with = or !=</span>
 <span class="s1">SELECT * FROM users WHERE email = NULL;  -- ❌ Returns 0 rows (not NULL rows)</span>
 <span class="s1">SELECT * FROM users WHERE email != NULL;  -- ❌ Also returns 0 rows!</span>
 
-<span class="s1">UPDATE users SET status = &#39;</span><span class="n">inactive</span><span class="err">&#39;</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">last_login</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ❌ Updates 0 rows</span>
+<span class="s1">UPDATE users SET status = '</span><span class="n">inactive</span><span class="err">'</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">last_login</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ❌ Updates 0 rows</span>
 </code></pre></div>
 <p><strong>Solution</strong>: Use <code>IS NULL</code> and <code>IS NOT NULL</code> operators.</p>
 <div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Correct</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="n">handling</span>
@@ -9921,7 +9921,7 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ Finds rows with non-NULL email</span>
 
 <span class="k">UPDATE</span><span class="w"> </span><span class="n">users</span>
-<span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;inactive&#39;</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'inactive'</span>
 <span class="k">WHERE</span><span class="w"> </span><span class="n">last_login</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ Updates rows with NULL last_login</span>
 </code></pre></div>
 <p><strong>Key Points</strong>:</p>
@@ -9935,7 +9935,7 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <p><strong>Issue</strong>: Comparing different data types forces type conversion, preventing index usage and slowing queries.</p>
 <p><strong>Example</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">comparison</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="nb">integer</span><span class="w"> </span><span class="k">column</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">order_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;12345&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ❌ Forces type conversion, no index</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">order_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'12345'</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ❌ Forces type conversion, no index</span>
 
 <span class="o">##</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">Integer</span><span class="w"> </span><span class="n">comparison</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="k">column</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ❌ Table scan, not index seek</span>
@@ -9944,7 +9944,7 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <div class="highlight"><pre><span></span><code><span class="o">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Correct</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="n">types</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">order_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12345</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ Integer comparison, uses index</span>
 
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;123&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ String comparison, uses index</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'123'</span><span class="p">;</span><span class="w">  </span><span class="c1">-- ✅ String comparison, uses index</span>
 
 <span class="o">##</span><span class="w"> </span><span class="n">Good</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Explicit</span><span class="w"> </span><span class="n">casting</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">needed</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
@@ -10068,7 +10068,7 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <span class="k">BEGIN</span><span class="w"> </span><span class="k">TRANSACTION</span><span class="w"> </span><span class="k">ISOLATION</span><span class="w"> </span><span class="k">LEVEL</span><span class="w"> </span><span class="k">REPEATABLE</span><span class="w"> </span><span class="k">READ</span><span class="p">;</span>
 
 <span class="k">SELECT</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">balance</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="p">;</span>
-<span class="c1">-- Other transactions can&#39;t modify these rows until commit</span>
+<span class="c1">-- Other transactions can't modify these rows until commit</span>
 <span class="k">UPDATE</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="p">;</span>
 
 <span class="k">COMMIT</span><span class="p">;</span>
@@ -10122,20 +10122,20 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 </code></pre></div>
 <h3 id="avoid-unparameterized-queries">❌ Avoid: Unparameterized Queries<a class="headerlink" href="#avoid-unparameterized-queries" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Bad - SQL injection risk</span>
-<span class="c1">-- query = &quot;SELECT * FROM users WHERE email = &#39;&quot; + user_input + &quot;&#39;&quot;</span>
+<span class="c1">-- query = "SELECT * FROM users WHERE email = '" + user_input + "'"</span>
 
 <span class="c1">-- Good - Parameterized query</span>
-<span class="c1">-- query = &quot;SELECT * FROM users WHERE email = $1&quot;</span>
+<span class="c1">-- query = "SELECT * FROM users WHERE email = $1"</span>
 <span class="c1">-- execute(query, [user_input])</span>
 </code></pre></div>
 <h3 id="avoid-missing-where-in-updatedelete">❌ Avoid: Missing WHERE in UPDATE/DELETE<a class="headerlink" href="#avoid-missing-where-in-updatedelete" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Bad - Updates all rows!</span>
-<span class="k">UPDATE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;inactive&#39;</span><span class="p">;</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'inactive'</span><span class="p">;</span>
 
 <span class="c1">-- Good - Specific WHERE clause</span>
 <span class="k">UPDATE</span><span class="w"> </span><span class="n">users</span>
-<span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;inactive&#39;</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">last_login</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">CURRENT_DATE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;90 days&#39;</span><span class="p">;</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'inactive'</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">last_login</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">CURRENT_DATE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">'90 days'</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="avoid-using-distinct-to-fix-duplicates">❌ Avoid: Using DISTINCT to Fix Duplicates<a class="headerlink" href="#avoid-using-distinct-to-fix-duplicates" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Bad - DISTINCT hides the real problem</span>
@@ -10199,18 +10199,18 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_orders_status_created</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">orders</span><span class="p">(</span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span><span class="p">);</span>
 
 <span class="c1">-- Partial index for specific conditions</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_active_users</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_active_users</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'active'</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="use-parameterized-queries">Use Parameterized Queries<a class="headerlink" href="#use-parameterized-queries" title="Permanent link">&para;</a></h3>
 <p>Prevent SQL injection with parameterized queries:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Good - Parameterized (Python example)</span>
 <span class="k">cursor</span><span class="p">.</span><span class="k">execute</span><span class="p">(</span>
-<span class="w">    </span><span class="ss">&quot;SELECT * FROM users WHERE email = %s&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="ss">"SELECT * FROM users WHERE email = %s"</span><span class="p">,</span>
 <span class="w">    </span><span class="p">(</span><span class="n">user_email</span><span class="p">,)</span>
 <span class="p">)</span>
 
 <span class="c1">-- Bad - String interpolation (SQL injection risk)</span>
-<span class="c1">-- cursor.execute(f&quot;SELECT * FROM users WHERE email = &#39;{user_email}&#39;&quot;)</span>
+<span class="c1">-- cursor.execute(f"SELECT * FROM users WHERE email = '{user_email}'")</span>
 </code></pre></div>
 <h3 id="optimize-join-performance">Optimize JOIN Performance<a class="headerlink" href="#optimize-join-performance" title="Permanent link">&para;</a></h3>
 <p>Choose the right JOIN type and order:</p>
@@ -10219,7 +10219,7 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">name</span>
 <span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span>
-<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'active'</span>
 <span class="p">)</span><span class="w"> </span><span class="n">u</span>
 <span class="k">INNER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span><span class="p">;</span>
 
@@ -10239,7 +10239,7 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <span class="c1">-- Modern pagination with keyset</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="s1">&#39;2024-01-01&#39;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="s1">'2024-01-01'</span>
 <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="k">DESC</span>
 <span class="k">LIMIT</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
 </code></pre></div>
@@ -10260,22 +10260,22 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <div class="highlight"><pre><span></span><code><span class="c1">-- Good - Specific columns</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="p">;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'active'</span><span class="p">;</span>
 
 <span class="c1">-- Bad - SELECT * wastes bandwidth</span>
-<span class="c1">-- SELECT * FROM users WHERE status = &#39;active&#39;;</span>
+<span class="c1">-- SELECT * FROM users WHERE status = 'active';</span>
 </code></pre></div>
 <h3 id="use-ctes-for-readability">Use CTEs for Readability<a class="headerlink" href="#use-ctes-for-readability" title="Permanent link">&para;</a></h3>
 <p>Common Table Expressions improve query readability:</p>
 <div class="highlight"><pre><span></span><code><span class="k">WITH</span><span class="w"> </span><span class="n">active_users</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">email</span>
 <span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span>
-<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'active'</span>
 <span class="p">),</span>
 <span class="n">recent_orders</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">order_count</span>
 <span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span>
-<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">CURRENT_DATE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">CURRENT_DATE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">'30 days'</span>
 <span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">user_id</span>
 <span class="p">)</span>
 <span class="k">SELECT</span>
@@ -10305,8 +10305,8 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <div class="highlight"><pre><span></span><code><span class="c1">-- Good - Explicit NULL handling</span>
 <span class="k">SELECT</span>
 <span class="w">    </span><span class="n">user_id</span><span class="p">,</span>
-<span class="w">    </span><span class="k">COALESCE</span><span class="p">(</span><span class="n">phone</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Not provided&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">phone</span><span class="p">,</span>
-<span class="w">    </span><span class="k">NULLIF</span><span class="p">(</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">email</span><span class="w">  </span><span class="c1">-- Convert empty strings to NULL</span>
+<span class="w">    </span><span class="k">COALESCE</span><span class="p">(</span><span class="n">phone</span><span class="p">,</span><span class="w"> </span><span class="s1">'Not provided'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">phone</span><span class="p">,</span>
+<span class="w">    </span><span class="k">NULLIF</span><span class="p">(</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="s1">''</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">email</span><span class="w">  </span><span class="c1">-- Convert empty strings to NULL</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="p">;</span>
 
 <span class="c1">-- Check for NULL explicitly</span>
@@ -10320,7 +10320,7 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <span class="w">    </span><span class="n">email</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">,</span>
 <span class="w">    </span><span class="n">age</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">age</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">18</span><span class="p">),</span>
 <span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
-<span class="w">    </span><span class="n">status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;inactive&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;suspended&#39;</span><span class="p">))</span>
+<span class="w">    </span><span class="n">status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">'active'</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'active'</span><span class="p">,</span><span class="w"> </span><span class="s1">'inactive'</span><span class="p">,</span><span class="w"> </span><span class="s1">'suspended'</span><span class="p">))</span>
 <span class="p">);</span>
 
 <span class="c1">-- Foreign key constraints</span>
@@ -10349,7 +10349,7 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
 <span class="w">    </span><span class="k">EXTRACT</span><span class="p">(</span><span class="k">YEAR</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">AGE</span><span class="p">(</span><span class="k">CURRENT_DATE</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">created_at</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">years_active</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
 <span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;completed&#39;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'completed'</span>
 <span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">created_at</span><span class="p">;</span>
 </code></pre></div>
 <hr />
@@ -10499,10 +10499,10 @@ aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>b
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

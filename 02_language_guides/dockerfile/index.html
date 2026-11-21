@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -8980,7 +8980,7 @@ best practices for creating secure, efficient, and maintainable container images
 
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;index.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"index.js"</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="from-instruction">FROM Instruction<a class="headerlink" href="#from-instruction" title="Permanent link">&para;</a></h2>
@@ -9008,7 +9008,7 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/dist<span class="w"> </span>./dist
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dist/index.js"</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="workdir-instruction">WORKDIR Instruction<a class="headerlink" href="#workdir-instruction" title="Permanent link">&para;</a></h2>
@@ -9065,7 +9065,7 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="w">    </span>apt-get<span class="w"> </span>autoremove<span class="w"> </span>-y<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
 
-<span class="c">## Bad - Clean up in separate layer (doesn&#39;t reduce image size)</span>
+<span class="c">## Bad - Clean up in separate layer (doesn't reduce image size)</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>build-essential
 <span class="k">RUN</span><span class="w"> </span>make
@@ -9079,7 +9079,7 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="w">    </span><span class="nv">LOG_LEVEL</span><span class="o">=</span>info
 
 <span class="c">## Path variables</span>
-<span class="k">ENV</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/app/node_modules/.bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">ENV</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"/app/node_modules/.bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">"</span>
 </code></pre></div>
 <hr />
 <h2 id="expose-instruction">EXPOSE Instruction<a class="headerlink" href="#expose-instruction" title="Permanent link">&para;</a></h2>
@@ -9134,7 +9134,7 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>CMD<span class="w"> </span>node<span class="w"> </span>healthcheck.js
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dist/index.js"</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="python-application">Python Application<a class="headerlink" href="#python-application" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## syntax=docker/dockerfile:1</span>
@@ -9175,7 +9175,7 @@ best practices for creating secure, efficient, and maintainable container images
 
 <span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
 
-<span class="k">ENV</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/home/appuser/.local/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="k">ENV</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"/home/appuser/.local/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="nv">PYTHONUNBUFFERED</span><span class="o">=</span><span class="m">1</span>
 
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8000</span>
@@ -9183,7 +9183,7 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="k">CMD</span><span class="w"> </span>python<span class="w"> </span>healthcheck.py
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;uvicorn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;main:app&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--port&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;8000&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"python"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-m"</span><span class="p">,</span><span class="w"> </span><span class="s2">"uvicorn"</span><span class="p">,</span><span class="w"> </span><span class="s2">"main:app"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--host"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--port"</span><span class="p">,</span><span class="w"> </span><span class="s2">"8000"</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="go-application">Go Application<a class="headerlink" href="#go-application" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## syntax=docker/dockerfile:1</span>
@@ -9226,7 +9226,7 @@ best practices for creating secure, efficient, and maintainable container images
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="k">CMD</span><span class="w"> </span>wget<span class="w"> </span>--no-verbose<span class="w"> </span>--tries<span class="o">=</span><span class="m">1</span><span class="w"> </span>--spider<span class="w"> </span>http://localhost:8080/health<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;./main&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"./main"</span><span class="p">]</span>
 </code></pre></div>
 <hr />
 <h2 id="dockerignore">.dockerignore<a class="headerlink" href="#dockerignore" title="Permanent link">&para;</a></h2>
@@ -9291,60 +9291,60 @@ sudo<span class="w"> </span>mv<span class="w"> </span>container-structure-test-l
 
 <span class="c1">## Command tests - verify installed packages</span>
 <span class="nt">commandTests</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;node</span><span class="nv"> </span><span class="s">version&quot;</span>
-<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;node&quot;</span>
-<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;--version&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">expectedOutput</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;v18.*&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"node</span><span class="nv"> </span><span class="s">version"</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">"node"</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"--version"</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">expectedOutput</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"v18.*"</span><span class="p p-Indicator">]</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;npm</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">installed&quot;</span>
-<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;which&quot;</span>
-<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;npm&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"npm</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">installed"</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">"which"</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"npm"</span><span class="p p-Indicator">]</span>
 <span class="w">    </span><span class="nt">exitCode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;application</span><span class="nv"> </span><span class="s">exists&quot;</span>
-<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
-<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;-f&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;/app/dist/index.js&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"application</span><span class="nv"> </span><span class="s">exists"</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">"test"</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"-f"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"/app/dist/index.js"</span><span class="p p-Indicator">]</span>
 <span class="w">    </span><span class="nt">exitCode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 
 <span class="c1">## File existence tests</span>
 <span class="nt">fileExistenceTests</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;application</span><span class="nv"> </span><span class="s">directory&quot;</span>
-<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/app&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"application</span><span class="nv"> </span><span class="s">directory"</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"/app"</span>
 <span class="w">    </span><span class="nt">shouldExist</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">permissions</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;drwxr-xr-x&quot;</span>
+<span class="w">    </span><span class="nt">permissions</span><span class="p">:</span><span class="w"> </span><span class="s">"drwxr-xr-x"</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;package.json</span><span class="nv"> </span><span class="s">exists&quot;</span>
-<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/app/package.json&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"package.json</span><span class="nv"> </span><span class="s">exists"</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"/app/package.json"</span>
 <span class="w">    </span><span class="nt">shouldExist</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;no</span><span class="nv"> </span><span class="s">secrets</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">image&quot;</span>
-<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/app/.env&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"no</span><span class="nv"> </span><span class="s">secrets</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">image"</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"/app/.env"</span>
 <span class="w">    </span><span class="nt">shouldExist</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 
 <span class="c1">## File content tests</span>
 <span class="nt">fileContentTests</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;package.json</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">correct</span><span class="nv"> </span><span class="s">version&quot;</span>
-<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/app/package.json&quot;</span>
-<span class="w">    </span><span class="nt">expectedContents</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;&quot;version&quot;:</span><span class="nv"> </span><span class="s">&quot;1.0.0&quot;&#39;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"package.json</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">correct</span><span class="nv"> </span><span class="s">version"</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"/app/package.json"</span>
+<span class="w">    </span><span class="nt">expectedContents</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'"version":</span><span class="nv"> </span><span class="s">"1.0.0"'</span><span class="p p-Indicator">]</span>
 
 <span class="c1">## Metadata tests</span>
 <span class="nt">metadataTest</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">env</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NODE_ENV&quot;</span>
-<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;production&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;PORT&quot;</span>
-<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3000&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">"NODE_ENV"</span>
+<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"production"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">"PORT"</span>
+<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"3000"</span>
 
-<span class="w">  </span><span class="nt">exposedPorts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;3000&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">exposedPorts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"3000"</span><span class="p p-Indicator">]</span>
 
-<span class="w">  </span><span class="nt">workdir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/app&quot;</span>
+<span class="w">  </span><span class="nt">workdir</span><span class="p">:</span><span class="w"> </span><span class="s">"/app"</span>
 
 <span class="w">  </span><span class="c1">## Verify non-root user</span>
-<span class="w">  </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;nodejs&quot;</span>
+<span class="w">  </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="s">"nodejs"</span>
 
 <span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;org.opencontainers.image.title&quot;</span>
-<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;My</span><span class="nv"> </span><span class="s">Application&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">"org.opencontainers.image.title"</span>
+<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"My</span><span class="nv"> </span><span class="s">Application"</span>
 </code></pre></div>
 <h3 id="running-structure-tests">Running Structure Tests<a class="headerlink" href="#running-structure-tests" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## Test a locally built image</span>
@@ -9395,7 +9395,7 @@ hadolint<span class="w"> </span>Dockerfile<span class="w"> </span><span class="o
 <h3 id="integration-testing-with-docker-compose">Integration Testing with Docker Compose<a class="headerlink" href="#integration-testing-with-docker-compose" title="Permanent link">&para;</a></h3>
 <p>Test multi-container applications:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## docker-compose.test.yml</span>
-<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">'3.8'</span>
 
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">app</span><span class="p">:</span>
@@ -9416,7 +9416,7 @@ hadolint<span class="w"> </span>Dockerfile<span class="w"> </span><span class="o
 <span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">      </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">test&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"CMD-SHELL"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">test"</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
 <span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3s</span>
 <span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
@@ -9456,30 +9456,30 @@ teardown<span class="o">()</span><span class="w"> </span><span class="o">{</span
 <span class="w">  </span>docker<span class="w"> </span>rm<span class="w"> </span>test-app
 <span class="o">}</span>
 
-@test<span class="w"> </span><span class="s2">&quot;container starts successfully&quot;</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span>run<span class="w"> </span>docker<span class="w"> </span>ps<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;name=test-app&quot;</span><span class="w"> </span>--format<span class="w"> </span><span class="s2">&quot;{{.Status}}&quot;</span>
-<span class="w">  </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span><span class="s2">&quot;Up&quot;</span><span class="w"> </span><span class="o">]]</span>
+@test<span class="w"> </span><span class="s2">"container starts successfully"</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>run<span class="w"> </span>docker<span class="w"> </span>ps<span class="w"> </span>--filter<span class="w"> </span><span class="s2">"name=test-app"</span><span class="w"> </span>--format<span class="w"> </span><span class="s2">"{{.Status}}"</span>
+<span class="w">  </span><span class="o">[[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$output</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span><span class="s2">"Up"</span><span class="w"> </span><span class="o">]]</span>
 <span class="o">}</span>
 
-@test<span class="w"> </span><span class="s2">&quot;application responds to HTTP requests&quot;</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span>run<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>http://localhost:3000/health
-<span class="w">  </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;200&quot;</span><span class="w"> </span><span class="o">]</span>
+@test<span class="w"> </span><span class="s2">"application responds to HTTP requests"</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>run<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">"%{http_code}"</span><span class="w"> </span>http://localhost:3000/health
+<span class="w">  </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$output</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"200"</span><span class="w"> </span><span class="o">]</span>
 <span class="o">}</span>
 
-@test<span class="w"> </span><span class="s2">&quot;container runs as non-root user&quot;</span><span class="w"> </span><span class="o">{</span>
+@test<span class="w"> </span><span class="s2">"container runs as non-root user"</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span>run<span class="w"> </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>test-app<span class="w"> </span>whoami
-<span class="w">  </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;nodejs&quot;</span><span class="w"> </span><span class="o">]</span>
+<span class="w">  </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$output</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"nodejs"</span><span class="w"> </span><span class="o">]</span>
 <span class="o">}</span>
 
-@test<span class="w"> </span><span class="s2">&quot;container has minimal attack surface&quot;</span><span class="w"> </span><span class="o">{</span>
+@test<span class="w"> </span><span class="s2">"container has minimal attack surface"</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span><span class="c1"># Verify no shell in distroless images</span>
-<span class="w">  </span>run<span class="w"> </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>test-app<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exit 0&quot;</span>
-<span class="w">  </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span>
+<span class="w">  </span>run<span class="w"> </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>test-app<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">"exit 0"</span>
+<span class="w">  </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$status</span><span class="s2">"</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span>
 <span class="o">}</span>
 
-@test<span class="w"> </span><span class="s2">&quot;application logs are accessible&quot;</span><span class="w"> </span><span class="o">{</span>
+@test<span class="w"> </span><span class="s2">"application logs are accessible"</span><span class="w"> </span><span class="o">{</span>
 <span class="w">  </span>run<span class="w"> </span>docker<span class="w"> </span>logs<span class="w"> </span>test-app
-<span class="w">  </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span><span class="s2">&quot;Server started on port 3000&quot;</span><span class="w"> </span><span class="o">]]</span>
+<span class="w">  </span><span class="o">[[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$output</span><span class="s2">"</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span><span class="s2">"Server started on port 3000"</span><span class="w"> </span><span class="o">]]</span>
 <span class="o">}</span>
 </code></pre></div>
 <h3 id="cicd-integration">CI/CD Integration<a class="headerlink" href="#cicd-integration" title="Permanent link">&para;</a></h3>
@@ -9523,10 +9523,10 @@ teardown<span class="o">()</span><span class="w"> </span><span class="o">{</span
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test image size</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">size=$(docker image inspect myapp:test --format=&#39;{{.Size}}&#39;)</span>
+<span class="w">          </span><span class="no">size=$(docker image inspect myapp:test --format='{{.Size}}')</span>
 <span class="w">          </span><span class="no">max_size=$((500 * 1024 * 1024))  # 500MB</span>
-<span class="w">          </span><span class="no">if [ &quot;$size&quot; -gt &quot;$max_size&quot; ]; then</span>
-<span class="w">            </span><span class="no">echo &quot;Image too large: $(($size / 1024 / 1024))MB&quot;</span>
+<span class="w">          </span><span class="no">if [ "$size" -gt "$max_size" ]; then</span>
+<span class="w">            </span><span class="no">echo "Image too large: $(($size / 1024 / 1024))MB"</span>
 <span class="w">            </span><span class="no">exit 1</span>
 <span class="w">          </span><span class="no">fi</span>
 
@@ -9543,43 +9543,43 @@ teardown<span class="o">()</span><span class="w"> </span><span class="o">{</span
 <span class="nt">schemaVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0.0</span>
 
 <span class="nt">commandTests</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;runs</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">non-root&quot;</span>
-<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;whoami&quot;</span>
-<span class="w">    </span><span class="nt">expectedOutput</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;nodejs|appuser|node&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">excludedOutput</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;root&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"runs</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">non-root"</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">"whoami"</span>
+<span class="w">    </span><span class="nt">expectedOutput</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"nodejs|appuser|node"</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">excludedOutput</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"root"</span><span class="p p-Indicator">]</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;no</span><span class="nv"> </span><span class="s">write</span><span class="nv"> </span><span class="s">permissions</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">system</span><span class="nv"> </span><span class="s">directories&quot;</span>
-<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
-<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;-w&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;/usr&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"no</span><span class="nv"> </span><span class="s">write</span><span class="nv"> </span><span class="s">permissions</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">system</span><span class="nv"> </span><span class="s">directories"</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">"test"</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"-w"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"/usr"</span><span class="p p-Indicator">]</span>
 <span class="w">    </span><span class="nt">exitCode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;no</span><span class="nv"> </span><span class="s">unnecessary</span><span class="nv"> </span><span class="s">tools</span><span class="nv"> </span><span class="s">installed&quot;</span>
-<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;which&quot;</span>
-<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;wget&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"no</span><span class="nv"> </span><span class="s">unnecessary</span><span class="nv"> </span><span class="s">tools</span><span class="nv"> </span><span class="s">installed"</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">"which"</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"wget"</span><span class="p p-Indicator">]</span>
 <span class="w">    </span><span class="nt">exitCode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 
 <span class="nt">fileExistenceTests</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;no</span><span class="nv"> </span><span class="s">.git</span><span class="nv"> </span><span class="s">directory&quot;</span>
-<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/app/.git&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"no</span><span class="nv"> </span><span class="s">.git</span><span class="nv"> </span><span class="s">directory"</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"/app/.git"</span>
 <span class="w">    </span><span class="nt">shouldExist</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;no</span><span class="nv"> </span><span class="s">environment</span><span class="nv"> </span><span class="s">files&quot;</span>
-<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/app/.env&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"no</span><span class="nv"> </span><span class="s">environment</span><span class="nv"> </span><span class="s">files"</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"/app/.env"</span>
 <span class="w">    </span><span class="nt">shouldExist</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;no</span><span class="nv"> </span><span class="s">node_modules</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">final</span><span class="nv"> </span><span class="s">image&quot;</span>
-<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/app/node_modules&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"no</span><span class="nv"> </span><span class="s">node_modules</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">final</span><span class="nv"> </span><span class="s">image"</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"/app/node_modules"</span>
 <span class="w">    </span><span class="nt">shouldExist</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># For compiled apps</span>
 
 <span class="nt">metadataTest</span><span class="p">:</span>
 <span class="w">  </span><span class="c1">## Ensure running as non-root</span>
-<span class="w">  </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;nodejs&quot;</span>
+<span class="w">  </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="s">"nodejs"</span>
 
 <span class="w">  </span><span class="c1">## No hardcoded secrets in env</span>
 <span class="w">  </span><span class="nt">envVars</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;API_KEY&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">"API_KEY"</span>
 <span class="w">      </span><span class="nt">isSet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;DB_PASSWORD&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">"DB_PASSWORD"</span>
 <span class="w">      </span><span class="nt">isSet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </code></pre></div>
 <h3 id="image-layer-analysis">Image Layer Analysis<a class="headerlink" href="#image-layer-analysis" title="Permanent link">&para;</a></h3>
@@ -9605,15 +9605,15 @@ docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </
 <span class="nv">end_time</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
 <span class="nv">build_time</span><span class="o">=</span><span class="k">$((</span><span class="nv">end_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">start_time</span><span class="k">))</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Build time: </span><span class="si">${</span><span class="nv">build_time</span><span class="si">}</span><span class="s2">s&quot;</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$build_time</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Build taking too long (&gt;5 minutes)&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Build time: </span><span class="si">${</span><span class="nv">build_time</span><span class="si">}</span><span class="s2">s"</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$build_time</span><span class="s2">"</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Build taking too long (&gt;5 minutes)"</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
 
 <span class="c1">## Image size test</span>
-<span class="nv">size</span><span class="o">=</span><span class="k">$(</span>docker<span class="w"> </span>image<span class="w"> </span>inspect<span class="w"> </span>myapp:test<span class="w"> </span>--format<span class="o">=</span><span class="s1">&#39;{{.Size}}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>numfmt<span class="w"> </span>--to<span class="o">=</span>iec<span class="k">)</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Image size: </span><span class="nv">$size</span><span class="s2">&quot;</span>
+<span class="nv">size</span><span class="o">=</span><span class="k">$(</span>docker<span class="w"> </span>image<span class="w"> </span>inspect<span class="w"> </span>myapp:test<span class="w"> </span>--format<span class="o">=</span><span class="s1">'{{.Size}}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>numfmt<span class="w"> </span>--to<span class="o">=</span>iec<span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Image size: </span><span class="nv">$size</span><span class="s2">"</span>
 
 <span class="c1">## Startup time test</span>
 <span class="nv">start_time</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
@@ -9624,13 +9624,13 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 <span class="nv">end_time</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
 <span class="nv">startup_time</span><span class="o">=</span><span class="k">$((</span><span class="nv">end_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">start_time</span><span class="k">))</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Startup time: </span><span class="si">${</span><span class="nv">startup_time</span><span class="si">}</span><span class="s2">s&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Startup time: </span><span class="si">${</span><span class="nv">startup_time</span><span class="si">}</span><span class="s2">s"</span>
 
 docker<span class="w"> </span>stop<span class="w"> </span>perf-test
 docker<span class="w"> </span>rm<span class="w"> </span>perf-test
 
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$startup_time</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Startup too slow (&gt;30 seconds)&quot;</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$startup_time</span><span class="s2">"</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Startup too slow (&gt;30 seconds)"</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
 </code></pre></div>
@@ -9684,13 +9684,13 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 </code></pre></div>
 <hr />
 <h2 id="labels">Labels<a class="headerlink" href="#labels" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="k">LABEL</span><span class="w"> </span>org.opencontainers.image.title<span class="o">=</span><span class="s2">&quot;My Application&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.description<span class="o">=</span><span class="s2">&quot;A sample application&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.version<span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.authors<span class="o">=</span><span class="s2">&quot;Tyler Dukes &lt;tyler@example.com&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.url<span class="o">=</span><span class="s2">&quot;https://example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.source<span class="o">=</span><span class="s2">&quot;https://github.com/myorg/myapp&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.licenses<span class="o">=</span><span class="s2">&quot;MIT&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">LABEL</span><span class="w"> </span>org.opencontainers.image.title<span class="o">=</span><span class="s2">"My Application"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.description<span class="o">=</span><span class="s2">"A sample application"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.version<span class="o">=</span><span class="s2">"1.0.0"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.authors<span class="o">=</span><span class="s2">"Tyler Dukes &lt;tyler@example.com&gt;"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.url<span class="o">=</span><span class="s2">"https://example.com"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.source<span class="o">=</span><span class="s2">"https://github.com/myorg/myapp"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.licenses<span class="o">=</span><span class="s2">"MIT"</span>
 </code></pre></div>
 <hr />
 <h2 id="common-pitfalls">Common Pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h2>
@@ -9761,7 +9761,7 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 
 <span class="c">## Good - Explicit download with verification</span>
 <span class="k">RUN</span><span class="w"> </span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://example.com/file.tar.gz<span class="w"> </span>-o<span class="w"> </span>/tmp/file.tar.gz<span class="w"> </span><span class="se">\</span>
-<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;expected-sha256  /tmp/file.tar.gz&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sha256sum<span class="w"> </span>-c<span class="w"> </span>-<span class="w"> </span><span class="se">\</span>
+<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"expected-sha256  /tmp/file.tar.gz"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sha256sum<span class="w"> </span>-c<span class="w"> </span>-<span class="w"> </span><span class="se">\</span>
 <span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>tar<span class="w"> </span>-xzf<span class="w"> </span>/tmp/file.tar.gz<span class="w"> </span>-C<span class="w"> </span>/app/<span class="w"> </span><span class="se">\</span>
 <span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>/tmp/file.tar.gz
 </code></pre></div>
@@ -9781,8 +9781,8 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.js&quot;</span><span class="p">]</span>
-<span class="c"># Container shows &quot;Up&quot; even if server crashes!</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"server.js"</span><span class="p">]</span>
+<span class="c"># Container shows "Up" even if server crashes!</span>
 </code></pre></div>
 <p><strong>Solution</strong>: Add HEALTHCHECK to verify application is responding.</p>
 <div class="highlight"><pre><span></span><code><span class="c">## Good - Health check validates application</span>
@@ -9795,15 +9795,15 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>40s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>CMD<span class="w"> </span>node<span class="w"> </span>healthcheck.js
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"server.js"</span><span class="p">]</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1">// healthcheck.js</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">);</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">host</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">port</span><span class="o">:</span><span class="w"> </span><span class="mf">3000</span><span class="p">,</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/health&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">timeout</span><span class="o">:</span><span class="w"> </span><span class="mf">2000</span><span class="w"> </span><span class="p">};</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'http'</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">host</span><span class="o">:</span><span class="w"> </span><span class="s1">'localhost'</span><span class="p">,</span><span class="w"> </span><span class="nx">port</span><span class="o">:</span><span class="w"> </span><span class="mf">3000</span><span class="p">,</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'/health'</span><span class="p">,</span><span class="w"> </span><span class="nx">timeout</span><span class="o">:</span><span class="w"> </span><span class="mf">2000</span><span class="w"> </span><span class="p">};</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">http</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">200</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">);</span>
 <span class="p">});</span>
-<span class="nx">req</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mf">1</span><span class="p">));</span>
+<span class="nx">req</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mf">1</span><span class="p">));</span>
 <span class="nx">req</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
 </code></pre></div>
 <p><strong>Key Points</strong>:</p>
@@ -9820,7 +9820,7 @@ docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> 
 <div class="highlight"><pre><span></span><code><span class="c">## Bad - Secret stored in image layer!</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span>
 <span class="k">ARG</span><span class="w"> </span>NPM_TOKEN<span class="w">  </span>#<span class="w"> </span>Secret<span class="w"> </span>visible<span class="w"> </span><span class="k">in</span><span class="w"> </span>docker<span class="w"> </span>history!
-<span class="k">RUN</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;//registry.npmjs.org/:_authToken=</span><span class="si">${</span><span class="nv">NPM_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.npmrc<span class="w"> </span><span class="se">\</span>
+<span class="k">RUN</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"//registry.npmjs.org/:_authToken=</span><span class="si">${</span><span class="nv">NPM_TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>&gt;<span class="w"> </span>.npmrc<span class="w"> </span><span class="se">\</span>
 <span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>npm<span class="w"> </span>install<span class="w"> </span><span class="se">\</span>
 <span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>.npmrc<span class="w">  </span>#<span class="w"> </span>Too<span class="w"> </span>late!<span class="w"> </span>Token<span class="w"> </span>already<span class="w"> </span><span class="k">in</span><span class="w"> </span>image<span class="w"> </span>layer
 </code></pre></div>
@@ -9849,14 +9849,14 @@ docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"
 <div class="highlight"><pre><span></span><code><span class="c">## Bad - Running as root</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;index.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"index.js"</span><span class="p">]</span>
 
 <span class="c">## Good - Non-root user</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 <span class="k">RUN</span><span class="w"> </span>adduser<span class="w"> </span>-D<span class="w"> </span>appuser
 <span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;index.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"index.js"</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="avoid-using-latest-tag">❌ Avoid: Using latest Tag<a class="headerlink" href="#avoid-using-latest-tag" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## Bad - Unpredictable builds</span>
@@ -9874,7 +9874,7 @@ docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"
 <span class="w">    </span>vim<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>nano
 
-<span class="c">## Good - Only install what&#39;s needed</span>
+<span class="c">## Good - Only install what's needed</span>
 <span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>build-essential<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
@@ -9921,7 +9921,7 @@ docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>install<span class="w">  </span>#<span class="w"> </span>Includes<span class="w"> </span>dev<span class="w"> </span>dependencies
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;start&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"npm"</span><span class="p">,</span><span class="w"> </span><span class="s2">"start"</span><span class="p">]</span>
 
 <span class="c">## Good - Multi-stage build</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
@@ -9937,14 +9937,14 @@ docker<span class="w"> </span>buildx<span class="w"> </span>build<span class="w"
 <span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/package*.json<span class="w"> </span>./
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production
 <span class="k">USER</span><span class="w"> </span><span class="s">node</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dist/index.js"</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="avoid-exposing-secrets-in-build">❌ Avoid: Exposing Secrets in Build<a class="headerlink" href="#avoid-exposing-secrets-in-build" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c">## Bad - Secrets in image layers</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">node:22-alpine</span>
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>.env<span class="w"> </span>.env<span class="w">  </span>#<span class="w"> </span>❌<span class="w"> </span>Secret<span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span>image!
-<span class="k">RUN</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;API_KEY=secret123&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>config.txt<span class="w">  </span>#<span class="w"> </span>❌<span class="w"> </span>In<span class="w"> </span>layer<span class="w"> </span>history!
+<span class="k">RUN</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"API_KEY=secret123"</span><span class="w"> </span>&gt;<span class="w"> </span>config.txt<span class="w">  </span>#<span class="w"> </span>❌<span class="w"> </span>In<span class="w"> </span>layer<span class="w"> </span>history!
 
 <span class="c">## Good - Use build secrets (Docker BuildKit)</span>
 <span class="c">## syntax=docker/dockerfile:1</span>
@@ -10017,7 +10017,7 @@ hadolint<span class="w"> </span>--format<span class="w"> </span>json<span class=
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--only<span class="o">=</span>production
 <span class="k">USER</span><span class="w"> </span><span class="s">nodejs</span>
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dist/index.js"</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="optimize-layer-caching">Optimize Layer Caching<a class="headerlink" href="#optimize-layer-caching" title="Permanent link">&para;</a></h3>
 <p>Order instructions from least to most frequently changing:</p>
@@ -10141,7 +10141,7 @@ docker-compose*.yml
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
 <span class="k">COPY</span><span class="w"> </span>--chown<span class="o">=</span>node:node<span class="w"> </span>.<span class="w"> </span>.
 <span class="k">USER</span><span class="w"> </span><span class="s">node</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;index.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"index.js"</span><span class="p">]</span>
 
 <span class="c"># Python - create custom user</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim</span>
@@ -10150,7 +10150,7 @@ docker-compose*.yml
 <span class="w">    </span>chown<span class="w"> </span>-R<span class="w"> </span>appuser:appuser<span class="w"> </span>/app
 <span class="k">COPY</span><span class="w"> </span>--chown<span class="o">=</span>appuser:appuser<span class="w"> </span>.<span class="w"> </span>.
 <span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;app.py&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"python"</span><span class="p">,</span><span class="w"> </span><span class="s2">"app.py"</span><span class="p">]</span>
 
 <span class="c"># Alpine - create user with adduser</span>
 <span class="k">FROM</span><span class="w"> </span><span class="s">alpine:3.19</span>
@@ -10173,7 +10173,7 @@ docker-compose*.yml
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c"># Bad - Secret stored in image layer</span>
 <span class="k">ARG</span><span class="w"> </span>NPM_TOKEN
-<span class="k">RUN</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;//registry.npmjs.org/:_authToken=</span><span class="si">${</span><span class="nv">NPM_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.npmrc<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<span class="k">RUN</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"//registry.npmjs.org/:_authToken=</span><span class="si">${</span><span class="nv">NPM_TOKEN</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span>&gt;<span class="w"> </span>.npmrc<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>npm<span class="w"> </span>install<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>rm<span class="w"> </span>.npmrc<span class="w">  </span>#<span class="w"> </span>Too<span class="w"> </span>late!<span class="w"> </span>Token<span class="w"> </span>already<span class="w"> </span><span class="k">in</span><span class="w"> </span>layer
 </code></pre></div>
@@ -10194,15 +10194,15 @@ docker-compose*.yml
 </code></pre></div>
 <h3 id="use-metadata-labels">Use Metadata Labels<a class="headerlink" href="#use-metadata-labels" title="Permanent link">&para;</a></h3>
 <p>Add OCI-compliant labels for documentation:</p>
-<div class="highlight"><pre><span></span><code><span class="k">LABEL</span><span class="w"> </span>org.opencontainers.image.title<span class="o">=</span><span class="s2">&quot;My Application&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.description<span class="o">=</span><span class="s2">&quot;Production-ready web service&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.version<span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.authors<span class="o">=</span><span class="s2">&quot;team@example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.url<span class="o">=</span><span class="s2">&quot;https://example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.source<span class="o">=</span><span class="s2">&quot;https://github.com/org/repo&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.licenses<span class="o">=</span><span class="s2">&quot;MIT&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.created<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BUILD_DATE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">      </span>org.opencontainers.image.revision<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">GIT_COMMIT</span><span class="si">}</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">LABEL</span><span class="w"> </span>org.opencontainers.image.title<span class="o">=</span><span class="s2">"My Application"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.description<span class="o">=</span><span class="s2">"Production-ready web service"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.version<span class="o">=</span><span class="s2">"1.0.0"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.authors<span class="o">=</span><span class="s2">"team@example.com"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.url<span class="o">=</span><span class="s2">"https://example.com"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.source<span class="o">=</span><span class="s2">"https://github.com/org/repo"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.licenses<span class="o">=</span><span class="s2">"MIT"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.created<span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">BUILD_DATE</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>org.opencontainers.image.revision<span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">GIT_COMMIT</span><span class="si">}</span><span class="s2">"</span>
 </code></pre></div>
 <h3 id="leverage-build-cache-mounts">Leverage Build Cache Mounts<a class="headerlink" href="#leverage-build-cache-mounts" title="Permanent link">&para;</a></h3>
 <p>Use cache mounts for package managers:</p>
@@ -10272,7 +10272,7 @@ docker-compose*.yml
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>install
 
 <span class="c"># Bad - cd only affects single RUN</span>
-<span class="k">RUN</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/app<span class="w">  </span>#<span class="w"> </span>Doesn<span class="err">&#39;</span>t<span class="w"> </span>persist<span class="w"> </span>to<span class="w"> </span>next<span class="w"> </span>instruction
+<span class="k">RUN</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/app<span class="w">  </span>#<span class="w"> </span>Doesn<span class="err">'</span>t<span class="w"> </span>persist<span class="w"> </span>to<span class="w"> </span>next<span class="w"> </span>instruction
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.<span class="w">  </span>#<span class="w"> </span>Copies<span class="w"> </span>to<span class="w"> </span>wrong<span class="w"> </span>location!
 </code></pre></div>
 <h3 id="avoid-installing-unnecessary-packages_1">Avoid Installing Unnecessary Packages<a class="headerlink" href="#avoid-installing-unnecessary-packages_1" title="Permanent link">&para;</a></h3>
@@ -10319,8 +10319,8 @@ trivy<span class="w"> </span>image<span class="w"> </span>--exit-code<span class
 <h3 id="use-specific-entrypoint-and-cmd">Use Specific ENTRYPOINT and CMD<a class="headerlink" href="#use-specific-entrypoint-and-cmd" title="Permanent link">&para;</a></h3>
 <p>Use exec form for proper signal handling:</p>
 <div class="highlight"><pre><span></span><code><span class="c"># Good - Exec form (JSON array)</span>
-<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;uvicorn&quot;</span><span class="p">]</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;main:app&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--port&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;8000&quot;</span><span class="p">]</span>
+<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">"python"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-m"</span><span class="p">,</span><span class="w"> </span><span class="s2">"uvicorn"</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"main:app"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--host"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0.0.0.0"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--port"</span><span class="p">,</span><span class="w"> </span><span class="s2">"8000"</span><span class="p">]</span>
 
 <span class="c"># Bad - Shell form (creates unnecessary shell process)</span>
 <span class="k">ENTRYPOINT</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>uvicorn
@@ -10476,10 +10476,10 @@ trivy<span class="w"> </span>image<span class="w"> </span>--exit-code<span class
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

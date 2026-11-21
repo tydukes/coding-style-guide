@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7333,14 +7333,14 @@ Terraform module for creating and managing [resource description].
 <span class="gu">### Simple Example</span>
 
 \```hcl
-module &quot;example&quot; {
-  source = &quot;github.com/your-org/terraform-aws-example&quot;
+module "example" {
+  source = "github.com/your-org/terraform-aws-example"
 
-  name        = &quot;my-resource&quot;
-  environment = &quot;production&quot;
+  name        = "my-resource"
+  environment = "production"
 
   tags = {
-    Project = &quot;my-project&quot;
+    Project = "my-project"
   }
 }
 \```
@@ -7348,19 +7348,19 @@ module &quot;example&quot; {
 <span class="gu">### Complete Example</span>
 
 \```hcl
-module &quot;example&quot; {
-  source = &quot;github.com/your-org/terraform-aws-example&quot;
+module "example" {
+  source = "github.com/your-org/terraform-aws-example"
 
-  name        = &quot;my-resource&quot;
-  environment = &quot;production&quot;
+  name        = "my-resource"
+  environment = "production"
 
   # Advanced configuration
   enable_monitoring = true
   retention_days    = 30
 
   tags = {
-    Project   = &quot;my-project&quot;
-    ManagedBy = &quot;Terraform&quot;
+    Project   = "my-project"
+    ManagedBy = "Terraform"
   }
 }
 \```
@@ -7429,7 +7429,7 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <hr />
 <h2 id="maintf-template">main.tf Template<a class="headerlink" href="#maintf-template" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1">## Main resource definitions</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_example_resource&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_example_resource"</span><span class="w"> </span><span class="nv">"this"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.name</span>
 
 <span class="c1">  # Configuration</span>
@@ -7442,29 +7442,29 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nv">var.name</span>
 <span class="w">      </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span>
-<span class="w">      </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
+<span class="w">      </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1">## Supporting resources</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_example_policy&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_example_policy"</span><span class="w"> </span><span class="nv">"this"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_policy</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span>
 
-<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.name}-policy&quot;</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Policy for ${var.name}&quot;</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"${var.name}-policy"</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Policy for ${var.name}"</span>
 
 <span class="w">  </span><span class="na">policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">jsonencode</span><span class="p">({</span>
-<span class="w">    </span><span class="na">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span>
+<span class="w">    </span><span class="na">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"2012-10-17"</span>
 <span class="w">    </span><span class="na">Statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="na">Effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span>
+<span class="w">        </span><span class="na">Effect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Allow"</span>
 <span class="w">        </span><span class="na">Action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">          </span><span class="s2">&quot;logs:CreateLogGroup&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;logs:CreateLogStream&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;logs:PutLogEvents&quot;</span>
+<span class="w">          </span><span class="s2">"logs:CreateLogGroup"</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">"logs:CreateLogStream"</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">"logs:PutLogEvents"</span>
 <span class="w">        </span><span class="p">]</span>
-<span class="w">        </span><span class="na">Resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;arn:aws:logs:*:*:*&quot;</span>
+<span class="w">        </span><span class="na">Resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"arn:aws:logs:*:*:*"</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">]</span>
 <span class="w">  </span><span class="p">})</span>
@@ -7475,64 +7475,64 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <hr />
 <h2 id="variablestf-template">variables.tf Template<a class="headerlink" href="#variablestf-template" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1">## Required variables</span>
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;name&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Name of the resource. Used for resource naming and tagging.&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"name"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Name of the resource. Used for resource naming and tagging."</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 
 <span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.name</span><span class="p">)</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="err">&amp;&amp;</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="nv">var.name</span><span class="p">)</span><span class="w"> </span><span class="err">&lt;</span><span class="p">=</span><span class="w"> </span><span class="m">64</span>
-<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Name must be between 1 and 64 characters.&quot;</span>
+<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Name must be between 1 and 64 characters."</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environment&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Environment name (e.g., dev, staging, production).&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"environment"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Environment name (e.g., dev, staging, production)."</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 
 <span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">([</span><span class="s2">&quot;dev&quot;, &quot;staging&quot;, &quot;production&quot;</span><span class="p">],</span><span class="w"> </span><span class="nv">var.environment</span><span class="p">)</span>
-<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Environment must be dev, staging, or production.&quot;</span>
+<span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">([</span><span class="s2">"dev", "staging", "production"</span><span class="p">],</span><span class="w"> </span><span class="nv">var.environment</span><span class="p">)</span>
+<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Environment must be dev, staging, or production."</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">## Optional variables with defaults</span>
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;enabled&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Whether the resource is enabled.&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"enabled"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Whether the resource is enabled."</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">bool</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;size&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Size of the resource.&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"size"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Size of the resource."</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;small&quot;</span>
+<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"small"</span>
 
 <span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">([</span><span class="s2">&quot;small&quot;, &quot;medium&quot;, &quot;large&quot;</span><span class="p">],</span><span class="w"> </span><span class="nv">var.size</span><span class="p">)</span>
-<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Size must be small, medium, or large.&quot;</span>
+<span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">([</span><span class="s2">"small", "medium", "large"</span><span class="p">],</span><span class="w"> </span><span class="nv">var.size</span><span class="p">)</span>
+<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Size must be small, medium, or large."</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;enable_policy&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Whether to create an IAM policy.&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"enable_policy"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Whether to create an IAM policy."</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">bool</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;retention_days&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Number of days to retain logs.&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"retention_days"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Number of days to retain logs."</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">number</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">7</span>
 
 <span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.retention_days</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="m">0</span>
-<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Retention days must be positive.&quot;</span>
+<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Retention days must be positive."</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">## Complex variables</span>
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;network_config&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Network configuration for the resource.&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"network_config"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Network configuration for the resource."</span>
 <span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">object</span><span class="p">({</span>
 <span class="w">    </span><span class="na">vpc_id</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="w">    </span><span class="na">subnet_ids</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
@@ -7542,8 +7542,8 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="p">}</span>
 
 <span class="c1">## Tags</span>
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;tags&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;A map of tags to add to all resources.&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"tags"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"A map of tags to add to all resources."</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nf">map</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
 <span class="w">  </span><span class="nb">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
 <span class="p">}</span>
@@ -7551,30 +7551,30 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <hr />
 <h2 id="outputstf-template">outputs.tf Template<a class="headerlink" href="#outputstf-template" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1">## Primary outputs</span>
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;id&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;The ID of the resource.&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"id"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"The ID of the resource."</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_example_resource.this.id</span>
 <span class="p">}</span>
 
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;arn&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;The ARN of the resource.&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"arn"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"The ARN of the resource."</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_example_resource.this.arn</span>
 <span class="p">}</span>
 
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;name&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;The name of the resource.&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"name"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"The name of the resource."</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_example_resource.this.name</span>
 <span class="p">}</span>
 
 <span class="c1">## Conditional outputs</span>
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;policy_arn&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;The ARN of the IAM policy (if enabled).&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"policy_arn"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"The ARN of the IAM policy (if enabled)."</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">var.enable_policy</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">aws_example_policy.this[0].arn</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">null</span>
 <span class="p">}</span>
 
 <span class="c1">## Complex outputs</span>
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;endpoint&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Endpoint information for the resource.&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"endpoint"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Endpoint information for the resource."</span>
 <span class="w">  </span><span class="nb">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">url</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_example_resource.this.endpoint</span>
 <span class="w">    </span><span class="na">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_example_resource.this.port</span>
@@ -7582,8 +7582,8 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="p">}</span>
 
 <span class="c1">## Sensitive outputs</span>
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;credentials&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Credentials for accessing the resource.&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"credentials"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Credentials for accessing the resource."</span>
 <span class="w">  </span><span class="nb">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_example_resource.this.username</span>
 <span class="w">    </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_example_resource.this.password</span>
@@ -7594,90 +7594,90 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <hr />
 <h2 id="versionstf-template">versions.tf Template<a class="headerlink" href="#versionstf-template" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.0&quot;</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.0"</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/aws&quot;</span>
-<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 5.0&quot;</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"hashicorp/aws"</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 5.0"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="examplessimplemaintf-template">examples/simple/main.tf Template<a class="headerlink" href="#examplessimplemaintf-template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">"aws"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"us-east-1"</span>
 <span class="p">}</span>
 
-<span class="kr">module</span><span class="w"> </span><span class="nv">&quot;example&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../../&quot;</span>
+<span class="kr">module</span><span class="w"> </span><span class="nv">"example"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../../"</span>
 
-<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;simple-example&quot;</span>
-<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"simple-example"</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"dev"</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;simple&quot;</span>
-<span class="w">    </span><span class="na">Purpose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;testing&quot;</span>
+<span class="w">    </span><span class="na">Example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"simple"</span>
+<span class="w">    </span><span class="na">Purpose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"testing"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;resource_id&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;The ID of the created resource.&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"resource_id"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"The ID of the created resource."</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">module.example.id</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="examplessimplevariablestf-template">examples/simple/variables.tf Template<a class="headerlink" href="#examplessimplevariablestf-template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;aws_region&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS region to deploy resources.&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">"aws_region"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"AWS region to deploy resources."</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"us-east-1"</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="examplescompletemaintf-template">examples/complete/main.tf Template<a class="headerlink" href="#examplescompletemaintf-template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">provider</span><span class="w"> </span><span class="nv">"aws"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.aws_region</span>
 <span class="p">}</span>
 
 <span class="c1">## VPC for the example</span>
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;example&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"example"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
 <span class="w">  </span><span class="na">enable_dns_hostnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="w">  </span><span class="na">enable_dns_support</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;example-vpc&quot;</span>
-<span class="w">    </span><span class="na">Example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;complete&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"example-vpc"</span>
+<span class="w">    </span><span class="na">Example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"complete"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;example&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_subnet"</span><span class="w"> </span><span class="nv">"example"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">vpc_id</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.example.id</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.1.0/24&quot;</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.1.0/24"</span>
 <span class="w">  </span><span class="na">availability_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_availability_zones.available.names[0</span><span class="p">]</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;example-subnet&quot;</span>
-<span class="w">    </span><span class="na">Example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;complete&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">"example-subnet"</span>
+<span class="w">    </span><span class="na">Example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"complete"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">data</span><span class="w"> </span><span class="nc">&quot;aws_availability_zones&quot;</span><span class="w"> </span><span class="nv">&quot;available&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;available&quot;</span>
+<span class="kr">data</span><span class="w"> </span><span class="nc">"aws_availability_zones"</span><span class="w"> </span><span class="nv">"available"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"available"</span>
 <span class="p">}</span>
 
 <span class="c1">## Complete module usage</span>
-<span class="kr">module</span><span class="w"> </span><span class="nv">&quot;example&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../../&quot;</span>
+<span class="kr">module</span><span class="w"> </span><span class="nv">"example"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"../../"</span>
 
-<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;complete-example&quot;</span>
-<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"complete-example"</span>
+<span class="w">  </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
 
 <span class="c1">  # Enable all features</span>
 <span class="w">  </span><span class="na">enabled</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-<span class="w">  </span><span class="na">size</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;large&quot;</span>
+<span class="w">  </span><span class="na">size</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">"large"</span>
 <span class="w">  </span><span class="na">enable_policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 
 <span class="c1">  # Network configuration</span>
@@ -7691,34 +7691,34 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="w">  </span><span class="na">retention_days</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Example</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;complete&quot;</span>
-<span class="w">    </span><span class="na">Purpose</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;testing&quot;</span>
-<span class="w">    </span><span class="na">ManagedBy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
+<span class="w">    </span><span class="na">Example</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"complete"</span>
+<span class="w">    </span><span class="na">Purpose</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"testing"</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">## Outputs</span>
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;resource_id&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;The ID of the created resource.&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"resource_id"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"The ID of the created resource."</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">module.example.id</span>
 <span class="p">}</span>
 
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;resource_arn&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;The ARN of the created resource.&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"resource_arn"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"The ARN of the created resource."</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">module.example.arn</span>
 <span class="p">}</span>
 
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;endpoint&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;The endpoint of the resource.&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"endpoint"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"The endpoint of the resource."</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">module.example.endpoint</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="examplescompletevariablestf-template">examples/complete/variables.tf Template<a class="headerlink" href="#examplescompletevariablestf-template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;aws_region&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AWS region to deploy resources.&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">"aws_region"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"AWS region to deploy resources."</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"us-east-1"</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -7726,10 +7726,10 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nx">test</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-<span class="w"> </span><span class="s">&quot;testing&quot;</span>
+<span class="w"> </span><span class="s">"testing"</span>
 
-<span class="w"> </span><span class="s">&quot;github.com/gruntwork-io/terratest/modules/terraform&quot;</span>
-<span class="w"> </span><span class="s">&quot;github.com/stretchr/testify/assert&quot;</span>
+<span class="w"> </span><span class="s">"github.com/gruntwork-io/terratest/modules/terraform"</span>
+<span class="w"> </span><span class="s">"github.com/stretchr/testify/assert"</span>
 <span class="p">)</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="nx">TestTerraformModule</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -7737,16 +7737,16 @@ Apache 2.0 Licensed. See LICENSE for full details.
 
 <span class="w"> </span><span class="nx">terraformOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">WithDefaultRetryableErrors</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
 <span class="w">  </span><span class="c1">// Path to the Terraform code</span>
-<span class="w">  </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../examples/simple&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">"../examples/simple"</span><span class="p">,</span>
 
 <span class="w">  </span><span class="c1">// Variables to pass to the Terraform code</span>
-<span class="w">  </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
-<span class="w">   </span><span class="s">&quot;aws_region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kt">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+<span class="w">   </span><span class="s">"aws_region"</span><span class="p">:</span><span class="w"> </span><span class="s">"us-east-1"</span><span class="p">,</span>
 <span class="w">  </span><span class="p">},</span>
 
 <span class="w">  </span><span class="c1">// Environment variables</span>
-<span class="w">  </span><span class="nx">EnvVars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
-<span class="w">   </span><span class="s">&quot;AWS_DEFAULT_REGION&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">EnvVars</span><span class="p">:</span><span class="w"> </span><span class="kt">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+<span class="w">   </span><span class="s">"AWS_DEFAULT_REGION"</span><span class="p">:</span><span class="w"> </span><span class="s">"us-east-1"</span><span class="p">,</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="w"> </span><span class="p">})</span>
 
@@ -7757,7 +7757,7 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
 
 <span class="w"> </span><span class="c1">// Validate outputs</span>
-<span class="w"> </span><span class="nx">resourceID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;resource_id&quot;</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">resourceID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">"resource_id"</span><span class="p">)</span>
 <span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceID</span><span class="p">)</span>
 <span class="p">}</span>
 
@@ -7765,14 +7765,14 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nx">Parallel</span><span class="p">()</span>
 
 <span class="w"> </span><span class="nx">terraformOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">WithDefaultRetryableErrors</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
-<span class="w">  </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../examples/complete&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">"../examples/complete"</span><span class="p">,</span>
 
-<span class="w">  </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
-<span class="w">   </span><span class="s">&quot;aws_region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kt">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+<span class="w">   </span><span class="s">"aws_region"</span><span class="p">:</span><span class="w"> </span><span class="s">"us-east-1"</span><span class="p">,</span>
 <span class="w">  </span><span class="p">},</span>
 
-<span class="w">  </span><span class="nx">EnvVars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
-<span class="w">   </span><span class="s">&quot;AWS_DEFAULT_REGION&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;us-east-1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">EnvVars</span><span class="p">:</span><span class="w"> </span><span class="kt">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+<span class="w">   </span><span class="s">"AWS_DEFAULT_REGION"</span><span class="p">:</span><span class="w"> </span><span class="s">"us-east-1"</span><span class="p">,</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="w"> </span><span class="p">})</span>
 
@@ -7781,12 +7781,12 @@ Apache 2.0 Licensed. See LICENSE for full details.
 <span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
 
 <span class="w"> </span><span class="c1">// Test outputs</span>
-<span class="w"> </span><span class="nx">resourceID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;resource_id&quot;</span><span class="p">)</span>
-<span class="w"> </span><span class="nx">resourceARN</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;resource_arn&quot;</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">resourceID</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">"resource_id"</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">resourceARN</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">"resource_arn"</span><span class="p">)</span>
 
 <span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceID</span><span class="p">)</span>
 <span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">NotEmpty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceARN</span><span class="p">)</span>
-<span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Contains</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceARN</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;arn:aws:&quot;</span><span class="p">)</span>
+<span class="w"> </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Contains</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">resourceARN</span><span class="p">,</span><span class="w"> </span><span class="s">"arn:aws:"</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
@@ -8020,10 +8020,10 @@ Examples:
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/shortcuts.js"></script>
       

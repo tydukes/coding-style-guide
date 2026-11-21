@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7963,44 +7963,44 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <h2 id="terraform-anti-patterns">Terraform Anti-Patterns<a class="headerlink" href="#terraform-anti-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="hardcoded-values">❌ Hardcoded Values<a class="headerlink" href="#hardcoded-values" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Hardcoded values make modules inflexible and environment-specific</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ami-0c55b159cbfafe1f0&quot;</span>
-<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.medium&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"web"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">"ami-0c55b159cbfafe1f0"</span>
+<span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.medium"</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production-web-server&quot;</span>
-<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
+<span class="w">    </span><span class="na">Name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">"production-web-server"</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use variables for configurability</p>
-<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;ami_id&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AMI ID for the EC2 instance&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span><span class="w"> </span><span class="nv">"ami_id"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"AMI ID for the EC2 instance"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;instance_type&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;EC2 instance type&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"instance_type"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"EC2 instance type"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;t3.micro&quot;</span>
+<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"t3.micro"</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environment&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Environment name&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"environment"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Environment name"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 
 <span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">([</span><span class="s2">&quot;dev&quot;, &quot;staging&quot;, &quot;production&quot;</span><span class="p">],</span><span class="w"> </span><span class="nv">var.environment</span><span class="p">)</span>
-<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Environment must be dev, staging, or production.&quot;</span>
+<span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">([</span><span class="s2">"dev", "staging", "production"</span><span class="p">],</span><span class="w"> </span><span class="nv">var.environment</span><span class="p">)</span>
+<span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Environment must be dev, staging, or production."</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;name&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Instance name&quot;</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">"name"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Instance name"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_instance&quot;</span><span class="w"> </span><span class="nv">&quot;web&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_instance"</span><span class="w"> </span><span class="nv">"web"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">ami</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.ami_id</span>
 <span class="w">  </span><span class="na">instance_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instance_type</span>
 
@@ -8017,17 +8017,17 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <hr />
 <h3 id="missing-lifecycle-rules">❌ Missing Lifecycle Rules<a class="headerlink" href="#missing-lifecycle-rules" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Recreating resources destroys data</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;database&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">identifier</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mydb&quot;</span>
-<span class="w">  </span><span class="na">instance_class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;db.t3.micro&quot;</span>
-<span class="w">  </span><span class="na">engine</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_db_instance"</span><span class="w"> </span><span class="nv">"database"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">identifier</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"mydb"</span>
+<span class="w">  </span><span class="na">instance_class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"db.t3.micro"</span>
+<span class="w">  </span><span class="na">engine</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">"postgres"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Good</strong>: Protect critical resources with lifecycle rules</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_db_instance&quot;</span><span class="w"> </span><span class="nv">&quot;database&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">identifier</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mydb&quot;</span>
-<span class="w">  </span><span class="na">instance_class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;db.t3.micro&quot;</span>
-<span class="w">  </span><span class="na">engine</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;postgres&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_db_instance"</span><span class="w"> </span><span class="nv">"database"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">identifier</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">"mydb"</span>
+<span class="w">  </span><span class="na">instance_class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"db.t3.micro"</span>
+<span class="w">  </span><span class="na">engine</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">"postgres"</span>
 
 <span class="w">  </span><span class="nb">lifecycle</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="na">prevent_destroy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
@@ -8038,7 +8038,7 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">CriticalData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="w">    </span><span class="na">CriticalData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"true"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -8047,19 +8047,19 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <h3 id="no-remote-state">❌ No Remote State<a class="headerlink" href="#no-remote-state" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Local state causes collaboration and CI/CD issues</p>
 <div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.0&quot;</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.0"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use remote state with locking</p>
 <div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.0&quot;</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.0"</span>
 
-<span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-terraform-state&quot;</span>
-<span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production/terraform.tfstate&quot;</span>
-<span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">"s3"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">"my-terraform-state"</span>
+<span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">"production/terraform.tfstate"</span>
+<span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">"us-east-1"</span>
 <span class="w">    </span><span class="na">encrypt</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-locks&quot;</span>
+<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"terraform-locks"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -8067,27 +8067,27 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <hr />
 <h3 id="missing-outputs">❌ Missing Outputs<a class="headerlink" href="#missing-outputs" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: No way to access resource attributes</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"main"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Good</strong>: Export important values as outputs</p>
-<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_vpc"</span><span class="w"> </span><span class="nv">"main"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.0/16"</span>
 <span class="p">}</span>
 
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_id&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ID of the VPC&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"vpc_id"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ID of the VPC"</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
 <span class="p">}</span>
 
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_cidr&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CIDR block of the VPC&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"vpc_cidr"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"CIDR block of the VPC"</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.cidr_block</span>
 <span class="p">}</span>
 
-<span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_arn&quot;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ARN of the VPC&quot;</span>
+<span class="kr">output</span><span class="w"> </span><span class="nv">"vpc_arn"</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ARN of the VPC"</span>
 <span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.arn</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -8113,38 +8113,38 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <p><strong>Bad</strong>: Failures stop playbook execution abruptly</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Download file</span>
 <span class="w">  </span><span class="nt">ansible.builtin.get_url</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://example.com/file.tar.gz&quot;</span>
-<span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/file.tar.gz&quot;</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://example.com/file.tar.gz"</span>
+<span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">"/tmp/file.tar.gz"</span>
 </code></pre></div>
 <p><strong>Good</strong>: Handle errors gracefully with blocks</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Download and extract file</span>
 <span class="w">  </span><span class="nt">block</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Download file</span>
 <span class="w">      </span><span class="nt">ansible.builtin.get_url</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://example.com/file.tar.gz&quot;</span>
-<span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/file.tar.gz&quot;</span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://example.com/file.tar.gz"</span>
+<span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">"/tmp/file.tar.gz"</span>
 <span class="w">        </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Extract file</span>
 <span class="w">      </span><span class="nt">ansible.builtin.unarchive</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/file.tar.gz&quot;</span>
-<span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/opt/app&quot;</span>
+<span class="w">        </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="s">"/tmp/file.tar.gz"</span>
+<span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">"/opt/app"</span>
 <span class="w">        </span><span class="nt">remote_src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
 
 <span class="w">  </span><span class="nt">rescue</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Log failure</span>
 <span class="w">      </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Failed</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">download</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">extract</span><span class="nv"> </span><span class="s">file&quot;</span>
+<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">"Failed</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">download</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">extract</span><span class="nv"> </span><span class="s">file"</span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Clean up partial download</span>
 <span class="w">      </span><span class="nt">ansible.builtin.file</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/file.tar.gz&quot;</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">"/tmp/file.tar.gz"</span>
 <span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
 
 <span class="w">  </span><span class="nt">always</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Report status</span>
 <span class="w">      </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Download</span><span class="nv"> </span><span class="s">attempt</span><span class="nv"> </span><span class="s">completed&quot;</span>
+<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">"Download</span><span class="nv"> </span><span class="s">attempt</span><span class="nv"> </span><span class="s">completed"</span>
 </code></pre></div>
 <p><strong>Why</strong>: Block/rescue/always provides structured error handling and cleanup</p>
 <hr />
@@ -8155,19 +8155,19 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app.conf.j2</span>
 <span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/app/app.conf</span>
 <span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">db_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;prod-db.example.com&quot;</span>
+<span class="w">    </span><span class="nt">db_host</span><span class="p">:</span><span class="w"> </span><span class="s">"prod-db.example.com"</span>
 <span class="w">    </span><span class="nt">db_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use variables and group_vars</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## group_vars/production.yml</span>
-<span class="nt">db_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;prod-db.example.com&quot;</span>
+<span class="nt">db_host</span><span class="p">:</span><span class="w"> </span><span class="s">"prod-db.example.com"</span>
 <span class="nt">db_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
-<span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;production&quot;</span>
+<span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="s">"production"</span>
 
 <span class="c1">## group_vars/development.yml</span>
-<span class="nt">db_host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;dev-db.example.com&quot;</span>
+<span class="nt">db_host</span><span class="p">:</span><span class="w"> </span><span class="s">"dev-db.example.com"</span>
 <span class="nt">db_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
-<span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;development&quot;</span>
+<span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="s">"development"</span>
 
 <span class="c1">## playbook.yml</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure application</span>
@@ -8240,19 +8240,19 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
     <span class="n">process_data</span><span class="p">()</span>
 <span class="k">except</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Something went wrong&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Something went wrong"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Good</strong>: Catch specific exceptions</p>
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
     <span class="n">process_data</span><span class="p">()</span>
 <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">raise</span>
 <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">raise</span>
 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unexpected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">raise</span>
 </code></pre></div>
 <p><strong>Why</strong>: Specific exceptions allow proper error handling without masking critical errors</p>
@@ -8278,7 +8278,7 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <hr />
 <h3 id="not-using-context-managers">❌ Not Using Context Managers<a class="headerlink" href="#not-using-context-managers" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: File handles may not be closed properly</p>
-<div class="highlight"><pre><span></span><code><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'file.txt'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># May not execute if exception occurs</span>
 </code></pre></div>
@@ -8286,22 +8286,22 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1">## Modern approach</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;file.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'file.txt'</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
 
 <span class="c1">## Or with context manager</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'file.txt'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 </code></pre></div>
 <p><strong>Why</strong>: Context managers ensure resources are properly released even if exceptions occur</p>
 <hr />
 <h3 id="string-concatenation-in-loops">❌ String Concatenation in Loops<a class="headerlink" href="#string-concatenation-in-loops" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Inefficient string building</p>
-<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="s2">""</span>
 <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
-    <span class="n">result</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span>
+    <span class="n">result</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">+</span> <span class="s2">","</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use join() for string building</p>
-<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="s2">","</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Why</strong>: join() is O(n) instead of O(n²) for string concatenation</p>
 <hr />
@@ -8323,13 +8323,13 @@ practices, along with their correct implementations. Each anti-pattern includes:
 
 <span class="c1">// For truly unknown data</span>
 <span class="kd">function</span><span class="w"> </span><span class="nx">processUnknownData</span><span class="p">(</span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="s1">&#39;value&#39;</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'object'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="s1">'value'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">typed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">DataWithValue</span><span class="p">;</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">typed</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;string&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">typed</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'string'</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">typed</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Invalid data structure&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">'Invalid data structure'</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Why</strong>: Proper types catch errors at compile time and enable IDE features</p>
@@ -8355,20 +8355,20 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <p><strong>Good</strong>: Validate before asserting</p>
 <div class="highlight"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">isUser</span><span class="p">(</span><span class="nx">obj</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">obj</span><span class="w"> </span><span class="nx">is</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">obj</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">    </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">obj</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'object'</span><span class="w"> </span><span class="o">&amp;&amp;</span>
 <span class="w">    </span><span class="nx">obj</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span>
-<span class="w">    </span><span class="s1">&#39;id&#39;</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">obj</span><span class="w"> </span><span class="o">&amp;&amp;</span>
-<span class="w">    </span><span class="s1">&#39;name&#39;</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">obj</span><span class="w"> </span><span class="o">&amp;&amp;</span>
-<span class="w">    </span><span class="s1">&#39;email&#39;</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">obj</span><span class="w"> </span><span class="o">&amp;&amp;</span>
-<span class="w">    </span><span class="ow">typeof</span><span class="w"> </span><span class="p">(</span><span class="nx">obj</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">any</span><span class="p">).</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;string&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span>
-<span class="w">    </span><span class="ow">typeof</span><span class="w"> </span><span class="p">(</span><span class="nx">obj</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">any</span><span class="p">).</span><span class="nx">name</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;string&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span>
-<span class="w">    </span><span class="ow">typeof</span><span class="w"> </span><span class="p">(</span><span class="nx">obj</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">any</span><span class="p">).</span><span class="nx">email</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;string&#39;</span>
+<span class="w">    </span><span class="s1">'id'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">obj</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">    </span><span class="s1">'name'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">obj</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">    </span><span class="s1">'email'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nx">obj</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">    </span><span class="ow">typeof</span><span class="w"> </span><span class="p">(</span><span class="nx">obj</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">any</span><span class="p">).</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'string'</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">    </span><span class="ow">typeof</span><span class="w"> </span><span class="p">(</span><span class="nx">obj</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">any</span><span class="p">).</span><span class="nx">name</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'string'</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">    </span><span class="ow">typeof</span><span class="w"> </span><span class="p">(</span><span class="nx">obj</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">any</span><span class="p">).</span><span class="nx">email</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'string'</span>
 <span class="w">  </span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">parsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">isUser</span><span class="p">(</span><span class="nx">parsed</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Invalid user data&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">'Invalid user data'</span><span class="p">);</span>
 <span class="p">}</span>
 <span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">parsed</span><span class="p">;</span><span class="w">  </span><span class="c1">// Safe</span>
 </code></pre></div>
@@ -8398,13 +8398,13 @@ practices, along with their correct implementations. Each anti-pattern includes:
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetchData</span><span class="p">();</span>
 <span class="w">    </span><span class="nx">processData</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Failed to load data:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">'Failed to load data:'</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
 <span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="nx">error</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="nx">loadData</span><span class="p">().</span><span class="k">catch</span><span class="p">(</span><span class="nx">error</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Unhandled error:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">'Unhandled error:'</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
 <span class="w">  </span><span class="c1">// Report to error tracking service</span>
 <span class="p">});</span>
 </code></pre></div>
@@ -8417,21 +8417,21 @@ practices, along with their correct implementations. Each anti-pattern includes:
 rm<span class="w"> </span><span class="nv">$file</span>
 </code></pre></div>
 <p><strong>Good</strong>: Always quote variable expansions</p>
-<div class="highlight"><pre><span></span><code><span class="nv">file</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&quot;</span>
-rm<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">file</span><span class="si">}</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nv">file</span><span class="o">=</span><span class="s2">"</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">"</span>
+rm<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">file</span><span class="si">}</span><span class="s2">"</span>
 </code></pre></div>
 <p><strong>Why</strong>: Quoting prevents word splitting and glob expansion</p>
 <hr />
 <h3 id="using-ls-for-file-iteration">❌ Using ls for File Iteration<a class="headerlink" href="#using-ls-for-file-iteration" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Breaks with spaces and special characters</p>
 <div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>ls<span class="w"> </span>*.txt<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span>process<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">file</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">  </span>process<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">file</span><span class="si">}</span><span class="s2">"</span>
 <span class="k">done</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use glob patterns directly</p>
 <div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span>*.txt<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="o">[[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">file</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">continue</span>
-<span class="w">  </span>process<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">file</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="o">[[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">file</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">continue</span>
+<span class="w">  </span>process<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">file</span><span class="si">}</span><span class="s2">"</span>
 <span class="k">done</span>
 </code></pre></div>
 <p><strong>Why</strong>: Glob patterns handle special characters correctly and avoid parsing ls output</p>
@@ -8446,7 +8446,7 @@ rm<span class="w"> </span>-rf<span class="w"> </span>*
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
 <span class="k">if</span><span class="w"> </span>!<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/some/directory<span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Failed to change directory&quot;</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Failed to change directory"</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span>
 <span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
 
@@ -8456,24 +8456,24 @@ rm<span class="w"> </span>-rf<span class="w"> </span>./*
 <hr />
 <h3 id="useless-use-of-cat">❌ Useless Use of cat<a class="headerlink" href="#useless-use-of-cat" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: Unnecessary process creation</p>
-<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>file.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>file.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"pattern"</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use input redirection</p>
-<div class="highlight"><pre><span></span><code>grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span>file.txt
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span><span class="s2">"pattern"</span><span class="w"> </span>file.txt
 <span class="c1">## or</span>
-grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="w"> </span>&lt;<span class="w"> </span>file.txt
+grep<span class="w"> </span><span class="s2">"pattern"</span><span class="w"> </span>&lt;<span class="w"> </span>file.txt
 </code></pre></div>
 <p><strong>Why</strong>: Eliminates unnecessary process and improves performance</p>
 <hr />
 <h3 id="not-using-for-tests">❌ Not Using [[ ]] for Tests<a class="headerlink" href="#not-using-for-tests" title="Permanent link">&para;</a></h3>
 <p><strong>Bad</strong>: [ ] is less powerful and error-prone</p>
-<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;match&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"value"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"match"</span>
 <span class="k">fi</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use [[ ]] for safer tests</p>
-<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">var</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;match&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">var</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"value"</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"match"</span>
 <span class="k">fi</span>
 </code></pre></div>
 <p><strong>Why</strong>: [[ ]] provides pattern matching, regex support, and safer variable handling</p>
@@ -8497,7 +8497,7 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 
 <span class="k">USER</span><span class="w"> </span><span class="s">node</span>
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"server.js"</span><span class="p">]</span>
 </code></pre></div>
 <p><strong>Why</strong>: Specific versions ensure reproducible builds and prevent breaking changes</p>
 <hr />
@@ -8507,7 +8507,7 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 
 <span class="k">COPY</span><span class="w"> </span>app<span class="w"> </span>/app
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/app/server&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"/app/server"</span><span class="p">]</span>
 </code></pre></div>
 <p><strong>Good</strong>: Create and use non-root user</p>
 <div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:22.04</span>
@@ -8520,7 +8520,7 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 
 <span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/app/server&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"/app/server"</span><span class="p">]</span>
 </code></pre></div>
 <p><strong>Why</strong>: Running as non-root reduces attack surface</p>
 <hr />
@@ -8536,7 +8536,7 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
 <span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/server.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dist/server.js"</span><span class="p">]</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use multi-stage builds for smaller images</p>
 <div class="highlight"><pre><span></span><code><span class="c">## Build stage</span>
@@ -8564,7 +8564,7 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 
 <span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dist/server.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dist/server.js"</span><span class="p">]</span>
 </code></pre></div>
 <p><strong>Why</strong>: Multi-stage builds reduce final image size by excluding build dependencies</p>
 <hr />
@@ -8597,7 +8597,7 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 
 <span class="k">COPY</span><span class="w"> </span>app<span class="w"> </span>/app
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/app/server.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"/app/server.js"</span><span class="p">]</span>
 </code></pre></div>
 <p><strong>Good</strong>: Add health checks</p>
 <div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:20-alpine</span>
@@ -8612,7 +8612,7 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="k">HEALTHCHECK</span><span class="w"> </span>--interval<span class="o">=</span>30s<span class="w"> </span>--timeout<span class="o">=</span>3s<span class="w"> </span>--start-period<span class="o">=</span>5s<span class="w"> </span>--retries<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>CMD<span class="w"> </span>node<span class="w"> </span>healthcheck.js<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 
-<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.js&quot;</span><span class="p">]</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">"node"</span><span class="p">,</span><span class="w"> </span><span class="s2">"server.js"</span><span class="p">]</span>
 </code></pre></div>
 <p><strong>Why</strong>: Health checks enable container orchestrators to detect and restart failed containers</p>
 <hr />
@@ -8641,7 +8641,7 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
-<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.ref == &#39;refs/heads/main&#39;</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.ref == 'refs/heads/main'</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run deploy</span>
@@ -8663,7 +8663,7 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-node@v4</span>
 <span class="w">    </span><span class="nt">with</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
-<span class="w">      </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;npm&#39;</span>
+<span class="w">      </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">'npm'</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
@@ -8674,13 +8674,13 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <p><strong>Bad</strong>: Security vulnerability</p>
 <div class="highlight"><pre><span></span><code><span class="nt">steps</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">      </span><span class="no">curl -H &quot;Authorization: token ghp_xxxxxxxxxxxx&quot; \</span>
+<span class="w">      </span><span class="no">curl -H "Authorization: token ghp_xxxxxxxxxxxx" \</span>
 <span class="w">        </span><span class="no">https://api.github.com/repos/...</span>
 </code></pre></div>
 <p><strong>Good</strong>: Use GitHub Secrets</p>
 <div class="highlight"><pre><span></span><code><span class="nt">steps</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">      </span><span class="no">curl -H &quot;Authorization: token ${{ secrets.GITHUB_TOKEN }}&quot; \</span>
+<span class="w">      </span><span class="no">curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \</span>
 <span class="w">        </span><span class="no">https://api.github.com/repos/...</span>
 </code></pre></div>
 <p><strong>Why</strong>: Secrets are encrypted and not visible in logs</p>
@@ -8719,7 +8719,7 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-node@v4</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ matrix.node-version }}</span>
-<span class="w">          </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;npm&#39;</span>
+<span class="w">          </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">'npm'</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
@@ -8963,10 +8963,10 @@ grep<span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span cla
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.top", "navigation.footer", "navigation.path", "toc.follow", "content.code.annotate", "content.code.copy", "content.action.edit", "content.tabs.link", "search.highlight", "search.share", "search.suggest"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../javascripts/shortcuts.js"></script>
       
