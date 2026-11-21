@@ -1831,10 +1831,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#native-terraform-testing-terraform-16" class="md-nav__link">
+  <a href="#native-terraform-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Native Terraform Testing (Terraform 1.6+)
+        Native Terraform Testing
       
     </span>
   </a>
@@ -9197,10 +9197,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#native-terraform-testing-terraform-16" class="md-nav__link">
+  <a href="#native-terraform-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Native Terraform Testing (Terraform 1.6+)
+        Native Terraform Testing
       
     </span>
   </a>
@@ -10836,7 +10836,7 @@ Language).</p>
 <li><strong>Type System</strong>: Static typing with primitive, complex, and structural types</li>
 <li><strong>State Management</strong>: Remote state with locking for collaboration</li>
 <li><strong>Provider Ecosystem</strong>: 3000+ providers for cloud, SaaS, and custom resources</li>
-<li><strong>Version Support</strong>: Targets Terraform versions <strong>1.5.x through 1.9.x</strong></li>
+<li><strong>Version Support</strong>: Runnable examples target Terraform <strong>1.17.x</strong></li>
 </ul>
 <h3 id="primary-use-cases">Primary Use Cases<a class="headerlink" href="#primary-use-cases" title="Permanent link">&para;</a></h3>
 <ul>
@@ -10851,70 +10851,41 @@ Language).</p>
 <table>
 <thead>
 <tr>
-<th>Version</th>
-<th>Support Status</th>
-<th>EOL Date</th>
-<th>Recommended</th>
+<th>Scope</th>
+<th>Terraform CLI</th>
+<th>Use</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1.10.x</td>
-<td>Active</td>
-<td>TBD</td>
-<td>✅ Yes</td>
+<td>Guide examples</td>
+<td>1.17.x</td>
+<td>Use the latest patch in this minor release for local runs.</td>
 </tr>
 <tr>
-<td>1.9.x</td>
-<td>Active</td>
-<td>TBD</td>
-<td>✅ Yes</td>
-</tr>
-<tr>
-<td>1.8.x</td>
-<td>Active</td>
-<td>TBD</td>
-<td>✅ Yes</td>
-</tr>
-<tr>
-<td>1.7.x</td>
-<td>Active</td>
-<td>TBD</td>
-<td>⚠️  Maintenance</td>
-</tr>
-<tr>
-<td>1.6.x</td>
-<td>Active</td>
-<td>TBD</td>
-<td>⚠️  Maintenance</td>
-</tr>
-<tr>
-<td>1.5.x</td>
-<td>EOL Soon</td>
-<td>TBD</td>
-<td>❌ EOL Soon</td>
+<td>CI examples</td>
+<td>1.17.2</td>
+<td>Pin the same patch in plan, test, and apply jobs.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Recommendation</strong>: Use <strong>Terraform 1.8+</strong> for new projects.
-Terraform 1.6+ is supported but consider upgrading to get the latest
-features and bug fixes.</p>
-<p><strong>EOL Policy</strong>: HashiCorp supports the latest minor version and typically
-maintains security fixes for N-2 releases. We recommend staying within
-2 minor versions of the latest release.</p>
-<p><strong>Version Features</strong>:</p>
+<p>This is the guide's compatibility policy. Check the
+<a href="https://github.com/hashicorp/terraform/releases">Terraform release notes</a> for upstream releases
+and the <a href="https://developer.hashicorp.com/terraform/language/v1-compatibility-promises">Terraform v1.0 compatibility promises</a>
+for backward compatibility and its exceptions. Review provider and module version constraints separately.</p>
+<p><strong>Feature history</strong>:</p>
 <ul>
-<li><strong>Terraform 1.10</strong>: Enhanced provider protocol, improved testing
-  framework</li>
-<li><strong>Terraform 1.9</strong>: Input variable validations, improved state
-  encryption</li>
-<li><strong>Terraform 1.8</strong>: Provider-defined functions, improved error messages</li>
-<li><strong>Terraform 1.7</strong>: Removed block support, test framework improvements</li>
-<li><strong>Terraform 1.6</strong>: Testing framework, config-driven import</li>
+<li><a href="https://github.com/hashicorp/terraform/blob/v1.5.0/CHANGELOG.md">Terraform 1.5</a> introduced configuration-driven import.</li>
+<li><a href="https://github.com/hashicorp/terraform/blob/v1.6.0/CHANGELOG.md">Terraform 1.6</a> introduced native tests.</li>
+<li><a href="https://github.com/hashicorp/terraform/blob/v1.7.0/CHANGELOG.md">Terraform 1.7</a> added provider mocking and
+  <code>removed</code> blocks.</li>
+<li><a href="https://github.com/hashicorp/terraform/blob/v1.8.0/CHANGELOG.md">Terraform 1.8</a> introduced provider-defined functions.</li>
+<li><a href="https://github.com/hashicorp/terraform/blob/v1.9.0/CHANGELOG.md">Terraform 1.9</a> let input validation refer to other
+  objects in the same module.</li>
+<li><a href="https://github.com/hashicorp/terraform/blob/v1.10.0/CHANGELOG.md">Terraform 1.10</a> added ephemeral values and
+  S3 lockfile support.</li>
+<li><a href="https://github.com/hashicorp/terraform/blob/v1.11.0/CHANGELOG.md">Terraform 1.11</a> added write-only resource arguments.</li>
 </ul>
-<p><strong>Breaking Changes</strong>: Terraform follows semantic versioning. Major
-version changes (e.g., 1.x to 2.x) may introduce breaking changes.
-Minor versions (e.g., 1.8 to 1.9) maintain backward compatibility.</p>
 <hr />
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -11107,7 +11078,7 @@ Minor versions (e.g., 1.8 to 1.9) maintain backward compatibility.</p>
 <p>Complete, production-ready configuration demonstrating all conventions:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## versions.tf - Terraform and provider version constraints</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.6.0"</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 1.17.0"</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -12375,7 +12346,7 @@ terraform.tfvars        # Variable value assignments (gitignored)
 <h3 id="provider-version-constraints">Provider Version Constraints<a class="headerlink" href="#provider-version-constraints" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">## versions.tf</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.5.0, &lt; 2.0.0"</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 1.17.0"</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -12516,7 +12487,7 @@ terraform<span class="w"> </span>workspace<span class="w"> </span>show
 </code></pre></div>
 <hr />
 <h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
-<h3 id="native-terraform-testing-terraform-16">Native Terraform Testing (Terraform 1.6+)<a class="headerlink" href="#native-terraform-testing-terraform-16" title="Permanent link">&para;</a></h3>
+<h3 id="native-terraform-testing">Native Terraform Testing<a class="headerlink" href="#native-terraform-testing" title="Permanent link">&para;</a></h3>
 <p>Use Terraform's built-in testing framework:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## tests/vpc_validation.tftest.hcl</span>
 <span class="nb">variables</span><span class="w"> </span><span class="p">{</span>
@@ -12643,7 +12614,7 @@ checkov<span class="w"> </span>-d<span class="w"> </span>.
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hashicorp/setup-terraform@v3</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">terraform_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.6.0</span>
+<span class="w">          </span><span class="nt">terraform_version</span><span class="p">:</span><span class="w"> </span><span class="s">"1.17.2"</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terraform Format Check</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform fmt -check -recursive</span>
@@ -12950,7 +12921,7 @@ and breaking change policies.</p>
 <h2 id="module-testing">Module Testing<a class="headerlink" href="#module-testing" title="Permanent link">&para;</a></h2>
 <p>This module is tested with:</p>
 <ul>
-<li>Terraform 1.6+ native tests</li>
+<li>Native Terraform tests on the guide's CLI baseline</li>
 <li>Terratest integration tests</li>
 <li>TFLint, TFSec, Checkov security scans</li>
 </ul>
@@ -13031,7 +13002,7 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 <span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
 
 <span class="nt">env</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">TF_VERSION</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.6.0</span>
+<span class="w">  </span><span class="nt">TF_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"1.17.2"</span>
 
 <span class="nt">jobs</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># Tier 1: Fast Static Analysis</span>
@@ -13175,7 +13146,7 @@ pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">report</span>
 
 <span class="nt">variables</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">TF_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"1.6.0"</span>
+<span class="w">  </span><span class="nt">TF_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"1.17.2"</span>
 
 <span class="c1"># Tier 1: Static Analysis</span>
 <span class="nt">terraform-validate</span><span class="p">:</span>
@@ -17448,7 +17419,7 @@ versions, breaking existing configurations.</p>
 <p><strong>Solution</strong>: Always specify provider version constraints.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## Good - Explicit version constraints</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.5.0, &lt; 2.0.0"</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 1.17.0"</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -17464,7 +17435,7 @@ versions, breaking existing configurations.</p>
 
 <span class="c1">## Better - Exact version for critical infrastructure</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"= 1.7.0"</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"= 1.17.2"</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -17651,7 +17622,7 @@ versions, breaking existing configurations.</p>
 
 <span class="c1">## Good - Pin provider versions</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.6.0"</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 1.17.0"</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -17914,7 +17885,7 @@ tflint<span class="w"> </span>--recursive
 <span class="err">@version</span><span class="w"> </span><span class="nv">1.2.0</span>
 <span class="err">@author</span><span class="w"> </span><span class="err">Tyler</span><span class="w"> </span><span class="err">Dukes</span>
 <span class="err">@last_updated</span><span class="w"> </span><span class="m">2025</span><span class="err">-</span><span class="m">10</span><span class="err">-</span><span class="m">28</span>
-<span class="err">@terraform_version</span><span class="w"> </span><span class="err">&gt;</span><span class="p">=</span><span class="w"> </span><span class="nv">1.5.0</span><span class="p">,</span><span class="w"> </span><span class="err">&lt;</span><span class="w"> </span><span class="nv">2.0.0</span>
+<span class="err">@terraform_version</span><span class="w"> </span><span class="err">~&gt;</span><span class="w"> </span><span class="nv">1.17.0</span>
 <span class="s2">"""</span>
 
 <span class="c1">#----------------------------------------------------------------------</span>
@@ -20634,7 +20605,7 @@ tests ensure infrastructure meets security, cost, and compliance requirements be
 <span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span>
 
 <span class="nt">env</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">TF_VERSION</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.6.0</span>
+<span class="w">  </span><span class="nt">TF_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"1.17.2"</span>
 <span class="w">  </span><span class="nt">TFLINT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.50.0</span>
 <span class="w">  </span><span class="nt">CHECKOV_VERSION</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.1.0</span>
 
@@ -21010,7 +20981,7 @@ tests ensure infrastructure meets security, cost, and compliance requirements be
 <p>Complete production-ready GitLab CI pipeline:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## .gitlab-ci.yml</span>
 <span class="nt">variables</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">TF_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"1.6.0"</span>
+<span class="w">  </span><span class="nt">TF_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"1.17.2"</span>
 <span class="w">  </span><span class="nt">TF_ROOT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CI_PROJECT_DIR}</span>
 <span class="w">  </span><span class="nt">TF_STATE_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 <span class="w">  </span><span class="nt">TFLINT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"v0.50.0"</span>
@@ -21803,7 +21774,7 @@ tests ensure infrastructure meets security, cost, and compliance requirements be
 <p>Complete EKS cluster module:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## modules/eks-cluster/main.tf</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.6.0"</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 1.17.0"</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -22391,7 +22362,7 @@ tests ensure infrastructure meets security, cost, and compliance requirements be
 <p>Complete Monitoring Stack Module:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## modules/monitoring/main.tf</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.6.0"</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 1.17.0"</span>
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"hashicorp/aws"</span>
@@ -22956,7 +22927,7 @@ tests ensure infrastructure meets security, cost, and compliance requirements be
 <p>Complete ECS Fargate Service Module:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## modules/ecs-service/main.tf</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.6.0"</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 1.17.0"</span>
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"hashicorp/aws"</span>
@@ -23775,7 +23746,7 @@ tests ensure infrastructure meets security, cost, and compliance requirements be
 <p>Complete Lambda Function with API Gateway Module:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## modules/lambda-api/main.tf</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.6.0"</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 1.17.0"</span>
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"hashicorp/aws"</span>
@@ -24566,7 +24537,7 @@ tests ensure infrastructure meets security, cost, and compliance requirements be
 <p>Complete DynamoDB Table with Streams Module:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">## modules/dynamodb/main.tf</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.6.0"</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 1.17.0"</span>
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"hashicorp/aws"</span>
@@ -25327,7 +25298,7 @@ tests ensure infrastructure meets security, cost, and compliance requirements be
 <h3 id="version-constraints">Version Constraints<a class="headerlink" href="#version-constraints" title="Permanent link">&para;</a></h3>
 <p>Pin provider versions for stability:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.5.0"</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 1.17.0"</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -26064,7 +26035,7 @@ tests ensure infrastructure meets security, cost, and compliance requirements be
 <h4 id="complete-multi-tier-application-stack">Complete Multi-Tier Application Stack<a class="headerlink" href="#complete-multi-tier-application-stack" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1">## Root module (main.tf) - Complete 3-tier web application</span>
 <span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.6.0"</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 1.17.0"</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -28242,7 +28213,7 @@ terraform<span class="w"> </span>validate
 </code></pre></div>
 <h4 id="modulesaws-backupproviderstf">modules/aws-backup/providers.tf<a class="headerlink" href="#modulesaws-backupproviderstf" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"&gt;= 1.5.0"</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 1.17.0"</span>
 
 <span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
