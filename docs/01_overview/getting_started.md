@@ -80,6 +80,11 @@ cd /path/to/your/project
 docker run --rm -v "$PWD:/workspace:ro" coding-style-guide:local lint
 ```
 
+The image uses `uv.lock` for Python dependencies and `docker/node-tools/package-lock.json`
+for its JavaScript linters. When changing their dependency declarations, refresh the
+matching lockfile with `uv lock` or `npm install --package-lock-only --ignore-scripts`
+from `docker/node-tools` for the JavaScript linters.
+
 If Docker cannot access the project on macOS or Windows, check Docker Desktop's
 file-sharing settings. If a lint or formatting command fails, read the tool
 output and rerun against the affected module or directory.
