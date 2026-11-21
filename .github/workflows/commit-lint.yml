@@ -13,13 +13,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # v7.1.0
+        with:
+          node-version: '24'
+
       - name: Install commitlint
-        run: |
-          npm install -g @commitlint/cli @commitlint/config-conventional
+        run: npm ci --prefix .github/ci-tools --ignore-scripts
 
       - name: Create commitlint config
         run: |
-          cat > .commitlintrc.json << 'EOF'
+          cat > .github/ci-tools/commitlint.config.json << 'EOF'
           {
             "extends": ["@commitlint/config-conventional"],
             "rules": {
@@ -51,7 +54,7 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          npx commitlint \
+          .github/ci-tools/node_modules/.bin/commitlint --config .github/ci-tools/commitlint.config.json \
             --from "${BASE_SHA}" \
             --to "${HEAD_SHA}" \
             --verbose

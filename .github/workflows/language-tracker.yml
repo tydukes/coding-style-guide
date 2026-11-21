@@ -24,19 +24,17 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
-        run: |
-          pip install requests beautifulsoup4 packaging
+      - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d  # v10.4.0
 
       - name: Check for new releases
         id: check_releases
-        run: python scripts/check_language_releases.py
+        run: uv run --frozen --no-build python scripts/check_language_releases.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create issues for new releases
         if: steps.check_releases.outputs.new_releases != '[]'
-        run: python scripts/create_release_issues.py
+        run: uv run --frozen --no-build python scripts/create_release_issues.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEW_RELEASES: ${{ steps.check_releases.outputs.new_releases }}

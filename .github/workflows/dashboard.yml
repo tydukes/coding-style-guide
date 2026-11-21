@@ -25,7 +25,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v10.4.0
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d  # v10.4.0
         with:
           version: "0.13.8"
           enable-cache: false
@@ -41,11 +41,11 @@ jobs:
             ${{ runner.os }}-uv-
 
       - name: Sync environment
-        run: uv sync
+        run: uv sync --frozen --no-build
 
       - name: Generate dashboard
         run: |
-          uv run python scripts/generate_dashboard.py
+          uv run --frozen --no-build python scripts/generate_dashboard.py
 
       - name: Check for changes
         id: check_changes

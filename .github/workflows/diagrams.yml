@@ -23,6 +23,9 @@ name: Validate Diagrams
       - '.github/workflows/diagrams.yml'
   workflow_dispatch: {}
 
+env:
+  PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+
 jobs:
   validate-mermaid:
     name: Validate Mermaid Diagrams
@@ -35,10 +38,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7.1.0
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Install Mermaid CLI
-        run: npm install -g @mermaid-js/mermaid-cli
+        run: npm ci --prefix .github/ci-tools --ignore-scripts
 
       - name: Find Markdown files with Mermaid diagrams
         id: find-mermaid
@@ -60,7 +63,7 @@ jobs:
           find docs -name '*.md' -exec grep -l '```mermaid' {} \; 2>/dev/null | while read -r file; do
             echo "Validating Mermaid in: $file"
             # Extract mermaid blocks and validate each
-            if ! mmdc -i "$file" -o /tmp/output.svg 2>&1; then
+            if ! .github/ci-tools/node_modules/.bin/mmdc -i "$file" -o /tmp/output.svg 2>&1; then
               echo "::error file=$file::Mermaid validation failed"
               exit_code=1
             fi
@@ -95,13 +98,14 @@ jobs:
         if: steps.check-diagrams.outputs.has_mmd == 'true'
         uses: actions/setup-node@v7.1.0
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Validate standalone Mermaid files
         if: steps.check-diagrams.outputs.has_mmd == 'true'
         run: |
-          npm install -g @mermaid-js/mermaid-cli
-          find . -name '*.mmd' -exec sh -c 'echo "Validating: $1" && mmdc -i "$1" -o /tmp/output.svg' _ {} \;
+          npm ci --prefix .github/ci-tools --ignore-scripts
+          find . -name '*.mmd' -exec sh -c \
+            'echo "Validating: $1" && .github/ci-tools/node_modules/.bin/mmdc -i "$1" -o /tmp/output.svg' _ {} \;
 
       - name: Validate PlantUML files
         if: steps.check-diagrams.outputs.has_puml == 'true'
@@ -113,9 +117,16 @@ jobs:
 
       - name: Install D2 and validate
         if: steps.check-diagrams.outputs.has_d2 == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          go install github.com/d2lang/d2@v0.9.0
-          export PATH="$(go env GOPATH)/bin:$PATH"
+          release_dir="$(mktemp -d)"
+          archive="d2-v0.9.0-linux-amd64.tar.gz"
+          gh release download v0.9.0 --repo d2lang/d2 --pattern "$archive" --dir "$release_dir"
+          expected="5669ddc46b99e942cc96078f4a4e36d5e62103348f4c05179ede27802fdd87a9"
+          printf '%s  %s\n' "$expected" "$release_dir/$archive" | sha256sum --check
+          tar -xzf "$release_dir/$archive" -C "$release_dir" d2-v0.9.0/bin/d2
+          export PATH="$release_dir/d2-v0.9.0/bin:$PATH"
           find . -name '*.d2' -exec sh -c 'echo "Validating: $1" && d2 fmt --check "$1"' _ {} \;
 
       - name: Install Graphviz and validate DOT files
@@ -134,7 +145,5 @@ jobs:
       - name: Validate Python diagram syntax
         if: steps.check-diagrams.outputs.has_py_diagrams == 'true'
         run: |
-          sudo apt-get update && sudo apt-get install -y graphviz
-          pip install diagrams
           find diagrams -name '*.py' -exec sh -c \
             'echo "Checking syntax: $1" && python -m py_compile "$1"' _ {} \;

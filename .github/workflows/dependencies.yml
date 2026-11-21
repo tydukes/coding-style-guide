@@ -23,10 +23,10 @@ jobs:
           python-version: '3.11'
 
       - name: Install UV
-        uses: astral-sh/setup-uv@v10.4.0
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d  # v10.4.0
 
       - name: Sync dependencies
-        run: uv sync
+        run: uv sync --frozen --no-build
 
       - name: Check for outdated packages
         run: |
@@ -53,11 +53,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install requests module
-        run: pip install requests
+      - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d  # v10.4.0
 
       - name: Check for outdated actions
-        run: python scripts/check_action_versions.py
+        run: uv run --frozen --no-build python scripts/check_action_versions.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -81,8 +80,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install pre-commit
-        run: pip install pre-commit
+      - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d  # v10.4.0
 
       - name: Check for outdated hooks
         run: |
@@ -92,7 +90,7 @@ jobs:
           cp .pre-commit-config.yaml .pre-commit-config.yaml.backup
 
           # Run autoupdate to see if anything would change
-          pre-commit autoupdate
+          uv run --frozen --no-build pre-commit autoupdate
 
           # Check if anything changed
           if ! diff -q .pre-commit-config.yaml .pre-commit-config.yaml.backup > /dev/null; then

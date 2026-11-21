@@ -25,17 +25,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7.1.0
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Install cSpell
-        run: npm install -g cspell
+        run: npm ci --prefix .github/ci-tools --ignore-scripts
 
       - name: Run spell check
         id: spell-check
         continue-on-error: true
         run: |
           echo "Running cSpell on markdown files..."
-          cspell --config .github/cspell.json "docs/**/*.md" "*.md" > spell-check-results.txt 2>&1
+          .github/ci-tools/node_modules/.bin/cspell --config .github/cspell.json \
+            "docs/**/*.md" "*.md" > spell-check-results.txt 2>&1
           SPELL_EXIT_CODE=$?
 
           if [ $SPELL_EXIT_CODE -ne 0 ]; then
