@@ -21,7 +21,7 @@ Language).
 - **Type System**: Static typing with primitive, complex, and structural types
 - **State Management**: Remote state with locking for collaboration
 - **Provider Ecosystem**: 3000+ providers for cloud, SaaS, and custom resources
-- **Version Support**: Targets Terraform versions **1.5.x through 1.9.x**
+- **Version Support**: Runnable examples target Terraform **1.17.x**
 
 ### Primary Use Cases
 
@@ -34,36 +34,28 @@ Language).
 
 ## Supported Versions
 
-| Version | Support Status | EOL Date | Recommended      |
-|---------|----------------|----------|------------------|
-| 1.10.x  | Active         | TBD      | ✅ Yes           |
-| 1.9.x   | Active         | TBD      | ✅ Yes           |
-| 1.8.x   | Active         | TBD      | ✅ Yes           |
-| 1.7.x   | Active         | TBD      | ⚠️  Maintenance  |
-| 1.6.x   | Active         | TBD      | ⚠️  Maintenance  |
-| 1.5.x   | EOL Soon       | TBD      | ❌ EOL Soon      |
+| Scope | Terraform CLI | Use |
+|-------|---------------|-----|
+| Guide examples | 1.17.x | Use the latest patch in this minor release for local runs. |
+| CI examples | 1.17.2 | Pin the same patch in plan, test, and apply jobs. |
 
-**Recommendation**: Use **Terraform 1.8+** for new projects.
-Terraform 1.6+ is supported but consider upgrading to get the latest
-features and bug fixes.
+This is the guide's compatibility policy. Check the
+[Terraform release notes](https://github.com/hashicorp/terraform/releases) for upstream releases
+and the [Terraform v1.0 compatibility promises](https://developer.hashicorp.com/terraform/language/v1-compatibility-promises)
+for backward compatibility and its exceptions. Review provider and module version constraints separately.
 
-**EOL Policy**: HashiCorp supports the latest minor version and typically
-maintains security fixes for N-2 releases. We recommend staying within
-2 minor versions of the latest release.
+**Feature history**:
 
-**Version Features**:
-
-- **Terraform 1.10**: Enhanced provider protocol, improved testing
-  framework
-- **Terraform 1.9**: Input variable validations, improved state
-  encryption
-- **Terraform 1.8**: Provider-defined functions, improved error messages
-- **Terraform 1.7**: Removed block support, test framework improvements
-- **Terraform 1.6**: Testing framework, config-driven import
-
-**Breaking Changes**: Terraform follows semantic versioning. Major
-version changes (e.g., 1.x to 2.x) may introduce breaking changes.
-Minor versions (e.g., 1.8 to 1.9) maintain backward compatibility.
+- [Terraform 1.5](https://github.com/hashicorp/terraform/blob/v1.5.0/CHANGELOG.md) introduced configuration-driven import.
+- [Terraform 1.6](https://github.com/hashicorp/terraform/blob/v1.6.0/CHANGELOG.md) introduced native tests.
+- [Terraform 1.7](https://github.com/hashicorp/terraform/blob/v1.7.0/CHANGELOG.md) added provider mocking and
+  `removed` blocks.
+- [Terraform 1.8](https://github.com/hashicorp/terraform/blob/v1.8.0/CHANGELOG.md) introduced provider-defined functions.
+- [Terraform 1.9](https://github.com/hashicorp/terraform/blob/v1.9.0/CHANGELOG.md) let input validation refer to other
+  objects in the same module.
+- [Terraform 1.10](https://github.com/hashicorp/terraform/blob/v1.10.0/CHANGELOG.md) added ephemeral values and
+  S3 lockfile support.
+- [Terraform 1.11](https://github.com/hashicorp/terraform/blob/v1.11.0/CHANGELOG.md) added write-only resource arguments.
 
 ---
 
@@ -108,7 +100,7 @@ Complete, production-ready configuration demonstrating all conventions:
 ```hcl
 ## versions.tf - Terraform and provider version constraints
 terraform {
-  required_version = ">= 1.6.0"
+  required_version = "~> 1.17.0"
 
   required_providers {
     aws = {
@@ -1459,7 +1451,7 @@ resource "aws_subnet" "private" {
 ```hcl
 ## versions.tf
 terraform {
-  required_version = ">= 1.5.0, < 2.0.0"
+  required_version = "~> 1.17.0"
 
   required_providers {
     aws = {
@@ -1622,7 +1614,7 @@ terraform workspace show
 
 ## Testing
 
-### Native Terraform Testing (Terraform 1.6+)
+### Native Terraform Testing
 
 Use Terraform's built-in testing framework:
 
@@ -1773,7 +1765,7 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.6.0
+          terraform_version: "1.17.2"
 
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
@@ -2054,7 +2046,7 @@ and breaking change policies.
 
 This module is tested with:
 
-- Terraform 1.6+ native tests
+- Native Terraform tests on the guide's CLI baseline
 - Terratest integration tests
 - TFLint, TFSec, Checkov security scans
 
@@ -2156,7 +2148,7 @@ on:
     branches: [main]
 
 env:
-  TF_VERSION: 1.6.0
+  TF_VERSION: "1.17.2"
 
 jobs:
   # Tier 1: Fast Static Analysis
@@ -2303,7 +2295,7 @@ stages:
   - report
 
 variables:
-  TF_VERSION: "1.6.0"
+  TF_VERSION: "1.17.2"
 
 # Tier 1: Static Analysis
 terraform-validate:
@@ -6711,7 +6703,7 @@ terraform {
 ```hcl
 ## Good - Explicit version constraints
 terraform {
-  required_version = ">= 1.5.0, < 2.0.0"
+  required_version = "~> 1.17.0"
 
   required_providers {
     aws = {
@@ -6727,7 +6719,7 @@ terraform {
 
 ## Better - Exact version for critical infrastructure
 terraform {
-  required_version = "= 1.7.0"
+  required_version = "= 1.17.2"
 
   required_providers {
     aws = {
@@ -6939,7 +6931,7 @@ terraform {
 
 ## Good - Pin provider versions
 terraform {
-  required_version = ">= 1.6.0"
+  required_version = "~> 1.17.0"
 
   required_providers {
     aws = {
@@ -7238,7 +7230,7 @@ repos:
 @version 1.2.0
 @author Tyler Dukes
 @last_updated 2025-10-28
-@terraform_version >= 1.5.0, < 2.0.0
+@terraform_version ~> 1.17.0
 """
 
 #----------------------------------------------------------------------
@@ -9994,7 +9986,7 @@ on:
   workflow_dispatch:
 
 env:
-  TF_VERSION: 1.6.0
+  TF_VERSION: "1.17.2"
   TFLINT_VERSION: v0.50.0
   CHECKOV_VERSION: 3.1.0
 
@@ -10374,7 +10366,7 @@ Complete production-ready GitLab CI pipeline:
 ```yaml
 ## .gitlab-ci.yml
 variables:
-  TF_VERSION: "1.6.0"
+  TF_VERSION: "1.17.2"
   TF_ROOT: ${CI_PROJECT_DIR}
   TF_STATE_NAME: default
   TFLINT_VERSION: "v0.50.0"
@@ -11175,7 +11167,7 @@ Complete EKS cluster module:
 ```hcl
 ## modules/eks-cluster/main.tf
 terraform {
-  required_version = ">= 1.6.0"
+  required_version = "~> 1.17.0"
 
   required_providers {
     aws = {
@@ -11766,7 +11758,7 @@ Complete Monitoring Stack Module:
 ```hcl
 ## modules/monitoring/main.tf
 terraform {
-  required_version = ">= 1.6.0"
+  required_version = "~> 1.17.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -12334,7 +12326,7 @@ Complete ECS Fargate Service Module:
 ```hcl
 ## modules/ecs-service/main.tf
 terraform {
-  required_version = ">= 1.6.0"
+  required_version = "~> 1.17.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -13156,7 +13148,7 @@ Complete Lambda Function with API Gateway Module:
 ```hcl
 ## modules/lambda-api/main.tf
 terraform {
-  required_version = ">= 1.6.0"
+  required_version = "~> 1.17.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -13950,7 +13942,7 @@ Complete DynamoDB Table with Streams Module:
 ```hcl
 ## modules/dynamodb/main.tf
 terraform {
-  required_version = ">= 1.6.0"
+  required_version = "~> 1.17.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -14732,7 +14724,7 @@ Pin provider versions for stability:
 
 ```hcl
 terraform {
-  required_version = ">= 1.5.0"
+  required_version = "~> 1.17.0"
 
   required_providers {
     aws = {
@@ -15511,7 +15503,7 @@ module "app_servers" {
 ```hcl
 ## Root module (main.tf) - Complete 3-tier web application
 terraform {
-  required_version = ">= 1.6.0"
+  required_version = "~> 1.17.0"
 
   required_providers {
     aws = {
@@ -17711,7 +17703,7 @@ output "cloudwatch_dashboard_name" {
 
 ```hcl
 terraform {
-  required_version = ">= 1.5.0"
+  required_version = "~> 1.17.0"
 
   required_providers {
     aws = {
