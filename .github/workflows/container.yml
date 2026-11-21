@@ -80,7 +80,17 @@ jobs:
           # Use the first tag from the metadata output (PR tag)
           IMAGE_TAG=$(echo "${{ steps.meta.outputs.tags }}" | head -n1)
           echo "Testing image: $IMAGE_TAG"
-          docker run --rm -v $PWD:/workspace "$IMAGE_TAG" help
+          docker run --rm "$IMAGE_TAG" help
+
+          fixture="$(mktemp -d)"
+          echo 'output "example" { value="example" }' > "$fixture/main.tf"
+          if docker run --rm -e STRICT=true -v "$fixture:/workspace:ro" "$IMAGE_TAG" lint; then
+            echo "Expected lint to reject unformatted Terraform"
+            exit 1
+          fi
+          docker run --rm -v "$fixture:/workspace" "$IMAGE_TAG" format
+          docker run --rm -e STRICT=true -v "$fixture:/workspace:ro" "$IMAGE_TAG" lint
+          docker run --rm -v "$fixture:/workspace:ro" "$IMAGE_TAG" validate
 
       - name: Generate SBOM
         if: github.event_name != 'pull_request'
