@@ -19,6 +19,9 @@ truth for whether a pull request can merge or a release can publish.
 
 Trusted same-repository pull requests may have GitHub auto-merge enabled after CI succeeds. The
 workflow does not directly approve, directly merge, or delete branches with a personal access token.
+The auto-merge enablement call uses `AUTO_MERGE_TOKEN` because GitHub rejected the equivalent
+`GITHUB_TOKEN` GraphQL mutation from the `workflow_run` event with `Resource not accessible by
+integration`.
 
 ```yaml
 trusted_auto_merge_authors:
@@ -29,7 +32,7 @@ trusted_auto_merge_authors:
 
 required_behavior:
   merge_method: squash
-  token: GITHUB_TOKEN
+  token: AUTO_MERGE_TOKEN
   same_repository_branch: true
   direct_merge: false
   auto_approve: false
@@ -56,24 +59,27 @@ first workflow that completes.
 
 ```yaml
 required_checks:
-  - Commit Message Lint
-  - CI
-  - CLI Build and Test
-  - Dependency Version Check
-  - Spell Checker
+  - build
+  - build-and-test
+  - build-and-push
+  - Validate Commit Messages
+  - Check Python Dependencies
+  - Check GitHub Actions Versions
+  - Check Docker Image Versions
+  - Check Pre-commit Hook Versions
+  - spell-check
   - CodeQL
-  - SonarCloud
-  - Build and Publish Container
+  - SonarCloud Code Analysis
 ```
 
-Container checks are required for container-affecting changes. CodeQL and SonarCloud are required
-where those services are enabled for the repository.
+Keep optional and issue-creating workflows, such as link checking and dashboard refreshes, outside
+branch protection unless they become release blockers.
 
 ## Token Rules
 
 Use `GITHUB_TOKEN` by default. It is scoped to the repository, receives workflow-level permissions,
 and is the correct token for checkout, version bump commits, release creation, issue creation, and
-GitHub auto-merge enablement.
+container publishing.
 
 ```yaml
 github_token_uses:
@@ -81,7 +87,6 @@ github_token_uses:
   - release version bump commits
   - changelog commits
   - GitHub release creation
-  - GitHub auto-merge enablement
   - recovery issue creation
   - ghcr container publishing
 ```
@@ -99,10 +104,16 @@ personal_access_token_rules:
     - branch protection is not bypassed
     - scopes are documented
     - expiration is configured
-  not_required_for:
+  required_for:
     - current auto-merge workflow
+  not_required_for:
     - current release workflow
 ```
+
+`AUTO_MERGE_TOKEN` is limited to enabling GitHub auto-merge for trusted same-repository pull
+requests. It must have repository access for this repository and pull request write permission. It
+must not be used to approve reviews, merge pull requests directly, bypass required checks, or push to
+protected branches.
 
 ## Release Path
 
