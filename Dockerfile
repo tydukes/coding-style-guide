@@ -4,7 +4,7 @@
 FROM hashicorp/terraform:1.17.2 AS terraform-cli
 
 # Install CLI npm production dependencies
-FROM node:24-slim AS cli-deps
+FROM node:26-slim AS cli-deps
 WORKDIR /app/cli
 COPY cli/package.json cli/package-lock.json ./
 RUN npm ci --omit=dev --ignore-scripts
@@ -16,13 +16,14 @@ RUN npm ci --omit=dev --ignore-scripts
 FROM ghcr.io/astral-sh/uv:0.13.8 AS uv-cli
 
 # Final image
-FROM python:3.15.0b1-slim AS base
+FROM python:3.15-slim AS base
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \
     curl \
     git \
+    libatomic1 \
     shellcheck \
     && rm -rf /var/lib/apt/lists/*
 
