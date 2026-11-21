@@ -1,45 +1,50 @@
 # Multi-stage build for coding style guide validator
 
-# Stage 1: install CLI npm production dependencies
-FROM node:20-slim AS cli-deps
+# Use the official multi-platform Terraform CLI for HCL formatting checks.
+FROM hashicorp/terraform:1.17.2 AS terraform-cli
+
+# Install CLI npm production dependencies
+FROM node:24-slim AS cli-deps
 WORKDIR /app/cli
 COPY cli/package.json cli/package-lock.json ./
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev --ignore-scripts
+WORKDIR /opt/node-tools
+COPY docker/node-tools/package.json docker/node-tools/package-lock.json ./
+RUN npm ci --omit=dev --ignore-scripts
 
-# Stage 2: final image
+# Use the published uv binary instead of executing a downloaded installer.
+FROM ghcr.io/astral-sh/uv:0.13.8 AS uv-cli
+
+# Final image
 FROM python:3.15.0b1-slim AS base
 
-# Install system dependencies, UV, and Node.js runtime
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \
     curl \
     git \
-    nodejs \
-    npm \
     shellcheck \
-    && rm -rf /var/lib/apt/lists/* \
-    && curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.local/bin:${PATH}"
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=uv-cli /uv /usr/local/bin/uv
 
 # Set working directory
 WORKDIR /app
 
 # Copy dependency files
-COPY pyproject.toml ./
+COPY pyproject.toml uv.lock ./
 COPY .pre-commit-config.yaml ./
 
-# Install Python dependencies with UV
-RUN uv sync --no-dev
-
-# Install Python linter tools into the venv (black, flake8, yamllint are dev-only
-# in pyproject.toml but required as runtime tools inside the container)
-RUN uv pip install black flake8 yamllint
+# Install locked runtime dependencies and linters from binary distributions.
+RUN uv sync --frozen --no-dev --group container --no-build --no-install-project
 
 # Add venv bin to PATH so the CLI can find Python-based linters
 ENV PATH="/app/.venv/bin:${PATH}"
 
-# Install Node.js linter globals (eslint, prettier, markdownlint-cli)
-RUN npm install -g eslint prettier markdownlint-cli
+# Use the same Node.js runtime to install and run the JavaScript tools.
+COPY --from=cli-deps /usr/local/bin/node /usr/local/bin/node
+COPY --from=cli-deps /opt/node-tools /opt/node-tools
+ENV PATH="/opt/node-tools/node_modules/.bin:${PATH}"
 
 # Install hadolint (Dockerfile linter) — multi-arch binary
 RUN ARCH=$(uname -m) && \
@@ -48,9 +53,12 @@ RUN ARCH=$(uname -m) && \
         aarch64) HA="arm64"  ;; \
         *) echo "Unsupported arch: ${ARCH}" && exit 1 ;; \
     esac && \
-    curl -fsSL "https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-${HA}" \
+    curl --proto '=https' --proto-redir '=https' -fsSL \
+         "https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-${HA}" \
          -o /usr/local/bin/hadolint && \
     chmod +x /usr/local/bin/hadolint
+
+COPY --from=terraform-cli /bin/terraform /usr/local/bin/terraform
 
 # Install CLI: pre-built dist + prod node_modules from cli-deps stage
 COPY cli/package.json ./cli/

@@ -149,8 +149,8 @@ Available modes:
 
 ### Environment Variables
 
-- `STRICT=true` - Fail on warnings
-- `DEBUG=true` - Enable debug output
+- `STRICT=true` - Fail on linter warnings and standalone metadata warnings
+- `DEBUG=true` - Print the validator and Terraform tool versions
 
 ## Complete Example Repositories
 

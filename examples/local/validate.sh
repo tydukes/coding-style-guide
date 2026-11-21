@@ -12,12 +12,11 @@ echo "   Image: ${IMAGE}"
 echo "   Command: ${COMMAND}"
 echo ""
 
+exit_code=0
 docker run --rm \
     -v "$(pwd):/workspace" \
     "${IMAGE}" \
-    "${COMMAND}"
-
-exit_code=$?
+    "${COMMAND}" || exit_code=$?
 
 if [[ $exit_code -eq 0 ]]; then
     echo ""
