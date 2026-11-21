@@ -2671,6 +2671,8 @@ variable "enable_logging" {
   type        = bool
   default     = true
 }
+```
+
 ```hcl
 ## modules/aws-waf/main.tf
 
@@ -3020,6 +3022,8 @@ resource "aws_cloudwatch_metric_alarm" "waf_rate_limited_requests" {
 }
 
 data "aws_region" "current" {}
+```
+
 ```hcl
 ## modules/aws-waf/outputs.tf
 
@@ -3120,6 +3124,8 @@ variable "admin_email" {
   description = "Email address for security notifications"
   type        = string
 }
+```
+
 ```hcl
 ## modules/security-monitoring/main.tf
 
@@ -3231,7 +3237,7 @@ resource "aws_cloudwatch_event_rule" "guardduty_findings" {
     detail-type = ["GuardDuty Finding"]
     detail = {
       severity = [
-        { numeric = [">=" 7.0] }  ## High and Critical severity
+        { numeric = [">=", 7.0] }  ## High and Critical severity
       ]
     }
   })
@@ -3456,6 +3462,8 @@ resource "aws_cloudwatch_metric_alarm" "guardduty_critical" {
 
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
+```
+
 ```hcl
 ## modules/security-monitoring/outputs.tf
 
@@ -3521,6 +3529,8 @@ variable "allowed_account_ids" {
   type        = list(string)
   default     = []
 }
+```
+
 ```hcl
 ## modules/secrets-manager/main.tf
 
@@ -3916,6 +3926,8 @@ resource "aws_iam_role" "ecs_task" {
 
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
+```
+
 ```hcl
 ## modules/secrets-manager/outputs.tf
 
@@ -3984,6 +3996,8 @@ variable "sns_topic_arn" {
   description = "SNS topic ARN for compliance notifications"
   type        = string
 }
+```
+
 ```hcl
 ## modules/cis-compliance/main.tf
 
@@ -4419,6 +4433,8 @@ resource "aws_config_config_rule" "encrypted_volumes" {
 
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
+```
+
 ```hcl
 ## modules/cis-compliance/outputs.tf
 
@@ -4484,6 +4500,8 @@ variable "multi_az" {
   type        = bool
   default     = true
 }
+```
+
 ```hcl
 ## modules/hipaa-compliance/main.tf
 
@@ -5029,6 +5047,8 @@ resource "aws_iam_role_policy" "vpc_flow_log" {
 
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
+```
+
 ```hcl
 ## modules/hipaa-compliance/outputs.tf
 
@@ -5092,6 +5112,8 @@ variable "backup_retention_days" {
   type        = number
   default     = 90
 }
+```
+
 ```hcl
 ## modules/soc2-compliance/main.tf
 
@@ -5652,6 +5674,8 @@ resource "aws_lambda_permission" "compliance_report" {
 
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
+```
+
 ```hcl
 ## modules/soc2-compliance/outputs.tf
 
