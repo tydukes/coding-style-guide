@@ -13510,8 +13510,8 @@ shows a complete WAF v2 setup with comprehensive security rules.</p>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">bool</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="p">}</span>
-<span class="err">```hcl</span>
-<span class="c1">## modules/aws-waf/main.tf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/aws-waf/main.tf</span>
 
 <span class="c1">## IP Set for blocked addresses</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_wafv2_ip_set"</span><span class="w"> </span><span class="nv">"blocked_ips"</span><span class="w"> </span><span class="p">{</span>
@@ -13859,8 +13859,8 @@ shows a complete WAF v2 setup with comprehensive security rules.</p>
 <span class="p">}</span>
 
 <span class="kr">data</span><span class="w"> </span><span class="nc">"aws_region"</span><span class="w"> </span><span class="nv">"current"</span><span class="w"> </span><span class="p">{}</span>
-<span class="err">```hcl</span>
-<span class="c1">## modules/aws-waf/outputs.tf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/aws-waf/outputs.tf</span>
 
 <span class="kr">output</span><span class="w"> </span><span class="nv">"web_acl_id"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ID of the WAF Web ACL"</span>
@@ -13955,8 +13955,8 @@ across AWS accounts. This example shows multi-account setup with automated remed
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Email address for security notifications"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
-<span class="err">```hcl</span>
-<span class="c1">## modules/security-monitoring/main.tf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/security-monitoring/main.tf</span>
 
 <span class="c1">## GuardDuty Detector</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_guardduty_detector"</span><span class="w"> </span><span class="nv">"main"</span><span class="w"> </span><span class="p">{</span>
@@ -14066,7 +14066,7 @@ across AWS accounts. This example shows multi-account setup with automated remed
 <span class="w">    </span><span class="na">detail-type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"GuardDuty Finding"</span><span class="p">]</span>
 <span class="w">    </span><span class="nb">detail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="na">severity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="na">numeric</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"&gt;="</span><span class="w"> </span><span class="nv">7.0</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="c1">  ## High and Critical severity</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="na">numeric</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"&gt;="</span><span class="p">,</span><span class="w"> </span><span class="nv">7.0</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="c1">  ## High and Critical severity</span>
 <span class="w">      </span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">})</span>
@@ -14291,8 +14291,8 @@ across AWS accounts. This example shows multi-account setup with automated remed
 
 <span class="kr">data</span><span class="w"> </span><span class="nc">"aws_region"</span><span class="w"> </span><span class="nv">"current"</span><span class="w"> </span><span class="p">{}</span>
 <span class="kr">data</span><span class="w"> </span><span class="nc">"aws_caller_identity"</span><span class="w"> </span><span class="nv">"current"</span><span class="w"> </span><span class="p">{}</span>
-<span class="err">```hcl</span>
-<span class="c1">## modules/security-monitoring/outputs.tf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/security-monitoring/outputs.tf</span>
 
 <span class="kr">output</span><span class="w"> </span><span class="nv">"guardduty_detector_id"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ID of the GuardDuty detector"</span>
@@ -14352,8 +14352,8 @@ patterns for production workloads.</p>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
 <span class="p">}</span>
-<span class="err">```hcl</span>
-<span class="c1">## modules/secrets-manager/main.tf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/secrets-manager/main.tf</span>
 
 <span class="c1">## KMS key for encrypting secrets</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_kms_key"</span><span class="w"> </span><span class="nv">"secrets"</span><span class="w"> </span><span class="p">{</span>
@@ -14747,8 +14747,8 @@ patterns for production workloads.</p>
 
 <span class="kr">data</span><span class="w"> </span><span class="nc">"aws_region"</span><span class="w"> </span><span class="nv">"current"</span><span class="w"> </span><span class="p">{}</span>
 <span class="kr">data</span><span class="w"> </span><span class="nc">"aws_caller_identity"</span><span class="w"> </span><span class="nv">"current"</span><span class="w"> </span><span class="p">{}</span>
-<span class="err">```hcl</span>
-<span class="c1">## modules/secrets-manager/outputs.tf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/secrets-manager/outputs.tf</span>
 
 <span class="kr">output</span><span class="w"> </span><span class="nv">"kms_key_id"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ID of the KMS key for secrets encryption"</span>
@@ -14811,8 +14811,8 @@ monitoring. Each resource maps to specific CIS controls.</p>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"SNS topic ARN for compliance notifications"</span>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
 <span class="p">}</span>
-<span class="err">```hcl</span>
-<span class="c1">## modules/cis-compliance/main.tf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/cis-compliance/main.tf</span>
 
 <span class="c1">## CIS 1.5-1.11: IAM Password Policy</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_iam_account_password_policy"</span><span class="w"> </span><span class="nv">"strict"</span><span class="w"> </span><span class="p">{</span>
@@ -15246,8 +15246,8 @@ monitoring. Each resource maps to specific CIS controls.</p>
 
 <span class="kr">data</span><span class="w"> </span><span class="nc">"aws_caller_identity"</span><span class="w"> </span><span class="nv">"current"</span><span class="w"> </span><span class="p">{}</span>
 <span class="kr">data</span><span class="w"> </span><span class="nc">"aws_region"</span><span class="w"> </span><span class="nv">"current"</span><span class="w"> </span><span class="p">{}</span>
-<span class="err">```hcl</span>
-<span class="c1">## modules/cis-compliance/outputs.tf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/cis-compliance/outputs.tf</span>
 
 <span class="kr">output</span><span class="w"> </span><span class="nv">"cloudtrail_arn"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ARN of the multi-region CloudTrail"</span>
@@ -15307,8 +15307,8 @@ All resources meet HIPAA Security Rule technical safeguards.</p>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">bool</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 <span class="p">}</span>
-<span class="err">```hcl</span>
-<span class="c1">## modules/hipaa-compliance/main.tf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/hipaa-compliance/main.tf</span>
 
 <span class="c1">## KMS Key for HIPAA encryption (required for PHI)</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_kms_key"</span><span class="w"> </span><span class="nv">"hipaa"</span><span class="w"> </span><span class="p">{</span>
@@ -15852,8 +15852,8 @@ All resources meet HIPAA Security Rule technical safeguards.</p>
 
 <span class="kr">data</span><span class="w"> </span><span class="nc">"aws_region"</span><span class="w"> </span><span class="nv">"current"</span><span class="w"> </span><span class="p">{}</span>
 <span class="kr">data</span><span class="w"> </span><span class="nc">"aws_caller_identity"</span><span class="w"> </span><span class="nv">"current"</span><span class="w"> </span><span class="p">{}</span>
-<span class="err">```hcl</span>
-<span class="c1">## modules/hipaa-compliance/outputs.tf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/hipaa-compliance/outputs.tf</span>
 
 <span class="kr">output</span><span class="w"> </span><span class="nv">"kms_key_arn"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ARN of the HIPAA encryption KMS key"</span>
@@ -15911,8 +15911,8 @@ Security, Availability, Processing Integrity, Confidentiality, and Privacy.</p>
 <span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">number</span>
 <span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">90</span>
 <span class="p">}</span>
-<span class="err">```hcl</span>
-<span class="c1">## modules/soc2-compliance/main.tf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/soc2-compliance/main.tf</span>
 
 <span class="c1">## CC6.1: Change Management Controls - CloudTrail for all changes</span>
 <span class="kr">resource</span><span class="w"> </span><span class="nc">"aws_cloudtrail"</span><span class="w"> </span><span class="nv">"change_management"</span><span class="w"> </span><span class="p">{</span>
@@ -16471,8 +16471,8 @@ Security, Availability, Processing Integrity, Confidentiality, and Privacy.</p>
 
 <span class="kr">data</span><span class="w"> </span><span class="nc">"aws_region"</span><span class="w"> </span><span class="nv">"current"</span><span class="w"> </span><span class="p">{}</span>
 <span class="kr">data</span><span class="w"> </span><span class="nc">"aws_caller_identity"</span><span class="w"> </span><span class="nv">"current"</span><span class="w"> </span><span class="p">{}</span>
-<span class="err">```hcl</span>
-<span class="c1">## modules/soc2-compliance/outputs.tf</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">## modules/soc2-compliance/outputs.tf</span>
 
 <span class="kr">output</span><span class="w"> </span><span class="nv">"cloudtrail_arn"</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ARN of the change management CloudTrail"</span>
