@@ -35,6 +35,14 @@ log_error() {
     return
 }
 
+run_checks() {
+    local args=(check --no-cache)
+    if [[ ${STRICT:-false} == true ]]; then
+        args+=(--strict)
+    fi
+    devops-style "${args[@]}"
+}
+
 # Function to run validation
 run_validate() {
     log_info "Running full validation suite..."
@@ -51,7 +59,7 @@ run_validate() {
 
     # Run linters via the devops-style CLI
     log_info "Running linters..."
-    if devops-style check; then
+    if run_checks; then
         log_success "Linter checks passed"
     else
         log_error "Linter checks failed"
@@ -84,7 +92,7 @@ run_validate() {
 run_lint() {
     log_info "Running linters only..."
 
-    if devops-style check; then
+    if run_checks; then
         log_success "Linter checks passed"
         return 0
     else
@@ -98,15 +106,16 @@ run_format() {
     log_info "Formatting code..."
 
     # Run black if Python files exist
-    if find . -name "*.py" -type f | grep -q .; then
+    if [[ -n "$(find . -name "*.py" -type f -print -quit)" ]]; then
         log_info "Formatting Python files with black..."
         /app/.venv/bin/black .
     fi
 
     # Run terraform fmt if .tf files exist
-    if find . -name "*.tf" -type f | grep -q .; then
-        log_info "Formatting Terraform files..."
-        terraform fmt -recursive . || true
+    log_info "Formatting Terraform files..."
+    if ! terraform fmt -recursive .; then
+        log_error "Terraform formatting failed"
+        return 1
     fi
 
     log_success "Formatting complete"
@@ -134,7 +143,11 @@ run_docs() {
 run_metadata() {
     log_info "Validating metadata tags..."
 
-    if /app/.venv/bin/python /app/scripts/validate_metadata.py; then
+    local args=(.)
+    if [[ ${STRICT:-false} == true ]]; then
+        args+=(--strict)
+    fi
+    if /app/.venv/bin/python /app/scripts/validate_metadata.py "${args[@]}"; then
         log_success "Metadata validation passed"
         return 0
     else
@@ -149,7 +162,7 @@ show_help() {
 Coding Style Guide Validator - Container Usage
 
 USAGE:
-    docker run --rm -v \$(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest [COMMAND]
+    docker run --rm -v "\$PWD:/workspace" ghcr.io/tydukes/coding-style-guide:latest [COMMAND]
 
 COMMANDS:
     validate    Run all validation checks (default)
@@ -161,21 +174,20 @@ COMMANDS:
 
 EXAMPLES:
     # Run full validation
-    docker run --rm -v \$(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest validate
+    docker run --rm -v "\$PWD:/workspace" ghcr.io/tydukes/coding-style-guide:latest validate
 
     # Run linters only
-    docker run --rm -v \$(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest lint
+    docker run --rm -v "\$PWD:/workspace" ghcr.io/tydukes/coding-style-guide:latest lint
 
     # Format code in-place
-    docker run --rm -v \$(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest format
+    docker run --rm -v "\$PWD:/workspace" ghcr.io/tydukes/coding-style-guide:latest format
 
 VOLUME MOUNTS:
     /workspace  - Your repository to validate (required)
-    /config     - Custom configuration files (optional)
 
 ENVIRONMENT VARIABLES:
-    STRICT      - Fail on warnings (default: false)
-    DEBUG       - Enable debug output (default: false)
+    STRICT      - Fail on linter warnings and standalone metadata warnings (default: false)
+    DEBUG       - Print tool versions (default: false)
 
 EOF
 }
@@ -184,10 +196,15 @@ EOF
 main() {
     local command="${1:-validate}"
 
-    log_info "Coding Style Guide Validator v0.1.0"
+    log_info "Coding Style Guide Validator"
     log_info "Command: $command"
     log_info "Workspace: /workspace"
     echo ""
+
+    if [[ ${DEBUG:-false} == true ]]; then
+        devops-style --version
+        terraform version
+    fi
 
     case "$command" in
         validate)

@@ -55,7 +55,7 @@ Validate any project in seconds:
 
 ```bash
 # Run full validation on current directory
-docker run --rm -v $(pwd):/workspace \
+docker run --rm -v "$PWD:/workspace" \
   ghcr.io/tydukes/coding-style-guide:latest validate
 ```
 
@@ -65,11 +65,11 @@ docker run --rm -v $(pwd):/workspace \
 
 ```bash
 # Validate Python code with Black and Flake8
-docker run --rm -v $(pwd):/workspace \
+docker run --rm -v "$PWD:/workspace" \
   ghcr.io/tydukes/coding-style-guide:latest lint
 
 # Auto-format Python code
-docker run --rm -v $(pwd):/workspace \
+docker run --rm -v "$PWD:/workspace" \
   ghcr.io/tydukes/coding-style-guide:latest format
 ```
 
@@ -77,11 +77,11 @@ docker run --rm -v $(pwd):/workspace \
 
 ```bash
 # Validate Terraform with fmt and validate
-docker run --rm -v $(pwd):/workspace \
+docker run --rm -v "$PWD:/workspace" \
   ghcr.io/tydukes/coding-style-guide:latest validate
 
 # Validate metadata tags in IaC modules
-docker run --rm -v $(pwd):/workspace \
+docker run --rm -v "$PWD:/workspace" \
   ghcr.io/tydukes/coding-style-guide:latest metadata
 ```
 
@@ -89,7 +89,7 @@ docker run --rm -v $(pwd):/workspace \
 
 ```bash
 # Run all validation checks (linters, formatters, metadata)
-docker run --rm -v $(pwd):/workspace \
+docker run --rm -v "$PWD:/workspace" \
   ghcr.io/tydukes/coding-style-guide:latest validate
 ```
 
@@ -97,7 +97,7 @@ docker run --rm -v $(pwd):/workspace \
 
 ```bash
 # Build MkDocs documentation with strict validation
-docker run --rm -v $(pwd):/workspace \
+docker run --rm -v "$PWD:/workspace" \
   ghcr.io/tydukes/coding-style-guide:latest docs
 ```
 
@@ -114,7 +114,7 @@ The containerized validator provides 5 specialized modes:
 Runs all checks: metadata validation, linters, and documentation build (if `mkdocs.yml` present).
 
 ```bash
-docker run --rm -v $(pwd):/workspace \
+docker run --rm -v "$PWD:/workspace" \
   ghcr.io/tydukes/coding-style-guide:latest validate
 ```
 
@@ -125,24 +125,27 @@ docker run --rm -v $(pwd):/workspace \
 - YAML (yamllint)
 - Shell scripts (shellcheck)
 - Markdown (markdownlint)
-- Terraform (fmt, validate)
+- Terraform formatting (`terraform fmt -check`)
 - MkDocs site build (if applicable)
 
 #### `lint` - Linters Only
 
-Faster validation without documentation build - ideal for CI pipelines.
+Runs the configured linters without building documentation. Mount the project read-only for a lint-only run.
 
 ```bash
-docker run --rm -v $(pwd):/workspace \
+docker run --rm -v "$PWD:/workspace" \
   ghcr.io/tydukes/coding-style-guide:latest lint
 ```
+
+See the [local Docker workflow](docs/01_overview/getting_started.md#check-local-files-with-docker) for
+read-only mounts, Terraform validation, and testing a local image build.
 
 #### `format` - Auto-Format Code
 
 Automatically formats code in-place (Python with Black, Terraform with fmt).
 
 ```bash
-docker run --rm -v $(pwd):/workspace \
+docker run --rm -v "$PWD:/workspace" \
   ghcr.io/tydukes/coding-style-guide:latest format
 ```
 
@@ -151,7 +154,7 @@ docker run --rm -v $(pwd):/workspace \
 Builds and validates MkDocs documentation with strict mode enabled.
 
 ```bash
-docker run --rm -v $(pwd):/workspace \
+docker run --rm -v "$PWD:/workspace" \
   ghcr.io/tydukes/coding-style-guide:latest docs
 ```
 
@@ -160,7 +163,7 @@ docker run --rm -v $(pwd):/workspace \
 Validates universal `@module` metadata tags across all languages.
 
 ```bash
-docker run --rm -v $(pwd):/workspace \
+docker run --rm -v "$PWD:/workspace" \
   ghcr.io/tydukes/coding-style-guide:latest metadata
 ```
 
@@ -317,7 +320,7 @@ jobs:
 
       - name: Validate coding standards
         run: |
-          docker run --rm -v $PWD:/workspace \
+          docker run --rm -v "$PWD:/workspace" \
             ghcr.io/tydukes/coding-style-guide:latest validate
 ```
 
@@ -348,8 +351,9 @@ repos:
     hooks:
       - id: coding-style-validator
         name: Validate Coding Standards
-        entry: docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest
-        args: [lint]
+        entry: >-
+          bash -c 'docker run --rm -v "$PWD:/workspace:ro"
+          ghcr.io/tydukes/coding-style-guide:latest lint'
         language: system
         pass_filenames: false
         always_run: true
@@ -525,6 +529,6 @@ Tyler Dukes
 **Ready to get started?** Run your first validation:
 
 ```bash
-docker run --rm -v $(pwd):/workspace \
+docker run --rm -v "$PWD:/workspace" \
   ghcr.io/tydukes/coding-style-guide:latest validate
 ```

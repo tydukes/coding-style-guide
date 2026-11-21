@@ -23,25 +23,66 @@ and points you to the right in-depth tutorial for your project type.
 - [uv package manager](https://docs.astral.sh/uv/)
 - Git
 
-## Quick Start (30 Seconds)
+## Check Local Files with Docker
+
+Start Docker and run these commands from the project directory you want to check.
+The bind mount exposes that directory as `/workspace` in the container.
 
 ```bash
-# Navigate to your project
 cd /path/to/your/project
+image=ghcr.io/tydukes/coding-style-guide:latest
+docker pull "$image"
 
-# Run full validation — no installation required
-docker run --rm -v $(pwd):/workspace \
-  ghcr.io/tydukes/coding-style-guide:latest validate
+# Read-only lint check
+docker run --rm -v "$PWD:/workspace:ro" "$image" lint
+
+# Run linters and report metadata findings. MkDocs builds if mkdocs.yml exists.
+docker run --rm -v "$PWD:/workspace" "$image" validate
+
+# Rewrite Python and Terraform files in the mounted project.
+docker run --rm -v "$PWD:/workspace" "$image" format
+git diff
 ```
 
-You'll immediately see linting errors, missing metadata tags, and formatting issues across all languages.
+Use a published release tag in place of `latest` for repeatable checks. Use the
+read-only mount with `lint` or `metadata`. A MkDocs build can write the
+configured site output, and `format` needs write access to the source files.
 
-**Auto-fix what's fixable:**
+### Check Terraform modules
+
+Formatting differences are warnings by default. Set `STRICT=true` to fail the
+check when the formatter reports a difference. The container checks Terraform
+formatting without initializing a backend,
+downloading providers, or contacting a cloud account. For configuration
+validation, run `terraform init -backend=false` and `terraform validate` from
+each module root using that project's supported Terraform version. Initialization
+can download providers and modules. Run plans and applies in your project's
+configured execution environment.
 
 ```bash
-docker run --rm -v $(pwd):/workspace \
-  ghcr.io/tydukes/coding-style-guide:latest format
+# Use the module directory as the workspace to narrow the lint check.
+docker run --rm -v "$PWD/infra/network:/workspace:ro" "$image" lint
+
+# Treat linter warnings as failures.
+docker run --rm -e STRICT=true -v "$PWD:/workspace:ro" "$image" lint
 ```
+
+### Test a local validator build
+
+Run these commands in the style guide repository. Then change to your target
+project before running the image.
+
+```bash
+(cd cli && npm ci && npm run build)
+docker build --tag coding-style-guide:local .
+
+cd /path/to/your/project
+docker run --rm -v "$PWD:/workspace:ro" coding-style-guide:local lint
+```
+
+If Docker cannot access the project on macOS or Windows, check Docker Desktop's
+file-sharing settings. If a lint or formatting command fails, read the tool
+output and rerun against the affected module or directory.
 
 **Prefer a local setup?**
 
@@ -92,7 +133,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run Full Validation
         run: |
-          docker run --rm -v $(pwd):/workspace \
+          docker run --rm -v "$PWD:/workspace" \
             ghcr.io/tydukes/coding-style-guide:latest validate
 ```
 
@@ -105,11 +146,12 @@ repos:
     hooks:
       - id: coding-style-validator
         name: Validate Coding Standards
-        entry: docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest
-        args: [lint]
+        entry: >-
+          bash -c 'docker run --rm -v "$PWD:/workspace:ro"
+          ghcr.io/tydukes/coding-style-guide:latest lint'
         language: system
         pass_filenames: false
-        stages: [commit]
+        stages: [pre-commit]
 ```
 
 ```bash
@@ -148,20 +190,13 @@ docker-compose run --rm format
 
 ### Makefile
 
-```makefile
-.PHONY: validate lint format
+Copy the [example Makefile](https://github.com/tydukes/coding-style-guide/blob/main/examples/local/Makefile)
+into your project root, then run one of the targets below.
 
-validate:
- docker run --rm -v $(PWD):/workspace \
-   ghcr.io/tydukes/coding-style-guide:latest validate
-
-lint:
- docker run --rm -v $(PWD):/workspace \
-   ghcr.io/tydukes/coding-style-guide:latest lint
-
-format:
- docker run --rm -v $(PWD):/workspace \
-   ghcr.io/tydukes/coding-style-guide:latest format
+```bash
+make lint
+make validate
+make format
 ```
 
 ---
@@ -170,12 +205,12 @@ format:
 
 | Problem | Quick Fix |
 |---------|-----------|
-| `Permission denied` in Docker | Add `--user $(id -u):$(id -g)` to the docker run command |
+| Docker cannot access the project | Check that Docker is running and has permission to mount the project directory |
 | Hundreds of errors on first run | Run `format` first, then `validate` again |
 | CI pipeline is slow | Use `lint` mode instead of `validate` (skips docs build) |
 | Metadata validation fails on legacy code | Start with non-blocking mode; add `@module` tags incrementally |
 | Pre-commit hooks are slow | Move full validation to `push` stage; keep only formatters on `commit` |
-| Container fails to pull in CI | Pin to a specific version tag: `ghcr.io/tydukes/coding-style-guide:v1.8.0` |
+| Container fails to pull in CI | Confirm the release tag exists and the runner can reach GHCR |
 
 See [FAQ](../faq.md) for more detailed answers.
 
@@ -206,19 +241,19 @@ After completing your first validation:
 
 ```bash
 # Validate entire project
-docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest validate
+docker run --rm -v "$PWD:/workspace" ghcr.io/tydukes/coding-style-guide:latest validate
 
 # Lint only (faster — skips docs build)
-docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest lint
+docker run --rm -v "$PWD:/workspace" ghcr.io/tydukes/coding-style-guide:latest lint
 
 # Auto-format code
-docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest format
+docker run --rm -v "$PWD:/workspace" ghcr.io/tydukes/coding-style-guide:latest format
 
 # Build documentation
-docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest docs
+docker run --rm -v "$PWD:/workspace" ghcr.io/tydukes/coding-style-guide:latest docs
 
 # Validate metadata tags only
-docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest metadata
+docker run --rm -v "$PWD:/workspace" ghcr.io/tydukes/coding-style-guide:latest metadata
 
 # Show all available commands
 docker run --rm ghcr.io/tydukes/coding-style-guide:latest help

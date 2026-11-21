@@ -6,7 +6,7 @@ set -euo pipefail
 # Default values
 IMAGE_NAME="${VALIDATOR_IMAGE:-ghcr.io/tydukes/coding-style-guide:latest}"
 WORKSPACE="${VALIDATOR_WORKSPACE:-$(pwd)}"
-COMMAND="${1:-validate}"
+COMMAND=validate
 STRICT="${STRICT:-false}"
 DEBUG="${DEBUG:-false}"
 
@@ -110,6 +110,8 @@ if [[ ! -d "$WORKSPACE" ]]; then
     exit 1
 fi
 
+WORKSPACE="$(cd -- "$WORKSPACE" && pwd -P)"
+
 # Check if Docker is available
 if ! command -v docker &> /dev/null; then
     echo -e "${YELLOW}Error: Docker is not installed or not in PATH${NC}" >&2
@@ -126,14 +128,13 @@ echo -e "  Debug:     ${DEBUG}"
 echo ""
 
 # Run container
+exit_code=0
 docker run --rm \
     -v "${WORKSPACE}:/workspace" \
     -e STRICT="${STRICT}" \
     -e DEBUG="${DEBUG}" \
     "${IMAGE_NAME}" \
-    "${COMMAND}"
-
-exit_code=$?
+    "${COMMAND}" || exit_code=$?
 
 if [[ $exit_code -eq 0 ]]; then
     echo -e "\n${GREEN}✓ Validation completed successfully${NC}"

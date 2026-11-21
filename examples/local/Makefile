@@ -6,9 +6,6 @@
 # Docker image to use
 IMAGE ?= ghcr.io/tydukes/coding-style-guide:latest
 
-# Current directory
-PWD := $(shell pwd)
-
 help: ## Show this help message
 	@echo "Coding Style Guide Validator - Local Usage"
 	@echo ""
@@ -19,30 +16,31 @@ help: ## Show this help message
 
 validate: ## Run full validation
 	@echo "Running full validation..."
-	@docker run --rm -v $(PWD):/workspace $(IMAGE) validate
+	@docker run --rm -v "$(CURDIR):/workspace" $(IMAGE) validate
 
 lint: ## Run linters only
 	@echo "Running linters..."
-	@docker run --rm -v $(PWD):/workspace $(IMAGE) lint
+	@docker run --rm -v "$(CURDIR):/workspace:ro" $(IMAGE) lint
 
 format: ## Auto-format code
 	@echo "Formatting code..."
-	@docker run --rm -v $(PWD):/workspace $(IMAGE) format
+	@docker run --rm -v "$(CURDIR):/workspace" $(IMAGE) format
 
 docs: ## Build and validate documentation
 	@echo "Validating documentation..."
-	@docker run --rm -v $(PWD):/workspace $(IMAGE) docs
+	@docker run --rm -v "$(CURDIR):/workspace" $(IMAGE) docs
 
 metadata: ## Validate metadata tags
 	@echo "Validating metadata..."
-	@docker run --rm -v $(PWD):/workspace $(IMAGE) metadata
+	@docker run --rm -v "$(CURDIR):/workspace:ro" $(IMAGE) metadata
 
 pull: ## Pull latest container image
 	@echo "Pulling latest image..."
 	@docker pull $(IMAGE)
 
-build: ## Build local container image
+build: ## Build local container image from the style guide checkout
 	@echo "Building local image..."
+	@(cd cli && npm ci && npm run build)
 	@docker build -t coding-style-guide:local .
 
 clean: ## Clean up validation artifacts
@@ -55,15 +53,15 @@ clean: ## Clean up validation artifacts
 
 validate-strict: ## Run validation in strict mode
 	@echo "Running strict validation..."
-	@docker run --rm -v $(PWD):/workspace -e STRICT=true $(IMAGE) validate
+	@docker run --rm -v "$(CURDIR):/workspace" -e STRICT=true $(IMAGE) validate
 
 validate-debug: ## Run validation with debug output
 	@echo "Running validation with debug output..."
-	@docker run --rm -v $(PWD):/workspace -e DEBUG=true $(IMAGE) validate
+	@docker run --rm -v "$(CURDIR):/workspace" -e DEBUG=true $(IMAGE) validate
 
 shell: ## Open shell in container for debugging
-	@docker run --rm -it -v $(PWD):/workspace --entrypoint /bin/bash $(IMAGE)
+	@docker run --rm -it -v "$(CURDIR):/workspace" --entrypoint /bin/bash $(IMAGE)
 
 test-local: build ## Build and test local image
 	@echo "Testing local build..."
-	@docker run --rm -v $(PWD):/workspace coding-style-guide:local validate
+	@docker run --rm -v "$(CURDIR):/workspace" coding-style-guide:local validate

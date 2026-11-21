@@ -1,21 +1,23 @@
 # Multi-stage build for coding style guide validator
 
-# Stage 1: install CLI npm production dependencies
-FROM node:20-slim AS cli-deps
+# Use the official multi-platform Terraform CLI for HCL formatting checks.
+FROM hashicorp/terraform:1.17.1 AS terraform-cli
+
+# Install CLI npm production dependencies
+FROM node:24-slim AS cli-deps
 WORKDIR /app/cli
 COPY cli/package.json cli/package-lock.json ./
 RUN npm ci --omit=dev
+RUN npm install --global --prefix /opt/node-tools eslint prettier markdownlint-cli
 
-# Stage 2: final image
+# Final image
 FROM python:3.15.0b1-slim AS base
 
-# Install system dependencies, UV, and Node.js runtime
+# Install system dependencies and UV
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \
     curl \
     git \
-    nodejs \
-    npm \
     shellcheck \
     && rm -rf /var/lib/apt/lists/* \
     && curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -38,8 +40,10 @@ RUN uv pip install black flake8 yamllint
 # Add venv bin to PATH so the CLI can find Python-based linters
 ENV PATH="/app/.venv/bin:${PATH}"
 
-# Install Node.js linter globals (eslint, prettier, markdownlint-cli)
-RUN npm install -g eslint prettier markdownlint-cli
+# Use the same Node.js runtime to install and run the JavaScript tools.
+COPY --from=cli-deps /usr/local/bin/node /usr/local/bin/node
+COPY --from=cli-deps /opt/node-tools /opt/node-tools
+ENV PATH="/opt/node-tools/bin:${PATH}"
 
 # Install hadolint (Dockerfile linter) — multi-arch binary
 RUN ARCH=$(uname -m) && \
@@ -51,6 +55,8 @@ RUN ARCH=$(uname -m) && \
     curl -fsSL "https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-${HA}" \
          -o /usr/local/bin/hadolint && \
     chmod +x /usr/local/bin/hadolint
+
+COPY --from=terraform-cli /bin/terraform /usr/local/bin/terraform
 
 # Install CLI: pre-built dist + prod node_modules from cli-deps stage
 COPY cli/package.json ./cli/
