@@ -139,6 +139,10 @@ jobs:
             patch)
               PATCH=$((PATCH + 1))
               ;;
+            *)
+              echo "::error::Unexpected release bump type: $BUMP_TYPE"
+              exit 1
+              ;;
           esac
 
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
@@ -211,11 +215,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install uv
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
-
-      - name: Add uv to PATH
-        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v10.4.0
+        with:
+          version: "0.13.8"
+          enable-cache: false
 
       - name: Install dependencies
         run: uv sync
@@ -293,7 +297,7 @@ jobs:
 
       - name: Build and publish
         if: steps.npm-state.outputs.published != 'true'
-        run: cd cli && npm ci && npm run build && npm publish --access public --provenance
+        run: cd cli && npm ci --ignore-scripts && npm run build && npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

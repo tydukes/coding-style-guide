@@ -114,8 +114,8 @@ jobs:
       - name: Install D2 and validate
         if: steps.check-diagrams.outputs.has_d2 == 'true'
         run: |
-          curl -fsSL https://d2lang.com/install.sh | sh -s --
-          export PATH="$HOME/.local/bin:$PATH"
+          go install github.com/d2lang/d2@v0.9.0
+          export PATH="$(go env GOPATH)/bin:$PATH"
           find . -name '*.d2' -exec sh -c 'echo "Validating: $1" && d2 fmt --check "$1"' _ {} \;
 
       - name: Install Graphviz and validate DOT files
