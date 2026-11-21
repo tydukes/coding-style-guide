@@ -210,9 +210,10 @@ Valid types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `ci`, 
 ## CI/CD Automation Notes
 
 **Auto-merge**: same-repository PRs from `dependabot[bot]` or `tydukes` can have GitHub
-auto-merge enabled after CI succeeds. The workflow uses `GITHUB_TOKEN`; it does not auto-approve,
-directly merge, use `AUTO_MERGE_TOKEN`, or bypass branch protection. Outside-contributor PRs must
-receive normal maintainer review and required checks before merge.
+auto-merge enabled after CI succeeds. The workflow uses `AUTO_MERGE_TOKEN` only for the GitHub
+auto-merge enablement call because `GITHUB_TOKEN` cannot perform that `workflow_run` GraphQL
+mutation. It does not auto-approve, directly merge, or bypass branch protection.
+Outside-contributor PRs must receive normal maintainer review and required checks before merge.
 
 **Blocking checks** (prevent merge):
 
@@ -230,8 +231,9 @@ action version: edit `versions.yml`, manually update all workflow files to match
 validates they stay in sync.
 
 **Token policy**: use `GITHUB_TOKEN` for checkout, version bump commits, changelog commits, release
-creation, auto-merge enablement, recovery issue creation, and container publishing to `ghcr.io`. Add a PAT
-only when GitHub permission limits require it, and document the exact reason, scopes, and expiration.
+creation, recovery issue creation, and container publishing to `ghcr.io`. Use `AUTO_MERGE_TOKEN`
+only for trusted same-repository auto-merge enablement. Add any other PAT only when GitHub
+permission limits require it, and document the exact reason, scopes, and expiration.
 
 ---
 
