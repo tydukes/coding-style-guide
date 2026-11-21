@@ -55,7 +55,7 @@ jobs:
       new_version: ${{ steps.bump.outputs.new_version }}
       bump_type: ${{ steps.analyze.outputs.bump_type }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
@@ -139,6 +139,10 @@ jobs:
             patch)
               PATCH=$((PATCH + 1))
               ;;
+            *)
+              echo "::error::Unexpected release bump type: $BUMP_TYPE"
+              exit 1
+              ;;
           esac
 
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
@@ -154,7 +158,7 @@ jobs:
       pull-requests: write
       issues: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
@@ -207,22 +211,22 @@ jobs:
           echo "Created release v${NEW_VERSION}"
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11'
 
-      - name: Install uv
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
-
-      - name: Add uv to PATH
-        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Set up uv
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d  # v10.4.0
+        with:
+          version: "0.13.8"
+          enable-cache: false
 
       - name: Install dependencies
-        run: uv sync
+        run: uv sync --frozen --no-build
 
       - name: Generate Changelog
         run: |
-          uv run python scripts/generate_changelog.py
+          uv run --frozen --no-build python scripts/generate_changelog.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -258,12 +262,12 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
         with:
           ref: main
           fetch-depth: 1
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
@@ -293,7 +297,7 @@ jobs:
 
       - name: Build and publish
         if: steps.npm-state.outputs.published != 'true'
-        run: cd cli && npm ci && npm run build && npm publish --access public --provenance
+        run: cd cli && npm ci --ignore-scripts && npm run build && npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
