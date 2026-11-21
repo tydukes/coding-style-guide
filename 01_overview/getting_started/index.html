@@ -881,13 +881,41 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start-30-seconds" class="md-nav__link">
+  <a href="#check-local-files-with-docker" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start (30 Seconds)
+        Check Local Files with Docker
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Check Local Files with Docker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-terraform-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Terraform modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-a-local-validator-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test a local validator build
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -6918,13 +6946,41 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start-30-seconds" class="md-nav__link">
+  <a href="#check-local-files-with-docker" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start (30 Seconds)
+        Check Local Files with Docker
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Check Local Files with Docker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-terraform-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Terraform modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-a-local-validator-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test a local validator build
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -7132,19 +7188,57 @@ and points you to the right in-depth tutorial for your project type.</p>
 <li><a href="https://docs.astral.sh/uv/">uv package manager</a></li>
 <li>Git</li>
 </ul>
-<h2 id="quick-start-30-seconds">Quick Start (30 Seconds)<a class="headerlink" href="#quick-start-30-seconds" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Navigate to your project</span>
-<span class="nb">cd</span><span class="w"> </span>/path/to/your/project
+<h2 id="check-local-files-with-docker">Check Local Files with Docker<a class="headerlink" href="#check-local-files-with-docker" title="Permanent link">&para;</a></h2>
+<p>Start Docker and run these commands from the project directory you want to check.
+The bind mount exposes that directory as <code>/workspace</code> in the container.</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/your/project
+<span class="nv">image</span><span class="o">=</span>ghcr.io/tydukes/coding-style-guide:latest
+docker<span class="w"> </span>pull<span class="w"> </span><span class="s2">"</span><span class="nv">$image</span><span class="s2">"</span>
 
-<span class="c1"># Run full validation — no installation required</span>
-docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>validate
+<span class="c1"># Read-only lint check</span>
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/workspace:ro"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$image</span><span class="s2">"</span><span class="w"> </span>lint
+
+<span class="c1"># Run linters and report metadata findings. MkDocs builds if mkdocs.yml exists.</span>
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/workspace"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$image</span><span class="s2">"</span><span class="w"> </span>validate
+
+<span class="c1"># Rewrite Python and Terraform files in the mounted project.</span>
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/workspace"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$image</span><span class="s2">"</span><span class="w"> </span>format
+git<span class="w"> </span>diff
 </code></pre></div>
-<p>You'll immediately see linting errors, missing metadata tags, and formatting issues across all languages.</p>
-<p><strong>Auto-fix what's fixable:</strong></p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>format
+<p>Use a published release tag in place of <code>latest</code> for repeatable checks. Use the
+read-only mount with <code>lint</code> or <code>metadata</code>. A MkDocs build can write the
+configured site output, and <code>format</code> needs write access to the source files.</p>
+<h3 id="check-terraform-modules">Check Terraform modules<a class="headerlink" href="#check-terraform-modules" title="Permanent link">&para;</a></h3>
+<p>Formatting differences are warnings by default. Set <code>STRICT=true</code> to fail the
+check when the formatter reports a difference. The container checks Terraform
+formatting without initializing a backend,
+downloading providers, or contacting a cloud account. For configuration
+validation, run <code>terraform init -backend=false</code> and <code>terraform validate</code> from
+each module root using that project's supported Terraform version. Initialization
+can download providers and modules. Run plans and applies in your project's
+configured execution environment.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Use the module directory as the workspace to narrow the lint check.</span>
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">/infra/network:/workspace:ro"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$image</span><span class="s2">"</span><span class="w"> </span>lint
+
+<span class="c1"># Treat linter warnings as failures.</span>
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-e<span class="w"> </span><span class="nv">STRICT</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/workspace:ro"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$image</span><span class="s2">"</span><span class="w"> </span>lint
 </code></pre></div>
+<h3 id="test-a-local-validator-build">Test a local validator build<a class="headerlink" href="#test-a-local-validator-build" title="Permanent link">&para;</a></h3>
+<p>Run these commands in the style guide repository. Then change to your target
+project before running the image.</p>
+<div class="highlight"><pre><span></span><code><span class="o">(</span><span class="nb">cd</span><span class="w"> </span>cli<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>build<span class="o">)</span>
+docker<span class="w"> </span>build<span class="w"> </span>--tag<span class="w"> </span>coding-style-guide:local<span class="w"> </span>.
+
+<span class="nb">cd</span><span class="w"> </span>/path/to/your/project
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/workspace:ro"</span><span class="w"> </span>coding-style-guide:local<span class="w"> </span>lint
+</code></pre></div>
+<p>The image uses <code>uv.lock</code> for Python dependencies and <code>docker/node-tools/package-lock.json</code>
+for its JavaScript linters. When changing their dependency declarations, refresh the
+matching lockfile with <code>uv lock</code> or <code>npm install --package-lock-only --ignore-scripts</code>
+from <code>docker/node-tools</code> for the JavaScript linters.</p>
+<p>If Docker cannot access the project on macOS or Windows, check Docker Desktop's
+file-sharing settings. If a lint or formatting command fails, read the tool
+output and rerun against the affected module or directory.</p>
 <p><strong>Prefer a local setup?</strong></p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/tydukes/coding-style-guide.git
 <span class="nb">cd</span><span class="w"> </span>coding-style-guide
@@ -7215,7 +7309,7 @@ it covers the foundations for every other path.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Full Validation</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">docker run --rm -v $(pwd):/workspace \</span>
+<span class="w">          </span><span class="no">docker run --rm -v "$PWD:/workspace" \</span>
 <span class="w">            </span><span class="no">ghcr.io/tydukes/coding-style-guide:latest validate</span>
 </code></pre></div>
 <h3 id="pre-commit-hooks">Pre-commit Hooks<a class="headerlink" href="#pre-commit-hooks" title="Permanent link">&para;</a></h3>
@@ -7225,11 +7319,12 @@ it covers the foundations for every other path.</p>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coding-style-validator</span>
 <span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate Coding Standards</span>
-<span class="w">        </span><span class="nt">entry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker run --rm -v $(pwd):/workspace ghcr.io/tydukes/coding-style-guide:latest</span>
-<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">lint</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">entry</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">          </span><span class="no">bash -c 'docker run --rm -v "$PWD:/workspace:ro"</span>
+<span class="w">          </span><span class="no">ghcr.io/tydukes/coding-style-guide:latest lint'</span>
 <span class="w">        </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">system</span>
 <span class="w">        </span><span class="nt">pass_filenames</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">        </span><span class="nt">stages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">commit</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">stages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">pre-commit</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
 pre-commit<span class="w"> </span>install
@@ -7259,19 +7354,11 @@ pre-commit<span class="w"> </span>install
 docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>format
 </code></pre></div>
 <h3 id="makefile">Makefile<a class="headerlink" href="#makefile" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">validate</span> <span class="n">lint</span> <span class="n">format</span>
-
-<span class="nf">validate</span><span class="o">:</span>
-<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span>PWD<span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
-<span class="w">   </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>validate
-
-<span class="nf">lint</span><span class="o">:</span>
-<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span>PWD<span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
-<span class="w">   </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>lint
-
-<span class="nf">format</span><span class="o">:</span>
-<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span>PWD<span class="k">)</span>:/workspace<span class="w"> </span><span class="se">\</span>
-<span class="w">   </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>format
+<p>Copy the <a href="https://github.com/tydukes/coding-style-guide/blob/main/examples/local/Makefile">example Makefile</a>
+into your project root, then run one of the targets below.</p>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>lint
+make<span class="w"> </span>validate
+make<span class="w"> </span>format
 </code></pre></div>
 <hr />
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
@@ -7284,8 +7371,8 @@ docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class
 </thead>
 <tbody>
 <tr>
-<td><code>Permission denied</code> in Docker</td>
-<td>Add <code>--user $(id -u):$(id -g)</code> to the docker run command</td>
+<td>Docker cannot access the project</td>
+<td>Check that Docker is running and has permission to mount the project directory</td>
 </tr>
 <tr>
 <td>Hundreds of errors on first run</td>
@@ -7305,7 +7392,7 @@ docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class
 </tr>
 <tr>
 <td>Container fails to pull in CI</td>
-<td>Pin to a specific version tag: <code>ghcr.io/tydukes/coding-style-guide:v1.8.0</code></td>
+<td>Confirm the release tag exists and the runner can reach GHCR</td>
 </tr>
 </tbody>
 </table>
@@ -7332,19 +7419,19 @@ docker-compose<span class="w"> </span>run<span class="w"> </span>--rm<span class
 </ul>
 <h2 id="container-commands-cheat-sheet">Container Commands Cheat Sheet<a class="headerlink" href="#container-commands-cheat-sheet" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Validate entire project</span>
-docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>validate
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/workspace"</span><span class="w"> </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>validate
 
 <span class="c1"># Lint only (faster — skips docs build)</span>
-docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>lint
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/workspace"</span><span class="w"> </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>lint
 
 <span class="c1"># Auto-format code</span>
-docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>format
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/workspace"</span><span class="w"> </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>format
 
 <span class="c1"># Build documentation</span>
-docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>docs
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/workspace"</span><span class="w"> </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>docs
 
 <span class="c1"># Validate metadata tags only</span>
-docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/workspace<span class="w"> </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>metadata
+docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/workspace"</span><span class="w"> </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span>metadata
 
 <span class="c1"># Show all available commands</span>
 docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>ghcr.io/tydukes/coding-style-guide:latest<span class="w"> </span><span class="nb">help</span>
