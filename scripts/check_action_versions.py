@@ -14,6 +14,8 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+import requests
+
 from version_utils import get_latest_release_tag, is_version_outdated
 
 
@@ -89,8 +91,26 @@ def check_action_for_updates(
         print(f"⚠️  Could not determine latest version for {action_repo}")
         return
 
+    latest_commit = None
+    if any(re.fullmatch(r"[0-9a-f]{40}", version) for version, _, _ in usages):
+        response = requests.get(
+            f"https://api.github.com/repos/{action_repo}/commits/{latest_tag}",
+            headers={"Authorization": f"Bearer {token}"},
+            timeout=15,
+        )
+        response.raise_for_status()
+        latest_commit = response.json()["sha"]
+
     for current_version, workflow_file, line_num in usages:
-        if is_version_outdated(current_version, latest_tag):
+        expected = (
+            latest_commit if re.fullmatch(r"[0-9a-f]{40}", current_version) else None
+        )
+        outdated = (
+            current_version != expected
+            if expected is not None
+            else is_version_outdated(current_version, latest_tag)
+        )
+        if outdated:
             outdated_actions.append(
                 (
                     action_repo,
