@@ -77,19 +77,18 @@ jobs:
 
             core.setOutput('author', author);
             core.setOutput('pr_number', prNumber);
+            core.setOutput('pr_node_id', pr.node_id);
 
       - name: Enable auto-merge
-        if: steps.pr-details.outputs.pr_number != ''
+        if: steps.pr-details.outputs.pr_node_id != ''
         uses: actions/github-script@v9
+        env:
+          PR_NUMBER: ${{ steps.pr-details.outputs.pr_number }}
+          PR_NODE_ID: ${{ steps.pr-details.outputs.pr_node_id }}
         with:
+          github-token: ${{ secrets.AUTO_MERGE_TOKEN }}
           script: |
-            const prNumber = ${{ steps.pr-details.outputs.pr_number }};
-            const { data: pr } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber
-            });
-
+            const prNumber = process.env.PR_NUMBER;
             const query = `
               mutation EnablePullRequestAutoMerge($pullRequestId: ID!, $mergeMethod: PullRequestMergeMethod!) {
                 enablePullRequestAutoMerge(input: {
@@ -108,7 +107,7 @@ jobs:
 
             try {
               await github.graphql(query, {
-                pullRequestId: pr.node_id,
+                pullRequestId: process.env.PR_NODE_ID,
                 mergeMethod: 'SQUASH'
               });
               console.log(`Enabled auto-merge for PR #${prNumber}`);
