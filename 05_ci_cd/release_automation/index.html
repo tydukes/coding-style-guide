@@ -6977,7 +6977,10 @@ Branch protection, required checks, review rules, and GitHub token restrictions 
 truth for whether a pull request can merge or a release can publish.</p>
 <h2 id="auto-merge-rules">Auto-Merge Rules<a class="headerlink" href="#auto-merge-rules" title="Permanent link">&para;</a></h2>
 <p>Trusted same-repository pull requests may have GitHub auto-merge enabled after CI succeeds. The
-workflow does not directly approve, directly merge, or delete branches with a personal access token.</p>
+workflow does not directly approve, directly merge, or delete branches with a personal access token.
+The auto-merge enablement call uses <code>AUTO_MERGE_TOKEN</code> because GitHub rejected the equivalent
+<code>GITHUB_TOKEN</code> GraphQL mutation from the <code>workflow_run</code> event with <code>Resource not accessible by
+integration</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">trusted_auto_merge_authors</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">maintainers</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tydukes</span>
@@ -6986,7 +6989,7 @@ workflow does not directly approve, directly merge, or delete branches with a pe
 
 <span class="nt">required_behavior</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">merge_method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">squash</span>
-<span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GITHUB_TOKEN</span>
+<span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AUTO_MERGE_TOKEN</span>
 <span class="w">  </span><span class="nt">same_repository_branch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">direct_merge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">  </span><span class="nt">auto_approve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
@@ -7006,27 +7009,29 @@ receive normal maintainer review and pass the required branch protection checks 
 <p>Branch protection should require the checks that represent the full repository risk, not only the
 first workflow that completes.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">required_checks</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Commit Message Lint</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLI Build and Test</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dependency Version Check</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Spell Checker</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build-and-test</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build-and-push</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate Commit Messages</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check Python Dependencies</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check GitHub Actions Versions</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check Docker Image Versions</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check Pre-commit Hook Versions</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spell-check</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CodeQL</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SonarCloud</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build and Publish Container</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SonarCloud Code Analysis</span>
 </code></pre></div>
-<p>Container checks are required for container-affecting changes. CodeQL and SonarCloud are required
-where those services are enabled for the repository.</p>
+<p>Keep optional and issue-creating workflows, such as link checking and dashboard refreshes, outside
+branch protection unless they become release blockers.</p>
 <h2 id="token-rules">Token Rules<a class="headerlink" href="#token-rules" title="Permanent link">&para;</a></h2>
 <p>Use <code>GITHUB_TOKEN</code> by default. It is scoped to the repository, receives workflow-level permissions,
 and is the correct token for checkout, version bump commits, release creation, issue creation, and
-GitHub auto-merge enablement.</p>
+container publishing.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">github_token_uses</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions checkout</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">release version bump commits</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">changelog commits</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GitHub release creation</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GitHub auto-merge enablement</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recovery issue creation</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr container publishing</span>
 </code></pre></div>
@@ -7041,10 +7046,15 @@ permissions.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">branch protection is not bypassed</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scopes are documented</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expiration is configured</span>
-<span class="w">  </span><span class="nt">not_required_for</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">required_for</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current auto-merge workflow</span>
+<span class="w">  </span><span class="nt">not_required_for</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current release workflow</span>
 </code></pre></div>
+<p><code>AUTO_MERGE_TOKEN</code> is limited to enabling GitHub auto-merge for trusted same-repository pull
+requests. It must have repository access for this repository and pull request write permission. It
+must not be used to approve reviews, merge pull requests directly, bypass required checks, or push to
+protected branches.</p>
 <h2 id="release-path">Release Path<a class="headerlink" href="#release-path" title="Permanent link">&para;</a></h2>
 <p>Releases are manual, trusted-ref workflows. Run them from <code>main</code>; do not run release publishing from
 pull requests, forks, feature branches, or code that has not been reviewed.</p>

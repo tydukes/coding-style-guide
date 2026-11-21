@@ -7792,16 +7792,22 @@ protection and required checks still decide when the pull request can merge.</p>
 </code></pre></div>
 <h2 id="setup-requirements">Setup Requirements<a class="headerlink" href="#setup-requirements" title="Permanent link">&para;</a></h2>
 <h3 id="token-model">Token Model<a class="headerlink" href="#token-model" title="Permanent link">&para;</a></h3>
-<p>The workflow uses <code>GITHUB_TOKEN</code> with the narrow permissions needed to read repository contents,
-enable auto-merge, and add the policy note to the pull request.</p>
+<p>The workflow uses the default <code>GITHUB_TOKEN</code> for repository reads and pull request comments. It uses
+<code>AUTO_MERGE_TOKEN</code> only for the GitHub auto-merge enablement mutation because GitHub rejected that
+operation from the <code>workflow_run</code> event when attempted with <code>GITHUB_TOKEN</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">permissions</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
 <span class="w">  </span><span class="nt">pull-requests</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
 <span class="w">  </span><span class="nt">issues</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
+
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">AUTO_MERGE_TOKEN</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enable GitHub auto-merge for trusted same-repository PRs</span>
+<span class="w">    </span><span class="nt">permissions</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Pull requests</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read and write</span>
 </code></pre></div>
-<p>Do not add <code>AUTO_MERGE_TOKEN</code> for this workflow. A personal access token would make it easier to
-bypass review gates, which is not the intended policy. If a future workflow truly needs a PAT,
-document the exact GitHub limitation, required scopes, expiration, and branch protection impact.</p>
+<p><code>AUTO_MERGE_TOKEN</code> must not approve reviews, merge pull requests directly, delete branches, push to
+protected branches, or bypass branch protection.</p>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <h3 id="update-flow">Update Flow<a class="headerlink" href="#update-flow" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart TD
@@ -7899,7 +7905,7 @@ merge conflicts, and repository auto-merge settings still apply.</p>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tydukes</span>
 </code></pre></div>
 <h3 id="how-maintainer-auto-merge-works">How Maintainer Auto-Merge Works<a class="headerlink" href="#how-maintainer-auto-merge-works" title="Permanent link">&para;</a></h3>
-<p>With <code>GITHUB_TOKEN</code> permissions configured:</p>
+<p>With <code>AUTO_MERGE_TOKEN</code> configured for the enablement call:</p>
 <ol>
 <li>✅ <strong>Eligibility Check</strong>: Workflow confirms trusted author and same-repository branch</li>
 <li>✅ <strong>Auto-Merge Enablement</strong>: GitHub auto-merge is enabled with squash strategy</li>
@@ -7952,8 +7958,9 @@ or by pushing updates to force CI re-run.</p>
 </ul>
 <p><strong>Issue</strong>: PAT authentication errors</p>
 <ul>
-<li><strong>Cause</strong>: The workflow should not use a PAT</li>
-<li><strong>Solution</strong>: Remove <code>AUTO_MERGE_TOKEN</code> usage and rely on <code>GITHUB_TOKEN</code></li>
+<li><strong>Check</strong>: Verify <code>AUTO_MERGE_TOKEN</code> exists in repository secrets</li>
+<li><strong>Check</strong>: Verify the token has pull request read/write permission for this repository</li>
+<li><strong>Solution</strong>: Rotate the token if it has expired or lost repository access</li>
 </ul>
 <p><strong>Issue</strong>: "Resource not accessible by integration" error</p>
 <ul>
