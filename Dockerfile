@@ -10,18 +10,21 @@ COPY cli/package.json cli/package-lock.json ./
 RUN npm ci --omit=dev
 RUN npm install --global --prefix /opt/node-tools eslint prettier markdownlint-cli
 
+# Use the published uv binary instead of executing a downloaded installer.
+FROM ghcr.io/astral-sh/uv:0.13.8 AS uv-cli
+
 # Final image
 FROM python:3.15.0b1-slim AS base
 
-# Install system dependencies and UV
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \
     curl \
     git \
     shellcheck \
-    && rm -rf /var/lib/apt/lists/* \
-    && curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.local/bin:${PATH}"
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=uv-cli /uv /usr/local/bin/uv
 
 # Set working directory
 WORKDIR /app
