@@ -1,7 +1,7 @@
 # Multi-stage build for coding style guide validator
 
 # Use the official multi-platform Terraform CLI for HCL formatting checks.
-FROM hashicorp/terraform:1.17.1 AS terraform-cli
+FROM hashicorp/terraform:1.17.2 AS terraform-cli
 
 # Install CLI npm production dependencies
 FROM node:24-slim AS cli-deps
