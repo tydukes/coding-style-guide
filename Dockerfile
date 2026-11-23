@@ -13,7 +13,7 @@ COPY docker/node-tools/package.json docker/node-tools/package-lock.json ./
 RUN npm ci --omit=dev --ignore-scripts
 
 # Use the published uv binary instead of executing a downloaded installer.
-FROM ghcr.io/astral-sh/uv:0.13.8 AS uv-cli
+FROM ghcr.io/astral-sh/uv:0.13.9 AS uv-cli
 
 # Final image
 FROM python:3.15-slim AS base
